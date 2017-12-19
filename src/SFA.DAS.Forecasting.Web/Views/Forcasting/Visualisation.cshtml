@@ -1,0 +1,30 @@
+﻿@model string
+
+@{
+    ViewBag.Title = "Forcasting";
+}
+
+<div class="grid-row">
+    <div class="column-full">
+        <h1 class="heading-xlarge heading-dashboard">Forcasting</h1>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <p>The figures below show the funds available to you for the duration of your apprenticeships. These figures are a representation of the data you have filled in.</p>
+    </div>
+
+    <div class="form-group">
+        <button class="button" data-clipboard-action="copy" data-clipboard-target="#balancesheet">
+            Copy to clipboard
+        </button>
+    </div>
+
+    <details>
+        <summary>How the cost of is calculated</summary>
+
+        <p>The balance sheet is based on last month’s payment for both levy credit and cost of training, it doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.</p>
+    </details>
+
+</div>
