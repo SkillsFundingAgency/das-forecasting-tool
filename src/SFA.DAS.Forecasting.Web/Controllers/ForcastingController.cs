@@ -1,17 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+
+using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
     public class ForcastingController : Controller
     {
-        // GET: Forcasting
-        public ActionResult Balance()
+        private readonly ForcastingOrchestrator _orchestrator;
+
+        public ForcastingController(ForcastingOrchestrator orchestrator)
         {
-            return View();
+            _orchestrator = orchestrator;
+        }
+
+        // GET: Forcasting
+        public ActionResult Balance(string hashedAccountId)
+        {
+            var viewModel = _orchestrator.Balance(hashedAccountId);
+            return View(viewModel);
         }
 
         public ActionResult Apprenticeships()
