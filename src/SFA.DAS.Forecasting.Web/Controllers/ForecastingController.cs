@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 
 using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
@@ -17,9 +18,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("balance", Name = "ForecastingBalance")]
-        public ActionResult Balance(string hashedAccountId)
+        public async Task<ActionResult> Balance(string hashedAccountId)
         {
-            var viewModel = _orchestrator.Balance(hashedAccountId);
+            var viewModel = await _orchestrator.Balance(hashedAccountId);
             return View(viewModel);
         }
 

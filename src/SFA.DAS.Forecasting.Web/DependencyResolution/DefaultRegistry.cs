@@ -14,6 +14,11 @@
 // limitations under the License.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
+using System.Net.NetworkInformation;
+
+using MediatR;
+
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap;
@@ -21,7 +26,6 @@ using StructureMap;
 namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 	
     public class DefaultRegistry : Registry {
-        #region Constructors and Destructors
 
         private const string ServiceNamespace = "SFA.DAS";
 
@@ -30,12 +34,25 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
                 scan => {
                     scan.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith(ServiceNamespace));
                     scan.RegisterConcreteTypesAgainstTheFirstInterface();
+
+                    scan.AssemblyContainingType<Ping>();
+                    scan.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<>));
+                    scan.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
+                    scan.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
                     //scan.TheCallingAssembly();
                     //scan.WithDefaultConventions();
                 });
             //For<IExample>().Use<Example>();
+
+            RegisterMediator();
         }
 
-        #endregion
+
+        private void RegisterMediator()
+        {
+            For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
+            For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
+            For<IMediator>().Use<Mediator>();
+        }
     }
 }

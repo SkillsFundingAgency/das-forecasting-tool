@@ -1,33 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
+using MediatR;
+
+using SFA.DAS.EmployerCommitments.Domain.Entities;
+using SFA.DAS.Forcasting.Application.Balance;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
     public class ForecastingOrchestrator
     {
-        public BalanceViewModel Balance(string hashedAccountId)
+        private readonly IMediator _mediator;
+
+        public ForecastingOrchestrator(IMediator mediator)
         {
-            return new BalanceViewModel { BalanceItemViewModels = GetBalanceData() };
+            _mediator = mediator;
         }
 
-        private IEnumerable<BalanceItemViewModel> GetBalanceData()
+        public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            for (int i = 0; i < 20; i++)
-            {
-                var m = DateTime.Now.AddMonths(i);
-                yield return new BalanceItemViewModel
-                {
-                    Date = m,
-                    LevyCredit = 700,
-                    CostOfTraining = 100,
-                    CompletionPayments = 0,
-                    ExpiredFunds = 0,
-                    Balance = 700 * (i + 1)
-                };
+            var result = await _mediator.Send(new EmployerBalanceRequest());
+            return new BalanceViewModel { BalanceItemViewModels = MapBalanceData(result.Data) };
+        }
 
-            }
+        private IEnumerable<BalanceItemViewModel> MapBalanceData(IEnumerable<BalanceItem> data)
+        {
+            return data.Select(x => 
+                new BalanceItemViewModel
+                {
+                    Date = x.Date,
+                    LevyCredit = x.LevyCredit,
+                    CostOfTraining =  x.CostOfTraining,
+                    CompletionPayments = x.CompletionPayments,
+                    ExpiredFunds = x.ExpiredFunds,
+                    Balance = x.Balance
+                });
+
         }
     }
 }
