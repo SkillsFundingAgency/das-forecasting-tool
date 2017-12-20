@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Balance]
 (
-	Id INT NOT NULL PRIMARY KEY,
+	Id BIGINT NOT NULL PRIMARY KEY  IDENTITY,
 	EmployerAccountId BIGINT NOT NULL,
 	BalanceMonth DateTime NOT NULL,
 	CostOfTraining decimal NOT NULL DEFAULT 0,
