@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Web
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Forcasting", action = "Balance", id = UrlParameter.Optional }
+                defaults: new { controller = "Forecasting", action = "Balance", id = UrlParameter.Optional }
             );
         }
     }

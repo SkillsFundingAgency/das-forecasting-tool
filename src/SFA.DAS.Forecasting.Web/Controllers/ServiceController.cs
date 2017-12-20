@@ -5,7 +5,7 @@ using SFA.DAS.Forecasting.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ForcastingRoutePrefix("Service")]
+    [ForecastingRoutePrefix("Service")]
     public class ServiceController : Controller
     {
         [Route("signout")]

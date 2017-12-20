@@ -5,7 +5,7 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
-    public class ForcastingOrchestrator
+    public class ForecastingOrchestrator
     {
         public BalanceViewModel Balance(string hashedAccountId)
         {

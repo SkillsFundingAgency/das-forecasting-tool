@@ -4,14 +4,14 @@ using System.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Mvc
 {
-    public class ForcastingRoutePrefix : RoutePrefixAttribute
+    public class ForecastingRoutePrefix : RoutePrefixAttribute
     {
-        public ForcastingRoutePrefix() : base()
+        public ForecastingRoutePrefix() : base()
         {
             
         }
 
-        public ForcastingRoutePrefix(string prefix) : base(GetPrefix(prefix))
+        public ForecastingRoutePrefix(string prefix) : base(GetPrefix(prefix))
         {
             
         }
@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Web.Mvc
             if (prefix == null)
                 throw new ArgumentNullException(nameof(prefix), "Cannot be null");
 
-            var commitmentsPrefix = ConfigurationManager.AppSettings["ForcastingRoutePrefix"];
+            var commitmentsPrefix = ConfigurationManager.AppSettings["ForecastingRoutePrefix"];
 
             if (!string.IsNullOrWhiteSpace(commitmentsPrefix))
                 return $"{commitmentsPrefix}/{prefix}";

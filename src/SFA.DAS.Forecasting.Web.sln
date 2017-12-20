@@ -5,9 +5,11 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web", "SFA.DAS.Forecasting.Web\SFA.DAS.Forecasting.Web.csproj", "{DEC16FDF-5394-4137-8C67-21414ED636EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forcasting.Application", "..\SFA.DAS.Forcasting.Application\SFA.DAS.Forcasting.Application.csproj", "{B6B0820B-097F-4938-A1D4-FE92F3A1308F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Application", "..\SFA.DAS.Forcasting.Application\SFA.DAS.Forecasting.Application.csproj", "{B6B0820B-097F-4938-A1D4-FE92F3A1308F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.EmployerCommitments.Domain", "SFA.DAS.EmployerCommitments.Domain\SFA.DAS.EmployerCommitments.Domain.csproj", "{737C7231-3BF2-4D0B-992E-A227D95EAA53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Domain", "SFA.DAS.EmployerCommitments.Domain\SFA.DAS.Forecasting.Domain.csproj", "{737C7231-3BF2-4D0B-992E-A227D95EAA53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Infrastructure", "SFA.DAS.Forecasting.Infrastructure\SFA.DAS.Forecasting.Infrastructure.csproj", "{30D7F22F-F384-4027-B91B-B2E1D08489DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{737C7231-3BF2-4D0B-992E-A227D95EAA53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{737C7231-3BF2-4D0B-992E-A227D95EAA53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{737C7231-3BF2-4D0B-992E-A227D95EAA53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30D7F22F-F384-4027-B91B-B2E1D08489DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D7F22F-F384-4027-B91B-B2E1D08489DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30D7F22F-F384-4027-B91B-B2E1D08489DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D7F22F-F384-4027-B91B-B2E1D08489DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,18 +5,18 @@ using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ForcastingRoutePrefix("accounts/{hashedaccountId}/forcasting")]
-    public class ForcastingController : Controller
+    [ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
+    public class ForecastingController : Controller
     {
-        private readonly ForcastingOrchestrator _orchestrator;
+        private readonly ForecastingOrchestrator _orchestrator;
 
-        public ForcastingController(ForcastingOrchestrator orchestrator)
+        public ForecastingController(ForecastingOrchestrator orchestrator)
         {
             _orchestrator = orchestrator;
         }
 
         [HttpGet]
-        [Route("balance", Name = "ForcastingBalance")]
+        [Route("balance", Name = "ForecastingBalance")]
         public ActionResult Balance(string hashedAccountId)
         {
             var viewModel = _orchestrator.Balance(hashedAccountId);
@@ -24,14 +24,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("apprenticeships", Name = "ForcastingApprenticeships")]
+        [Route("apprenticeships", Name = "ForecastingApprenticeships")]
         public ActionResult Apprenticeships()
         {
             return View();
         }
 
         [HttpGet]
-        [Route("visualisation", Name = "ForcastingVisualisation")]
+        [Route("visualisation", Name = "ForecastingVisualisation")]
         public ActionResult Visualisation()
         {
             return View();
