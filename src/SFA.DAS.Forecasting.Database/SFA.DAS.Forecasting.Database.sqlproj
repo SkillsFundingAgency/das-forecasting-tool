@@ -66,6 +66,9 @@
     <Build Include="Tables\CurrentBalanceAndLevy.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\BalanceData.sql" />
+    <None Include="TestData\ResetBalanceData.sql" />
+    <None Include="TestData\ResetCurrentAndBalanceData.sql" />
+    <None Include="TestData\ResetApprenticeshipData.sql" />
+    <None Include="TestData\RebuildTestData.sql" />
   </ItemGroup>
 </Project>
