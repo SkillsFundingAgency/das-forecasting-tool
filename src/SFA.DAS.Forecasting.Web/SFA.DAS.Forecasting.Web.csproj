@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MediatR, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediatR.4.0.1\lib\net45\MediatR.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -278,6 +282,16 @@
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
     <Content Include="Views\Forecasting\Apprenticeships.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
+      <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
+      <Name>SFA.DAS.Forecasting.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
+      <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
+      <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
