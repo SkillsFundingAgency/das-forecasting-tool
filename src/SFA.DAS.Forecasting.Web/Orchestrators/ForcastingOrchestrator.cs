@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using MediatR;
 
+using SFA.DAS.Forecasting.Application.Queries.Apprenticeships;
 using SFA.DAS.Forecasting.Application.Queries.Balance;
 using SFA.DAS.Forecasting.Domain.Entities;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -46,6 +47,32 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                     Balance = x.Balance
                 });
 
+        }
+
+        public async Task<ApprenticeshipPageViewModel> Apprenticeships(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+
+            var result = await _mediator.Send(new ApprenticeshipsRequest { EmployerAccountId = accountId });
+
+            return new ApprenticeshipPageViewModel
+                       {
+                           Apprenticeships =
+                               result.Data.Select(
+                                   m =>
+                                   new ApprenticeshipViewModel
+                                       {
+                                           Name =
+                                               $"{m.FirstName} {m.LastName}",
+                                           StartDate = m.StartDate,
+                                           MonthlyPayment =
+                                               m.MonthlyPayment,
+                                           TotalInstallments =
+                                               m.TotalInstallments,
+                                           CompletionPayment =
+                                               m.CompletionPayment
+                                       })
+                       };
         }
     }
 }

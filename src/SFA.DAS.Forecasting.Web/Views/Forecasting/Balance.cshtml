@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.Forecasting.Web.ViewModels.BalanceViewModel
+﻿@using SFA.DAS.Forecasting.Web.Extensions
+@model SFA.DAS.Forecasting.Web.ViewModels.BalanceViewModel
 
 @{
     ViewBag.Title = "Forecasting";
@@ -51,12 +52,12 @@
                 @foreach (var item in Model.BalanceItemViewModels)
                 {
                     <tr>
-                        <td class="nowrap">@item.Date</td>
-                        <td class="financial">@item.LevyCredit</td>
-                        <td class="financial">@item.CostOfTraining</td>
-                        <td class="financial">@item.CompletionPayments</td>
-                        <td class="financial">@item.ExpiredFunds</td>
-                        <td class="financial">@item.Balance</td>
+                        <td class="nowrap">@item.Date.ToGdsFormatLongMonthNameWithoutDay()</td>
+                        <td class="financial">@item.LevyCredit.FormatCost()</td>
+                        <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                        <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                        <td class="financial">@item.ExpiredFunds.FormatCost()</td>
+                        <td class="financial">@item.Balance.FormatCost()</td>
                     </tr>
                 }
 

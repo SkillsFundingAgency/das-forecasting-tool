@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Queries\Apprenticeships\ApprenticeshipHandler.cs" />
+    <Compile Include="Queries\Apprenticeships\ApprenticeshipsRequest.cs" />
+    <Compile Include="Queries\Apprenticeships\ApprenticeshipsResponse.cs" />
     <Compile Include="Queries\Balance\EmployerBalanceResponse.cs" />
     <Compile Include="Queries\Balance\EmployerBalanceHandler.cs" />
     <Compile Include="Queries\Balance\EmployerBalanceRequest.cs" />
