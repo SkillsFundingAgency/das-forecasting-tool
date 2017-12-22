@@ -7,8 +7,8 @@
     <ProjectGuid>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SFA.DAS.Forcasting.Application</RootNamespace>
-    <AssemblyName>SFA.DAS.Forcasting.Application</AssemblyName>
+    <RootNamespace>SFA.DAS.Forecasting.Application</RootNamespace>
+    <AssemblyName>SFA.DAS.Forecasting.Application</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,9 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Balance\EmployerBalanceResponse.cs" />
-    <Compile Include="Balance\EmployerBalanceHandler.cs" />
-    <Compile Include="Balance\EmployerBalanceRequest.cs" />
+    <Compile Include="Queries\Balance\EmployerBalanceResponse.cs" />
+    <Compile Include="Queries\Balance\EmployerBalanceHandler.cs" />
+    <Compile Include="Queries\Balance\EmployerBalanceRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 using MediatR;
 
-using SFA.DAS.EmployerCommitments.Domain.Entities;
-using SFA.DAS.Forcasting.Application.Balance;
+using SFA.DAS.Forecasting.Application.Queries.Balance;
+using SFA.DAS.Forecasting.Domain.Entities;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            var result = await _mediator.Send(new EmployerBalanceRequest());
+            var result = await _mediator.Send(new EmployerBalanceRequest {EmployerAccountId = 12345 });
             return new BalanceViewModel { BalanceItemViewModels = MapBalanceData(result.Data) };
         }
 

@@ -16,8 +16,15 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Net.NetworkInformation;
+using System.Web;
+using System.Web.Routing;
 
 using MediatR;
+
+using SFA.DAS.Forecasting.Domain.Interfaces;
+using SFA.DAS.Forecasting.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Infrastructure.Repositories;
+using SFA.DAS.NLog.Logger;
 
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -33,8 +40,8 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
             Scan(
                 scan => {
                     scan.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith(ServiceNamespace));
-                    scan.RegisterConcreteTypesAgainstTheFirstInterface();
-
+                    scan.TheCallingAssembly();
+                    scan.RegisterConcreteTypesAgainstTheFirstInterface();                    
                     scan.AssemblyContainingType<Ping>();
                     scan.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<>));
                     scan.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
@@ -42,11 +49,21 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
                     //scan.TheCallingAssembly();
                     //scan.WithDefaultConventions();
                 });
-            //For<IExample>().Use<Example>();
 
+            ConfigureLogging();
+
+            
             RegisterMediator();
         }
 
+
+        private void ConfigureLogging()
+        {
+            For<ILog>().Use(x => new NLogLogger(
+                x.ParentType,
+                null,
+                null)).AlwaysUnique();
+        }
 
         private void RegisterMediator()
         {

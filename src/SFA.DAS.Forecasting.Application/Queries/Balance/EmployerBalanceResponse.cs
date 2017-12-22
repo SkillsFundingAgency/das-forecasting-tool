@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using SFA.DAS.EmployerCommitments.Domain.Entities;
+using SFA.DAS.Forecasting.Domain.Entities;
 
-namespace SFA.DAS.Forcasting.Application.Balance
+namespace SFA.DAS.Forecasting.Application.Queries.Balance
 {
     public class EmployerBalanceResponse
     {
