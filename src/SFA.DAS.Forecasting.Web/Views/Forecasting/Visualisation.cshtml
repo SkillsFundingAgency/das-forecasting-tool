@@ -3,7 +3,16 @@
 @{
     ViewBag.Title = "Forecasting";
 }
-
+<script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/44CB0BC1-6BD2-B341-BF0E-BABEC9F67D33/main.js" charset="UTF-8"></script>
+<script src="http://www.chartjs.org/dist/2.7.1/Chart.bundle.js"></script>
+<script src="http://www.chartjs.org/samples/latest/utils.js"></script>
+<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
 <div class="grid-row">
     <div class="column-full">
         <h1 class="heading-xlarge heading-dashboard">Forecasting</h1>
@@ -26,5 +35,58 @@
 
         <p>The balance sheet is based on last month’s payment for both levy credit and cost of training, it doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.</p>
     </details>
+  
+    <div style="width: 75%">
+        <canvas id="canvas"></canvas>
+    </div>
+    <script>
+        var MONTHS = ["Jan", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var color = Chart.helpers.color;
+        var posCol = window.chartColors.blue;
+        var negCol = window.chartColors.red;
+        var barChartData = {
+            labels: ["Jan 2018", "Feb 2018", "Mar 2018", "Apr 2018", "May 2018", "Jun 2018", "Jul 2018", "Aug 2018", "Sep 2018", "Oct 2018", "Nov 2018", "Dec 2018",
+                "Jan 2019", "Feb 2019", "Mar 2019", "Apr 2019", "May 2019", "Jun 2019", "Jul 2019", "Aug 2019", "Sep 2019", "Oct 2019", "Nov 2019", "Dec 2019",
+                "Jan 2020", "Feb 2020", "Mar 2020", "Apr 2020", "May 2020", "Jun 2020", "Jul 2020", "Aug 2020", "Sep 2020", "Oct 2020", "Nov 2020", "Dec 2020",
+                "Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021", "Jun 2021", "Jul 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021"
+            ],
+            datasets: [{
+                label: 'Amount Available (£)',
+                backgroundColor: [posCol, posCol, negCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol,
+                    posCol, posCol, negCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol,
+                    posCol, posCol, negCol, posCol, negCol, posCol, posCol, posCol, posCol, posCol, posCol, posCol,
+                    posCol, posCol, negCol, posCol, posCol, posCol, negCol, posCol, posCol, negCol, posCol, posCol
+                ]  ,                        
+                //borderColor: window.chartColors.black,
+                borderWidth: 2,
+                data: [
+                    980,50,-100,53,12,978,976,925,750,450,325,300,
+                    198,50,-10,53,12,978,976,925,750,450,325,300,
+                    15,30,-25,1,-10,50,505,543,234,725,75,555,
+                    150, 300, -243, 188, 43,675,-135,654,345,-567,35,671
+                ]
+            }]
+        };
 
+        window.onload = function() {
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myBar = new Chart(ctx, {
+                type: 'bar',   // bar, line
+                data: barChartData,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Your 4 Year Forecast'
+                    }
+                }
+            });
+
+        };
+
+   
+    </script>
 </div>
