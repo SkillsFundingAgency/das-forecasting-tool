@@ -215,7 +215,9 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\BalanceItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceViewModel.cs" />
+    <Compile Include="ViewModels\ChartItemViewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
+    <Compile Include="ViewModels\VisualisationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\fonts-ie8.css" />
