@@ -24,6 +24,7 @@ using MediatR;
 using SFA.DAS.Forecasting.Domain.Interfaces;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Infrastructure.Repositories;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 using StructureMap.Configuration.DSL;
@@ -52,7 +53,9 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 
             ConfigureLogging();
 
-            
+            // ToDo: Move to local config
+            For<IHashingService>().Use(x => new HashingService.HashingService("46789BCDFGHJKLMNPRSTVWXY", "SFA: digital apprenticeship service"));
+
             RegisterMediator();
         }
 

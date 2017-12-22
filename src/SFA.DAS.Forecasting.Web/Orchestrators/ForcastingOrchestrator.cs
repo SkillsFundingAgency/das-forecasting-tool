@@ -7,6 +7,7 @@ using MediatR;
 using SFA.DAS.Forecasting.Application.Queries.Balance;
 using SFA.DAS.Forecasting.Domain.Entities;
 using SFA.DAS.Forecasting.Web.ViewModels;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
@@ -14,19 +15,21 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     public class ForecastingOrchestrator
     {
         private readonly IMediator _mediator;
-
+        private readonly IHashingService _hashingService;
         private readonly ILog _logger;
 
-        public ForecastingOrchestrator(IMediator mediator, ILog logger)
+        public ForecastingOrchestrator(IMediator mediator, IHashingService hashingService, ILog logger)
         {
             _mediator = mediator;
+            _hashingService = hashingService;
             _logger = logger;
         }
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            _logger.Info($"Hellow world {hashedAccountId}");
-            var result = await _mediator.Send(new EmployerBalanceRequest {EmployerAccountId = 12345 });
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            
+            var result = await _mediator.Send(new EmployerBalanceRequest {EmployerAccountId = accountId });
             return new BalanceViewModel { BalanceItemViewModels = MapBalanceData(result.Data) };
         }
 
