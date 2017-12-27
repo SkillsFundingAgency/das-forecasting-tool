@@ -15,12 +15,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Configuration;
 using System.Net.NetworkInformation;
 using System.Web;
 using System.Web.Routing;
 
 using MediatR;
 
+using SFA.DAS.Configuration;
+using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.Forecasting.Domain.Interfaces;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Infrastructure.Repositories;
@@ -34,7 +39,7 @@ using StructureMap;
 namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 	
     public class DefaultRegistry : Registry {
-
+        private const string ServiceName = "SFA.DAS.Forecasting";
         private const string ServiceNamespace = "SFA.DAS";
 
         public DefaultRegistry() {
@@ -53,8 +58,10 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 
             ConfigureLogging();
 
-            // ToDo: Move to local config
-            For<IHashingService>().Use(x => new HashingService.HashingService("46789BCDFGHJKLMNPRSTVWXY", "SFA: digital apprenticeship service"));
+            var config = GetConfiguration();
+
+            For<IApplicationConfiguration>().Use(config);
+            For<IHashingService>().Use(x => new HashingService.HashingService(config.HashingService.AllowedCharacters, config.HashingService.Hashstring));
 
             RegisterMediator();
         }
@@ -73,6 +80,38 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
             For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
             For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
             For<IMediator>().Use<Mediator>();
+        }
+
+        private ForcastingApplicationConfiguration GetConfiguration()
+        {
+            var environment = Environment.GetEnvironmentVariable("DASENV");
+            if (string.IsNullOrEmpty(environment))
+            {
+                //environment = ConfigurationManager.GetSetting("EnvironmentName");
+                environment = ConfigurationManager.AppSettings["EnvironmentName"];
+            }
+            
+            var configurationRepository = GetConfigurationRepository();
+            var configurationService = new ConfigurationService(configurationRepository,
+                new ConfigurationOptions(ServiceName, environment, "1.0"));
+
+            var result = configurationService.Get<ForcastingApplicationConfiguration>();
+
+            return result;
+        }
+
+        private static IConfigurationRepository GetConfigurationRepository()
+        {
+            IConfigurationRepository configurationRepository;
+            if (bool.Parse(ConfigurationManager.AppSettings["LocalConfig"] ?? "false"))
+            {
+                configurationRepository = new FileStorageConfigurationRepository();
+            }
+            else
+            {
+                configurationRepository = new AzureTableStorageConfigurationRepository(ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"]);
+            }
+            return configurationRepository;
         }
     }
 }

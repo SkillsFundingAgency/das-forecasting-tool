@@ -44,7 +44,7 @@
     <Compile Include="Entities\BalanceItem.cs" />
     <Compile Include="Interfaces\IApprenticeshipRepository.cs" />
     <Compile Include="Interfaces\IBalanceRepository.cs" />
-    <Compile Include="Interfaces\IConfiguration.cs" />
+    <Compile Include="Interfaces\IApplicationConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

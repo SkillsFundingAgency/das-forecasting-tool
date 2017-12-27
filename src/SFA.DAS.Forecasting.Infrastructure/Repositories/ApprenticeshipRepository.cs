@@ -14,8 +14,8 @@ namespace SFA.DAS.Forecasting.Infrastructure.Repositories
 {
     public class ApprenticeshipRepository : BaseRepository, IApprenticeshipRepository
     {
-        public ApprenticeshipRepository(IConfiguration configuration, ILog logger)
-            : base(configuration.DatabaseConnectionString, logger)
+        public ApprenticeshipRepository(IApplicationConfiguration applicationConfiguration, ILog logger)
+            : base(applicationConfiguration.DatabaseConnectionString, logger)
         {
         }
 

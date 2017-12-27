@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Forecasting.Domain.Interfaces
 {
-    public interface IConfiguration
+    public interface IApplicationConfiguration
     {
         string DatabaseConnectionString { get; set; }
     }

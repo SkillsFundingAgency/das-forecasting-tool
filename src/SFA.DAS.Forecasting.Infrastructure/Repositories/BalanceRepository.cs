@@ -15,8 +15,8 @@ namespace SFA.DAS.Forecasting.Infrastructure.Repositories
 {
     public class BalanceRepository : BaseRepository, IBalanceRepository
     {
-        public BalanceRepository(IConfiguration configuration, ILog logger)
-            : base(configuration.DatabaseConnectionString, logger)
+        public BalanceRepository(IApplicationConfiguration applicationConfiguration, ILog logger)
+            : base(applicationConfiguration.DatabaseConnectionString, logger)
         {
         }
 
