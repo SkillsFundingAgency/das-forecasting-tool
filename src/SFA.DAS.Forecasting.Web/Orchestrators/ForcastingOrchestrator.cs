@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,25 +29,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
+            _logger.Info("Balance!");
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             
             var result = await _mediator.Send(new EmployerBalanceRequest {EmployerAccountId = accountId });
             return new BalanceViewModel { BalanceItemViewModels = MapBalanceData(result.Data) };
-        }
-
-        private IEnumerable<BalanceItemViewModel> MapBalanceData(IEnumerable<BalanceItem> data)
-        {
-            return data.Select(x => 
-                new BalanceItemViewModel
-                {
-                    Date = x.Date,
-                    LevyCredit = x.LevyCredit,
-                    CostOfTraining =  x.CostOfTraining,
-                    CompletionPayments = x.CompletionPayments,
-                    ExpiredFunds = x.ExpiredFunds,
-                    Balance = x.Balance
-                });
-
         }
 
         public async Task<ApprenticeshipPageViewModel> Apprenticeships(string hashedAccountId)
@@ -73,6 +60,35 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                                                m.CompletionPayment
                                        })
                        };
+        }
+
+        public async Task<VisualisationViewModel> Visualisation(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+
+            var result = await _mediator.Send(new EmployerBalanceRequest { EmployerAccountId = accountId });
+            
+            var viewModel = new VisualisationViewModel
+            {
+                ChartTitle = "Your 4 Year Forecast",
+                ChartItems = result.Data.Select(m => new ChartItemViewModel { BalanceMonth = m.Date, Amount = m.Balance })
+        };
+
+            return viewModel;
+        }
+
+        private IEnumerable<BalanceItemViewModel> MapBalanceData(IEnumerable<BalanceItem> data)
+        {
+            return data.Select(x =>
+                new BalanceItemViewModel
+                {
+                    Date = x.Date,
+                    LevyCredit = x.LevyCredit,
+                    CostOfTraining = x.CostOfTraining,
+                    CompletionPayments = x.CompletionPayments,
+                    ExpiredFunds = x.ExpiredFunds,
+                    Balance = x.Balance
+                });
         }
     }
 }
