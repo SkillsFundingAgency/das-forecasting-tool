@@ -4,9 +4,7 @@
 @{
     ViewBag.Title = Model.ChartTitle;
 }
-<script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/44CB0BC1-6BD2-B341-BF0E-BABEC9F67D33/main.js" charset="UTF-8"></script>
-<script src="http://www.chartjs.org/dist/2.7.1/Chart.bundle.js"></script>
-<script src="http://www.chartjs.org/samples/latest/utils.js"></script>
+
 <style>
     canvas {
         -moz-user-select: none;
@@ -36,10 +34,17 @@
 
         <p>The balance sheet is based on last month’s payment for both levy credit and cost of training, it doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.</p>
     </details>
-  
+
+    @Html.Partial("ForcastingMenu")
+
     <div style="width: 90%">
         <canvas id="canvas"></canvas>
     </div>
+
+    <script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/44CB0BC1-6BD2-B341-BF0E-BABEC9F67D33/main.js" charset="UTF-8"></script>
+    <script src="http://www.chartjs.org/dist/2.7.1/Chart.bundle.js"></script>
+    <script src="http://www.chartjs.org/samples/latest/utils.js"></script>
+
     <script>
 
         var chartTitle = '@Model.ChartTitle';
@@ -61,7 +66,7 @@
 
             @Html.Raw(amountSb)
 
- 
+
         }
 
 //        var monthlyData = 	[
@@ -70,7 +75,7 @@
 //            15,30,-25,1,-10,50,505,543,234,725,75,555,
 //            150, 300, -243, 188, 43,675,-135,654,345,-567,35,671
 //        ];
-		
+
 //        var labelData = ["Jan 18", "Feb 18", "Mar 18", "Apr 18", "May 18", "Jun 18", "Jul 18", "Aug 18", "Sep 18", "Oct 18", "Nov 18", "Dec 18",
 //            "Jan 19", "Feb 19", "Mar 19", "Apr 19", "May 19", "Jun 19", "Jul 19", "Aug 19", "Sep 19", "Oct 19", "Nov 19", "Dec 19",
 //            "Jan 20", "Feb 20", "Mar 20", "Apr 20", "May 20", "Jun 20", "Jul 20", "Aug 20", "Sep 20", "Oct 20", "Nov 20", "Dec 20",
@@ -78,41 +83,41 @@
 //        ];
 
         var x = setBackgroundColours(monthlyData);
-	
-	
+
+
         var color = Chart.helpers.color;
         var barChartData = {
             labels: labelData,
-            datasets: [{
-                label: 'Amount Available (£)',
-                backgroundColor:  setBackgroundColours(monthlyData),                        
-                borderColor: window.chartColors.black,
-                borderWidth: 2,
-                data: monthlyData
-            }]
+            datasets: [
+                {
+                    label: 'Amount Available (£)',
+                    backgroundColor: setBackgroundColours(monthlyData),
+                    borderColor: window.chartColors.black,
+                    borderWidth: 2,
+                    data: monthlyData
+                }
+            ]
         };
 
-	
-        function setBackgroundColours(dataToProcess)
-        {
-            var colors = [];	
-            dataToProcess.forEach(function(item){
-                if (item>0) {
+
+        function setBackgroundColours(dataToProcess) {
+            var colors = [];
+            dataToProcess.forEach(function(item) {
+                if (item > 0) {
                     colors.push(window.chartColors.blue);
-                }
-                else {
+                } else {
                     colors.push(window.chartColors.red);
                 };
             });
-	
+
             return colors;
         };
-	
 
-        window.onload = function() {
+
+        window.onload = function () {
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myBar = new Chart(ctx, {
-                type: 'bar', 
+                type: 'bar',
                 data: barChartData,
                 options: {
                     responsive: true,

@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
             var config = GetConfiguration();
 
             For<IApplicationConfiguration>().Use(config);
-            For<IHashingService>().Use(x => new HashingService.HashingService(config.HashingService.AllowedCharacters, config.HashingService.Hashstring));
+            For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.HashString));
 
             RegisterMediator();
         }
@@ -87,31 +87,16 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
             {
-                //environment = ConfigurationManager.GetSetting("EnvironmentName");
                 environment = ConfigurationManager.AppSettings["EnvironmentName"];
             }
             
-            var configurationRepository = GetConfigurationRepository();
+            var configurationRepository = new AzureTableStorageConfigurationRepository(ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"]);
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(ServiceName, environment, "1.0"));
 
             var result = configurationService.Get<ForcastingApplicationConfiguration>();
 
             return result;
-        }
-
-        private static IConfigurationRepository GetConfigurationRepository()
-        {
-            IConfigurationRepository configurationRepository;
-            if (bool.Parse(ConfigurationManager.AppSettings["LocalConfig"] ?? "false"))
-            {
-                configurationRepository = new FileStorageConfigurationRepository();
-            }
-            else
-            {
-                configurationRepository = new AzureTableStorageConfigurationRepository(ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"]);
-            }
-            return configurationRepository;
         }
     }
 }
