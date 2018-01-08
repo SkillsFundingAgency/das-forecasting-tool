@@ -70,5 +70,6 @@
     <None Include="TestData\ResetCurrentAndBalanceData.sql" />
     <None Include="TestData\ResetApprenticeshipData.sql" />
     <None Include="TestData\RebuildTestData.sql" />
+    <None Include="Database.publish.xml" />
   </ItemGroup>
 </Project>
