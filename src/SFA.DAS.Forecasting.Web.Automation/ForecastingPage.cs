@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.WindowsAzure.Storage.Blob.Protocol;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using Sfa.Automation.Framework.Constants;
