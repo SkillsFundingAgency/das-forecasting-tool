@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.Aut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.AcceptanceTests", "SFA.DAS.Forecasting.Web.AcceptanceTests\SFA.DAS.Forecasting.Web.AcceptanceTests.csproj", "{53EAF7C5-7389-4F4D-BF13-073253D32CCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{2CA3C768-DDB6-4A0A-8A91-CA57635C7F75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{2CA3C768-DDB6-4A0A-8A91-CA57635C7F75}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payments", "Payments", "{D4DBF553-4EA6-4853-A238-A8DC349CEE36}"
 EndProject
@@ -29,7 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Application", "SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj", "{5D623524-911F-4652-B7F1-42028A1051ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.PaymentsAdapter.Functions", "SFA.DAS.PaymentsAdapter.Functions\SFA.DAS.PaymentsAdapter.Functions.csproj", "{DEDA2AEE-C945-4810-BF9E-FF774795FF0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.PaymentsAdapter.Functions", "SFA.DAS.PaymentsAdapter.Functions\SFA.DAS.PaymentsAdapter.Functions.csproj", "{DEDA2AEE-C945-4810-BF9E-FF774795FF0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Messages", "SFA.DAS.Forecasting.Payments.Messages\SFA.DAS.Forecasting.Payments.Messages.csproj", "{7D24810E-D721-42BD-BA74-95E9E2CC982A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{DEDA2AEE-C945-4810-BF9E-FF774795FF0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEDA2AEE-C945-4810-BF9E-FF774795FF0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEDA2AEE-C945-4810-BF9E-FF774795FF0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{EADDDE7C-898E-4580-A65C-E784BF3F3891} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 		{5D623524-911F-4652-B7F1-42028A1051ED} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 		{DEDA2AEE-C945-4810-BF9E-FF774795FF0B} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
+		{7D24810E-D721-42BD-BA74-95E9E2CC982A} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89553F32-71A1-4EE1-8BD1-BC5BCC7E5E70}

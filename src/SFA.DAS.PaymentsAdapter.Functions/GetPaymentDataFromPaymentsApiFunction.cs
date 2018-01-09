@@ -1,7 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Provider.Events.Api.Types;
+using SFA.DAS.Forecasting.Payments.Domain.Entities;
+using SFA.DAS.Forecasting.Payments.Messages.Events;
+using SFA.DAS.PaymentsAdapter.Functions.Infrastructure;
 
 namespace SFA.DAS.PaymentsAdapter.Functions
 {
@@ -9,15 +12,37 @@ namespace SFA.DAS.PaymentsAdapter.Functions
     public static class GetPaymentDataFromPaymentsApiFunction
     {
         [FunctionName("GetPaymentDataFromPaymentsApiFunction")]
-        public static void Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer,
-            [Queue("payments-adapter-publish-payment")] ICollector<Payment> payments,
+        public static async Task Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer,
+            [Queue("payments-adapter-publish-payment")] ICollector<PaymentMessage> payments,
             TraceWriter traceWriter)
         {
+            // ToDo: What do we do with the init round? About 2 million record currently.
             traceWriter.Info($"Getting payment data from payment api. Date: {DateTime.Now}");
-            //TODO: replace with call to payments api
-            payments.Add(new Payment { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "12345"});
-            payments.Add(new Payment { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "ABCDE" });
+
+            var url = Environment.GetEnvironmentVariable("PaymentsApiBaseUrl", EnvironmentVariableTarget.Process);
+            
+            var paymentEvents = new PaymentEvents(PaymentsConfig()); // User interface?
+
+            foreach (var payment in await paymentEvents.ReadAsync())
+            {
+                payments.Add(payment);
+            }
+
             traceWriter.Info("Finished getting payment data from payment api.");
+        }
+
+        public static PaymentEventsApiConfig PaymentsConfig()
+        {
+            var url = Environment.GetEnvironmentVariable("PaymentsApiBaseUrl", EnvironmentVariableTarget.Process);
+            var token = Environment.GetEnvironmentVariable("PaymentsApiToken", EnvironmentVariableTarget.Process);
+            var conectionString = Environment.GetEnvironmentVariable("StorageConnectionString", EnvironmentVariableTarget.Process);
+            return new PaymentEventsApiConfig
+            {
+                ApiBaseUrl = url,
+                ClientToken = token,
+                StorageConnectionString = conectionString,
+                MaxPages = 5
+            };
         }
     }
 }

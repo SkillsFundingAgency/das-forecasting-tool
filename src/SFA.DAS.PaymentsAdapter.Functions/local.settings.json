@@ -3,6 +3,12 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "StorageConnectionString": "UseDevelopmentStorage=true"
+    "StorageConnectionString": "UseDevelopmentStorage=true",
+    "PaymentsApiBaseUrl": "",
+    "PaymentsApiToken": ""
+  },
+  "http": {
+    "maxOutstandingRequests": 1,
+    "maxConcurrentRequests": 1
   }
 }
