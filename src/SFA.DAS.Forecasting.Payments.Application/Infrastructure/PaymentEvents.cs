@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
             _config = config;
         }
 
-        public async Task<IEnumerable<PaymentMessage>> ReadAsync()
+        public async Task<IEnumerable<PaymentEvent>> ReadAsync()
         {
             var info = await _table.GetLatestInfo();
             if (info.PageNumber <= _config.MaxPages)
@@ -33,12 +33,12 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
                 return result.Items.Select(MapToPaymentMessage);
             }
             
-            return new List<PaymentMessage>();
+            return new List<PaymentEvent>();
         }
 
-        private PaymentMessage MapToPaymentMessage(Provider.Events.Api.Types.Payment payment)
+        private PaymentEvent MapToPaymentMessage(Provider.Events.Api.Types.Payment payment)
         {
-            return new PaymentMessage
+            return new PaymentEvent
             {
                 Id = payment.Id,
                 EmployerAccountId = payment.EmployerAccountId,
@@ -56,11 +56,11 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
             };
         }
 
-        //public async Task<IEnumerable<PaymentMessage>> ReadAsync()
+        //public async Task<IEnumerable<PaymentEvent>> ReadAsync()
         //{
-        //    var l = new List<PaymentMessage> {
-        //        new PaymentMessage { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "12345"},
-        //        new PaymentMessage { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "ABCDE" }
+        //    var l = new List<PaymentEvent> {
+        //        new PaymentEvent { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "12345"},
+        //        new PaymentEvent { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "ABCDE" }
         //    };
 
         //    return await Task.FromResult(l);

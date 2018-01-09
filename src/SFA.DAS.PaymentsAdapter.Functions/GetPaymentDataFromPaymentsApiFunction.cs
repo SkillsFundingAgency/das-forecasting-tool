@@ -13,7 +13,7 @@ namespace SFA.DAS.PaymentsAdapter.Functions
     {
         [FunctionName("GetPaymentDataFromPaymentsApiFunction")]
         public static async Task Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer,
-            [Queue("payments-adapter-publish-payment")] ICollector<PaymentMessage> payments,
+            [Queue("payments-adapter-publish-payment")] ICollector<PaymentEvent> payments,
             TraceWriter traceWriter)
         {
             // ToDo: What do we do with the init round? About 2 million record currently.

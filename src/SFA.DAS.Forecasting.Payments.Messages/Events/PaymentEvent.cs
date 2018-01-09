@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Forecasting.Payments.Messages.Events
 {
-    public class PaymentMessage
+    public class PaymentEvent
     {
         public string Id { get; set; }
         public string EmployerAccountId { get; set; }
