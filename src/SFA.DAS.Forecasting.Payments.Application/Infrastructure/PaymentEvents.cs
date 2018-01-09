@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Payments.Application.Infrastructure;
+using SFA.DAS.Forecasting.Payments.Application.Infrastructure.Models;
 using SFA.DAS.Forecasting.Payments.Domain.Entities;
 using SFA.DAS.Forecasting.Payments.Domain.Interfaces;
 using SFA.DAS.Forecasting.Payments.Messages.Events;
 using SFA.DAS.Provider.Events.Api.Client;
 
-namespace SFA.DAS.PaymentsAdapter.Functions.Infrastructure
+namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 {
     public class PaymentEvents : IPaymentEvents
     {
@@ -30,7 +29,7 @@ namespace SFA.DAS.PaymentsAdapter.Functions.Infrastructure
             {
                 var result = await _client.GetPayments(page: info.PageNumber + 1);
 
-                await _table.Insert(new Models.Info { PageNumber = result.PageNumber });
+                await _table.Insert(new Info { PageNumber = result.PageNumber });
                 return result.Items.Select(MapToPaymentMessage);
             }
             

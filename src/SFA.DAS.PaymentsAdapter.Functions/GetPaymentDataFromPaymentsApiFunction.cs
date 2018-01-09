@@ -2,9 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Payments.Application.Infrastructure;
 using SFA.DAS.Forecasting.Payments.Domain.Entities;
 using SFA.DAS.Forecasting.Payments.Messages.Events;
-using SFA.DAS.PaymentsAdapter.Functions.Infrastructure;
 
 namespace SFA.DAS.PaymentsAdapter.Functions
 {
