@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Messaging.POC;
 using SFA.DAS.Provider.Events.Api.Types;
 
 namespace SFA.DAS.PaymentsAdapter.Functions
@@ -13,6 +14,9 @@ namespace SFA.DAS.PaymentsAdapter.Functions
             TraceWriter traceWriter)
         {
             traceWriter.Info($"Now publishing payment: {payment.Id}, employer: {payment.EmployerAccountId}.");
+            var publisher = Ioc.Container.GetInstance<IMessagePublisher>();
+            publisher.Publish(payment);
+            traceWriter.Info($"Finished publishing payment data. {payment.Id}, employer: {payment.EmployerAccountId}");
         }
     }
 }
