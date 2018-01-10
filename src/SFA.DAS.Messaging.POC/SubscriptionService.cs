@@ -8,7 +8,7 @@ namespace SFA.DAS.Messaging.POC
 {
     public interface ISubscriptionService
     {
-        Task AddSubscription<T>(string queue);
+        Task AddSubscription<T>(string queue, string storageAccount);
         Task<List<Subscription>> GetSubscriptions<T>();
     }
 
@@ -20,7 +20,7 @@ namespace SFA.DAS.Messaging.POC
             SubscriptionsTable = cloudTableClient?.GetTableReference("MessageSubscriptions") ?? throw new ArgumentNullException(nameof(cloudTableClient));
         }
 
-        public async Task AddSubscription<T>(string queue)
+        public async Task AddSubscription<T>(string queue, string storageAccount)
         {
             await SubscriptionsTable.CreateIfNotExistsAsync();
             await SubscriptionsTable.ExecuteAsync(
