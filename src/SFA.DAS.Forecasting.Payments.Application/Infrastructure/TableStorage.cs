@@ -21,6 +21,7 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 
         public async Task<Info> GetLatestInfo()
         {
+            await _table.CreateIfNotExistsAsync();
             var io = TableOperation.Retrieve<Info>(PartitionKey, RowKey);
             var result = await _table.ExecuteAsync(io);
             if (result.Result != null)
