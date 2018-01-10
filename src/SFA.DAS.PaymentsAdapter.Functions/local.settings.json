@@ -4,8 +4,8 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "StorageConnectionString": "UseDevelopmentStorage=true",
-    "PaymentsApiBaseUrl": "http://das-at-papi-cs.cloudapp.net",
-    "PaymentsApiToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoiUmVhZERhdGFMb2NrIFJlYWRQYXltZW50cyBSZWFkU3VibWlzc2lvbnMiLCJpc3MiOiJodHRwOi8vZGFzLWF0LXBhcGktY3MuY2xvdWRhcHAubmV0IiwiYXVkIjoiaHR0cHM6Ly9hdC1lYXMuYXBwcmVudGljZXNoaXBzLnNmYS5iaXMuZ292LnVrIiwiZXhwIjoxNTI5NjYzNjYxLCJuYmYiOjE0OTgxMjc2NjF9.1Zps9C0VFMDCb9uQ-pgMa7L1Gy3xHQt38DagV8Kh4jw"
+    "PaymentsApiBaseUrl": "",
+    "PaymentsApiToken": ""
   },
   "http": {
     "maxOutstandingRequests": 1,

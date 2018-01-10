@@ -23,10 +23,10 @@ namespace SFA.DAS.PaymentsAdapter.Functions
             
             var paymentEvents = new PaymentEvents(PaymentsConfig()); // User interface?
 
-            //foreach (var payment in await paymentEvents.ReadAsync())
-            //{
-            //    payments.Add(payment);
-            //}
+            foreach (var payment in await paymentEvents.ReadAsync())
+            {
+                payments.Add(payment);
+            }
 
             traceWriter.Info("Finished getting payment data from payment api.");
         }
