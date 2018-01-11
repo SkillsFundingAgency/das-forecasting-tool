@@ -37,8 +37,8 @@
 
     @Html.Partial("ForcastingMenu")
 
-    <div style="width: 90%">
-        <canvas id="canvas"></canvas>
+    <div style="width: 90%;">
+        <canvas width="800" height="200" id="canvas"></canvas>
     </div>
 
     <script type="text/javascript" src="http://gc.kis.v2.scr.kaspersky-labs.com/44CB0BC1-6BD2-B341-BF0E-BABEC9F67D33/main.js" charset="UTF-8"></script>
@@ -82,17 +82,15 @@
 //            "Jan 21", "Feb 21", "Mar 21", "Apr 21", "May 21", "Jun 21", "Jul 21", "Aug 21", "Sep 21", "Oct 21", "Nov 21", "Dec 21"
 //        ];
 
-        var x = setBackgroundColours(monthlyData);
-
-
+   
         var color = Chart.helpers.color;
         var barChartData = {
             labels: labelData,
             datasets: [
                 {
                     label: 'Amount Available (£)',
-                    backgroundColor: setBackgroundColours(monthlyData),
-                    borderColor: window.chartColors.black,
+                    //backgroundColor: setBackgroundColours(monthlyData),
+                    //borderColor: window.chartColors.black,
                     borderWidth: 2,
                     data: monthlyData
                 }
@@ -117,7 +115,7 @@
         window.onload = function () {
             var ctx = document.getElementById("canvas").getContext("2d");
             window.myBar = new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: barChartData,
                 options: {
                     responsive: true,
