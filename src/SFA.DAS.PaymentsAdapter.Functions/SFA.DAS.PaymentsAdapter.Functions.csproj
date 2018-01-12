@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
+    <PackageReference Include="SFA.DAS.Provider.Events.Api.Client" Version="2.0.0.40478" />
+    <PackageReference Include="StructureMap" Version="4.5.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Domain\SFA.DAS.Forecasting.Payments.Domain.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Messages\SFA.DAS.Forecasting.Payments.Messages.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Messaging.POC\SFA.DAS.Messaging.POC.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>

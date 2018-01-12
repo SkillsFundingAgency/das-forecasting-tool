@@ -58,6 +58,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
+      <Project>{b6b0820b-097f-4938-a1d4-fe92f3a1308f}</Project>
+      <Name>SFA.DAS.Forecasting.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Messages\SFA.DAS.Forecasting.Payments.Messages.csproj">
       <Project>{7D24810E-D721-42BD-BA74-95E9E2CC982A}</Project>
       <Name>SFA.DAS.Forecasting.Payments.Messages</Name>
