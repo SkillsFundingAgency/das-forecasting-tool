@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "StorageConnectionString": "UseDevelopmentStorage=true",
+    "PaymentsApiBaseUrl": "",
+    "PaymentsApiToken": "",
+    "Environment": "DEV"
+  },
+  "http": {
+    "maxOutstandingRequests": 1,
+    "maxConcurrentRequests": 10
+  }
+}
