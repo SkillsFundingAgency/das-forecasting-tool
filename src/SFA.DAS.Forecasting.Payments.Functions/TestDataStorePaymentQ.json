@@ -1,0 +1,14 @@
+﻿{
+  "EmployerAccountId": "123456",
+  "Uln": "1234567890",
+  "FrameworkCode": 550,
+  "ProgrammeType": 20,
+  "PathwayCode": 6,
+  "StandardCOde":  0,
+  "EarningDetails": {
+    "StartDate": "2017-08-01",
+    "MonthlyPayment": "50",
+    "TotalInstallments": 18,
+    "CompletionPayment": "250"
+  }
+}

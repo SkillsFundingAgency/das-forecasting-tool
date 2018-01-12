@@ -34,6 +34,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             {
                 EmployerAccountId = long.Parse(payment.EmployerAccountId),
                 Name = "Gustav",
+                Uln = payment.Uln,
                 DateOfBirth = new DateTime(1998, 12, 08),
                 TrainingName = "Code manager",
                 TrainingLevel = 2,

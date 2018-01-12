@@ -14,5 +14,6 @@ namespace SFA.DAS.Forecasting.Payments.Domain.Entities
         public decimal MonthlyPayment { get; set; }
         public int Instalments { get; set; }
         public decimal CompletionPayment { get; set; }
+        public long Uln { get; set; }
     }
 }
