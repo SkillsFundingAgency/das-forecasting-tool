@@ -1,9 +1,9 @@
 {
     "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "StorageConnectionString": "UseDevelopmentStorage=true",
-    "DbConnectionString": "Data Source=(localdb)\\ProjectsV13;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Pooling=False;Connect Timeout=30"
+    "Values": {
+      "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+      "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+      "StorageConnectionString": "UseDevelopmentStorage=true",
+      "DbConnectionString": "Data Source=(localdb)\\ProjectsV13;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Pooling=False;Connect Timeout=30"
   }
 }

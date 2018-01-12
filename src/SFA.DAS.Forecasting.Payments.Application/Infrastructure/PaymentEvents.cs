@@ -1,14 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Payments.Application.Infrastructure.Models;
 using SFA.DAS.Forecasting.Payments.Domain.Entities;
 using SFA.DAS.Forecasting.Payments.Domain.Interfaces;
 using SFA.DAS.Forecasting.Payments.Messages.Events;
 using SFA.DAS.Provider.Events.Api.Client;
 
-namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
-{
+namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure{
+    public class DevPaymentEvents : IPaymentEvents
+    {
+        public Task<IEnumerable<PaymentEvent>> ReadAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     public class PaymentEvents : IPaymentEvents
     {
         private PaymentsEventsApiClient _client;
@@ -29,7 +35,7 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
             {
                 var result = await _client.GetPayments(page: info.PageNumber + 1);
 
-                await _table.Insert(new Info { PageNumber = result.PageNumber });
+                await _table.Insert(new Models.Info { PageNumber = result.PageNumber });
                 return result.Items.Select(MapToPaymentMessage);
             }
             
@@ -55,15 +61,5 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 
             };
         }
-
-        //public async Task<IEnumerable<PaymentEvent>> ReadAsync()
-        //{
-        //    var l = new List<PaymentEvent> {
-        //        new PaymentEvent { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "12345"},
-        //        new PaymentEvent { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "ABCDE" }
-        //    };
-
-        //    return await Task.FromResult(l);
-        //}
     }
 }
