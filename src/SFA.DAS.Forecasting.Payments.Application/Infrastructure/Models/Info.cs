@@ -6,4 +6,9 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure.Models
     {
         public int PageNumber { get; set; }
     }
+
+    public class TableRow : TableEntity
+    {
+        public string Data { get; set; }
+    }
 }
