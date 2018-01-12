@@ -8,15 +8,6 @@ using SFA.DAS.Provider.Events.Api.Client;
 
 namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 {
-
-    public class DevPaymentEvents : IPaymentEvents
-    {
-        public Task<IEnumerable<PaymentMessage>> ReadAsync()
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     public class PaymentEvents : IPaymentEvents
     {
         private PaymentsEventsApiClient _client;
@@ -60,7 +51,6 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
                 PathwayCode = payment.PathwayCode,
 
                 Amount = payment.Amount
-
             };
         }
 

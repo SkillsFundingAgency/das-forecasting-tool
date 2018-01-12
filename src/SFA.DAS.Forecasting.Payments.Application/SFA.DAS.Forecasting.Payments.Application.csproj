@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\DevPaymentEvents.cs" />
     <Compile Include="Infrastructure\Models\Info.cs" />
     <Compile Include="Infrastructure\PaymentEvents.cs" />
     <Compile Include="Infrastructure\TableStorage.cs" />

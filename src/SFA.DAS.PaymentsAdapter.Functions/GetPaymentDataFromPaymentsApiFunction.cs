@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Payments.Messages.Events;
 using SFA.DAS.Forecasting.Payments.Application.Infrastructure;
 using SFA.DAS.Forecasting.Payments.Domain.Entities;
+using SFA.DAS.Forecasting.Payments.Domain.Interfaces;
 
 namespace SFA.DAS.PaymentsAdapter.Functions
 {
@@ -19,10 +20,7 @@ namespace SFA.DAS.PaymentsAdapter.Functions
             // ToDo: What do we do with the init round? About 2 million record currently.
             traceWriter.Info($"Getting payment data from payment api. Date: {DateTime.Now}");
 
-            var url = Environment.GetEnvironmentVariable("PaymentsApiBaseUrl", EnvironmentVariableTarget.Process);
-            
-
-            var paymentEvents = new PaymentEvents(PaymentsConfig()); // User interface?
+            var paymentEvents = Ioc.Container.GetInstance<IPaymentEvents>();
 
             foreach (var payment in await paymentEvents.ReadAsync())
             {

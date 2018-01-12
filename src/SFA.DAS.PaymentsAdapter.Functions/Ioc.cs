@@ -15,7 +15,11 @@ namespace SFA.DAS.PaymentsAdapter.Functions
                 lock (LockObject)
                 {
                     if (container == null)
-                        container = new Container(c => c.AddRegistry(new MessagingRegistry()));
+                        container = new Container(c =>
+                        {
+                            c.AddRegistry(new MessagingRegistry());
+                            c.AddRegistry(new Infrastructure.DefaultRegistry());
+                        });
                 }
 
                 return container;
