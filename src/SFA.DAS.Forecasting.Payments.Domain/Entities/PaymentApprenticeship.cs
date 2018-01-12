@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.Domain.Entities
+namespace SFA.DAS.Forecasting.Payments.Domain.Entities
 {
-    public class Apprenticeship
+    public class PaymentApprenticeship
     {
         public long EmployerAccountId { get; set; }
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public int TrainingName { get; set; }
+        public string TrainingName { get; set; }
         public int TrainingLevel { get; set; }
         public string TrainingProviderName { get; set; }
         public DateTime StartDate { get; set; }
