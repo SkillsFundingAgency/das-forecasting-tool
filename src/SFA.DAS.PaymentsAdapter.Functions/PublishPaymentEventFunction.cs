@@ -10,7 +10,7 @@ namespace SFA.DAS.PaymentsAdapter.Functions
     {
         [FunctionName("PublishPaymentEventFunction")]
         public static void Run(
-            [QueueTrigger("payments-adapter-publish-payment")]Payment payment,
+            [QueueTrigger(QueueNames.PublishPaymentEvent)]Payment payment,
             TraceWriter traceWriter)
         {
             traceWriter.Info($"Now publishing payment: {payment.Id}, employer: {payment.EmployerAccountId}.");

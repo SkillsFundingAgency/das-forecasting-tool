@@ -5,11 +5,13 @@
   <ItemGroup>    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.2" />    
     <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />    
-    <PackageReference Include="SFA.DAS.Sql.Client" Version="1.0.0.44965" />
+    <PackageReference Include="SFA.DAS.Sql.Client" Version="1.0.0.44965" />    
+    <PackageReference Include="StructureMap" Version="4.5.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Messages\SFA.DAS.Forecasting.Payments.Messages.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Messaging.POC\SFA.DAS.Messaging.POC.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

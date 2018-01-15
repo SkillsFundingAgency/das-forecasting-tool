@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     public static class StorePayment
     {
         [FunctionName("StorePayment")]
-        public static async Task Run([QueueTrigger("valid-payments-items")]PaymentEvent payment, TraceWriter log)
+        public static async Task Run([QueueTrigger(QueueNames.StorePaymentEvent)]PaymentEvent payment, TraceWriter log)
         {
             log.Info($"Storing payment to database");
 
