@@ -10,16 +10,17 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
     {
         public async Task<IEnumerable<PaymentEvent>> ReadAsync()
         {
+            var apprenticeshipId = new Random(Guid.NewGuid().GetHashCode()).Next(1, 5);
             var payments = new List<PaymentEvent> {
                 new PaymentEvent
                 {
                     Id = Guid.NewGuid().ToString("N"),
                     EmployerAccountId = "12345",
                     Ukprn = 1234,
-                    ApprenticeshipId = 1,
-                    Uln = 345,
+                    ApprenticeshipId = apprenticeshipId,
+                    Uln = apprenticeshipId*10,
                     StandardCode = 1,
-                    Amount =  new Random(Guid.NewGuid().GetHashCode()).Next(100,500)
+                    Amount =  apprenticeshipId*100
                 }
             };
 
