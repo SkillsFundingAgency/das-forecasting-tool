@@ -8,6 +8,8 @@ using SFA.DAS.Provider.Events.Api.Client;
 
 namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 {
+
+
     public class PaymentEvents : IPaymentEvents
     {
         private PaymentsEventsApiClient _client;
@@ -21,23 +23,23 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
             _config = config;
         }
 
-        public async Task<IEnumerable<PaymentMessage>> ReadAsync()
+        public async Task<IEnumerable<PaymentEvent>> ReadAsync()
         {
             var info = await _table.GetLatestInfo();
             if (info.PageNumber <= _config.MaxPages)
             {
                 var result = await _client.GetPayments(page: info.PageNumber + 1);
 
-                await _table.Insert(new PaymentsAdapter.Functions.Infrastructure.Models.Info { PageNumber = result.PageNumber });
+                await _table.Insert(new Models.Info { PageNumber = result.PageNumber });
                 return result.Items.Select(MapToPaymentMessage);
             }
-            
-            return new List<PaymentMessage>();
+
+            return new List<PaymentEvent>();
         }
 
-        private PaymentMessage MapToPaymentMessage(Provider.Events.Api.Types.Payment payment)
+        private PaymentEvent MapToPaymentMessage(Provider.Events.Api.Types.Payment payment)
         {
-            return new PaymentMessage
+            return new PaymentEvent
             {
                 Id = payment.Id,
                 EmployerAccountId = payment.EmployerAccountId,
@@ -53,15 +55,5 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
                 Amount = payment.Amount
             };
         }
-
-        //public async Task<IEnumerable<PaymentMessage>> ReadAsync()
-        //{
-        //    var l = new List<PaymentMessage> {
-        //        new PaymentMessage { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "12345"},
-        //        new PaymentMessage { Id = Guid.NewGuid().ToString("N"), EmployerAccountId = "ABCDE" }
-        //    };
-
-        //    return await Task.FromResult(l);
-        //}
     }
 }

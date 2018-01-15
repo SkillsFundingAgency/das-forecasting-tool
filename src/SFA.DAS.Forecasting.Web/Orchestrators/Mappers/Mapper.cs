@@ -26,10 +26,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
         {
             return new ApprenticeshipViewModel
             {
-                Name = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+                Name = apprenticeship.Name,
                 StartDate = apprenticeship.StartDate,
                 MonthlyPayment = apprenticeship.MonthlyPayment,
-                TotalInstallments = apprenticeship.TotalInstallments,
+                TotalInstallments = apprenticeship.Instalments,
                 CompletionPayment = apprenticeship.CompletionPayment
             };
         }

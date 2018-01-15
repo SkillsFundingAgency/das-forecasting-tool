@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\PaymentApprenticeship.cs" />
     <Compile Include="Entities\PaymentEventsApiConfig.cs" />
     <Compile Include="Interfaces\IPaymentEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

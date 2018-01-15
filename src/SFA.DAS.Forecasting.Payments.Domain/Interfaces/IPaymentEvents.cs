@@ -6,6 +6,6 @@ namespace SFA.DAS.Forecasting.Payments.Domain.Interfaces
 {
     public interface IPaymentEvents
     {
-        Task<IEnumerable<PaymentMessage>> ReadAsync();
+        Task<IEnumerable<PaymentEvent>> ReadAsync();
     }
 }

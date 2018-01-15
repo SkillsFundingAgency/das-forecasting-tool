@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web", "SFA.DAS.Forecasting.Web\SFA.DAS.Forecasting.Web.csproj", "{DEC16FDF-5394-4137-8C67-21414ED636EB}"
 EndProject
@@ -34,9 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.PaymentsAdapter.Fun
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Messaging.POC", "SFA.DAS.Messaging.POC\SFA.DAS.Messaging.POC.csproj", "{720E75F0-39B8-4434-9FAE-F9BD9A398DEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{72C7A2E0-E8C8-40F5-9C64-B1F52B08977F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Messages", "SFA.DAS.Forecasting.Payments.Messages\SFA.DAS.Forecasting.Payments.Messages.csproj", "{7D24810E-D721-42BD-BA74-95E9E2CC982A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{8D539B2C-B828-400F-AC5E-5A41617AF1B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,14 +94,14 @@ Global
 		{720E75F0-39B8-4434-9FAE-F9BD9A398DEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{720E75F0-39B8-4434-9FAE-F9BD9A398DEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720E75F0-39B8-4434-9FAE-F9BD9A398DEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72C7A2E0-E8C8-40F5-9C64-B1F52B08977F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72C7A2E0-E8C8-40F5-9C64-B1F52B08977F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72C7A2E0-E8C8-40F5-9C64-B1F52B08977F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72C7A2E0-E8C8-40F5-9C64-B1F52B08977F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D24810E-D721-42BD-BA74-95E9E2CC982A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D539B2C-B828-400F-AC5E-5A41617AF1B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D539B2C-B828-400F-AC5E-5A41617AF1B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D539B2C-B828-400F-AC5E-5A41617AF1B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D539B2C-B828-400F-AC5E-5A41617AF1B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,8 +114,8 @@ Global
 		{5D623524-911F-4652-B7F1-42028A1051ED} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 		{DEDA2AEE-C945-4810-BF9E-FF774795FF0B} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 		{720E75F0-39B8-4434-9FAE-F9BD9A398DEF} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
-		{72C7A2E0-E8C8-40F5-9C64-B1F52B08977F} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 		{7D24810E-D721-42BD-BA74-95E9E2CC982A} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
+		{8D539B2C-B828-400F-AC5E-5A41617AF1B2} = {D4DBF553-4EA6-4853-A238-A8DC349CEE36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89553F32-71A1-4EE1-8BD1-BC5BCC7E5E70}

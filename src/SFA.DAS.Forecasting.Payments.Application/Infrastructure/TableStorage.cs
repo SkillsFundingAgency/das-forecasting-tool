@@ -1,7 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
-using SFA.DAS.PaymentsAdapter.Functions.Infrastructure.Models;
-using System;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Payments.Application.Infrastructure.Models;
 
 namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 {
