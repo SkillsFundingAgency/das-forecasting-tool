@@ -52,7 +52,8 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
                 FrameworkCode = payment.FrameworkCode,
                 PathwayCode = payment.PathwayCode,
 
-                Amount = payment.Amount
+                Amount = payment.Amount,
+                
             };
         }
     }

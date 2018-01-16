@@ -10,6 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Domain\SFA.DAS.Forecasting.Payments.Domain.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Messages\SFA.DAS.Forecasting.Payments.Messages.csproj" />
     <ProjectReference Include="..\SFA.DAS.Messaging.POC\SFA.DAS.Messaging.POC.csproj" />
   </ItemGroup>

@@ -16,5 +16,6 @@
         public decimal Amount { get; set; }
         public int? PathwayCode { get; set; }
         public EarningDetails EarningDetails { get; set; }
+        public CollectionPeriod CollectionPeriod { get; set; }
     }
 }

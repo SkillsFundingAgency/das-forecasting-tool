@@ -20,7 +20,23 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
                     ApprenticeshipId = apprenticeshipId,
                     Uln = apprenticeshipId*10,
                     StandardCode = 1,
-                    Amount =  apprenticeshipId*100
+                    Amount =  80,
+                    EarningDetails = new EarningDetails
+                    {
+                        RequiredPaymentId = Guid.NewGuid(),
+                        ActualEndDate = new DateTime(0001,1,1,0,0,0),
+                        PlannedEndDate = DateTime.Today.AddMonths(10),
+                        CompletionAmount = 240,
+                        MonthlyInstallment = 80,
+                        StartDate = DateTime.Today.AddMonths(-2),
+                        TotalInstallments = 12
+                    },
+                    CollectionPeriod = new CollectionPeriod
+                    {
+                        Id = "17/18-R01",
+                        Month = DateTime.Today.Month,
+                        Year = DateTime.Today.Year
+                    }
                 }
             };
 

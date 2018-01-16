@@ -18,7 +18,6 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                         container = new Container(c =>
                         {
                             c.AddRegistry(new MessagingRegistry());
-                            
                         });
                 }
 

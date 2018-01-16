@@ -22,11 +22,13 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
 
         public async Task StorePayment(PaymentEvent payment)
         {
-            var data = new TableRow();
-            data.PartitionKey = PartitionKey;
-            data.RowKey = payment.Id;
-            data.Data = JsonConvert.SerializeObject(payment);
-            
+            var data = new TableRow
+            {
+                PartitionKey = PartitionKey,
+                RowKey = payment.Id,
+                Data = JsonConvert.SerializeObject(payment)
+            };
+
             var op = TableOperation.InsertOrReplace(data);
             await _table.ExecuteAsync(op);
         }

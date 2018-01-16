@@ -1,15 +1,16 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
+using SFA.DAS.Forecasting.Payments.Domain.Apprenticeships;
 using SFA.DAS.Forecasting.Payments.Domain.Entities;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 
-namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
+namespace SFA.DAS.Forecasting.Payments.Application.Apprenticeships
 {
-    public class PaymentDbRepository : BaseRepository
+    public class ApprenticeshipRepository : BaseRepository, IApprenticeshipRepository
     {
-        public PaymentDbRepository(string databaseConnectionString, ILog logger)
-            : base(databaseConnectionString, logger)
+        public ApprenticeshipRepository(string databaseConnectionString)
+            : base(databaseConnectionString, new SFA.DAS.NLog.Logger.NLogLogger())
         {
         }
 
