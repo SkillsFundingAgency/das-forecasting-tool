@@ -1,4 +1,5 @@
 ﻿using StructureMap;
+using System;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
 {
@@ -13,6 +14,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                 return container ?? (container = new Container(c =>
                 {
                     c.Scan(o => {
+                        o.AssembliesFromPath(Environment.CurrentDirectory);
                         o.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith("SFA.DAS"));
                         o.RegisterConcreteTypesAgainstTheFirstInterface();
                     });

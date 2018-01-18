@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
-using SFA.DAS.Forecasting.Levy.Application;
-using SFA.DAS.Forecasting.Levy.Domain;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
 
@@ -20,9 +18,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 using (container.GetNestedContainer())
                 {
                     container.Configure(c =>c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType)));
-                    
-                    // Is there a way to not reference the Domain and Application?
-                    container.Configure(c => c.For<ILevyWorker>().Use<LevyWorker>());
                     await runAction(container);
                 }
             }

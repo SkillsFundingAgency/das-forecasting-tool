@@ -98,15 +98,5 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Levy\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj">
-      <Project>{46bf78f3-b921-42e9-8272-4ccf443abfe4}</Project>
-      <Name>SFA.DAS.Forecasting.Levy.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Levy\SFA.DAS.Forecasting.Levy.Domain\SFA.DAS.Forecasting.Levy.Domain.csproj">
-      <Project>{da28f7bf-60fd-43af-92fc-1e314e647689}</Project>
-      <Name>SFA.DAS.Forecasting.Levy.Domain</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
