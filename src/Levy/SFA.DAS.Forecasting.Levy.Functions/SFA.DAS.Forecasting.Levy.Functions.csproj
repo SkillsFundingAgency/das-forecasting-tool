@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
+    <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />
+    <PackageReference Include="StructureMap" Version="4.5.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Domain\SFA.DAS.Forecasting.Levy.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="host.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+</Project>
