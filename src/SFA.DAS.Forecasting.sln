@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web", "SFA.DAS.Forecasting.Web\SFA.DAS.Forecasting.Web.csproj", "{DEC16FDF-5394-4137-8C67-21414ED636EB}"
 EndProject
@@ -23,13 +23,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.Acc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Levy", "Levy", "{C85801B7-AAD9-4568-AC6F-01F918EAD7C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Levy.Functions", "Levy\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj", "{B496FDBD-F723-4EA2-B380-5DFFF9F09A4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Levy.Functions", "Levy\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj", "{B496FDBD-F723-4EA2-B380-5DFFF9F09A4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Levy.Application", "Levy\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj", "{46BF78F3-B921-42E9-8272-4CCF443ABFE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Levy.Domain", "Levy\SFA.DAS.Forecasting.Levy.Domain\SFA.DAS.Forecasting.Levy.Domain.csproj", "{DA28F7BF-60FD-43AF-92FC-1E314E647689}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Functions.Framework", "SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj", "{C6C44EF9-7599-49EB-958D-00681B642C9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Levy.UnitTests", "SFA.DAS.Forecasting.Levy.UnitTests\SFA.DAS.Forecasting.Levy.UnitTests.csproj", "{8DE4E924-D70F-4EDF-A9C7-68DA4267F5CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Core", "SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj", "{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payments", "Payments", "{BAE111DC-C72A-46BD-9D2A-5E55AD3E4A9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Domain", "SFA.DAS.Forecasting.Payments.Domain\SFA.DAS.Forecasting.Payments.Domain.csproj", "{02119BA0-EDA4-422E-9CFD-DCA3E39CE556}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Application", "SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj", "{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.UnitTests", "SFA.DAS.Forecasting.Payments.UnitTests\SFA.DAS.Forecasting.Payments.UnitTests.csproj", "{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +99,26 @@ Global
 		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE4E924-D70F-4EDF-A9C7-68DA4267F5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE4E924-D70F-4EDF-A9C7-68DA4267F5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE4E924-D70F-4EDF-A9C7-68DA4267F5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE4E924-D70F-4EDF-A9C7-68DA4267F5CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02119BA0-EDA4-422E-9CFD-DCA3E39CE556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02119BA0-EDA4-422E-9CFD-DCA3E39CE556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02119BA0-EDA4-422E-9CFD-DCA3E39CE556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02119BA0-EDA4-422E-9CFD-DCA3E39CE556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +130,10 @@ Global
 		{B496FDBD-F723-4EA2-B380-5DFFF9F09A4E} = {C85801B7-AAD9-4568-AC6F-01F918EAD7C0}
 		{46BF78F3-B921-42E9-8272-4CCF443ABFE4} = {C85801B7-AAD9-4568-AC6F-01F918EAD7C0}
 		{DA28F7BF-60FD-43AF-92FC-1E314E647689} = {C85801B7-AAD9-4568-AC6F-01F918EAD7C0}
+		{8DE4E924-D70F-4EDF-A9C7-68DA4267F5CE} = {C85801B7-AAD9-4568-AC6F-01F918EAD7C0}
+		{02119BA0-EDA4-422E-9CFD-DCA3E39CE556} = {BAE111DC-C72A-46BD-9D2A-5E55AD3E4A9C}
+		{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9} = {BAE111DC-C72A-46BD-9D2A-5E55AD3E4A9C}
+		{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65} = {BAE111DC-C72A-46BD-9D2A-5E55AD3E4A9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89553F32-71A1-4EE1-8BD1-BC5BCC7E5E70}

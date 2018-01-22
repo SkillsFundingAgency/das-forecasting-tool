@@ -56,13 +56,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Messages\LevyDeclarationEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\LevyDeclarationEventValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Infrastructure\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
+      <Project>{426ce92a-1acb-4ffe-adb2-5b49484f33ca}</Project>
+      <Name>SFA.DAS.Forecasting.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Domain\SFA.DAS.Forecasting.Levy.Domain.csproj">
       <Project>{DA28F7BF-60FD-43AF-92FC-1E314E647689}</Project>
       <Name>SFA.DAS.Forecasting.Levy.Domain</Name>

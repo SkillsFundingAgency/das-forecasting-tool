@@ -8,6 +8,7 @@
     <PackageReference Include="StructureMap" Version="4.5.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj" />
     <ProjectReference Include="..\..\SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Domain\SFA.DAS.Forecasting.Levy.Domain.csproj" />
