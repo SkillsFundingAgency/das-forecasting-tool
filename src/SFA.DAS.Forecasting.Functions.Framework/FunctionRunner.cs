@@ -6,6 +6,7 @@ using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
+using SFA.DAS.Forecasting.Levy.Domain;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
 
@@ -17,6 +18,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             try
             {
+                FunctionRunner.SetUpConfiguration<IConfig, Config>(typeof(TFunction).Namespace?.Replace(".Functions",string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {

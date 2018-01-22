@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         {
             try
             {
-                FunctionRunner.SetUpConfiguration<IConfig, Config>("SFA.DAS.Forecasting.Levy");
+                //FunctionRunner.SetUpConfiguration<IConfig, Config>("SFA.DAS.Forecasting.Levy");
                 await FunctionRunner.Run<TestFunction>(log, async container => {
                     var logger = container.GetInstance<ILog>();
                     var config = container.GetInstance<IConfig>();
