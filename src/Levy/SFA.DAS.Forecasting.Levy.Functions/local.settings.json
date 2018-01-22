@@ -1,0 +1,12 @@
+{
+    "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "StorageConnectionString": "UseDevelopmentStorage=true",
+    "ConnectionStringKey": "localhost",
+    "EnvironmentKey": "LOCAL",
+    "LoggingRedisKey": "logstash",
+    "EnvironmentName":  "LOCAL"
+  }
+}
