@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.Acc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Levy", "Levy", "{C85801B7-AAD9-4568-AC6F-01F918EAD7C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Levy.Functions", "Levy\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj", "{B496FDBD-F723-4EA2-B380-5DFFF9F09A4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Levy.Functions", "Levy\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj", "{B496FDBD-F723-4EA2-B380-5DFFF9F09A4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Levy.Application", "Levy\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj", "{46BF78F3-B921-42E9-8272-4CCF443ABFE4}"
 EndProject

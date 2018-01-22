@@ -13,15 +13,26 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         [FunctionName("TestFunction")]
         public static async Task Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer, TraceWriter log)
         {
-            await FunctionRunner.Run<TestFunction>(log, async container => {
-                var logger = container.GetInstance<ILog>();
-                logger.Info("Hej info");
-                logger.Trace("Hej Trace");
-                logger.Warn("Hej Warn");
-                logger.Error(new Exception(), "Hej Error");
-                var service = container.GetInstance<ILevyWorker>();
-                await service.Run();
-            });
+            try
+            {
+                FunctionRunner.SetUpConfiguration<IConfig, Config>("SFA.DAS.Forecasting.Levy");
+                await FunctionRunner.Run<TestFunction>(log, async container => {
+                    var logger = container.GetInstance<ILog>();
+                    var config = container.GetInstance<IConfig>();
+                    logger.Info("Hej info");
+                    logger.Trace("Hej Trace");
+                    logger.Warn("Hej Warn");
+                    logger.Error(new Exception(), "Hej Error");
+
+                    var service = container.GetInstance<ILevyWorker>();
+                    await service.Run();
+                });
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
             log.Info($"C# Timer trigger function executed at: {DateTime.Now}");
         }

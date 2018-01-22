@@ -18,8 +18,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                         o.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith("SFA.DAS"));
                         o.RegisterConcreteTypesAgainstTheFirstInterface();
                     });
-                    //c.AddRegistry<DefaultRegistry>();
-                    //c.AddRegistry<MessagingRegistry>();
                 }));
             }
         }
