@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Entities\LevyDeclaration.cs" />
     <Compile Include="Aggregates\EmployerLevy.cs" />
+    <Compile Include="IConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IEmployerLevyRepository.cs" />
     <Compile Include="Services\ILevyPeriodService.cs" />

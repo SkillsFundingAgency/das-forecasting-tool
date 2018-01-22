@@ -1,8 +1,6 @@
 ﻿using Microsoft.Azure.WebJobs.Host;
 using NLog;
-using NLog.Common;
 using NLog.Config;
-using NLog.Targets;
 using SFA.DAS.NLog.Logger;
 using System;
 
@@ -25,38 +23,15 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             LogManager.Configuration = config;
         }
 
-        private static void UseFileLogging()
+        internal static NLogLogger Create(TraceWriter writer, Type type)
         {
-            var targetName = "Disk";
-            var config = LogManager.Configuration ?? new LoggingConfiguration();
-            var fileTarget = new FileTarget(targetName);
-            config.AddTarget(targetName, fileTarget);
-
-            fileTarget.FileName = @"${var:localdir}/logs/${shortdate}/${var:appName}.${shortdate}.log";
-            fileTarget.Layout = @"${var:simplelayout}";
-
-            var rule = new LoggingRule("*", LogLevel.Trace, fileTarget);
-            config.LoggingRules.Add(rule);
-
-            LogManager.Configuration = config;
-        }
-
-        public static NLogLogger Create(TraceWriter writer, Type type)
-        {
-            // ToDo: Move to config
-            LogManager.Configuration = new LoggingConfiguration();
-            LogManager.Configuration.Variables.Add("simplelayout", "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}} --&gt; ${all-event-properties}");
-            LogManager.Configuration.Variables.Add("appName", "das-forecasting-levy-f");
-            LogManager.Configuration.Variables.Add("localdir", "C:/temp/FAT");
-
-            InternalLogger.LogLevel = LogLevel.Debug;
-            InternalLogger.LogFile = "C:/Temp/FAT/forecasting.error.log";
-
+            LogManager.ThrowConfigExceptions = true;
             
-            var logger = new NLogLogger(type, null, null);
-
+            // Where shouuld we find the NLog.config?
+            LogManager.Configuration = new XmlLoggingConfiguration($"{Environment.CurrentDirectory}/NLog.config");
             HookNLogToAzureLog(writer);
-            UseFileLogging();
+
+            var logger = new NLogLogger(type, null, null);
 
             return logger;
         }

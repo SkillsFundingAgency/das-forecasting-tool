@@ -21,7 +21,8 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             return await FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevyDeclarationEvent>(log,
                 container =>
                 {
-                    var validationResults = container.GetInstance<LevyDeclarationEventValidator>().Validate(levyDeclarationEvent);
+                    var validationResults = container.GetInstance<LevyDeclarationEventValidator>()
+                        .Validate(levyDeclarationEvent);
                     if (validationResults?.Any() ?? false)
                     {
                         log.Warning($"Levy declaration event failed superficial validation. Event: {levyDeclarationEvent.ToJson()}");

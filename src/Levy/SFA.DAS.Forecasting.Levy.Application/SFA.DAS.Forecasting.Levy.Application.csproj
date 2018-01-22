@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Infrastructure\" />
+    <Folder Include="Reposiories\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
