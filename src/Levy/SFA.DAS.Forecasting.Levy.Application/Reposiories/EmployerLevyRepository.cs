@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Forecasting.Levy.Domain.Entities;
 using SFA.DAS.Forecasting.Levy.Domain.Repositories;
 using SFA.DAS.NLog.Logger;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Levy.Application.Reposiories
 {
@@ -13,8 +14,9 @@ namespace SFA.DAS.Forecasting.Levy.Application.Reposiories
             _logger = logger;
         }
 
-        public void StoreLevyDeclaration(LevyDeclaration levyDeclaration)
+        public async Task StoreLevyDeclaration(LevyDeclaration levyDeclaration)
         {
+
             _logger.Info("Store event");
         }
     }

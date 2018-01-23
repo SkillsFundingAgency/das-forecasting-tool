@@ -19,8 +19,8 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             LevyDeclarationEvent = new LevyDeclarationEvent
             {
                 Amount = 1000,
-                EmployerAccountId = Guid.NewGuid().ToString("N"),
-                SubmissionDate = DateTime.Today,
+                EmployerAccountId = 123456,
+                PayrollDate = DateTime.Today,
                 Scheme = "ABCD",
                 TransactionDate = DateTime.Today
             };
@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
         public void Fails_If_Employer_Account_Id_Is_Not_Populated()
         {
             var validator = new LevyDeclarationEventValidator();
-            LevyDeclarationEvent.EmployerAccountId = null;
+            LevyDeclarationEvent.EmployerAccountId = 0;
             var result = validator.Validate(LevyDeclarationEvent);
             Assert.IsNotEmpty(result);
         }
@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
         public void Fails_If_Declaration_Date_Is_Invalid()
         {
             var validator = new LevyDeclarationEventValidator();
-            LevyDeclarationEvent.SubmissionDate = new DateTime(0001, 01, 01);
+            LevyDeclarationEvent.PayrollDate = new DateTime(0001, 01, 01);
             var result = validator.Validate(LevyDeclarationEvent);
             Assert.IsNotEmpty(result);
         }
@@ -69,6 +69,17 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
         {
             var validator = new LevyDeclarationEventValidator();
             LevyDeclarationEvent.TransactionDate = new DateTime(0001, 01, 01);
+            var result = validator.Validate(LevyDeclarationEvent);
+            Assert.IsNotEmpty(result);
+        }
+
+        [Test]
+        public void Fails_If_Transaction_Date_Is_Older_Than_Two_Years()
+        {
+            var validator = new LevyDeclarationEventValidator();
+            var transactionDate = DateTime.Now.AddMonths(-26);
+
+            LevyDeclarationEvent.TransactionDate = transactionDate;
             var result = validator.Validate(LevyDeclarationEvent);
             Assert.IsNotEmpty(result);
         }
