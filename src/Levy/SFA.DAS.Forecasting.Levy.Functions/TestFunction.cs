@@ -4,28 +4,23 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Levy.Domain;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
     public class TestFunction : IFunction
     {
         [FunctionName("TestFunction")]
-        public static async Task Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer, TraceWriter log)
+        public static async Task Run([TimerTrigger("* * */5 * * *")]TimerInfo myTimer, TraceWriter log)
         {
+            return;
             try
             {
-                //FunctionRunner.SetUpConfiguration<IConfig, Config>("SFA.DAS.Forecasting.Levy");
-                await FunctionRunner.Run<TestFunction>(log, async container => {
-                    var logger = container.GetInstance<ILog>();
+                await FunctionRunner.Run<TestFunction>(log, async (container, logger) => {
                     var config = container.GetInstance<IConfig>();
                     logger.Info("Hej info");
                     logger.Trace("Hej Trace");
                     logger.Warn("Hej Warn");
                     logger.Error(new Exception(), "Hej Error");
-
-                    //var service = container.GetInstance<ILevyWorker>();
-                    //await service.Run();
                 });
 
             }

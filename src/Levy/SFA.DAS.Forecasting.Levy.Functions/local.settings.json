@@ -4,9 +4,10 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "StorageConnectionString": "UseDevelopmentStorage=true",
+    "AzureWebJobsServiceBus": "",
     "ConnectionStringKey": "localhost",
     "EnvironmentKey": "LOCAL",
     "LoggingRedisKey": "logstash",
-    "EnvironmentName":  "LOCAL"
+    "EnvironmentName": "LOCAL"
   }
 }

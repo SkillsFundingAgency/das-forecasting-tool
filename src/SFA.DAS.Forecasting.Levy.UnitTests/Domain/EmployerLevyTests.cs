@@ -13,8 +13,11 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests
     [TestFixture]
     public class EmployerLevyTests
     {
-        protected AutoMoq.AutoMoqer Moqer { get; private set; }
+        private EmployerLevy _service;
+
+        protected AutoMoqer Moqer { get; private set; }
         protected string EmployerAccountId { get; set; }
+
         [SetUp]
         public void SetUp()
         {
@@ -22,14 +25,15 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests
             EmployerAccountId = Guid.NewGuid().ToString("D");
             Moqer.GetMock<ILevyPeriodService>()
                 .Setup(svc => svc.GetCurrentPeriod()).Returns(Task.FromResult<string>("R01"));
+
+            var levyRepository = Moqer.GetMock<IEmployerLevyRepository>();
+            _service = new EmployerLevy(levyRepository.Object);
         }
 
         [Test]
         public void Stores_Valid_Levy_Declaration()
         {
-            var service = new EmployerLevy();
-
-            service.AddDeclaration(EmployerAccountId,"R01", 1000, "ABCD", DateTime.Now).Wait();
+            _service.AddDeclaration(EmployerAccountId,"R01", 1000, "ABCD", DateTime.Now).Wait();
             Moqer.GetMock<IEmployerLevyRepository>()
                 .Verify(repo => repo.StoreLevyDeclaration(It.Is<LevyDeclaration>(x => x.Amount == 1000 && x.EmployerAccountId == EmployerAccountId)));
         }
