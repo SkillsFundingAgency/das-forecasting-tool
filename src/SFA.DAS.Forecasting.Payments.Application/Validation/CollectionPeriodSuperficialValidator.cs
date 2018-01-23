@@ -8,7 +8,24 @@ namespace SFA.DAS.Forecasting.Payments.Application.Validation
     {
         public List<ValidationFailure> Validate(CollectionPeriod itemToValidate)
         {
-            throw new System.NotImplementedException();
-        }
+	        var failures = new List<ValidationFailure>();
+
+			if (string.IsNullOrWhiteSpace(itemToValidate.Id))
+	        {
+		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Id)} is missing." });
+	        }
+
+			if (itemToValidate.Month <= 0 || itemToValidate.Month >= 12)
+			{
+				failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Month)} is invalid." });
+			}
+
+	        if (itemToValidate.Year < 0)
+	        {
+		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Month)} is less than zero." });
+	        }
+
+			return failures;
+		}
     }
 }

@@ -57,9 +57,18 @@ namespace SFA.DAS.Forecasting.Payments.UnitTests.Application
 		    EarningDetails.CompletionAmount = -1;
 		    var result = validator.Validate(EarningDetails);
 		    Assert.IsNotEmpty(result);
-	    }
+		}
 
 	    [Test]
+	    public void Fails_If_Completion_Status_Is_Negative()
+	    {
+		    var validator = new EarningDetailsSuperficialValidator();
+		    EarningDetails.CompletionStatus = -1;
+		    var result = validator.Validate(EarningDetails);
+		    Assert.IsNotEmpty(result);
+	    }
+
+		[Test]
 	    public void Fails_If_Monthly_Installment_Is_Negative()
 	    {
 		    var validator = new EarningDetailsSuperficialValidator();
@@ -73,15 +82,6 @@ namespace SFA.DAS.Forecasting.Payments.UnitTests.Application
 	    {
 		    var validator = new EarningDetailsSuperficialValidator();
 		    EarningDetails.TotalInstallments = -1;
-		    var result = validator.Validate(EarningDetails);
-		    Assert.IsNotEmpty(result);
-	    }
-
-	    [Test]
-	    public void Fails_If_Completion_Status_Is_Negative()
-	    {
-		    var validator = new EarningDetailsSuperficialValidator();
-		    EarningDetails.CompletionStatus = -1;
 		    var result = validator.Validate(EarningDetails);
 		    Assert.IsNotEmpty(result);
 	    }
