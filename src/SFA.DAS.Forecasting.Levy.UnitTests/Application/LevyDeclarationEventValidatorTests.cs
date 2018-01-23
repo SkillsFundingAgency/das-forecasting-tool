@@ -1,7 +1,6 @@
 ﻿using System;
 using AutoMoq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
 using SFA.DAS.Forecasting.Levy.Application.Validation;
 

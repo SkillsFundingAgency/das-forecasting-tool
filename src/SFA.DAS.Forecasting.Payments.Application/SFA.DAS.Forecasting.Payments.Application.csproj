@@ -44,7 +44,9 @@
     <Compile Include="Messages\EarningDetails.cs" />
     <Compile Include="Messages\PaymentEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\EarningDetailsSuperficialValidator.cs" />
     <Compile Include="Validation\PaymentEventSuperficialValidator.cs" />
+    <Compile Include="Validation\CollectionPeriodSuperficialValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">

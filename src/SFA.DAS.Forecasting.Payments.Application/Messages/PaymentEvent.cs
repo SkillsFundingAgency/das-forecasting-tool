@@ -11,7 +11,7 @@
 
 		public long Ukprn { get; set; }
 
-        public long? ApprenticeshipId { get; set; }
+        public long ApprenticeshipId { get; set; }
 
 	    public decimal Amount { get; set; }
 
