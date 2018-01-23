@@ -18,9 +18,8 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                 async (container, logger) =>
                 {
                     var employerLevy = container.GetInstance<EmployerLevy>();
-                    await employerLevy.AddDeclaration(levyEvent.EmployerAccountId, "", levyEvent.Amount, levyEvent.Scheme, levyEvent.TransactionDate);
+                    await employerLevy.AddDeclaration(levyEvent.EmployerAccountId, levyEvent.PayrollDate, levyEvent.Amount, levyEvent.Scheme, levyEvent.TransactionDate);
 
-                    logger.Info("Hello world");
                     return await Task.FromResult(1);
                 });
         }
