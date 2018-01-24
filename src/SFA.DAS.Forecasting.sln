@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.UnitTests", "SFA.DAS.Forecasting.Payments.UnitTests\SFA.DAS.Forecasting.Payments.UnitTests.csproj", "{F5F03405-B98D-4D5F-B6AC-8C99C34A1F65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{4E2AC790-1A6F-4B56-8609-0F576BFF3613}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{4E2AC790-1A6F-4B56-8609-0F576BFF3613}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

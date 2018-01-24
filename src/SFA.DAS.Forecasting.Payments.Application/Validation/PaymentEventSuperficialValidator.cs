@@ -29,6 +29,14 @@ namespace SFA.DAS.Forecasting.Payments.Application.Validation
 		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Ukprn)} is less than zero." });
 	        }
 
+	        var earningsValidation = new EarningDetailsSuperficialValidator().Validate(itemToValidate.EarningDetails);
+
+			failures.AddRange(earningsValidation);
+
+			var collectionPeriodValidation = new CollectionPeriodSuperficialValidator().Validate(itemToValidate.CollectionPeriod);
+
+			failures.AddRange(collectionPeriodValidation);
+
 			return failures;
 		}
     }
