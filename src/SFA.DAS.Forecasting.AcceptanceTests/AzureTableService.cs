@@ -2,7 +2,6 @@
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,7 +9,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 {
     public class AzureTableService
     {
-        private readonly string _connectionString;
         private readonly CloudTable _table;
 
         public AzureTableService(string connectionString, string tableName)
