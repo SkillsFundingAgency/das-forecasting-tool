@@ -8,7 +8,28 @@ namespace SFA.DAS.Forecasting.Payments.Application.Validation
     {
         public List<ValidationFailure> Validate(PaymentEvent itemToValidate)
         {
-            throw new System.NotImplementedException();
-        }
+	        var failures = new List<ValidationFailure>();
+	        if (string.IsNullOrWhiteSpace(itemToValidate.EmployerAccountId))
+	        {
+		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.EmployerAccountId)} is missing." });
+	        }
+
+	        if (itemToValidate.Amount < 0)
+	        {
+		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Amount)} is less than zero." });
+	        }
+
+	        if (itemToValidate.ApprenticeshipId < 0)
+	        {
+		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.ApprenticeshipId)} is less than zero." });
+	        }
+
+	        if (itemToValidate.Ukprn < 0)
+	        {
+		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Ukprn)} is less than zero." });
+	        }
+
+			return failures;
+		}
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Payments.Application.Messages;
+using SFA.DAS.Forecasting.Payments.Application.Validation;
 
 namespace SFA.DAS.Forecasting.Payments.UnitTests.Application
 {
@@ -31,16 +32,45 @@ namespace SFA.DAS.Forecasting.Payments.UnitTests.Application
                     MonthlyInstallment =  87.27m,
                     TotalInstallments = 12
                 },
-                Uln = 1,
                 Id = Guid.NewGuid().ToString("D"),
                 Ukprn = 2
             };
         }
 
-        [Test]
-        public void Rejects_Invalid_Employer_Account_Id()
-        {
-            
-        }
-    }
+		[Test]
+		public void Fails_If_Employer_Account_Id_Is_Not_Populated()
+		{
+			var validator = new PaymentEventSuperficialValidator();
+			PaymentEvent.EmployerAccountId = null;
+			var result = validator.Validate(PaymentEvent);
+			Assert.IsNotEmpty(result);
+		}
+
+	    [Test]
+	    public void Fails_If_Ukprn_Is_Negative()
+	    {
+		    var validator = new PaymentEventSuperficialValidator();
+		    PaymentEvent.Ukprn = -1;
+		    var result = validator.Validate(PaymentEvent);
+		    Assert.IsNotEmpty(result);
+	    }
+
+		[Test]
+		public void Fails_If_Apprenticeship_Id_Is_Negative()
+		{
+			var validator = new PaymentEventSuperficialValidator();
+			PaymentEvent.ApprenticeshipId = -1;
+			var result = validator.Validate(PaymentEvent);
+			Assert.IsNotEmpty(result);
+		}
+
+	    [Test]
+	    public void Fails_If_Amount_Is_Negative()
+	    {
+		    var validator = new PaymentEventSuperficialValidator();
+		    PaymentEvent.Amount = -1;
+		    var result = validator.Validate(PaymentEvent);
+		    Assert.IsNotEmpty(result);
+	    }
+	}
 }
