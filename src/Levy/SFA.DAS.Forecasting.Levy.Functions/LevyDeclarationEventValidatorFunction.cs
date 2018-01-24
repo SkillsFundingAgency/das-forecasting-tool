@@ -29,6 +29,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                         return null;
                     }
 
+                    logger.Info($"Validated {nameof(LevyDeclarationEvent)} for EmployerAccountId: {levyDeclarationEvent.EmployerAccountId}");
                     return  Task.FromResult(levyDeclarationEvent);
                 });
         }

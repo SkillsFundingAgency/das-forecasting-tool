@@ -20,10 +20,10 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevyDeclarationEvent>(writer,
                 async (container, logger) =>
                 {
-                    dynamic body = await req.Content.ReadAsStringAsync();
-                    var levyDeclarationEvent = JsonConvert.DeserializeObject<LevyDeclarationEvent>(body as string);
+                    var body = await req.Content.ReadAsStringAsync();
+                    var levyDeclarationEvent = JsonConvert.DeserializeObject<LevyDeclarationEvent>(body);
 
-                    logger.Info($"Added one levy declaration to {QueueNames.LevyDeclarationValidator} ");
+                    logger.Info($"Added one levy declaration to {QueueNames.LevyDeclarationValidator} queue.");
                     return await Task.FromResult(levyDeclarationEvent);
                 });
         }

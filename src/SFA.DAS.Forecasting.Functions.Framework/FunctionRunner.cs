@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
             catch (Exception ex)
             {
-                writer.Error($"Error invoking function: {typeof(TFunction)}. Error: {ex}");
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
         }
@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
             catch (Exception ex)
             {
-                writer.Error($"Error invoking function: {typeof(TFunction)}. Error: {ex}");
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
         }

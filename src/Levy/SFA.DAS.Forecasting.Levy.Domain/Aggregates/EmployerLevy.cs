@@ -25,10 +25,5 @@ namespace SFA.DAS.Forecasting.Levy.Domain.Aggregates
             
             await _levyStorage.StoreLevyDeclaration(levyDeclaration);
         }
-
-        public async Task<decimal> GetCurrentPeriodTotalAmount(string employerAccountId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

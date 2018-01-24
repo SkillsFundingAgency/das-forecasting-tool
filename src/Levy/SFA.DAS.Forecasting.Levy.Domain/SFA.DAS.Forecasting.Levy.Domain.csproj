@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="Entities\LevyDeclaration.cs" />
     <Compile Include="Aggregates\EmployerLevy.cs" />
     <Compile Include="IConfig.cs" />

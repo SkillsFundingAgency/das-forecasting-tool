@@ -1,19 +1,26 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
+using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
-    public static class LevyDeclarationEventServiceBusFunction
+    public class LevyDeclarationEventServiceBusFunction : IFunction
     {
         [FunctionName("LevyDeclarationEventServiceBusFunction")]
         [return: Queue(QueueNames.LevyDeclarationValidator)]
-        public static LevyDeclarationEvent Run(
+        public static async Task<LevyDeclarationEvent> Run(
             [ServiceBusTrigger("LevyDeclaration", "mysubscription", AccessRights.Manage)]LevyDeclarationEvent levyEvent, 
-            TraceWriter log)
+            TraceWriter writer)
         {
-            return levyEvent;
+            return await FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevyDeclarationEvent>(writer,
+                async (container, logger) =>
+                {
+                    logger.Info($"Added {nameof(LevyDeclarationEvent)} to queue: {QueueNames.LevyDeclarationValidator},  for EmployerAccountId: {levyEvent?.EmployerAccountId}");
+                    return await Task.FromResult(levyEvent);
+                });
         }
     }
 }
