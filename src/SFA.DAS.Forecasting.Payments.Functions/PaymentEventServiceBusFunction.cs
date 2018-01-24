@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 		    [ServiceBusTrigger("LevyDeclaration", "mysubscription", AccessRights.Manage)]PaymentEvent paymentEvent,
 		    TraceWriter writer)
 	    {
-		    return await FunctionRunner.Run<PaymentEventSuperficialValidator, PaymentEvent>(writer,
+		    return await FunctionRunner.Run<PaymentEventServiceBusFunction, PaymentEvent>(writer,
 			    async (container, logger) =>
 			    {
 				    logger.Info($"Added {nameof(PaymentEvent)} to queue: myQueueName,  for EmployerAccountId: {paymentEvent?.EmployerAccountId}");
