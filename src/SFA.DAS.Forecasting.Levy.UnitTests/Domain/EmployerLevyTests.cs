@@ -7,7 +7,7 @@ using SFA.DAS.Forecasting.Levy.Domain.Aggregates;
 using SFA.DAS.Forecasting.Levy.Domain.Entities;
 using SFA.DAS.Forecasting.Levy.Domain.Repositories;
 
-namespace SFA.DAS.Forecasting.Levy.UnitTests
+namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
 {
     [TestFixture]
     public class EmployerLevyTests
