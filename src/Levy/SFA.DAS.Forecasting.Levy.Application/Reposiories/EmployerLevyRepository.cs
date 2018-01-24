@@ -13,6 +13,7 @@ namespace SFA.DAS.Forecasting.Levy.Application.Reposiories
 {
     public class EmployerLevyRepository : IEmployerLevyRepository
     {
+        // ToDo: Const or config...
         private static string LevyDeclarationTableName = "LevyDeclarations";
 
         private readonly ILog _logger;
