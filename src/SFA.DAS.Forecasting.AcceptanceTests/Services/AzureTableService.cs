@@ -1,11 +1,13 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.AcceptanceTests.Services.Models;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
-namespace SFA.DAS.Forecasting.AcceptanceTests
+namespace SFA.DAS.Forecasting.AcceptanceTests.Services
 {
     public class AzureTableService
     {
@@ -34,27 +36,23 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         internal void DeleteEntities(string partitionKey)
         {
-            var query = new TableQuery<TablrRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+            var query = new TableQuery<TableRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
             foreach (var item in _table.ExecuteQuery(query))
             {
                 var oper = TableOperation.Delete(item);
                 _table.Execute(oper);
             }
+            Thread.Sleep(500); // retry...
         }
 
         internal IEnumerable<LevyDeclarationEvent> GetRecords(string partitionKey)
         {
             var list = new List<LevyDeclarationEvent>();
 
-            var query = new TableQuery<TablrRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
+            var query = new TableQuery<TableRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
 
             return _table.ExecuteQuery(query)
                 .Select(entity => JsonConvert.DeserializeObject<LevyDeclarationEvent>(entity.Data));
         }
-    }
-
-    public class TablrRow : TableEntity
-    {
-        public string Data { get; set; }
     }
 }
