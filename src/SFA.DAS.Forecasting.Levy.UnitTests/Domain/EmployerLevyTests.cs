@@ -14,14 +14,10 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
     {
         private Mock<IEmployerLevyRepository> _levyRepository;
         private EmployerLevy _service;
-        protected long EmployerAccountId { get; set; }
 
         [SetUp]
         public void SetUp()
         {
-            
-            EmployerAccountId = 123456;
-
             _levyRepository = new Mock<IEmployerLevyRepository>();
             
             _service = new EmployerLevy(_levyRepository.Object);
@@ -30,21 +26,22 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
         [Test]
         public async Task Stores_Valid_Levy_Declaration()
         {
-            var year = DateTime.Now.Year;
+	        var employerAccountId = 123456;
+			var year = DateTime.Now.Year;
             var payrollDate = new DateTime(year, 02, 04);
 
             LevyDeclaration levy = null;
-            _levyRepository.Setup(m => m.StoreLevyDeclaration(It.IsAny<LevyDeclaration>()))
+            _levyRepository
+				.Setup(m => m.StoreLevyDeclaration(It.IsAny<LevyDeclaration>()))
                 .Callback<LevyDeclaration>(l => levy = l)
                 .Returns(Task.Run(() => 1));
 
-            await _service.AddDeclaration(EmployerAccountId, payrollDate, 1000, "ABCD", DateTime.Now);
+            await _service.AddDeclaration(employerAccountId, payrollDate, 1000, "ABCD", DateTime.Now);
 
-            Assert.AreEqual(EmployerAccountId, levy.EmployerAccountId);
+            Assert.AreEqual(employerAccountId, levy.EmployerAccountId);
             Assert.AreEqual(1000, levy.Amount);
             Assert.AreEqual($"{year}-{payrollDate.Month}", levy.Period);
-
-
+			
             _levyRepository.Verify(repo => repo.StoreLevyDeclaration(
                     It.IsAny<LevyDeclaration>()));
         }
