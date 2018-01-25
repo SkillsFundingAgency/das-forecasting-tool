@@ -4,6 +4,7 @@ using SFA.DAS.Forecasting.AcceptanceTests.Services;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -13,13 +14,15 @@ using TechTalk.SpecFlow;
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
     [Binding]
-    public class ProcessLevyEventCI_528Steps
+    public class ProcessLevyEventCI_528Steps : StepsBase
     {
         // ToDo: Move to config...
         private const string TableName = "LevyDeclarations";
         private const string ConnectionString = "UseDevelopmentStorage=true";
+
+        //private string _baseUrl = "http://localhost:7071/api";
+        
         private const long EmployerAccountId = 1111;
-        private string _baseUrl = "http://localhost:7071/api";
 
         private AzureTableService _azureTableService;
         private List<LevyDeclarationEvent> _records;
@@ -41,7 +44,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Given(@"that I'm the ESFA")]
         public void GivenThatIMTheESFA()
         {
-            //ScenarioContext.Current.Pending();
+            // ScenarioContext.Current.Pending();
         }
         
         [Given(@"I have credited levy to employer accouns")]
@@ -56,9 +59,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 
             var client = new HttpClient();
 
+            var url = Path.Combine(Config.FunctionBaseUrl, "LevyDeclarationEventHttpFunction");
             foreach (var item in Data())
             {
-                await client.PostAsync($"{_baseUrl}/LevyDeclarationEventHttpFunction", new StringContent(item));
+                await client.PostAsync(url, new StringContent(item));
                 Thread.Sleep(100);
             }
         }
