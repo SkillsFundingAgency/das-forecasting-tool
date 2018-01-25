@@ -81,7 +81,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Levy\AddingLevyDeclarations.cs" />
     <Compile Include="Services\AzureTableService.cs" />
     <Compile Include="Levy\Feature\ProcessLevyEvent.feature.cs">
       <AutoGen>True</AutoGen>
