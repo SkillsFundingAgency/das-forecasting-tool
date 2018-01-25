@@ -194,6 +194,10 @@
       <Project>{DA28F7BF-60FD-43AF-92FC-1E314E647689}</Project>
       <Name>SFA.DAS.Forecasting.Levy.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
+      <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
+      <Name>SFA.DAS.Forecasting.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
