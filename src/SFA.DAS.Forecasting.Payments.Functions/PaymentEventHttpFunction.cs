@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 {
     public class PaymentEventHttpFunction : IFunction
     {
-        [FunctionName("LevyDeclarationEventHttpFunction")]
+        [FunctionName("PaymentEventHttpFunction")]
         [return: Queue(QueueNames.PaymentProcessor)]
         public static async Task<PaymentEvent> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationEventHttpFunction")]HttpRequestMessage req, 
