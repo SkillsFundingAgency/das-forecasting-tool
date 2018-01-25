@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "__funcName__"
+    },
+    "storageName": {
+      "value": "__funcStorageName__"
+    },
+    "hostingPlanName": {
+      "value": "__funcHostingPlanName__"
+    },
+    "hostingEnvironment": {
+      "value": "__funcHostingEnvironment__"
+    },
+    "location": {
+      "value": "__funcLocation__"
+    },
+    "serverFarmResourceGroup": {
+      "value": "__funcServerFarmResourceGroup__"
+    },
+    "subscriptionId": {
+      "value": "__funcSubscriptionId__"
+    }
+  }
+}
