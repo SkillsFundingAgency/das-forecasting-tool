@@ -2,8 +2,8 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Payments.Application.Repositories.Models;
-using SFA.DAS.Forecasting.Payments.Domain;
 using SFA.DAS.Forecasting.Payments.Domain.Entities;
 using SFA.DAS.Forecasting.Payments.Domain.Repositories;
 using SFA.DAS.NLog.Logger;

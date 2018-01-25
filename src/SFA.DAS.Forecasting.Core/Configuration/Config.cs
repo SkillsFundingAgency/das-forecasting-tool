@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Payments.Domain
+﻿namespace SFA.DAS.Forecasting.Core.Configuration
 {
 	public class Config : IConfig
 	{

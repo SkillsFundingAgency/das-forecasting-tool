@@ -1,12 +1,11 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Levy.Application.Reposiories.Models;
-using SFA.DAS.Forecasting.Levy.Domain;
 using SFA.DAS.Forecasting.Levy.Domain.Entities;
 using SFA.DAS.Forecasting.Levy.Domain.Repositories;
 using SFA.DAS.NLog.Logger;
-using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Levy.Application.Reposiories
