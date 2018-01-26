@@ -7,8 +7,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
     [Binding]
     public class BindingBootstrapper : StepsBase
     {
-        public static Container ParentContainer { get; private set; }
-
         [BeforeTestRun(Order = 0)]
         public static void SetUpContainer()
         {

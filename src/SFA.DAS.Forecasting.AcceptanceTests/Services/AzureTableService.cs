@@ -45,14 +45,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
             Thread.Sleep(500); // retry...
         }
 
-        internal IEnumerable<LevyDeclarationEvent> GetRecords(string partitionKey)
+        internal IList<LevyDeclarationEvent> GetRecords(string partitionKey)
         {
             var list = new List<LevyDeclarationEvent>();
 
             var query = new TableQuery<TableRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
 
             return _table.ExecuteQuery(query)
-                .Select(entity => JsonConvert.DeserializeObject<LevyDeclarationEvent>(entity.Data));
+                .Select(entity => JsonConvert.DeserializeObject<LevyDeclarationEvent>(entity.Data))
+                .ToList();
         }
     }
 }

@@ -16,102 +16,164 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     [Binding]
     public class ProcessLevyEventCI_528Steps : StepsBase
     {
-        // ToDo: Move to config...
-        private const string TableName = "LevyDeclarations";
-        private const string ConnectionString = "UseDevelopmentStorage=true";
-
-        //private string _baseUrl = "http://localhost:7071/api";
-        
         private const long EmployerAccountId = 1111;
-
         private AzureTableService _azureTableService;
-        private List<LevyDeclarationEvent> _records;
 
 
         [BeforeScenario]
         public void BeforeScenario()
         {
-            _azureTableService = new AzureTableService(ConnectionString, TableName);
+            _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
             _azureTableService.EnsureExcists();
+            _azureTableService.DeleteEntities(EmployerAccountId.ToString());
         }
 
         [AfterScenario]
         public void AfterSecnario()
         {
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
-        }
-
-        [Given(@"that I'm the ESFA")]
-        public void GivenThatIMTheESFA()
-        {
-            // ScenarioContext.Current.Pending();
-        }
-        
-        [Given(@"I have credited levy to employer accouns")]
-        public void GivenIHaveCreditedLevyToEmployerAccouns()
-        {
-            // ScenarioContext.Current.Pending();
+            Thread.Sleep(1000);
         }
         
         [Given(@"levy credit events have been created")]
         public async Task GivenLevyCreditEventsHaveBeenCreated()
         {
-
-            var client = new HttpClient();
-
-            var url = Path.Combine(Config.FunctionBaseUrl, "LevyDeclarationEventHttpFunction");
-            foreach (var item in Data())
-            {
-                await client.PostAsync(url, new StringContent(item));
-                Thread.Sleep(100);
-            }
+            await PostData(ValidData());
         }
-        
-        [Then(@"the data for each levy credit event is stored")]
-        public void ThenTheDataForEachLevyCreditEventIsStored()
+
+        [Given(@"events with invalid data have been created")]
+        public async Task WhenThereIsMissingEventData()
         {
+            await PostData(InvalidData());
+        }
 
-            _records = _azureTableService.GetRecords(EmployerAccountId.ToString())
-                .ToList();
-
-            double expectedRecordsoBeSaved = 2;
+        [Then(@"there are (.*) levy credit events stored")]
+        public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
+        {
+            var _records = Do(() => _azureTableService?.GetRecords(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
             Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
-        
+
         [Then(@"all of the data stored is correct")]
         public void ThenAllOfTheDataStoredIsCorrect()
         {
-            var second = _records[1];
-            Assert.AreEqual(201, second.Amount);
+            var _records = _azureTableService?.GetRecords(EmployerAccountId.ToString())?.ToList();
+
+            Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 301) != null);
+            Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 201) != null);
+            Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 101) != null);
         }
 
-        private IEnumerable<string> Data()
+        [Then(@"the event with invalid data is not stored")]
+        public void ThenTheEventIsNotStored()
+        {
+            var _records = _azureTableService?.GetRecords(EmployerAccountId.ToString());
+
+            Assert.AreEqual(0, _records.Count(m => m.EmployerAccountId.ToString().EndsWith("2")));
+        }
+
+        private IEnumerable<string> ValidData()
         {
             return
                 new List<LevyDeclarationEvent> {
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
-                        Amount = 201,
+                        Amount = 101,
                         TransactionDate = DateTime.Now,
                         PayrollDate = DateTime.Now,
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
-                        Amount = 100,
+                        Amount = 201,
                         TransactionDate = DateTime.Now.AddMonths(-12),
                         PayrollDate = DateTime.Now.AddMonths(-12),
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
-                        Amount = 100,
-                        TransactionDate = DateTime.Now.AddMonths(-25),
+                        Amount = 301,
+                        TransactionDate = DateTime.Now.AddMonths(-15),
                         PayrollDate = DateTime.Now.AddMonths(-15),
                         Scheme = "Not sure"
                     }
                 }
                 .Select(m => JsonConvert.SerializeObject(m));
+        }
+
+        private IEnumerable<string> InvalidData()
+        {
+            return
+                new List<LevyDeclarationEvent> {
+                    new LevyDeclarationEvent {
+                        EmployerAccountId = EmployerAccountId,
+                        Amount = 102,
+                        TransactionDate = DateTime.Now,
+                        PayrollDate = DateTime.Now,
+                        Scheme = ""
+                    },
+                    new LevyDeclarationEvent {
+                        EmployerAccountId = EmployerAccountId,
+                        Amount = 202,
+                        TransactionDate = DateTime.Now.AddMonths(-25).AddDays(-1),
+                        PayrollDate = DateTime.Now.AddMonths(-12),
+                        Scheme = "Not sure"
+                    },
+                    new LevyDeclarationEvent {
+                        EmployerAccountId = EmployerAccountId,
+                        Amount = 303,
+                        TransactionDate = DateTime.Now.AddMonths(-15),
+                        PayrollDate = DateTime.MinValue,
+                        Scheme = "Not sure"
+                    },
+                    new LevyDeclarationEvent {
+                        EmployerAccountId = EmployerAccountId,
+                        Amount = 501,
+                        TransactionDate = DateTime.Now.AddMonths(-2),
+                        PayrollDate = DateTime.Now.AddMonths(-2),
+                        Scheme = "Not sure"
+                    },
+                    new LevyDeclarationEvent {
+                        EmployerAccountId = EmployerAccountId,
+                        Amount = -10,
+                        TransactionDate = DateTime.Now.AddMonths(-2),
+                        PayrollDate = DateTime.Now.AddMonths(-2),
+                        Scheme = "Not sure"
+                    }
+
+                }
+                .Select(m => JsonConvert.SerializeObject(m));
+        }
+
+        private async Task PostData(IEnumerable<string> events)
+        {
+            var client = new HttpClient();
+
+            var url = Path.Combine(Config.FunctionBaseUrl, "LevyDeclarationEventHttpFunction");
+            foreach (var item in events)
+            {
+                await client.PostAsync(url, new StringContent(item));
+            }
+
+            Thread.Sleep(2000);
+        }
+
+        public static IEnumerable<T> Do<T>(
+            Func<IEnumerable<T>> action,
+            int expectedCount,
+            TimeSpan retryInterval,
+            int maxAttemptCount = 3)
+        {
+            for (int attempted = 0; attempted < maxAttemptCount; attempted++)
+            {
+                var a = action();
+                if(a.Count() == expectedCount)
+                {
+                    return a;
+                }
+                Thread.Sleep(retryInterval);
+            }
+            return new List<T>();
         }
     }
 }

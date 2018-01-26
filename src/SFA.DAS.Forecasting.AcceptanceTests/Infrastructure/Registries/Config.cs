@@ -10,6 +10,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
         public string Environment => GetAppSetting("Environment");
         public string FunctionBaseUrl => GetAppSetting("FunctionBaseUrl");
 
+        public string AzureStorageConnectionString => GetAppSetting("AzureStorageConnectionString");
+        public string LevyDeclarationsTable => GetAppSetting("LevyDeclarationsTable");
+
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
     }
 }

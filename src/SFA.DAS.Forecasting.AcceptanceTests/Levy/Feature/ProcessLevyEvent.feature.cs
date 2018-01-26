@@ -65,22 +65,37 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC1 Store levy credit event data")]
-        public virtual void AC1StoreLevyCreditEventData()
+        [NUnit.Framework.DescriptionAttribute("AC1 - Store levy credit event data")]
+        public virtual void AC1_StoreLevyCreditEventData()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1 Store levy credit event data", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1 - Store levy credit event data", ((string[])(null)));
 #line 6
 this.ScenarioSetup(scenarioInfo);
 #line 7
-testRunner.Given("that I\'m the ESFA", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+testRunner.Given("levy credit events have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
-testRunner.And("I have credited levy to employer accouns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.Then("there are 3 levy credit events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 9
-testRunner.And("levy credit events have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 10
-testRunner.Then("the data for each levy credit event is stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 11
 testRunner.And("all of the data stored is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC2 - Do not store levy credit event data when some data missing")]
+        public virtual void AC2_DoNotStoreLevyCreditEventDataWhenSomeDataMissing()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2 - Do not store levy credit event data when some data missing", ((string[])(null)));
+#line 11
+this.ScenarioSetup(scenarioInfo);
+#line 12
+testRunner.Given("levy credit events have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 13
+testRunner.And("events with invalid data have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 14
+testRunner.Then("there are 4 levy credit events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 15
+testRunner.And("the event with invalid data is not stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
