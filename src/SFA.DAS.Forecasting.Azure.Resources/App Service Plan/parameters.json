@@ -21,7 +21,7 @@
       "value": "1"
     },
     "numberOfWorkers": {
-      "value": "__aseNumberOfWorkers__"
+      "value": "__aspNumberOfWorkers__"
     },
     "hostingEnvironment": {
       "value": "__aspHostingEnvironment__"
