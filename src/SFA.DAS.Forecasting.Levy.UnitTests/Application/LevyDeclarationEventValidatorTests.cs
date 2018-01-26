@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMoq;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
 using SFA.DAS.Forecasting.Levy.Application.Validation;
@@ -31,7 +32,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             var validator = new LevyDeclarationEventValidator();
             LevyDeclarationEvent.EmployerAccountId = 0;
             var result = validator.Validate(LevyDeclarationEvent);
-            Assert.IsNotEmpty(result);
+            result.IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -40,7 +41,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             var validator = new LevyDeclarationEventValidator();
             LevyDeclarationEvent.PayrollDate = new DateTime(0001, 01, 01);
             var result = validator.Validate(LevyDeclarationEvent);
-            Assert.IsNotEmpty(result);
+            result.IsValid.Should().BeFalse();
         }
 
         [Test]
@@ -49,7 +50,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             var validator = new LevyDeclarationEventValidator();
             LevyDeclarationEvent.Scheme = null;
             var result = validator.Validate(LevyDeclarationEvent);
-            Assert.IsNotEmpty(result);
+            result.IsValid.Should().BeFalse();
         }
 
 
@@ -59,7 +60,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             var validator = new LevyDeclarationEventValidator();
             LevyDeclarationEvent.Amount = -1;
             var result = validator.Validate(LevyDeclarationEvent);
-            Assert.IsNotEmpty(result);
+            result.IsValid.Should().BeFalse();
         }
 
 
@@ -69,18 +70,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             var validator = new LevyDeclarationEventValidator();
             LevyDeclarationEvent.TransactionDate = new DateTime(0001, 01, 01);
             var result = validator.Validate(LevyDeclarationEvent);
-            Assert.IsNotEmpty(result);
-        }
-
-        [Test]
-        public void Fails_If_Transaction_Date_Is_Older_Than_Two_Years()
-        {
-            var validator = new LevyDeclarationEventValidator();
-            var transactionDate = DateTime.Now.AddMonths(-26);
-
-            LevyDeclarationEvent.TransactionDate = transactionDate;
-            var result = validator.Validate(LevyDeclarationEvent);
-            Assert.IsNotEmpty(result);
+            result.IsValid.Should().BeFalse();
         }
     }
 }

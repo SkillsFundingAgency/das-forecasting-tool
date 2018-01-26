@@ -3,5 +3,6 @@
 	public interface IConfig
 	{
 		string StorageConnectionString { get; set; }
-	}
+        string LevyDeclarationTableName { get; }
+    }
 }

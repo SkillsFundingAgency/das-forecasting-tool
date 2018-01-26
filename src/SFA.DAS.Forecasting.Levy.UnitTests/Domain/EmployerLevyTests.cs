@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Levy.Domain.Aggregates;
 using SFA.DAS.Forecasting.Levy.Domain.Entities;
 using SFA.DAS.Forecasting.Levy.Domain.Repositories;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
 {
@@ -20,7 +21,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
         {
             _levyRepository = new Mock<IEmployerLevyRepository>();
             
-            _service = new EmployerLevy(_levyRepository.Object);
+            _service = new EmployerLevy(_levyRepository.Object, Mock.Of<ILog>());
         }
 
         [Test]
@@ -43,7 +44,16 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
             Assert.AreEqual($"{year}-{payrollDate.Month}", levy.Period);
 			
             _levyRepository.Verify(repo => repo.StoreLevyDeclaration(
-                    It.IsAny<LevyDeclaration>()));
+                    It.IsAny<LevyDeclaration>()), Times.Once());
+        }
+
+        [Test]
+        public async Task Should_not_store_when_transaction_date_older_than_2_years()
+        {
+            var transactionDate = DateTime.Now.AddMonths(-25);
+            await _service.AddDeclaration(123456, DateTime.Now, 1000, "ABCD", transactionDate);
+
+            _levyRepository.Verify(repo => repo.StoreLevyDeclaration(It.IsAny<LevyDeclaration>()), Times.Never());
         }
     }
 }
