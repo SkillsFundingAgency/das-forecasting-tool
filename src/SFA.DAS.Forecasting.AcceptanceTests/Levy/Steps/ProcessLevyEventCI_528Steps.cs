@@ -50,14 +50,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there are (.*) levy credit events stored")]
         public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
         {
-            var _records = Do(() => _azureTableService?.GetRecords(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
+            var _records = Do(() => _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
             Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
 
         [Then(@"all of the data stored is correct")]
         public void ThenAllOfTheDataStoredIsCorrect()
         {
-            var _records = _azureTableService?.GetRecords(EmployerAccountId.ToString())?.ToList();
+            var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString())?.ToList();
 
             Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 301) != null);
             Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 201) != null);
@@ -67,7 +67,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"the event with invalid data is not stored")]
         public void ThenTheEventIsNotStored()
         {
-            var _records = _azureTableService?.GetRecords(EmployerAccountId.ToString());
+            var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString());
 
             Assert.AreEqual(0, _records.Count(m => m.EmployerAccountId.ToString().EndsWith("2")));
         }
