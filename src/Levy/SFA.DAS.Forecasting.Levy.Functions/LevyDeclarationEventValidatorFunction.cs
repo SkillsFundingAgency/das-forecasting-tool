@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -23,7 +22,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                 {
                     var validationResults = container.GetInstance<LevyDeclarationEventValidator>()
                         .Validate(levyDeclarationEvent);
-                    if (validationResults?.Any() ?? false)
+                    if (!validationResults.IsValid)
                     {
                         logger.Warn($"Levy declaration event failed superficial validation. Event: {levyDeclarationEvent.ToJson()}");
                         return null;

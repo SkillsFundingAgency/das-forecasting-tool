@@ -12,9 +12,6 @@ namespace SFA.DAS.Forecasting.Levy.Application.Reposiories
 {
     public class EmployerLevyRepository : IEmployerLevyRepository
     {
-        // ToDo: Const or config...
-        private static string LevyDeclarationTableName = "LevyDeclarations";
-
         private readonly ILog _logger;
         private CloudTable _table;
 
@@ -24,9 +21,8 @@ namespace SFA.DAS.Forecasting.Levy.Application.Reposiories
 
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
-            _table = tableClient.GetTableReference(LevyDeclarationTableName);
+            _table = tableClient.GetTableReference(settings.LevyDeclarationTableName);
         }
-
 
         public async Task StoreLevyDeclaration(LevyDeclaration levyDeclaration)
         {
