@@ -82,7 +82,7 @@
       <HintPath>..\packages\System.ValueTuple.4.3.0-preview1-24530-04\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="TechTalk.SpecFlow, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
-      <HintPath>..\packages\SpecFlow.2.2.0\lib\net45\TechTalk.SpecFlow.dll</HintPath>
+      <HintPath>..\packages\SpecFlow.2.2.1\lib\net45\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +94,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
     </Compile>
+    <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
     <Compile Include="Services\AzureTableService.cs" />
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +113,10 @@
       <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Payments\Feature\ProcessPaymentEvent.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ProcessPaymentEvent.feature.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Levy\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj">

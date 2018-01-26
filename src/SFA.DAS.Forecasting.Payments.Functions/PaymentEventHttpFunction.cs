@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         [FunctionName("PaymentEventHttpFunction")]
         [return: Queue(QueueNames.PaymentProcessor)]
         public static async Task<PaymentEvent> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationEventHttpFunction")]HttpRequestMessage req, 
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "EmployerPaymentEventHttpFunction")]HttpRequestMessage req, 
             TraceWriter writer)
         {
             return await FunctionRunner.Run<PaymentEventHttpFunction, PaymentEvent>(writer,
