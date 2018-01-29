@@ -8,11 +8,13 @@ using SFA.DAS.Forecasting.Levy.Domain.Repositories;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
+    [StorageAccount("StorageConnectionString")]
     public class LevyDeclarationEventStoreFunction : IFunction
     {
         [FunctionName("LevyDeclarationEventStoreFunction")]
+        [return:Queue()]
         public static async Task Run(
-            [QueueTrigger(QueueNames.LevyDeclarationProcessor)]LevyDeclarationEvent levyEvent,
+            [QueueTrigger(QueueNames.StoreLevyDeclaration)]LevyDeclarationEvent levyEvent,
             TraceWriter writer)
         {
             await FunctionRunner.Run<LevyDeclarationEventStoreFunction>(writer,
