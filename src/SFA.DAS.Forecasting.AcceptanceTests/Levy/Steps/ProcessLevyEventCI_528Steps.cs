@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Services;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
@@ -51,7 +52,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
         {
             var _records = Do(() => _azureTableService?.GetRecords(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
-            Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
+            _records.Count().Should().Be(expectedRecordsoBeSaved, because: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
 
         [Then(@"all of the data stored is correct")]
@@ -59,9 +60,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         {
             var _records = _azureTableService?.GetRecords(EmployerAccountId.ToString())?.ToList();
 
-            Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 301) != null);
-            Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 201) != null);
-            Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 101) != null);
+            _records.Should().Contain(m => m.Amount == 301);
+            _records.Should().Contain(m => m.Amount == 201);
+            _records.Should().Contain(m => m.Amount == 101);
+            //Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 301) != null);
+            //Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 201) != null);
+            //Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 101) != null);
         }
 
         [Then(@"the event with invalid data is not stored")]
