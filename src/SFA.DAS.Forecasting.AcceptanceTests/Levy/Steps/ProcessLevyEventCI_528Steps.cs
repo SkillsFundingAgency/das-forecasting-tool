@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         private AzureTableService _azureTableService;
 
 
-        [BeforeScenario]
+        [OneTimeSetUp]
         public void BeforeScenario()
         {
             _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
         }
 
-        [AfterScenario]
+        [OneTimeTearDown]
         public void AfterSecnario()
         {
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
