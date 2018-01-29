@@ -8,6 +8,9 @@
     "storageName": {
       "value": "__funcStorageName__"
     },
+    "storageAccountResourceGroup": {
+      "value": "__funcStorageAccountResourceGroup__"
+    },
     "hostingPlanName": {
       "value": "__funcHostingPlanName__"
     },
