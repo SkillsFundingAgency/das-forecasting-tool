@@ -8,9 +8,11 @@ namespace SFA.DAS.Forecasting.Levy.Application.Messages
     public class LevyDeclarationEvent
     {
         public long EmployerAccountId { get; set; }
-        public DateTime PayrollDate { get; set; }
+        public string PayrollYear { get; set; }
+        public short? PayrollMonth { get; set; }
         public string Scheme { get; set; }
         public decimal Amount { get; set; }
         public DateTime TransactionDate { get; set; }
     }
+
 }

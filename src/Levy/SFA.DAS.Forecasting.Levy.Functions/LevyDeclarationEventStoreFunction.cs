@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Levy.Application.Messages;
 using SFA.DAS.Forecasting.Levy.Domain.Aggregates;
+using SFA.DAS.Forecasting.Levy.Domain.Repositories;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
@@ -11,17 +12,17 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     {
         [FunctionName("LevyDeclarationEventStoreFunction")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.LevyDeclarationProcessor)]LevyDeclarationEvent levyEvent, 
+            [QueueTrigger(QueueNames.LevyDeclarationProcessor)]LevyDeclarationEvent levyEvent,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<LevyDeclarationEventStoreFunction, int>(writer,
+            await FunctionRunner.Run<LevyDeclarationEventStoreFunction>(writer,
                 async (container, logger) =>
                 {
-                    var employerLevy = container.GetInstance<EmployerLevy>();
-                    await employerLevy.AddDeclaration(levyEvent.EmployerAccountId, levyEvent.PayrollDate, levyEvent.Amount, levyEvent.Scheme, levyEvent.TransactionDate);
-
-                    logger.Info($"Stored {nameof(LevyDeclarationEvent)} for EmployerAccountId: {levyEvent.EmployerAccountId} and PayrollDate: {levyEvent.PayrollDate}");
-                    return await Task.FromResult(1);
+                    var repository = container.GetInstance<ILevyPeriodRepository>();
+                    var levyPeriod = await repository.Get(levyEvent.EmployerAccountId, levyEvent.PayrollYear, levyEvent.PayrollMonth ?? 0);
+                    levyPeriod.AddDeclaration(levyEvent.EmployerAccountId, levyEvent.PayrollYear, levyEvent.PayrollMonth ?? 0, levyEvent.Amount, levyEvent.Scheme, levyEvent.TransactionDate);
+                    await repository.StoreLevyPeriod(levyPeriod);
+                    logger.Info($"Stored {nameof(LevyDeclarationEvent)} for EmployerAccountId: {levyEvent.EmployerAccountId} and PayrollYear: {levyEvent.PayrollYear}");
                 });
         }
     }

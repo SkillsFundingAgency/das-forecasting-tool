@@ -1,7 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
-using System;
 
-namespace SFA.DAS.Forecasting.Levy.Application.Reposiories.Models
+namespace SFA.DAS.Forecasting.Levy.Application.Services.Models
 {
     public class TableEntry : TableEntity
     {

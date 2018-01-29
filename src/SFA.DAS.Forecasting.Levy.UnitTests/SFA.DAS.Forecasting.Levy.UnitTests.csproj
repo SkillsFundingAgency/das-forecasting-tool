@@ -86,7 +86,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\LevyDeclarationEventValidatorTests.cs" />
-    <Compile Include="Domain\EmployerLevyTests.cs" />
+    <Compile Include="Domain\LevyDeclarationHandlerTests.cs" />
+    <Compile Include="Domain\LevyPeriodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

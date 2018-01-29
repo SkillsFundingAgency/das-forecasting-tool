@@ -76,10 +76,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Handlers\LevyDeclarationHandler.cs" />
     <Compile Include="Messages\LevyDeclarationEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reposiories\EmployerLevyRepository.cs" />
-    <Compile Include="Reposiories\Models\TableEntry.cs" />
+    <Compile Include="Services\LevyDataService.cs" />
+    <Compile Include="Services\Models\TableEntry.cs" />
     <Compile Include="Validation\LevyDeclarationEventValidator.cs" />
   </ItemGroup>
   <ItemGroup>
