@@ -11,7 +11,8 @@ namespace SFA.DAS.Forecasting.Levy.Application.Validation
             RuleFor(e => e.Amount).GreaterThan(0);
             RuleFor(e => e.Scheme).NotNull().NotEmpty();
 
-            RuleFor(e => e.PayrollDate).GreaterThan(System.DateTime.MinValue).NotNull();
+            RuleFor(e => e.PayrollYear).NotNull().NotEmpty();
+            RuleFor(e => e.PayrollMonth).NotNull().NotEmpty();
             RuleFor(e => e.TransactionDate).GreaterThan(System.DateTime.MinValue).NotNull();
         }
     }

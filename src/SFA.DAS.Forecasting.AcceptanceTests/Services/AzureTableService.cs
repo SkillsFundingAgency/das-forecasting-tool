@@ -22,7 +22,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
 
         internal void EnsureExcists()
         {
-
             if (!_table.Exists())
             {
                 _table.Create();
@@ -45,14 +44,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
             Thread.Sleep(500); // retry...
         }
 
-        internal IList<LevyDeclarationEvent> GetRecords(string partitionKey)
+        internal IList<T> GetRecords<T>(string partitionKey) 
+			where T : class 
         {
-            var list = new List<LevyDeclarationEvent>();
-
             var query = new TableQuery<TableRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
 
             return _table.ExecuteQuery(query)
-                .Select(entity => JsonConvert.DeserializeObject<LevyDeclarationEvent>(entity.Data))
+                .Select(entity => JsonConvert.DeserializeObject<T>(entity.Data))
                 .ToList();
         }
     }

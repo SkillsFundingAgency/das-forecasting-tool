@@ -102,6 +102,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
     </Compile>
+    <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
+      <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
     <Compile Include="Services\AzureTableService.cs" />
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,11 +121,19 @@
       <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Payments\Feature\ProcessPaymentEvent.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ProcessPaymentEvent.feature.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Levy\SFA.DAS.Forecasting.Levy.Application\SFA.DAS.Forecasting.Levy.Application.csproj">
       <Project>{46BF78F3-B921-42E9-8272-4CCF443ABFE4}</Project>
       <Name>SFA.DAS.Forecasting.Levy.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj">
+      <Project>{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}</Project>
+      <Name>SFA.DAS.Forecasting.Payments.Application</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
