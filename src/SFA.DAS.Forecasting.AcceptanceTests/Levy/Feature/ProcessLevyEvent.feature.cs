@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
 #line 1 "ProcessLevyEvent.feature"
 #line hidden
         
-        [NUnit.Framework.TestFixtureSetUpAttribute()]
+        [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
             testRunner.OnFeatureStart(featureInfo);
         }
         
-        [NUnit.Framework.TestFixtureTearDownAttribute()]
+        [NUnit.Framework.OneTimeTearDownAttribute()]
         public virtual void FeatureTearDown()
         {
             testRunner.OnFeatureEnd();
@@ -77,7 +77,7 @@ testRunner.Given("levy credit events have been created", ((string)(null)), ((Tec
 #line 8
 testRunner.Then("there are 3 levy credit events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 9
-testRunner.And("all of the data stored is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("all of the levy declarations  stored is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -92,11 +92,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 12
 testRunner.Given("levy credit events have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 13
-testRunner.And("events with invalid data have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("all events with invalid data have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 14
 testRunner.Then("there are 4 levy credit events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 15
-testRunner.And("the event with invalid data is not stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("all the event with invalid data is not stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

@@ -95,9 +95,9 @@
       <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
     </Compile>
     <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
     <Compile Include="Services\AzureTableService.cs" />
