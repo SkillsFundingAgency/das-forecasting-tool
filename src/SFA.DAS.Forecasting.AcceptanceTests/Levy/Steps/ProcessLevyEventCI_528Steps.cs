@@ -80,21 +80,24 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 101,
                         TransactionDate = DateTime.Now,
-                        PayrollDate = DateTime.Now,
+                        PayrollYear = "18/19",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
                         Amount = 201,
                         TransactionDate = DateTime.Now.AddMonths(-12),
-                        PayrollDate = DateTime.Now.AddMonths(-12),
+                        PayrollYear = "18/19",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
                         Amount = 301,
                         TransactionDate = DateTime.Now.AddMonths(-15),
-                        PayrollDate = DateTime.Now.AddMonths(-15),
+                        PayrollYear = "18/19",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     }
                 }
@@ -109,35 +112,40 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 102,
                         TransactionDate = DateTime.Now,
-                        PayrollDate = DateTime.Now,
+                        PayrollYear = "17/18",
+                        PayrollMonth = 1,
                         Scheme = ""
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
                         Amount = 202,
                         TransactionDate = DateTime.Now.AddMonths(-25).AddDays(-1),
-                        PayrollDate = DateTime.Now.AddMonths(-12),
+                        PayrollYear = "16/17",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
                         Amount = 303,
                         TransactionDate = DateTime.Now.AddMonths(-15),
-                        PayrollDate = DateTime.MinValue,
+                        PayrollYear = "01/01",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
                         Amount = 501,
                         TransactionDate = DateTime.Now.AddMonths(-2),
-                        PayrollDate = DateTime.Now.AddMonths(-2),
+                        PayrollYear = "17/18",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
                     new LevyDeclarationEvent {
                         EmployerAccountId = EmployerAccountId,
                         Amount = -10,
                         TransactionDate = DateTime.Now.AddMonths(-2),
-                        PayrollDate = DateTime.Now.AddMonths(-2),
+                        PayrollYear = "18/19",
+                        PayrollMonth = 1,
                         Scheme = "Not sure"
                     }
 

@@ -20,7 +20,8 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
             {
                 Amount = 1000,
                 EmployerAccountId = 123456,
-                PayrollDate = DateTime.Today,
+                PayrollYear = "18/19",
+                PayrollMonth = 1,
                 Scheme = "ABCD",
                 TransactionDate = DateTime.Today
             };
@@ -39,7 +40,7 @@ namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
         public void Fails_If_Declaration_Date_Is_Invalid()
         {
             var validator = new LevyDeclarationEventValidator();
-            LevyDeclarationEvent.PayrollDate = new DateTime(0001, 01, 01);
+            LevyDeclarationEvent.PayrollYear = null;
             var result = validator.Validate(LevyDeclarationEvent);
             result.IsValid.Should().BeFalse();
         }

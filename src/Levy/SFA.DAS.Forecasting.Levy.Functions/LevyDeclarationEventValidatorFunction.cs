@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class LevyDeclarationEventValidatorFunction: IFunction
     {
         [FunctionName("LevyDeclarationEventValidatorFunction")]
-        [return:Queue(QueueNames.LevyDeclarationProcessor)]
+        [return:Queue(QueueNames.StoreLevyDeclaration)]
         public static async Task<LevyDeclarationEvent> Run(
             [QueueTrigger(QueueNames.LevyDeclarationValidator)]LevyDeclarationEvent levyDeclarationEvent, 
             TraceWriter writer)

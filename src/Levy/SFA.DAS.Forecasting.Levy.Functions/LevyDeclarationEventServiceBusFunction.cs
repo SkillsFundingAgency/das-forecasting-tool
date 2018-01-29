@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         [FunctionName("LevyDeclarationEventServiceBusFunction")]
         [return: Queue(QueueNames.LevyDeclarationValidator)]
         public static async Task<LevyDeclarationEvent> Run(
-            [ServiceBusTrigger("LevyDeclaration", "mysubscription", AccessRights.Manage)]LevyDeclarationEvent levyEvent, 
+            [ServiceBusTrigger("LevyPeriod", "mysubscription", AccessRights.Manage)]LevyDeclarationEvent levyEvent, 
             TraceWriter writer)
         {
             return await FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevyDeclarationEvent>(writer,

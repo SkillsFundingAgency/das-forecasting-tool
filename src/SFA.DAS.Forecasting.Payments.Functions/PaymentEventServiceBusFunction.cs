@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	    [FunctionName("PaymentEventServiceBusFunction")]
 	    [return: Queue(QueueNames.PaymentValidator)]
 	    public static async Task<PaymentEvent> Run(
-		    [ServiceBusTrigger("LevyDeclaration", "mysubscription", AccessRights.Manage)]PaymentEvent paymentEvent,
+		    [ServiceBusTrigger("LevyPeriod", "mysubscription", AccessRights.Manage)]PaymentEvent paymentEvent,
 		    TraceWriter writer)
 	    {
 		    return await FunctionRunner.Run<PaymentEventServiceBusFunction, PaymentEvent>(writer,

@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Employer\EmployerAccount.cs" />
+    <Compile Include="AccountProjection\LevyProjection.cs" />
     <Compile Include="Entities\Apprenticeship.cs" />
     <Compile Include="Entities\BalanceItem.cs" />
     <Compile Include="Interfaces\IApprenticeshipRepository.cs" />
