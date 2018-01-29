@@ -1,24 +1,36 @@
 {
-    "parameters": {
-        "name": {
-            "type": "string"
-        },
-        "hostingPlanName": {
-            "type": "string"
-        },
-        "location": {
-            "type": "string"
-        },
-        "hostingEnvironment": {
-            "type": "string"
-        },
-        "serverFarmResourceGroup": {
-            "type": "string"
-        },
-        "subscriptionId": {
-            "type": "string"
-        }
+  "parameters": {
+    "name": {
+      "type": "string"
     },
+    "hostingPlanName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "hostingEnvironment": {
+      "type": "string"
+    },
+    "serverFarmResourceGroup": {
+      "type": "string"
+    },
+    "subscriptionId": {
+      "type": "string"
+    },
+    "EnvironmentName": {
+      "type": "string"
+    },
+    "RedisConnection": {
+      "type": "string"
+    },
+    "LoggingRedisConnectionString": {
+      "type": "string"
+    },
+    "LoggingRedisKey": {
+      "type": "string"
+    }
+  },
     "resources": [
         {
             "name": "[parameters('name')]",
@@ -32,6 +44,22 @@
                   {
                     "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                     "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+                  },
+                  {
+                    "name": "EnvironmentName",
+                    "value": "[parameters('EnvironmentName')]"
+                  },
+                  {
+                    "name": "RedisConnection",
+                    "value": "[parameters('RedisConnection')]"
+                  },
+                  {
+                    "name": "LoggingRedisConnectionString",
+                    "value": "[parameters('LoggingRedisConnectionString')]"
+                  },
+                  {
+                    "name": "LoggingRedisKey",
+                    "value": "[parameters('LoggingRedisKey')]"
                   }
                 ],
                 "alwaysOn": true,
