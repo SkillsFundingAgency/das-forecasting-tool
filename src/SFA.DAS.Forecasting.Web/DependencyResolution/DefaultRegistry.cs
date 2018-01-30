@@ -18,26 +18,18 @@
 using System;
 using System.Configuration;
 using System.Net.NetworkInformation;
-using System.Web;
-using System.Web.Routing;
-
-using MediatR;
 
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.Forecasting.Domain.Interfaces;
 using SFA.DAS.Forecasting.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Infrastructure.Repositories;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
-
-using StructureMap.Configuration.DSL;
-using StructureMap.Graph;
 using StructureMap;
 
-namespace SFA.DAS.Forecasting.Web.DependencyResolution {
-	
+namespace SFA.DAS.Forecasting.Web.DependencyResolution
+{
+
     public class DefaultRegistry : Registry {
         private const string ServiceName = "SFA.DAS.Forecasting";
         private const string ServiceNamespace = "SFA.DAS";
@@ -49,11 +41,6 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
                     scan.TheCallingAssembly();
                     scan.RegisterConcreteTypesAgainstTheFirstInterface();                    
                     scan.AssemblyContainingType<Ping>();
-                    scan.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<>));
-                    scan.ConnectImplementationsToTypesClosing(typeof(IRequestHandler<,>));
-                    scan.ConnectImplementationsToTypesClosing(typeof(INotificationHandler<>));
-                    //scan.TheCallingAssembly();
-                    //scan.WithDefaultConventions();
                 });
 
             ConfigureLogging();
@@ -62,8 +49,6 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 
             For<IApplicationConfiguration>().Use(config);
             For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.HashString));
-
-            RegisterMediator();
         }
 
 
@@ -73,13 +58,6 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
                 x.ParentType,
                 null,
                 null)).AlwaysUnique();
-        }
-
-        private void RegisterMediator()
-        {
-            For<SingleInstanceFactory>().Use<SingleInstanceFactory>(ctx => t => ctx.GetInstance(t));
-            For<MultiInstanceFactory>().Use<MultiInstanceFactory>(ctx => t => ctx.GetAllInstances(t));
-            For<IMediator>().Use<Mediator>();
         }
 
         private ForcastingApplicationConfiguration GetConfiguration()

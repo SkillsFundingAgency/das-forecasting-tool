@@ -1,10 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-using MediatR;
-
-using SFA.DAS.Forecasting.Application.Queries.Apprenticeships;
-using SFA.DAS.Forecasting.Application.Queries.Balance;
+using SFA.DAS.Forecasting.Domain.Interfaces;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -14,20 +11,23 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
     public class ForecastingOrchestrator
     {
-        private readonly IMediator _mediator;
         private readonly IHashingService _hashingService;
+        private readonly IBalanceRepository _balanceRepository;
+        private readonly IApprenticeshipRepository _apprenticeshipRepository;
         private readonly ILog _logger;
 
         private readonly Mapper _mapper;
 
         public ForecastingOrchestrator(
-            IMediator mediator, 
-            IHashingService hashingService, 
+            IHashingService hashingService,
+            IBalanceRepository balanceRepository,
+            IApprenticeshipRepository apprenticeshipRepository,
             ILog logger,
             Mapper mapper)
         {
-            _mediator = mediator;
             _hashingService = hashingService;
+            _balanceRepository = balanceRepository;
+            _apprenticeshipRepository = apprenticeshipRepository;
             _logger = logger;
             _mapper = mapper;
         }
@@ -35,20 +35,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            
-            var result = await _mediator.Send(new EmployerBalanceRequest {EmployerAccountId = accountId });
-            return new BalanceViewModel { BalanceItemViewModels = _mapper.MapBalance(result.Data) };
+
+            var result = await  _balanceRepository.GetBalanceAsync(accountId);
+            return new BalanceViewModel { BalanceItemViewModels = _mapper.MapBalance(result) };
         }
 
         public async Task<ApprenticeshipPageViewModel> Apprenticeships(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var result = await _mediator.Send(new ApprenticeshipsRequest { EmployerAccountId = accountId });
+            var apprenticeships = await _apprenticeshipRepository.GetApprenticeships(accountId);
 
             return new ApprenticeshipPageViewModel
             {
-                Apprenticeships = result.Data.Select(_mapper.MapApprenticeship)
+                Apprenticeships = apprenticeships.Select(_mapper.MapApprenticeship)
             };
         }
 
@@ -56,12 +56,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var result = await _mediator.Send(new EmployerBalanceRequest { EmployerAccountId = accountId });
+            var result = await _balanceRepository.GetBalanceAsync(accountId);
             
             var viewModel = new VisualisationViewModel
             {
                 ChartTitle = "Your 4 Year Forecast",
-                ChartItems = result.Data.Select(m => new ChartItemViewModel { BalanceMonth = m.Date, Amount = m.Balance })
+                ChartItems = result.Select(m => new ChartItemViewModel { BalanceMonth = m.Date, Amount = m.Balance })
             };
 
             return viewModel;
