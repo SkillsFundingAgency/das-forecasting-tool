@@ -121,10 +121,6 @@
       <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
       <Name>SFA.DAS.Forecasting.Application</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj">
-      <Project>{62DF1F14-97BA-4070-AFF1-F4E53B37E6C9}</Project>
-      <Name>SFA.DAS.Forecasting.Payments.Application</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

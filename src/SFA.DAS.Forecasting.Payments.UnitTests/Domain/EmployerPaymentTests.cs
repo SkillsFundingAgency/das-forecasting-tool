@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Payments.Domain.Aggregates;
-using SFA.DAS.Forecasting.Payments.Domain.Entities;
-using SFA.DAS.Forecasting.Payments.Domain.Repositories;
+using SFA.DAS.Forecasting.Domain.Payments.Aggregates;
+using SFA.DAS.Forecasting.Domain.Payments.Entities;
+using SFA.DAS.Forecasting.Domain.Payments.Repositories;
 
 namespace SFA.DAS.Forecasting.Payments.UnitTests.Domain
 {

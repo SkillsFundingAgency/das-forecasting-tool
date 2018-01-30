@@ -82,6 +82,14 @@
     <Compile Include="Levy\Services\LevyDataService.cs" />
     <Compile Include="Levy\Services\Models\TableEntry.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationEventValidator.cs" />
+    <Compile Include="Payments\Messages\CollectionPeriod.cs" />
+    <Compile Include="Payments\Messages\EarningDetails.cs" />
+    <Compile Include="Payments\Messages\PaymentEvent.cs" />
+    <Compile Include="Payments\Repositories\EmployerPaymentRepository.cs" />
+    <Compile Include="Payments\Repositories\Models\TableEntry.cs" />
+    <Compile Include="Payments\Validation\CollectionPeriodSuperficialValidator.cs" />
+    <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />
+    <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

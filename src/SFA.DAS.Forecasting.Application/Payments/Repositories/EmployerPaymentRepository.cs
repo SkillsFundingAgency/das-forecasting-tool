@@ -3,12 +3,12 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Core.Configuration;
-using SFA.DAS.Forecasting.Payments.Application.Repositories.Models;
-using SFA.DAS.Forecasting.Payments.Domain.Entities;
-using SFA.DAS.Forecasting.Payments.Domain.Repositories;
+using SFA.DAS.Forecasting.Application.Payments.Repositories.Models;
+using SFA.DAS.Forecasting.Domain.Payments.Entities;
+using SFA.DAS.Forecasting.Domain.Payments.Repositories;
 using SFA.DAS.NLog.Logger;
 
-namespace SFA.DAS.Forecasting.Payments.Application.Repositories
+namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 {
 	public class EmployerPaymentRepository : IEmployerPaymentRepository
 	{

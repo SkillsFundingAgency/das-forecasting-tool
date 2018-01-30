@@ -3,7 +3,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Payments.Application.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Payments.Domain.Repositories;
+using SFA.DAS.Forecasting.Domain.Payments.Repositories;
 
-namespace SFA.DAS.Forecasting.Payments.Domain.Aggregates
+namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 {
     public class EmployerPayment
     {

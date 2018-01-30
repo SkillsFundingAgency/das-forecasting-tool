@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Payments.Domain.Entities;
+using SFA.DAS.Forecasting.Domain.Payments.Entities;
 
-namespace SFA.DAS.Forecasting.Payments.Domain.Repositories
+namespace SFA.DAS.Forecasting.Domain.Payments.Repositories
 {
     public interface IEmployerPaymentRepository
     {

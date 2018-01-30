@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.Payments.Application.Messages
+namespace SFA.DAS.Forecasting.Application.Payments.Messages
 {
 	/// <summary>
 	/// TODO: Temp event definition. this will be replaced by the actual Earning details published by the employer services.

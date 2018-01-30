@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Payments.Domain.Entities
+﻿namespace SFA.DAS.Forecasting.Domain.Payments.Entities
 {
 	public class Payment
 	{

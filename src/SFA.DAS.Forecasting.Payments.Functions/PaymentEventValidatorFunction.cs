@@ -4,8 +4,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Payments.Application.Messages;
-using SFA.DAS.Forecasting.Payments.Application.Validation;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Validation;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {

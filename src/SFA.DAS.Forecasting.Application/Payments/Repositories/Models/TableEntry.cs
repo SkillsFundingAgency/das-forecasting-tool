@@ -1,6 +1,6 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
 
-namespace SFA.DAS.Forecasting.Payments.Application.Repositories.Models
+namespace SFA.DAS.Forecasting.Application.Payments.Repositories.Models
 {
     public class TableEntry : TableEntity
     {

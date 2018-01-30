@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Forecasting.Core.Validation;
-using SFA.DAS.Forecasting.Payments.Application.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 
-namespace SFA.DAS.Forecasting.Payments.Application.Validation
+namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
     public class CollectionPeriodSuperficialValidator : ISuperficialValidation<CollectionPeriod>
     {

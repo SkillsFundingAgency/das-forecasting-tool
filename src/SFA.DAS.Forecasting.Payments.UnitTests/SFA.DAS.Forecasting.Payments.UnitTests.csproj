@@ -73,17 +73,17 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
+      <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
+      <Name>SFA.DAS.Forecasting.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj">
-      <Project>{62df1f14-97ba-4070-aff1-f4e53b37e6c9}</Project>
-      <Name>SFA.DAS.Forecasting.Payments.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Domain\SFA.DAS.Forecasting.Payments.Domain.csproj">
-      <Project>{02119BA0-EDA4-422E-9CFD-DCA3E39CE556}</Project>
-      <Name>SFA.DAS.Forecasting.Payments.Domain</Name>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
+      <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
+      <Name>SFA.DAS.Forecasting.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

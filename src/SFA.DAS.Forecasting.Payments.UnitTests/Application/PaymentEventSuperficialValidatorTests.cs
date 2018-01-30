@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Payments.Application.Messages;
-using SFA.DAS.Forecasting.Payments.Application.Validation;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Validation;
 
 namespace SFA.DAS.Forecasting.Payments.UnitTests.Application
 {
