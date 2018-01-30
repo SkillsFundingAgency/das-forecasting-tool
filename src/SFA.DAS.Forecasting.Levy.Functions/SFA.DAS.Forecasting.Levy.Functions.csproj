@@ -3,6 +3,7 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove=".gitignore" />
     <None Remove="NLog.Config" />
   </ItemGroup>
   <ItemGroup>
@@ -22,10 +23,8 @@
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
-    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj" />
-    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj" />
-    <ProjectReference Include="..\..\SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
