@@ -1,9 +1,9 @@
+using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
-using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {

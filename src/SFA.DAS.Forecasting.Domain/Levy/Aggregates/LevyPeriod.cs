@@ -1,14 +1,14 @@
-﻿using SFA.DAS.Forecasting.Levy.Domain.Repositories;
+﻿using SFA.DAS.Forecasting.Domain.Levy.Repositories;
 using SFA.DAS.NLog.Logger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Levy.Domain.Model;
-using SFA.DAS.Forecasting.Levy.Domain.Validation;
+using SFA.DAS.Forecasting.Domain.Levy.Model;
+using SFA.DAS.Forecasting.Domain.Levy.Validation;
 
-namespace SFA.DAS.Forecasting.Levy.Domain.Aggregates
+namespace SFA.DAS.Forecasting.Domain.Levy.Aggregates
 {
     public interface ILevyPeriod
     {

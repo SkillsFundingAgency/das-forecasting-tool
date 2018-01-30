@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
-using SFA.DAS.Forecasting.Levy.Domain.Repositories;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
+using SFA.DAS.Forecasting.Domain.Levy.Repositories;
 using SFA.DAS.NLog.Logger;
 
-namespace SFA.DAS.Forecasting.Levy.Application.Handlers
+namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 {
     public class LevyDeclarationHandler
     {

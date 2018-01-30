@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Services;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,12 +42,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             await PostData(ValidData());
         }
 
-        //[Given(@"events with invalid data have been created")]
-        //public async Task WhenThereIsMissingEventData()
-        //{
-        //    await PostData(InvalidData());
-        //}
-
         [Given(@"all events with invalid data have been created")]
          public async Task WhenThereIsMissingEventData()
         {
@@ -62,16 +56,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
 
-        //[Then(@"all of the data stored is correct")]
-        //public void ThenAllOfTheDataStoredIsCorrect()
-        //{
-        //    var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString())?.ToList();
-
-        //    Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 301) != null);
-        //    Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 201) != null);
-        //    Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 101) != null);
-        //}
-
         [Then(@"all of the levy declarations  stored is correct")]
         public void ThenAllOfTheLevyDeclarationsStoredIsCorrect()
         {
@@ -80,19 +64,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             _records.Should().Contain(m => m.Amount == 301);
             _records.Should().Contain(m => m.Amount == 201);
             _records.Should().Contain(m => m.Amount == 101);
-            //Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 301) != null);
-            //Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 201) != null);
-            //Assert.IsTrue(_records.SingleOrDefault(m => m.Amount == 101) != null);
         }
-
-
-        //[Then(@"the event with invalid data is not stored")]
-        //public void ThenTheEventIsNotStored()
-        //{
-        //    var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString());
-
-        //    Assert.AreEqual(0, _records.Count(m => m.EmployerAccountId.ToString().EndsWith("2")));
-        //}
 
         [Then(@"all the event with invalid data is not stored")]
         public void ThenAllTheEventWithInvalidDataIsNotStored()

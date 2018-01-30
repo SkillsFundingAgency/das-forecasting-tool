@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Services;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
 using SFA.DAS.Forecasting.Payments.Application.Messages;
 using TechTalk.SpecFlow;
 

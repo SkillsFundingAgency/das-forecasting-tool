@@ -2,7 +2,7 @@
 using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Levy.Application.Validation;
 
 namespace SFA.DAS.Forecasting.Levy.UnitTests.Application

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Levy.Domain.Model;
+using SFA.DAS.Forecasting.Domain.Levy.Model;
 
-namespace SFA.DAS.Forecasting.Levy.Domain.Services
+namespace SFA.DAS.Forecasting.Domain.Levy.Services
 {
     public interface ILevyDataService
     {

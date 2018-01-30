@@ -1,5 +1,5 @@
-﻿using SFA.DAS.Forecasting.Levy.Application.Messages;
-using FluentValidation;
+﻿using FluentValidation;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
 
 namespace SFA.DAS.Forecasting.Levy.Application.Validation
 {

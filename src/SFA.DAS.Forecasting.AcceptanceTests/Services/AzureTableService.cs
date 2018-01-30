@@ -2,7 +2,6 @@
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.AcceptanceTests.Services.Models;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;

@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using AutoMoq;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Levy.Application.Handlers;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
-using SFA.DAS.Forecasting.Levy.Domain.Aggregates;
-using SFA.DAS.Forecasting.Levy.Domain.Repositories;
+using SFA.DAS.Forecasting.Application.Levy.Handlers;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
+using SFA.DAS.Forecasting.Domain.Levy.Aggregates;
+using SFA.DAS.Forecasting.Domain.Levy.Repositories;
 
 namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
 {

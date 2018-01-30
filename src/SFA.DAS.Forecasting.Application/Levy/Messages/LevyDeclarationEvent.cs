@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.Levy.Application.Messages
+namespace SFA.DAS.Forecasting.Application.Levy.Messages
 {
     /// <summary>
     /// TODO: Temp event definition. this will be replaced by the actual Levy event published by the employer services.

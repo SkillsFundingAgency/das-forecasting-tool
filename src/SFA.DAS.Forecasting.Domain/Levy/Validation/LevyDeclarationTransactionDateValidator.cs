@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.Levy.Domain.Validation
+namespace SFA.DAS.Forecasting.Domain.Levy.Validation
 {
     public class LevyDeclarationTransactionDateValidator
     {

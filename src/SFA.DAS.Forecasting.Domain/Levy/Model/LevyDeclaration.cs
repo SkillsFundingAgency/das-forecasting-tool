@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.Levy.Domain.Model
+namespace SFA.DAS.Forecasting.Domain.Levy.Model
 {
     public class LevyDeclaration
     {

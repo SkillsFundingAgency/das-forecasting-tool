@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Levy.Domain.Aggregates;
-using SFA.DAS.Forecasting.Levy.Domain.Services;
+using SFA.DAS.Forecasting.Domain.Levy.Aggregates;
+using SFA.DAS.Forecasting.Domain.Levy.Services;
 
-namespace SFA.DAS.Forecasting.Levy.Domain.Repositories
+namespace SFA.DAS.Forecasting.Domain.Levy.Repositories
 {
     public interface ILevyPeriodRepository
     {

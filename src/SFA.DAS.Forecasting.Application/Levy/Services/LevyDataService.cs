@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Levy.Services.Models;
 using SFA.DAS.Forecasting.Core.Configuration;
-using SFA.DAS.Forecasting.Levy.Application.Services.Models;
-using SFA.DAS.Forecasting.Levy.Domain.Model;
-using SFA.DAS.Forecasting.Levy.Domain.Services;
+using SFA.DAS.Forecasting.Domain.Levy.Model;
+using SFA.DAS.Forecasting.Domain.Levy.Services;
 
-namespace SFA.DAS.Forecasting.Levy.Application.Services
+namespace SFA.DAS.Forecasting.Application.Levy.Services
 {
     public class LevyDataService : ILevyDataService
     {

@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Levy.Messages;
+using SFA.DAS.Forecasting.Domain.Levy.Repositories;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Levy.Application.Messages;
-using SFA.DAS.Forecasting.Levy.Domain.Aggregates;
-using SFA.DAS.Forecasting.Levy.Domain.Repositories;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
