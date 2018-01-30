@@ -16,8 +16,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Application\SFA.DAS.Forecasting.Payments.Application.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Domain\SFA.DAS.Forecasting.Payments.Domain.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Azure.WebJobs">

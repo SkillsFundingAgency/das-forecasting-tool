@@ -97,6 +97,16 @@
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Infrastructure\Registries\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
+    <Compile Include="Levy\Feature\ProcessLevyEvent.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
+    </Compile>
     <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
     <Compile Include="Services\AzureTableService.cs" />
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />

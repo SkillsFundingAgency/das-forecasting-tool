@@ -5,7 +5,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Levy.Application.Validation;
 
-namespace SFA.DAS.Forecasting.Levy.UnitTests.Application
+namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
 {
     [TestFixture]
     public class LevyDeclarationEventValidatorTests

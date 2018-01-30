@@ -3,7 +3,7 @@ using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Levy.Aggregates;
 
-namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
+namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
 {
     [TestFixture]
     public class LevyPeriodTests

@@ -8,7 +8,7 @@ using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Domain.Levy.Aggregates;
 using SFA.DAS.Forecasting.Domain.Levy.Repositories;
 
-namespace SFA.DAS.Forecasting.Levy.UnitTests.Domain
+namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
 {
     [TestFixture]
     public class LevyDeclarationHandlerTests

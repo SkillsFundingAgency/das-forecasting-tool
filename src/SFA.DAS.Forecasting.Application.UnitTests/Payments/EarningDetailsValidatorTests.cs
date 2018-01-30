@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Validation;
 
-namespace SFA.DAS.Forecasting.Payments.UnitTests.Application
+namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 {
     [TestFixture]
     public class EarningDetailsValidatorTests

@@ -5,7 +5,7 @@ using SFA.DAS.Forecasting.Domain.Payments.Aggregates;
 using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using SFA.DAS.Forecasting.Domain.Payments.Repositories;
 
-namespace SFA.DAS.Forecasting.Payments.UnitTests.Domain
+namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 {
     [TestFixture]
     public class EmployerPaymentTests
