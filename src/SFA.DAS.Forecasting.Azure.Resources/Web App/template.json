@@ -81,6 +81,9 @@
         "name": "[parameters('name')]",
         "type": "microsoft.insights/components",
         "location": "[parameters('location')]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
         "tags": {
           "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('name'))]": "Resource"
         },
