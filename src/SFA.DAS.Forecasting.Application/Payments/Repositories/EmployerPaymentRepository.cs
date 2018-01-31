@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 
 			var tableModel = new TableEntry
 			{
-				PartitionKey = payment.EmployerAccountId,
+				PartitionKey = payment.EmployerAccountId.ToString(),
 				RowKey = payment.Id,
 				Data = JsonConvert.SerializeObject(payment)
 			};

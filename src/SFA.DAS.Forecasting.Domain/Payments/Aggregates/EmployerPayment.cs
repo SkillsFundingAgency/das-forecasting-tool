@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 	    {
 		    _paymentStorage = paymentStorage;
 	    }
-	    public async Task AddDeclaration(string id, string employerAccountId, long ukprn, long apprenticeshipId, decimal amount)
+	    public async Task AddPayment(string id, int employerAccountId, long ukprn, long apprenticeshipId, decimal amount)
 	    {
 		    var payment = new Entities.Payment
 		    {

@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
         public async Task Stores_Valid_Payment()
         {
 	        var id = "testId";
-	        var employerAccountId = "123456";
+	        var employerAccountId = 123456;
 			var ukprn = 123456;
 	        var apprenticeshipId = 654321;
 	        var amount = 123m;
@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
                 .Callback<Payment>(p => payment = p)
                 .Returns(Task.Run(() => 1));
 
-            await _service.AddDeclaration(id, employerAccountId, ukprn, apprenticeshipId, amount);
+            await _service.AddPayment(id, employerAccountId, ukprn, apprenticeshipId, amount);
 
             Assert.AreEqual(id, payment.Id);
             Assert.AreEqual(employerAccountId, payment.EmployerAccountId);
