@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Payments.Repositories;
 
 namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
@@ -11,7 +12,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 	    {
 		    _paymentStorage = paymentStorage;
 	    }
-	    public async Task AddPayment(string id, int employerAccountId, long ukprn, long apprenticeshipId, decimal amount)
+	    public async Task AddPayment(string id, long employerAccountId, long ukprn, long apprenticeshipId, decimal amount)
 	    {
 		    var payment = new Entities.Payment
 		    {
@@ -24,5 +25,5 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 
 		    await _paymentStorage.StorePayment(payment);
 	    }
-	}
+    }
 }

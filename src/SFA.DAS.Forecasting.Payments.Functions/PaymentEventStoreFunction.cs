@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 async (container, logger) =>
                 {
                     var employerLevy = container.GetInstance<EmployerPayment>();
-                    await employerLevy.AddDeclaration(paymentEvent.Id, 
+                    await employerLevy.AddPayment(paymentEvent.Id, 
 						paymentEvent.EmployerAccountId, 
 						paymentEvent.Ukprn, 
 						paymentEvent.ApprenticeshipId, 

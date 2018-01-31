@@ -2,103 +2,155 @@
 @model SFA.DAS.Forecasting.Web.ViewModels.BalanceViewModel
 
 @{
-    ViewBag.Title = "Forecasting";
+    ViewBag.Title = "Funding projection";
 }
 
-<div class="grid-row">
-    <div class="column-full">
-        <h1 class="heading-xlarge heading-dashboard">Forecasting</h1>
-    </div>
-</div>
 
 <div class="grid-row">
     <div class="column-two-thirds">
-        <p>The figures below show the funds available to you for the duration of your apprenticeships. These figures are a representation of the data you have filled in.</p>
+        <div class="hgroup form-group">
+            <h1 class="heading-xlarge">
+                Funding projection
+            </h1>
+            <p>
+                The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
+            </p>
+
+            <p>
+                These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding. The table shows the monthly projection figures until April 2019.
+            </p>
+        </div>
     </div>
 
-    <div class="form-group">
-        <button class="button" data-clipboard-action="copy" data-clipboard-target="#balancesheet">
-            Copy to clipboard
-        </button>
+    <div class="column-one-third">
+        <div class="related">
+            <div class="hidden">
+                <h4 class="heading-small">Skip to</h4>
+                <ul class="list list-bullets">
+                    <li><a href="#viz">Your account projection</a></li>
+                    <li><a href="#apprentice">Costs by apprentice</a></li>
+                    <li><a href="#apprenticeship">Costs by apprenticeship</a></li>
+                </ul>
+            </div>
+
+            <h3 class="heading-small">Download this data</h3>
+            <div class="form-group">
+                <ul class="list list-links">
+
+                    <li>
+                        <a href="#" class="" data-clipboard-action="copy" data-clipboard-target="#balancesheet">
+                            Download as a CSV file
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+            <details>
+                <summary>What does the download include?</summary>
+                <p>The download includes the following data:</p>
+                <ul class="list list-bullet">
+                    <li>Funds in</li>
+                    <li>Cost of training</li>
+                    <li>Completion payments</li>
+                    <li>Future funds</li>
+                </ul>
+            </details>
+
+        </div>
     </div>
 
-    <details>
-        <summary>How the cost of is calculated</summary>
 
-        <p>The balance sheet is based on last month’s payment for both levy credit and cost of training, it doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.</p>
-    </details>
+    <div name="balance" id="balance" class="grid-row">
+        <div class="column-full">
+            <h4 class="heading-large">Your account projection</h4>
+
+            <div class="grid-row" style="margin-bottom: 30px;">
+                <div class="column-two-thirds">
+                    <p>A month by month projection of your account balance.</p>
+
+                    <details>
+                        <summary>How the 'cost of training' is calculated</summary>
+                        <div class="panel panel-width-thin">
+
+                            <p>The cost of training column shows the total of the previous monthly training payments that have been made to your training providers.  The same training costs are used throughout the forecast.</p>
+                            <p>The completion payment column shows the total of completion payments that happen in that month.</p>
+                            <p>Payments are usually made on the 5th working day of each month and are updated in the forecast.</p>
+
+                        </div>
+                    </details>
 
 
-    <div id="tabs-container">
-        @Html.Partial("ForcastingMenu")
-        <div id="tab-1" class="tab-content">
 
-            <table class="results-table sticky-header" id="balancesheet">
+                    <details>
+                        <summary>How are the 'funds in' figures worked out?</summary>
+                        <div class="panel panel-width-thin">
+
+                            <p>The funds in column show the total of the last received levy credits from your PAYE schemes. The figure will be updated on the 23rd of each month.</p>
+                            <p>The same figures are used throughout the forecast.</p>
+
+                        </div>
+                    </details>
+
+                    <details>
+                        <summary>Where is the end point assessment cost?</summary>
+                        <div class="panel panel-width-thin">
+
+                            <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
+                            <p>
+                                This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
+
+                            </p>
+
+                        </div>
+                    </details>
+
+                </div>
+                <div class="column-one-third hidden">
+                    <div id="" class="data grey">
+                        <div class="chart-date">
+                            Current funds
+                        </div>
+                        <div class="chart-value">
+                            <span class="bold-large">£999,999,999</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <table class="small" id="balancesheet">
                 <thead>
                     <tr>
                         <th class="nowrap">Date</th>
-                        <th class="financial">Levy credit</th>
+                        <th class="financial">Funds in</th>
                         <th class="financial">Cost of training</th>
                         <th class="financial">Completion payments</th>
-                        <th class="financial">Expired funds</th>
-                        <th class="financial">Balance</th>
+                        <th class="financial">Future funds</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach (var item in Model.BalanceItemViewModels)
-                {
-                    <tr>
-                        <td class="nowrap">@item.Date.ToGdsFormatLongMonthNameWithoutDay()</td>
-                        <td class="financial">@item.LevyCredit.FormatCost()</td>
-                        <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                        <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                        <td class="financial">@item.ExpiredFunds.FormatCost()</td>
-                        <td class="financial">@item.Balance.FormatCost()</td>
-                    </tr>
-                }
+                    @foreach (var item in Model.BalanceItemViewModels)
+                    {
+                        <tr>
+                            <td class="nowrap">@item.Date.ToGdsFormatShortMonthAndYearWithoutDay()</td>
+                            <td class="financial">@item.LevyCredit.FormatCost()</td>
+                            <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                            <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                            <td class="financial">@item.Balance.FormatCost()</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-        </div>
-
-
-        <div id="tab-2" class="tab-content" style="display: none;">
-            <table class="hidden">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="">September 2017</td>
-                        <td>Acme Training Plc</td>
-                        <td> £313.40 </td>
-                        <td><a href="#">Details</a></td>
-                    </tr>
-                    <tr>
-                        <td class="">September 2017</td>
-                        <td>Anvil Mentoring and Training Ltd</td>
-                        <td> £300.00 </td>
-                        <td><a href="#">Details</a></td>
-                    </tr>
-                    <tr>
-                        <td class="">September 2017</td>
-                        <td>Anvil Group Plc</td>
-                        <td> £133.33 </td>
-                        <td><a href="#">Details</a></td>
-                    </tr>
-                    <tr>
-                        <td class="">September 2017</td>
-                        <td>Best Western Training Ltd</td>
-                        <td>£133,33</td>
-                        <td><a href="#">Details</a></td>
-                    </tr>
-                </tbody>
-            </table>
-
         </div>
     </div>
+
+    <div class="info-highlighted">
+        <h3 class="heading-medium">Disclaimer</h3>
+        <p>This tool is designed to illustrate what your funds will look like if there are no changes made to your apprenticeships.</p>
+        <p>The Department for Education is not responsible for the consequences of any decisions or actions taken, based on the information provided by this tool.</p>
+    </div>
+
 </div>
