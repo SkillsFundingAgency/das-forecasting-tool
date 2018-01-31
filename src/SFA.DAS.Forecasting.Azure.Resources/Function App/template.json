@@ -88,6 +88,12 @@
       }
     }
   ],
+  "outputs": {
+    "functionIdentity": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
+    }
+  },
   "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0"
 }
