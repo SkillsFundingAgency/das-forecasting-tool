@@ -81,7 +81,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		    return
 			    new List<PaymentEvent> {
 						new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -104,7 +104,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 102,
 						    ApprenticeshipId = 1235,
 						    Id = Guid.NewGuid().ToString(),
@@ -127,7 +127,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 103,
 						    ApprenticeshipId = 1236,
 						    Id = Guid.NewGuid().ToString(),
@@ -158,7 +158,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		    return
 			    new List<PaymentEvent> {
 						new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = -1,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -181,7 +181,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = -1,
 						    Id = Guid.NewGuid().ToString(),
@@ -204,7 +204,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -227,7 +227,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -250,7 +250,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -273,7 +273,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -296,7 +296,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -319,7 +319,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -342,7 +342,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -365,7 +365,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -388,7 +388,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -411,7 +411,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -434,7 +434,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
