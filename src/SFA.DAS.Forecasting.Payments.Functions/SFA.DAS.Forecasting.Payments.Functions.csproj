@@ -2,6 +2,14 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="NLog.Config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NLog.Config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>    
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.1.0-beta4" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.1.0-beta4" />    
