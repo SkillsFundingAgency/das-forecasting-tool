@@ -17,15 +17,21 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     [Binding]
     public class ProcessLevyEventCI_528Steps : StepsBase
     {
-        private const long EmployerAccountId = 1111;
         private AzureTableService _azureTableService;
+
+        [Scope(Feature = "ProcessLevyEvent [CI-528]")]
+        [BeforeFeature(Order = 1)]
+        public static void StartLevyFunction()
+        {
+            StartFunction("SFA.DAS.Forecasting.Levy.Functions");
+        }
 
 
         [OneTimeSetUp]
         public void BeforeScenario()
         {
             _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
-            _azureTableService.EnsureExcists();
+            _azureTableService.EnsureExists();
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
         }
 
@@ -35,28 +41,39 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
             Thread.Sleep(1000);
         }
-        
-        [Given(@"levy credit events have been created")]
+
+        [Given(@"that I'm the ESFA")]
+        public void GivenThatIMTheESFA()
+        {
+            //just for show
+        }
+
+        [Given(@"I have credited levy to employer accounts")]
+        public void GivenIHaveCreditedLevyToEmployerAccounts()
+        {
+            //just for show
+        }
+
+        [When(@"the employer services notifies the Forecasting service of the Levy Credits")]
         public async Task GivenLevyCreditEventsHaveBeenCreated()
         {
             await PostData(ValidData());
         }
 
-        [Given(@"all events with invalid data have been created")]
+        [When(@"the employer service notifies the Forecasting service of the invalid Levy Credits")]
          public async Task WhenThereIsMissingEventData()
         {
             await PostData(InvalidData());
         }
 
-
-        [Then(@"there are (.*) levy credit events stored")]
+        [Then(@"there should be (.*) levy credit events stored")]
         public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
         {
             var _records = Do(() => _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
             Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
 
-        [Then(@"all of the levy declarations  stored is correct")]
+        [Then(@"all of the levy declarations stored should be correct")]
         public void ThenAllOfTheLevyDeclarationsStoredIsCorrect()
         {
             var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString())?.ToList();
@@ -83,7 +100,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 101,
                         TransactionDate = DateTime.Now,
-                        PayrollYear = "18/19",
+                        PayrollYear = "18-19",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
@@ -91,7 +108,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 201,
                         TransactionDate = DateTime.Now.AddMonths(-12),
-                        PayrollYear = "18/19",
+                        PayrollYear = "18-19",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
@@ -99,7 +116,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 301,
                         TransactionDate = DateTime.Now.AddMonths(-15),
-                        PayrollYear = "18/19",
+                        PayrollYear = "18-19",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     }
@@ -115,7 +132,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 102,
                         TransactionDate = DateTime.Now,
-                        PayrollYear = "17/18",
+                        PayrollYear = "17-18",
                         PayrollMonth = 1,
                         Scheme = ""
                     },
@@ -123,7 +140,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 202,
                         TransactionDate = DateTime.Now.AddMonths(-25).AddDays(-1),
-                        PayrollYear = "16/17",
+                        PayrollYear = "16-17",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
@@ -131,7 +148,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 303,
                         TransactionDate = DateTime.Now.AddMonths(-15),
-                        PayrollYear = "01/01",
+                        PayrollYear = "01-01",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
@@ -139,7 +156,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 501,
                         TransactionDate = DateTime.Now.AddMonths(-2),
-                        PayrollYear = "17/18",
+                        PayrollYear = "17-18",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
@@ -147,7 +164,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = -10,
                         TransactionDate = DateTime.Now.AddMonths(-2),
-                        PayrollYear = "18/19",
+                        PayrollYear = "18-19",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     }

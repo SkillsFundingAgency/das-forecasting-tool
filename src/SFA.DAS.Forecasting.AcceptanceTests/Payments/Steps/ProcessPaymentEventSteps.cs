@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 	    public void BeforeScenario()
 	    {
 		    _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.EmployerPaymentsTable);
-		    _azureTableService.EnsureExcists();
+		    _azureTableService.EnsureExists();
 		    _azureTableService.DeleteEntities(EmployerAccountId.ToString());
 	    }
 

@@ -9,10 +9,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
         public TimeSpan TimeToPause => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"] ?? "00:00:05");
         public string Environment => GetAppSetting("Environment");
         public string FunctionBaseUrl => GetAppSetting("FunctionBaseUrl");
-
+        public int EmployerAccountId => int.Parse( GetAppSetting("EmployerAccountId"));
         public string AzureStorageConnectionString => GetAppSetting("AzureStorageConnectionString");
         public string LevyDeclarationsTable => GetAppSetting("LevyDeclarationsTable");
         public string EmployerPaymentsTable => GetAppSetting("EmployerPaymentsTable");
+        
 
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
     }

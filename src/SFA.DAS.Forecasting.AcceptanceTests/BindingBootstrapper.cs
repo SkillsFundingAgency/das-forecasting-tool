@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
+﻿using System;
+using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
 using StructureMap;
 using TechTalk.SpecFlow;
 
@@ -11,6 +12,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         public static void SetUpContainer()
         {
             ParentContainer = new Container(new DefaultRegistry());
+        }
+
+        [AfterFeature(Order = 0)]
+        public static void CleanUpFunctionProcesses()
+        {
+            Processes?.ForEach(process => process.Kill());
         }
 
         [AfterTestRun(Order = 999)]

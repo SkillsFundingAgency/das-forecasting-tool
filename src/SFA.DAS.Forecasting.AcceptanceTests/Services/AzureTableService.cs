@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
             _table = tableClient.GetTableReference(tableName);
         }
 
-        internal void EnsureExcists()
+        internal void EnsureExists()
         {
             if (!_table.Exists())
             {
