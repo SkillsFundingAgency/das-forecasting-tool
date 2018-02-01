@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using SFA.DAS.Forecasting.Domain.Interfaces;
@@ -17,6 +18,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly ILog _logger;
 
         private readonly Mapper _mapper;
+
+        private readonly static DateTime balanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
@@ -37,7 +40,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
             var result = await  _balanceRepository.GetBalanceAsync(accountId);
-            return new BalanceViewModel { BalanceItemViewModels = _mapper.MapBalance(result) };
+            
+            return new BalanceViewModel { BalanceItemViewModels = _mapper.MapBalance(result).Where(m => m.Date < balanceMaxDate) };
         }
 
         public async Task<ApprenticeshipPageViewModel> Apprenticeships(string hashedAccountId)
