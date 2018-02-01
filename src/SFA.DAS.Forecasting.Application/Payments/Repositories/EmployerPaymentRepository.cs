@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 	public class EmployerPaymentRepository : IEmployerPaymentRepository
 	{
 		// ToDo: Const or config...
-		private static string EmployerPaymentTableName = "EmployerPayment";
+		private static string EmployerPaymentTableName = "EmployerPayments";
 
 		private readonly ILog _logger;
 		private CloudTable _table;
