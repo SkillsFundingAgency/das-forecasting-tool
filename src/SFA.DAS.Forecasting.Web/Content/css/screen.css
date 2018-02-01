@@ -2952,21 +2952,21 @@ a#link-settings:focus {
   display: block;
 }
 
-.error-summary, .info-summary, .success-summary, .warning-summary {
-  border-width: 4px;
-  border-style: solid;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  padding: 15px 10px;
+.error-summary, .info-summary, .success-summary, .warning-summary, .info-highlighted {
+    border-width: 4px;
+    border-style: solid;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px 10px;
 }
 
 @media (min-width: 641px) {
-  .error-summary, .info-summary, .success-summary, .warning-summary {
-    border-width: 5px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    padding: 20px 15px 15px;
-  }
+    .error-summary, .info-summary, .success-summary, .warning-summary, .info-highlighted {
+        border-width: 5px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding: 20px 15px 15px;
+    }
 }
 
 .error-summary:focus, .info-summary:focus, .success-summary:focus, .warning-summary:focus {
@@ -2981,28 +2981,28 @@ a#link-settings:focus {
   margin-top: 0;
 }
 
-.error-summary h1[class^="heading-"], .info-summary h1[class^="heading-"], .success-summary h1[class^="heading-"], .warning-summary h1[class^="heading-"] {
-  margin: 0;
+.error-summary h1[class^="heading-"], .info-summary h1[class^="heading-"], .success-summary h1[class^="heading-"], .warning-summary h1[class^="heading-"], .info-highlighted h3[class^="heading-"] {
+    margin: 0;
 }
 
-.error-summary h2[class^="heading-"], .info-summary h2[class^="heading-"], .success-summary h2[class^="heading-"], .warning-summary h2[class^="heading-"] {
-  margin: 0;
+.error-summary h2[class^="heading-"], .info-summary h2[class^="heading-"], .success-summary h2[class^="heading-"], .warning-summary h2[class^="heading-"], .info-highlighted h3[class^="heading-"] {
+    margin: 0;
 }
 
-.error-summary h3[class^="heading-"], .info-summary h3[class^="heading-"], .success-summary h3[class^="heading-"], .warning-summary h3[class^="heading-"] {
-  margin: 0;
+.error-summary h3[class^="heading-"], .info-summary h3[class^="heading-"], .success-summary h3[class^="heading-"], .warning-summary h3[class^="heading-"], .info-highlighted h3[class^="heading-"] {
+    margin: 0;
 }
 
-.error-summary h4[class^="heading-"], .info-summary h4[class^="heading-"], .success-summary h4[class^="heading-"], .warning-summary h4[class^="heading-"] {
-  margin: 0;
+.error-summary h4[class^="heading-"], .info-summary h4[class^="heading-"], .success-summary h4[class^="heading-"], .warning-summary h4[class^="heading-"], .info-highlighted h3[class^="heading-"] {
+    margin: 0;
 }
 
-.error-summary h5[class^="heading-"], .info-summary h5[class^="heading-"], .success-summary h5[class^="heading-"], .warning-summary h5[class^="heading-"] {
-  margin: 0;
+.error-summary h5[class^="heading-"], .info-summary h5[class^="heading-"], .success-summary h5[class^="heading-"], .warning-summary h5[class^="heading-"], .info-highlighted h3[class^="heading-"] {
+    margin: 0;
 }
 
-.error-summary h6[class^="heading-"], .info-summary h6[class^="heading-"], .success-summary h6[class^="heading-"], .warning-summary h6[class^="heading-"] {
-  margin: 0;
+.error-summary h6[class^="heading-"], .info-summary h6[class^="heading-"], .success-summary h6[class^="heading-"], .warning-summary h6[class^="heading-"], .info-highlighted h3[class^="heading-"] {
+    margin: 0;
 }
 
 .error-summary-list, .info-summary-list, .success-summary-list, .warning-summary-list {
@@ -5641,4 +5641,11 @@ h2 .float-right {
     margin-top: 5px;
     word-wrap: break-word;
   }
+}
+
+.info-highlighted {
+    max-width: 30em;
+    background: #eaebf3;
+    border: none;
+    border-left: solid 10px #2e358b;
 }

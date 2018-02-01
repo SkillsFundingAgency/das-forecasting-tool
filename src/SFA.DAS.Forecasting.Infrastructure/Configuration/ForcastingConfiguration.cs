@@ -9,5 +9,7 @@ namespace SFA.DAS.Forecasting.Infrastructure.Configuration
         public string AllowedHashstringCharacters { get; set; }
 
         public string HashString { get; set; }
+
+        public string BackLink { get; set; }
     }
 }

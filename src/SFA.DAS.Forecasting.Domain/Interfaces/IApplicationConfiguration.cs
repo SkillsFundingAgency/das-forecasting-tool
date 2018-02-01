@@ -3,5 +3,6 @@
     public interface IApplicationConfiguration
     {
         string DatabaseConnectionString { get; set; }
+        string BackLink { get; set; }
     }
 }
