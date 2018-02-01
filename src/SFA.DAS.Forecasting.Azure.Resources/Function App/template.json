@@ -23,6 +23,18 @@
     },
     "subscriptionId": {
       "type": "string"
+    },
+    "PaymentsApiBaseUrl": {
+      "type": "string"
+    },
+    "PaymentsApiToken": {
+      "type": "string"
+    },
+    "Environment": {
+      "type": "string"
+    },
+    "DbConnectionString": {
+      "type": "string"
     }
   },
   "resources": [
@@ -54,6 +66,26 @@
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
               "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+            },
+            {
+              "name": "StorageConnectionString",
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+            },
+            {
+              "name": "PaymentsApiBaseUrl",
+              "value": "[parameters('PaymentsApiBaseUrl')]"
+            },
+            {
+              "name": "PaymentsApiToken",
+              "value": "[parameters('PaymentsApiToken')]"
+            },
+            {
+              "name": "Environment",
+              "value": "[parameters('Environment')]"
+            },
+            {
+              "name": "DbConnectionString",
+              "value": "[parameters('DbConnectionString')]"
             }
           ],
           "alwaysOn": true,
@@ -89,7 +121,7 @@
     }
   ],
   "outputs": {
-    "functionIdentity": {
+    "identity": {
       "type": "string",
       "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
     }

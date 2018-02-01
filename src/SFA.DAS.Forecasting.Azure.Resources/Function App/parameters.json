@@ -25,6 +25,18 @@
     },
     "subscriptionId": {
       "value": "__funcSubscriptionId__"
+    },
+    "PaymentsApiBaseUrl": {
+      "value": "__funcPaymentsApiBaseUrl__"
+    },
+    "PaymentsApiToken": {
+      "value": "__funcPaymentsApiToken__"
+    },
+    "Environment": {
+      "value": "__funcEnvironment__"
+    },
+    "DbConnectionString": {
+      "value": "__funcDbConnectionString__"
     }
   }
 }
