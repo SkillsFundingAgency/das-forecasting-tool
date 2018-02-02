@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 using SFA.DAS.Forecasting.Domain.Entities;
-
+using SFA.DAS.Forecasting.ReadModel.AccountProjections;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public class Mapper
     {
-        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<BalanceItem> data)
+        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjection> data)
         {
             return data.Select(x =>
                 new BalanceItemViewModel
@@ -19,8 +20,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                     LevyCredit = x.FundsIn,
                     CostOfTraining = x.TotalCostOfTraning,
                     CompletionPayments = x.CompletionPayments,
-                    ExpiredFunds = x.ExpiredFunds,
-                    Balance = x.Balance
+                    ExpiredFunds = 0,
+                    Balance = x.FundsIn
                 });
         }
 

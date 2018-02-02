@@ -56,6 +56,11 @@ namespace SFA.DAS.Forecasting.Web.Extensions
 
         public static string ToGdsFormatShortMonthWithoutDay(this DateTime date)
         {
+            return date.ToString("MMM yy");
+        }
+
+        public static string ToGdsFormatShortMonthAndYearWithoutDay(this DateTime date)
+        {
             return date.ToString("MM yyyy");
         }
 

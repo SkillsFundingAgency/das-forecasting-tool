@@ -628,6 +628,10 @@
       <Project>{30D7F22F-F384-4027-B91B-B2E1D08489DE}</Project>
       <Name>SFA.DAS.Forecasting.Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
+      <Project>{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}</Project>
+      <Name>SFA.DAS.Forecasting.ReadModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

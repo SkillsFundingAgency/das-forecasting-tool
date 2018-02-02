@@ -19,18 +19,10 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("balance", Name = "ForecastingBalance")]
+        [Route("", Name = "ForecastingBalance")]
         public async Task<ActionResult> Balance(string hashedAccountId)
         {
             var viewModel = await _orchestrator.Balance(hashedAccountId);
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        [Route("apprenticeships", Name = "ForecastingApprenticeships")]
-        public async Task<ActionResult> Apprenticeships(string hashedAccountId)
-        {
-            var viewModel = await _orchestrator.Apprenticeships(hashedAccountId);
             return View(viewModel);
         }
 
