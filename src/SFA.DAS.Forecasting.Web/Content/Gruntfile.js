@@ -20,6 +20,14 @@ module.exports = function(grunt) {
         }
       }
     },
+    copy: {
+        main: {
+            expand: true,
+            flatten: true,
+            src: 'src/govuk_template/assets/stylesheets/*.css',
+            dest: 'dist'
+        },
+    },
     // Watches styles and specs for changes
     watch: {
       css: {
@@ -33,12 +41,13 @@ module.exports = function(grunt) {
 
   ;[
 	'grunt-contrib-watch',
-    'grunt-sass'
+      'grunt-sass',
+      'grunt-contrib-copy'
   ].forEach(function (task) {
     grunt.loadNpmTasks(task)
   })
 
   // Default task(s).
-  grunt.registerTask('default', ['sass', 'watch']);
+  grunt.registerTask('default', ['sass', 'watch', 'copy']);
 
 };

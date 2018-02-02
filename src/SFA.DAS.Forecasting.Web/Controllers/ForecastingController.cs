@@ -3,8 +3,11 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
+using CsvHelper.Configuration;
+using CsvHelper.TypeConversion;
 using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
+using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
@@ -39,11 +42,6 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("download", Name = "DownloadCsv")]
         public async Task<ActionResult> Csv(string hashedAccountId)
         {
-            //var accountId = _hashingService.DecodeValue(hashedAccountId);
-            //var result = await _accountProjectionRepository.Get(accountId);
-            //var balanceItemViewModels = _mapper.MapBalance(result)
-            //    .Where(m => m.Date < balanceMaxDate);
-
             var viewModel = await _orchestrator.Balance(hashedAccountId);
 
             using (var memoryStream = new MemoryStream())
