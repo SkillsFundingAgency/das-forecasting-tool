@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 {
                     var employerLevy = container.GetInstance<EmployerPayment>();
                     await employerLevy.AddPayment(paymentEvent.Id, 
-						paymentEvent.EmployerAccountId, 
+						int.Parse(paymentEvent.EmployerAccountId), 
 						paymentEvent.Ukprn, 
 						paymentEvent.ApprenticeshipId, 
 						paymentEvent.Amount);

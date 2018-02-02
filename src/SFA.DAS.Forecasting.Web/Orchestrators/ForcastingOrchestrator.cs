@@ -14,25 +14,26 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     public class ForecastingOrchestrator
     {
         private readonly IHashingService _hashingService;
-        private readonly IAccountProjectionDataService _accountProjectionRepository;
-        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly IBalanceRepository _balanceRepository;
+        private readonly IApprenticeshipRepository _apprenticeshipRepository;
         private readonly ILog _logger;
 
         private readonly Mapper _mapper;
+
 
         // ToDo: Move to config
         private readonly static DateTime balanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
-            IAccountProjectionDataService accountProjectionRepository,
-            IApplicationConfiguration applicationConfiguration,
+            IBalanceRepository balanceRepository,
+            IApprenticeshipRepository apprenticeshipRepository,
             ILog logger,
             Mapper mapper)
         {
             _hashingService = hashingService;
-            _accountProjectionRepository = accountProjectionRepository;
-            _applicationConfiguration = applicationConfiguration;
+            _balanceRepository = balanceRepository;
+            _apprenticeshipRepository = apprenticeshipRepository;
             _logger = logger;
             _mapper = mapper;
         }
@@ -68,12 +69,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var result = await _accountProjectionRepository.Get(accountId);
+            var result = await _balanceRepository.GetBalanceAsync(accountId);
             
             var viewModel = new VisualisationViewModel
             {
                 ChartTitle = "Your 4 Year Forecast",
-                ChartItems = result.Select(m => new ChartItemViewModel { BalanceMonth = new DateTime(m.Year, m.Month, 1), Amount = m.FutureFunds })
+                ChartItems = result.Select(m => new ChartItemViewModel { BalanceMonth = m.Date, Amount = m.Balance })
             };
 
             return viewModel;

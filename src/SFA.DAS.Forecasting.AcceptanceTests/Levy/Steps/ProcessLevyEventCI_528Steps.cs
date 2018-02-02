@@ -192,18 +192,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             TimeSpan retryInterval,
             int maxAttemptCount = 3)
         {
-			var a = new List<T>();
-
-            for (var attempted = 0; attempted < maxAttemptCount; attempted++)
+            for (int attempted = 0; attempted < maxAttemptCount; attempted++)
             {
-                a = action().ToList();
-                if(a.Count == expectedCount)
+                var a = action();
+                if(a.Count() == expectedCount)
                 {
                     return a;
                 }
                 Thread.Sleep(retryInterval);
             }
-            return a;
+            return new List<T>();
         }
     }
 }

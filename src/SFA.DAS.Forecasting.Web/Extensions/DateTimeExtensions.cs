@@ -59,16 +59,6 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             return date.ToString("MM yyyy");
         }
 
-        /// <summary>
-        /// MMM yy - Jun 19
-        /// </summary>
-        /// <param name="date"></param>
-        /// <returns></returns>
-        public static string ToGdsFormatShortMonthAndYearWithoutDay(this DateTime date)
-        {
-            return date.ToString("MMM yy");
-        }
-
         public static string ToGdsFormatLongMonthNameWithoutDay(this DateTime date)
         {
             return date.ToString("MMMM yyyy");

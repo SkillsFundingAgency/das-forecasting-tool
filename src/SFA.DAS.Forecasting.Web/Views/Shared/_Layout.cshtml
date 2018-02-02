@@ -125,6 +125,8 @@
 
         @RenderSection("breadcrumb", required: false)
 
+        @*@Html.Partial(@"_SuccessMessage", Model as OrchestratorResponse)*@
+
         @RenderBody()
 
     </main>

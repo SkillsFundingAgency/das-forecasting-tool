@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             PaymentEvent = new PaymentEvent
             {
-                EmployerAccountId = 1111,
+                EmployerAccountId = Guid.NewGuid().ToString("D"),
                 Amount = 100,
                 ApprenticeshipId = 1,
                 CollectionPeriod = new CollectionPeriod
@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		public void Fails_If_Employer_Account_Id_Is_Not_Populated()
 		{
 			var validator = new PaymentEventSuperficialValidator();
-			PaymentEvent.EmployerAccountId = 0;
+			PaymentEvent.EmployerAccountId = null;
 			var result = validator.Validate(PaymentEvent);
 			Assert.IsNotEmpty(result);
 		}

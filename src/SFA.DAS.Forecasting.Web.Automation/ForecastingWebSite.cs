@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public DashboardPage NavigateToDashboard()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/balance"));
             return new DashboardPage(WebBrowserDriver);
         }
 

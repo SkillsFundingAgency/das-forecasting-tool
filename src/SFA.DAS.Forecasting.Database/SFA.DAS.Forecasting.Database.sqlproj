@@ -61,10 +61,15 @@
     <Folder Include="Tables" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\AccountProjection.sql" />
+    <Build Include="Tables\Balance.sql" />
+    <Build Include="Tables\Apprenticeship.sql" />
+    <Build Include="Tables\CurrentBalanceAndLevy.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\AccountProjection.sql" />
+    <None Include="TestData\ResetBalanceData.sql" />
+    <None Include="TestData\ResetCurrentAndBalanceData.sql" />
+    <None Include="TestData\ResetApprenticeshipData.sql" />
+    <None Include="TestData\RebuildTestData.sql" />
     <None Include="Database.publish.xml" />
   </ItemGroup>
 </Project>
