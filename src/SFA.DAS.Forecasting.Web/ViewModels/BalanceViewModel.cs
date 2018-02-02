@@ -7,5 +7,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public IEnumerable<BalanceItemViewModel> BalanceItemViewModels { get; set; }
 
         public string BackLink { get; set; }
+
+        public string HashedAccountId { get; set; }
     }
 }

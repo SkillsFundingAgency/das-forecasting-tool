@@ -19,6 +19,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         private readonly Mapper _mapper;
 
+        // ToDo: Move to config
         private readonly static DateTime balanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
@@ -43,7 +44,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             
             return new BalanceViewModel {
                 BalanceItemViewModels = _mapper.MapBalance(result).Where(m => m.Date < balanceMaxDate),
-                BackLink = _applicationConfiguration.BackLink
+                BackLink = _applicationConfiguration.BackLink,
+                HashedAccountId = hashedAccountId
             };
         }
 

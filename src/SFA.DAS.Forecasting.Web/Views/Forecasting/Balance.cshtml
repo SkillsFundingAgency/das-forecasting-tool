@@ -24,7 +24,27 @@
 
     <div class="column-one-third">
         <div class="related">
+            <h3 class="heading-small">Download this data</h3>
+            <div class="form-group">
+                <ul class="list list-links">
 
+                    <li>
+                        <a href="@Url.Action("Csv", "Download", new {hashedAccountId = Model.HashedAccountId}, null)" class="" >
+                            Download as a CSV file
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <details>
+                <summary>What does the download include?</summary>
+                <p>The download includes the following data:</p>
+                <ul class="list list-bullet">
+                    <li>Funds in</li>
+                    <li>Cost of training</li>
+                    <li>Completion payments</li>
+                    <li>Future funds</li>
+                </ul>
+            </details>
         </div>
     </div>
 

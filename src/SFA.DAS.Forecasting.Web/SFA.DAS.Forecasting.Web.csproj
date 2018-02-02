@@ -45,6 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=6.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.6.1.1\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Hashids.net, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hashids.net.1.2.2\lib\net45\Hashids.net.dll</HintPath>
       <Private>True</Private>
@@ -277,6 +280,7 @@
   <ItemGroup>
     <Content Include="Content\css\fonts-ie8.css" />
     <Content Include="Content\css\fonts.css" />
+    <Content Include="Content\css\forecasting.css" />
     <Content Include="Content\css\govuk-template-ie6.css" />
     <Content Include="Content\css\govuk-template-ie7.css" />
     <Content Include="Content\css\govuk-template-ie8.css" />
@@ -350,6 +354,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Download\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>
   <ItemGroup>

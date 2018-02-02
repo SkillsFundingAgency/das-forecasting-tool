@@ -3792,7 +3792,7 @@ table.responsive tr.total {
   font-size: 32px;
   line-height: 1.09375;
   margin-top: 15px;
-  margin-bottom: 5px;
+  margin-bottom: 5px;.
 }
 
 @media (min-width: 641px) {
@@ -5641,11 +5641,4 @@ h2 .float-right {
     margin-top: 5px;
     word-wrap: break-word;
   }
-}
-
-.info-highlighted {
-    max-width: 30em;
-    background: #eaebf3;
-    border: none;
-    border-left: solid 10px #2e358b;
 }
