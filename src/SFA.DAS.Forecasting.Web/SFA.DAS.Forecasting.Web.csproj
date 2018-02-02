@@ -271,6 +271,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\ApprenticeshipPageViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipViewModel.cs" />
+    <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceViewModel.cs" />
     <Compile Include="ViewModels\ChartItemViewModel.cs" />
@@ -501,11 +502,11 @@
     <Content Include="Content\src\govuk_template\assets\stylesheets\govuk-template.css" />
     <Content Include="Content\src\govuk_template\assets\stylesheets\images\close.png" />
     <Content Include="Content\src\govuk_template\assets\stylesheets\images\gov.uk_logotype_crown-1x.png" />
-    <Content Include="Content\src\govuk_template\assets\stylesheets\images\gov.uk_logotype_crown.png" />
+    <Content Include="Content\dist\images\gov.uk_logotype_crown.png" />
     <Content Include="Content\src\govuk_template\assets\stylesheets\images\govuk-crest-2x.png" />
     <Content Include="Content\src\govuk_template\assets\stylesheets\images\govuk-crest-ie.png" />
-    <Content Include="Content\src\govuk_template\assets\stylesheets\images\govuk-crest.png" />
-    <Content Include="Content\src\govuk_template\assets\stylesheets\images\open-government-licence.png" />
+    <Content Include="Content\dist\images\govuk-crest.png" />
+    <Content Include="Content\dist\images\open-government-licence.png" />
     <Content Include="Content\src\govuk_template\assets\stylesheets\images\open-government-licence_2x.png" />
     <Content Include="Content\src\govuk_template\views\layouts\govuk_template.html" />
     <Content Include="favicon.ico" />

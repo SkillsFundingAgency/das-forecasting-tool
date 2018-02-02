@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -43,10 +44,24 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var result = await _accountProjectionRepository.Get(accountId);
             
             return new BalanceViewModel {
-                BalanceItemViewModels = _mapper.MapBalance(result).Where(m => m.Date < balanceMaxDate),
+                BalanceItemViewModels = _mapper.MapBalance(result)
+                    .Where(m => m.Date < balanceMaxDate),
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId
             };
+        }
+
+        public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+
+            var result = await _accountProjectionRepository.Get(accountId);
+
+            return _mapper.MapBalance(result)
+                .Where(m => m.Date < balanceMaxDate)
+                .Select(m => _mapper.ToCsvBalance(m));
+
+            
         }
 
         public async Task<VisualisationViewModel> Visualisation(string hashedAccountId)
