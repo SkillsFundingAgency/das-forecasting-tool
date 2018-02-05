@@ -10,8 +10,6 @@
 
         public decimal CompletionPayments { get; set; }
 
-        public decimal ExpiredFunds { get; set; }
-
         public decimal Balance { get; set; }
     }
 }

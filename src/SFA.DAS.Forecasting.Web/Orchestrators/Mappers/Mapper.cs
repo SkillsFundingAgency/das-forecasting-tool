@@ -41,11 +41,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
         {
             return new BalanceCsvItemViewModel
             {
-                Date = x.Date.ToGdsFormatShortMonthAndYearWithoutDay(),
+                Date = x.Date.ToGdsFormatShortMonthWithoutDay(),
                 LevyCredit = x.LevyCredit,
                 CostOfTraining = x.CostOfTraining,
                 CompletionPayments = x.CompletionPayments,
-                ExpiredFunds = x.ExpiredFunds,
                 Balance = x.Balance
             };
 
