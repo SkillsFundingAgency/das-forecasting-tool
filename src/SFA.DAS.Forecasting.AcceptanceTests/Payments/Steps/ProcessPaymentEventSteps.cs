@@ -16,12 +16,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
     [Binding]
     public class ProcessPaymentEventSteps : StepsBase
     {
-        [Scope(Feature = "ProcessPaymentEvent")]
-        [BeforeFeature(Order = 1)]
-        public static void StartPaymentFunction()
-        {
-            StartFunction("SFA.DAS.Forecasting.Payments.Functions");
-        }
+        //[Scope(Feature = "ProcessPaymentEvent")]
+        //[BeforeFeature(Order = 1)]
+        //public static void StartPaymentFunction()
+        //{
+        //    StartFunction("SFA.DAS.Forecasting.Payments.Functions");
+        //}
         private AzureTableService _azureTableService;
 
 		[BeforeScenario]

@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     }
 
                     logger.Info($"Validated {nameof(PaymentEvent)} for EmployerAccountId: {paymentEvent.EmployerAccountId}");
-                    return  Task.FromResult(paymentEvent);
+                    return Task.FromResult(paymentEvent);
                 });
         }
     }

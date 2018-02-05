@@ -84,8 +84,12 @@
     <Compile Include="Levy\Repositories\LevyPeriodRepository.cs" />
     <Compile Include="Levy\Services\ILevyDataService.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationTransactionDateValidator.cs" />
+    <Compile Include="Payments\Aggregates\TrainingCost.cs" />
     <Compile Include="Payments\Aggregates\EmployerPayment.cs" />
+    <Compile Include="Payments\Entities\CollectionPeriod.cs" />
+    <Compile Include="Payments\Entities\EmployerTotalCostOfTraining.cs" />
     <Compile Include="Payments\Entities\Payment.cs" />
+    <Compile Include="Payments\Repositories\ITrainingCostRepository.cs" />
     <Compile Include="Payments\Repositories\IEmployerPaymentRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
