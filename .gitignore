@@ -258,3 +258,4 @@ src/ReleaseTemplate.sql
 src/SFA.DAS.EAS.Web/App_Data/audit/*.*
 src/Tools/PhantomJS/tools/phantomjs/ChangeLog
 *.stackdump
+/src/SFA.DAS.Forecasting.Web/Web.Debug.config

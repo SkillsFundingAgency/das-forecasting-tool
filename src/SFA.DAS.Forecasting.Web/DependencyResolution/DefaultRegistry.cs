@@ -84,19 +84,13 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 
         private ForcastingApplicationConfiguration GetConfiguration()
         {
-            var environment = Environment.GetEnvironmentVariable("DASENV");
-            if (string.IsNullOrEmpty(environment))
+            return new ForcastingApplicationConfiguration
             {
-                environment = ConfigurationManager.AppSettings["EnvironmentName"];
-            }
-            
-            var configurationRepository = new AzureTableStorageConfigurationRepository(ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"]);
-            var configurationService = new ConfigurationService(configurationRepository,
-                new ConfigurationOptions(ServiceName, environment, "1.0"));
-
-            var result = configurationService.Get<ForcastingApplicationConfiguration>();
-
-            return result;
+                AllowedHashstringCharacters = ConfigurationManager.AppSettings["AllowedHashstringCharacters"],
+                HashString = ConfigurationManager.AppSettings["HashString"],
+                DatabaseConnectionString =
+                    ConfigurationManager.ConnectionStrings["DatabaseConnectionString"]?.ConnectionString
+            };
         }
     }
 }
