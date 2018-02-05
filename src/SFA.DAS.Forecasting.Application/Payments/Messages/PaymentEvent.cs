@@ -16,6 +16,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
         public string ApprenticeName { get; set; }
         public string CourseName { get; set; }
         public int? CourseLevel { get; set; }
+	    public long Uln { get; set; }
+
         public DateTime? CourseStartDate { get; set; }
 
         public EarningDetails EarningDetails { get; set; }
