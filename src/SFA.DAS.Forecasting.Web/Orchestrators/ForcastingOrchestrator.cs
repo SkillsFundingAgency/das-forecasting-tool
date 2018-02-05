@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,24 +14,29 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     public class ForecastingOrchestrator
     {
         private readonly IHashingService _hashingService;
-        private readonly IBalanceRepository _balanceRepository;
+        private readonly IAccountProjectionDataService _accountProjection;
         private readonly IApprenticeshipRepository _apprenticeshipRepository;
+        private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly ILog _logger;
 
         private readonly Mapper _mapper;
 
+
+        // ToDo: Move to config
         private readonly static DateTime balanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
-            IBalanceRepository balanceRepository,
+            IAccountProjectionDataService accountProjection,
             IApprenticeshipRepository apprenticeshipRepository,
+            IApplicationConfiguration applicationConfiguration,
             ILog logger,
             Mapper mapper)
         {
             _hashingService = hashingService;
-            _balanceRepository = balanceRepository;
+            _accountProjection = accountProjection;
             _apprenticeshipRepository = apprenticeshipRepository;
+            _applicationConfiguration = applicationConfiguration;
             _logger = logger;
             _mapper = mapper;
         }
@@ -39,33 +45,39 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var result = await  _balanceRepository.GetBalanceAsync(accountId);
+            var result = await _accountProjection.Get(accountId);
             
-            return new BalanceViewModel { BalanceItemViewModels = _mapper.MapBalance(result).Where(m => m.Date < balanceMaxDate) };
+            return new BalanceViewModel {
+                BalanceItemViewModels = _mapper.MapBalance(result)
+                    .Where(m => m.Date < balanceMaxDate),
+                BackLink = _applicationConfiguration.BackLink,
+                HashedAccountId = hashedAccountId
+            };
         }
 
-        public async Task<ApprenticeshipPageViewModel> Apprenticeships(string hashedAccountId)
+        public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var apprenticeships = await _apprenticeshipRepository.GetApprenticeships(accountId);
+            var result = await _accountProjection.Get(accountId);
 
-            return new ApprenticeshipPageViewModel
-            {
-                Apprenticeships = apprenticeships.Select(_mapper.MapApprenticeship)
-            };
+            return _mapper.MapBalance(result)
+                .Where(m => m.Date < balanceMaxDate)
+                .Select(m => _mapper.ToCsvBalance(m));
+
+            
         }
 
         public async Task<VisualisationViewModel> Visualisation(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            var result = await _balanceRepository.GetBalanceAsync(accountId);
+            var result = await _accountProjection.Get(accountId);
             
             var viewModel = new VisualisationViewModel
             {
                 ChartTitle = "Your 4 Year Forecast",
-                ChartItems = result.Select(m => new ChartItemViewModel { BalanceMonth = m.Date, Amount = m.Balance })
+                ChartItems = result.Select(m => new ChartItemViewModel { BalanceMonth = new DateTime(m.Year, m.Month, 1), Amount = m.FutureFunds })
             };
 
             return viewModel;

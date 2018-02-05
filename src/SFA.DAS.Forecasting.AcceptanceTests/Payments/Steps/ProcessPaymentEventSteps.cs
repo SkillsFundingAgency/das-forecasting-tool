@@ -81,329 +81,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		    return
 			    new List<PaymentEvent> {
 						new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-								EndpointAssessorId = Guid.NewGuid().ToString()
-						    },
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 102,
-						    ApprenticeshipId = 1235,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 103,
-						    ApprenticeshipId = 1236,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    }
-				    }
-				    .Select(JsonConvert.SerializeObject);
-	    }
-
-	    private IEnumerable<string> InvalidData()
-	    {
-		    return
-			    new List<PaymentEvent> {
-						new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = -1,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = -1,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = -1,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.MinValue,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.MinValue,
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.MinValue,
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = -1,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = -1,
-							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = -1,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 101,
-						    ApprenticeshipId = 1234,
-						    Id = Guid.NewGuid().ToString(),
-						    Ukprn = 12345,
-						    EarningDetails = new EarningDetails
-						    {
-							    StartDate = DateTime.Today,
-							    PlannedEndDate = DateTime.Now.AddMonths(5),
-							    ActualEndDate = DateTime.Now.AddMonths(6),
-							    TotalInstallments = 18,
-							    MonthlyInstallment = 1000,
-							    CompletionAmount = 3000,
-							    CompletionStatus = -1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
-						    CollectionPeriod = new CollectionPeriod
-						    {
-							    Id = "123",
-							    Month = DateTime.Now.Month,
-							    Year = DateTime.Now.Year
-						    }
-					    },
-					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
-						    Amount = 103,
-						    ApprenticeshipId = 1236,
 						    Id = Guid.NewGuid().ToString(),
 						    Ukprn = 12345,
 						    EarningDetails = new EarningDetails
@@ -424,7 +104,268 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 102,
+						    ApprenticeshipId = 1235,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 103,
+						    ApprenticeshipId = 1236,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    }
+				    }
+				    .Select(JsonConvert.SerializeObject);
+	    }
+
+	    private IEnumerable<string> InvalidData()
+	    {
+		    return
+			    new List<PaymentEvent> {
+						new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = -1,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = -1,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = -1,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.MinValue,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.MinValue,
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.MinValue,
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = -1,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = -1,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = -1,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -437,9 +378,31 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
+							    CompletionStatus = -1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 101,
+						    ApprenticeshipId = 1234,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -448,7 +411,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -461,9 +424,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
+							    CompletionStatus = 1
+						    },
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -472,7 +434,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 						    }
 					    },
 					    new PaymentEvent {
-						    EmployerAccountId = EmployerAccountId,
+						    EmployerAccountId = EmployerAccountId.ToString(),
 						    Amount = 101,
 						    ApprenticeshipId = 1234,
 						    Id = Guid.NewGuid().ToString(),
@@ -485,9 +447,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1,
-							    EndpointAssessorId = Guid.NewGuid().ToString()
-							},
+							    CompletionStatus = 1
+						    },
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -518,18 +479,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		    TimeSpan retryInterval,
 		    int maxAttemptCount = 3)
 	    {
-			var a = new List<T>();
-
-		    for (var attempted = 0; attempted < maxAttemptCount; attempted++)
+		    for (int attempted = 0; attempted < maxAttemptCount; attempted++)
 		    {
-			    a = action().ToList();
-			    if (a.Count == expectedCount)
+			    var a = action();
+			    if (a.Count() == expectedCount)
 			    {
 				    return a;
 			    }
 			    Thread.Sleep(retryInterval);
 		    }
-		    return a;
-		}
+		    return new List<T>();
+	    }
 	}
 }

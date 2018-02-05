@@ -89,6 +89,7 @@
     <Compile Include="Payments\Messages\EarningDetails.cs" />
     <Compile Include="Payments\Messages\EmployerPeriod.cs" />
     <Compile Include="Payments\Messages\PaymentEvent.cs" />
+    <Compile Include="Payments\Repositories\TrainingCostRepository.cs" />
     <Compile Include="Payments\Repositories\EmployerPaymentRepository.cs" />
     <Compile Include="Payments\Repositories\Models\TableEntry.cs" />
     <Compile Include="Payments\Validation\CollectionPeriodSuperficialValidator.cs" />

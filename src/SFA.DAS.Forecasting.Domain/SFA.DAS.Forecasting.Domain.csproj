@@ -53,10 +53,6 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Forecasting.Application, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SFA.DAS.Forecasting.Web\Bin\SFA.DAS.Forecasting.Application.dll</HintPath>
-    </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
@@ -87,9 +83,12 @@
     <Compile Include="Levy\Repositories\LevyPeriodRepository.cs" />
     <Compile Include="Levy\Services\ILevyDataService.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationTransactionDateValidator.cs" />
+    <Compile Include="Payments\Aggregates\TrainingCost.cs" />
     <Compile Include="Payments\Aggregates\EmployerPayment.cs" />
+    <Compile Include="Payments\Entities\CollectionPeriod.cs" />
     <Compile Include="Payments\Entities\EmployerTotalCostOfTraining.cs" />
     <Compile Include="Payments\Entities\Payment.cs" />
+    <Compile Include="Payments\Repositories\ITrainingCostRepository.cs" />
     <Compile Include="Payments\Repositories\IEmployerPaymentRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

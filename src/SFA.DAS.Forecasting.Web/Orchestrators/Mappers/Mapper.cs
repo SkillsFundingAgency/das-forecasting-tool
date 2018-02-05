@@ -1,24 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using SFA.DAS.Forecasting.Domain.Entities;
+using SFA.DAS.Forecasting.ReadModel.AccountProjections;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public class Mapper
     {
-        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<BalanceItem> data)
+        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjection> data)
         {
             return data.Select(x =>
                 new BalanceItemViewModel
                 {
-                    Date = x.Date,
-                    LevyCredit = x.LevyCredit,
-                    CostOfTraining = x.CostOfTraining,
+                    Date = (new DateTime(x.Year, x.Month, 1)),
+                    LevyCredit = x.FundsIn,
+                    CostOfTraining = x.TotalCostOfTraning,
                     CompletionPayments = x.CompletionPayments,
-                    ExpiredFunds = x.ExpiredFunds,
-                    Balance = x.Balance
+                    ExpiredFunds = 0,
+                    Balance = x.FundsIn
                 });
         }
 
@@ -33,5 +36,19 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 CompletionPayment = apprenticeship.CompletionPayment
             };
         }
+
+        public BalanceCsvItemViewModel ToCsvBalance(BalanceItemViewModel x)
+        {
+            return new BalanceCsvItemViewModel
+            {
+                Date = x.Date.ToGdsFormatShortMonthWithoutDay(),
+                LevyCredit = x.LevyCredit,
+                CostOfTraining = x.CostOfTraining,
+                CompletionPayments = x.CompletionPayments,
+                Balance = x.Balance
+            };
+
+        }
+        
     }
 }

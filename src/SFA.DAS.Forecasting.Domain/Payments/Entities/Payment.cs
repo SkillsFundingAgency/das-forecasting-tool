@@ -6,7 +6,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Entities
 	{
 		public string Id { get; set; }
 
-		public long EmployerAccountId { get; set; }
+		public string EmployerAccountId { get; set; }
 
 		public long Ukprn { get; set; }
 

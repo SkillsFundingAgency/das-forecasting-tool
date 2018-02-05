@@ -1,11 +1,6 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.Azure;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Queue;
-using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Queues;
@@ -41,7 +36,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 						Year = paymentEvent.CollectionPeriod.Year
 					};
 
-					container.GetInstance<QueueService>().SendMessageWithVisibilitydelay(employerPeriod, QueueNames.PaymentAggregationAllower, 10);
+					container.GetInstance<QueueService>().SendMessageWithVisibilityDelay(employerPeriod, QueueNames.PaymentAggregationAllower, 10);
 
                     return await Task.FromResult(1);
                 });

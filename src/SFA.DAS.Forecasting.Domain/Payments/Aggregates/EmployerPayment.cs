@@ -1,6 +1,4 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using SFA.DAS.Forecasting.Domain.Payments.Repositories;
@@ -16,6 +14,18 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 		    _paymentStorage = paymentStorage;
 	    }
 
+	    public async Task AddPayment(string id, int employerAccountId, long ukprn, long apprenticeshipId, decimal amount)
+	    {
+		    var payment = new Entities.Payment
+		    {
+			    Id = id,
+			    EmployerAccountId = employerAccountId.ToString(),
+			    Ukprn = ukprn,
+			    ApprenticeshipId = apprenticeshipId,
+			    Amount = amount
+		    };
+	    }
+
 	    public async Task AddPayment(Payment payment)
 	    {
 		    await _paymentStorage.StorePayment(payment);
@@ -25,5 +35,5 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 	    {
 		    return _paymentStorage.GetPayments(employerAccountId, month, year);
 	    }
-    }
+	}
 }
