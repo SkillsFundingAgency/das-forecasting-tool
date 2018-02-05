@@ -52,5 +52,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
                 .Select(entity => JsonConvert.DeserializeObject<T>(entity.Data))
                 .ToList();
         }
+
+        internal IList<T> GetRecordsStartingWith<T>(string partitionKey)
+            where T : class
+        {
+            var query = new TableQuery<TableRow>();
+
+            return _table.ExecuteQuery(query)
+                .Where(m => m.PartitionKey.StartsWith(partitionKey))
+                .Select(entity => JsonConvert.DeserializeObject<T>(entity.Data))
+                .ToList();
+        }
     }
 }

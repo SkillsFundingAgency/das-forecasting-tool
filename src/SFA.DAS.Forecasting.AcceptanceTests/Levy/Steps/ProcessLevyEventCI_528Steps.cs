@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         }
 
 
-        [OneTimeSetUp]
+        [BeforeScenario]
         public void BeforeScenario()
         {
             _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
@@ -35,7 +35,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
         }
 
-        [OneTimeTearDown]
+        [AfterScenario]
         public void AfterSecnario()
         {
             _azureTableService.DeleteEntities(EmployerAccountId.ToString());
@@ -69,14 +69,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there should be (.*) levy credit events stored")]
         public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
         {
-            var _records = Do(() => _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
+            var _records = Do(() => _azureTableService?.GetRecordsStartingWith<LevyDeclarationEvent>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
             Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
 
         [Then(@"all of the levy declarations stored should be correct")]
         public void ThenAllOfTheLevyDeclarationsStoredIsCorrect()
         {
-            var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString())?.ToList();
+            var _records = _azureTableService?.GetRecordsStartingWith<LevyDeclarationEvent>(EmployerAccountId.ToString())?.ToList();
 
             _records.Should().Contain(m => m.Amount == 301);
             _records.Should().Contain(m => m.Amount == 201);
@@ -108,7 +108,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 201,
                         TransactionDate = DateTime.Now.AddMonths(-12),
-                        PayrollYear = "18-19",
+                        PayrollYear = "17-18",
                         PayrollMonth = 1,
                         Scheme = "Not sure"
                     },
@@ -116,8 +116,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         EmployerAccountId = EmployerAccountId,
                         Amount = 301,
                         TransactionDate = DateTime.Now.AddMonths(-15),
-                        PayrollYear = "18-19",
-                        PayrollMonth = 1,
+                        PayrollYear = "16-17",
+                        PayrollMonth = 10,
                         Scheme = "Not sure"
                     }
                 }
@@ -186,22 +186,24 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Thread.Sleep(2000);
         }
 
-        public static IEnumerable<T> Do<T>(
+        private static IEnumerable<T> Do<T>(
             Func<IEnumerable<T>> action,
             int expectedCount,
             TimeSpan retryInterval,
             int maxAttemptCount = 3)
         {
+            IEnumerable<T> rList = null;
             for (int attempted = 0; attempted < maxAttemptCount; attempted++)
             {
                 var a = action();
-                if(a.Count() == expectedCount)
+                if(a?.Count() == expectedCount)
                 {
                     return a;
                 }
+                rList = a;
                 Thread.Sleep(retryInterval);
             }
-            return new List<T>();
+            return rList ?? new List<T>();
         }
     }
 }
