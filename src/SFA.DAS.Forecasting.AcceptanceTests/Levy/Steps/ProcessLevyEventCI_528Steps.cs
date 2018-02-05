@@ -69,56 +69,56 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there should be (.*) levy credit events stored")]
         public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
         {
-            var _records = Do(() => _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
+            var _records = Do(() => _azureTableService?.GetRecords<LevySchemeDeclarationUpdatedMessage>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
             Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
         }
 
         [Then(@"all of the levy declarations stored should be correct")]
         public void ThenAllOfTheLevyDeclarationsStoredIsCorrect()
         {
-            var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString())?.ToList();
+            var _records = _azureTableService?.GetRecords<LevySchemeDeclarationUpdatedMessage>(EmployerAccountId.ToString())?.ToList();
 
-            _records.Should().Contain(m => m.Amount == 301);
-            _records.Should().Contain(m => m.Amount == 201);
-            _records.Should().Contain(m => m.Amount == 101);
+            _records.Should().Contain(m => m.LevyDeclaredInMonth == 301);
+            _records.Should().Contain(m => m.LevyDeclaredInMonth == 201);
+            _records.Should().Contain(m => m.LevyDeclaredInMonth == 101);
         }
 
         [Then(@"all the event with invalid data is not stored")]
         public void ThenAllTheEventWithInvalidDataIsNotStored()
         {
-            var _records = _azureTableService?.GetRecords<LevyDeclarationEvent>(EmployerAccountId.ToString());
+            var _records = _azureTableService?.GetRecords<LevySchemeDeclarationUpdatedMessage>(EmployerAccountId.ToString());
 
-            Assert.AreEqual(0, _records.Count(m => m.EmployerAccountId.ToString().EndsWith("2")));
+            Assert.AreEqual(0, _records.Count(m => m.AccountId.ToString().EndsWith("2")));
         }
 
 
         private IEnumerable<string> ValidData()
         {
             return
-                new List<LevyDeclarationEvent> {
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 101,
-                        TransactionDate = DateTime.Now,
+                new List<LevySchemeDeclarationUpdatedMessage> {
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 101,
+                        CreatedDate = DateTime.Now,
                         PayrollYear = "18-19",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     },
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 201,
-                        TransactionDate = DateTime.Now.AddMonths(-12),
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 201,
+                        CreatedDate = DateTime.Now.AddMonths(-12),
                         PayrollYear = "18-19",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     },
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 301,
-                        TransactionDate = DateTime.Now.AddMonths(-15),
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 301,
+                        CreatedDate = DateTime.Now.AddMonths(-15),
                         PayrollYear = "18-19",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     }
                 }
                 .Select(m => JsonConvert.SerializeObject(m));
@@ -127,46 +127,46 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         private IEnumerable<string> InvalidData()
         {
             return
-                new List<LevyDeclarationEvent> {
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 102,
-                        TransactionDate = DateTime.Now,
+                new List<LevySchemeDeclarationUpdatedMessage> {
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 102,
+                        CreatedDate = DateTime.Now,
                         PayrollYear = "17-18",
                         PayrollMonth = 1,
-                        Scheme = ""
+                        EmpRef = ""
                     },
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 202,
-                        TransactionDate = DateTime.Now.AddMonths(-25).AddDays(-1),
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 202,
+                        CreatedDate = DateTime.Now.AddMonths(-25).AddDays(-1),
                         PayrollYear = "16-17",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     },
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 303,
-                        TransactionDate = DateTime.Now.AddMonths(-15),
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 303,
+                        CreatedDate = DateTime.Now.AddMonths(-15),
                         PayrollYear = "01-01",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     },
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = 501,
-                        TransactionDate = DateTime.Now.AddMonths(-2),
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = 501,
+                        CreatedDate = DateTime.Now.AddMonths(-2),
                         PayrollYear = "17-18",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     },
-                    new LevyDeclarationEvent {
-                        EmployerAccountId = EmployerAccountId,
-                        Amount = -10,
-                        TransactionDate = DateTime.Now.AddMonths(-2),
+                    new LevySchemeDeclarationUpdatedMessage {
+                        AccountId = EmployerAccountId,
+                        LevyDeclaredInMonth = -10,
+                        CreatedDate = DateTime.Now.AddMonths(-2),
                         PayrollYear = "18-19",
                         PayrollMonth = 1,
-                        Scheme = "Not sure"
+                        EmpRef = "Not sure"
                     }
 
                 }

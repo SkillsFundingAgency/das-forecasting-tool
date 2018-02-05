@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using SFA.DAS.Forecasting.Domain.Interfaces;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
@@ -15,29 +14,22 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataService _accountProjection;
-        private readonly IApprenticeshipRepository _apprenticeshipRepository;
         private readonly IApplicationConfiguration _applicationConfiguration;
-        private readonly ILog _logger;
-
         private readonly Mapper _mapper;
 
 
         // ToDo: Move to config
-        private readonly static DateTime balanceMaxDate = DateTime.Parse("2019-05-01");
+        private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
             IAccountProjectionDataService accountProjection,
-            IApprenticeshipRepository apprenticeshipRepository,
             IApplicationConfiguration applicationConfiguration,
-            ILog logger,
             Mapper mapper)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;
-            _apprenticeshipRepository = apprenticeshipRepository;
             _applicationConfiguration = applicationConfiguration;
-            _logger = logger;
             _mapper = mapper;
         }
 
@@ -49,7 +41,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             
             return new BalanceViewModel {
                 BalanceItemViewModels = _mapper.MapBalance(result)
-                    .Where(m => m.Date < balanceMaxDate),
+                    .Where(m => m.Date < BalanceMaxDate),
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId
             };
@@ -62,7 +54,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var result = await _accountProjection.Get(accountId);
 
             return _mapper.MapBalance(result)
-                .Where(m => m.Date < balanceMaxDate)
+                .Where(m => m.Date < BalanceMaxDate)
                 .Select(m => _mapper.ToCsvBalance(m));
 
             

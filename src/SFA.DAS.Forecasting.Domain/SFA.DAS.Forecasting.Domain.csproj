@@ -73,12 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountProjection\LevyProjection.cs" />
-    <Compile Include="Entities\Apprenticeship.cs" />
-    <Compile Include="Entities\BalanceItem.cs" />
-    <Compile Include="Interfaces\IAccountProjectionDataService.cs" />
-    <Compile Include="Interfaces\IApprenticeshipRepository.cs" />
-    <Compile Include="Interfaces\IBalanceRepository.cs" />
-    <Compile Include="Interfaces\IApplicationConfiguration.cs" />
+    <Compile Include="AccountProjection\IAccountProjectionDataService.cs" />
     <Compile Include="Levy\Aggregates\LevyPeriod.cs" />
     <Compile Include="Levy\Model\LevyDeclaration.cs" />
     <Compile Include="Levy\Repositories\LevyPeriodRepository.cs" />
@@ -98,6 +93,9 @@
       <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -64,6 +64,8 @@
     <Build Include="Tables\Balance.sql" />
     <Build Include="Tables\Apprenticeship.sql" />
     <Build Include="Tables\CurrentBalanceAndLevy.sql" />
+    <Build Include="Tables\LevyDeclaration.sql" />
+    <Build Include="Tables\LevyDeclaredInMonth.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\ResetBalanceData.sql" />

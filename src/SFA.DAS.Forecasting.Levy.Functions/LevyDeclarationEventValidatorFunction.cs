@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
+using SFA.DAS.Forecasting.Application.Levy.Validation;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Levy.Application.Validation;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
@@ -13,23 +13,23 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     {
         [FunctionName("LevyDeclarationEventValidatorFunction")]
         [return:Queue(QueueNames.StoreLevyDeclaration)]
-        public static async Task<LevyDeclarationEvent> Run(
-            [QueueTrigger(QueueNames.LevyDeclarationValidator)]LevyDeclarationEvent levyDeclarationEvent, 
+        public static async Task<LevySchemeDeclarationUpdatedMessage> Run(
+            [QueueTrigger(QueueNames.ValidateDeclaration)]LevySchemeDeclarationUpdatedMessage levySchemeDeclarationUpdatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevyDeclarationEvent>(writer,
+            return await FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevySchemeDeclarationUpdatedMessage>(writer,
                 (container, logger) =>
                 {
                     var validationResults = container.GetInstance<LevyDeclarationEventValidator>()
-                        .Validate(levyDeclarationEvent);
+                        .Validate(levySchemeDeclarationUpdatedMessage);
                     if (!validationResults.IsValid)
                     {
-                        logger.Warn($"Levy declaration event failed superficial validation. Event: {levyDeclarationEvent.ToJson()}");
+                        logger.Warn($"Levy declaration event failed superficial validation. Event: {levySchemeDeclarationUpdatedMessage.ToJson()}");
                         return null;
                     }
 
-                    logger.Info($"Validated {nameof(LevyDeclarationEvent)} for EmployerAccountId: {levyDeclarationEvent.EmployerAccountId}");
-                    return  Task.FromResult(levyDeclarationEvent);
+                    logger.Info($"Validated {nameof(LevySchemeDeclarationUpdatedMessage)} for EmployerAccountId: {levySchemeDeclarationUpdatedMessage.AccountId}");
+                    return  Task.FromResult(levySchemeDeclarationUpdatedMessage);
                 });
         }
     }

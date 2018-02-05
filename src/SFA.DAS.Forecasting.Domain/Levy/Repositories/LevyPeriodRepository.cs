@@ -7,7 +7,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Repositories
 {
     public interface ILevyPeriodRepository
     {
-        Task<LevyPeriod> Get(long employerAccountId, string periodYear, short periodMonth);
+        Task<LevyPeriod> Get(long employerAccountId, string payrollYear, short payrollMonth);
         Task StoreLevyPeriod(LevyPeriod levyPeriod);
     }
 
@@ -20,10 +20,10 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Repositories
             LevyDataService = levyDataService ?? throw new ArgumentNullException(nameof(levyDataService));
         }
 
-        public async Task<LevyPeriod> Get(long employerAccountId, string periodYear, short periodMonth)
+        public async Task<LevyPeriod> Get(long employerAccountId, string payrollYear, short payrollMonth)
         {
             var levyDeclarations =
-                await LevyDataService.GetLevyDeclarationsForPeriod(employerAccountId, periodYear, periodMonth);
+                await LevyDataService.GetLevyDeclarationsForPeriod(employerAccountId, payrollYear, (byte)payrollMonth);
             var levyPeriod = new LevyPeriod();
             levyPeriod.LevyDeclarations.AddRange(levyDeclarations);
             return levyPeriod;
@@ -31,10 +31,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Repositories
 
         public async Task StoreLevyPeriod(LevyPeriod levyPeriod)
         {
-            foreach (var levyDeclaration in levyPeriod.LevyDeclarations)
-            {
-                await LevyDataService.StoreLevyDeclaration(levyDeclaration);
-            }
+            await LevyDataService.StoreLevyDeclarations(levyPeriod.LevyDeclarations);
         }
     }
 }

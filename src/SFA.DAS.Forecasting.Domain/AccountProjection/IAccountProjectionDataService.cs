@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Forecasting.Domain.Interfaces
+namespace SFA.DAS.Forecasting.Domain.AccountProjection
 {
     public interface IAccountProjectionDataService
     {

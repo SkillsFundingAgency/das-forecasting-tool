@@ -12,18 +12,18 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class LevyDeclarationEventHttpFunction : IFunction
     {
         [FunctionName("LevyDeclarationEventHttpFunction")]
-        [return: Queue(QueueNames.LevyDeclarationValidator)]
-        public static async Task<LevyDeclarationEvent> Run(
+        [return: Queue(QueueNames.ValidateDeclaration)]
+        public static async Task<LevySchemeDeclarationUpdatedMessage> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationEventHttpFunction")]HttpRequestMessage req, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevyDeclarationEvent>(writer,
+            return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevySchemeDeclarationUpdatedMessage>(writer,
                 async (container, logger) =>
                 {
                     var body = await req.Content.ReadAsStringAsync();
-                    var levyDeclarationEvent = JsonConvert.DeserializeObject<LevyDeclarationEvent>(body);
+                    var levyDeclarationEvent = JsonConvert.DeserializeObject<LevySchemeDeclarationUpdatedMessage>(body);
 
-                    logger.Info($"Added one levy declaration to {QueueNames.LevyDeclarationValidator} queue.");
+                    logger.Info($"Added one levy declaration to {QueueNames.ValidateDeclaration} queue.");
                     return await Task.FromResult(levyDeclarationEvent);
                 });
         }

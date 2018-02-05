@@ -66,7 +66,11 @@
     <Reference Include="SFA.DAS.Sql.Client, Version=1.0.0.44965, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Sql.Client.1.0.0.44965\lib\net45\SFA.DAS.Sql.Client.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap, Version=4.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -86,10 +90,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountProjection\Services\AccountProjectionDataService.cs" />
-    <Compile Include="Levy\Handlers\LevyDeclarationHandler.cs" />
-    <Compile Include="Levy\Messages\LevyDeclarationEvent.cs" />
+    <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
+    <Compile Include="Infrastructure\DefaultRegistry.cs" />
+    <Compile Include="Levy\Handlers\AllowLevyDeclarationAggregationHandler.cs" />
+    <Compile Include="Levy\Handlers\ProcessLevyDeclarationHandler.cs" />
+    <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
+    <Compile Include="Levy\Messages\LevyDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Services\LevyDataService.cs" />
-    <Compile Include="Levy\Services\Models\TableEntry.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationEventValidator.cs" />
     <Compile Include="Payments\Messages\CollectionPeriod.cs" />
     <Compile Include="Payments\Messages\EarningDetails.cs" />
@@ -119,6 +126,7 @@
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

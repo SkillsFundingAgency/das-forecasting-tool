@@ -1,10 +1,11 @@
 ﻿using Dapper;
-using SFA.DAS.Forecasting.Domain.Interfaces;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Domain.AccountProjection;
+using IApplicationConfiguration = SFA.DAS.Forecasting.Application.Infrastructure.Configuration.IApplicationConfiguration;
 
 namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
 {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using SFA.DAS.Forecasting.Domain.Entities;
 using SFA.DAS.Forecasting.ReadModel.AccountProjections;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -25,17 +23,17 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 });
         }
 
-        public ApprenticeshipViewModel MapApprenticeship(Apprenticeship apprenticeship)
-        {
-            return new ApprenticeshipViewModel
-            {
-                Name = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                StartDate = apprenticeship.StartDate,
-                MonthlyPayment = apprenticeship.MonthlyPayment,
-                TotalInstallments = apprenticeship.TotalInstallments,
-                CompletionPayment = apprenticeship.CompletionPayment
-            };
-        }
+        //public ApprenticeshipViewModel MapApprenticeship(Apprenticeship apprenticeship)
+        //{
+        //    return new ApprenticeshipViewModel
+        //    {
+        //        Name = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
+        //        StartDate = apprenticeship.StartDate,
+        //        MonthlyPayment = apprenticeship.MonthlyPayment,
+        //        TotalInstallments = apprenticeship.TotalInstallments,
+        //        CompletionPayment = apprenticeship.CompletionPayment
+        //    };
+        //}
 
         public BalanceCsvItemViewModel ToCsvBalance(BalanceItemViewModel x)
         {

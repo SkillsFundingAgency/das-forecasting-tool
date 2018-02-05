@@ -180,6 +180,7 @@
   <ItemGroup>
     <Compile Include="FunctionRunner.cs" />
     <Compile Include="IFunction.cs" />
+    <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\ContainerBootstrapper.cs" />
     <Compile Include="Logging\AzureFunctionLogTarget.cs" />
     <Compile Include="Logging\LoggerSetup.cs" />

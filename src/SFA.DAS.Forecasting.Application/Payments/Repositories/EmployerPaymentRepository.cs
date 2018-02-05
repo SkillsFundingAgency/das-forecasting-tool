@@ -2,7 +2,7 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Repositories.Models;
 using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using SFA.DAS.Forecasting.Domain.Payments.Repositories;
@@ -14,13 +14,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 	{
 		// ToDo: Const or config...
 		private static string EmployerPaymentTableName = "EmployerPayment";
+		private readonly CloudTable _table;
 
-		private readonly ILog _logger;
-		private CloudTable _table;
-
-		public EmployerPaymentRepository(ILog logger, IConfig settings)
+		public EmployerPaymentRepository(ILog logger, IApplicationConfiguration settings)
 		{
-			_logger = logger;
 
 			CloudStorageAccount storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
 			var tableClient = storageAccount.CreateCloudTableClient();
