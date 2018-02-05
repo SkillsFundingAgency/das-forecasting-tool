@@ -105,5 +105,36 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 			Assert.AreEqual(actual, expected);
 
 		}
+
+		[Test]
+		public async Task Stores_Valid_Payment()
+		{
+			var employerAccountId = "123456";
+			var periodMonth = 1;
+			var periodYear = 2018;
+			var totalCostOfTraining = 123m;
+
+			EmployerTotalCostOfTraining employerTotalCostOfTraining = null;
+			_trainingCostRepository
+				.Setup(m => m.StoreTrainingCost(It.IsAny<EmployerTotalCostOfTraining>()))
+				.Callback<EmployerTotalCostOfTraining>(p => employerTotalCostOfTraining = p)
+				.Returns(Task.Run(() => 1));
+
+			await _service.AddTotalCostOfTraining(new EmployerTotalCostOfTraining
+			{
+				EmployerAccountId = employerAccountId,
+				PeriodMonth = periodMonth,
+				PeriodYear = periodYear,
+				TotalCostOfTraining = totalCostOfTraining
+			});
+			
+			Assert.AreEqual(employerAccountId, employerTotalCostOfTraining.EmployerAccountId);
+			Assert.AreEqual(periodMonth, employerTotalCostOfTraining.PeriodMonth);
+			Assert.AreEqual(periodYear, employerTotalCostOfTraining.PeriodYear);
+			Assert.AreEqual(totalCostOfTraining, employerTotalCostOfTraining.TotalCostOfTraining);
+
+			_trainingCostRepository.Verify(repo => repo.StoreTrainingCost(
+				It.IsAny<EmployerTotalCostOfTraining>()));
+		}
 	}
 }

@@ -10,12 +10,12 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     public class PaymentEventAllowAggregationsFunction : IFunction
     {
         [FunctionName("PaymentEventAllowAggregationsFunction")]
-        public static async Task Run(
+        [return: Queue(QueueNames.PaymentAggregation)]
+		public static async Task<EmployerPeriod> Run(
 	        [QueueTrigger(QueueNames.PaymentAggregationAllower)]EmployerPeriod employerPeriod,
-	        [Queue(QueueNames.PaymentAggregation)] ICollector<EmployerPeriod> collector, 
 			TraceWriter writer)
         {
-			await FunctionRunner.Run<PaymentEventStoreFunction, int>(writer,
+			return await FunctionRunner.Run<PaymentEventStoreFunction, EmployerPeriod>(writer,
 				async (container, logger) =>
 				{
 					var employerPayment = container.GetInstance<EmployerPayment>();
@@ -24,12 +24,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 					var trainingCost = container.GetInstance<TrainingCost>();
 					var aggregationAllowed = trainingCost.IsAggregationAllowed(payments);
 
-					if (aggregationAllowed)
-					{
-						collector.Add(employerPeriod);
-					}
-
-					return await Task.FromResult(1);
+					return aggregationAllowed ? employerPeriod : null;
 				});
 		}
     }
