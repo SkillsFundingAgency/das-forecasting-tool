@@ -32,13 +32,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         {
             _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
             _azureTableService.EnsureExists();
-            _azureTableService.DeleteEntities(EmployerAccountId.ToString());
+            _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
         }
 
         [AfterScenario]
         public void AfterSecnario()
         {
-            _azureTableService.DeleteEntities(EmployerAccountId.ToString());
+            _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
             Thread.Sleep(1000);
         }
 

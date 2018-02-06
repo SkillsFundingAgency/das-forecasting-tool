@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation, Version=7.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.7.3.4\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
@@ -60,6 +63,9 @@
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Sql.Client, Version=1.0.0.44965, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Sql.Client.1.0.0.44965\lib\net45\SFA.DAS.Sql.Client.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -79,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountProjection\Services\AccountProjectionDataService.cs" />
     <Compile Include="Levy\Handlers\LevyDeclarationHandler.cs" />
     <Compile Include="Levy\Messages\LevyDeclarationEvent.cs" />
     <Compile Include="Levy\Services\LevyDataService.cs" />
@@ -110,6 +117,10 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
+      <Project>{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}</Project>
+      <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

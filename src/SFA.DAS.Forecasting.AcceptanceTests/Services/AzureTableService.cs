@@ -43,6 +43,17 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
             Thread.Sleep(500); // retry...
         }
 
+        internal void DeleteEntitiesStartingWith(string partitionKey)
+        {
+            var query = new TableQuery<TableRow>();
+            foreach (var item in _table.ExecuteQuery(query).Where(m => m.PartitionKey.StartsWith(partitionKey)))
+            {
+                var oper = TableOperation.Delete(item);
+                _table.Execute(oper);
+            }
+            Thread.Sleep(500); // retry...
+        }
+
         internal IList<T> GetRecords<T>(string partitionKey) 
 			where T : class 
         {
