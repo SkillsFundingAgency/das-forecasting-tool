@@ -34,13 +34,13 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 		    return response;
 	    }
 
-	    public bool IsAggregationAllowed(List<Payment> payments)
+	    public bool IsAggregationAllowed(List<Payment> payments, int delayInSeconds)
 	    {
 		    var response = true;
 
 		    foreach (var payment in payments)
 		    {
-			    if (payment.ReceivedTime > DateTime.Now.AddMinutes(-10))
+			    if (payment.ReceivedTime > DateTime.Now.AddSeconds(delayInSeconds * -1))
 			    {
 				    response = false;
 			    }

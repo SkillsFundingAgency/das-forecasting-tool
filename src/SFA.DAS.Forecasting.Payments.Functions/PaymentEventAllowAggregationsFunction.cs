@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -22,7 +23,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 					var payments = employerPayment.GetPaymentsForEmployerPeriod(employerPeriod.EmployerAccountId, employerPeriod.Month, employerPeriod.Year);
 
 					var trainingCost = container.GetInstance<TrainingCost>();
-					var aggregationAllowed = trainingCost.IsAggregationAllowed(payments);
+					var aggregationAllowed = trainingCost.IsAggregationAllowed(payments, Environment.GetEnvironmentVariable("DelayInSeconds") != null ? int.Parse(Environment.GetEnvironmentVariable("DelayInSeconds")) : 0);
 
 					return aggregationAllowed ? employerPeriod : null;
 				});

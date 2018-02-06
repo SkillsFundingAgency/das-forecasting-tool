@@ -77,6 +77,8 @@ this.ScenarioSetup(scenarioInfo);
  testRunner.Then("there are 3 payment events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 9
  testRunner.And("all of the data stored is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("the aggregation for the total cost of training has been created properly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

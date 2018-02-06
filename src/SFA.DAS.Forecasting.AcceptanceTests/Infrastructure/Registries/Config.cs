@@ -13,6 +13,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
         public string AzureStorageConnectionString => GetAppSetting("AzureStorageConnectionString");
         public string LevyDeclarationsTable => GetAppSetting("LevyDeclarationsTable");
         public string EmployerPaymentsTable => GetAppSetting("EmployerPaymentsTable");
+        public string EmployerPaymentsTotalCostsTableName => GetAppSetting("TrainingCosts");
         
 
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
