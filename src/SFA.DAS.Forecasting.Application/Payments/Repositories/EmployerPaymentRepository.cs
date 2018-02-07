@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -24,7 +26,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 			_table = tableClient.GetTableReference(EmployerPaymentTableName);
 		}
 
-
 		public async Task StorePayment(Payment payment)
 		{
 			EnsureExists(_table);
@@ -39,6 +40,29 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 			var op = TableOperation.InsertOrReplace(tableModel);
 
 			await _table.ExecuteAsync(op);
+		}
+
+		public List<Payment> GetPayments(string partitionKey)
+		{
+			EnsureExists(_table);
+
+			var entities = _table.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey)));
+
+			return entities
+				.Select(tableEntry => JsonConvert.DeserializeObject<Payment>(tableEntry.Data))
+				.ToList();
+		}
+
+		public List<Payment> GetPayments(string employerAccountId, int month, int year)
+		{
+			EnsureExists(_table);
+
+			var entities = _table.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId)));
+
+			return entities
+				.Select(tableEntry => JsonConvert.DeserializeObject<Payment>(tableEntry.Data))
+				.Where(x => x.CollectionPeriod.Month == month && x.CollectionPeriod.Year == year)
+				.ToList();
 		}
 
 		private void EnsureExists(CloudTable table)

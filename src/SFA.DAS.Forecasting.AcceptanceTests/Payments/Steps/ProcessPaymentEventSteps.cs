@@ -16,13 +16,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
     [Binding]
     public class ProcessPaymentEventSteps : StepsBase
     {
-        [Scope(Feature = "ProcessPaymentEvent")]
-        [BeforeFeature(Order = 1)]
-        public static void StartPaymentFunction()
-        {
-            StartFunction("SFA.DAS.Forecasting.Payments.Functions");
-        }
-        private AzureTableService _azureTableService;
+		[Scope(Feature = "ProcessPaymentEvent")]
+		[BeforeFeature(Order = 1)]
+		public static void StartPaymentFunction()
+		{
+			StartFunction("SFA.DAS.Forecasting.Payments.Functions");
+		}
+		private AzureTableService _azureTableService;
 
 		[BeforeScenario]
 	    public void BeforeScenario()
@@ -473,7 +473,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		    Thread.Sleep(2000);
 	    }
 
-	    public static IEnumerable<T> Do<T>(
+	    private static IEnumerable<T> Do<T>(
 		    Func<IEnumerable<T>> action,
 		    int expectedCount,
 		    TimeSpan retryInterval,
@@ -490,5 +490,5 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		    }
 		    return new List<T>();
 	    }
-	}
+    }
 }

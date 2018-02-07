@@ -43,12 +43,34 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Services
             Thread.Sleep(500); // retry...
         }
 
+        internal void DeleteEntitiesStartingWith(string partitionKey)
+        {
+            var query = new TableQuery<TableRow>();
+            foreach (var item in _table.ExecuteQuery(query).Where(m => m.PartitionKey.StartsWith(partitionKey)))
+            {
+                var oper = TableOperation.Delete(item);
+                _table.Execute(oper);
+            }
+            Thread.Sleep(500); // retry...
+        }
+
         internal IList<T> GetRecords<T>(string partitionKey) 
 			where T : class 
         {
             var query = new TableQuery<TableRow>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey));
 
             return _table.ExecuteQuery(query)
+                .Select(entity => JsonConvert.DeserializeObject<T>(entity.Data))
+                .ToList();
+        }
+
+        internal IList<T> GetRecordsStartingWith<T>(string partitionKey)
+            where T : class
+        {
+            var query = new TableQuery<TableRow>();
+
+            return _table.ExecuteQuery(query)
+                .Where(m => m.PartitionKey.StartsWith(partitionKey))
                 .Select(entity => JsonConvert.DeserializeObject<T>(entity.Data))
                 .ToList();
         }

@@ -27,18 +27,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         }
 
 
-        [OneTimeSetUp]
+        [BeforeScenario]
         public void BeforeScenario()
         {
             _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
             _azureTableService.EnsureExists();
-            _azureTableService.DeleteEntities(EmployerAccountId.ToString());
+            _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
         }
 
-        [OneTimeTearDown]
+        [AfterScenario]
         public void AfterSecnario()
         {
-            _azureTableService.DeleteEntities(EmployerAccountId.ToString());
+            _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
             Thread.Sleep(1000);
         }
 
@@ -108,7 +108,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         AccountId = EmployerAccountId,
                         LevyDeclaredInMonth = 201,
                         CreatedDate = DateTime.Now.AddMonths(-12),
-                        PayrollYear = "18-19",
+                        PayrollYear = "17-18",
                         PayrollMonth = 1,
                         EmpRef = "Not sure"
                     },
@@ -116,8 +116,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                         AccountId = EmployerAccountId,
                         LevyDeclaredInMonth = 301,
                         CreatedDate = DateTime.Now.AddMonths(-15),
-                        PayrollYear = "18-19",
-                        PayrollMonth = 1,
+                        PayrollYear = "16-17",
+                        PayrollMonth = 10,
                         EmpRef = "Not sure"
                     }
                 }
@@ -186,22 +186,24 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Thread.Sleep(2000);
         }
 
-        public static IEnumerable<T> Do<T>(
+        private static IEnumerable<T> Do<T>(
             Func<IEnumerable<T>> action,
             int expectedCount,
             TimeSpan retryInterval,
             int maxAttemptCount = 3)
         {
+            IEnumerable<T> rList = null;
             for (int attempted = 0; attempted < maxAttemptCount; attempted++)
             {
                 var a = action();
-                if(a.Count() == expectedCount)
+                if(a?.Count() == expectedCount)
                 {
                     return a;
                 }
+                rList = a;
                 Thread.Sleep(retryInterval);
             }
-            return new List<T>();
+            return rList ?? new List<T>();
         }
     }
 }

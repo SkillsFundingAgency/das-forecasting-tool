@@ -68,7 +68,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             var assembly = Assembly.GetExecutingAssembly();
             var codebase = new Uri(assembly.CodeBase);
             var path = codebase.LocalPath;
-            return Path.GetFullPath(Path.Combine(path, $"..\\..\\..\\..\\{appName}"));
+            return Path.GetFullPath(Path.Combine(path, $"..\\..\\..\\..\\{appName}\\bin\\Debug\\net462"));
         }
 
         private static string GetLocalPath()
