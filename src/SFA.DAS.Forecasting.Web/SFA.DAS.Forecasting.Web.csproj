@@ -357,7 +357,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <None Include="Views\Forecasting\Balance.cshtml" />
+    <Content Include="Views\Forecasting\Balance.cshtml" />
     <Content Include="Views\Forecasting\Visualisation.cshtml" />
     <Content Include="Views\Forecasting\ForcastingMenu.cshtml" />
   </ItemGroup>
