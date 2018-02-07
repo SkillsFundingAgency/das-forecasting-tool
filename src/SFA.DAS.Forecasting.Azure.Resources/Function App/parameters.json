@@ -27,16 +27,16 @@
       "value": "__funcSubscriptionId__"
     },
     "PaymentsApiBaseUrl": {
-      "value": "__funcPaymentsApiBaseUrl__"
+      "value": "__funcAppSettingPaymentsApiBaseUrl__"
     },
     "PaymentsApiToken": {
-      "value": "__funcPaymentsApiToken__"
+      "value": "__funcAppSettingPaymentsApiToken__"
     },
     "Environment": {
-      "value": "__funcEnvironment__"
+      "value": "__funcAppSettingEnvironment__"
     },
     "DbConnectionString": {
-      "value": "__funcDbConnectionString__"
+      "value": "__funcAppSettingDbConnectionString__"
     }
   }
 }
