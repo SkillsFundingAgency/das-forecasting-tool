@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Forecasting.ReadModel.AccountProjections
+namespace SFA.DAS.Forecasting.ReadModel.Projections
 {
     public class AccountProjection
     {
@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.ReadModel.AccountProjections
         public short Month { get; set; }
         public int Year { get;set; }
         public decimal FundsIn { get; set; }
-        public decimal TotalCostOfTraning { get; set; }
+        public decimal TotalCostOfTraining { get; set; }
         public decimal CompletionPayments { get; set; }
         public decimal FutureFunds { get; set; }
     }

@@ -72,8 +72,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountProjection\LevyProjection.cs" />
-    <Compile Include="AccountProjection\IAccountProjectionDataService.cs" />
+    <Compile Include="Commitments\EmployerCommitments.cs" />
+    <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
+    <Compile Include="Commitments\Model\Commitment.cs" />
+    <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
+    <Compile Include="Commitments\Validation\CommitmentEndDateValidator.cs" />
+    <Compile Include="Commitments\Validation\ICommitmentValidator.cs" />
+    <Compile Include="Events\IEventPublisher.cs" />
+    <Compile Include="Projections\AccountProjection.cs" />
+    <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
+    <Compile Include="Projections\Model\AccountActivity.cs" />
+    <Compile Include="Projections\AccountProjectionRepository.cs" />
     <Compile Include="Levy\Aggregates\LevyPeriod.cs" />
     <Compile Include="Levy\Model\LevyDeclaration.cs" />
     <Compile Include="Levy\Repositories\LevyPeriodRepository.cs" />
@@ -89,14 +98,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
+      <Project>{426ce92a-1acb-4ffe-adb2-5b49484f33ca}</Project>
+      <Name>SFA.DAS.Forecasting.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
       <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountProjections\AccountProjection.cs" />
-    <Compile Include="AccountProjections\ProjectionGenerationType.cs" />
+    <Compile Include="Projections\AccountProjection.cs" />
+    <Compile Include="Projections\ProjectionGenerationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

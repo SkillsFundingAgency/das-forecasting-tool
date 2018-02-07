@@ -1,13 +1,13 @@
-﻿using Dapper;
-using SFA.DAS.NLog.Logger;
-using SFA.DAS.Sql.Client;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Domain.AccountProjection;
+using Dapper;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
+using SFA.DAS.NLog.Logger;
+using SFA.DAS.Sql.Client;
 using IApplicationConfiguration = SFA.DAS.Forecasting.Application.Infrastructure.Configuration.IApplicationConfiguration;
 
-namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
+namespace SFA.DAS.Forecasting.Application.Projections.Services
 {
     public class AccountProjectionDataService : BaseRepository, IAccountProjectionDataService
     {
@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
         {
         }
 
-        public async Task<IEnumerable<ReadModel.AccountProjections.AccountProjection>> Get(long employerId)
+        public async Task<IEnumerable<ReadModel.Projections.AccountProjection>> Get(long employerId)
         {
             return await WithConnection(
                async c =>
@@ -26,13 +26,18 @@ namespace SFA.DAS.Forecasting.Application.AccountProjection.Services
 
                    var result =
                        await
-                       c.QueryAsync<ReadModel.AccountProjections.AccountProjection>(
+                       c.QueryAsync<ReadModel.Projections.AccountProjection>(
                              sql: "SELECT * FROM [dbo].[AccountProjection] WHERE EmployerAccountId = @employerAccountId"
                            , param: parameters,
                              commandType: CommandType.Text);
 
                    return result;
                });
+        }
+
+        public async Task Store(IEnumerable<Domain.Projections.AccountProjection> accountProjections)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
