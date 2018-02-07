@@ -29,6 +29,24 @@
     },
     "LoggingRedisKey": {
       "type": "string"
+    },
+    "AllowedHashstringCharacters": {
+      "type": "string"
+    },
+    "HashString": {
+      "type": "string"
+    },
+    "databaseUsername": {
+      "type": "string"
+    },
+    "databasePassword": {
+      "type": "securestring"
+    },
+    "databaseName": {
+      "type": "string"
+    },
+    "sqlServer": {
+      "type": "string"
     }
   },
     "resources": [
@@ -60,6 +78,21 @@
               {
                 "name": "LoggingRedisKey",
                 "value": "[parameters('LoggingRedisKey')]"
+              },
+              {
+                "name": "AllowedHashstringCharacters",
+                "value": "[parameters('AllowedHashstringCharacters')]"
+              },
+              {
+                "name": "HashString",
+                "value": "[parameters('HashString')]"
+              }
+            ],
+            "connectionStrings": [
+              {
+                "name": "DatabaseConnectionString",
+                "ConnectionString": "[concat('Data Source=tcp:' , parameters('sqlServer'),'.database.windows.net' , ',1433;Initial Catalog=',parameters('databaseName'),';User Id=',parameters('databaseUsername'),';Password=',parameters('databasePassword'),';')]",
+                "type": "SQLAzure"
               }
             ],
             "alwaysOn": true,

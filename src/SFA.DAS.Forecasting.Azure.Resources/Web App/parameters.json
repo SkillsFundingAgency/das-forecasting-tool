@@ -31,6 +31,24 @@
     },
     "LoggingRedisKey": {
       "value": "__appSettingLoggingRedisKey__"
+    },
+    "AllowedHashstringCharacters": {
+      "value": "__appSettingAllowedHashstringCharacters__"
+    },
+    "HashString": {
+      "value": "__appSettingHashString__"
+    },
+    "databaseName": {
+      "value": "__connStringDatabaseName__"
+    },
+    "sqlServer": {
+      "value": "__connStringSqlServer__"
+    },
+    "databaseUsername": {
+      "value": "__connStringDatabaseUsername__"
+    },
+    "databasePassword": {
+      "value": "__connStringDatabasePassword__"
     }
   }
 }
