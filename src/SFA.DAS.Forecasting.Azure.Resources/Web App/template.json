@@ -40,7 +40,7 @@
       "type": "string"
     },
     "databasePassword": {
-      "type": "securestring"
+      "type": "string"
     },
     "databaseName": {
       "type": "string"
