@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -36,7 +37,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 						Year = paymentEvent.CollectionPeriod.Year
 					};
 
-					container.GetInstance<QueueService>().SendMessageWithVisibilityDelay(employerPeriod, QueueNames.PaymentAggregationAllower, 10);
+					container.GetInstance<QueueService>()
+						.SendMessageWithVisibilityDelay(
+							employerPeriod, 
+							QueueNames.PaymentAggregationAllower,
+							Environment.GetEnvironmentVariable("DelayInSeconds") != null ? int.Parse(Environment.GetEnvironmentVariable("DelayInSeconds")) : 0);
 
                     return await Task.FromResult(1);
                 });

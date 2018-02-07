@@ -7,6 +7,7 @@ Scenario: AC1: Store payment event data
 	Given payment events have been created
 	Then there are 3 payment events stored
 	And all of the data stored is correct
+	And the aggregation for the total cost of training has been created properly
 
 Scenario: AC2: do not store invalid data
 	Given payment events have been created

@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 	public class TrainingCostRepository : ITrainingCostRepository
 	{
 		// ToDo: Const or config...
-		private static string EmployerPaymentTableName = "TrainingCosts";
+		private static string EmployerPaymentsTotalCostsTableName = "TrainingCosts";
 
 		private readonly ILog _logger;
 		private CloudTable _table;
@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 
 			CloudStorageAccount storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
 			var tableClient = storageAccount.CreateCloudTableClient();
-			_table = tableClient.GetTableReference(EmployerPaymentTableName);
+			_table = tableClient.GetTableReference(EmployerPaymentsTotalCostsTableName);
 		}
 
 		public async Task StoreTrainingCost(EmployerTotalCostOfTraining employerTotalCostOfTraining)

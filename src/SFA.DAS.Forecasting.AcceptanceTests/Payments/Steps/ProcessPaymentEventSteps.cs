@@ -9,7 +9,9 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Services;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using TechTalk.SpecFlow;
+using CollectionPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.CollectionPeriod;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
@@ -23,14 +25,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 			StartFunction("SFA.DAS.Forecasting.Payments.Functions");
 		}
 		private AzureTableService _azureTableService;
+		private AzureTableService _totalCostAzureTableService;
 
 		[BeforeScenario]
 	    public void BeforeScenario()
 	    {
-		    _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.EmployerPaymentsTable);
+			_azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.EmployerPaymentsTable);
 		    _azureTableService.EnsureExists();
 		    _azureTableService.DeleteEntities(EmployerAccountId.ToString());
-	    }
+		    _totalCostAzureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.EmployerPaymentsTotalCostsTableName);
+		    _totalCostAzureTableService.EnsureExists();
+		    _totalCostAzureTableService.DeleteEntities(EmployerAccountId.ToString());
+		}
 
 	    [AfterScenario]
 	    public void AfterSecnario()
@@ -58,17 +64,27 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 			Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
 		}
 
-	    [Then(@"all of the data stored is correct")]
-	    public void ThenAllOfTheDataStoredIsCorrect()
-	    {
-		    var _records = _azureTableService?.GetRecords<PaymentEvent>(EmployerAccountId.ToString())?.ToList();
+		[Then(@"all of the data stored is correct")]
+		public void ThenAllOfTheDataStoredIsCorrect()
+		{
+			var _records = _azureTableService?.GetRecords<PaymentEvent>(EmployerAccountId.ToString())?.ToList();
 
-		    Assert.IsTrue(_records.SingleOrDefault(m => m.ApprenticeshipId == 1234) != null);
-		    Assert.IsTrue(_records.SingleOrDefault(m => m.ApprenticeshipId == 1235) != null);
-		    Assert.IsTrue(_records.SingleOrDefault(m => m.ApprenticeshipId == 1236) != null);
-	    }
+			Assert.IsTrue(_records.SingleOrDefault(m => m.ApprenticeshipId == 1234) != null);
+			Assert.IsTrue(_records.SingleOrDefault(m => m.ApprenticeshipId == 1235) != null);
+			Assert.IsTrue(_records.SingleOrDefault(m => m.ApprenticeshipId == 1236) != null);
+		}
 
-	    [Then(@"the event with invalid data is not stored")]
+		[Then(@"the aggregation for the total cost of training has been created properly")]
+		public void ThenTotalCostAggregationIsCreated()
+		{
+			var _records = _totalCostAzureTableService?.GetRecords<EmployerTotalCostOfTraining>(EmployerAccountId.ToString())?.ToList();
+
+			Assert.IsTrue(_records != null);
+			Assert.IsTrue(_records.Any());
+			Assert.IsTrue(_records.Count == 1);
+		}
+
+		[Then(@"the event with invalid data is not stored")]
 	    public void ThenTheEventIsNotStored()
 	    {
 		    var _records = _azureTableService?.GetRecords<PaymentEvent>(EmployerAccountId.ToString());
@@ -94,7 +110,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
+							    CompletionStatus = 1,
+								EndpointAssessorId = Guid.NewGuid().ToString()
 						    },
 						    CollectionPeriod = new CollectionPeriod
 						    {
@@ -117,8 +134,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -140,8 +158,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -171,8 +190,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -194,8 +214,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -217,8 +238,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -240,8 +262,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -263,8 +286,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -286,8 +310,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -309,8 +334,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = -1,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -332,8 +358,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = -1,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -355,8 +382,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = -1,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -378,8 +406,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = -1
-						    },
+							    CompletionStatus = -1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -401,8 +430,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -424,8 +454,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -447,8 +478,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    TotalInstallments = 18,
 							    MonthlyInstallment = 1000,
 							    CompletionAmount = 3000,
-							    CompletionStatus = 1
-						    },
+							    CompletionStatus = 1,
+							    EndpointAssessorId = Guid.NewGuid().ToString()
+							},
 						    CollectionPeriod = new CollectionPeriod
 						    {
 							    Id = "123",
@@ -456,6 +488,29 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 							    Year = -1
 						    }
 					    },
+					    new PaymentEvent {
+						    EmployerAccountId = EmployerAccountId.ToString(),
+						    Amount = 103,
+						    ApprenticeshipId = 1236,
+						    Id = Guid.NewGuid().ToString(),
+						    Ukprn = 12345,
+						    EarningDetails = new EarningDetails
+						    {
+							    StartDate = DateTime.Today,
+							    PlannedEndDate = DateTime.Now.AddMonths(5),
+							    ActualEndDate = DateTime.Now.AddMonths(6),
+							    TotalInstallments = 18,
+							    MonthlyInstallment = 1000,
+							    CompletionAmount = 3000,
+							    CompletionStatus = 1
+						    },
+						    CollectionPeriod = new CollectionPeriod
+						    {
+							    Id = "123",
+							    Month = DateTime.Now.Month,
+							    Year = DateTime.Now.Year
+						    }
+					    }
 					}
 				    .Select(JsonConvert.SerializeObject);
 	    }
