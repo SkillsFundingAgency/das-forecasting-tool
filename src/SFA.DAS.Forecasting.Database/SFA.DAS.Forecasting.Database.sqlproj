@@ -64,7 +64,7 @@
     <Build Include="Tables\Balance.sql" />
     <Build Include="Tables\Apprenticeship.sql" />
     <Build Include="Tables\CurrentBalanceAndLevy.sql" />
-    <Build Include="TestData\AccountProjection.sql" />
+    <None Include="TestData\AccountProjection.sql" />
     <Build Include="Tables\AccountProjection.sql" />
   </ItemGroup>
   <ItemGroup>
