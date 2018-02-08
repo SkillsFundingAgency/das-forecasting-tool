@@ -18,14 +18,13 @@
 using System;
 using System.Configuration;
 using System.Net.NetworkInformation;
-
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.Forecasting.Domain.Interfaces;
-using SFA.DAS.Forecasting.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
+
 
 namespace SFA.DAS.Forecasting.Web.DependencyResolution
 {
@@ -60,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
                 null)).AlwaysUnique();
         }
 
-        private ForcastingApplicationConfiguration GetConfiguration()
+        private IApplicationConfiguration GetConfiguration()
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
@@ -72,7 +71,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(ServiceName, environment, "1.0"));
 
-            var result = configurationService.Get<ForcastingApplicationConfiguration>();
+            var result = configurationService.Get<IApplicationConfiguration>();
 
             return result;
         }

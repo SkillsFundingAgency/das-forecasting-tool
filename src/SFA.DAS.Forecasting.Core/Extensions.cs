@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Newtonsoft.Json;
 
 namespace SFA.DAS.Forecasting.Core
@@ -16,5 +17,14 @@ namespace SFA.DAS.Forecasting.Core
 
         }
 
+        public static bool IsNullDate(this DateTime? date)
+        {
+            return !date.HasValue || date.Value.Year == 1;
+        }
+
+        public static DateTime GeStartOfMonth(this DateTime date)
+        {
+            return date.AddDays(date.Day * -1).AddDays(1);
+        }
     }
 }

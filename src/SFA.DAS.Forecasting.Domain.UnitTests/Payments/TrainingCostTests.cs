@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 			{
 				new Payment
 				{
-					EmployerAccountId = "1234",
+					EmployerAccountId = 1234,
 					CollectionPeriod = new CollectionPeriod
 					{
 						Month = 1,
@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 				},
 				new Payment
 				{
-					EmployerAccountId = "1234",
+					EmployerAccountId = 1234,
 					CollectionPeriod = new CollectionPeriod
 					{
 						Month = 1,
@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 				},
 				new Payment
 				{
-					EmployerAccountId = "1234",
+					EmployerAccountId = 1234,
 					CollectionPeriod = new CollectionPeriod
 					{
 						Month = 1,
@@ -60,7 +60,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 				},
 				new Payment
 				{
-					EmployerAccountId = "1234",
+					EmployerAccountId = 1234,
 					CollectionPeriod = new CollectionPeriod
 					{
 						Month = 1,
@@ -109,7 +109,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 		[Test]
 		public async Task Stores_Valid_Payment()
 		{
-			var employerAccountId = "123456";
+			var employerAccountId = 123456;
 			var periodMonth = 1;
 			var periodYear = 2018;
 			var totalCostOfTraining = 123m;

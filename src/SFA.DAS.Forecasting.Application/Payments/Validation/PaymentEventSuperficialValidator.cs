@@ -9,11 +9,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
         public List<ValidationFailure> Validate(PaymentEvent itemToValidate)
         {
 	        var failures = new List<ValidationFailure>();
-	        if (string.IsNullOrWhiteSpace(itemToValidate.EmployerAccountId))
+	        if (string.IsNullOrWhiteSpace(itemToValidate.EmployerAccountId.ToString()))
 	        {
 		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.EmployerAccountId)} is missing." });
 	        }
-            else if (!long.TryParse(itemToValidate.EmployerAccountId,out long res) )
+            else if (!long.TryParse(itemToValidate.EmployerAccountId.ToString(), out long res) )
 	        {
                 failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.EmployerAccountId)} is not a valid employer account id." });
             }

@@ -1,65 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage;
+using Dapper;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Application.Levy.Services.Models;
-using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Payments.Repositories.Models;
 using SFA.DAS.Forecasting.Domain.Levy.Model;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
+using SFA.DAS.NLog.Logger;
+using SFA.DAS.Sql.Client;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Services
 {
-    public class LevyDataService : ILevyDataService
+    public class LevyDataService : BaseRepository, ILevyDataService
     {
-        private readonly CloudTable _table;
-
-        public LevyDataService(IConfig settings)
+        public LevyDataService(IApplicationConfiguration applicationConfiguration, ILog log) : base(applicationConfiguration.DatabaseConnectionString, log)
         {
-            if (settings == null) throw new ArgumentNullException(nameof(settings));
-            var storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
-            var tableClient = storageAccount.CreateCloudTableClient();
-            _table = tableClient.GetTableReference(settings.LevyDeclarationTableName);
-            EnsureExists(_table);
         }
 
-        public async Task<List<LevyDeclaration>> GetLevyDeclarationsForPeriod(long employerAccountId, string periodYear, int month)
+        public async Task<List<LevyDeclaration>> GetLevyDeclarationsForPeriod(long employerAccountId, string payrollYear, byte payrollMonth)
         {
-            var partitionKey = GetPartitionKey(employerAccountId, periodYear, month);
-            TableContinuationToken continuationToken = null;
-            var levyDeclarations = new List<LevyDeclaration>();
-            do
+            return await WithConnection(async cnn =>
             {
-                var results = await _table.ExecuteQuerySegmentedAsync(
-                    new TableQuery<TableEntry>().Where(
-                        TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey)),
-                    continuationToken);
-                continuationToken = results.ContinuationToken;
-                levyDeclarations.AddRange(results.Select(item => JsonConvert.DeserializeObject<LevyDeclaration>(item.Data)));
-            } while (continuationToken != null);
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
+                parameters.Add("@payrollYear", payrollYear, DbType.String);
+                parameters.Add("@payrollMonth", payrollMonth, DbType.Byte);
 
-            return levyDeclarations;
+                var levyDeclarations = await cnn.QueryAsync<LevyDeclaration>(
+                            sql: "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYearStart = @payrollYearStart and PayrollMonth = @payrollMonth",
+                            param: parameters,
+                            commandType: CommandType.Text);
+                return levyDeclarations.ToList();
+            });
         }
 
         private static string GetPartitionKey(long employerAccountId, string periodYear, int periodMonth)
         {
-            return $"{employerAccountId}_{periodYear}_{periodMonth}".ToLower().Replace("-", "_").Replace("/","_");
+            return $"{employerAccountId}_{periodYear}_{periodMonth}".ToLower().Replace("-", "_").Replace("/", "_");
         }
 
-        public async Task StoreLevyDeclaration(LevyDeclaration levyDeclaration)
+        public async Task StoreLevyDeclarations(IEnumerable<LevyDeclaration> levyDeclarations)
         {
-            EnsureExists(_table);
-
-            var tableModel = new TableEntry
+            await WithTransaction(async (cnn, tx) =>
             {
-                PartitionKey = GetPartitionKey(levyDeclaration.EmployerAccountId, levyDeclaration.PayrollYear, levyDeclaration.PayrollMonth),
-                RowKey = levyDeclaration.Scheme,
-                Data = JsonConvert.SerializeObject(levyDeclaration)
-            };
+                try
+                {
+                    foreach (var levyDeclaration in levyDeclarations)
+                        await StoreLevyDeclaration(cnn, levyDeclaration);
+                    tx.Commit();
+                }
+                catch (Exception e)
+                {
+                    tx.Rollback();
+                    throw;
+                }
+            });
+        }
 
-            await _table.ExecuteAsync(TableOperation.InsertOrReplace(tableModel));
+        private async Task StoreLevyDeclaration(IDbConnection connection, LevyDeclaration levyDeclaration)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", levyDeclaration.EmployerAccountId, DbType.Int64);
+            parameters.Add("@payrollYear", levyDeclaration.PayrollYear, DbType.String);
+            parameters.Add("@payrollMonth", levyDeclaration.PayrollMonth, DbType.Byte);
+            parameters.Add("@levyAmountDeclared", levyDeclaration.LevyAmountDeclared, DbType.Decimal);
+            parameters.Add("@transactionDate", levyDeclaration.TransactionDate, DbType.Byte);
+
+            await connection.ExecuteAsync(
+                @"MERGE LevyDeclaration AS target 
+                                    USING(SELECT @employerAccountId, @scheme, @payrollYear, @payrollMonth, @levyAmountDeclared, @transactionDate) AS source(EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate)
+                                    ON(target.EmployerAccountId = source.EmployerAccountId and target.Scheme = source.Scheme and target.PayrollYear = source.PayrollYear and target.PayrollMonth = source.PayrollMonth)
+                                    WHEN MATCHED THEN
+                                        UPDATE SET LevyAmountDeclared = source.LevyAmountDeclared, DateReceived = getdate()
+                                    WHEN NOT MATCHED THEN
+                                        INSERT(EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate)
+                                        VALUES(source.EmployerAccountId, source.Scheme, source.PayrollYear, source.PayrollMonth, source.LevyAmountDeclared, source.TransactionDate);",
+                parameters,
+                commandType: CommandType.Text);
         }
 
         private void EnsureExists(CloudTable table)

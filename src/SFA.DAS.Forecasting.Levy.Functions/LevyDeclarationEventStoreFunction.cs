@@ -1,8 +1,13 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Levy.Handlers;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Domain.Levy.Repositories;
+using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
@@ -11,19 +16,25 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class LevyDeclarationEventStoreFunction : IFunction
     {
         [FunctionName("LevyDeclarationEventStoreFunction")]
-        //[return:Queue()]
         public static async Task Run(
-            [QueueTrigger(QueueNames.StoreLevyDeclaration)]LevyDeclarationEvent levyEvent,
+            [QueueTrigger(QueueNames.StoreLevyDeclaration)]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedMessage,
             TraceWriter writer)
         {
             await FunctionRunner.Run<LevyDeclarationEventStoreFunction>(writer,
                 async (container, logger) =>
                 {
-                    var repository = container.GetInstance<ILevyPeriodRepository>();
-                    var levyPeriod = await repository.Get(levyEvent.EmployerAccountId, levyEvent.PayrollYear, levyEvent.PayrollMonth ?? 0);
-                    levyPeriod.AddDeclaration(levyEvent.EmployerAccountId, levyEvent.PayrollYear, levyEvent.PayrollMonth ?? 0, levyEvent.Amount, levyEvent.Scheme, levyEvent.TransactionDate);
-                    await repository.StoreLevyPeriod(levyPeriod);
-                    logger.Info($"Stored {nameof(LevyDeclarationEvent)} for EmployerAccountId: {levyEvent.EmployerAccountId} and PayrollYear: {levyEvent.PayrollYear}");
+                    logger.Debug("Getting levy declaration handler from container.");
+                    var handler = container.GetInstance<ProcessLevyDeclarationHandler>();
+                    if (handler==null)
+                        throw new InvalidOperationException($"Faild to get levy handler from container.");
+                    await handler.Handle(levySchemeUpdatedMessage);
+                    var config = container.GetInstance<IApplicationConfiguration>();
+                    var storageAccount = CloudStorageAccount.Parse(config.StorageConnectionString);
+                    var queueClient = storageAccount.CreateCloudQueueClient();
+                    var queue = queueClient.GetQueueReference(QueueNames.AllowAggregation);
+                    await queue.CreateIfNotExistsAsync();
+                    queue.AddMessage(new CloudQueueMessage(levySchemeUpdatedMessage.ToJson()),null,TimeSpan.FromSeconds(config.SecondsToWaitToAllowAggregation));
+                    logger.Info($"Finished handling levy declaration for EmployerAccountId: {levySchemeUpdatedMessage.AccountId}, PayrollYear: {levySchemeUpdatedMessage.PayrollYear}, month: {levySchemeUpdatedMessage.PayrollMonth}, scheme: {levySchemeUpdatedMessage.EmpRef}");
                 });
         }
     }

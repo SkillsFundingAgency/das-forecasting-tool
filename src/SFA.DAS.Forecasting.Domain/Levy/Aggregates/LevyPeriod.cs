@@ -1,21 +1,12 @@
-﻿using SFA.DAS.Forecasting.Domain.Levy.Repositories;
-using SFA.DAS.NLog.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Levy.Model;
 using SFA.DAS.Forecasting.Domain.Levy.Validation;
 
 namespace SFA.DAS.Forecasting.Domain.Levy.Aggregates
 {
-    public interface ILevyPeriod
-    {
-        void AddDeclaration(long employerAccountId, string payrollYear, short payrollMonth, decimal amount, string scheme, DateTime transactionDate);
-    }
-
-    public class LevyPeriod : ILevyPeriod
+    public class LevyPeriod
     {
         internal readonly List<LevyDeclaration> LevyDeclarations;
         private readonly LevyDeclarationTransactionDateValidator _levyDeclarationTransactionDateValidator;
@@ -27,26 +18,38 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Aggregates
             _levyDeclarationTransactionDateValidator = new LevyDeclarationTransactionDateValidator();
         }
 
-        public virtual void AddDeclaration(long employerAccountId, string payrollYear, short payrollMonth, decimal amount, string scheme, DateTime transactionDate)
+        public virtual void AddDeclaration(long employerAccountId, string payrollYear, byte payrollMonth, decimal amount, string scheme, DateTime transactionDate)
         {
             if (!_levyDeclarationTransactionDateValidator.IsValid(transactionDate))
                 throw new InvalidOperationException($"Found LevyDeclarationEvent older than 2 years. Not saved. Employer: {employerAccountId}, Payroll date: {payrollYear} - {payrollMonth}, Amount: {amount}");
 
-            LevyDeclarations.Add(new LevyDeclaration
+            var levyDeclaration = LevyDeclarations.FirstOrDefault(levy =>
+                levy.PayrollMonth == payrollMonth && levy.PayrollYear == payrollYear && levy.Scheme.Equals(scheme));
+            if (levyDeclaration == null)
             {
-                EmployerAccountId = employerAccountId,
-                Amount = amount,
-                Scheme = scheme,
-                PayrollYear = payrollYear,
-                PayrollMonth =  payrollMonth,
-                TransactionDate = transactionDate
-            });
+                LevyDeclarations.Add(levyDeclaration = new LevyDeclaration
+                {
+                    EmployerAccountId = employerAccountId,
+                    Scheme = scheme,
+                    PayrollYear = payrollYear,
+                    PayrollMonth = payrollMonth,
+                });
+            }
+
+            levyDeclaration.TransactionDate = transactionDate;
+            levyDeclaration.LevyAmountDeclared = amount;
         }
 
         public decimal GetPeriodAmount()
         {
-            return LevyDeclarations.Sum(levyDeclaration => levyDeclaration.Amount);
+            return LevyDeclarations.Sum(levyDeclaration => levyDeclaration.LevyAmountDeclared);
+        }
+
+        public DateTime? GetLastTimeReceivedLevy()
+        {
+            return LevyDeclarations.OrderByDescending(levy => levy.DateReceived)
+                .FirstOrDefault()
+                ?.DateReceived;
         }
     }
-
 }

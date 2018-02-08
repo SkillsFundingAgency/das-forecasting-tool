@@ -2,7 +2,7 @@
 {
 	public class EmployerTotalCostOfTraining
 	{
-		public string EmployerAccountId { get; set; }
+		public long EmployerAccountId { get; set; }
 
 		public decimal TotalCostOfTraining { get; set; }
 

@@ -66,7 +66,11 @@
     <Reference Include="SFA.DAS.Sql.Client, Version=1.0.0.44965, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Sql.Client.1.0.0.44965\lib\net45\SFA.DAS.Sql.Client.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap, Version=4.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -85,11 +89,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountProjection\Services\AccountProjectionDataService.cs" />
-    <Compile Include="Levy\Handlers\LevyDeclarationHandler.cs" />
-    <Compile Include="Levy\Messages\LevyDeclarationEvent.cs" />
+    <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
+    <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
+    <Compile Include="Infrastructure\DefaultRegistry.cs" />
+    <Compile Include="Levy\Handlers\AllowLevyDeclarationAggregationHandler.cs" />
+    <Compile Include="Levy\Handlers\ProcessLevyDeclarationHandler.cs" />
+    <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
+    <Compile Include="Levy\Messages\LevyDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Services\LevyDataService.cs" />
-    <Compile Include="Levy\Services\Models\TableEntry.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationEventValidator.cs" />
     <Compile Include="Payments\Mapping\PaymentMapper.cs" />
     <Compile Include="Payments\Messages\CollectionPeriod.cs" />
@@ -119,9 +126,12 @@
       <Name>SFA.DAS.Forecasting.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
-      <Project>{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}</Project>
+      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commitments\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
