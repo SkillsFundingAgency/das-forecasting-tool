@@ -8,6 +8,7 @@
     "ConnectionStringKey": "localhost",
     "EnvironmentKey": "LOCAL",
     "LoggingRedisKey": "logstash",
-    "EnvironmentName": "LOCAL"
+    "EnvironmentName": "LOCAL",
+    "DelayTimeInSeconds": 5
   }
 }

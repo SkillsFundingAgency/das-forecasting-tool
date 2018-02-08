@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 	public class EmployerPaymentRepository : IEmployerPaymentRepository
 	{
 		// ToDo: Const or config...
-		private static string EmployerPaymentTableName = "EmployerPayment";
+		private static string EmployerPaymentTableName = "EmployerPayments";
 		private readonly CloudTable _table;
 
 		public EmployerPaymentRepository(ILog logger, IApplicationConfiguration settings)
@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 
 			var tableModel = new TableEntry
 			{
-				PartitionKey = payment.EmployerAccountId.ToString(),
+				PartitionKey = payment.EmployerAccountId,
 				RowKey = payment.Id,
 				Data = JsonConvert.SerializeObject(payment)
 			};

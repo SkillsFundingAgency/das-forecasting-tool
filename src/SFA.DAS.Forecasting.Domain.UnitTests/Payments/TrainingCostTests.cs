@@ -100,7 +100,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 				}
 			};
 
-			var actual = _service.IsAggregationAllowed(payments);
+			var actual = _service.IsAggregationAllowed(payments, 10);
 
 			Assert.AreEqual(actual, expected);
 
