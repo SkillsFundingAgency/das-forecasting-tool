@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		}
 
 	    [AfterScenario]
-	    public void AfterSecnario()
+	    public void AfterScenario()
 	    {
 		    _azureTableService.DeleteEntities(EmployerAccountId.ToString());
 		    Thread.Sleep(1000);
