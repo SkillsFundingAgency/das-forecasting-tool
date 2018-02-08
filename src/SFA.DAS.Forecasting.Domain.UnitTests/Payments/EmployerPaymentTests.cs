@@ -40,14 +40,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
             {
 	            Id = id,
 				EmployerAccountId = employerAccountId,
-				Ukprn = ukprn,
+				ProviderId = ukprn,
 				ApprenticeshipId = apprenticeshipId,
 				Amount = amount
             });
 
             Assert.AreEqual(id, payment.Id);
             Assert.AreEqual(employerAccountId, payment.EmployerAccountId);
-            Assert.AreEqual(ukprn, payment.Ukprn);
+            Assert.AreEqual(ukprn, payment.ProviderId);
             Assert.AreEqual(apprenticeshipId, payment.ApprenticeshipId);
             Assert.AreEqual(amount, payment.Amount);
 			

@@ -67,6 +67,9 @@
     <Build Include="Tables\LevyDeclaration.sql" />
     <Build Include="Tables\AccountProjection.sql" />
     <Build Include="Tables\EmployerAccount.sql" />
+    <Build Include="Tables\Payment.sql" />
+    <Build Include="Tables\Commitment.sql" />
+    <Build Include="Tables\EmployerTotalCostOfTraining.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\ResetBalanceData.sql" />
