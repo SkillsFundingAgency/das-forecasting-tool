@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         }
 
         [AfterScenario]
-        public void AfterSecnario()
+        public void AfterScenario()
         {
             _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
             Thread.Sleep(1000);
