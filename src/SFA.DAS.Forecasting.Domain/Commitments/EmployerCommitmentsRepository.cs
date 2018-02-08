@@ -5,7 +5,13 @@ using SFA.DAS.Forecasting.Domain.Events;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
-    public class EmployerCommitmentsRepository
+    public interface IEmployerCommitmentsRepository
+    {
+        Task<EmployerCommitments> Get(long employerAccountId);
+        Task Store(EmployerCommitments commitments);
+    }
+
+    public class EmployerCommitmentsRepository : IEmployerCommitmentsRepository
     {
         private readonly ICommitmentsDataService _dataService;
         private readonly IEventPublisher _eventPublisher;
