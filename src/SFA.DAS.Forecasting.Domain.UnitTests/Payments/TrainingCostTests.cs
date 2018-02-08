@@ -72,7 +72,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 
 			var actual = _service.AggregateEmployerPayments(payments);
 
-			Assert.AreEqual(actual.EmployerAccountId, "1234");
+			Assert.AreEqual(actual.EmployerAccountId, 1234);
 			Assert.AreEqual(actual.PeriodMonth, 1);
 			Assert.AreEqual(actual.PeriodYear, 2018);
 			Assert.AreEqual(actual.TotalCostOfTraining, 99);
@@ -88,15 +88,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 			{
 				new Payment
 				{
-					ReceivedTime = DateTime.Now.AddMinutes(firstDelay)
+					ReceivedTime = DateTime.Now.AddSeconds(firstDelay)
 				},
 				new Payment
 				{
-					ReceivedTime = DateTime.Now.AddMinutes(secondDelay)
+					ReceivedTime = DateTime.Now.AddSeconds(secondDelay)
 				},
 				new Payment
 				{
-					ReceivedTime = DateTime.Now.AddMinutes(thirdDelay)
+					ReceivedTime = DateTime.Now.AddSeconds(thirdDelay)
 				}
 			};
 

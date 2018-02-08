@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[EmployerTotalCostOfTraining]
+﻿CREATE TABLE [dbo].[TotalCostOfTraining]
 (
 	[Id] BIGINT NOT NULL PRIMARY KEY Identity(1,1),
 	[EmployerAccountId] BIGINT NOT NULL,

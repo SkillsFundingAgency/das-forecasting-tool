@@ -69,7 +69,7 @@
     <Build Include="Tables\EmployerAccount.sql" />
     <Build Include="Tables\Payment.sql" />
     <Build Include="Tables\Commitment.sql" />
-    <Build Include="Tables\EmployerTotalCostOfTraining.sql" />
+    <Build Include="Tables\TotalCostOfTraining.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\ResetBalanceData.sql" />
