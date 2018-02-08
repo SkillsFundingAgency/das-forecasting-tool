@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Payments.Application.Infrastructure
             var storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(connectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
             _table = tableClient.GetTableReference(TableName);
+            _table.CreateIfNotExists();
         }
 
         public async Task<Info> GetLatestInfo()
