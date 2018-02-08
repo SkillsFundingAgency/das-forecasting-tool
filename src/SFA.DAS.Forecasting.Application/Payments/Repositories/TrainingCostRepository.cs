@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Repositories.Models;
 using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using SFA.DAS.Forecasting.Domain.Payments.Repositories;
@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Repositories
 		private readonly ILog _logger;
 		private CloudTable _table;
 
-		public TrainingCostRepository(ILog logger, IConfig settings)
+		public TrainingCostRepository(ILog logger, IApplicationConfiguration settings)
 		{
 			_logger = logger;
 

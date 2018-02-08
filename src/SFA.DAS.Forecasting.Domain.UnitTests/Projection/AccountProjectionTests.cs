@@ -30,8 +30,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 EmployerAccountId = 1,
                 LevyDeclared = 7000,
                 Balance = 47700,
-                TotalCostOfTraining = 100,
-                TrainingCostPeriod = DateTime.Today
             };
             Moqer.SetInstance(_accountActivity);
             _commitment = new Commitment

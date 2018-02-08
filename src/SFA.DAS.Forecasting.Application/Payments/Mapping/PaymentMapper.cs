@@ -11,13 +11,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 		{
 			return new Payment
 			{
-				Id = paymentEvent.Id,
+				ExternalPaymentId = paymentEvent.Id,
 				EmployerAccountId = paymentEvent.EmployerAccountId,
-				ProviderName = paymentEvent.ProviderName,
 				ProviderId = paymentEvent.Ukprn,
 				LearnerId = paymentEvent.Uln,
-				FirstName = paymentEvent.ApprenticeName,
-				LastName = paymentEvent.ApprenticeName,
 				Amount = paymentEvent.Amount,
 				CollectionPeriod = new CollectionPeriod
 				{

@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
         public async Task Stores_Valid_Payment()
         {
 	        var id = "testId";
-	        var employerAccountId = "123456";
+	        var employerAccountId = 123456;
 			var ukprn = 123456;
 	        var apprenticeshipId = 654321;
 	        var amount = 123m;
@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 
             await _service.AddPayment(new Payment
             {
-	            Id = id,
+	            ExternalPaymentId = id,
 				EmployerAccountId = employerAccountId,
 				ProviderId = ukprn,
 				ApprenticeshipId = apprenticeshipId,
