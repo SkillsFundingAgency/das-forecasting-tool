@@ -2,6 +2,7 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Data.OData.Query.SemanticAst;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
@@ -35,9 +36,28 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                });
         }
 
-        public async Task Store(IEnumerable<Domain.Projections.AccountProjection> accountProjections)
+        public async Task Refresh(long employerAccountId, IEnumerable<Domain.Projections.AccountProjection> accountProjections)
         {
-            throw new System.NotImplementedException();
+            await WithTransaction(async (cnn, tx) =>
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
+
+                await cnn.ExecuteAsync("Delete From [dbo].[AccountProjection] WHERE EmployerAccountId = @employerAccountId"
+                            , parameters, commandType: CommandType.Text);
+
+                var sql = @"Insert INTO [dbo].[AccountProjection] Values 
+                            (@EmployerAccountId
+                           ,@ProjectionCreationDate
+                           ,@ProjectionGenerationType
+                           ,@Month
+                           ,@Year
+                           ,@FundsIn
+                           ,@TotalCostOfTraning
+                           ,@CompletionPayments
+                           ,@FutureFunds)";
+                await cnn.ExecuteAsync(sql, accountProjections);
+            });
         }
     }
 }

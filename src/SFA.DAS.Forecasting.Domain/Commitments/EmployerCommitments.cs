@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly List<Commitment> _commitments;
         private readonly IEventPublisher _eventPublisher;
         public ReadOnlyCollection<Commitment> Commitments => _commitments.AsReadOnly();
-        private readonly List<ICommitmentValidator> _addCommitmentvalidators = new List<ICommitmentValidator>
+        private readonly List<ICommitmentValidator> _addCommitmentValidators = new List<ICommitmentValidator>
         {
             //new CommitmentEndDateValidator()
         };
@@ -43,7 +43,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 CompletionAmount = completionAmount,
                 NumberOfInstallments = numberOfInstallments
             };
-            var results = _addCommitmentvalidators.Select(validator => validator.Validate(commitment)).Where(failureReason => failureReason != null).ToList();
+            var results = _addCommitmentValidators.Select(validator => validator.Validate(commitment)).Where(failureReason => failureReason != null).ToList();
             if (results.Any())
             {
                 _eventPublisher.Publish(new ValidationFailure<Commitment>(results.ToList(), commitment));

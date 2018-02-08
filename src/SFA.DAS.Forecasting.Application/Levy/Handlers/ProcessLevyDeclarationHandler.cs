@@ -14,7 +14,6 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
     {
         public ILevyPeriodRepository Repository { get; }
         public ILog Logger { get; }
-        public IApplicationConfiguration ApplicationConfiguration { get; }
 
         public ProcessLevyDeclarationHandler(ILevyPeriodRepository repository, ILog logger)
         {

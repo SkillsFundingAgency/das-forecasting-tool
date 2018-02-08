@@ -38,11 +38,6 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
             });
         }
 
-        private static string GetPartitionKey(long employerAccountId, string periodYear, int periodMonth)
-        {
-            return $"{employerAccountId}_{periodYear}_{periodMonth}".ToLower().Replace("-", "_").Replace("/", "_");
-        }
-
         public async Task StoreLevyDeclarations(IEnumerable<LevyDeclaration> levyDeclarations)
         {
             await WithTransaction(async (cnn, tx) =>
@@ -81,14 +76,6 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                                         VALUES(source.EmployerAccountId, source.Scheme, source.PayrollYear, source.PayrollMonth, source.LevyAmountDeclared, source.TransactionDate);",
                 parameters,
                 commandType: CommandType.Text);
-        }
-
-        private void EnsureExists(CloudTable table)
-        {
-            if (!table.Exists())
-            {
-                table.Create();
-            }
         }
     }
 }

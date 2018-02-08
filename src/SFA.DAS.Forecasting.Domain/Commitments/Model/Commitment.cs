@@ -14,6 +14,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments.Model
         public decimal CompletionAmount { get; set; }
         public decimal MonthlyInstallment { get; set; }
         public short NumberOfInstallments { get; set; }
+        public long ProviderId { get; set; }
         public string ProviderName { get; set; }
         public string ApprenticeName { get; set; }
         public string CourseName { get; set; }
