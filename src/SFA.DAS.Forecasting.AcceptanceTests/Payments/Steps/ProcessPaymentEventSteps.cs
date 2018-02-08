@@ -77,11 +77,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 		[Then(@"the aggregation for the total cost of training has been created properly")]
 		public void ThenTotalCostAggregationIsCreated()
 		{
-			var _records = _totalCostAzureTableService?.GetRecords<EmployerTotalCostOfTraining>(EmployerAccountId.ToString())?.ToList();
-
-			Assert.IsTrue(_records != null);
-			Assert.IsTrue(_records.Any());
-			Assert.IsTrue(_records.Count == 1);
+			WaitForIt(() => 
+				_totalCostAzureTableService?
+					.GetRecords<EmployerTotalCostOfTraining>(EmployerAccountId.ToString())?
+					.ToList()
+					.Count == 1, "No records available, or more than 1 found");
 		}
 
 		[Then(@"the event with invalid data is not stored")]
