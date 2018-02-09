@@ -86,7 +86,6 @@
     <Compile Include="Levy\LevyDeclarationHandlerTests.cs" />
     <Compile Include="Levy\LevyPeriodTests.cs" />
     <Compile Include="Payments\EmployerPaymentTests.cs" />
-    <Compile Include="Payments\TrainingCostTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
