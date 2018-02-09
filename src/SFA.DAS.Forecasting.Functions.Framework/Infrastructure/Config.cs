@@ -16,5 +16,5 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
         public string Hashstring { get; set; }
 
         public AccountApiConfiguration AccountApi { get; set; }
-    }
+    } 
 }
