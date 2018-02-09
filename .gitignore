@@ -90,7 +90,6 @@ ipch/
 *.vspx
 *.sap
 
-desktop.ini
 
 # TFS 2012 Local Workspace
 $tf/
@@ -261,3 +260,4 @@ src/ReleaseTemplate.sql
 src/SFA.DAS.EAS.Web/App_Data/audit/*.*
 src/Tools/PhantomJS/tools/phantomjs/ChangeLog
 *.stackdump
+desktop.ini
