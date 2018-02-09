@@ -83,6 +83,8 @@
     <Compile Include="Commitments\Validation\ICommitmentValidator.cs" />
     <Compile Include="Accounts\Model\EmployerAccount.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
+    <Compile Include="Payments\Repositories\EmployerPaymentRepository.cs" />
+    <Compile Include="Payments\Services\IEmployerPaymentDataService.cs" />
     <Compile Include="Projections\AccountProjection.cs" />
     <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
     <Compile Include="Projections\Model\AccountActivity.cs" />
