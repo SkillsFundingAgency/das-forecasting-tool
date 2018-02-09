@@ -107,8 +107,6 @@
     <Compile Include="Payments\Messages\EarningDetails.cs" />
     <Compile Include="Payments\Messages\EmployerPeriod.cs" />
     <Compile Include="Payments\Messages\PaymentEvent.cs" />
-    <Compile Include="Payments\Repositories\TrainingCostRepository.cs" />
-    <Compile Include="Payments\Repositories\Models\TableEntry.cs" />
     <Compile Include="Payments\Validation\CollectionPeriodSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
@@ -133,9 +131,7 @@
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commitments\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
