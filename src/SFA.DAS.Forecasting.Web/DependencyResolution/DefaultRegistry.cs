@@ -35,6 +35,9 @@ using SFA.DAS.NLog.Logger;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 using StructureMap;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Azure.KeyVault;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 	
@@ -84,13 +87,30 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
 
         private ForcastingApplicationConfiguration GetConfiguration()
         {
+            if (ConfigurationManager.AppSettings["Environment"]?.Equals("LOCAL") ?? false)
+            {
+                return new ForcastingApplicationConfiguration
+                {
+                    AllowedHashstringCharacters = ConfigurationManager.AppSettings["AllowedHashstringCharacters"],
+                    HashString = ConfigurationManager.AppSettings["HashString"],
+                    DatabaseConnectionString = ConfigurationManager.ConnectionStrings["DatabaseConnectionString"]?.ConnectionString
+                };
+            }
+
             return new ForcastingApplicationConfiguration
             {
-                AllowedHashstringCharacters = ConfigurationManager.AppSettings["AllowedHashstringCharacters"],
-                HashString = ConfigurationManager.AppSettings["HashString"],
-                DatabaseConnectionString =
-                    ConfigurationManager.ConnectionStrings["DatabaseConnectionString"]?.ConnectionString
+                AllowedHashstringCharacters = GetKeyValueSecret(ConfigurationManager.AppSettings["AllowedHashstringCharacters"]).Result,
+                HashString = GetKeyValueSecret(ConfigurationManager.AppSettings["HashString"]).Result,
+                DatabaseConnectionString = GetKeyValueSecret(ConfigurationManager.AppSettings["DatabaseConnectionString"]).Result
             };
+        }
+
+        private async Task<string> GetKeyValueSecret(string secretUri)
+        {
+            AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            var secret = await keyVaultClient.GetSecretAsync(secretUri).ConfigureAwait(false);
+            return secret.Value;
         }
     }
 }
