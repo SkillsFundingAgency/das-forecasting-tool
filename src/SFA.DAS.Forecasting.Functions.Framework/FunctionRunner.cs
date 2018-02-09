@@ -4,8 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
 
@@ -21,7 +23,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
-                    container.Configure(c =>c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType)));
+                    ConfigureContainer(writer, container);
                     await runAction(container, container.GetInstance<ILog>());
                 }
             }
@@ -40,7 +42,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
-                    container.Configure(c => c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType)));
+                    ConfigureContainer(writer, container);
                     return await runAction(container, container.GetInstance<ILog>());
                 }
             }
@@ -49,6 +51,18 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
+        }
+
+        private static void ConfigureContainer(TraceWriter writer, IContainer container)
+        {
+            var config = container.GetInstance<IConfig>();
+            container.Configure(c =>
+            {
+                c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType));
+                c.For<IHashingService>().Use(new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
+                c.For<IAccountApiClient>().Use<AccountApiClient>()
+                    .Ctor<IAccountApiConfiguration>().Is(config.AccountApi);
+            });
         }
 
         private static T2 SetUpConfiguration<T1, T2>(string serviceName)  where T2 : class, T1
@@ -74,7 +88,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
 
             return result;
-            
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
         }
 
-
+        [Scope(Feature = "ProcessLevyEvent [CI-528]")]
         [BeforeScenario]
         public void BeforeScenario()
         {
@@ -35,6 +35,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
         }
 
+        [Scope(Feature = "ProcessLevyEvent [CI-528]")]
         [AfterScenario]
         public void AfterScenario()
         {

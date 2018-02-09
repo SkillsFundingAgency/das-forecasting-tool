@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
+﻿using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
 using StructureMap;
 using TechTalk.SpecFlow;
 
