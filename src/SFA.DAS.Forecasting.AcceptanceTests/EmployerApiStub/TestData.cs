@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
                     HashedAccountId = accountId,
                     PayrollYear = "2018-19",
                     PayrollMonth = 1,
-                    SubmissionDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
                     PayeSchemeReference = "World",
                     TotalAmount = 200
                 },
@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
                     HashedAccountId = accountId,
                     PayrollYear = "2017-18",
                     PayrollMonth = 12,
-                    SubmissionDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
                     PayeSchemeReference = "World",
                     TotalAmount = 300
                 }

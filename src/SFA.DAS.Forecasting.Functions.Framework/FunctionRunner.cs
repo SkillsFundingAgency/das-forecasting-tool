@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
 using SFA.DAS.HashingService;
@@ -17,19 +18,25 @@ namespace SFA.DAS.Forecasting.Functions.Framework
     {
         public static async Task Run<TFunction>(TraceWriter writer, Func<IContainer, ILog, Task> runAction) where TFunction : IFunction
         {
+            ILog logger = null;
             try
             {
-                SetUpConfiguration<IConfig, Config>(typeof(TFunction).Namespace?.Replace(".Functions",string.Empty));
+                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions",string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
+                    logger = container.GetInstance<ILog>();
                     ConfigureContainer(writer, container);
-                    await runAction(container, container.GetInstance<ILog>());
+                    await runAction(container, logger);
                 }
             }
             catch (Exception ex)
             {
-                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                if(logger != null)
+                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
+                else
+                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+
                 throw;
             }
         }
@@ -38,7 +45,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             try
             {
-                SetUpConfiguration<IConfig, Config>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
+                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -55,7 +62,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
 
         private static void ConfigureContainer(TraceWriter writer, IContainer container)
         {
-            var config = container.GetInstance<IConfig>();
+            var config = container.GetInstance<IApplicationConfiguration>();
             container.Configure(c =>
             {
                 c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType));
