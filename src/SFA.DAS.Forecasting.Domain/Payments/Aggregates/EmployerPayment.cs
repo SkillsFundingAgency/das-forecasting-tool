@@ -19,9 +19,9 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Aggregates
 		    await _paymentStorage.StorePayment(payment);
 	    }
 
-		public List<Payment> GetPaymentsForEmployerPeriod(string employerAccountId, int month, int year)
+		public async Task<List<Payment>> GetPaymentsForEmployerPeriod(long employerAccountId, int month, int year)
 	    {
-		    return _paymentStorage.GetPayments(employerAccountId, month, year);
+		    return await _paymentStorage.GetPayments(employerAccountId, month, year);
 	    }
 	}
 }

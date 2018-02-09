@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 				async (container, logger) =>
 				{
 					var employerPayment = container.GetInstance<EmployerPayment>();
-					var payments = employerPayment.GetPaymentsForEmployerPeriod(employerPeriod.EmployerAccountId, employerPeriod.Month, employerPeriod.Year);
+					var payments = await employerPayment.GetPaymentsForEmployerPeriod(employerPeriod.EmployerAccountId, employerPeriod.Month, employerPeriod.Year);
 
 					var trainingCost = container.GetInstance<TrainingCost>();
 					var aggregationAllowed = trainingCost.IsAggregationAllowed(payments, Environment.GetEnvironmentVariable("DelayInSeconds") != null ? int.Parse(Environment.GetEnvironmentVariable("DelayInSeconds")) : 0);

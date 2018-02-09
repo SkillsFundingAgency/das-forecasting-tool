@@ -2,6 +2,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Levy.Handlers;
+using SFA.DAS.Forecasting.Application.Payments.Handlers;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Queues;
@@ -23,25 +28,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             await FunctionRunner.Run<PaymentEventStoreFunction, int>(writer,
                 async (container, logger) =>
                 {
-                    var employerPayment = container.GetInstance<EmployerPayment>();
-	                var paymentMapper = container.GetInstance<PaymentMapper>();
+	                logger.Debug("Getting levy declaration handler from container.");
+	                var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
+	                var mapper = container.GetInstance<PaymentMapper>();
 
-					await employerPayment.AddPayment(paymentMapper.MapToPayment(paymentEvent));
-
-	                logger.Info($"Stored {nameof(PaymentEvent)} for EmployerAccountId: {paymentEvent.EmployerAccountId}");
-
-					var employerPeriod = new EmployerPeriod
-					{
-						EmployerAccountId = paymentEvent.EmployerAccountId.ToString(),
-						Month = paymentEvent.CollectionPeriod.Month,
-						Year = paymentEvent.CollectionPeriod.Year
-					};
-
-					container.GetInstance<QueueService>()
-						.SendMessageWithVisibilityDelay(
-							employerPeriod, 
-							QueueNames.PaymentAggregationAllower,
-							Environment.GetEnvironmentVariable("DelayInSeconds") != null ? int.Parse(Environment.GetEnvironmentVariable("DelayInSeconds")) : 0);
+					await handler.Handle(mapper.MapToPayment(paymentEvent));
 
                     return await Task.FromResult(1);
                 });

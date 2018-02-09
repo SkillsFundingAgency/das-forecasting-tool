@@ -8,8 +8,6 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Repositories
     {
 	    Task StorePayment(Payment payment);
 
-	    List<Payment> GetPayments(string employerId);
-
-		List<Payment> GetPayments(string employerAccountId, int month, int year);
+		Task<List<Payment>> GetPayments(long employerAccountId, int month, int year);
     }
 }
