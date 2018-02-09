@@ -89,6 +89,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commitments\Handlers\RecordCommitmentHandler.cs" />
+    <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
     <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\DefaultRegistry.cs" />
@@ -130,9 +132,7 @@
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commitments\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

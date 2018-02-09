@@ -6,6 +6,6 @@ namespace SFA.DAS.Forecasting.Domain.Projections.Services
     public interface IAccountProjectionDataService
     {
         Task<IEnumerable<ReadModel.Projections.AccountProjection>> Get(long employerId);
-        Task Store(IEnumerable<AccountProjection> accountProjections);
+        Task Refresh(long employerAccountId, IEnumerable<AccountProjection> accountProjections);
     }
 }

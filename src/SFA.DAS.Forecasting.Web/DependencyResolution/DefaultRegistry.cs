@@ -71,7 +71,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(ServiceName, environment, "1.0"));
 
-            var result = configurationService.Get<IApplicationConfiguration>();
+            var result = configurationService.Get<ApplicationConfiguration>();
 
             return result;
         }

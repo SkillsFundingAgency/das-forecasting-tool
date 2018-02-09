@@ -72,12 +72,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accounts\Account.cs" />
+    <Compile Include="Accounts\AccountRepository.cs" />
+    <Compile Include="Accounts\Services\IEmployerAccountDataService.cs" />
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Model\Commitment.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
     <Compile Include="Commitments\Validation\CommitmentEndDateValidator.cs" />
     <Compile Include="Commitments\Validation\ICommitmentValidator.cs" />
+    <Compile Include="Accounts\Model\EmployerAccount.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Projections\AccountProjection.cs" />
     <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
