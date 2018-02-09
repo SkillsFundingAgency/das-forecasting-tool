@@ -27,7 +27,6 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
         public async Task<LevyDeclarationUpdatedMessage> LevyForPeriod(string employerId, string periodYear, short? periodMonth)
         {
             _logger.Debug("1");
-            // Getting by year month not available?
             var res = await _accountApiClient.GetLevyDeclarations(employerId);
 
             if (res == null)
