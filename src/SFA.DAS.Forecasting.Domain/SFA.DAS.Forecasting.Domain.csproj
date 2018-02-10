@@ -72,22 +72,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accounts\Account.cs" />
-    <Compile Include="Accounts\AccountRepository.cs" />
-    <Compile Include="Accounts\Services\IEmployerAccountDataService.cs" />
+    <Compile Include="Balance\CurrentBalance.cs" />
+    <Compile Include="Projections\Model\Account.cs" />
+    <Compile Include="Balance\CurrentBalanceRepository.cs" />
+    <Compile Include="Balance\Services\IBalanceDataService.cs" />
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Model\Commitment.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
     <Compile Include="Commitments\Validation\CommitmentEndDateValidator.cs" />
     <Compile Include="Commitments\Validation\ICommitmentValidator.cs" />
-    <Compile Include="Accounts\Model\EmployerAccount.cs" />
+    <Compile Include="Balance\Model\Balance.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Payments\Repositories\EmployerPaymentRepository.cs" />
     <Compile Include="Payments\Services\IEmployerPaymentDataService.cs" />
     <Compile Include="Projections\AccountProjection.cs" />
     <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
-    <Compile Include="Projections\Model\AccountActivity.cs" />
     <Compile Include="Projections\AccountProjectionRepository.cs" />
     <Compile Include="Levy\Aggregates\LevyPeriod.cs" />
     <Compile Include="Levy\Model\LevyDeclaration.cs" />

@@ -81,6 +81,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Balance\CurrentBalanceTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentsTests.cs" />
     <Compile Include="Projection\AccountProjectionTests.cs" />
     <Compile Include="Levy\LevyDeclarationHandlerTests.cs" />

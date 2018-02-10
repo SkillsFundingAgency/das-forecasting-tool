@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Aggregates
         internal readonly List<LevyDeclaration> LevyDeclarations;
         private readonly LevyDeclarationTransactionDateValidator _levyDeclarationTransactionDateValidator;
 
-        //TODO: should really be internal but unit tests need access to contructor. 
+        //TODO: should really be internal but unit tests need access to constructor. 
         public LevyPeriod()
         {
             LevyDeclarations = new List<LevyDeclaration>();

@@ -53,6 +53,20 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
             });
         }
 
+        public async Task<decimal> GetLatestLevyAmount(long employerAccountId)
+        {
+            return await WithConnection(async cnn =>
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
+
+                return await cnn.ExecuteScalarAsync<decimal>(
+                    sql: "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYearStart = @payrollYearStart and PayrollMonth = @payrollMonth",
+                    param: parameters,
+                    commandType: CommandType.Text);
+            });
+        }
+
         private async Task StoreLevyDeclaration(IDbConnection connection, LevyDeclaration levyDeclaration)
         {
             var parameters = new DynamicParameters();

@@ -17,26 +17,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         {
         }
 
-        public async Task<IEnumerable<ReadModel.Projections.AccountProjection>> Get(long employerId)
-        {
-            return await WithConnection(
-               async c =>
-               {
-                   var parameters = new DynamicParameters();
-                   parameters.Add("@employerAccountId", employerId, DbType.Int64);
 
-                   var result =
-                       await
-                       c.QueryAsync<ReadModel.Projections.AccountProjection>(
-                             sql: "SELECT * FROM [dbo].[AccountProjection] WHERE EmployerAccountId = @employerAccountId"
-                           , param: parameters,
-                             commandType: CommandType.Text);
-
-                   return result;
-               });
-        }
-
-        public async Task Refresh(long employerAccountId, IEnumerable<Domain.Projections.AccountProjection> accountProjections)
+        public async Task Store(long employerAccountId, IEnumerable<ReadModel.Projections.AccountProjectionReadModel> accountProjections)
         {
             await WithTransaction(async (cnn, tx) =>
             {
@@ -47,15 +29,15 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                             , parameters, commandType: CommandType.Text);
 
                 var sql = @"Insert INTO [dbo].[AccountProjection] Values 
-                            (@EmployerAccountId
-                           ,@ProjectionCreationDate
-                           ,@ProjectionGenerationType
-                           ,@Month
-                           ,@Year
-                           ,@FundsIn
-                           ,@TotalCostOfTraning
-                           ,@CompletionPayments
-                           ,@FutureFunds)";
+                           (@EmployerAccountId,
+                           @ProjectionCreationDate,
+                           @ProjectionGenerationType,
+                           @Month,
+                           @Year,
+                           @FundsIn,
+                           @TotalCostOfTraning,
+                           @CompletionPayments,
+                           @FutureFunds)";
                 await cnn.ExecuteAsync(sql, accountProjections);
             });
         }

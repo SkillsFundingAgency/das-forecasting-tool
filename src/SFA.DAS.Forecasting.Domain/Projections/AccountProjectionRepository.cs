@@ -1,36 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Domain.Accounts;
+using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Levy.Services;
+using SFA.DAS.Forecasting.Domain.Projections.Model;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
 {
     public interface IAccountProjectionRepository
     {
         Task<AccountProjection> Get(long employerAccountId);
-        Task Store(List<ReadModel.Projections.AccountProjection> accountProjections);
+        Task Store(AccountProjection accountProjection);
     }
 
-    public class AccountProjectionRepository: IAccountProjectionRepository
+    public class AccountProjectionRepository : IAccountProjectionRepository
     {
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
-        private readonly IAccountRepository _accountRepository;
+        private readonly ICurrentBalanceRepository _currentBalanceRepository;
+        private readonly ILevyDataService _levyDataService;
+        private readonly IAccountProjectionDataService _accountProjectionDataService;
 
-        public AccountProjectionRepository(IEmployerCommitmentsRepository commitmentsRepository, IAccountRepository accountRepository)
+        public AccountProjectionRepository(IEmployerCommitmentsRepository commitmentsRepository, ICurrentBalanceRepository currentBalanceRepository,
+            ILevyDataService levyDataService, IAccountProjectionDataService accountProjectionDataService)
         {
             _commitmentsRepository = commitmentsRepository ?? throw new ArgumentNullException(nameof(commitmentsRepository));
-            _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
+            _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
+            _levyDataService = levyDataService ?? throw new ArgumentNullException(nameof(levyDataService));
+            _accountProjectionDataService = accountProjectionDataService ?? throw new ArgumentNullException(nameof(accountProjectionDataService));
         }
 
-        public Task<AccountProjection> Get(long employerAccountId)
+        public async Task<AccountProjection> Get(long employerAccountId)
         {
-            throw new System.NotImplementedException();
+            var levy = _levyDataService.GetLatestLevyAmount(employerAccountId);
+            var balance = _currentBalanceRepository.Get(employerAccountId);
+            var commitments = _commitmentsRepository.Get(employerAccountId);
+            await Task.WhenAll(levy, balance, commitments);
+            return new AccountProjection(new Account(employerAccountId, balance.Result.Amount, levy.Result), commitments.Result);
         }
 
-        public Task Store(List<ReadModel.Projections.AccountProjection> accountProjections)
+        public async Task Store(AccountProjection accountProjection)
         {
-            throw new System.NotImplementedException();
+            if (!accountProjection.Projections.Any())
+                return;
+            await _accountProjectionDataService.Store(accountProjection.Projections.First().EmployerAccountId, accountProjection.Projections);
         }
     }
 }

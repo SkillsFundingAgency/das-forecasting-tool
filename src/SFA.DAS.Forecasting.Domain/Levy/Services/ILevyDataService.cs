@@ -8,5 +8,6 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Services
     {
         Task<List<LevyDeclaration>> GetLevyDeclarationsForPeriod(long employerAccountId, string payrollYear, byte payrollMonth);
         Task StoreLevyDeclarations(IEnumerable<LevyDeclaration> levyDeclarations);
+        Task<decimal> GetLatestLevyAmount(long employerAccountId);
     }
 }
