@@ -92,18 +92,18 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="TechTalk.SpecFlow, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
-      <HintPath>..\packages\SpecFlow.2.2.1\lib\net45\TechTalk.SpecFlow.dll</HintPath>
+    <Reference Include="TechTalk.SpecFlow, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
+      <HintPath>..\packages\SpecFlow.2.3.0-preview20180201\lib\net45\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
-    <Compile Include="Levy\Feature\Process Levy Event.feature.cs">
+    <Compile Include="Levy\Feature\ProcessLevyEvent.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Process Levy Event.feature</DependentUpon>
+      <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
     </Compile>
     <Compile Include="Levy\LevySubmission.cs" />
     <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
@@ -121,9 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Levy\Feature\Process Levy Event.feature">
+    <None Include="Levy\Feature\ProcessLevyEvent.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Process Levy Event.feature.cs</LastGenOutput>
+      <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
     <None Include="Payments\Feature\ProcessPaymentEvent.feature">
@@ -163,6 +163,8 @@
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets'))" />
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
+    <Error Condition="!Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets'))" />
   </Target>
   <Import Project="..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets')" />
+  <Import Project="..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" />
 </Project>
