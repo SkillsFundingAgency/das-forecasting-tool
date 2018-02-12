@@ -1,6 +1,8 @@
-﻿## SFA.DAS.Forecasting.Levy.Functions
+## SFA.DAS.Forecasting.Levy.Functions
 
 ##### LevyDeclarationPreLoadHttpFunction
+Gets the levy declarations for a list of AccountIds for a year month period.  
+
 ```
 POST  http://localhost:7071/api/LevyDeclarationPreLoadHttpFunction
 
