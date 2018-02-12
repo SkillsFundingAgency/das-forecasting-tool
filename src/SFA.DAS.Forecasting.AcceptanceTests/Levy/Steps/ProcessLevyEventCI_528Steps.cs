@@ -45,7 +45,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         //    _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
         //    Thread.Sleep(1000);
         //}
-        
+
         [Given(@"I'm a levy paying employer")]
         public void GivenIMALevyPayingEmployer()
         {
@@ -79,6 +79,27 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Assert.IsTrue(LevySubmissions.Any());
         }
 
+        [Given(@"I made some invalid levy declarations")]
+        public void GivenIMadeSomeInvalidLevyDeclarations()
+        {
+            LevySubmissions = new List<LevySubmission>
+            {
+                new LevySubmission
+                {
+                    CreatedDate = "0001/01/01 00:00",
+                    Amount = 7000,
+                    Scheme = "ABCD-EFG"
+                },
+                new LevySubmission
+                {
+                    CreatedDate = DateTime.Today.ToString(),
+                    Amount = 0,
+                    Scheme = string.Empty
+                },
+            };
+        }
+
+
         [When(@"the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations")]
         public void WhenTheSFAEmployerHMRCLevyServiceNotifiesTheForecastingServiceOfTheLevyDeclarations()
         {
@@ -97,7 +118,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             {
                 var payload = levyEvent.ToJson();
                 Console.WriteLine($"Sending levy event to levy function: {Config.LevyFunctionUrl}, Payload: {payload}");
-                var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload,Encoding.UTF8,"application/json")).Result;
+                var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
                 Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             });
         }
@@ -130,5 +151,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             }, "Failed to find all the levy declarations.");
         }
 
+        [Then(@"the Forecasting Levy service should not store the levy declarations")]
+        public void ThenTheForecastingLevyServiceShouldNotStoreTheLevyDeclarations()
+        {
+            Thread.Sleep(Config.TimeToWait);
+            Console.WriteLine($"Looking for Levy Declaration. Employer Account Id: {Config.EmployerAccountId}, Payroll Year - Month: {PayrollPeriod.PayrollYear}, {PayrollPeriod.PayrollMonth}");
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+            parameters.Add("@payrollYear", PayrollPeriod.PayrollYear, DbType.String);
+            parameters.Add("@payrollMonth", PayrollPeriod.PayrollMonth, DbType.Byte);
+            var count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where employerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
+                parameters, commandType: CommandType.Text);
+            Assert.AreEqual(0, count);
+        }
     }
 }
