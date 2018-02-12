@@ -10,12 +10,12 @@ using SFA.DAS.Forecasting.Messages.Projections;
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class LevyDeclarationAllowAggregationFunction : IFunction
+    public class LevyDeclarationAllowProjectionFunction : IFunction
     {
-        [FunctionName("LevyDeclarationAllowAggregationFunction")]
+        [FunctionName("LevyDeclarationAllowProjectionFunction")]
         [return:Queue(QueueNames.GenerateLevyProjections)]
         public static async Task<GenerateLevyAccountProjection> Run(
-            [QueueTrigger(QueueNames.AllowAggregation)]LevySchemeDeclarationUpdatedMessage message,
+            [QueueTrigger(QueueNames.AllowProjection)]LevySchemeDeclarationUpdatedMessage message,
             TraceWriter writer)
         {
             return await FunctionRunner.Run<LevyDeclarationEventStoreFunction, GenerateLevyAccountProjection>(writer,

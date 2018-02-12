@@ -2,7 +2,7 @@
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using StructureMap;
 
-namespace SFA.DAS.Forecasting.Application.Infrastructure
+namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
     public class DefaultRegistry: Registry
     {

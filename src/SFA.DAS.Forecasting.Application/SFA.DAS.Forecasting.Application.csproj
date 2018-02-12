@@ -121,7 +121,7 @@
     <Compile Include="Projections\Handlers\GenerateLevyAccountProjectionHandler.cs" />
     <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
     <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
-    <Compile Include="Infrastructure\DefaultRegistry.cs" />
+    <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
     <Compile Include="Levy\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Levy\Handlers\StoreLevyDeclarationHandler.cs" />
     <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
