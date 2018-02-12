@@ -10,7 +10,10 @@
     "EnvironmentKey": "LOCAL",
     "LoggingRedisKey": "logstash",
     "EnvironmentName": "LOCAL",
-    "DelayTimeInSeconds": 5
+    "SecondsToWaitToAllowProjections": 5,
+    "HashString": "",
+    "AllowedHashstringCharacters": "",
+    "NumberOfMonthsToProject": "48"
   },
   "Host": {
     "LocalHttpPort": 7071,

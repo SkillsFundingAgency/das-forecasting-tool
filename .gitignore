@@ -34,7 +34,6 @@ bld/
 # NUNIT
 *.VisualState.xml
 TestResult.xml
-*.feature.cs
 
 # Build Results of an ATL Project
 [Dd]ebugPS/
@@ -89,6 +88,7 @@ ipch/
 *.vsp
 *.vspx
 *.sap
+
 
 # TFS 2012 Local Workspace
 $tf/
@@ -259,3 +259,4 @@ src/ReleaseTemplate.sql
 src/SFA.DAS.EAS.Web/App_Data/audit/*.*
 src/Tools/PhantomJS/tools/phantomjs/ChangeLog
 *.stackdump
+desktop.ini

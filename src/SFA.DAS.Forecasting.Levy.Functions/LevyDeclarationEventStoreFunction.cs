@@ -33,7 +33,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                     var queueClient = storageAccount.CreateCloudQueueClient();
                     var queue = queueClient.GetQueueReference(QueueNames.AllowAggregation);
                     await queue.CreateIfNotExistsAsync();
-                    queue.AddMessage(new CloudQueueMessage(levySchemeUpdatedMessage.ToJson()),null,TimeSpan.FromSeconds(config.SecondsToWaitToAllowAggregation));
+                    queue.AddMessage(new CloudQueueMessage(levySchemeUpdatedMessage.ToJson()),null,TimeSpan.FromSeconds(config.SecondsToWaitToAllowProjections));
                     logger.Info($"Finished handling levy declaration for EmployerAccountId: {levySchemeUpdatedMessage.AccountId}, PayrollYear: {levySchemeUpdatedMessage.PayrollYear}, month: {levySchemeUpdatedMessage.PayrollMonth}, scheme: {levySchemeUpdatedMessage.EmpRef}");
                 });
         }

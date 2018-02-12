@@ -13,6 +13,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
+using System.Threading;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -28,6 +29,23 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
         }
 
+        //[Scope(Feature = "ProcessLevyEvent [CI-528]")]
+        //[BeforeScenario]
+        //public void BeforeScenario()
+        //{
+        //    _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
+        //    _azureTableService.EnsureExists();
+        //    _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
+        //}
+
+        //[Scope(Feature = "ProcessLevyEvent [CI-528]")]
+        //[AfterScenario]
+        //public void AfterScenario()
+        //{
+        //    _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
+        //    Thread.Sleep(1000);
+        //}
+        
         [Given(@"I'm a levy paying employer")]
         public void GivenIMALevyPayingEmployer()
         {

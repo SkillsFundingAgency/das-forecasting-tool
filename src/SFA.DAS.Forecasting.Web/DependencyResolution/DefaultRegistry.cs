@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
             var config = GetConfiguration();
 
             For<IApplicationConfiguration>().Use(config);
-            For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.HashString));
+            For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
         }
 
 
