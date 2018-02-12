@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
+                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -45,7 +45,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             try
             {
-                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
+                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
+                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {

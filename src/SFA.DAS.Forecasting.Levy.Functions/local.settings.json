@@ -11,8 +11,8 @@
     "LoggingRedisKey": "logstash",
     "EnvironmentName": "LOCAL",
     "SecondsToWaitToAllowProjections": 5,
-    "HashString": "",
-    "AllowedHashstringCharacters": "",
+    "HashString": "hash n beans",
+    "AllowedHashstringCharacters": "abcdefgh",
     "NumberOfMonthsToProject": "48"
   },
   "Host": {
