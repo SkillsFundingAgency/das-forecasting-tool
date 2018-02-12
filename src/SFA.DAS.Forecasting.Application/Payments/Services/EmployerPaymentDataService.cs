@@ -11,9 +11,9 @@ using SFA.DAS.Sql.Client;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
-	public class EmployerPaymmentDataService : BaseRepository, IEmployerPaymentDataService
+	public class EmployerPaymentDataService : BaseRepository, IEmployerPaymentDataService
 	{
-		public EmployerPaymmentDataService(string connectionString, ILog logger) : base(connectionString, logger)
+		public EmployerPaymentDataService(string connectionString, ILog logger) : base(connectionString, logger)
 		{
 		}
 
@@ -55,7 +55,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 		private async Task StoreEmployerPayment(IDbConnection connection, Payment employerPayment)
 		{
 			var parameters = new DynamicParameters();
-			parameters.Add("@id", employerPayment.Id, DbType.Int64);
 			parameters.Add("@externalPaymentId", employerPayment.ExternalPaymentId, DbType.String);
 			parameters.Add("@employerAccountId", employerPayment.EmployerAccountId, DbType.Int64);
 			parameters.Add("@providerId", employerPayment.ProviderId, DbType.Int64);
@@ -68,13 +67,19 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
 			await connection.ExecuteAsync(
 				@"MERGE Payment AS target 
-                                    USING(SELECT @id, @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear) AS source(Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear)
-                                    ON(target.EmployerAccountId = source.EmployerAccountId and target.ExternalPaymentId = source.ExternalPaymentId and target.ProviderId = source.ProviderId and target.LearnerId = source.LearnerId and target.LearnerId = source.LearnerId and target.CollectionPeriodMonth = source.CollectionPeriodMonth and target.CollectionPeriodYear = source.CollectionPeriodYear)
+                                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear) 
+									AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear)
+                                    ON(target.EmployerAccountId = source.EmployerAccountId 
+										and target.ExternalPaymentId = source.ExternalPaymentId 
+										and target.ProviderId = source.ProviderId 
+										and target.LearnerId = source.LearnerId 
+										and target.CollectionPeriodMonth = source.CollectionPeriodMonth 
+										and target.CollectionPeriodYear = source.CollectionPeriodYear)
                                     WHEN MATCHED THEN
                                         UPDATE SET Amount = source.Amount, ReceivedTime = source.ReceivedTime
                                     WHEN NOT MATCHED THEN
-                                        INSERT(Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear)
-                                        VALUES(source.Id, source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear);",
+                                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear)
+                                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear);",
 				parameters,
 				commandType: CommandType.Text);
 		}

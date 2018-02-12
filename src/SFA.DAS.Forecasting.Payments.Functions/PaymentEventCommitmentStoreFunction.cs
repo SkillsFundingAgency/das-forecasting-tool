@@ -8,15 +8,14 @@ using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
-    public class PaymentEventStoreFunction : IFunction
+    public class PaymentEventCommitmentStoreFunction : IFunction
     {
-	    [FunctionName("PaymentEventStoreFunction")]
-	    [return: Queue(QueueNames.CommitmentProcessor)]
-		public static async Task<PaymentCreatedMessage> Run(
-            [QueueTrigger(QueueNames.PaymentProcessor)]PaymentCreatedMessage paymentCreatedMessage, 
+		[FunctionName("PaymentEventCommitmentStoreFunction")]
+		public static async Task Run(
+            [QueueTrigger(QueueNames.CommitmentProcessor)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStoreFunction, PaymentCreatedMessage>(writer,
+            await FunctionRunner.Run<PaymentEventStoreFunction, int>(writer,
                 async (container, logger) =>
                 {
 	                var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
@@ -24,7 +23,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 
 					await handler.Handle(mapper.MapToPayment(paymentCreatedMessage));
 
-                    return await Task.FromResult(paymentCreatedMessage);
+                    return await Task.FromResult(1);
                 });
         }
     }
