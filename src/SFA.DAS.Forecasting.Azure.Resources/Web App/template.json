@@ -36,6 +36,9 @@
     "HashString": {
       "type": "string"
     },
+    "DatabaseConnectionString": {
+      "type": "string"
+    },
     "databaseUsername": {
       "type": "string"
     },
@@ -84,8 +87,12 @@
                 "value": "[parameters('AllowedHashstringCharacters')]"
               },
               {
-                "name": "HashString",
+                "name": "HashStringDatabaseConnectionString",
                 "value": "[parameters('HashString')]"
+              },
+              {
+                "name": "DatabaseConnectionString",
+                "value": "[parameters('DatabaseConnectionString')]"
               }
             ],
             "connectionStrings": [

@@ -38,6 +38,9 @@
     "HashString": {
       "value": "__appSettingHashString__"
     },
+    "DatabaseConnectionString": {
+      "value": "__appSettingDatabaseConnectionString__"
+    },
     "databaseName": {
       "value": "__connStringDatabaseName__"
     },
