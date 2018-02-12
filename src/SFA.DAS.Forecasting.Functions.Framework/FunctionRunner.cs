@@ -25,8 +25,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
-                    logger = container.GetInstance<ILog>();
                     ConfigureContainer(writer, container);
+                    logger = container.GetInstance<ILog>();
                     await runAction(container, logger);
                 }
             }
@@ -43,6 +43,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
 
         public static async Task<TReturn> Run<TFunction, TReturn>(TraceWriter writer, Func<IContainer, ILog, Task<TReturn>> runAction) where TFunction : IFunction
         {
+            ILog logger = null;
             try
             {
                 SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
@@ -50,12 +51,16 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 using (container.GetNestedContainer())
                 {
                     ConfigureContainer(writer, container);
+                    logger = container.GetInstance<ILog>();
                     return await runAction(container, container.GetInstance<ILog>());
                 }
             }
             catch (Exception ex)
             {
-                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                if (logger != null)
+                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
+                else
+                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
         }
