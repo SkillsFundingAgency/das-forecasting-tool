@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.ReadModel.Projections
 {
-    public class AccountProjection
+    public class AccountProjectionReadModel
     {
         public long Id { get; set; }
         public long EmployerAccountId { get; set; }

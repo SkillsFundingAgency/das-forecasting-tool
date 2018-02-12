@@ -91,6 +91,7 @@
     <Compile Include="Payments\EarningDetailsValidatorTests.cs" />
     <Compile Include="Payments\PaymentEventSuperficialValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\PayrollDateServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -104,6 +105,10 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
+      <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
+      <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

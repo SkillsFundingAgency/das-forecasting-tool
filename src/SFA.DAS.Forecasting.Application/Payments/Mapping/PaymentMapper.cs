@@ -1,28 +1,27 @@
 ﻿using System;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Domain.Payments.Entities;
-using CollectionPeriod = SFA.DAS.Forecasting.Domain.Payments.Entities.CollectionPeriod;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 {
 	public class PaymentMapper
 	{
-		public Payment MapToPayment(PaymentEvent paymentEvent)
+		public Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
 		{
 			return new Payment
 			{
-				ExternalPaymentId = paymentEvent.Id,
-				EmployerAccountId = paymentEvent.EmployerAccountId,
-				ProviderId = paymentEvent.Ukprn,
-				LearnerId = paymentEvent.Uln,
-				Amount = paymentEvent.Amount,
-				CollectionPeriod = new CollectionPeriod
-				{
-					Id = paymentEvent.CollectionPeriod.Id,
-					Month = paymentEvent.CollectionPeriod.Month,
-					Year = paymentEvent.CollectionPeriod.Year
+				ExternalPaymentId = paymentCreatedMessage.Id,
+				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
+				ProviderId = paymentCreatedMessage.Ukprn,
+				LearnerId = paymentCreatedMessage.Uln,
+				Amount = paymentCreatedMessage.Amount,
+				CollectionPeriod = new Models.Payments.CollectionPeriod
+                {
+					Id = paymentCreatedMessage.CollectionPeriod.Id,
+					Month = paymentCreatedMessage.CollectionPeriod.Month,
+					Year = paymentCreatedMessage.CollectionPeriod.Year
 				},
-				ApprenticeshipId = paymentEvent.ApprenticeshipId,
+				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
 				ReceivedTime = DateTime.Now
 			};
 		}

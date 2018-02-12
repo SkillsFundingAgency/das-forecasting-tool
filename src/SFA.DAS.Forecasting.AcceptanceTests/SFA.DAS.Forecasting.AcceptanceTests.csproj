@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.19.4.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.19.4\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
@@ -95,18 +98,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
-    <Compile Include="Infrastructure\Registries\Config.cs" />
+    <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
-    <Compile Include="Levy\Feature\ProcessLevyEvent.feature.cs">
+    <Compile Include="Levy\Feature\Process Levy Event.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
+      <DependentUpon>Process Levy Event.feature</DependentUpon>
     </Compile>
+    <Compile Include="Levy\LevySubmission.cs" />
     <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
     </Compile>
+    <Compile Include="PayrollPeriod.cs" />
     <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
     <Compile Include="Services\AzureTableService.cs" />
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
@@ -116,9 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Levy\Feature\ProcessLevyEvent.feature">
+    <None Include="Levy\Feature\Process Levy Event.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
+      <LastGenOutput>Process Levy Event.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
     <None Include="Payments\Feature\ProcessPaymentEvent.feature">
@@ -131,9 +136,21 @@
       <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
       <Name>SFA.DAS.Forecasting.Application</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
+      <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
+      <Name>SFA.DAS.Forecasting.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
+      <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
+      <Name>SFA.DAS.Forecasting.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
+      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
+      <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -4,9 +4,9 @@ using SFA.DAS.Forecasting.Application.Payments.Messages;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
-    public class PaymentEventSuperficialValidator: ISuperficialValidation<PaymentEvent>
+    public class PaymentEventSuperficialValidator: ISuperficialValidation<PaymentCreatedMessage>
     {
-        public List<ValidationFailure> Validate(PaymentEvent itemToValidate)
+        public List<ValidationFailure> Validate(PaymentCreatedMessage itemToValidate)
         {
 	        var failures = new List<ValidationFailure>();
 	        if (string.IsNullOrWhiteSpace(itemToValidate.EmployerAccountId.ToString()))

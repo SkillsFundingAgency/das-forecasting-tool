@@ -10,5 +10,9 @@
     "LoggingRedisKey": "logstash",
     "EnvironmentName": "LOCAL",
     "DelayTimeInSeconds": 5
+  },
+  "Host": {
+    "LocalHttpPort": 7072,
+    "CORS": "*"
   }
 }

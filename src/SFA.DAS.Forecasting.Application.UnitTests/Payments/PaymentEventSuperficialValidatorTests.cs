@@ -8,12 +8,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
     [TestFixture]
     public class PaymentEventSuperficialValidatorTests
     {
-        protected PaymentEvent PaymentEvent { get; set; }
+        protected PaymentCreatedMessage PaymentCreatedMessage { get; set; }
 
         [SetUp]
         public void SetUp()
         {
-            PaymentEvent = new PaymentEvent
+            PaymentCreatedMessage = new PaymentCreatedMessage
             {
                 EmployerAccountId = 1,
                 Amount = 100,
@@ -41,8 +41,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		public void Fails_If_Employer_Account_Id_Is_Not_Populated()
 		{
 			var validator = new PaymentEventSuperficialValidator();
-			PaymentEvent.EmployerAccountId = 0;
-			var result = validator.Validate(PaymentEvent);
+			PaymentCreatedMessage.EmployerAccountId = 0;
+			var result = validator.Validate(PaymentCreatedMessage);
 			Assert.IsNotEmpty(result);
 		}
 
@@ -50,8 +50,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 	    public void Fails_If_Ukprn_Is_Negative()
 	    {
 		    var validator = new PaymentEventSuperficialValidator();
-		    PaymentEvent.Ukprn = -1;
-		    var result = validator.Validate(PaymentEvent);
+		    PaymentCreatedMessage.Ukprn = -1;
+		    var result = validator.Validate(PaymentCreatedMessage);
 		    Assert.IsNotEmpty(result);
 	    }
 
@@ -59,8 +59,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		public void Fails_If_Apprenticeship_Id_Is_Negative()
 		{
 			var validator = new PaymentEventSuperficialValidator();
-			PaymentEvent.ApprenticeshipId = -1;
-			var result = validator.Validate(PaymentEvent);
+			PaymentCreatedMessage.ApprenticeshipId = -1;
+			var result = validator.Validate(PaymentCreatedMessage);
 			Assert.IsNotEmpty(result);
 		}
 
@@ -68,8 +68,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 	    public void Fails_If_Amount_Is_Negative()
 	    {
 		    var validator = new PaymentEventSuperficialValidator();
-		    PaymentEvent.Amount = -1;
-		    var result = validator.Validate(PaymentEvent);
+		    PaymentCreatedMessage.Amount = -1;
+		    var result = validator.Validate(PaymentCreatedMessage);
 		    Assert.IsNotEmpty(result);
 	    }
 	}

@@ -10,7 +10,6 @@ using SFA.DAS.Forecasting.Application.Payments.Handlers;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Queues;
-using SFA.DAS.Forecasting.Domain.Payments.Aggregates;
 using SFA.DAS.Forecasting.Functions.Framework;
 using CollectionPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.CollectionPeriod;
 
@@ -22,7 +21,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	    public CollectionPeriod CollectionPeriod { get; set; }
 		[FunctionName("PaymentEventStoreFunction")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.PaymentProcessor)]PaymentEvent paymentEvent, 
+            [QueueTrigger(QueueNames.PaymentProcessor)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
             await FunctionRunner.Run<PaymentEventStoreFunction, int>(writer,
@@ -32,7 +31,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	                var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
 	                var mapper = container.GetInstance<PaymentMapper>();
 
-					await handler.Handle(mapper.MapToPayment(paymentEvent));
+					await handler.Handle(mapper.MapToPayment(paymentCreatedMessage));
 
                     return await Task.FromResult(1);
                 });

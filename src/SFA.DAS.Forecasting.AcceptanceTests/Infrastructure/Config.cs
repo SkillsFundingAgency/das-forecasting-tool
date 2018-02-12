@@ -1,0 +1,22 @@
+﻿using System;
+using System.Configuration;
+
+namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
+{
+    public class Config
+    {
+        public TimeSpan TimeToWait => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToWait"] ?? "00:00:30");
+        public TimeSpan TimeToPause => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"] ?? "00:00:05");
+        public string Environment => GetAppSetting("Environment");
+
+        public bool IsDevEnvironment => (Environment?.Equals("DEVELOPMENT", StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                        (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);
+        public string LevyFunctionUrl => GetAppSetting("LevyFunctionUrl");
+        public string PaymentFunctionUrl => GetAppSetting("PaymentFunctionUrl");
+        public string ProjectionFunctionUrl => GetAppSetting("ProjectionFunctionUrl");
+        public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));
+        public string AzureStorageConnectionString => GetConnectionString("StorageConnectionString");
+        protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
+        protected string GetConnectionString(string name) => ConfigurationManager.ConnectionStrings[name].ConnectionString ?? throw new InvalidOperationException($"{name} not found in connection strings.");
+    }
+}

@@ -91,13 +91,15 @@
   <ItemGroup>
     <Compile Include="Commitments\Handlers\RecordCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
+    <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
+    <Compile Include="Payments\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Services\EmployerPaymmentDataService.cs" />
     <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
     <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\DefaultRegistry.cs" />
-    <Compile Include="Levy\Handlers\AllowLevyDeclarationAggregationHandler.cs" />
-    <Compile Include="Levy\Handlers\ProcessLevyDeclarationHandler.cs" />
+    <Compile Include="Levy\Handlers\AllowAccountProjectionsHandler.cs" />
+    <Compile Include="Levy\Handlers\StoreLevyDeclarationHandler.cs" />
     <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Messages\LevyDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Services\LevyDataService.cs" />
@@ -106,11 +108,13 @@
     <Compile Include="Payments\Messages\CollectionPeriod.cs" />
     <Compile Include="Payments\Messages\EarningDetails.cs" />
     <Compile Include="Payments\Messages\EmployerPeriod.cs" />
-    <Compile Include="Payments\Messages\PaymentEvent.cs" />
+    <Compile Include="Payments\Messages\PaymentCreatedMessage.cs" />
     <Compile Include="Payments\Validation\CollectionPeriodSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
+    <Compile Include="Projections\Services\AccountProjectionReadModelDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\PayrollDateService.cs" />
     <Compile Include="Shared\Queues\QueueService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +129,10 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
+      <Project>{97049CCE-774A-4377-B682-1C01B95C2CF3}</Project>
+      <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
       <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
