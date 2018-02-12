@@ -3,10 +3,10 @@ using System;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
 {
-    public class Host : IDisposable
+    public class ApiHost : IDisposable
     {
         NancyHost _host;
-        public Host()
+        public ApiHost()
         {
             var config = new HostConfiguration { RewriteLocalhost = false };
             config.UrlReservations.CreateAutomatically = true;

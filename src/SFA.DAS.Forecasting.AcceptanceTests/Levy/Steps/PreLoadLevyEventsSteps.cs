@@ -2,7 +2,6 @@
 using SFA.DAS.EmployerAccounts.Events.Messages;
 using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
 using SFA.DAS.Forecasting.AcceptanceTests.Services;
-using SFA.DAS.Forecasting.Application.Levy.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,43 +20,17 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         private static readonly IReadOnlyList<string> TableStorageIds = new List<string> { "497_2018_19_1", "498_2018_19_1", "499_2018_19_1" };
         private static string Url = Path.Combine(Config.LevyFunctionUrl, "LevyDeclarationPreLoadHttpFunction");
 
-        private static Host _h;
+        private static ApiHost _apiHost;
         private AzureTableService _azureTableService;
 
         [Scope(Feature = FeatureName)]
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-            _h = new Host();
+            _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
             Thread.Sleep(1000);
         }
-
-
-        //[Scope(Feature = FeatureName)]
-        //[BeforeScenario]
-        //public void BeforeScenario()
-        //{
-        //    _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
-        //    _azureTableService.EnsureExists();
-
-        //    foreach (var id in TableStorageIds)
-        //    {
-        //        _azureTableService.DeleteEntities(id);
-        //    }
-        //}
-
-        //[Scope(Feature = FeatureName)]
-        //[AfterScenario]
-        //public void AfterSecnario()
-        //{
-        //    foreach (var id in TableStorageIds)
-        //    {
-        //        _azureTableService.DeleteEntities(id);
-        //    }
-
-        //    Thread.Sleep(1000);
-        //}
 
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
         public async Task ITriggerFunction()
@@ -85,6 +58,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"all records should have the latest data")]
         public void AllRecordsShouldHaveTheLatestData()
         {
+            // ToDo: Query SQL
             var declarations = TableStorageIds.Select(m => _azureTableService.GetRecords<LevyDeclarationUpdatedMessage>(m).SingleOrDefault());
 
             foreach (var declaration in declarations)
