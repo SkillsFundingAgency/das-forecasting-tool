@@ -3,17 +3,17 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Forecasting.Domain.Levy.Repositories;
+using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 {
-    public class ProcessLevyDeclarationHandler
+    public class StoreLevyDeclarationHandler
     {
         public ILevyPeriodRepository Repository { get; }
         public ILog Logger { get; }
 
-        public ProcessLevyDeclarationHandler(ILevyPeriodRepository repository, ILog logger)
+        public StoreLevyDeclarationHandler(ILevyPeriodRepository repository, ILog logger)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));

@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
+using SFA.DAS.Forecasting.Models.Payments;
 
-namespace SFA.DAS.Forecasting.Domain.Payments.Repositories
+namespace SFA.DAS.Forecasting.Domain.Payments
 {
-	public class EmployerPaymentRepository : IEmployerPaymentRepository
+    public interface IEmployerPaymentRepository
+    {
+        Task StorePayment(Payment payment);
+
+        Task<List<Payment>> GetPayments(long employerAccountId, int month, int year);
+    }
+
+    public class EmployerPaymentRepository : IEmployerPaymentRepository
 	{
 		public IEmployerPaymentDataService EmployerPaymentDataService { get; set; }
 

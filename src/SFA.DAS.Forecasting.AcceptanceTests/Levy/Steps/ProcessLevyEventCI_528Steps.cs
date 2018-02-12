@@ -1,16 +1,17 @@
-﻿using FluentAssertions;
-using Newtonsoft.Json;
-using NUnit.Framework;
+﻿using Newtonsoft.Json;
 using SFA.DAS.Forecasting.AcceptanceTests.Services;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Data;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
+using Dapper;
+using NUnit.Framework;
+using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -18,192 +19,94 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     public class ProcessLevyEventCI_528Steps : StepsBase
     {
         private AzureTableService _azureTableService;
-
-        [Scope(Feature = "ProcessLevyEvent [CI-528]")]
+        protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
+        [Scope(Feature = "Process Levy Event [CI-528]")]
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
         }
 
-
-        [BeforeScenario]
-        public void BeforeScenario()
-        {
-            _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
-            _azureTableService.EnsureExists();
-            _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
-        }
-
-        [AfterScenario]
-        public void AfterScenario()
-        {
-            _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
-            Thread.Sleep(1000);
-        }
-
-        [Given(@"that I'm the ESFA")]
-        public void GivenThatIMTheESFA()
+        [Given(@"I'm a levy paying employer")]
+        public void GivenIMALevyPayingEmployer()
         {
             //just for show
         }
 
-        [Given(@"I have credited levy to employer accounts")]
-        public void GivenIHaveCreditedLevyToEmployerAccounts()
+        [Given(@"the payroll period is")]
+        public void GivenThePayrollPeriodIs(Table table)
         {
-            //just for show
+            PayrollPeriod = table.CreateInstance<PayrollPeriod>();
         }
 
-        [When(@"the employer services notifies the Forecasting service of the Levy Credits")]
-        public async Task GivenLevyCreditEventsHaveBeenCreated()
+        [Given(@"I have no existing levy declarations for the payroll period")]
+        public void GivenIHaveNoExistingLevyDeclarations()
         {
-            await PostData(ValidData());
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+            parameters.Add("@payrollYear", PayrollPeriod.Year, DbType.String);
+            parameters.Add("@payrollMonth", PayrollPeriod.Month, DbType.Byte);
+            Connection.Execute("Delete from LevyDeclaration where employerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
+                    parameters, commandType: CommandType.Text);
+        }
+
+        [Given(@"I have made the following levy declarations")]
+        public void GivenIHaveMadeTheFollowingLevyDeclarations(Table table)
+        {
+            LevySubmissions = table.CreateSet<LevySubmission>().ToList();
+            Assert.IsTrue(LevySubmissions.Any());
+        }
+
+        [When(@"the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations")]
+        public void WhenTheSFAEmployerHMRCLevyServiceNotifiesTheForecastingServiceOfTheLevyDeclarations()
+        {
+            LevySubmissions.Select(levySubmission => new LevySchemeDeclarationUpdatedMessage
+            {
+                Id = 123456,
+                AccountId = Config.EmployerAccountId,
+                LevyDeclaredInMonth = levySubmission.Amount,
+                PayrollMonth = PayrollPeriod.Month,
+                PayrollYear = PayrollPeriod.Year,
+                CreatedDate = levySubmission.CreatedDateValue,
+                EmpRef = levySubmission.Scheme
+            })
+                .ToList()
+                .ForEach(levyEvent =>
+                {
+                    var payload = levyEvent.ToJson();
+                    Console.WriteLine($"Sending levy event to levy function: {Config.LevyFunctionUrl}, Payload: {payload}");
+                    var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload)).Result;
+                    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                });
         }
 
         [When(@"the employer service notifies the Forecasting service of the invalid Levy Credits")]
-         public async Task WhenThereIsMissingEventData()
+        public void WhenThereIsMissingEventData()
         {
-            await PostData(InvalidData());
+            ScenarioContext.Current.Pending();
         }
 
-        [Then(@"there should be (.*) levy credit events stored")]
-        public void ThenThereAreLevyCreditEventsStored(int expectedRecordsoBeSaved)
+        [Then(@"the Forecasting Levy service should store the levy declarations")]
+        public void ThenTheForecastingLevyServiceShouldStoreTheLevyDeclarations()
         {
-            var _records = Do(() => _azureTableService?.GetRecords<LevySchemeDeclarationUpdatedMessage>(EmployerAccountId.ToString()), expectedRecordsoBeSaved, TimeSpan.FromMilliseconds(1000), 5);
-            Assert.AreEqual(expectedRecordsoBeSaved, _records.Count(), message: $"Only {expectedRecordsoBeSaved} record should validate and be saved to the database");
-        }
-
-        [Then(@"all of the levy declarations stored should be correct")]
-        public void ThenAllOfTheLevyDeclarationsStoredIsCorrect()
-        {
-            var _records = _azureTableService?.GetRecords<LevySchemeDeclarationUpdatedMessage>(EmployerAccountId.ToString())?.ToList();
-
-            _records.Should().Contain(m => m.LevyDeclaredInMonth == 301);
-            _records.Should().Contain(m => m.LevyDeclaredInMonth == 201);
-            _records.Should().Contain(m => m.LevyDeclaredInMonth == 101);
-        }
-
-        [Then(@"all the event with invalid data is not stored")]
-        public void ThenAllTheEventWithInvalidDataIsNotStored()
-        {
-            var _records = _azureTableService?.GetRecords<LevySchemeDeclarationUpdatedMessage>(EmployerAccountId.ToString());
-
-            Assert.AreEqual(0, _records.Count(m => m.AccountId.ToString().EndsWith("2")));
-        }
-
-
-        private IEnumerable<string> ValidData()
-        {
-            return
-                new List<LevySchemeDeclarationUpdatedMessage> {
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 101,
-                        CreatedDate = DateTime.Now,
-                        PayrollYear = "18-19",
-                        PayrollMonth = 1,
-                        EmpRef = "Not sure"
-                    },
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 201,
-                        CreatedDate = DateTime.Now.AddMonths(-12),
-                        PayrollYear = "17-18",
-                        PayrollMonth = 1,
-                        EmpRef = "Not sure"
-                    },
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 301,
-                        CreatedDate = DateTime.Now.AddMonths(-15),
-                        PayrollYear = "16-17",
-                        PayrollMonth = 10,
-                        EmpRef = "Not sure"
-                    }
-                }
-                .Select(m => JsonConvert.SerializeObject(m));
-        }
-
-        private IEnumerable<string> InvalidData()
-        {
-            return
-                new List<LevySchemeDeclarationUpdatedMessage> {
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 102,
-                        CreatedDate = DateTime.Now,
-                        PayrollYear = "17-18",
-                        PayrollMonth = 1,
-                        EmpRef = ""
-                    },
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 202,
-                        CreatedDate = DateTime.Now.AddMonths(-25).AddDays(-1),
-                        PayrollYear = "16-17",
-                        PayrollMonth = 1,
-                        EmpRef = "Not sure"
-                    },
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 303,
-                        CreatedDate = DateTime.Now.AddMonths(-15),
-                        PayrollYear = "01-01",
-                        PayrollMonth = 1,
-                        EmpRef = "Not sure"
-                    },
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = 501,
-                        CreatedDate = DateTime.Now.AddMonths(-2),
-                        PayrollYear = "17-18",
-                        PayrollMonth = 1,
-                        EmpRef = "Not sure"
-                    },
-                    new LevySchemeDeclarationUpdatedMessage {
-                        AccountId = EmployerAccountId,
-                        LevyDeclaredInMonth = -10,
-                        CreatedDate = DateTime.Now.AddMonths(-2),
-                        PayrollYear = "18-19",
-                        PayrollMonth = 1,
-                        EmpRef = "Not sure"
-                    }
-
-                }
-                .Select(m => JsonConvert.SerializeObject(m));
-        }
-
-        private async Task PostData(IEnumerable<string> events)
-        {
-            var client = new HttpClient();
-
-            var url = Path.Combine(Config.FunctionBaseUrl, "LevyDeclarationEventHttpFunction");
-            foreach (var item in events)
+            WaitForIt(() =>
             {
-                await client.PostAsync(url, new StringContent(item));
-            }
-
-            Thread.Sleep(2000);
-        }
-
-        private static IEnumerable<T> Do<T>(
-            Func<IEnumerable<T>> action,
-            int expectedCount,
-            TimeSpan retryInterval,
-            int maxAttemptCount = 3)
-        {
-            IEnumerable<T> rList = null;
-            for (int attempted = 0; attempted < maxAttemptCount; attempted++)
-            {
-                var a = action();
-                if(a?.Count() == expectedCount)
+                foreach (var levySubmission in LevySubmissions)
                 {
-                    return a;
+                    Console.WriteLine($"Looking for Levy Declaration. Employer Account Id: {Config.EmployerAccountId}, Scheme: {levySubmission.Scheme}, Payroll Year - Month: {PayrollPeriod.Year}, {PayrollPeriod.Month}, Amount: {levySubmission.Amount}");
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+                    parameters.Add("@payrollYear", PayrollPeriod.Year, DbType.String);
+                    parameters.Add("@payrollMonth", PayrollPeriod.Month, DbType.Byte);
+                    parameters.Add("@scheme", levySubmission.Scheme, DbType.String);
+                    parameters.Add("@amount", levySubmission.Amount, DbType.Decimal);
+                    var count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where employerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth and [scheme] = @scheme and [LevyAmountDeclared] = @amount",
+                        parameters, commandType: CommandType.Text);
+                    return count == 1;
                 }
-                rList = a;
-                Thread.Sleep(retryInterval);
-            }
-            return rList ?? new List<T>();
+                return false;
+            },"Failed to find all the levy declarations.");
         }
+
     }
 }

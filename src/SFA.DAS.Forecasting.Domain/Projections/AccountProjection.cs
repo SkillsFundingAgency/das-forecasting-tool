@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Projections.Model;
+using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.ReadModel.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Projections

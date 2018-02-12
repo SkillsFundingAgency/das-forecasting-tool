@@ -5,9 +5,9 @@ using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Model;
 using SFA.DAS.Forecasting.Domain.Events;
-using SFA.DAS.Forecasting.Domain.Projections.Model;
+using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 {

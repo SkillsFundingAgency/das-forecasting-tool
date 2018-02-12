@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Domain.Levy.Model;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
+using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 
@@ -28,8 +28,8 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Byte);
 
                 var levyDeclarations = await cnn.QueryAsync<LevyDeclaration>(
-                            sql: "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYearStart = @payrollYearStart and PayrollMonth = @payrollMonth",
-                            param: parameters,
+                            "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYearStart = @payrollYearStart and PayrollMonth = @payrollMonth",
+                            parameters,
                             commandType: CommandType.Text);
                 return levyDeclarations.ToList();
             });

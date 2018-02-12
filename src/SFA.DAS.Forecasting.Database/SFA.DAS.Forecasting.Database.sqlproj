@@ -59,6 +59,7 @@
     <Folder Include="Properties" />
     <Folder Include="TestData" />
     <Folder Include="Tables" />
+    <Folder Include="PostDeployment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Balance.sql" />
@@ -68,6 +69,8 @@
     <Build Include="Tables\Commitment.sql" />
     <Build Include="TestData\AccountProjection.sql" />
     <Build Include="Tables\AccountProjectionCommitment.sql" />
+    <Build Include="Tables\FundingSource.sql" />
+    <PostDeploy Include="PostDeployment\Script.PostDeployment1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\ResetBalanceData.sql" />

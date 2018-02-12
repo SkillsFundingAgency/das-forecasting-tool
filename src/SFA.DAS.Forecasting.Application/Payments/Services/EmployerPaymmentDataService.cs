@@ -4,8 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using SFA.DAS.Forecasting.Domain.Payments.Entities;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
+using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 

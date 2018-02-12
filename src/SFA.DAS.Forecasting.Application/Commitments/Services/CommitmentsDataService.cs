@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Domain.Commitments.Model;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
+using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 

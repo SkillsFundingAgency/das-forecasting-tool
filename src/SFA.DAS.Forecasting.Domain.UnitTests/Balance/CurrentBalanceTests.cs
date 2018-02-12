@@ -8,12 +8,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
     public class CurrentBalanceTests
     {
         private CurrentBalance _currentBalance;
-        private Domain.Balance.Model.Balance _balance;
+        private Models.Balance.Balance _balance;
 
         [SetUp]
         public void SetUp()
         {
-            _balance = new Domain.Balance.Model.Balance
+            _balance = new Models.Balance.Balance
             {
                 EmployerAccountId = 12345,
                 BalancePeriod = DateTime.Today,

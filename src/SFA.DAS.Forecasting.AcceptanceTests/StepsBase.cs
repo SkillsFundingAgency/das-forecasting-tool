@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
+using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using StructureMap;
 using TechTalk.SpecFlow;
 
@@ -17,15 +21,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-
-        //C:\Users\abroo\AppData\Local\Azure.Functions.Cli\1.0.8
         protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.8", "func.exe");
-
-        protected IContainer NestedContainer { get; set; }
+        protected IContainer NestedContainer { get => Get<IContainer>();  set => Set(value); }
+        protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
-
+        protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
+        protected static HttpClient HttpClient = new HttpClient();
         public T Get<T>(string key = null) where T : class
         {
             return key == null ? ScenarioContext.Current.Get<T>() : ScenarioContext.Current.Get<T>(key);
@@ -109,5 +112,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             Console.WriteLine("Giving the function time to start.");
             Thread.Sleep(TimeSpan.FromSeconds(5));
         }
+
     }
 }

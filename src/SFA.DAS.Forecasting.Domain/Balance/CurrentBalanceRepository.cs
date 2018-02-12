@@ -20,13 +20,13 @@ namespace SFA.DAS.Forecasting.Domain.Balance
         }
         public async Task<CurrentBalance> Get(long employerAccountId)
         {
-            var employerAccount = await _dataService.Get(employerAccountId) ?? new Model.Balance { EmployerAccountId = employerAccountId, BalancePeriod = DateTime.MinValue};
+            var employerAccount = await _dataService.Get(employerAccountId) ?? new Models.Balance.Balance { EmployerAccountId = employerAccountId, BalancePeriod = DateTime.MinValue};
             return new CurrentBalance(employerAccount);
         }
 
         public async Task Store(CurrentBalance currentBalance)
         {
-            await _dataService.Store(new Model.Balance
+            await _dataService.Store(new Models.Balance.Balance
             {
                 EmployerAccountId = currentBalance.EmployerAccountId,
                 BalancePeriod = currentBalance.Period,

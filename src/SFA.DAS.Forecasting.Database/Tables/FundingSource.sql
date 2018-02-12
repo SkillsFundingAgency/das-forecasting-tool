@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[FundingSource]
+(
+	[Id] TINYINT NOT NULL CONSTRAINT PK_FundingSource PRIMARY KEY,
+	[Name] NVARCHAR(200) NOT NULL
+)

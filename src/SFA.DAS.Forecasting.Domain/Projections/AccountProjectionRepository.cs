@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
-using SFA.DAS.Forecasting.Domain.Projections.Model;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
 {

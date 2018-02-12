@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Domain.Payments.Entities;
-using SFA.DAS.Forecasting.Domain.Payments.Repositories;
+using SFA.DAS.Forecasting.Domain.Payments;
+using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers

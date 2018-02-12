@@ -13,15 +13,15 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
         [FunctionName("PaymentEventHttpFunction")]
         [return: Queue(QueueNames.PaymentValidator)]
-        public static async Task<PaymentEvent> Run(
+        public static async Task<PaymentCreatedMessage> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "EmployerPaymentEventHttpFunction")]HttpRequestMessage req, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventHttpFunction, PaymentEvent>(writer,
+            return await FunctionRunner.Run<PaymentEventHttpFunction, PaymentCreatedMessage>(writer,
                 async (container, logger) =>
                 {
                     var body = await req.Content.ReadAsStringAsync();
-                    var paymentEvent = JsonConvert.DeserializeObject<PaymentEvent>(body);
+                    var paymentEvent = JsonConvert.DeserializeObject<PaymentCreatedMessage>(body);
 
                     logger.Info($"Added one payment to {QueueNames.PaymentProcessor} queue.");
                     return await Task.FromResult(paymentEvent);

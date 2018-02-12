@@ -14,13 +14,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _commitmentsRepository = commitmentsRepository ?? throw new ArgumentNullException(nameof(commitmentsRepository));
         }
 
-        public async Task Handle(PaymentEvent paymentEvent)
+        public async Task Handle(PaymentCreatedMessage paymentCreatedMessage)
         {
-            var employerCommitments = await _commitmentsRepository.Get(paymentEvent.EmployerAccountId);
-            employerCommitments.AddCommitment(paymentEvent.ApprenticeshipId, paymentEvent.Uln, paymentEvent.EarningDetails.StartDate, 
-                paymentEvent.EarningDetails.PlannedEndDate, paymentEvent.EarningDetails.ActualEndDate, 
-                paymentEvent.EarningDetails.MonthlyInstallment, paymentEvent.EarningDetails.CompletionAmount, 
-                (short)paymentEvent.EarningDetails.TotalInstallments);
+            var employerCommitments = await _commitmentsRepository.Get(paymentCreatedMessage.EmployerAccountId);
+            employerCommitments.AddCommitment(paymentCreatedMessage.ApprenticeshipId, paymentCreatedMessage.Uln, paymentCreatedMessage.EarningDetails.StartDate, 
+                paymentCreatedMessage.EarningDetails.PlannedEndDate, paymentCreatedMessage.EarningDetails.ActualEndDate, 
+                paymentCreatedMessage.EarningDetails.MonthlyInstallment, paymentCreatedMessage.EarningDetails.CompletionAmount, 
+                (short)paymentCreatedMessage.EarningDetails.TotalInstallments);
             await _commitmentsRepository.Store(employerCommitments);
         }
     }

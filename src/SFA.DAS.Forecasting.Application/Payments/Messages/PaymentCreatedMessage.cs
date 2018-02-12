@@ -5,7 +5,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
 	/// <summary>
 	/// TODO: Temp event definition. this will be replaced by the actual Payment event published by the employer services.
 	/// </summary>
-	public class PaymentEvent
+	public class PaymentCreatedMessage
     {
         public string Id { get; set; }
 		public long EmployerAccountId { get; set; }

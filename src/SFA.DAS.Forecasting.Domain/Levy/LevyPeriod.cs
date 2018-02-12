@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Forecasting.Domain.Levy.Model;
 using SFA.DAS.Forecasting.Domain.Levy.Validation;
+using SFA.DAS.Forecasting.Models.Levy;
 
-namespace SFA.DAS.Forecasting.Domain.Levy.Aggregates
+namespace SFA.DAS.Forecasting.Domain.Levy
 {
     public class LevyPeriod
     {

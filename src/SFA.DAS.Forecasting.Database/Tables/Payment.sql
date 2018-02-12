@@ -9,5 +9,6 @@
 	[ReceivedTime] DATETIME NOT NULL,
 	[LearnerId] BIGINT NOT NULL, 
 	[CollectionPeriodMonth] INT NOT NULL,
-	[CollectionPeriodYear] INT NOT NULL
+	[CollectionPeriodYear] INT NOT NULL,
+	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Payment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id)
 )
