@@ -3,11 +3,10 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EAS.Account.Api.Types;
-using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Levy.Services;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
     [TestFixture]
     public class LevyEmployerDataServiceTests
     {
-        private LevyEmployerDataService _levyEmployerDataService;
+        private EmployerDataService _levyEmployerDataService;
         
 
         [SetUp]
@@ -29,7 +28,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
                 .Returns(LevyDeclarations());
 
             hashingService.Setup(m => m.DecodeValue("ABBA12")).Returns(112233);
-            _levyEmployerDataService = new LevyEmployerDataService(accountApiClient.Object, hashingService.Object, Mock.Of<ILog>());
+            _levyEmployerDataService = new EmployerDataService(accountApiClient.Object, hashingService.Object, Mock.Of<ILog>());
         }
 
 

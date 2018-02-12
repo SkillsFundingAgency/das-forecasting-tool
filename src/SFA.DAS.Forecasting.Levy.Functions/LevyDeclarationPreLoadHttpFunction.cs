@@ -5,9 +5,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
-using SFA.DAS.EmployerAccounts.Events.Messages;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Application.Levy.Services;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
@@ -29,7 +28,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                    var body = await req.Content.ReadAsStringAsync();
                    var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
 
-                   var levyDataService = container.GetInstance<LevyEmployerDataService>();
+                   var levyDataService = container.GetInstance<EmployerDataService>();
 
                    if (preLoadRequest == null)
                    {

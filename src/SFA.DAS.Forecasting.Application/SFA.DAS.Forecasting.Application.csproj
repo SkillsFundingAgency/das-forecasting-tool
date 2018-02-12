@@ -124,7 +124,7 @@
     <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Messages\LevyDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Services\LevyDataService.cs" />
-    <Compile Include="Levy\Services\LevyEmployerDataService.cs" />
+    <Compile Include="Shared\Services\EmployerDataService.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationEventValidator.cs" />
     <Compile Include="Payments\Mapping\PaymentMapper.cs" />
     <Compile Include="Payments\Messages\CollectionPeriod.cs" />
