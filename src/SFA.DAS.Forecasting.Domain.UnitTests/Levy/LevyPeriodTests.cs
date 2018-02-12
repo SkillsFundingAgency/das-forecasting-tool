@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMoq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Domain.Levy.Aggregates;
+using SFA.DAS.Forecasting.Domain.Levy;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
 {

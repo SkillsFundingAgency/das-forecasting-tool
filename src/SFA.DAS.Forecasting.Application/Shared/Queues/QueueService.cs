@@ -6,7 +6,12 @@ using Newtonsoft.Json;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Queues
 {
-	public class QueueService
+    public interface IQueueService
+    {
+        void SendMessageWithVisibilityDelay<T>(T element, string queueName, int visibilityDelay) where T : class;
+    }
+
+	public class QueueService: IQueueService
 	{
 		public void SendMessageWithVisibilityDelay<T>(T element, string queueName, int visibilityDelay) 
 			where  T : class 
@@ -14,14 +19,14 @@ namespace SFA.DAS.Forecasting.Application.Shared.Queues
 			var message = new CloudQueueMessage(JsonConvert.SerializeObject(element));
 
 			// Retrieve storage account from connection string.
-			CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
+			var storageAccount = CloudStorageAccount.Parse(
 				CloudConfigurationManager.GetSetting("StorageConnectionString"));
 
 			// Create the queue client.
-			CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+			var queueClient = storageAccount.CreateCloudQueueClient();
 
 			// Retrieve a reference to a container.
-			CloudQueue queue = queueClient.GetQueueReference(queueName);
+			var queue = queueClient.GetQueueReference(queueName);
 
 			// Create the queue if it doesn't already exist
 			queue.CreateIfNotExists();

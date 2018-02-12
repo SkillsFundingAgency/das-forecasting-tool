@@ -21,8 +21,8 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             await FunctionRunner.Run<LevyDeclarationEventStoreFunction>(writer,
                 async (container, logger) =>
                 {
-                    logger.Debug("Getting levy declaration aggregation handler from container.");
-                    var handler = container.GetInstance<AllowLevyDeclarationAggregationHandler>();
+                    logger.Debug("Getting levy declaration handler from container.");
+                    var handler = container.GetInstance<AllowAccountProjectionsHandler>();
                     if (handler == null)
                         throw new InvalidOperationException($"Faild to get levy handler from container.");
                     await handler.Allow(levySchemeUpdatedMessage);

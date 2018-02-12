@@ -2,7 +2,7 @@
 {
 	public class EmployerPeriod
 	{
-		public string EmployerAccountId { get; set; }
+		public long EmployerAccountId { get; set; }
 
 		public int Month { get; set; }
 

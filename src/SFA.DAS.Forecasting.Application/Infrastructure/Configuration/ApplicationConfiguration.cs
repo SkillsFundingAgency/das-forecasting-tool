@@ -4,12 +4,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
     public interface IApplicationConfiguration
     {
-        string DatabaseConnectionString { get; set; }
-        string StorageConnectionString { get; set; }
-        string BackLink { get; set; }
-        string AllowedHashstringCharacters { get; set; }
-        string Hashstring { get; set; }
-        int SecondsToWaitToAllowAggregation { get; set; }
+        string DatabaseConnectionString { get; }
+        string StorageConnectionString { get;  }
+        string BackLink { get;  }
+        string AllowedHashstringCharacters { get;  }
+        string Hashstring { get;  }
+        int SecondsToWaitToAllowAggregation { get; }
+        int NumberOfMonthsToProject { get;  }
         AccountApiConfiguration AccountApi { get; set; }
     }
 
@@ -21,6 +22,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string AllowedHashstringCharacters { get; set; }
         public string Hashstring { get; set; }
         public int SecondsToWaitToAllowAggregation { get; set; }
+        public int NumberOfMonthsToProject { get; set; }
         public AccountApiConfiguration AccountApi { get; set; }
     }
 }

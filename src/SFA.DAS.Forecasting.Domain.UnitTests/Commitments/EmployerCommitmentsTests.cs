@@ -4,8 +4,8 @@ using System.Linq;
 using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Model;
 using SFA.DAS.Forecasting.Domain.Events;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 {

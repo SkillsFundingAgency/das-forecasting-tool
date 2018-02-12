@@ -13,11 +13,26 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             ParentContainer = new Container(new DefaultRegistry());
         }
 
+        [BeforeScenario(Order = 0)]
+        public void SetupNestedContainer()
+        {
+            NestedContainer = ParentContainer.GetNestedContainer();
+        }
+
+        [AfterScenario(Order = 99)]
+        public void CleanupNestedContainer()
+        {
+            NestedContainer?.Dispose();
+            NestedContainer = null;
+        }
+
         [AfterFeature(Order = 0)]
         public static void CleanUpFunctionProcesses()
         {
             Processes?.ForEach(process => process.Kill());
         }
+
+
 
         [AfterTestRun(Order = 999)]
         public static void CleanUpContainer()

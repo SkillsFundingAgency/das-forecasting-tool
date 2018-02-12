@@ -81,12 +81,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Balance\CurrentBalanceTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentsTests.cs" />
     <Compile Include="Projection\AccountProjectionTests.cs" />
     <Compile Include="Levy\LevyDeclarationHandlerTests.cs" />
     <Compile Include="Levy\LevyPeriodTests.cs" />
     <Compile Include="Payments\EmployerPaymentTests.cs" />
-    <Compile Include="Payments\TrainingCostTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +106,10 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
+      <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
+      <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
       <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>

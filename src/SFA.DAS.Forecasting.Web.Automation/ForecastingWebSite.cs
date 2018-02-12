@@ -23,6 +23,15 @@ namespace SFA.DAS.Forecasting.Web.Automation
             return new DashboardPage(WebBrowserDriver);
         }
 
+        public FundingProjectionPage NavigateToFundingProjectionPage()
+        {
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
+            return new FundingProjectionPage(WebBrowserDriver);
+        }
+
+
+
+
         public T NavigateTo<T>() where T : ForecastingPage, new()
         {
             var page = Activator.CreateInstance(typeof(T), WebBrowserDriver) as T;

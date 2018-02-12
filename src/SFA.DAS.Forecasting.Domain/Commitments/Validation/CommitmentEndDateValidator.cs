@@ -1,6 +1,6 @@
 ﻿using System;
 using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Forecasting.Domain.Commitments.Model;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments.Validation
 {

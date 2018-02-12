@@ -14,23 +14,23 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
         [FunctionName("PaymentEventValidatorFunction")]
         [return:Queue(QueueNames.PaymentProcessor)]
-        public static async Task<PaymentEvent> Run(
-            [QueueTrigger(QueueNames.PaymentValidator)]PaymentEvent paymentEvent, 
+        public static async Task<PaymentCreatedMessage> Run(
+            [QueueTrigger(QueueNames.PaymentValidator)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventValidatorFunction, PaymentEvent>(writer,
+            return await FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer,
                 (container, logger) =>
                 {
                     var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
-                        .Validate(paymentEvent);
+                        .Validate(paymentCreatedMessage);
                     if (validationResults?.Any() ?? false)
                     {
-                        logger.Warn($"Payment event failed superficial validation. Event: {paymentEvent.ToJson()}");
+                        logger.Warn($"Payment event failed superficial validation. Event: {paymentCreatedMessage.ToJson()}");
                         return null;
                     }
 
-                    logger.Info($"Validated {nameof(PaymentEvent)} for EmployerAccountId: {paymentEvent.EmployerAccountId}");
-                    return Task.FromResult(paymentEvent);
+                    logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId}");
+                    return Task.FromResult(paymentCreatedMessage);
                 });
         }
     }

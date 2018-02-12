@@ -79,6 +79,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FundingProjectionPage.cs" />
     <Compile Include="DashboardPage.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ForecastingPage.cs" />
