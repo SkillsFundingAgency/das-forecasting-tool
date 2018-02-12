@@ -87,7 +87,7 @@
                 "value": "[parameters('AllowedHashstringCharacters')]"
               },
               {
-                "name": "HashStringDatabaseConnectionString",
+                "name": "HashString",
                 "value": "[parameters('HashString')]"
               },
               {
