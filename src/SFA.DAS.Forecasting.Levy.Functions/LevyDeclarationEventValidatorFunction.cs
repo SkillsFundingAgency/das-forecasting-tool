@@ -13,23 +13,23 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     {
         [FunctionName("LevyDeclarationEventValidatorFunction")]
         [return:Queue(QueueNames.StoreLevyDeclaration)]
-        public static async Task<LevySchemeDeclarationUpdatedMessage> Run(
-            [QueueTrigger(QueueNames.ValidateDeclaration)]LevySchemeDeclarationUpdatedMessage levySchemeDeclarationUpdatedMessage, 
+        public static LevySchemeDeclarationUpdatedMessage Run(
+            [QueueTrigger(QueueNames.ValidateDeclaration)]LevySchemeDeclarationUpdatedMessage message, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevySchemeDeclarationUpdatedMessage>(writer,
+            return FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevySchemeDeclarationUpdatedMessage>(writer,
                 (container, logger) =>
                 {
                     var validationResults = container.GetInstance<LevyDeclarationEventValidator>()
-                        .Validate(levySchemeDeclarationUpdatedMessage);
+                        .Validate(message);
                     if (!validationResults.IsValid)
                     {
-                        logger.Warn($"Levy declaration event failed superficial validation. Event: {levySchemeDeclarationUpdatedMessage.ToJson()}");
+                        logger.Warn($"Levy declaration event failed superficial validation. Event: {message.ToJson()}");
                         return null;
                     }
 
-                    logger.Info($"Validated {nameof(LevySchemeDeclarationUpdatedMessage)} for EmployerAccountId: {levySchemeDeclarationUpdatedMessage.AccountId}");
-                    return  Task.FromResult(levySchemeDeclarationUpdatedMessage);
+                    logger.Info($"Validated {nameof(LevySchemeDeclarationUpdatedMessage)} for EmployerAccountId: {message.AccountId}");
+                    return  message;
                 });
         }
     }

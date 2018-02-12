@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using Dapper;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
@@ -37,6 +38,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public void GivenThePayrollPeriodIs(Table table)
         {
             PayrollPeriod = table.CreateInstance<PayrollPeriod>();
+            Assert.IsNotNull(PayrollPeriod);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(PayrollPeriod.PayrollYear));
+            Assert.AreNotEqual(0, PayrollPeriod.PayrollMonth);
         }
 
         [Given(@"I have no existing levy declarations for the payroll period")]
@@ -44,8 +48,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            parameters.Add("@payrollYear", PayrollPeriod.Year, DbType.String);
-            parameters.Add("@payrollMonth", PayrollPeriod.Month, DbType.Byte);
+            parameters.Add("@payrollYear", PayrollPeriod.PayrollYear, DbType.String);
+            parameters.Add("@payrollMonth", PayrollPeriod.PayrollMonth, DbType.Byte);
             Connection.Execute("Delete from LevyDeclaration where employerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
                     parameters, commandType: CommandType.Text);
         }
@@ -65,19 +69,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                 Id = 123456,
                 AccountId = Config.EmployerAccountId,
                 LevyDeclaredInMonth = levySubmission.Amount,
-                PayrollMonth = PayrollPeriod.Month,
-                PayrollYear = PayrollPeriod.Year,
+                PayrollMonth = PayrollPeriod.PayrollMonth,
+                PayrollYear = PayrollPeriod.PayrollYear,
                 CreatedDate = levySubmission.CreatedDateValue,
                 EmpRef = levySubmission.Scheme
             })
-                .ToList()
-                .ForEach(levyEvent =>
-                {
-                    var payload = levyEvent.ToJson();
-                    Console.WriteLine($"Sending levy event to levy function: {Config.LevyFunctionUrl}, Payload: {payload}");
-                    var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload)).Result;
-                    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-                });
+            .ToList()
+            .ForEach(levyEvent =>
+            {
+                var payload = levyEvent.ToJson();
+                Console.WriteLine($"Sending levy event to levy function: {Config.LevyFunctionUrl}, Payload: {payload}");
+                var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload,Encoding.UTF8,"application/json")).Result;
+                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            });
         }
 
         [When(@"the employer service notifies the Forecasting service of the invalid Levy Credits")]
@@ -93,11 +97,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             {
                 foreach (var levySubmission in LevySubmissions)
                 {
-                    Console.WriteLine($"Looking for Levy Declaration. Employer Account Id: {Config.EmployerAccountId}, Scheme: {levySubmission.Scheme}, Payroll Year - Month: {PayrollPeriod.Year}, {PayrollPeriod.Month}, Amount: {levySubmission.Amount}");
+                    Console.WriteLine($"Looking for Levy Declaration. Employer Account Id: {Config.EmployerAccountId}, Scheme: {levySubmission.Scheme}, Payroll Year - Month: {PayrollPeriod.PayrollYear}, {PayrollPeriod.PayrollMonth}, Amount: {levySubmission.Amount}");
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                    parameters.Add("@payrollYear", PayrollPeriod.Year, DbType.String);
-                    parameters.Add("@payrollMonth", PayrollPeriod.Month, DbType.Byte);
+                    parameters.Add("@payrollYear", PayrollPeriod.PayrollYear, DbType.String);
+                    parameters.Add("@payrollMonth", PayrollPeriod.PayrollMonth, DbType.Byte);
                     parameters.Add("@scheme", levySubmission.Scheme, DbType.String);
                     parameters.Add("@amount", levySubmission.Amount, DbType.Decimal);
                     var count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where employerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth and [scheme] = @scheme and [LevyAmountDeclared] = @amount",
@@ -105,7 +109,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                     return count == 1;
                 }
                 return false;
-            },"Failed to find all the levy declarations.");
+            }, "Failed to find all the levy declarations.");
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Dapper;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
@@ -14,8 +15,11 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 {
     public class LevyDataService : BaseRepository, ILevyDataService
     {
+        public ILog Logger { get; }
+
         public LevyDataService(IApplicationConfiguration applicationConfiguration, ILog log) : base(applicationConfiguration.DatabaseConnectionString, log)
         {
+            Logger = log ?? throw new ArgumentNullException(nameof(log));
         }
 
         public async Task<List<LevyDeclaration>> GetLevyDeclarationsForPeriod(long employerAccountId, string payrollYear, byte payrollMonth)
@@ -28,7 +32,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Byte);
 
                 var levyDeclarations = await cnn.QueryAsync<LevyDeclaration>(
-                            "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYearStart = @payrollYearStart and PayrollMonth = @payrollMonth",
+                            "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
                             parameters,
                             commandType: CommandType.Text);
                 return levyDeclarations.ToList();
@@ -37,20 +41,34 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task StoreLevyDeclarations(IEnumerable<LevyDeclaration> levyDeclarations)
         {
-            await WithTransaction(async (cnn, tx) =>
+
+
+            var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            try
             {
                 try
                 {
-                    foreach (var levyDeclaration in levyDeclarations)
-                        await StoreLevyDeclaration(cnn, levyDeclaration);
-                    tx.Commit();
+                    await WithConnection(async cnn =>
+                    {
+                        foreach (var levyDeclaration in levyDeclarations)
+                        {
+                            await StoreLevyDeclaration(cnn, levyDeclaration);
+                        }
+
+                        return 0;
+                    });
+                    txScope.Complete();
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    tx.Rollback();
+                    Logger.Error(ex, $"Error storing levy declarations. Error: {ex}");
                     throw;
                 }
-            });
+            }
+            finally
+            {
+                txScope.Dispose();
+            }
         }
 
         public async Task<decimal> GetLatestLevyAmount(long employerAccountId)
@@ -71,10 +89,11 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", levyDeclaration.EmployerAccountId, DbType.Int64);
+            parameters.Add("@scheme", levyDeclaration.Scheme, DbType.String);
             parameters.Add("@payrollYear", levyDeclaration.PayrollYear, DbType.String);
             parameters.Add("@payrollMonth", levyDeclaration.PayrollMonth, DbType.Byte);
             parameters.Add("@levyAmountDeclared", levyDeclaration.LevyAmountDeclared, DbType.Decimal);
-            parameters.Add("@transactionDate", levyDeclaration.TransactionDate, DbType.Byte);
+            parameters.Add("@transactionDate", levyDeclaration.TransactionDate, DbType.DateTime);
 
             await connection.ExecuteAsync(
                 @"MERGE LevyDeclaration AS target 

@@ -6,6 +6,7 @@
     "StorageConnectionString": "UseDevelopmentStorage=true",
     "AzureWebJobsServiceBus": "",
     "ConnectionStringKey": "localhost",
+    "ForecastingConnectionString": "Data Source=.;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True",
     "EnvironmentKey": "LOCAL",
     "LoggingRedisKey": "logstash",
     "EnvironmentName": "LOCAL",
