@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
     {   
         public static string[] getCurrentDownloadFiles()
         {
-            return Directory.GetFiles("");
+            return Directory.GetFiles("C:/Temp/Download/");
         }
     }
 }
