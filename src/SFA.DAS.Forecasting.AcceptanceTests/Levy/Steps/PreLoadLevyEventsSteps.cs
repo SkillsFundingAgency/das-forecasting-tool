@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     {
         private const string FeatureName= "PreLoadLevyEvents";
         private static readonly IReadOnlyList<string> TableStorageIds = new List<string> { "497_2018_19_1", "498_2018_19_1", "499_2018_19_1" };
-        private static string Url = Path.Combine(Config.FunctionBaseUrl, "LevyDeclarationPreLoadHttpFunction");
+        private static string Url = Path.Combine(Config.LevyFunctionUrl, "LevyDeclarationPreLoadHttpFunction");
 
         private static Host _h;
         private AzureTableService _azureTableService;
@@ -34,30 +34,30 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         }
 
 
-        [Scope(Feature = FeatureName)]
-        [BeforeScenario]
-        public void BeforeScenario()
-        {
-            _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
-            _azureTableService.EnsureExists();
+        //[Scope(Feature = FeatureName)]
+        //[BeforeScenario]
+        //public void BeforeScenario()
+        //{
+        //    _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
+        //    _azureTableService.EnsureExists();
 
-            foreach (var id in TableStorageIds)
-            {
-                _azureTableService.DeleteEntities(id);
-            }
-        }
+        //    foreach (var id in TableStorageIds)
+        //    {
+        //        _azureTableService.DeleteEntities(id);
+        //    }
+        //}
 
-        [Scope(Feature = FeatureName)]
-        [AfterScenario]
-        public void AfterSecnario()
-        {
-            foreach (var id in TableStorageIds)
-            {
-                _azureTableService.DeleteEntities(id);
-            }
+        //[Scope(Feature = FeatureName)]
+        //[AfterScenario]
+        //public void AfterSecnario()
+        //{
+        //    foreach (var id in TableStorageIds)
+        //    {
+        //        _azureTableService.DeleteEntities(id);
+        //    }
 
-            Thread.Sleep(1000);
-        }
+        //    Thread.Sleep(1000);
+        //}
 
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
         public async Task ITriggerFunction()
