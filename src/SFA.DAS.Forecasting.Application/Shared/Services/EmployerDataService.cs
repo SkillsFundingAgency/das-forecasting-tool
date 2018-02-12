@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerAccounts.Events.Messages;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.HashingService;
@@ -7,15 +8,15 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Forecasting.Application.Levy.Services
+namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
-    public class LevyEmployerDataService
+    public class EmployerDataService
     {
         private readonly IAccountApiClient _accountApiClient;
         private readonly IHashingService _hashingService;
         private readonly ILog _logger;
 
-        public LevyEmployerDataService (
+        public EmployerDataService(
             IAccountApiClient accountApiClient, 
             IHashingService hashingService,
             ILog logger)
@@ -27,12 +28,11 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task<LevySchemeDeclarationUpdatedMessage> LevyForPeriod(string employerId, string periodYear, short? periodMonth)
         {
-            _logger.Debug("1");
             var res = await _accountApiClient.GetLevyDeclarations(employerId);
 
             if (res == null)
             {
-                _logger.Debug($"Account API client returned null");
+                _logger.Debug($"Account API client returned null for GetLevyDeclarations");
                 return null;
             }
 
@@ -57,5 +57,19 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 CreatedDate = levy.CreatedDate
             };
         }
+
+        //public async Task<IOrderedEnumerable<TransactionViewModel>> GetTransaction(string employerId, int year, int month)
+        //{
+        //    var res = await _accountApiClient.GetTransactions(employerId, year, month);
+
+        //    if (res == null)
+        //    {
+        //        _logger.Debug($"Account API client returned null for GetTransactions");
+        //        return null;
+        //    }
+
+        //    //PaymentCreatedMessage
+        //    return res.First();
+        //}
     }
 }
