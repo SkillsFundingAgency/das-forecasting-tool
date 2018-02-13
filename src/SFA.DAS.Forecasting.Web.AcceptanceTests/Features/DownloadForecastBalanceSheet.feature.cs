@@ -72,15 +72,30 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
  testRunner.Given("that I am an employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
  testRunner.And("I have logged into my Apprenticeship Account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC1: DownloadForecastBalanceSheet_Forecast between payments made and 23rd of mont" +
+            "h")]
+        public virtual void AC1DownloadForecastBalanceSheet_ForecastBetweenPaymentsMadeAnd23RdOfMonth()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: DownloadForecastBalanceSheet_Forecast between payments made and 23rd of mont" +
+                    "h", ((string[])(null)));
 #line 10
-  testRunner.Given("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
 #line 11
-  testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.Given("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 12
-  testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 13
+  testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 14
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
+            this.ScenarioCleanup();
         }
     }
 }

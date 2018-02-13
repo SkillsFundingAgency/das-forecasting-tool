@@ -8,10 +8,21 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 {
     static class FileManager
-    {   
+    {
         public static string[] getCurrentDownloadFiles()
         {
-            return Directory.GetFiles("C:/Temp/Download/");
+            return Directory.GetFiles(FileManager.DownloadsFolderPath);
+        }
+
+        private static string DownloadsFolderPath
+        {
+            get
+            {
+                string user = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                return Path.Combine(user, "Downloads");
+            }
+
+            set { }
         }
     }
 }
