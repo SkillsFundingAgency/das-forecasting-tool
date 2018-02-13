@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Byte);
 
                 var levyDeclarations = await cnn.QueryAsync<LevyDeclaration>(
-                            "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
+                            "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, PayrollDate, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
                             parameters,
                             commandType: CommandType.Text);
                 return levyDeclarations.ToList();
@@ -41,8 +41,6 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task StoreLevyDeclarations(IEnumerable<LevyDeclaration> levyDeclarations)
         {
-
-
             var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             try
             {
@@ -79,7 +77,13 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
 
                 return await cnn.ExecuteScalarAsync<decimal>(
-                    sql: "SELECT Id, EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate, DateReceived FROM [dbo].[LevyDeclaration] WHERE EmployerAccountId = @employerAccountId and PayrollYearStart = @payrollYearStart and PayrollMonth = @payrollMonth",
+                    sql: @"select 
+	top 1 
+	sum(LevyAmountDeclared) 
+	from LevyDeclaration	
+    where EmployerAccountId = @employerAccountId
+	group by PayrollDate 
+	order by PayrollDate desc",
                     param: parameters,
                     commandType: CommandType.Text);
             });
@@ -92,18 +96,19 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
             parameters.Add("@scheme", levyDeclaration.Scheme, DbType.String);
             parameters.Add("@payrollYear", levyDeclaration.PayrollYear, DbType.String);
             parameters.Add("@payrollMonth", levyDeclaration.PayrollMonth, DbType.Byte);
+            parameters.Add("@payrollDate", levyDeclaration.PayrollDate, DbType.DateTime);
             parameters.Add("@levyAmountDeclared", levyDeclaration.LevyAmountDeclared, DbType.Decimal);
             parameters.Add("@transactionDate", levyDeclaration.TransactionDate, DbType.DateTime);
 
             await connection.ExecuteAsync(
                 @"MERGE LevyDeclaration AS target 
-                                    USING(SELECT @employerAccountId, @scheme, @payrollYear, @payrollMonth, @levyAmountDeclared, @transactionDate) AS source(EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate)
+                                    USING(SELECT @employerAccountId, @scheme, @payrollYear, @payrollMonth, @payrollDate, @levyAmountDeclared, @transactionDate) AS source(EmployerAccountId, Scheme, PayrollYear, PayrollMonth, PayrollDate, LevyAmountDeclared, TransactionDate)
                                     ON(target.EmployerAccountId = source.EmployerAccountId and target.Scheme = source.Scheme and target.PayrollYear = source.PayrollYear and target.PayrollMonth = source.PayrollMonth)
                                     WHEN MATCHED THEN
                                         UPDATE SET LevyAmountDeclared = source.LevyAmountDeclared, DateReceived = getdate()
                                     WHEN NOT MATCHED THEN
-                                        INSERT(EmployerAccountId, Scheme, PayrollYear, PayrollMonth, LevyAmountDeclared, TransactionDate)
-                                        VALUES(source.EmployerAccountId, source.Scheme, source.PayrollYear, source.PayrollMonth, source.LevyAmountDeclared, source.TransactionDate);",
+                                        INSERT(EmployerAccountId, Scheme, PayrollYear, PayrollMonth, PayrollDate, LevyAmountDeclared, TransactionDate)
+                                        VALUES(source.EmployerAccountId, source.Scheme, source.PayrollYear, source.PayrollMonth, source.PayrollDate, source.LevyAmountDeclared, source.TransactionDate);",
                 parameters,
                 commandType: CommandType.Text);
         }

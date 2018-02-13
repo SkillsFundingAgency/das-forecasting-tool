@@ -39,6 +39,9 @@
     <Reference Include="Hashids.net, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hashids.net.1.2.2\lib\net45\Hashids.net.dll</HintPath>
     </Reference>
+    <Reference Include="MediatR, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediatR.4.0.1\lib\net45\MediatR.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
     </Reference>
@@ -111,14 +114,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Commitments\Handlers\RecordCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
+    <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
+    <Compile Include="Infrastructure\Registries\StructrMapRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Services\EmployerPaymmentDataService.cs" />
     <Compile Include="Projections\Handlers\GenerateLevyAccountProjectionHandler.cs" />
+    <Compile Include="Projections\Handlers\GeneratePaymentAccountProjectionHandler.cs" />
     <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
     <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />

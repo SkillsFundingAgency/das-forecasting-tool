@@ -18,9 +18,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
         }
 
-        public Task<List<Commitment>> GetCurrentCommitments(long employerAccountId)
+        public async Task<List<Commitment>> GetCurrentCommitments(long employerAccountId)
         {
-            return WithConnection(async cnn =>
+            return await WithConnection(async cnn =>
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                 [CompletionAmount],
                                 [MonthlyInstallment],
                                 [NumberOfInstallments]
-                                From Commitments
+                                From Commitment
                                 Where EmployerAccountId = @employerAccountId and ActualEndDate Is Null";
 
                 var commitments = await cnn.QueryAsync<Commitment>(

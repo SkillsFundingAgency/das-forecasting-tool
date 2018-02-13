@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
         }
 
-        public void AddCommitment(long apprenticeshipId, long learnerId, DateTime startDate, DateTime plannedEndDate,
+        public bool AddCommitment(long apprenticeshipId, long learnerId, DateTime startDate, DateTime plannedEndDate,
             DateTime? actualEndDate, decimal monthlyInstallment, decimal completionAmount, short numberOfInstallments)
         {
             var commitment = new Commitment
@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             if (results.Any())
             {
                 _eventPublisher.Publish(new ValidationFailure<Commitment>(results.ToList(), commitment));
-                return;
+                return false;
             }
 
             var existingCommitment = _commitments.FirstOrDefault(c =>
@@ -63,6 +63,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             }
             else
                 _commitments.Add(commitment);
+
+            return true;
         }
 
         public virtual decimal GetTotalCostOfTraining(DateTime date)

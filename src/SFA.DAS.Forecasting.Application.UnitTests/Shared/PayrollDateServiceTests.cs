@@ -23,8 +23,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Shared
             Assert.AreEqual(month, new PayrollDateService().GetPayrollDate("17-18", payrollMonth).Month);
         }
 
-        [TestCase("17-18", 17)]
-        [TestCase("18-19", 18)]
+        [TestCase("17-18", 2017)]
+        [TestCase("18-19", 2018)]
         public void Converts_Payroll_Year(string payrollYear, int year)
         {
             Assert.AreEqual(year, new PayrollDateService().GetPayrollDate(payrollYear, 1).Year);

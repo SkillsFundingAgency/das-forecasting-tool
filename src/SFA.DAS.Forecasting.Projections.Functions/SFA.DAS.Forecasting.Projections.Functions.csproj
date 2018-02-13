@@ -3,9 +3,19 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="NLog.Config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NLog.Config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.1.0-beta4" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
-    <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.56651" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />
+    <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.0.0.47445" />
     <PackageReference Include="StructureMap" Version="4.6.1" />
   </ItemGroup>
   <ItemGroup>

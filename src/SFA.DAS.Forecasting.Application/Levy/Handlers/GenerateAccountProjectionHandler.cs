@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Projections;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers

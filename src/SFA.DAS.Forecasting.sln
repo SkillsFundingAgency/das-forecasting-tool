@@ -26,6 +26,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{4E2AC790-1A6F-4B56-8609-0F576BFF3613}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.AcceptanceTests", "SFA.DAS.Forecasting.AcceptanceTests\SFA.DAS.Forecasting.AcceptanceTests.csproj", "{B0AB734A-AA53-4F32-92A0-0C7ADD6A336C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4E2AC790-1A6F-4B56-8609-0F576BFF3613} = {4E2AC790-1A6F-4B56-8609-0F576BFF3613}
+		{F36C43B1-49D5-4820-BCA7-32C73B110C99} = {F36C43B1-49D5-4820-BCA7-32C73B110C99}
+		{602A91CA-3FC9-4A33-8B50-2714173EA22C} = {602A91CA-3FC9-4A33-8B50-2714173EA22C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Domain.UnitTests", "SFA.DAS.Forecasting.Domain.UnitTests\SFA.DAS.Forecasting.Domain.UnitTests.csproj", "{B854C713-F745-413F-A493-22A5F5B13689}"
 EndProject
