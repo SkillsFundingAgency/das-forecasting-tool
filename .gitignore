@@ -9,6 +9,8 @@
 
 # Settings
 */local.settings.json
+*/Web.Debug.config
+src/SFA.DAS.Forecasting.Web/Web.Debug.config
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
