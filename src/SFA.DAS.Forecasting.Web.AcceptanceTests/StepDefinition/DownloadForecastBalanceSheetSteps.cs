@@ -97,6 +97,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         //    public decimal TotalCostOfTraining { get; set; }
         //    public decimal CompletionPayments { get; set; }
         //    public decimal FutureFunds { get; set; }
-        }
+       // }
     }
 }
