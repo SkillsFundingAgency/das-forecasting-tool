@@ -132,7 +132,6 @@
     <Compile Include="Payments\EarningDetailsValidatorTests.cs" />
     <Compile Include="Payments\PaymentEventSuperficialValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared\EmployerDatabaseServiceTests.cs" />
     <Compile Include="Shared\PayrollDateServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
