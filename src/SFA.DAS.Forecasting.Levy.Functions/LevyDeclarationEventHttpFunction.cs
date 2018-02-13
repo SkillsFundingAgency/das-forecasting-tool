@@ -14,12 +14,12 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     {
         [FunctionName("LevyDeclarationEventHttpFunction")]
         [return: Queue(QueueNames.ValidateDeclaration)]
-        public static async Task<LevySchemeDeclarationUpdatedMessage> Run(
+        public static LevySchemeDeclarationUpdatedMessage Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationEventHttpFunction")]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedEvent, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevySchemeDeclarationUpdatedMessage>(writer,
-                async (container, logger) =>
+            return  FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevySchemeDeclarationUpdatedMessage>(writer,
+                 (container, logger) =>
                 {
                     logger.Debug($"Received levy scheme declaration event via http endpoint: {levySchemeUpdatedEvent.ToDebugJson()}");
                     return levySchemeUpdatedEvent;

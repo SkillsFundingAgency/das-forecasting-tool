@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Projections;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers
@@ -29,7 +29,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
         {
             _logger.Debug($"Now generating account projections for id: {levySchemeDeclaration.AccountId} in response to Levy event.");
             var accountProjections = await _accountProjectionRepository.Get(levySchemeDeclaration.AccountId);
-            accountProjections.BuildLevyTriggeredProjections(DateTime.Today,_applicationConfiguration.NumberOfMonthsToProject);
+            accountProjections.BuildLevyTriggeredProjections(DateTime.Today, _applicationConfiguration.NumberOfMonthsToProject);
             foreach (var accountProjectionReadModel in accountProjections.Projections)
             {
                 _logger.Debug($"Generated projection: {accountProjectionReadModel.ToJson()}");

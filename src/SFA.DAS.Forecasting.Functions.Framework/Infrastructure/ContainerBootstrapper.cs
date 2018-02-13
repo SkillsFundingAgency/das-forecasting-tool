@@ -6,12 +6,12 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
     public class ContainerBootstrapper : Registry
     {
         private static readonly object LockObject = new object();
-        private static IContainer container;
+        private static IContainer _container;
         public static IContainer Bootstrap()
         {
             lock (LockObject)
             {
-                return container ?? (container = new Container(c =>
+                return _container ?? (_container = new Container(c =>
                 {
                     c.Scan(o => {
                         o.LookForRegistries();

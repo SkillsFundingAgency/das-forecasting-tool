@@ -25,6 +25,7 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Azure.WebJobs">

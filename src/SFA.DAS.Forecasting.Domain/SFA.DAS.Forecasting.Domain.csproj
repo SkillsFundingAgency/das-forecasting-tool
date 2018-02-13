@@ -48,7 +48,7 @@
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
@@ -81,7 +81,9 @@
     <Compile Include="Commitments\Validation\CommitmentEndDateValidator.cs" />
     <Compile Include="Commitments\Validation\ICommitmentValidator.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
+    <Compile Include="Payments\CommitmentRepository.cs" />
     <Compile Include="Payments\EmployerPaymentRepository.cs" />
+    <Compile Include="Payments\Services\ICommitmentDataService.cs" />
     <Compile Include="Payments\Services\IEmployerPaymentDataService.cs" />
     <Compile Include="Projections\AccountProjection.cs" />
     <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Levy\Validation\LevyDeclarationTransactionDateValidator.cs" />
     <Compile Include="Payments\EmployerPayment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\IPayrollDateService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -4,12 +4,16 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "StorageConnectionString": "UseDevelopmentStorage=true",
+    "ForecastingConnectionString": "Data Source=(localdb)\\ProjectsV13;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True",
     "AzureWebJobsServiceBus": "",
     "ConnectionStringKey": "localhost",
     "EnvironmentKey": "LOCAL",
     "LoggingRedisKey": "logstash",
     "EnvironmentName": "LOCAL",
-    "DelayTimeInSeconds": 5
+    "SecondsToWaitToAllowProjections": 5,
+    "HashString": "hash n beans",
+    "AllowedHashstringCharacters": "abcdefgh",
+    "NumberOfMonthsToProject": "48"
   },
   "Host": {
     "LocalHttpPort": 7071,

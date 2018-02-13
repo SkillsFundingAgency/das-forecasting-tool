@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
             var lastReceivedTime = levyPeriod.GetLastTimeReceivedLevy();
             if (lastReceivedTime == null)
                 throw new InvalidOperationException($"Invalid last time received");
-            var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowAggregation) <= DateTime.Now;
+            var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.Now;
             Logger.Info($"Allow projections '{allowProjections}' for employer '{levySchemeDeclaration.AccountId}' in response to levy event.");
             return allowProjections;
         }

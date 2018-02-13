@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
+using SFA.DAS.Forecasting.Domain.Shared;
 
 namespace SFA.DAS.Forecasting.Domain.Levy
 {
@@ -13,17 +14,19 @@ namespace SFA.DAS.Forecasting.Domain.Levy
     public class LevyPeriodRepository: ILevyPeriodRepository
     {
         public ILevyDataService LevyDataService { get; }
+        public IPayrollDateService PayrollDateService { get; }
 
-        public LevyPeriodRepository(ILevyDataService levyDataService)
+        public LevyPeriodRepository(ILevyDataService levyDataService, IPayrollDateService payrollDateService)
         {
             LevyDataService = levyDataService ?? throw new ArgumentNullException(nameof(levyDataService));
+            PayrollDateService = payrollDateService ?? throw new ArgumentNullException(nameof(payrollDateService));
         }
 
         public async Task<LevyPeriod> Get(long employerAccountId, string payrollYear, short payrollMonth)
         {
             var levyDeclarations =
                 await LevyDataService.GetLevyDeclarationsForPeriod(employerAccountId, payrollYear, (byte)payrollMonth);
-            var levyPeriod = new LevyPeriod();
+            var levyPeriod = new LevyPeriod(PayrollDateService);
             levyPeriod.LevyDeclarations.AddRange(levyDeclarations);
             return levyPeriod;
         }

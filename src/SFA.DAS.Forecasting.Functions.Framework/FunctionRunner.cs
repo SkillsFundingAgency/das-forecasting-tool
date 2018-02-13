@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions",string.Empty));
+                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -32,11 +32,30 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
             catch (Exception ex)
             {
-                if(logger != null)
+                if (logger != null)
                     logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
                 else
                     writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
 
+                throw;
+            }
+        }
+
+        public static TReturn Run<TFunction, TReturn>(TraceWriter writer, Func<IContainer, ILog, TReturn> runAction) where TFunction : IFunction
+        {
+            try
+            {
+                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
+                var container = ContainerBootstrapper.Bootstrap();
+                using (container.GetNestedContainer())
+                {
+                    container.Configure(c => c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType)));
+                    return runAction(container, container.GetInstance<ILog>());
+                }
+            }
+            catch (Exception ex)
+            {
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
         }
@@ -46,7 +65,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
+                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -71,13 +90,18 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             container.Configure(c =>
             {
                 c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType));
-                c.For<IHashingService>().Use(new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
+                c.ForSingletonOf<IHashingService>()
+                    .Use<HashingService.HashingService>()
+                    .Ctor<string>("allowedCharacters").Is(config.AllowedHashstringCharacters)
+                    .Ctor<string>("hashstring").Is(config.Hashstring);
+
+                //c.For<IHashingService>().Use(new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
                 c.For<IAccountApiClient>().Use<AccountApiClient>()
                     .Ctor<IAccountApiConfiguration>().Is(config.AccountApi);
             });
         }
 
-        private static T2 SetUpConfiguration<T1, T2>(string serviceName)  where T2 : class, T1
+        private static T2 SetUpConfiguration<T1, T2>(string serviceName) where T2 : class, T1
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
@@ -90,7 +114,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(serviceName, environment, "1.0"));
 
-            
+
             var result = configurationService.Get<T2>();
 
             var container = ContainerBootstrapper.Bootstrap();
