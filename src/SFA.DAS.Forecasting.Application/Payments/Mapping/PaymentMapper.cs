@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Mapping
@@ -23,6 +24,27 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				},
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
 				ReceivedTime = DateTime.Now
+			};
+		}
+
+		public Commitment MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
+		{
+			return new Commitment
+			{
+				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
+				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
+				LearnerId = paymentCreatedMessage.Uln,
+				StartDate = paymentCreatedMessage.EarningDetails.StartDate,
+				PlannedEndDate = paymentCreatedMessage.EarningDetails.PlannedEndDate,
+				ActualEndDate = paymentCreatedMessage.EarningDetails.ActualEndDate,
+				CompletionAmount = paymentCreatedMessage.EarningDetails.CompletionAmount,
+				MonthlyInstallment = paymentCreatedMessage.EarningDetails.MonthlyInstallment,
+				NumberOfInstallments = (short)paymentCreatedMessage.EarningDetails.TotalInstallments,
+				ProviderId = paymentCreatedMessage.Ukprn,
+				ProviderName = paymentCreatedMessage.ProviderName,
+				ApprenticeName = paymentCreatedMessage.ApprenticeName,
+				CourseName = paymentCreatedMessage.CourseName,
+				CourseLevel = paymentCreatedMessage.CourseLevel
 			};
 		}
 	}

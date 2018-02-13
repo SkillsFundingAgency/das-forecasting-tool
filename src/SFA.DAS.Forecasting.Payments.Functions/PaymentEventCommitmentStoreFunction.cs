@@ -18,10 +18,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             await FunctionRunner.Run<PaymentEventStoreFunction, int>(writer,
                 async (container, logger) =>
                 {
-	                var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
+	                var handler = container.GetInstance<ProcessEmployerCommitmentHandler>();
 	                var mapper = container.GetInstance<PaymentMapper>();
 
-					await handler.Handle(mapper.MapToPayment(paymentCreatedMessage));
+					await handler.Handle(mapper.MapToCommitment(paymentCreatedMessage));
 
                     return await Task.FromResult(1);
                 });
