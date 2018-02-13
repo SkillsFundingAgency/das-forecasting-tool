@@ -9,6 +9,7 @@
 
 # Settings
 */local.settings.json
+*/Web.Debug.config
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
