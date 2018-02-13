@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Forecasting.Domain.Levy.Validation;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Levy;
 
 namespace SFA.DAS.Forecasting.Domain.Levy
 {
     public class LevyPeriod
     {
+        private readonly IPayrollDateService _payrollDateService;
         internal readonly List<LevyDeclaration> LevyDeclarations;
         private readonly LevyDeclarationTransactionDateValidator _levyDeclarationTransactionDateValidator;
 
         //TODO: should really be internal but unit tests need access to constructor. 
-        public LevyPeriod()
+        public LevyPeriod(IPayrollDateService payrollDateService)
         {
+            _payrollDateService = payrollDateService ?? throw new ArgumentNullException(nameof(payrollDateService));
             LevyDeclarations = new List<LevyDeclaration>();
             _levyDeclarationTransactionDateValidator = new LevyDeclarationTransactionDateValidator();
         }
@@ -33,6 +36,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy
                     Scheme = scheme,
                     PayrollYear = payrollYear,
                     PayrollMonth = payrollMonth,
+                    PayrollDate = _payrollDateService.GetPayrollDate(payrollYear, payrollMonth)
                 });
             }
 

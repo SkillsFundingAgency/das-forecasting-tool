@@ -2,7 +2,7 @@
 {
     public class PayrollPeriod
     {
-        public string Year { get; set; }
-        public short Month { get; set; }
+        public string PayrollYear { get; set; }
+        public short PayrollMonth { get; set; }
     }
 }

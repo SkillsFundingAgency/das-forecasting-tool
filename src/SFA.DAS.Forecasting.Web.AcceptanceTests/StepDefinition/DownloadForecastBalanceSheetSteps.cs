@@ -46,5 +46,17 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             string pattern = @"esfaforecast_\d{4}\d{2}\d{2}\d{2}\d{2}\d{2}";
             Assert.IsTrue(Regex.IsMatch(this.targetFilename, pattern, RegexOptions.ECMAScript));
         }
+        //[Then(@"column headers are downloaded")]
+        //public void ThenColumnHeadersAreDownloaded()
+        //{
+        //    ScenarioContext.Current.Pending();
+        //}
+
+        //[Then(@"all of the rows have been downloaded")]
+        //public void ThenAllOfTheRowsHaveBeenDownloaded()
+        //{
+        //    ScenarioContext.Current.Pending();
+        //}
+
     }
 }

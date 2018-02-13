@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SFA.DAS.Forecasting.Payments.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "host start"
+    }
+  }
+}
