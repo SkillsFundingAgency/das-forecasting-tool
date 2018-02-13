@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                         csvWriter.WriteRecords(results);
                         streamWriter.Flush();
                         memoryStream.Position = 0;
-                        return File(memoryStream.ToArray(), "text/csv", $"esfaforecast_{DateTime.Now.ToString("yyyyMMddhhmmss")}.csv");
+                        return File(memoryStream.ToArray(), "text/csv", $"esfaforecast_{DateTime.Now:yyyyMMddhhmmss}.csv");
                     }
                 }
             }

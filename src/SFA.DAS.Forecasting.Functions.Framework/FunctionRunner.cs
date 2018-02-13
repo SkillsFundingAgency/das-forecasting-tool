@@ -21,7 +21,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -45,7 +44,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             try
             {
-                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -65,7 +63,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                //SetUpConfiguration<IApplicationConfiguration, ApplicationConfiguration>(typeof(TFunction).Namespace?.Replace(".Functions", string.Empty));
                 var container = ContainerBootstrapper.Bootstrap();
                 using (container.GetNestedContainer())
                 {
@@ -94,10 +91,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                     .Use<HashingService.HashingService>()
                     .Ctor<string>("allowedCharacters").Is(config.AllowedHashstringCharacters)
                     .Ctor<string>("hashstring").Is(config.Hashstring);
-
-                //c.For<IHashingService>().Use(new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
-                c.For<IAccountApiClient>().Use<AccountApiClient>()
-                    .Ctor<IAccountApiConfiguration>().Is(config.AccountApi);
             });
         }
 

@@ -2,18 +2,6 @@
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
-    public interface IApplicationConfiguration
-    {
-        string DatabaseConnectionString { get; }
-        string StorageConnectionString { get;  }
-        string BackLink { get;  }
-        string AllowedHashstringCharacters { get;  }
-        string Hashstring { get;  }
-        int SecondsToWaitToAllowProjections { get; }
-        int NumberOfMonthsToProject { get;  }
-        AccountApiConfiguration AccountApi { get; set; }
-    }
-
     public class ApplicationConfiguration: IApplicationConfiguration
     {
         public string DatabaseConnectionString { get; set; }
@@ -25,4 +13,5 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public int NumberOfMonthsToProject { get; set; }
         public AccountApiConfiguration AccountApi { get; set; }
     }
+
 }

@@ -15,41 +15,37 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Configuration;
 using System.Net.NetworkInformation;
-using SFA.DAS.Configuration;
-using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
 
-
 namespace SFA.DAS.Forecasting.Web.DependencyResolution
 {
-
-    public class DefaultRegistry : Registry {
+    public class DefaultRegistry : Registry
+    {
         private const string ServiceName = "SFA.DAS.Forecasting";
         private const string ServiceNamespace = "SFA.DAS";
 
-        public DefaultRegistry() {
+        public DefaultRegistry()
+        {
             Scan(
-                scan => {
+                scan =>
+                {
                     scan.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith(ServiceNamespace));
                     scan.TheCallingAssembly();
-                    scan.RegisterConcreteTypesAgainstTheFirstInterface();                    
+                    scan.RegisterConcreteTypesAgainstTheFirstInterface();
                     scan.AssemblyContainingType<Ping>();
                 });
 
             ConfigureLogging();
-
-            var config = GetConfiguration();
-
-            For<IApplicationConfiguration>().Use(config);
-            For<IHashingService>().Use(x => new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
+            ForSingletonOf<IHashingService>()
+                .Use<HashingService.HashingService>()
+                .Ctor<string>("allowedCharacters").Is(ctx =>
+                    ctx.GetInstance<IApplicationConfiguration>().AllowedHashstringCharacters)
+                .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().Hashstring);
         }
-
 
         private void ConfigureLogging()
         {
@@ -57,23 +53,6 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
                 x.ParentType,
                 null,
                 null)).AlwaysUnique();
-        }
-
-        private IApplicationConfiguration GetConfiguration()
-        {
-            var environment = Environment.GetEnvironmentVariable("DASENV");
-            if (string.IsNullOrEmpty(environment))
-            {
-                environment = ConfigurationManager.AppSettings["EnvironmentName"];
-            }
-            
-            var configurationRepository = new AzureTableStorageConfigurationRepository(ConfigurationManager.AppSettings["ConfigurationStorageConnectionString"]);
-            var configurationService = new ConfigurationService(configurationRepository,
-                new ConfigurationOptions(ServiceName, environment, "1.0"));
-
-            var result = configurationService.Get<ApplicationConfiguration>();
-
-            return result;
         }
     }
 }
