@@ -94,6 +94,86 @@ this.FeatureBackground();
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 14
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 15
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 16
+     testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC2 - Forecast data is displayed correctly when forecast between payments made an" +
+            "d 23rd of month")]
+        public virtual void AC2_ForecastDataIsDisplayedCorrectlyWhenForecastBetweenPaymentsMadeAnd23RdOfMonth()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2 - Forecast data is displayed correctly when forecast between payments made an" +
+                    "d 23rd of month", ((string[])(null)));
+#line 20
+  this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Date",
+                        "Funds in",
+                        "Cost Of Training",
+                        "Completion Payments",
+                        "Future Funds"});
+            table1.AddRow(new string[] {
+                        "Jan 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+            table1.AddRow(new string[] {
+                        "Feb 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+            table1.AddRow(new string[] {
+                        "Mar 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+            table1.AddRow(new string[] {
+                        "Apr 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+            table1.AddRow(new string[] {
+                        "Jun 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+            table1.AddRow(new string[] {
+                        "Jul 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+            table1.AddRow(new string[] {
+                        "Aug 18",
+                        "1000",
+                        "0",
+                        "0",
+                        "1000"});
+#line 22
+  testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
+#line 32
+  testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 33
+  testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 34
+  testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 35
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 36
+  testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

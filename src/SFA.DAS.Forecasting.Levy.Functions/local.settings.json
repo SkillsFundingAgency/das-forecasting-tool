@@ -4,7 +4,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "StorageConnectionString": "UseDevelopmentStorage=true",
-    "ForecastingConnectionString": "Data Source=.;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True",
+    "ForecastingConnectionString": "Data Source=(localdb)\\ProjectsV13;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True",
     "AzureWebJobsServiceBus": "",
     "ConnectionStringKey": "localhost",
     "EnvironmentKey": "LOCAL",
