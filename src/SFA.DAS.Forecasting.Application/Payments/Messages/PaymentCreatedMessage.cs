@@ -2,10 +2,10 @@
 
 namespace SFA.DAS.Forecasting.Application.Payments.Messages
 {
-	/// <summary>
-	/// TODO: Temp event definition. this will be replaced by the actual Payment event published by the employer services.
-	/// </summary>
-	public class PaymentCreatedMessage
+    /// <summary>
+    /// TODO: Temp event definition. this will be replaced by the actual Payment event published by the employer services.
+    /// </summary>
+    public class PaymentCreatedMessage
     {
         public string Id { get; set; }
 		public long EmployerAccountId { get; set; }
@@ -23,7 +23,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
         public EarningDetails EarningDetails { get; set; }
 	    public CollectionPeriod CollectionPeriod { get; set; }
     }
-
 
     //public class PaymentCreatedMessage : AccountMessageBase
     //{

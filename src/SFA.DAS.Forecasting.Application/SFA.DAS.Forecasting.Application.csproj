@@ -115,6 +115,8 @@
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
+    <Compile Include="Payments\Messages\PreLoadPaymentMessage.cs" />
+    <Compile Include="Payments\Services\EmployerDataService.cs" />
     <Compile Include="Payments\Services\EmployerPaymmentDataService.cs" />
     <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
     <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
@@ -124,6 +126,7 @@
     <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Messages\LevyDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Services\LevyDataService.cs" />
+    <Compile Include="Shared\Services\EmployerDatabaseService.cs" />
     <Compile Include="Shared\Services\EmployerDataService.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationEventValidator.cs" />
     <Compile Include="Payments\Mapping\PaymentMapper.cs" />

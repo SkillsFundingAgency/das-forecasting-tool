@@ -2,6 +2,7 @@
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerAccounts.Events.Messages;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using System;
@@ -58,18 +59,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             };
         }
 
-        //public async Task<IOrderedEnumerable<TransactionViewModel>> GetTransaction(string employerId, int year, int month)
-        //{
-        //    var res = await _accountApiClient.GetTransactions(employerId, year, month);
-
-        //    if (res == null)
-        //    {
-        //        _logger.Debug($"Account API client returned null for GetTransactions");
-        //        return null;
-        //    }
-
-        //    //PaymentCreatedMessage
-        //    return res.First();
-        //}
+        public async Task<EarningDetails> PaymentForPeriod(CollectionPeriod collectionPeriod, long employerAccountId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
