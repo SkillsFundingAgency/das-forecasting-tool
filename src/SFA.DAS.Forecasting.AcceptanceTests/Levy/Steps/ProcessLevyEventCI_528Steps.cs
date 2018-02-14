@@ -14,6 +14,7 @@ using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using System.Threading;
+using System.IO;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -21,6 +22,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     public class ProcessLevyEventCI_528Steps : StepsBase
     {
         private AzureTableService _azureTableService;
+        private static string Url = Path.Combine(Config.LevyFunctionUrl, "LevyDeclarationEventHttpFunction");
+
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         [Scope(Feature = "Process Levy Event [CI-528]")]
         [BeforeFeature(Order = 1)]
@@ -117,8 +120,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             .ForEach(levyEvent =>
             {
                 var payload = levyEvent.ToJson();
-                Console.WriteLine($"Sending levy event to levy function: {Config.LevyFunctionUrl}, Payload: {payload}");
-                var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
+                Console.WriteLine($"Sending levy event to levy function: {Url}, Payload: {payload}");
+                var response = HttpClient.PostAsync(Url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
                 Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             });
         }

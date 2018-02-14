@@ -6,24 +6,22 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Application.Levy.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
-    public static class LevyDeclarationPreLoadHttpFunction
+    public class LevyDeclarationPreLoadHttpFunction : IFunction
     {
         [FunctionName("LevyDeclarationPreLoadHttpFunction")]
         [return: Queue(QueueNames.ValidateDeclaration)]
         public static async Task Run(
             [HttpTrigger(AuthorizationLevel.Function, 
-            "post", 
-            Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
+            "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
             [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<LevyDeclarationEventHttpFunction>(writer,
+            await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction>(writer,
                async (container, logger) =>
                {
                    var body = await req.Content.ReadAsStringAsync();
