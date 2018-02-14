@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Payments.Mapping;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Payments;
-using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers
@@ -20,9 +21,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task Handle(Payment employerPayment)
+        public async Task Handle(PaymentCreatedMessage paymentCreatedMessage)
         {
-            Logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, year: {employerPayment.CollectionPeriod.Year}, month: {employerPayment.CollectionPeriod.Month}");
+	        var mapper = new PaymentMapper();
+	        var employerPayment = mapper.MapToPayment(paymentCreatedMessage);
+
+			Logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, year: {employerPayment.CollectionPeriod.Year}, month: {employerPayment.CollectionPeriod.Month}");
 			await Repository.StorePayment(employerPayment);
             Logger.Info($"Finished adding the employer payment. Employer payment: {JsonConvert.SerializeObject(employerPayment)}");
         }

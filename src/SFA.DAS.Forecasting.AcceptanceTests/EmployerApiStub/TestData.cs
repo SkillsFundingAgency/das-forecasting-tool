@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
                 new LevyDeclarationViewModel
                 {
                     HashedAccountId = accountId,
-                    PayrollYear = "2018-19",
+                    PayrollYear = "18-19",
                     PayrollMonth = 1,
                     CreatedDate = DateTime.UtcNow,
                     PayeSchemeReference = "World",
@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
                 new LevyDeclarationViewModel
                 {
                     HashedAccountId = accountId,
-                    PayrollYear = "2017-18",
+                    PayrollYear = "17-18",
                     PayrollMonth = 12,
                     CreatedDate = DateTime.UtcNow,
                     PayeSchemeReference = "World",

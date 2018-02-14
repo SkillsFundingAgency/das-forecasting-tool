@@ -14,6 +14,7 @@ using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using System.Threading;
+using System.IO;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -98,8 +99,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             .ForEach(levyEvent =>
             {
                 var payload = levyEvent.ToJson();
-                Console.WriteLine($"Sending levy event to levy function: {Config.LevyFunctionUrl}, Payload: {payload}");
-                var response = HttpClient.PostAsync(Config.LevyFunctionUrl, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
+                var url = Config.LevyFunctionUrl;
+                Console.WriteLine($"Sending levy event to levy function: {url}, Payload: {payload}");
+                var response = HttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
                 Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             });
         }

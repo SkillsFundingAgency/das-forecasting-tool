@@ -19,9 +19,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 async (container, logger) =>
                 {
 	                var handler = container.GetInstance<ProcessEmployerCommitmentHandler>();
-	                var mapper = container.GetInstance<PaymentMapper>();
-
-					await handler.Handle(mapper.MapToCommitment(paymentCreatedMessage));
+	                
+					await handler.Handle(paymentCreatedMessage);
 
                     return await Task.FromResult(1);
                 });
