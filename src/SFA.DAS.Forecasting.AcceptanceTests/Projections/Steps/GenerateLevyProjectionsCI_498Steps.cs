@@ -86,6 +86,32 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             });
         }
 
+        [Then(@"calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes")]
+        public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSumOfTheLinkedPAYESchemes()
+        {
+            WaitForIt(() =>
+            {
+                var projections = new List<AccountProjectionReadModel>();
+                ExecuteSql(() =>
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+
+                    projections = Connection.Query<AccountProjectionReadModel>(
+                        "Select * from AccountProjection where EmployerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                });
+
+                if (projections.Any(projection => projection.FundsIn == LevySubmissions.Sum(levy => levy.Amount)))
+                {
+                    projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}"));
+                    AccountProjections = projections;
+                    return true;
+                }
+                return false;
+            });
+        }
+
+
         [Then(@"each future month's forecast levy credit should be the same")]
         public void ThenEachFutureMonthSForecastLevyCreditShouldBeTheSame()
         {

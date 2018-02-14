@@ -29,5 +29,5 @@ Scenario: AC2: Calculate forecast levy credit value when multiple linked PAYE sc
 	| ABC-5678 | 3500   | Today        |
 	| ABC-9012 | 8500   | Today        |
 	When the account projection is generated
-	Then calculated levy credit value should be the amount declared for the single linked PAYE scheme
+	Then calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes
 	And each future month's forecast levy credit should be the same

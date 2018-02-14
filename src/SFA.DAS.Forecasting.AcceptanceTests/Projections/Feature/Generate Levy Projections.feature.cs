@@ -169,8 +169,8 @@ this.FeatureBackground();
 #line 31
  testRunner.When("the account projection is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 32
- testRunner.Then("calculated levy credit value should be the amount declared for the single linked " +
-                    "PAYE scheme", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("calculated levy credit value should be the amount declared for the sum of the lin" +
+                    "ked PAYE schemes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 33
  testRunner.And("each future month\'s forecast levy credit should be the same", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
