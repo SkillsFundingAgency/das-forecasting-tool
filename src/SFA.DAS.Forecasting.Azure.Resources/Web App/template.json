@@ -39,6 +39,9 @@
     "DatabaseConnectionString": {
       "type": "string"
     },
+    "StorageConnectionString": {
+      "type": "string"
+    },
     "databaseUsername": {
       "type": "string"
     },
@@ -93,6 +96,10 @@
               {
                 "name": "DatabaseConnectionString",
                 "value": "[parameters('DatabaseConnectionString')]"
+              },
+              {
+                "name": "StorageConnectionString",
+                "value": "[parameters('StorageConnectionString')]"
               }
             ],
             "connectionStrings": [
