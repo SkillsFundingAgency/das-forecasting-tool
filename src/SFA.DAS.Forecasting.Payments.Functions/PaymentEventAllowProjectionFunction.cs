@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             [QueueTrigger(QueueNames.AllowProjection)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStoreFunction, PaymentCreatedMessage>(writer,
+            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, PaymentCreatedMessage>(writer,
                 async (container, logger) =>
                 {
 					logger.Debug("Getting payment declaration handler from container.");
