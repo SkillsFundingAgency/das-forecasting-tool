@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "__appName__"
+    },
+    "hostingPlanName": {
+      "value": "__appHostingPlanName__"
+    },
+    "hostingEnvironment": {
+      "value": "__appHostingEnvironment__"
+    },
+    "location": {
+      "value": "__appLocation__"
+    },
+    "serverFarmResourceGroup": {
+      "value": "__appServerFarmResourceGroup__"
+    },
+    "subscriptionId": {
+      "value": "__appSubscriptionId__"
+    },
+    "EnvironmentName": {
+      "value": "__appSettingEnvironmentName__"
+    },
+    "RedisConnection": {
+      "value": "__appSettingRedisConnection__"
+    },
+    "LoggingRedisConnectionString": {
+      "value": "__appSettingLoggingRedisConnectionString__"
+    },
+    "LoggingRedisKey": {
+      "value": "__appSettingLoggingRedisKey__"
+    },
+    "AllowedHashstringCharacters": {
+      "value": "__appSettingAllowedHashstringCharacters__"
+    },
+    "HashString": {
+      "value": "__appSettingHashString__"
+    },
+    "DatabaseConnectionString": {
+      "value": "__appSettingDatabaseConnectionString__"
+    },
+    "StorageConnectionString": {
+      "value": "__appSettingStorageConnectionString__"
+    },
+    "databaseName": {
+      "value": "__connStringDatabaseName__"
+    },
+    "sqlServer": {
+      "value": "__connStringSqlServer__"
+    },
+    "databaseUsername": {
+      "value": "__connStringDatabaseUsername__"
+    },
+    "databasePassword": {
+      "value": "__connStringDatabasePassword__"
+    }
+  }
+}

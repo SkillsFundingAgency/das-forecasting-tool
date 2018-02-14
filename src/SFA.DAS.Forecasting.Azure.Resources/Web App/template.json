@@ -1,0 +1,151 @@
+{
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "hostingEnvironment": {
+      "type": "string"
+    },
+    "serverFarmResourceGroup": {
+      "type": "string"
+    },
+    "subscriptionId": {
+      "type": "string"
+    },
+    "EnvironmentName": {
+      "type": "string"
+    },
+    "RedisConnection": {
+      "type": "string"
+    },
+    "LoggingRedisConnectionString": {
+      "type": "string"
+    },
+    "LoggingRedisKey": {
+      "type": "string"
+    },
+    "AllowedHashstringCharacters": {
+      "type": "string"
+    },
+    "HashString": {
+      "type": "string"
+    },
+    "DatabaseConnectionString": {
+      "type": "string"
+    },
+    "StorageConnectionString": {
+      "type": "string"
+    },
+    "databaseUsername": {
+      "type": "string"
+    },
+    "databasePassword": {
+      "type": "securestring"
+    },
+    "databaseName": {
+      "type": "string"
+    },
+    "sqlServer": {
+      "type": "string"
+    }
+  },
+    "resources": [
+      {
+        "name": "[parameters('name')]",
+        "type": "Microsoft.Web/sites",
+        "dependsOn": [
+          "[resourceId('microsoft.insights/components/', parameters('name'))]"
+        ],
+        "properties": {
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+              },
+              {
+                "name": "EnvironmentName",
+                "value": "[parameters('EnvironmentName')]"
+              },
+              {
+                "name": "RedisConnection",
+                "value": "[parameters('RedisConnection')]"
+              },
+              {
+                "name": "LoggingRedisConnectionString",
+                "value": "[parameters('LoggingRedisConnectionString')]"
+              },
+              {
+                "name": "LoggingRedisKey",
+                "value": "[parameters('LoggingRedisKey')]"
+              },
+              {
+                "name": "AllowedHashstringCharacters",
+                "value": "[parameters('AllowedHashstringCharacters')]"
+              },
+              {
+                "name": "HashString",
+                "value": "[parameters('HashString')]"
+              },
+              {
+                "name": "DatabaseConnectionString",
+                "value": "[parameters('DatabaseConnectionString')]"
+              },
+              {
+                "name": "StorageConnectionString",
+                "value": "[parameters('StorageConnectionString')]"
+              }
+            ],
+            "connectionStrings": [
+              {
+                "name": "DatabaseConnectionString",
+                "ConnectionString": "[concat('Data Source=tcp:' , parameters('sqlServer'),'.database.windows.net' , ',1433;Initial Catalog=',parameters('databaseName'),';User Id=',parameters('databaseUsername'),';Password=',parameters('databasePassword'),';')]",
+                "type": "SQLAzure"
+              }
+            ],
+            "alwaysOn": true,
+            "phpVersion": "",
+            "use32BitWorkerProcess": false
+          },
+          "name": "[parameters('name')]",
+          "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+          "hostingEnvironment": "[parameters('hostingEnvironment')]"
+        },
+        "apiVersion": "2016-03-01",
+        "location": "[parameters('location')]",
+        "identity": {
+          "type": "SystemAssigned"
+        },
+        "tags": {
+          "[concat('hidden-related:', '/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
+        }
+      },
+      {
+        "apiVersion": "2015-05-01",
+        "name": "[parameters('name')]",
+        "type": "microsoft.insights/components",
+        "location": "[parameters('location')]",
+        "tags": {
+          "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('name'))]": "Resource"
+        },
+        "properties": {
+          "ApplicationId": "[parameters('name')]",
+          "Request_Source": "IbizaWebAppExtensionCreate"
+        }
+      }
+    ],    
+    "outputs": {
+      "identity": {
+        "type": "string",
+        "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
+      }
+    },
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0"
+}
