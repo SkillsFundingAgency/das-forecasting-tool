@@ -124,6 +124,7 @@
     <Compile Include="Infrastructure\MessageHandler.cs" />
     <Compile Include="Infrastructure\Registries\StructrMapRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
+    <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerCommitmentHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
