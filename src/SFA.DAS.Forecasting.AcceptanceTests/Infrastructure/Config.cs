@@ -13,7 +13,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
                                         (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);
         public string LevyFunctionUrl => GetAppSetting("LevyFunctionUrl");
         public string PaymentFunctionUrl => GetAppSetting("PaymentFunctionUrl");
-        public string ProjectionFunctionUrl => GetAppSetting("ProjectionFunctionUrl");
+        public string ProjectionPaymentFunctionUrl => GetAppSetting("ProjectionPaymentFunctionUrl");
+        public string ProjectionLevyFunctionUrl => GetAppSetting("ProjectionLevyFunctionUrl");
         public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));
         public string AzureStorageConnectionString => GetConnectionString("StorageConnectionString");
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");

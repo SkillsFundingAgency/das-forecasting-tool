@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Queue;
 using SFA.DAS.Forecasting.Application.Projections.Handlers;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.Projections;

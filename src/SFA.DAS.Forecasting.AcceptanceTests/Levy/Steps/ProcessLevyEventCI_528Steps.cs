@@ -20,31 +20,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     [Binding]
     public class ProcessLevyEventCI_528Steps : StepsBase
     {
-        private AzureTableService _azureTableService;
-        protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         [Scope(Feature = "Process Levy Event [CI-528]")]
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
         }
-
-        //[Scope(Feature = "ProcessLevyEvent [CI-528]")]
-        //[BeforeScenario]
-        //public void BeforeScenario()
-        //{
-        //    _azureTableService = new AzureTableService(Config.AzureStorageConnectionString, Config.LevyDeclarationsTable);
-        //    _azureTableService.EnsureExists();
-        //    _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
-        //}
-
-        //[Scope(Feature = "ProcessLevyEvent [CI-528]")]
-        //[AfterScenario]
-        //public void AfterScenario()
-        //{
-        //    _azureTableService.DeleteEntitiesStartingWith(EmployerAccountId.ToString());
-        //    Thread.Sleep(1000);
-        //}
 
         [Given(@"I'm a levy paying employer")]
         public void GivenIMALevyPayingEmployer()
