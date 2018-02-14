@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "value": "__funcName__"
+    },
+    "storageName": {
+      "value": "__funcStorageName__"
+    },
+    "storageAccountResourceGroup": {
+      "value": "__funcStorageAccountResourceGroup__"
+    },
+    "hostingPlanName": {
+      "value": "__funcHostingPlanName__"
+    },
+    "hostingEnvironment": {
+      "value": "__funcHostingEnvironment__"
+    },
+    "location": {
+      "value": "__funcLocation__"
+    },
+    "serverFarmResourceGroup": {
+      "value": "__funcServerFarmResourceGroup__"
+    },
+    "subscriptionId": {
+      "value": "__funcSubscriptionId__"
+    },
+    "PaymentsApiBaseUrl": {
+      "value": "__funcAppSettingPaymentsApiBaseUrl__"
+    },
+    "PaymentsApiToken": {
+      "value": "__funcAppSettingPaymentsApiToken__"
+    },
+    "Environment": {
+      "value": "__funcAppSettingEnvironment__"
+    },
+    "DbConnectionString": {
+      "value": "__funcAppSettingDbConnectionString__"
+    }
+  }
+}
