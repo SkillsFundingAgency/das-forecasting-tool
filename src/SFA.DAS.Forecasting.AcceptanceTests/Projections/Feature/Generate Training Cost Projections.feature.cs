@@ -18,22 +18,22 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Generate Completion Payment Projections [CI-506]")]
-    public partial class GenerateCompletionPaymentProjectionsCI_506Feature
+    [NUnit.Framework.DescriptionAttribute("Generate Training Cost Projections [CI-499]")]
+    public partial class GenerateTrainingCostProjectionsCI_499Feature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Generate Completion Payment Projections.feature"
+#line 1 "Generate Training Cost Projections.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Generate Completion Payment Projections [CI-506]", "\tAs an employer with a pay bill over £3 million each year and therefore must now " +
-                    "pay the apprenticeship levy\r\n\tI want my completion costs to be forecast for the " +
-                    "next 4 years\r\n\tSo that I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Generate Training Cost Projections [CI-499]", "\tAs an employer with a pay bill over £3 million each year and therefore must now " +
+                    "pay the apprenticeship levy\r\n\tI want my trainging costs to be forecast for the n" +
+                    "ext 4 years\r\n\tSo that I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -96,10 +96,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC1: Commitments with end dates in forecast period")]
-        public virtual void AC1CommitmentsWithEndDatesInForecastPeriod()
+        [NUnit.Framework.DescriptionAttribute("AC1: Training cost for commitments included in the projection")]
+        public virtual void AC1TrainingCostForCommitmentsIncludedInTheProjection()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: Commitments with end dates in forecast period", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: Training cost for commitments included in the projection", ((string[])(null)));
 #line 16
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -120,9 +120,9 @@ this.FeatureBackground();
                         "1",
                         "Test Provider",
                         "Yesterday",
-                        "500",
-                        "3000",
-                        "24"});
+                        "250",
+                        "1500",
+                        "12"});
 #line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
 #line 20
@@ -130,16 +130,18 @@ this.FeatureBackground();
 #line 21
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 22
- testRunner.And("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC2: Multiple commitments with end dates in forecast period")]
-        public virtual void AC2MultipleCommitmentsWithEndDatesInForecastPeriod()
+        [NUnit.Framework.DescriptionAttribute("AC2: Training cost multiple apprenticeships with different numbers of instalments" +
+            "")]
+        public virtual void AC2TrainingCostMultipleApprenticeshipsWithDifferentNumbersOfInstalments()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Multiple commitments with end dates in forecast period", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Training cost multiple apprenticeships with different numbers of instalments" +
+                    "", ((string[])(null)));
 #line 24
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -160,12 +162,12 @@ this.FeatureBackground();
                         "1",
                         "Test Provider",
                         "Yesterday",
-                        "500",
-                        "3000",
-                        "24"});
+                        "250",
+                        "1500",
+                        "12"});
             table4.AddRow(new string[] {
                         "Test Apprentice 2",
-                        "Test Course 2",
+                        "Test Course",
                         "1",
                         "Test Provider",
                         "Yesterday",
@@ -174,79 +176,21 @@ this.FeatureBackground();
                         "24"});
             table4.AddRow(new string[] {
                         "Test Apprentice 3",
-                        "Test Course 3",
-                        "1",
-                        "Test Provider",
-                        "Last year",
-                        "250",
-                        "2000",
-                        "24"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice 4",
-                        "Test Course 3",
-                        "1",
-                        "Test Provider",
-                        "Last year",
-                        "250",
-                        "2000",
-                        "24"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice 5",
-                        "Test Course 4",
-                        "1",
-                        "Test Provider",
-                        "Next year",
-                        "100",
-                        "2000",
-                        "24"});
-#line 25
- testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
-#line 32
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 33
- testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
- testRunner.And("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC3: Multiple commitments and some with end dates after end of forecast period")]
-        public virtual void AC3MultipleCommitmentsAndSomeWithEndDatesAfterEndOfForecastPeriod()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: Multiple commitments and some with end dates after end of forecast period", ((string[])(null)));
-#line 36
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line hidden
-            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Apprentice Name",
-                        "Course Name",
-                        "Course Level",
-                        "Provider Name",
-                        "Start Date",
-                        "Installment Amount",
-                        "Completion Amount",
-                        "Number Of Installments"});
-            table5.AddRow(new string[] {
-                        "Test Apprentice 1",
                         "Test Course",
                         "1",
                         "Test Provider",
-                        "Next Year",
+                        "Last Year",
                         "1000",
                         "6000",
                         "48"});
-#line 37
- testRunner.Given("the following commitments have been recorded", ((string)(null)), table5, "Given ");
-#line 40
+#line 25
+ testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
+#line 30
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 41
+#line 31
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 42
- testRunner.And("the completion payments should not be included in the projection", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 32
+ testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

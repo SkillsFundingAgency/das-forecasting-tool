@@ -108,6 +108,11 @@
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Projections\Feature\Generate Training Cost Projections.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Generate Training Cost Projections.feature</DependentUpon>
+    </Compile>
     <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
@@ -146,6 +151,7 @@
     </Compile>
     <Compile Include="Projections\Steps\GenerateLevyProjectionsCI_498Steps.cs" />
     <Compile Include="Payments\TestCommitment.cs" />
+    <Compile Include="Projections\Steps\GenerateTrainingCostProjectionsCI_499Steps.cs" />
     <Compile Include="Services\AzureTableService.cs" />
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -184,6 +190,10 @@
     <None Include="Projections\Feature\Generate Completion Payment Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Generate Completion Payment Projections.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\Generate Training Cost Projections.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Generate Training Cost Projections.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
