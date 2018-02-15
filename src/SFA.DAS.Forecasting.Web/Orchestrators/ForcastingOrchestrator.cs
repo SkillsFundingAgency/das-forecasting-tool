@@ -24,7 +24,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public ForecastingOrchestrator(
             IHashingService hashingService,
             IAccountProjectionReadModelDataService accountProjection,
-
             IApplicationConfiguration applicationConfiguration,
             Mapper mapper)
         {

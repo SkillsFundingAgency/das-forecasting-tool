@@ -12,7 +12,6 @@ Background:
 	| Scheme   | Amount | Created Date |
 	| ABC-1234 | 3000   | Today        |
 	And the current balance is 5000
-	And I have no existing levy declarations for the payroll period
 
 Scenario: AC1: Commitments with end dates in forecast period
 	Given the following commitments have been recorded
