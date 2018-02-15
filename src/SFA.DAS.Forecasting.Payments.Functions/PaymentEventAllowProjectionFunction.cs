@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Handlers;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
@@ -12,11 +13,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
 	    [FunctionName("PaymentEventAllowProjectionFunction")]
 	    [return: Queue(QueueNames.GeneratePaymentProjection)]
-		public static async Task<PaymentCreatedMessage> Run(
+		public static async Task<GeneratePaymentAccountProjection> Run(
             [QueueTrigger(QueueNames.AllowProjection)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, PaymentCreatedMessage>(writer,
+            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GeneratePaymentAccountProjection>(writer,
                 async (container, logger) =>
                 {
 					logger.Debug("Getting payment declaration handler from container.");
@@ -31,7 +32,12 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	                }
 
 	                logger.Info($"Now sending message to trigger the account projections for employer '{paymentCreatedMessage.EmployerAccountId}'");
-	                return new PaymentCreatedMessage();
+	                return new GeneratePaymentAccountProjection
+	                {
+		                EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
+						Month = paymentCreatedMessage.CollectionPeriod.Month,
+						Year = paymentCreatedMessage.CollectionPeriod.Year
+	                };
 				});
         }
     }
