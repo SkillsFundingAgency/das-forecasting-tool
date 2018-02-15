@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.KeyVault;
@@ -28,6 +29,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject") ?? "0"),
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections") ?? "0"),
                 BackLink = GetAppSetting("BackLink"),
+                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast") ?? "false"),
                 AccountApi = GetAccount()
             };
             return configuration;

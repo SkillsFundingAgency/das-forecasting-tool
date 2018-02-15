@@ -35,29 +35,26 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-
-            var result = await _accountProjection.Get(accountId);
             
             return new BalanceViewModel {
-                BalanceItemViewModels = _mapper.MapBalance(result)
-                    .Where(m => m.Date < BalanceMaxDate),
+                BalanceItemViewModels = await GetBalance(hashedAccountId),
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId
             };
         }
 
-        public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
+        private async Task<IEnumerable<BalanceItemViewModel>> GetBalance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-
             var result = await _accountProjection.Get(accountId);
-
             return _mapper.MapBalance(result)
-                .Where(m => m.Date < BalanceMaxDate)
-                .Select(m => _mapper.ToCsvBalance(m));
+                .Where(m => !_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate);
+        }
 
-            
+        public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
+        {
+            return (await GetBalance(hashedAccountId))
+                .Select(m => _mapper.ToCsvBalance(m));
         }
 
         public async Task<VisualisationViewModel> Visualisation(string hashedAccountId)
