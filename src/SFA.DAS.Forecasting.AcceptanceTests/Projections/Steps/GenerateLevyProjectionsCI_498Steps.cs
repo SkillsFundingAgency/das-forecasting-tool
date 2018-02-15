@@ -51,7 +51,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             InsertNewBalance(balance);
         }
 
-        [When(@"the account projection is generated")]
+        [When(@"the account projection is triggered after levy has been declared")]
         public void WhenTheAccountProjectionIsGenerated()
         {
             DeleteAccountProjections();
@@ -60,55 +60,41 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Console.WriteLine($"Sending levy event to levy function: {projectionUrl}");
             var response = HttpClient.PostAsync(projectionUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+        }
+
+        [Then(@"the account projection should be generated")]
+        public void ThenTheAccountProjectionShouldBeGenerated()
+        {
+            WaitForIt(() =>
+            {
+                var projections = new List<AccountProjectionReadModel>();
+                ExecuteSql(() =>
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+
+                    projections = Connection.Query<AccountProjectionReadModel>(
+                        "Select * from AccountProjection where EmployerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                });
+                if (!projections.Any())
+                    return false;
+                projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}"));
+                AccountProjections = projections;
+                return true;
+            }, "Account projection failed.");
         }
 
         [Then(@"calculated levy credit value should be the amount declared for the single linked PAYE scheme")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSingleLinkedPAYEScheme()
         {
-            WaitForIt(() =>
-            {
-                var projections = new List<AccountProjectionReadModel>();
-                ExecuteSql(() =>
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-
-                    projections = Connection.Query<AccountProjectionReadModel>(
-                        "Select * from AccountProjection where EmployerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
-                });
-                if (projections.Any(projection => projection.FundsIn == LevySubmissions.FirstOrDefault()?.Amount))
-                {
-                    projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}"));
-                    AccountProjections = projections;
-                    return true;
-                }
-                return false;
-            });
+            AccountProjections.ForEach(projection => Assert.AreEqual(projection.FundsIn,LevySubmissions.FirstOrDefault()?.Amount,$"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.FundsIn}"));
         }
 
         [Then(@"calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSumOfTheLinkedPAYESchemes()
         {
-            WaitForIt(() =>
-            {
-                var projections = new List<AccountProjectionReadModel>();
-                ExecuteSql(() =>
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-
-                    projections = Connection.Query<AccountProjectionReadModel>(
-                        "Select * from AccountProjection where EmployerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
-                });
-
-                if (projections.Any(projection => projection.FundsIn == LevySubmissions.Sum(levy => levy.Amount)))
-                {
-                    projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}"));
-                    AccountProjections = projections;
-                    return true;
-                }
-                return false;
-            });
+            AccountProjections.ForEach(projection => Assert.AreEqual(projection.FundsIn, LevySubmissions.Sum(levy => levy.Amount), $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.FundsIn}"));
         }
 
 

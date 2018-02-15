@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
     <Compile Include="Levy\Feature\PreLoadLevyEvents.feature.cs">
@@ -137,6 +138,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Generate Levy Projections.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\Generate Completion Payment Projections.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Generate Completion Payment Projections.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Steps\GenerateLevyProjectionsCI_498Steps.cs" />
     <Compile Include="Payments\TestCommitment.cs" />
@@ -174,6 +180,10 @@
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Generate Levy Projections.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\Generate Completion Payment Projections.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Generate Completion Payment Projections.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

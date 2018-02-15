@@ -137,11 +137,13 @@ this.FeatureBackground();
 #line 19
  testRunner.Given("the following levy declarations have been recorded", ((string)(null)), table3, "Given ");
 #line 22
- testRunner.When("the account projection is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 23
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 24
  testRunner.Then("calculated levy credit value should be the amount declared for the single linked " +
                     "PAYE scheme", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 24
+#line 25
  testRunner.And("each future month\'s forecast levy credit should be the same", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -152,7 +154,7 @@ this.FeatureBackground();
         public virtual void AC2CalculateForecastLevyCreditValueWhenMultipleLinkedPAYESchemes()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Calculate forecast levy credit value when multiple linked PAYE schemes", ((string[])(null)));
-#line 26
+#line 27
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -173,14 +175,16 @@ this.FeatureBackground();
                         "ABC-9012",
                         "8500",
                         "Today"});
-#line 27
+#line 28
  testRunner.Given("the following levy declarations have been recorded", ((string)(null)), table4, "Given ");
-#line 32
- testRunner.When("the account projection is generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 33
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 34
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 35
  testRunner.Then("calculated levy credit value should be the amount declared for the sum of the lin" +
                     "ked PAYE schemes", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 34
+#line 36
  testRunner.And("each future month\'s forecast levy credit should be the same", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
