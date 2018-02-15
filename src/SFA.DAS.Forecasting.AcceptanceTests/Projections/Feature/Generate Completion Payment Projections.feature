@@ -32,3 +32,11 @@ Scenario: AC2: Multiple commitments with end dates in forecast period
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	Then the completion payments should be included in the correct month	
+
+Scenario: AC3: Multiple commitments and some with end dates after end of forecast period
+	Given the following commitments have been recorded
+	| Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| Test Apprentice 1 | Test Course | 1            | Test Provider | Next Year  | 1000               | 6000              | 48                     |
+	When the account projection is triggered after a payment run
+	Then the account projection should be generated
+	Then the completion payments should not be included in the projection
