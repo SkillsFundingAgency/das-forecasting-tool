@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using Microsoft.Azure;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
@@ -15,11 +14,17 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             {
                 StorageConnectionString = GetConnectionString("StorageConnectionString"),
                 DatabaseConnectionString = GetConnectionString("ForecastingConnectionString"),
+                EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
                 Hashstring = GetAppSetting("HashString"),
                 AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters"),
                 NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject") ?? "0"),
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections") ?? "0"),
-                AccountApi = GetAccount()
+                AccountApi = GetAccount(),
+                PaymentEventsApi = new PaymentsEventsApiConfiguration
+                {
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl"),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken"),
+                }
             });
         }
 

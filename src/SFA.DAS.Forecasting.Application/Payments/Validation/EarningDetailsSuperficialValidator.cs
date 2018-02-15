@@ -9,6 +9,13 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
         public List<ValidationFailure> Validate(EarningDetails itemToValidate)
         {
 	        var failures = new List<ValidationFailure>();
+
+            if (itemToValidate == null)
+            {
+                failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate)} cannot be null." });
+                return failures;
+            }
+
 			if (itemToValidate.StartDate == System.DateTime.MinValue) // What is a valid date?
 			{
 				failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.StartDate)} is not a valid date." });

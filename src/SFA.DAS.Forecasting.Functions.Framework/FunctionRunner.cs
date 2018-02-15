@@ -6,10 +6,12 @@ using SFA.DAS.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
 namespace SFA.DAS.Forecasting.Functions.Framework
@@ -98,6 +100,9 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 //c.For<IHashingService>().Use(new HashingService.HashingService(config.AllowedHashstringCharacters, config.Hashstring));
                 c.For<IAccountApiClient>().Use<AccountApiClient>()
                     .Ctor<IAccountApiConfiguration>().Is(config.AccountApi);
+
+                c.For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
+                .Ctor<IPaymentsEventsApiConfiguration>().Is(config.PaymentEventsApi);
             });
         }
 
