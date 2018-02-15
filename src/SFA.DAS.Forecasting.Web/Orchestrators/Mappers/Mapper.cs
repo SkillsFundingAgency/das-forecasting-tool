@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                     CostOfTraining = x.TotalCostOfTraining,
                     CompletionPayments = x.CompletionPayments,
                     ExpiredFunds = 0,
-                    Balance = x.FundsIn
+                    Balance = x.FutureFunds
                 });
         }
 

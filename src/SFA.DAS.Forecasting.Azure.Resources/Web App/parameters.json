@@ -41,6 +41,9 @@
     "DatabaseConnectionString": {
       "value": "__appSettingDatabaseConnectionString__"
     },
+    "StorageConnectionString": {
+      "value": "__appSettingStorageConnectionString__"
+    },
     "databaseName": {
       "value": "__connStringDatabaseName__"
     },

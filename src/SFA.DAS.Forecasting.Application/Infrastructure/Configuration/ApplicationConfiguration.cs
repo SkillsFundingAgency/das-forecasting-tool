@@ -3,21 +3,6 @@ using SFA.DAS.Provider.Events.Api.Client;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
-    public interface IApplicationConfiguration
-    {
-        string DatabaseConnectionString { get; }
-        string StorageConnectionString { get;  }
-        string BackLink { get;  }
-        string AllowedHashstringCharacters { get;  }
-        string Hashstring { get;  }
-        int SecondsToWaitToAllowProjections { get; }
-        int NumberOfMonthsToProject { get;  }
-        AccountApiConfiguration AccountApi { get; set; }
-        string EmployerConnectionString { get; set; }
-
-        PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
-    }
-
     public class ApplicationConfiguration: IApplicationConfiguration
     {
         public string DatabaseConnectionString { get; set; }
@@ -28,6 +13,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public int SecondsToWaitToAllowProjections { get; set; }
         public int NumberOfMonthsToProject { get; set; }
         public AccountApiConfiguration AccountApi { get; set; }
+        public bool LimitForecast { get; set; }
         public string EmployerConnectionString { get; set; }
         public PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
     }
@@ -37,4 +23,5 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string ClientToken { get; set; }
         public string ApiBaseUrl { get; set; }
     }
+
 }

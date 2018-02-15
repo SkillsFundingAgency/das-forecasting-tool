@@ -16,12 +16,18 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
+
 namespace SFA.DAS.Forecasting.Web.DependencyResolution {
     using StructureMap;
 	
     public static class IoC {
         public static IContainer Initialize() {
-            return new Container(c => c.AddRegistry<DefaultRegistry>());
+            return new Container(c =>
+            {
+                c.AddRegistry<ConfigurationRegistry>();
+                c.AddRegistry<DefaultRegistry>();
+            });
         }
     }
 }

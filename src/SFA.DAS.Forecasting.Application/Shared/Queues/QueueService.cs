@@ -8,12 +8,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Queues
 {
     public interface IQueueService
     {
-        void SendMessageWithVisibilityDelay<T>(T element, string queueName, int visibilityDelay) where T : class;
+        void SendMessageWithVisibilityDelay<T>(T element, string queueName, TimeSpan visibilityDelay) where T : class;
     }
 
 	public class QueueService: IQueueService
 	{
-		public void SendMessageWithVisibilityDelay<T>(T element, string queueName, int visibilityDelay) 
+		public void SendMessageWithVisibilityDelay<T>(T element, string queueName, TimeSpan visibilityDelay) 
 			where  T : class 
 		{
 			var message = new CloudQueueMessage(JsonConvert.SerializeObject(element));
@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Queues
 			// Create the queue if it doesn't already exist
 			queue.CreateIfNotExists();
 
-			queue.AddMessage(message, null, TimeSpan.FromMinutes(visibilityDelay));
+			queue.AddMessage(message, null, visibilityDelay);
 		}
 	}
 }

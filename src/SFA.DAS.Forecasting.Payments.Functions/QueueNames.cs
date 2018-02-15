@@ -8,5 +8,7 @@
         public const string AddEarningDetails = "forecasting-payment-add-earning-details";
         public const string PreLoadPayment = "forecasting-payment-create-preload";
         public const string PreLoadEarningDetailsPayment = "forecasting-payment-load-earning-details";
+	    public const string AllowProjection = "forecasting-payment-allow-projection";
+	    public const string GeneratePaymentProjection = "forecasting-projections-generate-payment-projections";
     }
 }

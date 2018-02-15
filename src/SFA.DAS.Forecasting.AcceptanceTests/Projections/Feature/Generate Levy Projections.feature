@@ -8,18 +8,29 @@ Background:
 	And the payroll period is 
 	| Payroll Year | Payroll Month |
 	| 18-19        | 1             |
+	And the following commitments have been recorded
+	| Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| Test Apprentice   | Test Course | 1            | Test Provider | Yesterday  | 500                | 3000              | 24                     |
+	| Test Apprentice 2 | Test Course | 1            | Test Provider | Last year  | 250                | 2000              | 24                     |
+	And the current balance is 5000
 	And I have no existing levy declarations for the payroll period
 
 Scenario: AC1: Calculate forecast levy credit value when single linked PAYE scheme
-	Given The following levy declaration has been recorded
+	Given the following levy declarations have been recorded
 	| Scheme   | Amount | Created Date |
-	| ABC-1234 | 7000   | Today        |
-	When the account projection is generated
+	| ABC-1234 | 3000   | Today        |
+	When the account projection is triggered after levy has been declared
+	Then the account projection should be generated
 	Then calculated levy credit value should be the amount declared for the single linked PAYE scheme
-	And each future month's forecast levy credit is the same
+	And each future month's forecast levy credit should be the same
 
-#Scenario: AC2: Calculate forecast levy credit value when multiple linked PAYE schemes
-#Given I'm calculating the levy credit value to use in a forecast
-#When I have many levy credits for each employer account
-#Then the calculated levy credit value for each account is the sum of the last levy credits
-#And each future month's forecast levy credit is the same
+Scenario: AC2: Calculate forecast levy credit value when multiple linked PAYE schemes
+	Given the following levy declarations have been recorded
+	| Scheme   | Amount | Created Date |
+	| ABC-1234 | 3000   | Today        |
+	| ABC-5678 | 3500   | Today        |
+	| ABC-9012 | 8500   | Today        |
+	When the account projection is triggered after levy has been declared
+	Then the account projection should be generated
+	Then calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes
+	And each future month's forecast levy credit should be the same

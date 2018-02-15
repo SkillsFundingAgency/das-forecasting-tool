@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                            @month,
                            @year,
                            @fundsIn,
-                           @totalCostOfTraning,
+                           @totalCostOfTraining,
                            @completionPayments,
                            @futureFunds)";
 
@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                         parameters.Add("@month", accountProjectionReadModel.Month, DbType.Int16);
                         parameters.Add("@year", accountProjectionReadModel.Year, DbType.Int32);
                         parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
-                        parameters.Add("@totalCostOfTraning", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
+                        parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
                         parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
                         parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
                         await cnn.ExecuteAsync(sql, parameters, commandType: CommandType.Text);

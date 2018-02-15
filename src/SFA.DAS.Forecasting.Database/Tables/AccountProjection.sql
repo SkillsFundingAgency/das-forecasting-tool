@@ -7,7 +7,7 @@
     [Month] SMALLINT NOT NULL,
     [Year] INT NOT NULL,
     [FundsIn] DECIMAL NOT NULL,
-    [TotalCostOfTraning] DECIMAL NOT NULL,
+    [TotalCostOfTraining] DECIMAL NOT NULL,
     [CompletionPayments] DECIMAL NOT NULL,
     [FutureFunds] DECIMAL NOT NULL
 )
