@@ -1,0 +1,142 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "templateBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "The base url for templates"
+       }
+     },
+      "appName": {
+        "type": "string"
+      },
+      "appHostingPlanName": {
+        "type": "string"
+      },
+      "appHostingEnvironment": {
+        "type": "string"
+      },
+      "appServerFarmResourceGroup": {
+        "type": "string"
+      },
+      "subscriptionId": {
+        "type": "string"
+      },
+      "appSettingEnvironmentName": {
+        "type": "string"
+      },
+      "appSettingRedisConnection": {
+        "type": "string"
+      },
+      "appSettingLoggingRedisConnectionString": {
+        "type": "string"
+      },
+      "appSettingLoggingRedisKey": {
+        "type": "string"
+      },
+      "appSettingAllowedHashstringCharacters": {
+        "type": "string"
+      },
+      "appSettingHashString": {
+        "type": "string"
+      },
+      "appSettingDatabaseConnectionString": {
+        "type": "string"
+      },
+      "appSettingStorageConnectionString": {
+        "type": "string"
+      },
+      "storageName": {
+        "type": "string"
+      },
+      "storageAccountType": {
+        "type": "string"
+      }
+  },
+  "variables": {
+    "storageResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/storage-resources.json')]",
+    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]",
+    "webappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/web-app-resources.json')]",
+    "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-08-01",
+      "name": "web-app-resources-deployment",
+      "dependsOn": [],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('webappResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "name": {
+            "value": "[parameters('appName')]"
+          },
+          "hostingPlanName": {
+            "value": "[parameters('appHostingPlanName')]"
+          },
+          "hostingEnvironment": {
+            "value": "[parameters('appHostingEnvironment')]"
+          },
+          "serverFarmResourceGroup": {
+            "value": "[parameters('appServerFarmResourceGroup')]"
+          },
+          "subscriptionId": {
+            "value": "[parameters('subscriptionid')]"
+          },
+          "EnvironmentName": {
+            "value": "[parameters('appSettingEnvironmentName')]"
+          },
+          "RedisConnection": {
+            "value": "[parameters('appSettingRedisConnection')]"
+          },
+          "LoggingRedisConnectionString": {
+            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          },
+          "LoggingRedisKey": {
+            "value": "[parameters('appSettingLoggingRedisKey')]"
+          },
+          "AllowedHashstringCharacters": {
+            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
+          },
+          "HashString": {
+            "value": "[parameters('appSettingHashString')]"
+          },
+          "DatabaseConnectionString": {
+            "value": "[parameters('appSettingDatabaseConnectionString')]"
+          },
+          "StorageConnectionString": {
+            "value": "[parameters('appSettingStorageConnectionString')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-08-01",
+      "name": "storage-resources-deployment",
+      "dependsOn": [],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('storageResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "name": {
+            "value": "[parameters('storageName')]"
+          },
+          "accountType": {
+            "value": "[parameters('storageAccountType')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
