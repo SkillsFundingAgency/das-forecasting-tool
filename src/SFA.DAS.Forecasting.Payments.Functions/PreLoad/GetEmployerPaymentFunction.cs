@@ -13,14 +13,14 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
         [FunctionName("GetEmployerPaymentFunction")]
         [return: Queue(QueueNames.PreLoadEarningDetailsPayment)]
-        public static async Task<PreLoadMessage> Run(
+        public static async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.PreLoadPayment)]PreLoadPaymentMessage message,
             TraceWriter writer)
         {
             // Store all payments in TableStorage
             // Sends a message to CreateEarningRecord
 
-            return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadMessage>(writer,
+            return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadPaymentMessage>(writer,
                async (container, logger) =>
                {
                    var employerData = container.GetInstance<IEmployerDatabaseService>();
@@ -41,12 +41,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                        logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
                    }
 
-                   return
-                       new PreLoadMessage
-                       {
-                           EmployerAccountId = message.EmployerAccountId,
-                           PeriodId = message.PeriodId
-                       };
+                   return message;
                });
         }
     }

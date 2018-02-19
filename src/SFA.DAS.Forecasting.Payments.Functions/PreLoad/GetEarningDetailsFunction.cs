@@ -14,11 +14,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
         [FunctionName("GetEarningDetailsFunction")]
         [return: Queue(QueueNames.AddEarningDetails)]
-        public static async Task<PreLoadMessage> Run(
-            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadMessage message, 
+        public static async Task<PreLoadPaymentMessage> Run(
+            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadMessage>(writer,
+            return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer,
                 async (container, logger) => {
 
                     // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId

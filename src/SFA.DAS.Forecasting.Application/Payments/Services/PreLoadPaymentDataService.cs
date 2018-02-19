@@ -94,7 +94,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 opb.Delete(item);
             }
 
-            await _eTable.ExecuteBatchAsync(opb);
+            if(opb.Any())
+                await _eTable.ExecuteBatchAsync(opb);
         }
 
         public async Task DeletePayment(long employerAccountId)
@@ -112,7 +113,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 opb.Delete(item);
             }
 
-            await _pTable.ExecuteBatchAsync(opb);
+            if (opb.Any())
+                await _pTable.ExecuteBatchAsync(opb);
         }
 
         private void EnsureExists(CloudTable table)
