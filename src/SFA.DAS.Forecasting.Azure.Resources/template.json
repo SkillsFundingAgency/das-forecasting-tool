@@ -6,61 +6,161 @@
       "type": "string",
       "metadata": {
         "description": "The base url for templates"
-       }
-     },
-      "appName": {
-        "type": "string"
-      },
-      "appHostingPlanName": {
-        "type": "string"
-      },
-      "appHostingEnvironment": {
-        "type": "string"
-      },
-      "appServerFarmResourceGroup": {
-        "type": "string"
-      },
-      "subscriptionId": {
-        "type": "string"
-      },
-      "appSettingEnvironmentName": {
-        "type": "string"
-      },
-      "appSettingRedisConnection": {
-        "type": "string"
-      },
-      "appSettingLoggingRedisConnectionString": {
-        "type": "string"
-      },
-      "appSettingLoggingRedisKey": {
-        "type": "string"
-      },
-      "appSettingAllowedHashstringCharacters": {
-        "type": "string"
-      },
-      "appSettingHashString": {
-        "type": "string"
-      },
-      "appSettingDatabaseConnectionString": {
-        "type": "string"
-      },
-      "appSettingStorageConnectionString": {
-        "type": "string"
-      },
-      "storageName": {
-        "type": "string"
-      },
-      "storageAccountType": {
-        "type": "string"
       }
+    },
+    "appName": {
+      "type": "string"
+    },
+    "appHostingPlanName": {
+      "type": "string"
+    },
+    "appHostingEnvironment": {
+      "type": "string"
+    },
+    "appServerFarmResourceGroup": {
+      "type": "string"
+    },
+    "subscriptionId": {
+      "type": "string"
+    },
+    "appSettingEnvironmentName": {
+      "type": "string"
+    },
+    "appSettingRedisConnection": {
+      "type": "string"
+    },
+    "appSettingLoggingRedisConnectionString": {
+      "type": "string"
+    },
+    "appSettingLoggingRedisKey": {
+      "type": "string"
+    },
+    "appSettingAllowedHashstringCharacters": {
+      "type": "string"
+    },
+    "appSettingHashString": {
+      "type": "string"
+    },
+    "appSettingDatabaseConnectionString": {
+      "type": "string"
+    },
+    "appSettingStorageConnectionString": {
+      "type": "string"
+    },
+    "storageName": {
+      "type": "string"
+    },
+    "storageAccountType": {
+      "type": "string"
+    },
+    "kvName": {
+      "type": "string"
+    },
+    "kvSku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "standard",
+        "Premium",
+        "premium"
+      ],
+      "metadata": {
+        "description": "SKU for the vault"
+      }
+    },
+    "kvWebAppObjectId": {
+      "type": "string"
+    },
+    "kvLevFunAppObjectId": {
+      "type": "string"
+    },
+    "kvPayFunAppObjectId": {
+      "type": "string"
+    },
+    "kvPrjFunAppObjectId": {
+      "type": "string"
+    },
+    "kvSecretsPermissionsList": {
+      "type": "array"
+    },
+    "kvEnabledForDeployment": {
+      "type": "bool"
+    },
+    "kvEnabledForTemplateDeployment": {
+      "type": "bool"
+    },
+    "kvEnabledForDiskEncryption": {
+      "type": "bool"
+    },
+    "levFunAppName": {
+      "type": "string"
+    },
+    "payFunAppName": {
+      "type": "string"
+    },
+    "prjFunAppName": {
+      "type": "string"
+    },
+    "storageName": {
+      "type": "string"
+    },
+    "storageAccountResourceGroup": {
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "string"
+    },
+    "hostingEnvironment": {
+      "type": "string"
+    },
+    "serverFarmResourceGroup": {
+      "type": "string"
+    },
+    "subscriptionId": {
+      "type": "string"
+    },
+    "PaymentsApiBaseUrl": {
+      "type": "string"
+    },
+    "PaymentsApiToken": {
+      "type": "string"
+    },
+    "Environment": {
+      "type": "string"
+    },
+    "DbConnectionString": {
+      "type": "string"
+    }
   },
   "variables": {
     "storageResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/storage-resources.json')]",
-    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]",
     "webappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/web-app-resources.json')]",
-    "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]"
+    "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]",
+    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]"
   },
   "resources": [
+    {
+      "apiVersion": "2017-08-01",
+      "name": "storage-resources-deployment",
+      "dependsOn": [],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('storageResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "name": {
+            "value": "[parameters('storageName')]"
+          },
+          "accountType": {
+            "value": "[parameters('storageAccountType')]"
+          }
+        }
+      }
+    },
     {
       "apiVersion": "2017-08-01",
       "name": "web-app-resources-deployment",
@@ -117,21 +217,105 @@
     },
     {
       "apiVersion": "2017-08-01",
-      "name": "storage-resources-deployment",
+      "name": "function-app-resources-deployment",
       "dependsOn": [],
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('storageResourcesTemplateUri')]",
+          "uri": "[variables('functionappResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "levFunAppName": {
+            "value": "[parameters('levFunAppName')]"
+          },
+          "payFunAppName": {
+            "value": "[parameters('payFunAppName')]"
+          },
+          "prjFunAppName": {
+            "value": "[parameters('prjFunAppName')]"
+          },
+          "hostingPlanName": {
+            "value": "[parameters('appHostingPlanName')]"
+          },
+          "hostingEnvironment": {
+            "value": "[parameters('appHostingEnvironment')]"
+          },
+          "serverFarmResourceGroup": {
+            "value": "[parameters('appServerFarmResourceGroup')]"
+          },
+          "subscriptionId": {
+            "value": "[parameters('subscriptionid')]"
+          },
+          "EnvironmentName": {
+            "value": "[parameters('appSettingEnvironmentName')]"
+          },
+          "RedisConnection": {
+            "value": "[parameters('appSettingRedisConnection')]"
+          },
+          "LoggingRedisConnectionString": {
+            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          },
+          "LoggingRedisKey": {
+            "value": "[parameters('appSettingLoggingRedisKey')]"
+          },
+          "AllowedHashstringCharacters": {
+            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
+          },
+          "HashString": {
+            "value": "[parameters('appSettingHashString')]"
+          },
+          "DatabaseConnectionString": {
+            "value": "[parameters('appSettingDatabaseConnectionString')]"
+          },
+          "StorageConnectionString": {
+            "value": "[parameters('appSettingStorageConnectionString')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-08-01",
+      "name": "keyvault-resources-deployment",
+      "dependsOn": [],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('keyvaultResourcesTemplateUri')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
           "name": {
-            "value": "[parameters('storageName')]"
+            "value": "[parameters('kvName')]"
           },
-          "accountType": {
-            "value": "[parameters('storageAccountType')]"
+          "sku": {
+            "value": "[parameters('kvSku')]"
+          },
+          "webAppObjectId": {
+            "value": "[reference('web-app-resources-deployment').outputs.webAppIdentity.value]"
+          },
+          "levFunAppObjectId": {
+            "value": "[reference('function-app-resources-deployment').outputs.levFunAppIdentity.value]"
+          },
+          "payFunAppObjectId": {
+            "value": "[reference('function-app-resources-deployment').outputs.payFunAppIdentity.value]"
+          },
+          "prjFunAppObjectId": {
+            "value": "[reference('function-app-resources-deployment').outputs.prjFunAppIdentity.value]"
+          },
+          "secretsPermissionsList": {
+            "value": "[parameters('kvSecretsPermissionsList')]"
+          },
+          "enabledForDeployment": {
+            "value": "[parameters('kvEnabledForDeployment')]"
+          },
+          "enabledForTemplateDeployment": {
+            "value": "[parameters('kvEnabledForTemplateDeployment')]"
+          },
+          "enabledForDiskEncryption": {
+            "value": "[parameters('kvEnabledForDiskEncryption')]"
           }
         }
       }

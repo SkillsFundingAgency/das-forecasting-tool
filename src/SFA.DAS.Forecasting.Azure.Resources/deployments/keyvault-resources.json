@@ -1,0 +1,102 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Standard",
+        "standard",
+        "Premium",
+        "premium"
+      ],
+      "metadata": {
+        "description": "SKU for the vault"
+      }
+    },
+    "webAppObjectId": {
+      "type": "string"
+    },
+    "levyFunAppObjectId": {
+      "type": "string"
+    },
+    "payFunAppObjectId": {
+      "type": "string"
+    },
+    "projFunAppObjectId": {
+      "type": "string"
+    },
+    "secretsPermissionsList": {
+      "type": "array"
+    },
+    "enabledForDeployment": {
+      "type": "bool"
+    },
+    "enabledForTemplateDeployment": {
+      "type": "bool"
+    },
+    "enabledForDiskEncryption": {
+      "type": "bool"
+    }
+  },
+    "resources": [
+      {
+        "apiVersion": "2015-06-01",
+        "name": "[parameters('name')]",
+        "location": "[resourceGroup().location]",
+        "type": "Microsoft.KeyVault/vaults",
+        "properties": {
+          "enabledForDeployment": "[parameters('enabledForDeployment')]",
+          "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+          "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
+          "accessPolicies": [
+            {
+              "objectId": "[parameters('webAppObjectId')]",
+              "tenantId": "[subscription().tenantId]",
+              "permissions": {
+                "keys": [],
+                "secrets": "[parameters('secretsPermissionsList')]",
+                "certificates": []
+              }
+            },
+            {
+              "objectId": "[parameters('levyFunAppObjectId')]",
+              "tenantId": "[subscription().tenantId]",
+              "permissions": {
+                "keys": [],
+                "secrets": "[parameters('secretsPermissionsList')]",
+                "certificates": []
+              }
+            },
+            {
+              "objectId": "[parameters('payFunAppObjectId')]",
+              "tenantId": "[subscription().tenantId]",
+              "permissions": {
+                "keys": [],
+                "secrets": "[parameters('secretsPermissionsList')]",
+                "certificates": []
+              }
+            },
+            {
+              "objectId": "[parameters('projFunAppObjectId')]",
+              "tenantId": "[subscription().tenantId]",
+              "permissions": {
+                "keys": [],
+                "secrets": "[parameters('secretsPermissionsList')]",
+                "certificates": []
+              }
+            }
+          ],
+          "tenantId": "[subscription().tenantId]",
+          "sku": {
+            "name": "[parameters('sku')]",
+            "family": "A"
+          }
+        }
+      }
+    ]
+}

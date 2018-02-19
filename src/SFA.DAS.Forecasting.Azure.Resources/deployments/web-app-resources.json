@@ -130,7 +130,7 @@
       }
     ],    
     "outputs": {
-      "identity": {
+      "webAppIdentity": {
         "type": "string",
         "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
       }
