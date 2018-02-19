@@ -2,10 +2,8 @@
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.EmployerAccounts.Events.Messages;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,11 +57,6 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 LevyDeclaredInMonth = levy.TotalAmount,
                 CreatedDate = levy.CreatedDate
             };
-        }
-
-        public async Task<EarningDetails> PaymentForPeriod(CollectionPeriod collectionPeriod, long employerAccountId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

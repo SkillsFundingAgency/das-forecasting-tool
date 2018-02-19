@@ -12,5 +12,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         int SecondsToWaitToAllowProjections { get; }
         int NumberOfMonthsToProject { get;  }
         AccountApiConfiguration AccountApi { get; set; }
+        bool LimitForecast { get; set; }
+        string EmployerConnectionString { get; set; }
+        PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
     }
 }

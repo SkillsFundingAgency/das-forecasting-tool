@@ -92,8 +92,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
  testRunner.And("the following levy declarations have been recorded", ((string)(null)), table2, "And ");
 #line 14
  testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 15
- testRunner.And("I have no existing levy declarations for the payroll period", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -102,7 +100,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         public virtual void AC1CommitmentsWithEndDatesInForecastPeriod()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: Commitments with end dates in forecast period", ((string[])(null)));
-#line 17
+#line 16
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -125,13 +123,13 @@ this.FeatureBackground();
                         "500",
                         "3000",
                         "24"});
-#line 18
+#line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 21
+#line 20
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 22
+#line 21
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 23
+#line 22
  testRunner.Then("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -142,7 +140,7 @@ this.FeatureBackground();
         public virtual void AC2MultipleCommitmentsWithEndDatesInForecastPeriod()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Multiple commitments with end dates in forecast period", ((string[])(null)));
-#line 25
+#line 24
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -201,13 +199,13 @@ this.FeatureBackground();
                         "100",
                         "2000",
                         "24"});
-#line 26
+#line 25
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
-#line 33
+#line 32
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 34
+#line 33
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 35
+#line 34
  testRunner.Then("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

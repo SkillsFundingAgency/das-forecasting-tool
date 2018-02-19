@@ -10,9 +10,6 @@
     },
     "accountType": {
       "value": "__storageAccountType__"
-    },
-    "httpsTrafficOnlyEnabled": {
-      "value": false
     }
   }
 }

@@ -33,6 +33,10 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
+    <Content Include="deployments\keyvault-resources.json" />
+    <Content Include="deployments\storage-resources.json" />
+    <Content Include="deployments\function-app-resources.json" />
+    <Content Include="deployments\web-app-resources.json" />
     <Content Include="README.md" />
     <Content Include="Function App\parameters.json" />
     <Content Include="Function App\template.json" />
@@ -44,6 +48,8 @@
     <Content Include="Storage\template.json" />
     <Content Include="Web App\parameters.json" />
     <Content Include="Web App\template.json" />
+    <None Include="parameters.json" />
+    <None Include="template.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
