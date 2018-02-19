@@ -2,17 +2,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
-    public class PaymentPreLoadStorePaymentMessageFunction : IFunction
+    public class GetEmployerPaymentFunction : IFunction
     {
-        [FunctionName("PaymentPreLoadStorePaymentMessageFunction")]
+        [FunctionName("GetEmployerPaymentFunction")]
         [return: Queue(QueueNames.PreLoadEarningDetailsPayment)]
         public static async Task<PreLoadMessage> Run(
             [QueueTrigger(QueueNames.PreLoadPayment)]PreLoadPaymentMessage message,
@@ -21,7 +20,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             // Store all payments in TableStorage
             // Sends a message to CreateEarningRecord
 
-            return await FunctionRunner.Run<PaymentPreLoadStorePaymentMessageFunction, PreLoadMessage>(writer,
+            return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadMessage>(writer,
                async (container, logger) =>
                {
                    var employerData = container.GetInstance<IEmployerDatabaseService>();

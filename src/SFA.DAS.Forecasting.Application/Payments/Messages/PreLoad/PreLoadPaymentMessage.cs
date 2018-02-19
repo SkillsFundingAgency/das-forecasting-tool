@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Application.Payments.Messages
+﻿namespace SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad
 {
     public class PreLoadPaymentMessage
     {
@@ -10,12 +10,6 @@
 
         public int PeriodMonth { get; set; }
 
-        public string PeriodId { get; set; }
-    }
-
-    public class PreLoadMessage
-    {
-        public long EmployerAccountId { get; set; }
         public string PeriodId { get; set; }
     }
 }

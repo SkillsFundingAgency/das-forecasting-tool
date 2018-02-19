@@ -163,11 +163,13 @@
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
     <Compile Include="Infrastructure\Registries\StructrMapRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
+    <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerCommitmentHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
-    <Compile Include="Payments\Messages\PreLoadPaymentMessage.cs" />
+    <Compile Include="Payments\Messages\PreLoad\PreLoadMessage.cs" />
+    <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentMessage.cs" />
     <Compile Include="Payments\Services\CommitmentDataService.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataService.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
