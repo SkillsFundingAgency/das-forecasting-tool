@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         protected static Config Config => ParentContainer.GetInstance<Config>();
         protected static List<Process> Processes = new List<Process>();
         protected static IContainer ParentContainer { get; set; }
-        protected IContainer NestedContainer { get; set; }
+        protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected ForecastingWebSite WebSite { get => Get<ForecastingWebSite>(); set => Set(value); }
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
 

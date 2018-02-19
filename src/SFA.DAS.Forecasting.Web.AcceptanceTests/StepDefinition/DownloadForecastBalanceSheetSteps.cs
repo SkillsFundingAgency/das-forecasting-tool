@@ -1,13 +1,17 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using Dapper;
+using Microsoft.VisualBasic.FileIO;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.ReadModel.Projections;
 using SFA.DAS.Forecasting.Web.Automation;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Transactions;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -20,6 +24,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         private string[] downloadedFilesBefore;
         private string targetFilename;
         private string newFilePath;
+        protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
 
         [Given(@"I'm on the Funding projection page")]
         public void GivenIMOnTheFundingProjectionPage()
@@ -32,6 +37,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [When(@"I select download as csv")]
         public void WhenISelectDownloadAsCsv()
         {
+           
             var page = Get<FundingProjectionPage>();
             page.DownloadCSVButton.Click();
         }
@@ -52,42 +58,111 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             string pattern = @"esfaforecast_\d{4}\d{2}\d{2}\d{2}\d{2}\d{2}";
             Assert.IsTrue(Regex.IsMatch(this.targetFilename, pattern, RegexOptions.ECMAScript));
 
-           
+
         }
         [Then(@"column headers are downloaded")]
         public void ThenColumnHeadersAreDownloaded()
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.True(readCsvHeader.Contains("Date,LevyCredit,CostOfTraining,CompletionPayments,FutureFunds"),"ERROR: File header titles is {0}", readCsv.First());
+            Assert.True(readCsvHeader.Contains("Date,LevyCredit,CostOfTraining,CompletionPayments,Balance"), "ERROR: File header titles is {0}", readCsv.First());
                         
-            if (File.Exists(newFilePath))
-            {
-                File.Delete(newFilePath);
-            }
-            
         }
 
 
         [Then(@"all of the rows have been downloaded")]
         public void ThenAllOfTheRowsHaveBeenDownloaded()
         {
-            //load the text file
-            //ignore the header line
-            //check that the file has the same number of rows as Projections
-            //make sure each row in Projections exists in the file
+            var readCsv = File.ReadLines(newFilePath);
+            var lineCount = File.ReadAllLines(newFilePath).Length;
+            Assert.AreEqual(lineCount, 8);
+
+
+            //if (File.Exists(newFilePath))
+            //{
+            //    File.Delete(newFilePath);
+            //}
             
-            
-            ScenarioContext.Current.Pending();
         }
 
         protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }
+        protected void DeleteAccountProjections()
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", long.Parse(Config.EmployerAccountID), DbType.Int64);
+            Connection.Execute("Delete from AccountProjection where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
+        }
+
+        public void Store(IEnumerable<TestAccountProjection> accountProjections)
+        {
+            var employerAccountId = long.Parse(Config.EmployerAccountID);
+            using (var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                var sql = @"Insert Into [dbo].[AccountProjection] Values 
+                           (@employerAccountId,
+                           @projectionCreationDate,
+                           @projectionGenerationType,
+                           @month,
+                           @year,
+                           @fundsIn,
+                           @totalCostOfTraining,
+                           @completionPayments,
+                           @futureFunds)";
+
+                foreach (var accountProjectionReadModel in accountProjections)
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
+                    parameters.Add("@projectionCreationDate", DateTime.Today, DbType.DateTime);
+                    parameters.Add("@projectionGenerationType", 1, DbType.Int16);
+                    parameters.Add("@month", GetMonth(accountProjectionReadModel.Date), DbType.Int16);
+                    parameters.Add("@year", 2018, DbType.Int32);
+                    parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
+                    parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
+                    parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
+                    parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
+                    Connection.Execute(sql, parameters, commandType: CommandType.Text);
+                }
+                txScope.Complete();
+            }
+        }
+
+        public short GetMonth(string dateString)
+        {
+            if (dateString.StartsWith("Jan"))
+                return 1;
+            else if (dateString.StartsWith("Feb"))
+                return 2;
+            else if (dateString.StartsWith("Mar"))
+                return 3;
+            else if (dateString.StartsWith("Apr"))
+                return 4;
+            else if (dateString.StartsWith("May"))
+                return 5;
+            else if (dateString.StartsWith("Jun"))
+                return 6;
+            else if (dateString.StartsWith("Jul"))
+                return 7;
+            else if (dateString.StartsWith("Aug"))
+                return 8;
+            else if (dateString.StartsWith("Sept"))
+                return 9;
+            else if (dateString.StartsWith("Oct"))
+                return 10;
+            else if (dateString.StartsWith("Nov"))
+                return 11;
+            else  
+                return 12;
+        }
+    
 
         [Given(@"I have generated the following projections")]
         public void GivenIHaveGeneratedTheFollowingProjections(Table table)
         {
             var projections = table.CreateSet<TestAccountProjection>().ToList();
             Projections = projections;
+            DeleteAccountProjections();
+            Store(Projections);
         }
 
         public class TestAccountProjection
