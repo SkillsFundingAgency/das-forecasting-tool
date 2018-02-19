@@ -64,21 +64,40 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 6
+#line 7
+ testRunner.Given("I have no existing payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC1: Store payment event data")]
         public virtual void AC1StorePaymentEventData()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: Store payment event data", ((string[])(null)));
-#line 6
-this.ScenarioSetup(scenarioInfo);
-#line 7
- testRunner.Given("payment events have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 8
- testRunner.Then("there are 3 payment events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 9
- testRunner.And("all of the data stored is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "ApprenticeshipId",
+                        "ProviderId"});
+            table1.AddRow(new string[] {
+                        "1234",
+                        "7000"});
+            table1.AddRow(new string[] {
+                        "5678",
+                        "3000"});
 #line 10
- testRunner.And("the aggregation for the total cost of training has been created properly", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("I have made the following payments", ((string)(null)), table1, "Given ");
+#line 14
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 15
+ testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -88,16 +107,17 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void AC2DoNotStoreInvalidData()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: do not store invalid data", ((string[])(null)));
-#line 12
+#line 17
 this.ScenarioSetup(scenarioInfo);
-#line 13
- testRunner.Given("payment events have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 14
- testRunner.And("events with invalid data have been created", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 15
- testRunner.Then("there are 3 payment events stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 16
- testRunner.And("the event with invalid data is not stored", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 6
+this.FeatureBackground();
+#line 18
+ testRunner.Given("I made some invalid payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 19
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 20
+ testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

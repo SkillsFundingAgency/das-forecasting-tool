@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             var configuration = new ApplicationConfiguration
             {
                 DatabaseConnectionString = GetConnectionString("DatabaseConnectionString"),
+                EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
                 StorageConnectionString = GetConnectionString("StorageConnectionString"),
                 Hashstring = GetAppSetting("HashString"),
                 AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters"),
@@ -30,7 +31,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections") ?? "0"),
                 BackLink = GetAppSetting("BackLink"),
                 LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast") ?? "false"),
-                AccountApi = GetAccount()
+                AccountApi = GetAccount(),
+                PaymentEventsApi = new PaymentsEventsApiConfiguration
+                {
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl"),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken"),
+                }
             };
             return configuration;
         }
@@ -58,11 +64,14 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public string GetAppSetting(string keyName)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return string.IsNullOrEmpty(value) || (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
-                   (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false)
+            return string.IsNullOrEmpty(value) || IsDevEnvironment
                 ? value
                 : GetKeyValueSecret(value).Result;
         }
+
+        public static bool IsDevEnvironment =>
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
         public string GetConnectionString(string name)
         {

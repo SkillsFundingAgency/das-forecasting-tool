@@ -40,9 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Projections\GenerateAccountProjection.cs" />
-    <Compile Include="Projections\GenerateLevyAccountProjection.cs" />
-    <Compile Include="Projections\GeneratePaymentAccountProjection.cs" />
+    <Compile Include="Projections\GenerateAccountProjectionCommand.cs" />
+    <Compile Include="Projections\ProjectionSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

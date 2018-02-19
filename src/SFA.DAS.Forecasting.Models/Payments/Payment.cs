@@ -13,6 +13,6 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public DateTime ReceivedTime { get; set; }
         public long LearnerId { get; set; }
         public CollectionPeriod CollectionPeriod { get; set; }
-        public Enum FundingSource { get; set; }
+        public FundingSource FundingSource { get; set; }
     }
 }

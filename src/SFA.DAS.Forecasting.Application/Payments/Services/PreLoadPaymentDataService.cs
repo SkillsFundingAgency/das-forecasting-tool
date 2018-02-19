@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
+using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
 using System.Linq;

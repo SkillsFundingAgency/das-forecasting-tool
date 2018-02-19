@@ -6,22 +6,22 @@ using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 {
-    public class GeneratePaymentAccountProjectionHandler
+    public class BuildAccountProjectionHandler
     {
         private readonly IAccountProjectionRepository _accountProjectionRepository;
         private readonly IApplicationConfiguration _config;
 
 
-        public GeneratePaymentAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository, IApplicationConfiguration config)
+        public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository, IApplicationConfiguration config)
         {
             _accountProjectionRepository = accountProjectionRepository ?? throw new ArgumentNullException(nameof(accountProjectionRepository));
             _config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
-        public async Task Handle(GeneratePaymentAccountProjection message)
+        public async Task Handle(GenerateAccountProjectionCommand message)
         {
             var projections = await _accountProjectionRepository.Get(message.EmployerAccountId);
-            projections.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
+            projections.BuildLevyTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
             await _accountProjectionRepository.Store(projections);
         }
     }

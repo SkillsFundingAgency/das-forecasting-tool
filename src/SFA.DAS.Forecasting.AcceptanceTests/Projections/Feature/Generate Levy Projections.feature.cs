@@ -90,7 +90,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
                         "Completion Amount",
                         "Number Of Installments"});
             table2.AddRow(new string[] {
-                        "Test Apprentice",
+                        "Test Apprentice 1",
                         "Test Course",
                         "1",
                         "Test Provider",
@@ -105,8 +105,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
                         "Test Provider",
                         "Last year",
                         "250",
-                        "2000",
-                        "24"});
+                        "1500",
+                        "48"});
 #line 11
  testRunner.And("the following commitments have been recorded", ((string)(null)), table2, "And ");
 #line 15

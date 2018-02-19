@@ -2,7 +2,7 @@
 {
     public enum FundingSource
     {
-        Levy, 
-        Transfer
+        Levy = 1, 
+        Transfer = 2
     }
 }

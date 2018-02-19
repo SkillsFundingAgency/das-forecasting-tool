@@ -1,38 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Dapper;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
-using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
-	public class CommitmentDataService : BaseRepository, ICommitmentDataService
+    public class CommitmentDataService : BaseRepository, ICommitmentDataService
 	{
-		public CommitmentDataService(string connectionString, ILog logger) : base(connectionString, logger)
+		public ILog Logger { get; }
+
+		public CommitmentDataService(IApplicationConfiguration applicationConfiguration, ILog logger) : base(applicationConfiguration.DatabaseConnectionString, logger)
 		{
+			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
+
 
 		public async Task StoreCommitment(Commitment commitment)
 		{
-			await WithTransaction(async (cnn, tx) =>
+			var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+			try
 			{
-				try
+				await WithConnection(async cnn =>
 				{
 					await StoreCommitment(cnn, commitment);
-					tx.Commit();
-				}
-				catch (Exception e)
-				{
-					tx.Rollback();
-					throw;
-				}
-			});
+					return 0;
+				});
+				txScope.Complete();
+			}
+			catch (Exception ex)
+			{
+				Logger.Error(ex, $"Error storing commitment. Error: {ex}");
+				throw;
+			}
+			finally
+			{
+				txScope.Dispose();
+			}
 		}
 
 		private async Task StoreCommitment(IDbConnection connection, Commitment commitment)

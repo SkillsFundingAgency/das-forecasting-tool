@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
 {
@@ -27,6 +28,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
                     PayeSchemeReference = "World",
                     TotalAmount = 300
                 }
+            };
+        }
+
+        public static AccountDetailViewModel GetAccountDetail(decimal balance)
+        {
+            return new AccountDetailViewModel
+            {
+                AccountId = 12345,
+                Balance = balance,
+                DasAccountName = "Test Employer",
+                DateRegistered = DateTime.Today,
+                HashedAccountId = "MDDP87",
             };
         }
     }

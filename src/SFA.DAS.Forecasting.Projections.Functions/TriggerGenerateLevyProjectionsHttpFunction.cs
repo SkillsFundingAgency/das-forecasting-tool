@@ -12,15 +12,16 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     {
         [FunctionName("TriggerGenerateLevyProjectionsHttpFunction")]
         public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "TriggerGenerateLevyProjections/{employerAccountId}")]HttpRequestMessage req, long employerAccountId,
-            [Queue(QueueNames.GenerateLevyProjections)]ICollector<GenerateLevyAccountProjection> messages,
+            [Queue(QueueNames.GenerateProjections)]ICollector<GenerateAccountProjectionCommand> messages,
             TraceWriter log)
         {
-            messages.Add(new GenerateLevyAccountProjection
+            log.Verbose($"Received http request to generate projections for employer: {employerAccountId}");
+            messages.Add(new GenerateAccountProjectionCommand
             {
-                EmployerAccountId = employerAccountId
+                EmployerAccountId = employerAccountId,
+                ProjectionSource = ProjectionSource.LevyDeclaration
             } );
 
-            // Fetching the name from the path parameter in the request URL
             return req.CreateResponse(HttpStatusCode.OK);
         }
     }

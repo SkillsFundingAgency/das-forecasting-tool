@@ -13,12 +13,12 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class LevyDeclarationAllowProjectionFunction : IFunction
     {
         [FunctionName("LevyDeclarationAllowProjectionFunction")]
-        [return:Queue(QueueNames.GenerateLevyProjections)]
-        public static async Task<GenerateLevyAccountProjection> Run(
+        [return:Queue(QueueNames.GenerateProjections)]
+        public static async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.AllowProjection)]LevySchemeDeclarationUpdatedMessage message,
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventStoreFunction, GenerateLevyAccountProjection>(writer,
+            return await FunctionRunner.Run<LevyDeclarationEventStoreFunction, GenerateAccountProjectionCommand>(writer,
                 async (container, logger) =>
                 {
                     logger.Debug("Getting levy declaration handler from container.");
@@ -33,11 +33,10 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                     }
 
                     logger.Info($"Now sending message to trigger the account projections for employer '{message.AccountId}'");
-                    return new GenerateLevyAccountProjection
+                    return new GenerateAccountProjectionCommand
                     {
                         EmployerAccountId = message.AccountId,
-                        PayrollYear = message.PayrollYear,
-                        PayrollMonth = message.PayrollMonth.Value
+                        ProjectionSource = ProjectionSource.LevyDeclaration
                     };
                 });
         }

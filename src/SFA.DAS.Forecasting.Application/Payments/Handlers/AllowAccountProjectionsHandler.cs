@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Domain.Payments;
 using SFA.DAS.NLog.Logger;
 
@@ -28,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
         public async Task<bool> Allow(PaymentCreatedMessage paymentCreatedMessage)
         {
-			var employerPayment = new EmployerPayment(Repository);
+			var employerPayment = new EmployerPaymentService(Repository);
             Logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.ToDebugJson()}");
 
 	        var payments = await Repository.GetPayments(paymentCreatedMessage.EmployerAccountId,

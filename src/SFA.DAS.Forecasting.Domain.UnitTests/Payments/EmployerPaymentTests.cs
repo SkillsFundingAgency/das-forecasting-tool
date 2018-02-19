@@ -13,14 +13,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
     public class EmployerPaymentTests
     {
         private Mock<IEmployerPaymentRepository> _levyRepository;
-        private EmployerPayment _service;
+        private EmployerPaymentService _service;
 
         [SetUp]
         public void SetUp()
         {
             _levyRepository = new Mock<IEmployerPaymentRepository>();
             
-            _service = new EmployerPayment(_levyRepository.Object);
+            _service = new EmployerPaymentService(_levyRepository.Object);
         }
 
 		[Test]
@@ -44,7 +44,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 				EmployerAccountId = employerAccountId,
 				ProviderId = ukprn,
 				ApprenticeshipId = apprenticeshipId,
-				Amount = amount
+				Amount = amount,
+				FundingSource = FundingSource.Levy
 			});
 
 			Assert.AreEqual(id, payment.ExternalPaymentId);

@@ -23,7 +23,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 					Year = paymentCreatedMessage.CollectionPeriod.Year
 				},
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
-				ReceivedTime = DateTime.Now
+				ReceivedTime = DateTime.Now,
+                FundingSource = FundingSource.Levy // ToDo: Get for somewhere?
 			};
 		}
 
