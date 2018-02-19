@@ -55,10 +55,10 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                                     WHEN MATCHED THEN
                                         UPDATE SET Amount = source.Amount, 
                                             BalancePeriod = source.BalancePeriod, 
-                                            ReceivedDate = source.ReceivedDate, 
+                                            ReceivedDate = source.ReceivedDate 
                                     WHEN NOT MATCHED THEN
                                         INSERT(EmployerAccountId, Amount, BalancePeriod, ReceivedDate)
-                                        VALUES(source.EmployerAccountId, source.Amount, source.BalancePeriod, source.ReceivedDate)",
+                                        VALUES(source.EmployerAccountId, source.Amount, source.BalancePeriod, source.ReceivedDate);",
                     parameters,
                     commandType: CommandType.Text);
             });

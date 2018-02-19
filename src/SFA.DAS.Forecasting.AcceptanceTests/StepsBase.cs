@@ -14,6 +14,7 @@ using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Shared;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.ReadModel.Projections;
 using StructureMap;
 using TechTalk.SpecFlow;
@@ -103,7 +104,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected static void StartFunction(string functionName)
         {
-            if (!Config.Environment.Equals("DEV", StringComparison.OrdinalIgnoreCase))
+            if (!Config.IsDevEnvironment)
             {
                 Console.WriteLine("Can only start the function in dev environment.");
                 return;

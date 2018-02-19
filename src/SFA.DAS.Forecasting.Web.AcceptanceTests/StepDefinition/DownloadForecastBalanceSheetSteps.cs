@@ -19,6 +19,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
     {
         private string[] downloadedFilesBefore;
         private string targetFilename;
+        private string newFilePath;
 
         [Given(@"I'm on the Funding projection page")]
         public void GivenIMOnTheFundingProjectionPage()
@@ -40,7 +41,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             Thread.Sleep(1000);
             var currentFiles = FileManager.getCurrentDownloadFiles();
-            var newFilePath = currentFiles.Except(downloadedFilesBefore).FirstOrDefault();
+            newFilePath = currentFiles.Except(downloadedFilesBefore).FirstOrDefault();
             Assert.NotNull(newFilePath);
             this.targetFilename = Path.GetFileName(newFilePath);
         }
@@ -50,53 +51,52 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             string pattern = @"esfaforecast_\d{4}\d{2}\d{2}\d{2}\d{2}\d{2}";
             Assert.IsTrue(Regex.IsMatch(this.targetFilename, pattern, RegexOptions.ECMAScript));
+
+           
         }
-        //[Then(@"column headers are downloaded")]
-        //public void ThenColumnHeadersAreDownloaded()
-        //{
-        //    using (TextFieldParser parser = new TextFieldParser(this.targetFilename))
-        //    {
-        //        parser.TextFieldType = FieldType.Delimited;
-        //        parser.SetDelimiters(",");
-        //        string[] fields = parser.ReadFields();
-        //        fields = fields.Select((field) => field.Trim()).ToArray();
-        //        var expected = new string[] { "Date", "LevyCredit", "CostOfTraining", "CompletionPayments", "Future Funds" };
-        //        Assert.AreEqual(fields.Length, 5);
-        //        foreach (var header in expected)
-        //        {
-        //            Assert.Contains(header, fields);
-        //        }
+        [Then(@"column headers are downloaded")]
+        public void ThenColumnHeadersAreDownloaded()
+        {
+            var readCsv = File.ReadLines(newFilePath);
+            var readCsvHeader = readCsv.First();
+            Assert.True(readCsvHeader.Contains("Date,LevyCredit,CostOfTraining,CompletionPayments,FutureFunds"),"ERROR: File header titles is {0}", readCsv.First());
+                        
+            if (File.Exists(newFilePath))
+            {
+                File.Delete(newFilePath);
+            }
+            
+        }
 
-        //    }
 
-        //}
+        [Then(@"all of the rows have been downloaded")]
+        public void ThenAllOfTheRowsHaveBeenDownloaded()
+        {
+            //load the text file
+            //ignore the header line
+            //check that the file has the same number of rows as Projections
+            //make sure each row in Projections exists in the file
+            
+            
+            ScenarioContext.Current.Pending();
+        }
 
-        //[Then(@"all of the rows have been downloaded")]
-        //public void ThenAllOfTheRowsHaveBeenDownloaded()
-        //{
-        //    //load the text file
-        //    //ignore the header line
-        //    //check that the file has the same number of rows as Projections
-        //    //make sure each row in Projections exists in the file
-        //    ScenarioContext.Current.Pending();
-        //}
+        protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }
 
-        //protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }
+        [Given(@"I have generated the following projections")]
+        public void GivenIHaveGeneratedTheFollowingProjections(Table table)
+        {
+            var projections = table.CreateSet<TestAccountProjection>().ToList();
+            Projections = projections;
+        }
 
-        //[Given(@"I have generated the following projections")]
-        //public void GivenIHaveGeneratedTheFollowingProjections(Table table)
-        //{
-        //    var projections = table.CreateSet<TestAccountProjection>().ToList();
-        //    Projections = projections;
-        //}
-
-        //public class TestAccountProjection
-        //{
-        //    public string Date { get; set; }
-        //    public string FundsIn { get; set; }
-        //    public decimal TotalCostOfTraining { get; set; }
-        //    public decimal CompletionPayments { get; set; }
-        //    public decimal FutureFunds { get; set; }
-       // }
+        public class TestAccountProjection
+        {
+            public string Date { get; set; }
+            public string FundsIn { get; set; }
+            public decimal TotalCostOfTraining { get; set; }
+            public decimal CompletionPayments { get; set; }
+            public decimal FutureFunds { get; set; }
+        }
     }
 }

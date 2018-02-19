@@ -10,9 +10,6 @@
         },
         "accountType": {
             "type": "string"
-        },
-        "httpsTrafficOnlyEnabled": {
-            "type": "bool"
         }
     },
     "resources": [
@@ -26,7 +23,6 @@
         },
         "kind": "Storage",
         "properties": {
-          "supportsHttpsTrafficOnly": "[parameters('httpsTrafficOnlyEnabled')]",
           "encryption": {
             "services": {
               "blob": {

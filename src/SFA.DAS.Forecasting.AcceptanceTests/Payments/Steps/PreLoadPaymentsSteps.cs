@@ -72,11 +72,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 return false;
             }, "Failed to find all the payments.");
 
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    Thread.Sleep(3 * 1000);
-            //}
-
             _apiHost.Dispose();
         }
 

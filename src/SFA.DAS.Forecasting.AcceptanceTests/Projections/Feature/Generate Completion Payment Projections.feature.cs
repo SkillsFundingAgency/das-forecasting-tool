@@ -32,8 +32,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Generate Completion Payment Projections [CI-506]", "\tAs an employer with a pay bill over £3 million each year and therefore must now " +
-                    "pay the apprenticeship levy\r\n\tI want my levy credit to be forecast for the next " +
-                    "4 years\r\n\tSo that I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
+                    "pay the apprenticeship levy\r\n\tI want my completion costs to be forecast for the " +
+                    "next 4 years\r\n\tSo that I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -130,7 +130,7 @@ this.FeatureBackground();
 #line 21
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 22
- testRunner.Then("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -206,7 +206,47 @@ this.FeatureBackground();
 #line 33
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 34
- testRunner.Then("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("the completion payments should be included in the correct month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC3: Multiple commitments and some with end dates after end of forecast period")]
+        public virtual void AC3MultipleCommitmentsAndSomeWithEndDatesAfterEndOfForecastPeriod()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: Multiple commitments and some with end dates after end of forecast period", ((string[])(null)));
+#line 36
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table5.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Next Year",
+                        "1000",
+                        "6000",
+                        "48"});
+#line 37
+ testRunner.Given("the following commitments have been recorded", ((string)(null)), table5, "Given ");
+#line 40
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 41
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 42
+ testRunner.And("the completion payments should not be included in the projection", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

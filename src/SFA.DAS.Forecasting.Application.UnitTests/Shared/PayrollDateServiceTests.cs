@@ -1,6 +1,7 @@
 ﻿using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Shared;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.Shared
