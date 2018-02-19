@@ -63,14 +63,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     CompletionAmount = 3000
                 }
             }, Moqer.GetMock<IEventPublisher>().Object);
-            
+
             for (var i = 0; i < 24; i++)
             {
                 var costOfTraining = employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(i));
-                Assert.AreEqual(500, costOfTraining,$"Invalid total cost of training for: {DateTime.Today.AddMonths(i)}, expected £500 but was £{costOfTraining}");
+                Assert.AreEqual(500, costOfTraining.Item1, $"Invalid total cost of training for: {DateTime.Today.AddMonths(i)}, expected £500 but was £{costOfTraining}");
             }
             var costOfTrainingCompletionMonth = employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(25));
-            Assert.AreEqual(0, costOfTrainingCompletionMonth, $"Invalid total cost of training for: {DateTime.Today.AddMonths(25)}, expected £0 but was £{costOfTrainingCompletionMonth}");
+            Assert.AreEqual(0, costOfTrainingCompletionMonth.Item1, $"Invalid total cost of training for: {DateTime.Today.AddMonths(25)}, expected £0 but was £{costOfTrainingCompletionMonth}");
         }
 
         [Test]
@@ -109,9 +109,52 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     NumberOfInstallments = 10
                 },
             }, Moqer.GetMock<IEventPublisher>().Object);
-            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today));
-            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(3)));
-            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(6)));
+            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today).Item1);
+            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(3)).Item1);
+            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(6)).Item1);
+        }
+        [Test]
+        public void Includes_Correct_Installment_Commitments_In_Month()
+        {
+            var employerCommitments = new EmployerCommitments(1, new List<Commitment>
+            {
+                new Commitment
+                {
+                    Id = 1,
+                    EmployerAccountId =1,
+                    ApprenticeshipId = 2,
+                    LearnerId = 3,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.AddMonths(2),
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 2
+                },
+                new Commitment
+                {
+                    Id = 2,
+                    EmployerAccountId =1,
+                    ApprenticeshipId = 3,
+                    LearnerId = 4,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.AddMonths(5),
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 5
+                },
+                new Commitment
+                {
+                    Id = 3,
+                    EmployerAccountId =1,
+                    ApprenticeshipId = 4,
+                    LearnerId = 5,
+                    StartDate = DateTime.Today.AddMonths(2),
+                    PlannedEndDate = DateTime.Today.AddMonths(12),
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 10
+                },
+            }, Moqer.GetMock<IEventPublisher>().Object);
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today).Item2.All(id => id == 1 || id == 2));
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).Item2.All(id => id == 2 || id == 3));
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(5)).Item2.All(id => id == 3));
         }
 
         [Test]
@@ -130,7 +173,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     NumberOfInstallments = 2
                 },
             }, Moqer.GetMock<IEventPublisher>().Object);
-            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)));
+            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).Item1);
         }
 
         [Test]
@@ -161,10 +204,43 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     CompletionAmount = 50
                 }
             }, Moqer.GetMock<IEventPublisher>().Object);
-            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today));
-            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)));
-            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(5)));
+            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).Item1);
+            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).Item1);
+            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(5)).Item1);
         }
-
+        [Test]
+        public void Includes_Correct_Completion_Payment_Commitments_In_Month()
+        {
+            var employerCommitments = new EmployerCommitments(1, new List<Commitment>
+            {
+                new Commitment
+                {
+                    Id = 1,
+                    EmployerAccountId =1,
+                    ApprenticeshipId = 2,
+                    LearnerId = 3,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.AddMonths(2),
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 2,
+                    CompletionAmount = 30
+                },
+                new Commitment
+                {
+                    Id = 2,
+                    EmployerAccountId =1,
+                    ApprenticeshipId = 3,
+                    LearnerId = 4,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.AddMonths(5),
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 5,
+                    CompletionAmount = 50
+                }
+            }, Moqer.GetMock<IEventPublisher>().Object);
+            Assert.IsFalse(employerCommitments.GetTotalCompletionPayments(DateTime.Today).Item2.Any());
+            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).Item2.All(id => id == 1));
+            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(5)).Item2.All(id => id == 2));
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.ReadModel.Projections;
@@ -49,17 +50,21 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
+            var commitments = totalCostOfTraning.Item2;
+            commitments.AddRange(completionPayments.Item2);
+            commitments = commitments.Distinct().ToList();
             var projection = new AccountProjectionReadModel
             {
                 FundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = totalCostOfTraning,
-                CompletionPayments = completionPayments,
-                FutureFunds = lastBalance + fundsIn - totalCostOfTraning - completionPayments,
+                TotalCostOfTraining = totalCostOfTraning.Item1,
+                CompletionPayments = completionPayments.Item1,
+                FutureFunds = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1,
                 ProjectionCreationDate = DateTime.UtcNow,
-                ProjectionGenerationType = projectionGenerationType
+                ProjectionGenerationType = projectionGenerationType,
+                Commitments = commitments
             };
             return projection;
         }
