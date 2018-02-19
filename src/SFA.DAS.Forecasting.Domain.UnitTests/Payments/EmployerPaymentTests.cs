@@ -44,7 +44,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 				EmployerAccountId = employerAccountId,
 				ProviderId = ukprn,
 				ApprenticeshipId = apprenticeshipId,
-				Amount = amount
+				Amount = amount,
+				FundingSource = FundingSource.Levy
 			});
 
 			Assert.AreEqual(id, payment.ExternalPaymentId);

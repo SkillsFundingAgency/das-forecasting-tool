@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Payments\Payment.cs" />
     <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />

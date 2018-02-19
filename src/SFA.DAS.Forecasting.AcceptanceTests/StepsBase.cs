@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -32,7 +31,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
-        protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
+	    protected List<Payment> Payments { get => Get<List<Payment>>(); set => Set(value); }
+		protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
         protected List<AccountProjectionReadModel> AccountProjections  { get => Get<List<AccountProjectionReadModel>>(); set => Set(value); }
@@ -44,7 +44,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         }
 
         protected static HttpClient HttpClient = new HttpClient();
-        public T Get<T>(string key = null) where T : class
+
+		public T Get<T>(string key = null) where T : class
         {
             return key == null ? ScenarioContext.Current.Get<T>() : ScenarioContext.Current.Get<T>(key);
         }

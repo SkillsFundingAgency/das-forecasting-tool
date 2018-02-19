@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Dapper;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
@@ -13,25 +15,35 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
 	public class EmployerPaymentDataService : BaseRepository, IEmployerPaymentDataService
 	{
-		public EmployerPaymentDataService(string connectionString, ILog logger) : base(connectionString, logger)
+		public ILog Logger { get; }
+
+		public EmployerPaymentDataService(IApplicationConfiguration applicationConfiguration, ILog logger) : base(applicationConfiguration.DatabaseConnectionString, logger)
 		{
+			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
 
 		public async Task StoreEmployerPayment(Payment employerPayment)
 		{
-			await WithTransaction(async (cnn, tx) =>
-			{
-				try
-				{
-					await StoreEmployerPayment(cnn, employerPayment);
-					tx.Commit();
-				}
-				catch (Exception e)
-				{
-					tx.Rollback();
-					throw;
-				}
-			});
+			var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            try
+            {
+	            await WithConnection(async cnn =>
+	            {
+		            await StoreEmployerPayment(cnn, employerPayment);
+
+		            return 0;
+	            });
+	            txScope.Complete();
+            }
+            catch (Exception ex)
+            {
+	            Logger.Error(ex, $"Error storing payment. Error: {ex}");
+	            throw;
+            }
+            finally
+            {
+                txScope.Dispose();
+            }
 		}
 
 		public async Task<List<Payment>> GetEmployerPayments(long employerAccountId, int month, int year)
@@ -40,12 +52,14 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			{
 				var parameters = new DynamicParameters();
 				parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
-				parameters.Add("@collectionPeriodYear", year, DbType.String);
-				parameters.Add("@collectionPeriodMonth", month, DbType.Byte);
+				parameters.Add("@collectionPeriodYear", year, DbType.Int32);
+				parameters.Add("@collectionPeriodMonth", month, DbType.Int32);
 
 				var employerPayments = await cnn.QueryAsync<Payment>(
 					sql:
-					"SELECT Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear FROM [dbo].[Payment] WHERE EmployerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth",
+					"SELECT Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear " +
+					"FROM [dbo].[Payment] " +
+					"WHERE EmployerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth",
 					param: parameters,
 					commandType: CommandType.Text);
 				return employerPayments.ToList();
@@ -64,11 +78,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			parameters.Add("@receivedTime", employerPayment.ReceivedTime, DbType.DateTime);
 			parameters.Add("@collectionPeriodMonth", employerPayment.CollectionPeriod.Month, DbType.Int32);
 			parameters.Add("@collectionPeriodYear", employerPayment.CollectionPeriod.Year, DbType.Int32);
+			parameters.Add("@fundingSource", employerPayment.FundingSource, DbType.Int16);
 
 			await connection.ExecuteAsync(
 				@"MERGE Payment AS target 
-                                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear) 
-									AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear)
+                                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear, @receivedTime, @fundingSource) 
+									AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
                                     ON(target.EmployerAccountId = source.EmployerAccountId 
 										and target.ExternalPaymentId = source.ExternalPaymentId 
 										and target.ProviderId = source.ProviderId 
@@ -78,8 +93,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                                     WHEN MATCHED THEN
                                         UPDATE SET Amount = source.Amount, ReceivedTime = source.ReceivedTime
                                     WHEN NOT MATCHED THEN
-                                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear)
-                                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear);",
+                                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
+                                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear, source.ReceivedTime, source.FundingSource);",
 				parameters,
 				commandType: CommandType.Text);
 		}

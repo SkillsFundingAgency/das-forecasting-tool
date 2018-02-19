@@ -154,7 +154,6 @@
     <Compile Include="Payments\Handlers\ProcessEmployerCommitmentHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Messages\PreLoadPaymentMessage.cs" />
-    <Compile Include="Payments\Services\EmployerDataService.cs" />
     <Compile Include="Payments\Services\CommitmentDataService.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataService.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
