@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                         "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
                         ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[Amount],[PaymentMetaDataId],[ProviderName] " +
                         ",[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
-                        ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName] " +
+                        ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource]" +
                     "FROM [employer_financial].[Payment] " +
                     "inner join [employer_financial].[PaymentMetaData] metaData " +
                     "on payment.PaymentMetaDataId = metaData.Id " +

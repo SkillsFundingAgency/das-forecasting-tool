@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFA.DAS.Forecasting.Models.Payments;
+using System;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Messages
 {
@@ -17,6 +18,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
         public string CourseName { get; set; }
         public int? CourseLevel { get; set; }
 	    public long Uln { get; set; }
+        public FundingSource FundingSource { get; set; }
 
         public DateTime? CourseStartDate { get; set; }
 

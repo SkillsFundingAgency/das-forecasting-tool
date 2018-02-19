@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Validation;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 {
@@ -18,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                 EmployerAccountId = 1,
                 Amount = 100,
                 ApprenticeshipId = 1,
-                CollectionPeriod = new CollectionPeriod
+                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod
                 {
                     Id = Guid.NewGuid().ToString("D"),
                     Month = 1,
@@ -30,14 +31,24 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                     PlannedEndDate = DateTime.Today.AddMonths(14),
                     CompletionAmount = 240,
                     MonthlyInstallment =  87.27m,
-                    TotalInstallments = 12
+                    TotalInstallments = 12,
+                    EndpointAssessorId = "EA-Id1",
+                    ActualEndDate = DateTime.MinValue
                 },
                 Id = Guid.NewGuid().ToString("D"),
-                Ukprn = 2
+                Ukprn = 2                
             };
         }
 
-		[Test]
+        [Test]
+        public void Should_Pass_validation()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            var result = validator.Validate(PaymentCreatedMessage);
+            Assert.IsNotEmpty(result);
+        }
+
+        [Test]
 		public void Fails_If_Employer_Account_Id_Is_Not_Populated()
 		{
 			var validator = new PaymentEventSuperficialValidator();
@@ -72,5 +83,23 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		    var result = validator.Validate(PaymentCreatedMessage);
 		    Assert.IsNotEmpty(result);
 	    }
-	}
+
+        [Test]
+        public void Fails_If_Funding_Source_Is_LessThan_0()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.FundingSource = (FundingSource)0;
+            var result = validator.Validate(PaymentCreatedMessage);
+            Assert.IsNotEmpty(result);
+        }
+
+        [Test]
+        public void Fails_If_Funding_Source_Is_MoreThan_2()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.FundingSource = (FundingSource)0;
+            var result = validator.Validate(PaymentCreatedMessage);
+            Assert.IsNotEmpty(result);
+        }
+    }
 }

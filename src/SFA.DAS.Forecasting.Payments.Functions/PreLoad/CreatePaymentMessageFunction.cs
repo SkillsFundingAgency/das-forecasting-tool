@@ -66,7 +66,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 EarningDetails = ed,
-                
+                FundingSource = payment.FundingSource
             };
         }
     }

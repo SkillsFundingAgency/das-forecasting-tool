@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Forecasting.Core.Validation;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
@@ -33,7 +34,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
 		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Ukprn)} is less than zero." });
 	        }
 
-	        var earningsValidation = new EarningDetailsSuperficialValidator().Validate(itemToValidate.EarningDetails);
+            if (!(itemToValidate.FundingSource == FundingSource.Levy || itemToValidate.FundingSource == FundingSource.Transfer) )
+            {
+                failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.FundingSource)} is not valid." });
+            }
+
+            var earningsValidation = new EarningDetailsSuperficialValidator().Validate(itemToValidate.EarningDetails);
 
 			failures.AddRange(earningsValidation);
 

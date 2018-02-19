@@ -26,11 +26,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
 		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.PlannedEndDate)} is not a valid date." });
 	        }
 
-	        if (itemToValidate.ActualEndDate == System.DateTime.MinValue) // What is a valid date?
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.ActualEndDate)} is not a valid date." });
-			}
-
 	        if (itemToValidate.CompletionAmount < 0)
 	        {
 		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.CompletionAmount)} is less than zero." });
