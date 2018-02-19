@@ -94,6 +94,8 @@ this.FeatureBackground();
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 14
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 15
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -166,6 +168,8 @@ this.FeatureBackground();
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 34
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 35
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -238,6 +242,8 @@ this.FeatureBackground();
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 52
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 53
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -308,6 +314,8 @@ this.FeatureBackground();
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 70
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 71
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
