@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 using System;
@@ -18,9 +19,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
     {
         public EmployerDatabaseService(
-            string connectionString,
+            IApplicationConfiguration config,
             ILog logger)
-            : base(connectionString, logger)
+            : base(config.EmployerConnectionString, logger)
         {
             //_logger = logger;
         }

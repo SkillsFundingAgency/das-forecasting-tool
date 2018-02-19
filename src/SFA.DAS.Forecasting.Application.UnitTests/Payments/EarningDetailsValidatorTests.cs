@@ -94,5 +94,13 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		    var result = validator.Validate(EarningDetails);
 		    Assert.IsNotEmpty(result);
 	    }
-	}
+
+        [Test]
+        public void Fails_If_Earning_Details_Are_Null()
+        {
+            var validator = new EarningDetailsSuperficialValidator();
+            var result = validator.Validate(null);
+            Assert.IsNotEmpty(result);
+        }
+    }
 }

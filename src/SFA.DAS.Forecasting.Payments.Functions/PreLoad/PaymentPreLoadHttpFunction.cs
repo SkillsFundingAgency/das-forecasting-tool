@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -15,14 +16,14 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class PaymentPreLoadHttpFunction : IFunction
     {
         [FunctionName("PaymentPreLoadHttpFunction")]
-        [return: Queue(QueueNames.PreLoadPayment)]
+        //[return: Queue(QueueNames.PreLoadPayment)]
         public static async Task Run(
             [HttpTrigger(AuthorizationLevel.Function, 
-            "post", 
-            Route = "PaymentPreLoadHttpFunction")]HttpRequestMessage req,
+            "post", Route = "PaymentPreLoadHttpFunction")]HttpRequestMessage req,
             [Queue(QueueNames.PreLoadPayment)] ICollector<PreLoadPaymentMessage> outputQueueMessage,
             TraceWriter writer)
         {
+            // Creates a msg for each EmployerAccountId
             await FunctionRunner.Run<PaymentPreLoadHttpFunction>(writer,
                async (container, logger) =>
                {
@@ -34,30 +35,26 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                        logger.Warn($"{nameof(PreLoadPaymentRequest)} not valid. Function will exit.");
                        return;
                    }
-
                    logger.Info($"{nameof(PaymentPreLoadHttpFunction)} started. Data: {string.Join("|", preLoadRequest.EmployerAccountIds)}, {preLoadRequest.PeriodYear}, {preLoadRequest.PeriodMonth}");
 
                    var hashingService = container.GetInstance<IHashingService>();
 
-                   var test8509 = hashingService.HashValue(8509);
-                   var test1234 = hashingService.HashValue(1234);
-
-                   var messageCount = 0;
                    foreach (var employerId in preLoadRequest.EmployerAccountIds)
                    {
                        var id = hashingService.DecodeValue(employerId);
-                        messageCount++;
                         outputQueueMessage.Add(
                             new PreLoadPaymentMessage
                             {
                                 EmployerAccountId = id,
+                                HashedEmployerAccountId = employerId,
                                 PeriodYear = preLoadRequest.PeriodYear,
-                                PeriodMonth = preLoadRequest.PeriodMonth
+                                PeriodMonth = preLoadRequest.PeriodMonth,
+                                PeriodId = preLoadRequest.PeriodId
                             }
                         );
                    }
 
-                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.PaymentValidator} queue.");
+                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} levy declarations to  {QueueNames.PreLoadPayment} queue.");
                });
         }
     }
@@ -69,5 +66,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         public int PeriodYear { get; set; }
 
         public int PeriodMonth { get; set; }
+
+        public string PeriodId { get; set; }
     }
 }
