@@ -27,11 +27,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     .Ctor<string>("allowedCharacters").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AllowedHashstringCharacters)
                     .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().Hashstring);
             }
-
-            ForSingletonOf<IHashingService>()
-                .Use<HashingService.HashingService>()
-                .Ctor<string>("allowedCharacters").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AllowedHashstringCharacters)
-                .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().Hashstring);
             For<IAccountApiClient>()
                 .Use<AccountApiClient>()
                 .Ctor<AccountApiConfiguration>()
