@@ -30,7 +30,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections") ?? "0"),
                 BackLink = GetAppSetting("BackLink"),
                 LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast") ?? "false"),
-                AccountApi = GetAccount()
+                AccountApi = GetAccount(),
+                PaymentEventsApi = new PaymentsEventsApiConfiguration
+                {
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl"),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken"),
+                }
             };
             return configuration;
         }

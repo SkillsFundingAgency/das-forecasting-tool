@@ -1,28 +1,23 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Payments.Functions
+namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
 {
     public class CreatePaymentMessageFunction : IFunction
     {
         [FunctionName("CreatePaymentMessageFunction")]
-        public static async Task Run(
+        public static void Run(
             [QueueTrigger(QueueNames.AddEarningDetails)]PreLoadMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<CreatePaymentMessageFunction>(writer,
-                async (container, logger) =>
+            FunctionRunner.Run<CreatePaymentMessageFunction>(writer, (container, logger) =>
                 {
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
 
@@ -32,7 +27,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 
                     var paymentCreatedMessage = payments
                         .Select(p => CreatePayment(p, earningDetails))
-                        .Where(p => p != null);
+                        .Where(p => p != null)
+                        .ToList();
 
                     foreach (var p in paymentCreatedMessage)
                     {
@@ -40,8 +36,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     }
 
                     // ToDo: Delete from TS
-                    logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count()}");
-
+                    logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
                 });
         }
 

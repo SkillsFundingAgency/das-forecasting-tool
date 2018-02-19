@@ -12,7 +12,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
     [Binding]
     public class BindingBootstrapper : StepsBase
     {
-        private static ApiHost _apiHost;
         private static NancyHost Host { get; set; }
         [BeforeTestRun(Order = 0)]
         public static void SetUpContainer()
@@ -26,7 +25,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     UrlReservations = new UrlReservations { CreateAutomatically = true, User = "Everyone" }
                 };
                 Host = new NancyHost(config, new Uri("http://localhost:50002/"));
-
                 Host.Start();
             }
         }

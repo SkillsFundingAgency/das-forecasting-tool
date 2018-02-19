@@ -3,7 +3,7 @@ using SFA.DAS.Provider.Events.Api.Client;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
-    public class ApplicationConfiguration: IApplicationConfiguration
+    public class ApplicationConfiguration : IApplicationConfiguration
     {
         public string DatabaseConnectionString { get; set; }
         public string StorageConnectionString { get; set; }
@@ -23,5 +23,4 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string ClientToken { get; set; }
         public string ApiBaseUrl { get; set; }
     }
-
 }

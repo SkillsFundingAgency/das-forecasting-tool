@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using NUnit.Framework;
-using SFA.DAS.Forecasting.AcceptanceTests.Services;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Models.Payments;
 using TechTalk.SpecFlow;
 using CollectionPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.CollectionPeriod;
 

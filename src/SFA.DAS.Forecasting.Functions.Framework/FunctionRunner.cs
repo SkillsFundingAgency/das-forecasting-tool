@@ -42,6 +42,29 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
         }
 
+        public static void Run<TFunction>(TraceWriter writer, Action<IContainer, ILog> runAction) where TFunction : IFunction
+        {
+            ILog logger = null;
+            try
+            {
+                var container = ContainerBootstrapper.Bootstrap();
+                using (container.GetNestedContainer())
+                {
+                    ConfigureContainer(writer, container);
+                    logger = container.GetInstance<ILog>();
+                    runAction(container, logger);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (logger != null)
+                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
+                else
+                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                throw;
+            }
+        }
+
         public static TReturn Run<TFunction, TReturn>(TraceWriter writer, Func<IContainer, ILog, TReturn> runAction) where TFunction : IFunction
         {
             try
