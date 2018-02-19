@@ -13,13 +13,14 @@ Scenario: AC1: DownloadForecastBalanceSheet_Forecast between payments made and 2
 	 Then the csv should be downloaded 
 	 And the downloaded filename is in the format esfaforecast_yyyymmddhhmmss
 	 And column headers are downloaded
-  #   And all of the rows have been downloaded
+     And all of the rows have been downloaded
 
 
 
   Scenario: AC2 - Forecast data is displayed correctly when forecast between payments made and 23rd of month
 
   Given I have generated the following projections
+  
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
   | Jan 18 | 1000     | 0                | 0                   | 1000         |
   | Feb 18 | 1000     | 0                | 0                   | 1000         |
@@ -29,11 +30,12 @@ Scenario: AC1: DownloadForecastBalanceSheet_Forecast between payments made and 2
   | Jul 18 | 1000     | 0                | 0                   | 1000         |
   | Aug 18 | 1000     | 0                | 0                   | 1000         |
 
+  And I'm on the Funding projection page  
   When I select download as csv
   Then the csv should be downloaded 
   And the downloaded filename is in the format esfaforecast_yyyymmddhhmmss
   And column headers are downloaded
-  #And all of the rows have been downloaded
+  And all of the rows have been downloaded
 
   Scenario: AC3 - Forecast data is displayed correctly when forecast between 23rd of month until next payments made
 

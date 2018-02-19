@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -10,20 +10,20 @@ using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
-    public class PaymentPreLoadGetEarningDetailsFunction : IFunction
+    public class GetEarningDetailsFunction : IFunction
     {
-        [FunctionName("PaymentPreLoadGetEarningDetailsFunction")]
+        [FunctionName("GetEarningDetailsFunction")]
         [return: Queue(QueueNames.AddEarningDetails)]
-        public static async Task<PreLoadMessage> Run(
-            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadMessage message, 
+        public static async Task<PreLoadPaymentMessage> Run(
+            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentPreLoadGetEarningDetailsFunction, PreLoadMessage>(writer,
+            return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer,
                 async (container, logger) => {
 
                     // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
                     //  --> Save to TS
-                    logger.Info($"Running {nameof(PaymentPreLoadGetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
+                    logger.Info($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
 
                     var paymentDataService = container.GetInstance<PaymentApiDataService>();
                     var hashingService = container.GetInstance<IHashingService>();

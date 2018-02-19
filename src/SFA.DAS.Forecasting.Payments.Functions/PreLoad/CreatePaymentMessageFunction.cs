@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -12,12 +14,13 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
     public class CreatePaymentMessageFunction : IFunction
     {
         [FunctionName("CreatePaymentMessageFunction")]
-        public static void Run(
-            [QueueTrigger(QueueNames.AddEarningDetails)]PreLoadMessage message,
+        public static async Task Run(
+            [QueueTrigger(QueueNames.AddEarningDetails)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
             TraceWriter writer)
         {
-            FunctionRunner.Run<CreatePaymentMessageFunction>(writer, (container, logger) =>
+            await FunctionRunner.Run<CreatePaymentMessageFunction>(writer,
+                async (container, logger) =>
                 {
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
 
@@ -35,7 +38,9 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
                         outputQueueMessage.Add(p);
                     }
 
-                    // ToDo: Delete from TS
+                    await dataService.DeletePayment(message.EmployerAccountId);
+                    await dataService.DeleteEarningDetails(message.EmployerAccountId);
+
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
                 });
         }

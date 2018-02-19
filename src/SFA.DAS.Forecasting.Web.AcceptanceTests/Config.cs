@@ -12,6 +12,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public string Environment => GetAppSetting("Environment");
         public string WebSiteUrl => GetAppSetting("WebSiteUrl");
 
+        public string EmployerAccountID => GetAppSetting("EmployerAccountID");
+
         public WebDriver Browser => Enum.TryParse(GetAppSetting("Browser"), true, out WebDriver browser)
             ? browser
             : throw new InvalidOperationException($"Invalid browser: {GetAppSetting("Browser")}");

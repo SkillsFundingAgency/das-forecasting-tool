@@ -6,7 +6,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.EmployerAccounts.Events.Messages.PreLoad;
+using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Payments.Functions;
 using SFA.DAS.HashingService;
@@ -56,16 +57,5 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                    logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} levy declarations to {QueueNames.PreLoadPayment} queue.");
                });
         }
-    }
-
-    internal class PreLoadPaymentRequest
-    {
-        public IEnumerable<string> EmployerAccountIds { get; set; }
-
-        public int PeriodYear { get; set; }
-
-        public int PeriodMonth { get; set; }
-
-        public string PeriodId { get; set; }
     }
 }
