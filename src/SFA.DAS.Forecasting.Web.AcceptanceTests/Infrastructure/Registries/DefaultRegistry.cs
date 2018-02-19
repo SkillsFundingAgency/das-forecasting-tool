@@ -1,4 +1,7 @@
 using StructureMap;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Infrastructure.Registries
 {
@@ -16,6 +19,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Infrastructure.Registries
                 scan.RegisterConcreteTypesAgainstTheFirstInterface();
             });
             ForSingletonOf<Config>();
+            For<IDbConnection>()
+                .Use<SqlConnection>()
+                .SelectConstructor(() =>
+                    new SqlConnection(ConfigurationManager.ConnectionStrings["DatabaseConnectionString"]
+                        .ConnectionString))
+                .Ctor<string>("connectionString")
+                .Is(ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString);
         }
     }
 }
