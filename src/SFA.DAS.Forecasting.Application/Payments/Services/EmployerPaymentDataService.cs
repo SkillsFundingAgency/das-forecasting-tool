@@ -17,7 +17,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 	{
 		public ILog Logger { get; }
 
-		public EmployerPaymentDataService(IApplicationConfiguration applicationConfiguration, ILog logger) : base(applicationConfiguration.DatabaseConnectionString, logger)
+		public EmployerPaymentDataService(IApplicationConfiguration applicationConfiguration , ILog logger) 
+            : base(applicationConfiguration.DatabaseConnectionString, logger)
 		{
 			Logger = logger ?? throw new ArgumentNullException(nameof(logger));
 		}
@@ -80,21 +81,21 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			parameters.Add("@collectionPeriodYear", employerPayment.CollectionPeriod.Year, DbType.Int32);
 			parameters.Add("@fundingSource", employerPayment.FundingSource, DbType.Int16);
 
-			await connection.ExecuteAsync(
-				@"MERGE Payment AS target 
-                                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear, @receivedTime, @fundingSource) 
-									AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
-                                    ON(target.EmployerAccountId = source.EmployerAccountId 
-										and target.ExternalPaymentId = source.ExternalPaymentId 
-										and target.ProviderId = source.ProviderId 
-										and target.LearnerId = source.LearnerId 
-										and target.CollectionPeriodMonth = source.CollectionPeriodMonth 
-										and target.CollectionPeriodYear = source.CollectionPeriodYear)
-                                    WHEN MATCHED THEN
-                                        UPDATE SET Amount = source.Amount, ReceivedTime = source.ReceivedTime
-                                    WHEN NOT MATCHED THEN
-                                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
-                                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear, source.ReceivedTime, source.FundingSource);",
+            await connection.ExecuteAsync(
+                @"MERGE Payment AS target 
+                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear, @receivedTime, @fundingSource) 
+					AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
+                    ON(target.EmployerAccountId = source.EmployerAccountId 
+						and target.ExternalPaymentId = source.ExternalPaymentId 
+						and target.ProviderId = source.ProviderId 
+						and target.LearnerId = source.LearnerId 
+						and target.CollectionPeriodMonth = source.CollectionPeriodMonth 
+						and target.CollectionPeriodYear = source.CollectionPeriodYear)
+                    WHEN MATCHED THEN
+                        UPDATE SET Amount = source.Amount, ReceivedTime = source.ReceivedTime
+                    WHEN NOT MATCHED THEN
+                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
+                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear, source.ReceivedTime, source.FundingSource);",
 				parameters,
 				commandType: CommandType.Text);
 		}

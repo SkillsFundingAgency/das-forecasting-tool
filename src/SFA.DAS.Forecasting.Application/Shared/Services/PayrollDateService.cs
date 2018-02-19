@@ -2,7 +2,7 @@
 using System.Linq;
 using SFA.DAS.Forecasting.Domain.Shared;
 
-namespace SFA.DAS.Forecasting.Application.Shared
+namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public class PayrollDateService : IPayrollDateService
     {

@@ -1,0 +1,51 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": {
+      "value": "[parameters('appName')]"
+    },
+    "appHostingPlanName": {
+      "value": "[parameters('appHostingPlanName')]"
+    },
+    "appHostingEnvironment": {
+      "value": "[parameters('appHostingEnvironment')]"
+    },
+    "appServerFarmResourceGroup": {
+      "value": "[parameters('appServerFarmResourceGroup')]"
+    },
+    "subscriptionId": {
+      "value": "[parameters('subscriptionid')]"
+    },
+    "appSettingEnvironmentName": {
+      "value": "[parameters('appSettingEnvironmentName')]"
+    },
+    "appSettingRedisConnection": {
+      "value": "[parameters('appSettingRedisConnection')]"
+    },
+    "appSettingLoggingRedisConnectionString": {
+      "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+    },
+    "appSettingLoggingRedisKey": {
+      "value": "[parameters('appSettingLoggingRedisKey')]"
+    },
+    "appSettingAllowedHashstringCharacters": {
+      "value": "[parameters('appSettingAllowedHashstringCharacters')]"
+    },
+    "appSettingHashString": {
+      "value": "[parameters('appSettingHashString')]"
+    },
+    "appSettingDatabaseConnectionString": {
+      "value": "[parameters('appSettingDatabaseConnectionString')]"
+    },
+    "appSettingStorageConnectionString": {
+      "value": "[parameters('appSettingStorageConnectionString')]"
+    },
+    "storageName": {
+      "value": "[parameters('storageName')]"
+    },
+    "storageAccountType": {
+      "value": "[parameters('storageAccountType')]"
+    }
+  }
+}

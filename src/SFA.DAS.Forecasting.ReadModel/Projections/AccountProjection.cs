@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Forecasting.ReadModel.Projections
 {
@@ -14,5 +15,6 @@ namespace SFA.DAS.Forecasting.ReadModel.Projections
         public decimal TotalCostOfTraining { get; set; }
         public decimal CompletionPayments { get; set; }
         public decimal FutureFunds { get; set; }
+        public List<long> Commitments { get; set; } = new List<long>();
     }
 }

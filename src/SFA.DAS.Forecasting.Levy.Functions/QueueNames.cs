@@ -6,6 +6,6 @@
         public const string ValidateDeclaration = "forecasting-levy-validate-declaration";
         public const string StoreLevyDeclaration = "forecasting-levy-store-declaration";
         public const string AllowProjection = "forecasting-levy-allow-projection";
-        public const string GenerateLevyProjections = "forecasting-projections-generate-levy-projections";
+        public const string GenerateProjections = "forecasting-projections-generate-projections";
     }
 }

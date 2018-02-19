@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
-using NLog;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
-using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
-	public class CommitmentDataService : BaseRepository, ICommitmentDataService
+    public class CommitmentDataService : BaseRepository, ICommitmentDataService
 	{
-
 		public ILog Logger { get; }
 
 		public CommitmentDataService(IApplicationConfiguration applicationConfiguration, ILog logger) : base(applicationConfiguration.DatabaseConnectionString, logger)

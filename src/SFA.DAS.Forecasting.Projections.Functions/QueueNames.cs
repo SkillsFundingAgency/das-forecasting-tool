@@ -2,7 +2,8 @@
 {
     public class QueueNames
     {
-        public const string GenerateLevyProjections = "forecasting-projections-generate-levy-projections";
-        public const string GeneratePaymentProjections = "forecasting-projections-generate-payment-projections";
+        public const string GenerateProjections = "forecasting-projections-generate-projections";
+        public const string BuildProjections = "forecasting-projections-build-projections";
+        public const string GetAccountBalance = "forecasting-projections-get-account-balance";
     }
 }

@@ -6,11 +6,11 @@ using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Payments
 {
-    public class EmployerPayment
+    public class EmployerPaymentService
     {
 		private readonly IEmployerPaymentRepository _paymentStorage;
 
-	    public EmployerPayment(IEmployerPaymentRepository paymentStorage)
+	    public EmployerPaymentService(IEmployerPaymentRepository paymentStorage)
 	    {
 		    _paymentStorage = paymentStorage;
 	    }

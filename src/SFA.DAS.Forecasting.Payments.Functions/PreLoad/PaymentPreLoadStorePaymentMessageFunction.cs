@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                async (container, logger) =>
                {
                    var employerData = container.GetInstance<IEmployerDatabaseService>();
+                   logger.Info($"Storing data for EmployerAcount: {message.EmployerAccountId}");
 
                    var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
 

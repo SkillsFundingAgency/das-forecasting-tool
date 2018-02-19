@@ -16,7 +16,6 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class PaymentPreLoadHttpFunction : IFunction
     {
         [FunctionName("PaymentPreLoadHttpFunction")]
-        //[return: Queue(QueueNames.PreLoadPayment)]
         public static async Task Run(
             [HttpTrigger(AuthorizationLevel.Function, 
             "post", Route = "PaymentPreLoadHttpFunction")]HttpRequestMessage req,
@@ -54,7 +53,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                         );
                    }
 
-                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} levy declarations to  {QueueNames.PreLoadPayment} queue.");
+                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} levy declarations to {QueueNames.PreLoadPayment} queue.");
                });
         }
     }

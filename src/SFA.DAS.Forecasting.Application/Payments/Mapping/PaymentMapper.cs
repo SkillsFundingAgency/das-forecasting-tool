@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				},
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
 				ReceivedTime = DateTime.Now,
-				FundingSource = FundingSource.Levy
+                FundingSource = FundingSource.Levy // ToDo: Get for somewhere?
 			};
 		}
 

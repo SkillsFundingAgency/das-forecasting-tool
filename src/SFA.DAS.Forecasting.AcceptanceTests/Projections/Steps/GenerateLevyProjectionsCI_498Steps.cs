@@ -48,7 +48,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         {
             Balance = balance;
             DeleteBalance();
-            InsertNewBalance(balance);
+            EmployerApiStub.SimpleApiModule.AccountBalance = balance;
+            //InsertNewBalance(balance);
         }
 
         [When(@"the account projection is triggered after levy has been declared")]

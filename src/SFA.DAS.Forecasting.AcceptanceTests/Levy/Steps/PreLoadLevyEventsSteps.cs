@@ -15,7 +15,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     public class PreLoadLevyEventsSteps : StepsBase
     {
         private const string FeatureName= "PreLoadLevyEvents";
-        private static string Url = Path.Combine(Config.LevyFunctionUrl, "LevyDeclarationPreLoadHttpFunction");
 
         private static ApiHost _apiHost;
         
@@ -25,7 +24,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-            _apiHost = new ApiHost();
+//            _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
             Thread.Sleep(1000);
         }
@@ -34,7 +33,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public void BeforeScenario()
         {
             ClearDatabase();
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
 
         [AfterScenario]
@@ -50,7 +49,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             var item = "{\"EmployerAccountIds\":[\"MJK9XV\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
 
             var client = new HttpClient();
-            await client.PostAsync(Url, new StringContent(item));
+            await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
         }
 
         [When(@"data have been processed")]

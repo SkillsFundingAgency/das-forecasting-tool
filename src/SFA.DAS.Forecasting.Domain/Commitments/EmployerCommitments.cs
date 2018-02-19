@@ -67,23 +67,23 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             return true;
         }
 
-        public virtual decimal GetTotalCostOfTraining(DateTime date)
+        public virtual Tuple<decimal, List<long>> GetTotalCostOfTraining(DateTime date)
         {
             var startOfMonth = date.GeStartOfMonth();
-            return _commitments.Where(commitment =>
+            var commitments = _commitments.Where(commitment =>
                     commitment.StartDate.GeStartOfMonth() <= startOfMonth &&
                     commitment.PlannedEndDate.GeStartOfMonth().AddMonths(-1) >= startOfMonth)
-                .Select(commitment => commitment.MonthlyInstallment)
-                .Sum();
+                .ToList();
+            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.MonthlyInstallment), commitments.Select(c => c.Id).ToList());
         }
 
-        public virtual decimal GetTotalCompletionPayments(DateTime date)
+        public virtual Tuple<decimal, List<long>> GetTotalCompletionPayments(DateTime date)
         {
             var startOfMonth = date.GeStartOfMonth();
-            return _commitments.Where(commitment =>
-                    commitment.PlannedEndDate.GeStartOfMonth() == startOfMonth)
-                .Select(commitment => commitment.CompletionAmount)
-                .Sum();
+            var commitments = _commitments.Where(commitment =>
+                   commitment.PlannedEndDate.GeStartOfMonth() == startOfMonth)
+                .ToList();
+            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.CompletionAmount), commitments.Select(c => c.Id).ToList());
         }
     }
 }
