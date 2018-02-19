@@ -18,9 +18,6 @@
     "hostingPlanName": {
       "type": "string"
     },
-    "location": {
-      "type": "string"
-    },
     "hostingEnvironment": {
       "type": "string"
     },

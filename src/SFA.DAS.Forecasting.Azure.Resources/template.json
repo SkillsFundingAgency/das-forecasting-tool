@@ -53,6 +53,9 @@
     "storageAccountType": {
       "type": "string"
     },
+    "storageAccountResourceGroup": {
+      "type": "string"
+    },
     "kvName": {
       "type": "string"
     },
@@ -102,34 +105,25 @@
     "prjFunAppName": {
       "type": "string"
     },
-    "storageName": {
+    "funAppHostingPlanName": {
       "type": "string"
     },
-    "storageAccountResourceGroup": {
+    "funAppHostingEnvironment": {
       "type": "string"
     },
-    "hostingPlanName": {
+    "funAppServerFarmResourceGroup": {
       "type": "string"
     },
-    "hostingEnvironment": {
+    "funAppSettingPaymentsApiBaseUrl": {
       "type": "string"
     },
-    "serverFarmResourceGroup": {
+    "funAppSettingPaymentsApiToken": {
       "type": "string"
     },
-    "subscriptionId": {
+    "funAppSettingEnvironment": {
       "type": "string"
     },
-    "PaymentsApiBaseUrl": {
-      "type": "string"
-    },
-    "PaymentsApiToken": {
-      "type": "string"
-    },
-    "Environment": {
-      "type": "string"
-    },
-    "DbConnectionString": {
+    "funAppSettingDbConnectionString": {
       "type": "string"
     }
   },
@@ -236,41 +230,35 @@
           "prjFunAppName": {
             "value": "[parameters('prjFunAppName')]"
           },
+          "storageName": {
+            "value": "[parameters('storageName')]"
+          },
+          "storageAccountResourceGroup": {
+            "value": "[parameters('storageAccountResourceGroup')]"
+          },
           "hostingPlanName": {
-            "value": "[parameters('appHostingPlanName')]"
+            "value": "[parameters('funAppHostingPlanName')]"
           },
           "hostingEnvironment": {
-            "value": "[parameters('appHostingEnvironment')]"
+            "value": "[parameters('funAppHostingEnvironment')]"
           },
           "serverFarmResourceGroup": {
-            "value": "[parameters('appServerFarmResourceGroup')]"
+            "value": "[parameters('funAppServerFarmResourceGroup')]"
           },
           "subscriptionId": {
             "value": "[parameters('subscriptionid')]"
           },
-          "EnvironmentName": {
-            "value": "[parameters('appSettingEnvironmentName')]"
+          "PaymentsApiBaseUrl": {
+            "value": "[parameters('funAppSettingPaymentsApiBaseUrl')]"
           },
-          "RedisConnection": {
-            "value": "[parameters('appSettingRedisConnection')]"
+          "PaymentsApiToken": {
+            "value": "[parameters('funAppSettingPaymentsApiToken')]"
           },
-          "LoggingRedisConnectionString": {
-            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          "Environment": {
+            "value": "[parameters('funAppSettingEnvironment')]"
           },
-          "LoggingRedisKey": {
-            "value": "[parameters('appSettingLoggingRedisKey')]"
-          },
-          "AllowedHashstringCharacters": {
-            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
-          },
-          "HashString": {
-            "value": "[parameters('appSettingHashString')]"
-          },
-          "DatabaseConnectionString": {
-            "value": "[parameters('appSettingDatabaseConnectionString')]"
-          },
-          "StorageConnectionString": {
-            "value": "[parameters('appSettingStorageConnectionString')]"
+          "DbConnectionString": {
+            "value": "[parameters('funAppSettingDbConnectionString')]"
           }
         }
       }

@@ -48,8 +48,8 @@
     <Content Include="Storage\template.json" />
     <Content Include="Web App\parameters.json" />
     <Content Include="Web App\template.json" />
-    <None Include="parameters.json" />
-    <None Include="template.json" />
+    <Content Include="parameters.json" />
+    <Content Include="template.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
