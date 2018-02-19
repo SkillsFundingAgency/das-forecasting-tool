@@ -9,6 +9,7 @@ using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
@@ -64,8 +65,9 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 CourseLevel = payment.ApprenticeshipCourseLevel,
                 Uln = payment.Uln,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
-                CollectionPeriod = new CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
-                EarningDetails = ed
+                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                EarningDetails = ed,
+                
             };
         }
     }

@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
+namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
 {
     using TechTalk.SpecFlow;
     
@@ -18,20 +18,21 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("PreLoadLevyEvents")]
-    public partial class PreLoadLevyEventsFeature
+    [NUnit.Framework.DescriptionAttribute("PreLoadPayments")]
+    public partial class PreLoadPaymentsFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "PreLoadLevyEvents.feature"
+#line 1 "PreLoadPayments.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "PreLoadLevyEvents", "\tPre load levy declarations", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "PreLoadPayments", "\tAs a product owner \r\n\tI want to pre populate the database for some employers\r\n\tS" +
+                    "o that I don\'t have to wait for the process to run.", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -64,18 +65,20 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Pre load levy events")]
-        public virtual void PreLoadLevyEvents()
+        [NUnit.Framework.DescriptionAttribute("Pre load payment events")]
+        [NUnit.Framework.CategoryAttribute("mytag")]
+        public virtual void PreLoadPaymentEvents()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre load levy events", ((string[])(null)));
-#line 4
-this.ScenarioSetup(scenarioInfo);
-#line 5
- testRunner.Given("I trigger function for 3 employers to have their data loaded.", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 6
- testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre load payment events", new string[] {
+                        "mytag"});
 #line 7
- testRunner.Then("there will be 3 records in the storage", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+this.ScenarioSetup(scenarioInfo);
+#line 8
+ testRunner.Given("I trigger PreLoadPayment function some employers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 9
+ testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 10
+ testRunner.Then("there will be payments for all the employers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

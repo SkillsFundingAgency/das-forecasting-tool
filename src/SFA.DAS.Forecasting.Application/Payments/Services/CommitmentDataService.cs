@@ -1,37 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
-using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
-	public class CommitmentDataService : BaseRepository, ICommitmentDataService
+    public class CommitmentDataService : BaseRepository, ICommitmentDataService
 	{
-		public CommitmentDataService(string connectionString, ILog logger) : base(connectionString, logger)
+		public CommitmentDataService(IApplicationConfiguration config, ILog logger) : base(config.DatabaseConnectionString, logger)
 		{
 		}
 
 		public async Task StoreCommitment(Commitment commitment)
 		{
-			await WithTransaction(async (cnn, tx) =>
+			await WithConnection<int>(async (cnn) =>
 			{
 				try
 				{
 					await StoreCommitment(cnn, commitment);
-					tx.Commit();
 				}
 				catch (Exception e)
 				{
-					tx.Rollback();
 					throw;
 				}
+                return 1;
 			});
 		}
 

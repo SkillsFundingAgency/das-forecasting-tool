@@ -84,6 +84,12 @@
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.0.0.57315, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.57315\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.0.0.57315, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.0.0.57315\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
+    </Reference>
     <Reference Include="StructureMap, Version=4.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>
     </Reference>
@@ -107,7 +113,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
+    <Compile Include="EmployerApiStub\Models\PageOfResults.cs" />
+    <Compile Include="EmployerApiStub\ProviderEventApiModule.cs" />
+    <Compile Include="EmployerApiStub\ProviderEventTestData.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PreLoadPayments.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Payments\Steps\PreLoadPaymentsSteps.cs" />
     <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
@@ -155,6 +170,7 @@
   <ItemGroup>
     <None Include="App.config">
       <TransformOnBuild>true</TransformOnBuild>
+      <SubType>Designer</SubType>
     </None>
     <None Include="App.Debug.config">
       <DependentUpon>App.config</DependentUpon>
@@ -173,6 +189,10 @@
       <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Payments\Feature\PreLoadPayments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PreLoadPayments.feature.cs</LastGenOutput>
+    </None>
     <None Include="Payments\Feature\ProcessPaymentEvent.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ProcessPaymentEvent.feature.cs</LastGenOutput>

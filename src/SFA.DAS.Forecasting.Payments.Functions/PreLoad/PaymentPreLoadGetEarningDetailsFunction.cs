@@ -34,9 +34,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 
                     foreach (var item in earningDetails)
                     {
-                        dataService.StoreEarningDetails(message.EmployerAccountId, item);
+                        await dataService.StoreEarningDetails(message.EmployerAccountId, item);
                     }
-                    // When done send a msg to 
+
+                    logger.Info($"Sending message {nameof(message)} to {QueueNames.AddEarningDetails}");
                     return message;
                 });
         }

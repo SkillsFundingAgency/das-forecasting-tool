@@ -44,6 +44,7 @@
     <Compile Include="Commitments\Commitment.cs" />
     <Compile Include="Levy\LevyDeclaration.cs" />
     <Compile Include="Payments\CollectionPeriod.cs" />
+    <Compile Include="Payments\EmployerPayment.cs" />
     <Compile Include="Payments\EmployerTotalCostOfTraining.cs" />
     <Compile Include="Payments\FundingSource.cs" />
     <Compile Include="Payments\Payment.cs" />

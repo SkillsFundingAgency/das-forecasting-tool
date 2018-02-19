@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -8,24 +9,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
 
-namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
+namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
     [Scope(Feature = FeatureName)]
     [Binding]
-    public class PreLoadLevyEventsSteps : StepsBase
+    public class PreLoadPaymentsSteps : StepsBase
     {
-        private const string FeatureName= "PreLoadLevyEvents";
-
+        private const string FeatureName = "PreLoadPayments";
+        private static IEnumerable<long> _accountIds = new List<long> { 8509 };
+        private static string Url = Path.Combine(Config.PaymentFunctionUrl, "PaymentPreLoadHttpFunction");
         private static ApiHost _apiHost;
-        
-        private static IEnumerable<long> _accountIds = new List<long> { 497, 498, 499 };
 
-        [Scope(Feature = FeatureName)]
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
             _apiHost = new ApiHost();
-            StartFunction("SFA.DAS.Forecasting.Levy.Functions");
+            StartFunction("SFA.DAS.Forecasting.Payments.Functions");
             Thread.Sleep(1000);
         }
 
@@ -36,30 +35,29 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Thread.Sleep(500);
         }
 
-        [AfterScenario]
+        [AfterScenario(Order = 1)]
         public void AfterScenario()
         {
-            //ClearDatabase();
-            Thread.Sleep(1000);
+            ClearDatabase();
         }
 
-        [Given(@"I trigger function for 3 employers to have their data loaded.")]
-        public async Task ITriggerFunction()
+        [Given(@"I trigger PreLoadPayment function some employers")]
+        public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployers()
         {
-            var item = "{\"EmployerAccountIds\":[\"MJK9XV\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
+            var item = "{\"EmployerAccountIds\":[\"MN4YKL\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\"}";
 
             var client = new HttpClient();
-            await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
+            await client.PostAsync(Url, new StringContent(item));
         }
-
+        
         [When(@"data have been processed")]
-        public void DataHaveBeenProcessed()
+        public void WhenDataHaveBeenProcessed()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
-
-        [Then(@"there will be (.*) records in the storage")]
-        public void ThereWillBeThreeRecordsInTheStorage(int expectedCount)
+        
+        [Then(@"there will be payments for all the employers")]
+        public void ThenThereWillBePaymentsForAllTheEmployers()
         {
             WaitForIt(() =>
             {
@@ -67,12 +65,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                    var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
                          , param: parameters, commandType: CommandType.Text);
                     return count == 1;
                 }
                 return false;
-            }, "Failed to find all the levy declarations.");
+            }, "Failed to find all the payments.");
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    Thread.Sleep(3 * 1000);
+            //}
+
+            _apiHost.Dispose();
         }
 
         private void ClearDatabase()
@@ -81,9 +86,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
+                var count = Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId = @employerAccountId"
                      , param: parameters, commandType: CommandType.Text);
-                
+
             }
         }
     }

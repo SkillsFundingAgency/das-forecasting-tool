@@ -46,8 +46,6 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             var levy = matches.SingleOrDefault();
             var accountId = _hashingService.DecodeValue(levy.HashedAccountId);
 
-
-
             return new LevySchemeDeclarationUpdatedMessage
             {
                 AccountId = accountId,

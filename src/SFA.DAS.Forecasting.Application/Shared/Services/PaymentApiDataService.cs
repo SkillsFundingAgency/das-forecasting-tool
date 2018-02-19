@@ -18,14 +18,14 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         public async Task<IEnumerable<EarningDetails>> PaymentForPeriod(string periodId, string employerAccountId)
         {
             List<EarningDetails> result = new List<EarningDetails>();
-            var maxPages = 1000;
+            var maxPages = 10000;
             for (int i = 1; i < maxPages; i++)
             {
-                var pm = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId, page: i);
-                var asdf = pm.Items
+                var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId, page: i);
+                var paymentEarningDetails = page.Items
                     .Select(m => m.EarningDetails);
 
-                foreach (var item in asdf)
+                foreach (var item in paymentEarningDetails)
                 {
                     var earningDetails = item.Select(m => 
                         new EarningDetails
@@ -44,6 +44,8 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
                     result.AddRange(earningDetails);
                 }
+                if (page.PageNumber == page.PageNumber)
+                    break;
             }
             return result;
         }
