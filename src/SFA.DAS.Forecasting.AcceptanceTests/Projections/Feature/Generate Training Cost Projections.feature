@@ -11,7 +11,7 @@ Background:
 	And the following levy declarations have been recorded
 	| Scheme   | Amount | Created Date |
 	| ABC-1234 | 3000   | Today        |
-	And the current balance is 5000
+	And the current balance is 10000
 
 Scenario: AC1: Training cost for commitments included in the projection
 	Given the following commitments have been recorded
@@ -24,9 +24,10 @@ Scenario: AC1: Training cost for commitments included in the projection
 Scenario: AC2: Training cost multiple apprenticeships with different numbers of instalments
 	Given the following commitments have been recorded
 	| Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
-	| Test Apprentice 1 | Test Course | 1            | Test Provider | Yesterday  | 250                | 1500              | 12                     |
+	| Test Apprentice 1 | Test Course | 1            | Test Provider | Yesterday  | 1000               | 6000              | 12                     |
 	| Test Apprentice 2 | Test Course | 1            | Test Provider | Yesterday  | 500                | 3000              | 24                     |
-	| Test Apprentice 3 | Test Course | 1            | Test Provider | Last Year  | 1000               | 6000              | 48                     |
+	| Test Apprentice 3 | Test Course | 1            | Test Provider | Last Year  | 250                | 1500              | 48                     |
+	| Test Apprentice 4 | Test Course | 1            | Test Provider | Next Year  | 1000               | 6000              | 12                     |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And the training costs should be included in the correct months

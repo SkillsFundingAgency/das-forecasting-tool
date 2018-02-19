@@ -58,11 +58,14 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public string GetAppSetting(string keyName)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return string.IsNullOrEmpty(value) || (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
-                   (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false)
+            return string.IsNullOrEmpty(value) || IsDevEnvironment
                 ? value
                 : GetKeyValueSecret(value).Result;
         }
+
+        public static bool IsDevEnvironment =>
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
         public string GetConnectionString(string name)
         {

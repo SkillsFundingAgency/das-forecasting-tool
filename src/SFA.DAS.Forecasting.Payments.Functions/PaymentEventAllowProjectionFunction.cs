@@ -12,18 +12,18 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     public class PaymentEventAllowProjectionFunction : IFunction
     {
 	    [FunctionName("PaymentEventAllowProjectionFunction")]
-	    [return: Queue(QueueNames.GeneratePaymentProjection)]
-		public static async Task<GeneratePaymentAccountProjection> Run(
+	    [return: Queue(QueueNames.GenerateProjections)]
+		public static async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.AllowProjection)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GeneratePaymentAccountProjection>(writer,
+            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GenerateAccountProjectionCommand>(writer,
                 async (container, logger) =>
                 {
 					logger.Debug("Getting payment declaration handler from container.");
 	                var handler = container.GetInstance<AllowAccountProjectionsHandler>();
 	                if (handler == null)
-		                throw new InvalidOperationException($"Faild to get payment handler from container.");
+		                throw new InvalidOperationException($"Failed to get payment handler from container.");
 	                var allowProjections = await handler.Allow(paymentCreatedMessage);
 	                if (!allowProjections)
 	                {
@@ -32,11 +32,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	                }
 
 	                logger.Info($"Now sending message to trigger the account projections for employer '{paymentCreatedMessage.EmployerAccountId}'");
-	                return new GeneratePaymentAccountProjection
-	                {
+	                return new GenerateAccountProjectionCommand
+                    {
 		                EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
-						Month = paymentCreatedMessage.CollectionPeriod.Month,
-						Year = paymentCreatedMessage.CollectionPeriod.Year
+                        ProjectionSource = ProjectionSource.PaymentPeriodEnd,
 	                };
 				});
         }

@@ -12,12 +12,12 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     {
         [FunctionName("TriggerGeneratePaymentProjectionsHttpFunction")]
         public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "TriggerGeneratePaymentProjections/{employerAccountId}")]HttpRequestMessage req, long employerAccountId,
-            [Queue(QueueNames.GeneratePaymentProjections)]ICollector<GeneratePaymentAccountProjection> messages,
-            TraceWriter log)
+            [Queue(QueueNames.GenerateProjections)]ICollector<GenerateAccountProjectionCommand> messages,TraceWriter log)
         {
-            messages.Add(new GeneratePaymentAccountProjection
+            messages.Add(new GenerateAccountProjectionCommand
             {
-                EmployerAccountId = employerAccountId
+                EmployerAccountId = employerAccountId,
+                ProjectionSource = ProjectionSource.PaymentPeriodEnd
             });
 
             // Fetching the name from the path parameter in the request URL

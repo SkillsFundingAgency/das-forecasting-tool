@@ -26,6 +26,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution {
             return new Container(c =>
             {
                 c.AddRegistry<ConfigurationRegistry>();
+                c.AddRegistry<Application.Infrastructure.Registries.DefaultRegistry>();
                 c.AddRegistry<DefaultRegistry>();
             });
         }

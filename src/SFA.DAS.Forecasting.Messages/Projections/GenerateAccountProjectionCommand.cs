@@ -2,8 +2,9 @@
 
 namespace SFA.DAS.Forecasting.Messages.Projections
 {
-    public abstract class GenerateAccountProjection
+    public class GenerateAccountProjectionCommand
     {
         public long EmployerAccountId { get; set; }
+        public ProjectionSource ProjectionSource { get; set; }
     }
 }

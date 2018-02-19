@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-            _apiHost = new ApiHost();
+//            _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
             Thread.Sleep(1000);
         }

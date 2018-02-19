@@ -91,7 +91,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
 #line 11
  testRunner.And("the following levy declarations have been recorded", ((string)(null)), table2, "And ");
 #line 14
- testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the current balance is 10000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -162,8 +162,8 @@ this.FeatureBackground();
                         "1",
                         "Test Provider",
                         "Yesterday",
-                        "250",
-                        "1500",
+                        "1000",
+                        "6000",
                         "12"});
             table4.AddRow(new string[] {
                         "Test Apprentice 2",
@@ -180,16 +180,25 @@ this.FeatureBackground();
                         "1",
                         "Test Provider",
                         "Last Year",
+                        "250",
+                        "1500",
+                        "48"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 4",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Next Year",
                         "1000",
                         "6000",
-                        "48"});
+                        "12"});
 #line 25
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
-#line 30
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 31
- testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 32
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 33
  testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
