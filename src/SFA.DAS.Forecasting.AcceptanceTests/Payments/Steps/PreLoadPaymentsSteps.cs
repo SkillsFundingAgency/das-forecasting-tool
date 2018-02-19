@@ -17,7 +17,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
     {
         private const string FeatureName = "PreLoadPayments";
         private static IEnumerable<long> _accountIds = new List<long> { 8509 };
-        private static string Url = Path.Combine(Config.PaymentFunctionUrl, "PaymentPreLoadHttpFunction");
         private static ApiHost _apiHost;
 
         [BeforeFeature(Order = 1)]
@@ -47,7 +46,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             var item = "{\"EmployerAccountIds\":[\"MN4YKL\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\"}";
 
             var client = new HttpClient();
-            await client.PostAsync(Url, new StringContent(item));
+            await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
         }
         
         [When(@"data have been processed")]

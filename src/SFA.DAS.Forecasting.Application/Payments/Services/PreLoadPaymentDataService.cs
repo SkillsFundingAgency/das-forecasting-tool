@@ -3,12 +3,9 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Models.Payments;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
@@ -30,7 +27,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         {
             EnsureExists(_pTable);
 
-            var entities = _pTable.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+            var entities = _pTable
+                .ExecuteQuery(new TableQuery<TableEntry>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
 
             return entities
                 .Select(tableEntry => JsonConvert.DeserializeObject<EmployerPayment>(tableEntry.Data))
@@ -78,6 +77,44 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
             var op = TableOperation.InsertOrReplace(tableModel);
 
             await _pTable.ExecuteAsync(op);
+        }
+
+        public async Task DeleteEarningDetails(long employerAccountId)
+        {
+            EnsureExists(_eTable);
+
+            var opb = new TableBatchOperation();
+
+            var entities = _eTable
+                .ExecuteQuery(new TableQuery<TableEntry>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())));
+
+            foreach (var item in entities)
+            {
+                opb.Delete(item);
+            }
+
+            if(opb.Any())
+                await _eTable.ExecuteBatchAsync(opb);
+        }
+
+        public async Task DeletePayment(long employerAccountId)
+        {
+            EnsureExists(_pTable);
+
+            var opb = new TableBatchOperation();
+
+            var entities = _pTable
+                .ExecuteQuery(new TableQuery<TableEntry>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())));
+
+            foreach (var item in entities)
+            {
+                opb.Delete(item);
+            }
+
+            if (opb.Any())
+                await _pTable.ExecuteBatchAsync(opb);
         }
 
         private void EnsureExists(CloudTable table)
