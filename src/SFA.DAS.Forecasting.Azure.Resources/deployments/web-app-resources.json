@@ -38,18 +38,6 @@
     },
     "StorageConnectionString": {
       "type": "string"
-    },
-    "databaseUsername": {
-      "type": "string"
-    },
-    "databasePassword": {
-      "type": "securestring"
-    },
-    "databaseName": {
-      "type": "string"
-    },
-    "sqlServer": {
-      "type": "string"
     }
   },
     "resources": [
