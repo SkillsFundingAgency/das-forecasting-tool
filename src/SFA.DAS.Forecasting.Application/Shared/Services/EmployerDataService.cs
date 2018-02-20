@@ -9,14 +9,19 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
-    public class EmployerDataService
+    public interface IEmployerDataService
+    {
+        Task<LevySchemeDeclarationUpdatedMessage> LevyForPeriod(string employerId, string periodYear, short? periodMonth);
+    }
+
+    public class EmployerDataService : IEmployerDataService
     {
         private readonly IAccountApiClient _accountApiClient;
         private readonly IHashingService _hashingService;
         private readonly ILog _logger;
 
         public EmployerDataService(
-            IAccountApiClient accountApiClient, 
+            IAccountApiClient accountApiClient,
             IHashingService hashingService,
             ILog logger)
         {

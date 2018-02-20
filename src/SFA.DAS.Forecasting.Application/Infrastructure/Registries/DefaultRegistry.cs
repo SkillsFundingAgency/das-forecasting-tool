@@ -3,6 +3,7 @@ using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.HashingService;
+using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
@@ -15,22 +16,24 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             {
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
-                ForSingletonOf<IHashingService>()
+                For<IHashingService>()
                     .Use<DevHashingService>();
             }
             else
             {
                 For<IAccountBalanceService>()
                     .Use<AccountBalanceService>();
-                ForSingletonOf<IHashingService>()
+                For<IHashingService>()
                     .Use<HashingService.HashingService>()
                     .Ctor<string>("allowedCharacters").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AllowedHashstringCharacters)
                     .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().Hashstring);
             }
             For<IAccountApiClient>()
                 .Use<AccountApiClient>()
-                .Ctor<AccountApiConfiguration>()
+                .Ctor<IAccountApiConfiguration>()
                 .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AccountApi);
+            For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
+                .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
         }
     }
 }
