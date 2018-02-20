@@ -1,57 +1,22 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.Forecasting.Core.Validation;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+﻿using SFA.DAS.Forecasting.Application.Payments.Messages;
+using FluentValidation;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
-    public class EarningDetailsSuperficialValidator : ISuperficialValidation<EarningDetails>
+    public class EarningDetailsSuperficialValidator : AbstractValidator<EarningDetails>
     {
-        public List<ValidationFailure> Validate(EarningDetails itemToValidate)
+        public EarningDetailsSuperficialValidator()
         {
-	        var failures = new List<ValidationFailure>();
+            RuleFor(m => m.StartDate).NotEmpty();
+            RuleFor(m => m.PlannedEndDate).NotEmpty();
 
-            if (itemToValidate == null)
-            {
-                failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate)} cannot be null." });
-                return failures;
-            }
+            RuleFor(m => m.CompletionAmount).GreaterThan(0);
+            RuleFor(m => m.CompletionAmount).GreaterThan(0);
+            RuleFor(m => m.CompletionStatus).GreaterThan(0);
+            RuleFor(m => m.MonthlyInstallment).GreaterThan(0);
+            RuleFor(m => m.TotalInstallments).GreaterThan(0);
 
-			if (itemToValidate.StartDate == System.DateTime.MinValue) // What is a valid date?
-			{
-				failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.StartDate)} is not a valid date." });
-			}
-
-	        if (itemToValidate.PlannedEndDate == System.DateTime.MinValue) // What is a valid date?
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.PlannedEndDate)} is not a valid date." });
-	        }
-
-	        if (itemToValidate.CompletionAmount < 0)
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.CompletionAmount)} is less than zero." });
-			}
-
-			if (itemToValidate.CompletionStatus < 0)
-			{
-				failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.CompletionStatus)} is less than zero." });
-			}
-
-	        if (itemToValidate.MonthlyInstallment < 0)
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.MonthlyInstallment)} is less than zero." });
-	        }
-
-	        if (itemToValidate.TotalInstallments < 0)
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.TotalInstallments)} is less than zero." });
-	        }
-
-	        if (string.IsNullOrWhiteSpace(itemToValidate.EndpointAssessorId))
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.EndpointAssessorId)} is missing." });
-	        }
-
-			return failures;
-		}
+            RuleFor(m => m.EndpointAssessorId).NotNull().NotEmpty();
+        }
     }
 }

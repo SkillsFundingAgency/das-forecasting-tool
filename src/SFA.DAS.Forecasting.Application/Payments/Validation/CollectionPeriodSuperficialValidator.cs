@@ -1,31 +1,19 @@
-﻿using System.Collections.Generic;
-using SFA.DAS.Forecasting.Core.Validation;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+﻿using SFA.DAS.Forecasting.Application.Payments.Messages;
+using FluentValidation;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
-    public class CollectionPeriodSuperficialValidator : ISuperficialValidation<CollectionPeriod>
+    public class CollectionPeriodSuperficialValidator : AbstractValidator<CollectionPeriod>
     {
-        public List<ValidationFailure> Validate(CollectionPeriod itemToValidate)
+        public CollectionPeriodSuperficialValidator()
         {
-	        var failures = new List<ValidationFailure>();
+            RuleFor(m => m.Id).NotNull().NotEmpty();
 
-			if (string.IsNullOrWhiteSpace(itemToValidate.Id))
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Id)} is missing." });
-	        }
+            RuleFor(m => m.Month).NotNull().NotEmpty()
+                .InclusiveBetween(0 ,12);
 
-			if (itemToValidate.Month <= 0 || itemToValidate.Month >= 12)
-			{
-				failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Month)} is invalid." });
-			}
-
-	        if (itemToValidate.Year < 0)
-	        {
-		        failures.Add(new ValidationFailure { Reason = $"{nameof(itemToValidate.Month)} is less than zero." });
-	        }
-
-			return failures;
-		}
+            RuleFor(m => m.Year).NotNull().NotEmpty()
+                .GreaterThan(0);
+        }
     }
 }
