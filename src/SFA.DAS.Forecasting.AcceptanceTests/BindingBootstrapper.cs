@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
-using Nancy;
 using Nancy.Hosting.Self;
-using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
 using StructureMap;
 using TechTalk.SpecFlow;

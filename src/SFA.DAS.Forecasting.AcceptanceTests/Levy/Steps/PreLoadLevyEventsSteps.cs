@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     {
         private const string FeatureName= "PreLoadLevyEvents";
 
-        private static ApiHost _apiHost;
+        //private static ApiHost _iHost;
         
         private static IEnumerable<long> _accountIds = new List<long> { 497, 498, 499 };
 
