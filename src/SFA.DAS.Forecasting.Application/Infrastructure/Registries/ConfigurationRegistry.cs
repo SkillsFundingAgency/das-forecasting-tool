@@ -76,8 +76,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public string GetConnectionString(string name)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[name];
-            return connectionString?.ConnectionString ?? ConfigurationManager.AppSettings[name];
+            var connectionString = ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
+            if (string.IsNullOrEmpty(connectionString))
+                return GetAppSetting(name);
+            
+            return IsDevEnvironment
+                ? connectionString
+                : GetKeyValueSecret(connectionString).Result;
         }
     }
 }
