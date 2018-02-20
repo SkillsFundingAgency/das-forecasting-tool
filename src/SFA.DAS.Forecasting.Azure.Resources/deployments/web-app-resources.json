@@ -38,6 +38,10 @@
     },
     "StorageConnectionString": {
       "type": "string"
+    },
+    "LimitForecast": {
+      "type": "bool",
+      "defaultValue": true
     }
   },
     "resources": [
@@ -85,6 +89,14 @@
               {
                 "name": "StorageConnectionString",
                 "value": "[parameters('StorageConnectionString')]"
+              },
+              {
+                "name": "ForecastingRoutePrefix",
+                "value": "forecasting"
+              },
+              {
+                "name": "LimitForecast",
+                "value": "[parameters('LimitForecast')]"
               }
             ],
             "alwaysOn": true,

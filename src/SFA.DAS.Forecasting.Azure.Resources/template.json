@@ -47,6 +47,9 @@
     "appSettingStorageConnectionString": {
       "type": "string"
     },
+    "appSettingLimitForecast": {
+      "type": "bool"
+    },
     "storageName": {
       "type": "string"
     },
@@ -205,6 +208,9 @@
           },
           "StorageConnectionString": {
             "value": "[parameters('appSettingStorageConnectionString')]"
+          },
+          "LimitForecast": {
+            "value": "[parameters('appSettingLimitForecast')]"
           }
         }
       }
