@@ -58,28 +58,28 @@
               "objectId": "[parameters('webAppObjectId')]",
               "tenantId": "[subscription().tenantId]",
               "permissions": {
-                "secrets": "concat('[',parameters('secretsPermissionsList'),']')"
+                "secrets": "[concat('[',parameters('secretsPermissionsList'),']')]"
               }
             },
             {
               "objectId": "[parameters('levyFunAppObjectId')]",
               "tenantId": "[subscription().tenantId]",
               "permissions": {
-                "secrets": "concat('[',parameters('secretsPermissionsList'),']')"
+                "secrets": "[concat('[',parameters('secretsPermissionsList'),']')]"
               }
             },
             {
               "objectId": "[parameters('payFunAppObjectId')]",
               "tenantId": "[subscription().tenantId]",
               "permissions": {
-                "secrets": "concat('[',parameters('secretsPermissionsList'),']')"
+                "secrets": "[concat('[',parameters('secretsPermissionsList'),']')]"
               }
             },
             {
               "objectId": "[parameters('projFunAppObjectId')]",
               "tenantId": "[subscription().tenantId]",
               "permissions": {
-                "secrets": "concat('[',parameters('secretsPermissionsList'),']')"
+                "secrets": "[concat('[',parameters('secretsPermissionsList'),']')]"
               }
             }
           ],
