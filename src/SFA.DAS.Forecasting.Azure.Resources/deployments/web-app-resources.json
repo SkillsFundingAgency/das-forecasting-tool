@@ -36,9 +36,6 @@
     "DatabaseConnectionString": {
       "type": "string"
     },
-    "StorageConnectionString": {
-      "type": "string"
-    },
     "LimitForecast": {
       "type": "bool",
       "defaultValue": true
@@ -85,10 +82,6 @@
               {
                 "name": "DatabaseConnectionString",
                 "value": "[parameters('DatabaseConnectionString')]"
-              },
-              {
-                "name": "StorageConnectionString",
-                "value": "[parameters('StorageConnectionString')]"
               },
               {
                 "name": "ForecastingRoutePrefix",
