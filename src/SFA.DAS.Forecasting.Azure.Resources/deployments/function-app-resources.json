@@ -27,16 +27,49 @@
     "subscriptionId": {
       "type": "string"
     },
-    "PaymentsApiBaseUrl": {
+    "StorageConnectionString": {
       "type": "string"
     },
-    "PaymentsApiToken": {
+    "DatabaseConnectionString": {
       "type": "string"
     },
-    "Environment": {
+    "LoggingRedisConnectionString": {
       "type": "string"
     },
-    "DbConnectionString": {
+    "LoggingRedisKey": {
+      "type": "string"
+    },
+    "EnvironmentName": {
+      "type": "string"
+    },
+    "HashString": {
+      "type": "string"
+    },
+    "AllowedHashstringCharacters": {
+      "type": "string"
+    },
+    "AccountApiTenant": {
+      "type": "string"
+    },
+    "AccountApiClientId": {
+      "type": "string"
+    },
+    "AccountApiClientSecret": {
+      "type": "string"
+    },
+    "AccountApiApiBaseUrl": {
+      "type": "string"
+    },
+    "AccountApiIdentifierUri": {
+      "type": "string"
+    },
+    "PaymentsEventApiBaseUrl": {
+      "type": "string"
+    },
+    "PaymentsEventClientToken": {
+      "type": "string"
+    },
+    "SecondsToWaitToAllowProjections": {
       "type": "string"
     }
   },
@@ -72,23 +105,63 @@
             },
             {
               "name": "StorageConnectionString",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[parameters('StorageConnectionString')]"
             },
             {
-              "name": "PaymentsApiBaseUrl",
-              "value": "[parameters('PaymentsApiBaseUrl')]"
+              "name": "DatabaseConnectionString",
+              "value": "[parameters('DatabaseConnectionString')]"
             },
             {
-              "name": "PaymentsApiToken",
-              "value": "[parameters('PaymentsApiToken')]"
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
             },
             {
-              "name": "Environment",
-              "value": "[parameters('Environment')]"
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
             },
             {
-              "name": "DbConnectionString",
-              "value": "[parameters('DbConnectionString')]"
+              "name": "EnvironmentName",
+              "value": "[parameters('EnvironmentName')]"
+            },
+            {
+              "name": "HashString",
+              "value": "[parameters('HashString')]"
+            },
+            {
+              "name": "AllowedHashstringCharacters",
+              "value": "[parameters('AllowedHashstringCharacters')]"
+            },
+            {
+              "name": "AccountApi-Tenant",
+              "value": "[parameters('AccountApiTenant')]"
+            },
+            {
+              "name": "AccountApi-ClientId",
+              "value": "[parameters('AccountApiClientId')]"
+            },
+            {
+              "name": "AccountApi-ClientSecret",
+              "value": "[parameters('AccountApiClientSecret')]"
+            },
+            {
+              "name": "AccountApi-ApiBaseUrl",
+              "value": "[parameters('AccountApiApiBaseUrl')]"
+            },
+            {
+              "name": "AccountApi-IdentifierUri",
+              "value": "[parameters('AccountApiIdentifierUri')]"
+            },
+            {
+              "name": "PaymentsEvent-ApiBaseUrl",
+              "value": "[parameters('PaymentsEventApiBaseUrl')]"
+            },
+            {
+              "name": "PaymentsEvent-ClientToken",
+              "value": "[parameters('PaymentsEventClientToken')]"
+            },
+            {
+              "name": "SecondsToWaitToAllowProjections",
+              "value": "[parameters('SecondsToWaitToAllowProjections')]"
             }
           ],
           "alwaysOn": true,
@@ -140,23 +213,63 @@
             },
             {
               "name": "StorageConnectionString",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[parameters('StorageConnectionString')]"
             },
             {
-              "name": "PaymentsApiBaseUrl",
-              "value": "[parameters('PaymentsApiBaseUrl')]"
+              "name": "DatabaseConnectionString",
+              "value": "[parameters('DatabaseConnectionString')]"
             },
             {
-              "name": "PaymentsApiToken",
-              "value": "[parameters('PaymentsApiToken')]"
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
             },
             {
-              "name": "Environment",
-              "value": "[parameters('Environment')]"
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
             },
             {
-              "name": "DbConnectionString",
-              "value": "[parameters('DbConnectionString')]"
+              "name": "EnvironmentName",
+              "value": "[parameters('EnvironmentName')]"
+            },
+            {
+              "name": "HashString",
+              "value": "[parameters('HashString')]"
+            },
+            {
+              "name": "AllowedHashstringCharacters",
+              "value": "[parameters('AllowedHashstringCharacters')]"
+            },
+            {
+              "name": "AccountApi-Tenant",
+              "value": "[parameters('AccountApiTenant')]"
+            },
+            {
+              "name": "AccountApi-ClientId",
+              "value": "[parameters('AccountApiClientId')]"
+            },
+            {
+              "name": "AccountApi-ClientSecret",
+              "value": "[parameters('AccountApiClientSecret')]"
+            },
+            {
+              "name": "AccountApi-ApiBaseUrl",
+              "value": "[parameters('AccountApiApiBaseUrl')]"
+            },
+            {
+              "name": "AccountApi-IdentifierUri",
+              "value": "[parameters('AccountApiIdentifierUri')]"
+            },
+            {
+              "name": "PaymentsEvent-ApiBaseUrl",
+              "value": "[parameters('PaymentsEventApiBaseUrl')]"
+            },
+            {
+              "name": "PaymentsEvent-ClientToken",
+              "value": "[parameters('PaymentsEventClientToken')]"
+            },
+            {
+              "name": "SecondsToWaitToAllowProjections",
+              "value": "[parameters('SecondsToWaitToAllowProjections')]"
             }
           ],
           "alwaysOn": true,
@@ -208,23 +321,63 @@
             },
             {
               "name": "StorageConnectionString",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[parameters('StorageConnectionString')]"
             },
             {
-              "name": "PaymentsApiBaseUrl",
-              "value": "[parameters('PaymentsApiBaseUrl')]"
+              "name": "DatabaseConnectionString",
+              "value": "[parameters('DatabaseConnectionString')]"
             },
             {
-              "name": "PaymentsApiToken",
-              "value": "[parameters('PaymentsApiToken')]"
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
             },
             {
-              "name": "Environment",
-              "value": "[parameters('Environment')]"
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
             },
             {
-              "name": "DbConnectionString",
-              "value": "[parameters('DbConnectionString')]"
+              "name": "EnvironmentName",
+              "value": "[parameters('EnvironmentName')]"
+            },
+            {
+              "name": "HashString",
+              "value": "[parameters('HashString')]"
+            },
+            {
+              "name": "AllowedHashstringCharacters",
+              "value": "[parameters('AllowedHashstringCharacters')]"
+            },
+            {
+              "name": "AccountApi-Tenant",
+              "value": "[parameters('AccountApiTenant')]"
+            },
+            {
+              "name": "AccountApi-ClientId",
+              "value": "[parameters('AccountApiClientId')]"
+            },
+            {
+              "name": "AccountApi-ClientSecret",
+              "value": "[parameters('AccountApiClientSecret')]"
+            },
+            {
+              "name": "AccountApi-ApiBaseUrl",
+              "value": "[parameters('AccountApiApiBaseUrl')]"
+            },
+            {
+              "name": "AccountApi-IdentifierUri",
+              "value": "[parameters('AccountApiIdentifierUri')]"
+            },
+            {
+              "name": "PaymentsEvent-ApiBaseUrl",
+              "value": "[parameters('PaymentsEventApiBaseUrl')]"
+            },
+            {
+              "name": "PaymentsEvent-ClientToken",
+              "value": "[parameters('PaymentsEventClientToken')]"
+            },
+            {
+              "name": "SecondsToWaitToAllowProjections",
+              "value": "[parameters('SecondsToWaitToAllowProjections')]"
             }
           ],
           "alwaysOn": true,

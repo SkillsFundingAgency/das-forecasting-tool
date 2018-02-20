@@ -71,6 +71,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static bool IsDevEnvironment =>
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
         public string GetConnectionString(string name)

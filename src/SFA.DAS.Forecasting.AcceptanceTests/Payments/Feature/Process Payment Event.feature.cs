@@ -18,20 +18,20 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("ProcessPaymentEvent")]
+    [NUnit.Framework.DescriptionAttribute("Process Payment Event")]
     public partial class ProcessPaymentEventFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "ProcessPaymentEvent.feature"
+#line 1 "Process Payment Event.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "ProcessPaymentEvent", "\tAs an employer\r\n\tI want my payments to be forecast for the next 4 years\r\n\tSo tha" +
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Process Payment Event", "\tAs an employer\r\n\tI want my payments to be forecast for the next 4 years\r\n\tSo tha" +
                     "t I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
