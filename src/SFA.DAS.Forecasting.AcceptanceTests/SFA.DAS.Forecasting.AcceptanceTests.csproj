@@ -135,6 +135,12 @@
     <Compile Include="EmployerApiStub\ProviderEventApiModule.cs" />
     <Compile Include="EmployerApiStub\ProviderEventTestData.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Levy\Feature\Build Projections From Levy Declarations.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Build Projections From Levy Declarations.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Levy\Steps\BuildProjectionsFromLevyDeclarations.cs" />
     <Compile Include="Payments\Payment.cs" />
     <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
       <AutoGen>True</AutoGen>
@@ -202,6 +208,10 @@
     <None Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
+    </None>
+    <None Include="Levy\Feature\Build Projections From Levy Declarations.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Build Projections From Levy Declarations.feature.cs</LastGenOutput>
     </None>
     <None Include="Levy\Feature\PreLoadLevyEvents.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
