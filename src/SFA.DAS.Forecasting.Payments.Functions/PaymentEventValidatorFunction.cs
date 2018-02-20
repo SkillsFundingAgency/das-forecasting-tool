@@ -23,7 +23,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 {
                     var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
                         .Validate(paymentCreatedMessage);
-                    if (validationResults?.Any() ?? false)
+
+                    if (!validationResults.IsValid)
                     {
                         logger.Warn($"Payment event failed superficial validation. Event: {paymentCreatedMessage.ToJson()}, Errors:{validationResults.ToJson()}");
                         return null;

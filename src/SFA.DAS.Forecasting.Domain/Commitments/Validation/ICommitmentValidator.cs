@@ -1,9 +1,13 @@
-﻿using SFA.DAS.Forecasting.Models.Commitments;
+﻿using FluentValidation;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments.Validation
 {
-    public interface ICommitmentValidator
+    public class CommitmentValidator : AbstractValidator<Commitment>
     {
-        string Validate(Commitment commitment);
+        public CommitmentValidator()
+        {
+            RuleFor(m => m.ActualEndDate).NotNull();
+        }
     }
 }
