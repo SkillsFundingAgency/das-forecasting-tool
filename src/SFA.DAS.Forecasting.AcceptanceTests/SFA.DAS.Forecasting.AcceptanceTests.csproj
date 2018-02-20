@@ -167,10 +167,10 @@
     <Compile Include="EmployerApiStub\SimpleApiModule.cs" />
     <Compile Include="EmployerApiStub\TestData.cs" />
     <Compile Include="Levy\LevySubmission.cs" />
-    <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
+    <Compile Include="Payments\Feature\Process Payment Event.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
+      <DependentUpon>Process Payment Event.feature</DependentUpon>
     </Compile>
     <Compile Include="PayrollPeriod.cs" />
     <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
@@ -217,9 +217,9 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadPayments.feature.cs</LastGenOutput>
     </None>
-    <None Include="Payments\Feature\ProcessPaymentEvent.feature">
+    <None Include="Payments\Feature\Process Payment Event.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ProcessPaymentEvent.feature.cs</LastGenOutput>
+      <LastGenOutput>Process Payment Event.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
