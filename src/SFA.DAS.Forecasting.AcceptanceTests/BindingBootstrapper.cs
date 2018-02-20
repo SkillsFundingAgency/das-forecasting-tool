@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Nancy;
 using Nancy.Hosting.Self;
@@ -21,10 +22,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             {
                 var config = new HostConfiguration
                 {
-                    
                     UrlReservations = new UrlReservations { CreateAutomatically = true, User = "Everyone" }
                 };
-                Host = new NancyHost(config, new Uri("http://localhost:50002/"));
+                Host = new NancyHost(config, new Uri("http://localhost:50003/"));
                 Host.Start();
             }
         }
@@ -45,7 +45,17 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         [AfterFeature(Order = 0)]
         public static void CleanUpFunctionProcesses()
         {
-            Processes?.ForEach(process => process.Kill());
+            Processes?.ForEach(process =>
+            {
+                //process.WaitForExit()
+                var processName = process.ProcessName;
+                process.Kill();
+                //foreach (var process1 in Process.GetProcessesByName(processName))
+                //{
+                //    process1.Kill();
+                //}
+            });
+            Processes?.Clear();
         }
 
         [AfterTestRun(Order = 999)]
