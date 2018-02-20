@@ -68,7 +68,7 @@
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+              "value": "[reference(resourceId('microsoft.insights/components/', parameters('levFunAppName')), '2015-05-01').InstrumentationKey]"
             },
             {
               "name": "StorageConnectionString",
@@ -136,7 +136,7 @@
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+              "value": "[reference(resourceId('microsoft.insights/components/', parameters('payFunAppName')), '2015-05-01').InstrumentationKey]"
             },
             {
               "name": "StorageConnectionString",
@@ -204,7 +204,7 @@
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+              "value": "[reference(resourceId('microsoft.insights/components/', parameters('prjFunAppName')), '2015-05-01').InstrumentationKey]"
             },
             {
               "name": "StorageConnectionString",
