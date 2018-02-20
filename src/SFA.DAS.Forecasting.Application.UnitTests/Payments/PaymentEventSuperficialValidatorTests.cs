@@ -38,7 +38,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                     ActualEndDate = DateTime.MinValue
                 },
                 Id = Guid.NewGuid().ToString("D"),
-                Ukprn = 2                
+                Ukprn = 2,
+                FundingSource = FundingSource.Levy
             };
         }
 

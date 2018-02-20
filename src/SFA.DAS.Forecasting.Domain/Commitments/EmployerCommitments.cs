@@ -17,17 +17,17 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly CommitmentValidator _commitmentValidator;
         public ReadOnlyCollection<Commitment> Commitments => _commitments.AsReadOnly();
 
-        public EmployerCommitments(CommitmentValidator commitmentValidator)
-        {
-            _commitmentValidator = commitmentValidator;
-        }
 
-
-        public EmployerCommitments(long employerAccountId, List<Commitment> commitments, IEventPublisher eventPublisher)
+        public EmployerCommitments(
+            long employerAccountId, 
+            List<Commitment> commitments, 
+            IEventPublisher eventPublisher, 
+            CommitmentValidator commitmentValidator)
         {
             _employerAccountId = employerAccountId;
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
             _eventPublisher = eventPublisher ?? throw new ArgumentNullException(nameof(eventPublisher));
+            _commitmentValidator = commitmentValidator;
         }
 
         public bool AddCommitment(long apprenticeshipId, long learnerId, DateTime startDate, DateTime plannedEndDate,
