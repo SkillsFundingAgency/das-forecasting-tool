@@ -14,12 +14,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
         [FunctionName("PaymentEventValidatorFunction")]
         [return:Queue(QueueNames.PaymentProcessor)]
-        public static async Task<PaymentCreatedMessage> Run(
+        public static PaymentCreatedMessage Run(
             [QueueTrigger(QueueNames.PaymentValidator)]PaymentCreatedMessage paymentCreatedMessage, 
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer,
-                (container, logger) =>
+            return FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer, (container, logger) =>
                 {
                     var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
                         .Validate(paymentCreatedMessage);
@@ -30,7 +29,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     }
 
                     logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId}");
-                    return Task.FromResult(paymentCreatedMessage);
+                    return paymentCreatedMessage;
                 });
         }
     }
