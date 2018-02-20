@@ -8,17 +8,17 @@ using System.Text;
 using System.Threading;
 using Dapper;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
-namespace SFA.DAS.Forecasting.AcceptanceTests
+namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
 	[Binding]
 	public class ProcessPaymentEventSteps : StepsBase
 	{
+	    [Scope(Feature = "Process Payment Event")]
 		[BeforeFeature(Order = 1)]
 		public static void StartLevyFunction()
 		{
