@@ -42,6 +42,8 @@
                     <li>Funds in</li>
                     <li>Cost of training</li>
                     <li>Completion payments</li>
+                    <li>Your contribution</li>
+                    <li>Government contribution</li>
                     <li>Future funds</li>
                 </ul>
             </details>
@@ -101,19 +103,23 @@
                     <th class="financial">Funds in</th>
                     <th class="financial">Cost of training</th>
                     <th class="financial">Completion payments</th>
+                    <th>Your contribution</th>
+                    <th>Government contribution</th>
                     <th class="financial">Future funds</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.BalanceItemViewModels)
                 {
-                    <tr>
-                        <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                        <td class="financial">@item.LevyCredit.FormatCost()</td>
-                        <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                        <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                        <td class="financial">@item.Balance.FormatCost()</td>
-                    </tr>
+                <tr>
+                    <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                    <td class="financial">@item.LevyCredit.FormatCost()</td>
+                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                    <td class="financial">@item.CoInvestmentEmployer.FormatCost()</td>
+                    <td class="financial">@item.CoInvestmentGovernment.FormatCost()</td>
+                    <td class="financial">@item.Balance.FormatCost()</td>
+                </tr>
                 }
             </tbody>
         </table>
