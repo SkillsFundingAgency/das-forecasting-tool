@@ -1,11 +1,10 @@
-﻿using Newtonsoft.Json;
-using SFA.DAS.Provider.Events.Api.Types;
+﻿using SFA.DAS.Provider.Events.Api.Types;
 using System;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
+namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub.TestData
 {
-    public class ProviderEventTestData
+    public class ProviderEvent
     {
         internal static PageOfResults<Payment> GetPayment(string accountId, string period_id, string page_nubmber)
         {
@@ -16,14 +15,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
             {
                 new Payment
                 {
-                    Id = "1B796A6A-C96F-4C72-94AB-02A302358D4B",
+                    Id = "f97840b3-d3bf-429c-bc3c-8a877f4f26f8",
                     ApprenticeshipId = 11002,
 
                     CollectionPeriod = new NamedCalendarPeriod
                     {
-                        Id = "16-17R5",
+                        Id = "1617-r10",
                         Year = 2017,
-                        Month = 1
+                        Month = 5
                     },
                     EarningDetails = new List<Earning>
                     {
@@ -31,7 +30,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
                         {
                             ActualEndDate = DateTime.Parse("2017-03-01"),
                             CompletionAmount = 5000,
-                            RequiredPaymentId = Guid.Parse("1B796A6A-C96F-4C72-94AB-02A302358D4B"),
+                            RequiredPaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8"),
                             CompletionStatus = 1,
                             MonthlyInstallment = 300,
                             TotalInstallments = 24,
@@ -48,7 +47,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
             .ToArray();
 
             return por;
-            //return JsonConvert.SerializeObject(por);
         }
 
         internal static string GetPayment2(string accountId, string period_id, string page_nubmber)

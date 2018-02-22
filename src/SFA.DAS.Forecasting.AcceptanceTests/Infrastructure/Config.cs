@@ -19,7 +19,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public string ProjectionLevyFunctionUrl => GetAppSetting("ProjectionLevyFunctionUrl");
         public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));
         public string AzureStorageConnectionString => GetConnectionString("StorageConnectionString");
+        public string ApiInsertBalanceUrl => GetAppSetting("ApiInsertBalanceUrl");
+        public string StubEmployerPaymentTable => GetAppSetting("Stub-EmployerPaymentTable");
+
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
         protected string GetConnectionString(string name) => ConfigurationManager.ConnectionStrings[name].ConnectionString ?? throw new InvalidOperationException($"{name} not found in connection strings.");
+
     }
 }

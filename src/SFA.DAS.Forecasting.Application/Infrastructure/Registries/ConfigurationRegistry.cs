@@ -36,7 +36,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 {
                     ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl"),
                     ClientToken = GetAppSetting("PaymentsEvent-ClientToken"),
-                }
+                },
+                StubEmployerPaymentTable = GetAppSetting("Stub-EmployerPaymentTable")
             };
             return configuration;
         }

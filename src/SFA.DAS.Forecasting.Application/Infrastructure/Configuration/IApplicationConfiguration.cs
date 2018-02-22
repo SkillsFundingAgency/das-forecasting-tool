@@ -15,5 +15,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         bool LimitForecast { get; set; }
         string EmployerConnectionString { get; set; }
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
+        string StubEmployerPaymentTable { get; set; }
     }
 }

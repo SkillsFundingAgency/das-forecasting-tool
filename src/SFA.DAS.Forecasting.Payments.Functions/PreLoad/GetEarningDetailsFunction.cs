@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -31,6 +32,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 
                     var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
                     var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, hashedAccountId);
+
+                    logger.Info($"Found {earningDetails.Count()} for Account: {hashedAccountId}");
 
                     foreach (var item in earningDetails)
                     {

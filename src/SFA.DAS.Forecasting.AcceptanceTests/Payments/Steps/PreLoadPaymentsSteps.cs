@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
+using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
+using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,22 +15,32 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
     [Binding]
     public class PreLoadPaymentsSteps : StepsBase
     {
+
         private const string FeatureName = "PreLoadPayments";
-        private static IEnumerable<long> _accountIds = new List<long> { 8509 };
-        //private static ApiHost _apiHost;
+        private TableStorageService _tableStorageService;
+        private readonly Config _settings;
+        private static long _accountId = 497;
+
+        public PreLoadPaymentsSteps()
+        {
+            _tableStorageService = ParentContainer.GetInstance<TableStorageService>();
+            _settings = ParentContainer.GetInstance<Config>();
+        }
 
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-          //  _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Payments.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+            
             Thread.Sleep(1000);
         }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public async Task BeforeScenario()
         {
             ClearDatabase();
+            await SetUpEmployerData();
             Thread.Sleep(500);
         }
 
@@ -43,7 +53,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I trigger PreLoadPayment function some employers")]
         public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployers()
         {
-            var item = "{\"EmployerAccountIds\":[\"MN4YKL\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\"}";
+            var item = "{\"EmployerAccountIds\":[\"MJK9XV\", \"MN4YKL\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"2017\",\"PeriodMonth\":5,\"PeriodId\": \"1617-R10\"}";
 
             var client = new HttpClient();
             await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
@@ -58,32 +68,57 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Then(@"there will be payments for all the employers")]
         public void ThenThereWillBePaymentsForAllTheEmployers()
         {
+            var count = 0;
             WaitForIt(() =>
             {
-                foreach (var accountId in _accountIds)
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
-                         , param: parameters, commandType: CommandType.Text);
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+                count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
                     return count == 1;
-                }
-                return false;
-            }, "Failed to find all the payments.");
 
-            //_apiHost.Dispose();
+            }, $"Failed to find all the payments. Found: {count}");
         }
 
         private void ClearDatabase()
         {
-            foreach (var accountId in _accountIds)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                var count = Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId = @employerAccountId"
-                     , param: parameters, commandType: CommandType.Text);
-
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+            var count = Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId = @employerAccountId"
+                    , param: parameters, commandType: CommandType.Text);
         }
+
+        private async Task SetUpEmployerData()
+        {
+            var year = 2017;
+            var month = 5;
+            var p2 = new EmployerPayment
+            {
+                    Ukprn = 10001378,
+                    Uln = 2002,
+                    AccountId = _accountId,
+                    ApprenticeshipId = 6666,
+                    CollectionPeriodId = "1617-r10",
+                    CollectionPeriodMonth = month,
+                    CollectionPeriodYear = year,
+                    Amount = 50.00000m,
+                    PaymentMetaDataId = 690,
+                    ProviderName = "CHESTERFIELD COLLEGE",
+                    StandardCode = 4,
+                    FrameworkCode = 0,
+                    ProgrammeType = 0,
+                    PathwayCode = 0,
+                    PathwayName = null,
+                    ApprenticeshipCourseName = "Chemical Engineering",
+                    ApprenticeshipCourseStartDate = DateTime.Parse("2017-01-09"),
+                    ApprenticeshipCourseLevel = 2,
+                    ApprenticeName = "John Doe",
+                    FundingSource = FundingSource.Levy,
+                    PaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8") // Need to match Payment from ProviderEvents API // IN: ProviderEventTestData.cs
+            };
+            
+            _tableStorageService.SetTable(_settings.StubEmployerPaymentTable);
+            await _tableStorageService.Store(new List<EmployerPayment> { p2 }, _accountId.ToString(), $"{year}-{month}");
+        }  
     }
 }
