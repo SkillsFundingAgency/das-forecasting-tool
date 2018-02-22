@@ -25,18 +25,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 });
         }
 
-        //public ApprenticeshipViewModel MapApprenticeship(Apprenticeship apprenticeship)
-        //{
-        //    return new ApprenticeshipViewModel
-        //    {
-        //        Name = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-        //        StartDate = apprenticeship.StartDate,
-        //        MonthlyPayment = apprenticeship.MonthlyPayment,
-        //        TotalInstallments = apprenticeship.TotalInstallments,
-        //        CompletionPayment = apprenticeship.CompletionPayment
-        //    };
-        //}
-
         public BalanceCsvItemViewModel ToCsvBalance(BalanceItemViewModel x)
         {
             return new BalanceCsvItemViewModel
@@ -45,6 +33,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 LevyCredit = x.LevyCredit,
                 CostOfTraining = x.CostOfTraining,
                 CompletionPayments = x.CompletionPayments,
+                CoInvestmentEmployer = x.CoInvestmentEmployer,
+                CoInvestmentGovernment = x.CoInvestmentGovernment,
                 Balance = x.Balance
             };
 
