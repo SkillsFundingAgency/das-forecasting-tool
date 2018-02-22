@@ -9,7 +9,8 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
+	[Authorize]
+	[ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
         private readonly ForecastingOrchestrator _orchestrator;
