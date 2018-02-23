@@ -291,6 +291,9 @@
     <Compile Include="ViewModels\VisualisationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\dist\c3\c3.min.css" />
+    <Content Include="Content\dist\c3\c3.min.js" />
+    <Content Include="Content\dist\c3\d3.min.js" />
     <Content Include="Content\dist\css\screen-ie6.css" />
     <Content Include="Content\dist\css\screen-ie7.css" />
     <Content Include="Content\dist\css\screen-ie8.css" />
@@ -302,6 +305,7 @@
     <Content Include="Content\dist\govuk-template-ie8.css" />
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
+    <Content Include="Content\dist\js\screen.js" />
     <Content Include="Content\Gruntfile.js" />
     <Content Include="Content\dist\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\dist\images\apple-touch-icon-152x152.png" />

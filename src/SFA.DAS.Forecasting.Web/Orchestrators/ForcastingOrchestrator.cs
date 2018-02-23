@@ -35,12 +35,27 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            
+            // BalanceItemViewModels.Select(m => m.Date.ToString("yyyy-MM-dd"))).Replace("\"", "")
+            var balance = await GetBalance(hashedAccountId);
             return new BalanceViewModel {
-                BalanceItemViewModels = await GetBalance(hashedAccountId),
+                BalanceItemViewModels = balance,
                 BackLink = _applicationConfiguration.BackLink,
-                HashedAccountId = hashedAccountId
+                HashedAccountId = hashedAccountId,
+                BalanceStringArray = MakeBalanceStringArray(balance),
+                DatesStringArray = MakeDateStringArray(balance)
             };
+        }
+
+        private string MakeDateStringArray(IEnumerable<BalanceItemViewModel> balance)
+        {
+            var bb = balance.Select(m => m.Date.ToString("yyyy-MM-dd"));
+            return string.Join(",", bb);
+        }
+
+        private string MakeBalanceStringArray(IEnumerable<BalanceItemViewModel> balance)
+        {
+            var bb = balance.Select(m => m.Balance.ToString());
+            return string.Join(",", bb);
         }
 
         private async Task<IEnumerable<BalanceItemViewModel>> GetBalance(string hashedAccountId)
