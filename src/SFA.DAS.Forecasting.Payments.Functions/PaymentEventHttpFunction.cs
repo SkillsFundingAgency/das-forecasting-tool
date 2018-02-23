@@ -25,7 +25,6 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     var paymentEvent = JsonConvert.DeserializeObject<PaymentCreatedMessage>(body);
 	                paymentEvent.FundingSource = FundingSource.Levy;
 
-
                     logger.Info($"Added one payment to {QueueNames.PaymentProcessor} queue.");
                     return await Task.FromResult(paymentEvent);
                 });

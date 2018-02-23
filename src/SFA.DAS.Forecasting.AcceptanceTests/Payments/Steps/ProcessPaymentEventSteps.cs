@@ -27,16 +27,25 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             StartFunction("SFA.DAS.Forecasting.Payments.Functions");
         }
 
-        [Given(@"I have no existing payments")]
-        public void GivenIHaveNoExistingPayments()
-        {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Payment where employerAccountId = @employerAccountId",
-                parameters, commandType: CommandType.Text);
-        }
+		[Given(@"I have no existing payments")]
+		public void GivenIHaveNoExistingPayments()
+		{
+			var parameters = new DynamicParameters();
+			parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+			Connection.Execute("Delete from Payment where employerAccountId = @employerAccountId",
+				parameters, commandType: CommandType.Text);
+		}
 
-        [Given(@"I have made the following payments")]
+	    [Given(@"I have no existing commitments")]
+	    public void GivenIHaveNoExistingCommitments()
+	    {
+		    var parameters = new DynamicParameters();
+		    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+		    Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId",
+			    parameters, commandType: CommandType.Text);
+	    }
+
+		[Given(@"I have made the following payments")]
         public void GivenIHaveMadeTheFollowingPayments(Table table)
         {
             Payments = table.CreateSet<Payment>().ToList();
@@ -59,18 +68,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     ProviderId = -2
                 },
             };
-        }
-
-        [Given(@"payment events have been created")]
-        public void GivenPaymentEventsHaveBeenCreated()
-        {
-            ScenarioContext.Current.Pending();
-        }
-
-        [Given(@"events with invalid data have been created")]
-        public void GivenEventsWithInvalidDataHaveBeenCreated()
-        {
-            ScenarioContext.Current.Pending();
         }
 
         [When(@"the SFA Employer HMRC Payment service notifies the Forecasting service of the payment")]
@@ -121,51 +118,71 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 });
         }
 
-        [Then(@"the Forecasting Payment service should store the payment declarations")]
-        public void ThenTheForecastingPaymentServiceShouldStoreThePaymentDeclarations()
-        {
-            WaitForIt(() =>
-            {
-                foreach (var payment in Payments)
-                {
-                    Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                    parameters.Add("@collectionPeriodYear", DateTime.Now.Year, DbType.Int32);
-                    parameters.Add("@collectionPeriodMonth", DateTime.Now.Month, DbType.Int32);
-                    parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where employerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth and ProviderId = @providerId",
-                        parameters, commandType: CommandType.Text);
-                    return count == 1;
-                }
-                return false;
-            }, "Failed to find all the payments.");
-        }
+		[Then(@"the Forecasting Payment service should store the payment declarations")]
+		public void ThenTheForecastingPaymentServiceShouldStoreThePaymentDeclarations()
+		{
+			WaitForIt(() =>
+			{
+				foreach (var payment in Payments)
+				{
+					Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
+					var parameters = new DynamicParameters();
+					parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+					parameters.Add("@collectionPeriodYear", DateTime.Now.Year, DbType.Int32);
+					parameters.Add("@collectionPeriodMonth", DateTime.Now.Month, DbType.Int32);
+					parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
+					var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where employerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth and ProviderId = @providerId",
+						parameters, commandType: CommandType.Text);
+					return count == 1;
+				}
+				return false;
+			}, "Failed to find all the payments.");
+		}
 
-        [Then(@"the Forecasting Payment service should not store the payments")]
-        public void ThenTheForecastingPaymentServiceShouldNotStoreThePaymentDeclarations()
-        {
-            Thread.Sleep(Config.TimeToWait);
-            Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}");
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            parameters.Add("@collectionPeriodYear", DateTime.Now.Year, DbType.Int32);
-            parameters.Add("@collectionPeriodMonth", DateTime.Now.Month, DbType.Int32);
-            var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where employerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth",
-                parameters, commandType: CommandType.Text);
-            Assert.AreEqual(0, count);
-        }
+	    [Then(@"the Forecasting Payment service should store the commitment declarations")]
+	    public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarations()
+	    {
+		    WaitForIt(() =>
+		    {
+			    foreach (var payment in Payments)
+			    {
+				    Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
+				    var parameters = new DynamicParameters();
+				    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+				    parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
+				    parameters.Add("@apprenticeshipId", payment.ApprenticeshipId, DbType.Int64);
+				    var count = Connection.ExecuteScalar<int>("Select Count(*) from Commitment where employerAccountId = @employerAccountId and ApprenticeshipId = @apprenticeshipId and ProviderId = @providerId",
+					    parameters, commandType: CommandType.Text);
+				    return count == 1;
+			    }
+			    return false;
+		    }, "Failed to find all the commitments.");
+	    }
 
-        [Then(@"there are (.*) payment events stored")]
-        public void ThenThereArePaymentEventsStored(int p0)
-        {
-            ScenarioContext.Current.Pending();
-        }
+		[Then(@"the Forecasting Payment service should not store the payments")]
+		public void ThenTheForecastingPaymentServiceShouldNotStoreThePaymentDeclarations()
+		{
+			Thread.Sleep(Config.TimeToWait);
+			Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}");
+			var parameters = new DynamicParameters();
+			parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+			parameters.Add("@collectionPeriodYear", DateTime.Now.Year, DbType.Int32);
+			parameters.Add("@collectionPeriodMonth", DateTime.Now.Month, DbType.Int32);
+			var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where employerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth",
+				parameters, commandType: CommandType.Text);
+			Assert.AreEqual(0, count);
+		}
 
-        [Then(@"the event with invalid data is not stored")]
-        public void ThenTheEventWithInvalidDataIsNotStored()
-        {
-            ScenarioContext.Current.Pending();
-        }
-    }
+	    [Then(@"the Forecasting Payment service should not store commitments")]
+	    public void ThenTheForecastingPaymentServiceShouldNotStoreTheCommitments()
+	    {
+		    Thread.Sleep(Config.TimeToWait);
+		    Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}");
+		    var parameters = new DynamicParameters();
+		    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
+		    var count = Connection.ExecuteScalar<int>("Select Count(*) from Commitment where employerAccountId = @employerAccountId",
+			    parameters, commandType: CommandType.Text);
+		    Assert.AreEqual(0, count);
+	    }
+	}
 }
