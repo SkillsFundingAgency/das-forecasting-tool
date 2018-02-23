@@ -20,25 +20,16 @@
     "sharedServerFarmResourceGroup": {
       "value": ""
     },
-    "appSettingRedisConnection": {
+    "appSettingLimitForecast": {
+      "value": false
+    },
+    "appSettingNumberOfMonthsToProject": {
       "value": ""
     },
     "appSettingLoggingRedisConnectionString": {
       "value": ""
     },
     "appSettingLoggingRedisKey": {
-      "value": ""
-    },
-    "appSettingAllowedHashstringCharacters": {
-      "value": ""
-    },
-    "appSettingHashString": {
-      "value": ""
-    },
-    "appSettingLimitForecast": {
-      "value": false
-    },
-    "databaseConnectionString": {
       "value": ""
     },
     "configurationStorageConnectionString": {
@@ -50,18 +41,25 @@
     "storageName": {
       "value": ""
     },
-    "kvName": {
+    "keyVaultName": {
       "value": ""
     },
     "kvSecretsPermissionsList": {
-      "value": [
-      ]
+      "value": []
     },
     "funAppNames": {
-      "value": [
-      ]
+      "value": []
     },
     "funAppHostingEnvironment": {
+      "value": ""
+    },
+    "secretDatabaseConnectionString": {
+      "value": ""
+    },
+    "secretHashString": {
+      "value": ""
+    },
+    "secretAllowedHashstringCharacters": {
       "value": ""
     }
   }

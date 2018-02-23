@@ -1,4 +1,6 @@
 {
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "funAppName": {
       "type": "string"
@@ -15,28 +17,25 @@
     "serverFarmResourceGroup": {
       "type": "string"
     },
-    "DatabaseConnectionString": {
-      "type": "string"
-    },
-    "LoggingRedisConnectionString": {
-      "type": "string"
-    },
-    "LoggingRedisKey": {
-      "type": "string"
-    },
     "EnvironmentName": {
-      "type": "string"
-    },
-    "HashString": {
-      "type": "string"
-    },
-    "AllowedHashstringCharacters": {
       "type": "string"
     },
     "SecondsToWaitToAllowProjections": {
       "type": "string"
     },
     "ConfigurationStorageConnectionString": {
+      "type": "string"
+    },
+    "KeyVaultName": {
+      "type": "string"
+    },
+    "NumberOfMonthsToProject": {
+      "type": "string"
+    },
+    "LoggingRedisConnectionString" : {
+      "type": "string"
+    },
+    "LoggingRedisKey" : {
       "type": "string"
     }
   },
@@ -71,32 +70,8 @@
               "value": "[reference(resourceId('microsoft.insights/components/', parameters('funAppName')), '2015-05-01').InstrumentationKey]"
             },
             {
-              "name": "StorageConnectionString",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "DatabaseConnectionString",
-              "value": "[parameters('DatabaseConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisConnectionString",
-              "value": "[parameters('LoggingRedisConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisKey",
-              "value": "[parameters('LoggingRedisKey')]"
-            },
-            {
               "name": "EnvironmentName",
               "value": "[parameters('EnvironmentName')]"
-            },
-            {
-              "name": "HashString",
-              "value": "[parameters('HashString')]"
-            },
-            {
-              "name": "AllowedHashstringCharacters",
-              "value": "[parameters('AllowedHashstringCharacters')]"
             },
             {
               "name": "ConfigurationStorageConnectionString",
@@ -105,10 +80,25 @@
             {
               "name": "SecondsToWaitToAllowProjections",
               "value": "[parameters('SecondsToWaitToAllowProjections')]"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "[parameters('KeyVaultName')]"
+            },
+            {
+              "name": "NumberOfMonthsToProject",
+              "value": "[parameters('NumberOfMonthsToProject')]"
+            },
+            {
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
+            },
+            {
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
             }
           ],
-          "alwaysOn": true,
-          "phpVersion": ""
+          "alwaysOn": true
         },
         "name": "[parameters('funAppName')]",
         "clientAffinityEnabled": false,
@@ -138,7 +128,5 @@
       "type": "string",
       "value": "[reference(concat('Microsoft.Web/sites/', parameters('funAppName')), '2016-03-01', 'Full').identity.principalId]"
     }
-  },
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0"
+  }
 }

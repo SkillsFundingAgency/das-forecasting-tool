@@ -31,5 +31,11 @@
       },
       "dependsOn": []
     }
-  ]
+  ],
+  "outputs": {
+    "storageConnectionString": {
+      "type": "string",
+      "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('name'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
+    }
+  }
 }

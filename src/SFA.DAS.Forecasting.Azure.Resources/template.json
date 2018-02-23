@@ -17,26 +17,17 @@
     "appHostingEnvironment": {
       "type": "string"
     },
-    "appSettingRedisConnection": {
+    "appSettingNumberOfMonthsToProject": {
       "type": "string"
+    },
+    "appSettingLimitForecast": {
+      "type": "bool"
     },
     "appSettingLoggingRedisConnectionString": {
       "type": "string"
     },
     "appSettingLoggingRedisKey": {
       "type": "string"
-    },
-    "appSettingAllowedHashstringCharacters": {
-      "type": "string"
-    },
-    "appSettingHashString": {
-      "type": "string"
-    },
-    "databaseConnectionString": {
-      "type": "string"
-    },
-    "appSettingLimitForecast": {
-      "type": "bool"
     },
     "configurationStorageConnectionString": {
       "type": "string"
@@ -47,7 +38,7 @@
     "storageName": {
       "type": "string"
     },
-    "kvName": {
+    "keyVaultName": {
       "type": "string"
     },
     "kvSecretsPermissionsList": {
@@ -63,6 +54,15 @@
       "type": "string"
     },
     "sharedServerFarmResourceGroup": {
+      "type": "string"
+    },
+    "secretDatabaseConnectionString": {
+      "type": "string"
+    },
+    "secretHashString": {
+      "type": "string"
+    },
+    "secretAllowedHashstringCharacters": {
       "type": "string"
     }
   },
@@ -117,27 +117,18 @@
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
-          },
-          "RedisConnection": {
-            "value": "[parameters('appSettingRedisConnection')]"
-          },
-          "LoggingRedisConnectionString": {
-            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
-          },
-          "LoggingRedisKey": {
-            "value": "[parameters('appSettingLoggingRedisKey')]"
-          },
-          "AllowedHashstringCharacters": {
-            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
-          },
-          "HashString": {
-            "value": "[parameters('appSettingHashString')]"
-          },
-          "DatabaseConnectionString": {
-            "value": "[parameters('DatabaseConnectionString')]"
-          },
+          },          
           "LimitForecast": {
             "value": "[parameters('appSettingLimitForecast')]"
+          },
+          "KeyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "LoggingRedisConnectionString" : {
+            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          },
+          "LoggingRedisKey" : {
+            "value": "[parameters('appSettingLoggingRedisKey')]"
           }
         }
       }
@@ -181,32 +172,30 @@
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
           },
-          "DatabaseConnectionString": {
-            "value": "[parameters('DatabaseConnectionString')]"
-          },
-          "LoggingRedisConnectionString": {
-            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
-          },
-          "LoggingRedisKey": {
-            "value": "[parameters('appSettingLoggingRedisKey')]"
-          },
-          "HashString": {
-            "value": "[parameters('appSettingHashString')]"
-          },
-          "AllowedHashstringCharacters": {
-            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
-          },
           "SecondsToWaitToAllowProjections": {
             "value": "[parameters('appSettingSecondsToWaitToAllowProjections')]"
+          },
+          "KeyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "NumberOfMonthsToProject": {
+            "value": "[parameters('appSettingNumberOfMonthsToProject')]"
+          },
+          "LoggingRedisConnectionString" : {
+            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          },
+          "LoggingRedisKey" : {
+            "value": "[parameters('appSettingLoggingRedisKey')]"
           }
         }
       }
     },
     {
       "apiVersion": "2017-08-01",
-      "name": "keyvault-resources-deployment3",
+      "name": "keyvault-resources-deployment",
       "dependsOn": [
-        "function-app-copy"
+        "function-app-copy",
+        "storage-resources-deployment"
       ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -217,7 +206,7 @@
         },
         "parameters": {
           "name": {
-            "value": "[parameters('kvName')]"
+            "value": "[parameters('keyVaultName')]"
           },
           "webAppObjectId": {
             "value": "[reference('web-app-resources-deployment').outputs.webAppIdentity.value]"
@@ -237,6 +226,18 @@
                 }
               ]
             }
+          },
+          "storageConnectionString": {
+            "value": "[reference('storage-resources-deployment').outputs.StorageConnectionString.value]"
+          },
+          "DatabaseConnectionString": {
+            "value": "[parameters('secretDatabaseConnectionString')]"
+          },
+          "HashString": {
+            "value": "[parameters('secretHashString')]"
+          },
+          "AllowedHashstringCharacters": {
+            "value": "[parameters('secretAllowedHashstringCharacters')]"
           }
         }
       }
