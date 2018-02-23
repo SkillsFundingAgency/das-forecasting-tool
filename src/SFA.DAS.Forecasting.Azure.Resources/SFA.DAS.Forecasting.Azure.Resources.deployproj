@@ -25,29 +25,13 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
-    <Content Include="App Service Plan\parameters.json" />
-    <Content Include="App Service Plan\template.json" />
-    <Content Include="ASEv2 ILB\parameters.json" />
-    <Content Include="ASEv2 ILB\template.json" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <Content Include="Deploy-AzureResourceGroup.ps1" />
     <Content Include="deployments\keyvault-resources.json" />
     <Content Include="deployments\storage-resources.json" />
     <Content Include="deployments\function-app-resources.json" />
     <Content Include="deployments\web-app-resources.json" />
-    <Content Include="README.md" />
-    <Content Include="Function App\parameters.json" />
-    <Content Include="Function App\template.json" />
-    <Content Include="NSG\parameters.json" />
-    <Content Include="NSG\template.json" />
-    <Content Include="SQL Server\parameters.json" />
-    <Content Include="SQL Server\template.json" />
-    <Content Include="Storage\parameters.json" />
-    <Content Include="Storage\template.json" />
-    <Content Include="Web App\parameters.json" />
-    <Content Include="Web App\template.json" />
     <Content Include="parameters.json" />
     <Content Include="template.json" />
   </ItemGroup>
