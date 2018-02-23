@@ -1,94 +1,53 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
       "type": "string"
     },
-    "sku": {
-      "type": "string",
-      "defaultValue": "Standard",
-      "allowedValues": [
-        "Standard",
-        "standard",
-        "Premium",
-        "premium"
-      ],
-      "metadata": {
-        "description": "SKU for the vault"
-      }
-    },
     "webAppObjectId": {
-      "type": "string"
-    },
-    "levyFunAppObjectId": {
-      "type": "string"
-    },
-    "payFunAppObjectId": {
-      "type": "string"
-    },
-    "projFunAppObjectId": {
       "type": "string"
     },
     "secretsPermissionsList": {
       "type": "array"
     },
-    "enabledForDeployment": {
-      "type": "bool"
-    },
-    "enabledForTemplateDeployment": {
-      "type": "bool"
-    },
-    "enabledForDiskEncryption": {
-      "type": "bool"
+    "funAppObjectIds": {
+      "type": "object"
     }
   },
-    "resources": [
+  "variables": {
+    "copy": [
       {
-        "apiVersion": "2015-06-01",
-        "name": "[parameters('name')]",
-        "location": "[resourceGroup().location]",
-        "type": "Microsoft.KeyVault/vaults",
-        "properties": {
-          "enabledForDeployment": "[parameters('enabledForDeployment')]",
-          "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
-          "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
-          "accessPolicies": [
-            {
-              "objectId": "[parameters('webAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "secrets": "[parameters('secretsPermissionsList')]"
-              }
-            },
-            {
-              "objectId": "[parameters('levyFunAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "secrets": "[parameters('secretsPermissionsList')]"
-              }
-            },
-            {
-              "objectId": "[parameters('payFunAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "secrets": "[parameters('secretsPermissionsList')]"
-              }
-            },
-            {
-              "objectId": "[parameters('projFunAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "secrets": "[parameters('secretsPermissionsList')]"
-              }
-            }
-          ],
+        "name": "keyVaultAccessPolicies",
+        "count": "[length(parameters('funAppObjectIds').objectIds)]",
+        "input": {
+          "objectId": "[parameters('funAppObjectIds').objectIds[copyIndex('keyVaultAccessPolicies')].identityId.value]",
           "tenantId": "[subscription().tenantId]",
-          "sku": {
-            "name": "[parameters('sku')]",
-            "family": "A"
+          "permissions": {
+            "secrets": "[parameters('secretsPermissionsList')]"
           }
         }
       }
     ]
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-01",
+      "name": "[parameters('name')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.KeyVault/vaults",
+      "properties": {
+        "enabledForDeployment": false,
+        "enabledForTemplateDeployment": true,
+        "enabledForDiskEncryption": false,
+        "accessPolicies": "[variables('keyVaultAccessPolicies')]",
+        "tenantId": "[subscription().tenantId]",
+        "sku": {
+          "name": "Standard",
+          "family": "A"
+        }
+      }
+    }
+  ],
+  "outputs": {}
 }
