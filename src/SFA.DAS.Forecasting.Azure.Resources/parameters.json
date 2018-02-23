@@ -38,10 +38,10 @@
     "appSettingLimitForecast": {
       "value": false
     },
-    "DatabaseConnectionString": {
+    "databaseConnectionString": {
       "value": ""
     },
-    "ConfigurationStorageConnectionString": {
+    "configurationStorageConnectionString": {
       "value": ""
     },
     "appSettingSecondsToWaitToAllowProjections": {
@@ -54,16 +54,12 @@
       "value": ""
     },
     "kvSecretsPermissionsList": {
-      "value": []
+      "value": [
+      ]
     },
-    "levFunAppName": {
-      "value": ""
-    },
-    "payFunAppName": {
-      "value": ""
-    },
-    "prjFunAppName": {
-      "value": ""
+    "funAppNames": {
+      "value": [
+      ]
     },
     "funAppHostingEnvironment": {
       "value": ""

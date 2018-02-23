@@ -8,18 +8,27 @@
     "webAppObjectId": {
       "type": "string"
     },
-    "levyFunAppObjectId": {
-      "type": "string"
-    },
-    "payFunAppObjectId": {
-      "type": "string"
-    },
-    "projFunAppObjectId": {
-      "type": "string"
-    },
     "secretsPermissionsList": {
       "type": "array"
+    },
+    "funAppObjectIds": {
+      "type": "object"
     }
+  },
+  "variables": {
+    "copy": [
+      {
+        "name": "keyVaultAccessPolicies",
+        "count": "[length(parameters('funAppObjectIds').objectIds)]",
+        "input": {
+          "objectId": "[parameters('funAppObjectIds').objectIds[copyIndex('keyVaultAccessPolicies')].identityId.value]",
+          "tenantId": "[subscription().tenantId]",
+          "permissions": {
+            "secrets": "[parameters('secretsPermissionsList')]"
+          }
+        }
+      }
+    ]
   },
   "resources": [
     {
@@ -31,36 +40,7 @@
         "enabledForDeployment": false,
         "enabledForTemplateDeployment": true,
         "enabledForDiskEncryption": false,
-        "accessPolicies": [
-          {
-            "objectId": "[parameters('webAppObjectId')]",
-            "tenantId": "[subscription().tenantId]",
-            "permissions": {
-              "secrets": "[parameters('secretsPermissionsList')]"
-            }
-          },
-          {
-            "objectId": "[parameters('levyFunAppObjectId')]",
-            "tenantId": "[subscription().tenantId]",
-            "permissions": {
-              "secrets": "[parameters('secretsPermissionsList')]"
-            }
-          },
-          {
-            "objectId": "[parameters('payFunAppObjectId')]",
-            "tenantId": "[subscription().tenantId]",
-            "permissions": {
-              "secrets": "[parameters('secretsPermissionsList')]"
-            }
-          },
-          {
-            "objectId": "[parameters('projFunAppObjectId')]",
-            "tenantId": "[subscription().tenantId]",
-            "permissions": {
-              "secrets": "[parameters('secretsPermissionsList')]"
-            }
-          }
-        ],
+        "accessPolicies": "[variables('keyVaultAccessPolicies')]",
         "tenantId": "[subscription().tenantId]",
         "sku": {
           "name": "Standard",
@@ -68,5 +48,6 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {}
 }

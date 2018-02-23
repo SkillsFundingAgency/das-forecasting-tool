@@ -32,13 +32,13 @@
     "appSettingHashString": {
       "type": "string"
     },
-    "DatabaseConnectionString": {
+    "databaseConnectionString": {
       "type": "string"
     },
     "appSettingLimitForecast": {
       "type": "bool"
     },
-    "ConfigurationStorageConnectionString": {
+    "configurationStorageConnectionString": {
       "type": "string"
     },
     "appSettingSecondsToWaitToAllowProjections": {
@@ -53,14 +53,8 @@
     "kvSecretsPermissionsList": {
       "type": "array"
     },
-    "levFunAppName": {
-      "type": "string"
-    },
-    "payFunAppName": {
-      "type": "string"
-    },
-    "prjFunAppName": {
-      "type": "string"
+    "funAppNames": {
+      "type": "array"
     },
     "sharedHostingPlanName": {
       "type": "string"
@@ -150,10 +144,14 @@
     },
     {
       "apiVersion": "2017-08-01",
-      "name": "function-app-resources-deployment",
+      "name": "[concat(parameters('funAppNames')[copyIndex()], '-function-app-resources-deployment')]",
       "dependsOn": [
         "storage-resources-deployment"
       ],
+      "copy": {
+        "name": "function-app-copy",
+        "count": "[length(parameters('funAppNames'))]"
+      },
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -162,14 +160,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "levFunAppName": {
-            "value": "[parameters('levFunAppName')]"
-          },
-          "payFunAppName": {
-            "value": "[parameters('payFunAppName')]"
-          },
-          "prjFunAppName": {
-            "value": "[parameters('prjFunAppName')]"
+          "funAppName": {
+            "value": "[parameters('funAppNames')[copyIndex()]]"
           },
           "storageName": {
             "value": "[parameters('storageName')]"
@@ -212,8 +204,10 @@
     },
     {
       "apiVersion": "2017-08-01",
-      "name": "keyvault-resources-deployment",
-      "dependsOn": [],
+      "name": "keyvault-resources-deployment3",
+      "dependsOn": [
+        "function-app-copy"
+      ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -228,17 +222,21 @@
           "webAppObjectId": {
             "value": "[reference('web-app-resources-deployment').outputs.webAppIdentity.value]"
           },
-          "levFunAppObjectId": {
-            "value": "[reference('function-app-resources-deployment').outputs.levFunAppIdentity.value]"
-          },
-          "payFunAppObjectId": {
-            "value": "[reference('function-app-resources-deployment').outputs.payFunAppIdentity.value]"
-          },
-          "prjFunAppObjectId": {
-            "value": "[reference('function-app-resources-deployment').outputs.prjFunAppIdentity.value]"
-          },
           "secretsPermissionsList": {
             "value": "[parameters('kvSecretsPermissionsList')]"
+          },
+          "funAppObjectIds": {
+            "value": {
+              "copy": [
+                {
+                  "name": "objectIds",
+                  "count": "[length(parameters('funAppNames'))]",
+                  "input": {
+                    "identityId": "[reference(concat(parameters('funAppNames')[copyIndex('objectIds')], '-function-app-resources-deployment')).outputs.funAppIdentity]"
+                  }
+                }
+              ]
+            }
           }
         }
       }
