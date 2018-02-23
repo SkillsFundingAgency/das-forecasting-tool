@@ -64,6 +64,18 @@
     },
     "funAppHostingEnvironment": {
       "value": ""
+    },
+    "secretDatabaseConnectionString": {
+      "value": ""
+    },
+    "secretLoggingRedisConnectionString": {
+      "value": ""
+    },
+    "secretHashString": {
+      "value": ""
+    },
+    "secretAllowedHashstringCharacters": {
+      "value": ""
     }
   }
 }

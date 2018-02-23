@@ -13,6 +13,36 @@
     },
     "funAppObjectIds": {
       "type": "object"
+    },
+    "storageConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string for the shared storage account"
+      }
+    },
+    "databaseConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "The database connection string"
+      }
+    },
+    "loggingRedisConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string used to connect to redis for logging"
+      }
+    },
+    "hashString": {
+      "type": "string",
+      "metadata": {
+        "description": "The string used for hashing"
+      }
+    },
+    "allowedHashstringCharacters": {
+      "type": "string",
+      "metadata": {
+        "description": "a lost of allowed characters that can be used for hashing"
+      }
     }
   },
   "variables": {
@@ -55,7 +85,64 @@
           "name": "Standard",
           "family": "A"
         }
-      }
+      },
+      "resources": [
+        {
+          "type": "secrets",
+          "name": "StorageConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('storageConnectionString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "DatabaseConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('databaseConnectionString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "LoggingRedisConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('loggingRedisConnectionString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "HashString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('hashString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "AllowedHashstringCharacters",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('allowedHashstringCharacters')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        }
+      ]
     }
   ],
   "outputs": {}

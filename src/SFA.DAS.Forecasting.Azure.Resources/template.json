@@ -67,6 +67,18 @@
     },
     "sharedServerFarmResourceGroup": {
       "type": "string"
+    },
+    "secretDatabaseConnectionString": {
+      "type": "string"
+    },
+    "secretLoggingRedisConnectionString": {
+      "type": "string"
+    },
+    "secretHashString": {
+      "type": "string"
+    },
+    "secretAllowedHashstringCharacters": {
+      "type": "string"
     }
   },
   "variables": {
@@ -216,9 +228,10 @@
     },
     {
       "apiVersion": "2017-08-01",
-      "name": "keyvault-resources-deployment3",
+      "name": "keyvault-resources-deployment",
       "dependsOn": [
-        "function-app-copy"
+        "function-app-copy",
+        "storage-resources-deployment"
       ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -249,6 +262,21 @@
                 }
               ]
             }
+          },
+          "storageConnectionString": {
+            "value": "[reference('storage-resources-deployment').outputs.StorageConnectionString.value]"
+          },
+          "DatabaseConnectionString": {
+            "value": "[parameters('secretDatabaseConnectionString')]"
+          },
+          "LoggingRedisConnectionString": {
+            "value": "[parameters('secretLoggingRedisConnectionString')]"
+          },
+          "HashString": {
+            "value": "[parameters('secretHashString')]"
+          },
+          "AllowedHashstringCharacters": {
+            "value": "[parameters('secretAllowedHashstringCharacters')]"
           }
         }
       }
