@@ -38,6 +38,9 @@
     "appSettingLimitForecast": {
       "value": false
     },
+    "appSettingNumberOfMonthsToProject": {
+      "value": ""
+    },
     "databaseConnectionString": {
       "value": ""
     },

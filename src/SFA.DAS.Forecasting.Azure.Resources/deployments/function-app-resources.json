@@ -41,6 +41,9 @@
     },
     "KeyVaultName": {
       "type": "string"
+    },
+    "NumberOfMonthsToProject": {
+      "type": "string"
     }
   },
   "resources": [
@@ -74,32 +77,8 @@
               "value": "[reference(resourceId('microsoft.insights/components/', parameters('funAppName')), '2015-05-01').InstrumentationKey]"
             },
             {
-              "name": "StorageConnectionString",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "DatabaseConnectionString",
-              "value": "[parameters('DatabaseConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisConnectionString",
-              "value": "[parameters('LoggingRedisConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisKey",
-              "value": "[parameters('LoggingRedisKey')]"
-            },
-            {
               "name": "EnvironmentName",
               "value": "[parameters('EnvironmentName')]"
-            },
-            {
-              "name": "HashString",
-              "value": "[parameters('HashString')]"
-            },
-            {
-              "name": "AllowedHashstringCharacters",
-              "value": "[parameters('AllowedHashstringCharacters')]"
             },
             {
               "name": "ConfigurationStorageConnectionString",
@@ -112,6 +91,10 @@
             {
               "name": "KeyVaultName",
               "value": "[parameters('KeyVaultName')]"
+            },
+            {
+              "name": "NumberOfMonthsToProject",
+              "value": "[parameters('NumberOfMonthsToProject')]"
             }
           ],
           "alwaysOn": true

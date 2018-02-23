@@ -60,30 +60,6 @@
               "value": "[parameters('EnvironmentName')]"
             },
             {
-              "name": "RedisConnection",
-              "value": "[parameters('RedisConnection')]"
-            },
-            {
-              "name": "LoggingRedisConnectionString",
-              "value": "[parameters('LoggingRedisConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisKey",
-              "value": "[parameters('LoggingRedisKey')]"
-            },
-            {
-              "name": "AllowedHashstringCharacters",
-              "value": "[parameters('AllowedHashstringCharacters')]"
-            },
-            {
-              "name": "HashString",
-              "value": "[parameters('HashString')]"
-            },
-            {
-              "name": "DatabaseConnectionString",
-              "value": "[parameters('DatabaseConnectionString')]"
-            },
-            {
               "name": "ForecastingRoutePrefix",
               "value": "forecasting"
             },

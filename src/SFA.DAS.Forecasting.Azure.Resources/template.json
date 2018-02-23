@@ -32,6 +32,9 @@
     "appSettingHashString": {
       "type": "string"
     },
+    "appSettingNumberOfMonthsToProject": {
+      "type": "string"
+    },
     "databaseConnectionString": {
       "type": "string"
     },
@@ -204,6 +207,9 @@
           },
           "KeyVaultName": {
             "value": "[parameters('keyVaultName')]"
+          },
+          "NumberOfMonthsToProject": {
+            "value": "[parameters('appSettingNumberOfMonthsToProject')]"
           }
         }
       }
