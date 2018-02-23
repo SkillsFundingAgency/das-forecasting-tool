@@ -3,112 +3,70 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "templateBaseUrl": {
-      "value": "__templateBaseUrl__"
+      "value": ""
     },
     "appName": {
-      "value": "__appName__"
+      "value": ""
     },
-    "appHostingPlanName": {
-      "value": "__appHostingPlanName__"
+    "environmentName": {
+      "value": ""
+    },
+    "sharedHostingPlanName": {
+      "value": ""
     },
     "appHostingEnvironment": {
-      "value": "__appHostingEnvironment__"
+      "value": ""
     },
-    "appServerFarmResourceGroup": {
-      "value": "__appServerFarmResourceGroup__"
-    },
-    "subscriptionId": {
-      "value": "__subscriptionid__"
-    },
-    "appSettingEnvironmentName": {
-      "value": "__appSettingEnvironmentName__"
+    "sharedServerFarmResourceGroup": {
+      "value": ""
     },
     "appSettingRedisConnection": {
-      "value": "__appSettingRedisConnection__"
+      "value": ""
     },
     "appSettingLoggingRedisConnectionString": {
-      "value": "__appSettingLoggingRedisConnectionString__"
+      "value": ""
     },
     "appSettingLoggingRedisKey": {
-      "value": "__appSettingLoggingRedisKey__"
+      "value": ""
     },
     "appSettingAllowedHashstringCharacters": {
-      "value": "__appSettingAllowedHashstringCharacters__"
+      "value": ""
     },
     "appSettingHashString": {
-      "value": "__appSettingHashString__"
+      "value": ""
     },
-    "appSettingDatabaseConnectionString": {
-      "value": "__appSettingDatabaseConnectionString__"
+    "appSettingLimitForecast": {
+      "value": false
     },
-    "appSettingStorageConnectionString": {
-      "value": "__appSettingStorageConnectionString__"
+    "DatabaseConnectionString": {
+      "value": ""
+    },
+    "ConfigurationStorageConnectionString": {
+      "value": ""
+    },
+    "appSettingSecondsToWaitToAllowProjections": {
+      "value": ""
     },
     "storageName": {
-      "value": "__storageName__"
-    },
-    "storageAccountType": {
-      "value": "__storageAccountType__"
+      "value": ""
     },
     "kvName": {
-      "value": "__kvName__"
-    },
-    "kvSku": {
-      "value": "__kvSku__"
-    },
-    "kvWebAppObjectId": {
-      "value": "__kvWebAppObjectId__"
-    },
-    "kvLevFunAppObjectId": {
-      "value": "__kvLevFunAppObjectId__"
-    },
-    "kvPayFunAppObjectId": {
-      "value": "__kvPayFunAppObjectId__"
-    },
-    "kvPrjFunAppObjectId": {
-      "value": "__kvPrjFunAppObjectId__"
+      "value": ""
     },
     "kvSecretsPermissionsList": {
-      "value": "__kvSecretsPermissionsList__"
-    },
-    "kvEnabledForDeployment": {
-      "value": "__kvEnabledForDeployment__"
-    },
-    "kvEnabledForTemplateDeployment": {
-      "value": "__kvEnabledForTemplateDeployment__"
-    },
-    "kvEnabledForDiskEncryption": {
-      "value": "__kvEnabledForDiskEncryption__"
+      "value": []
     },
     "levFunAppName": {
-      "value": "__levFunAppName__"
+      "value": ""
     },
     "payFunAppName": {
-      "value": "__payFunAppName__"
+      "value": ""
     },
     "prjFunAppName": {
-      "value": "__prjFunAppName__"
-    },
-    "funAppHostingPlanName": {
-      "value": "__funAppHostingPlanName__"
+      "value": ""
     },
     "funAppHostingEnvironment": {
-      "value": "__funAppHostingEnvironment__"
-    },
-    "funAppServerFarmResourceGroup": {
-      "value": "__funAppServerFarmResourceGroup__"
-    },
-    "funAppSettingPaymentsApiBaseUrl": {
-      "value": "__funAppSettingPaymentsApiBaseUrl__"
-    },
-    "funAppSettingPaymentsApiToken": {
-      "value": "__funAppSettingPaymentsApiTokenn__"
-    },
-    "funAppSettingEnvironment": {
-      "value": "__funAppSettingEnvironmentName__"
-    },
-    "funAppSettingDbConnectionString": {
-      "value": "__funAppSettingDbConnectionStringg__"
+      "value": ""
     }
   }
 }
