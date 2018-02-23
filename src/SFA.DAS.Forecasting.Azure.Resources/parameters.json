@@ -20,28 +20,16 @@
     "sharedServerFarmResourceGroup": {
       "value": ""
     },
-    "appSettingRedisConnection": {
-      "value": ""
-    },
-    "appSettingLoggingRedisConnectionString": {
-      "value": ""
-    },
-    "appSettingLoggingRedisKey": {
-      "value": ""
-    },
-    "appSettingAllowedHashstringCharacters": {
-      "value": ""
-    },
-    "appSettingHashString": {
-      "value": ""
-    },
     "appSettingLimitForecast": {
       "value": false
     },
     "appSettingNumberOfMonthsToProject": {
       "value": ""
     },
-    "databaseConnectionString": {
+    "appSettingLoggingRedisConnectionString": {
+      "value": ""
+    },
+    "appSettingLoggingRedisKey": {
       "value": ""
     },
     "configurationStorageConnectionString": {
@@ -66,9 +54,6 @@
       "value": ""
     },
     "secretDatabaseConnectionString": {
-      "value": ""
-    },
-    "secretLoggingRedisConnectionString": {
       "value": ""
     },
     "secretHashString": {

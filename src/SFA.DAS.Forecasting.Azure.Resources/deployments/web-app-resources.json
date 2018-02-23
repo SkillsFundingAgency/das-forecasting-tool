@@ -1,4 +1,6 @@
 {
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
       "type": "string"
@@ -15,29 +17,17 @@
     "EnvironmentName": {
       "type": "string"
     },
-    "RedisConnection": {
+    "LimitForecast": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    "KeyVaultName": {
       "type": "string"
     },
     "LoggingRedisConnectionString": {
       "type": "string"
     },
     "LoggingRedisKey": {
-      "type": "string"
-    },
-    "AllowedHashstringCharacters": {
-      "type": "string"
-    },
-    "HashString": {
-      "type": "string"
-    },
-    "DatabaseConnectionString": {
-      "type": "string"
-    },
-    "LimitForecast": {
-      "type": "bool",
-      "defaultValue": true
-    },
-    "KeyVaultName": {
       "type": "string"
     }
   },
@@ -70,6 +60,14 @@
             {
               "name": "KeyVaultName",
               "value": "[parameters('KeyVaultName')]"
+            },
+            {
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
+            },
+            {
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
             }
           ],
           "alwaysOn": true
@@ -100,7 +98,5 @@
       "type": "string",
       "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
     }
-  },
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0"
+  }
 }

@@ -1,4 +1,6 @@
 {
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "funAppName": {
       "type": "string"
@@ -15,22 +17,7 @@
     "serverFarmResourceGroup": {
       "type": "string"
     },
-    "DatabaseConnectionString": {
-      "type": "string"
-    },
-    "LoggingRedisConnectionString": {
-      "type": "string"
-    },
-    "LoggingRedisKey": {
-      "type": "string"
-    },
     "EnvironmentName": {
-      "type": "string"
-    },
-    "HashString": {
-      "type": "string"
-    },
-    "AllowedHashstringCharacters": {
       "type": "string"
     },
     "SecondsToWaitToAllowProjections": {
@@ -43,6 +30,12 @@
       "type": "string"
     },
     "NumberOfMonthsToProject": {
+      "type": "string"
+    },
+    "LoggingRedisConnectionString" : {
+      "type": "string"
+    },
+    "LoggingRedisKey" : {
       "type": "string"
     }
   },
@@ -95,6 +88,14 @@
             {
               "name": "NumberOfMonthsToProject",
               "value": "[parameters('NumberOfMonthsToProject')]"
+            },
+            {
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
+            },
+            {
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
             }
           ],
           "alwaysOn": true
@@ -127,7 +128,5 @@
       "type": "string",
       "value": "[reference(concat('Microsoft.Web/sites/', parameters('funAppName')), '2016-03-01', 'Full').identity.principalId]"
     }
-  },
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0"
+  }
 }

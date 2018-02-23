@@ -17,29 +17,17 @@
     "appHostingEnvironment": {
       "type": "string"
     },
-    "appSettingRedisConnection": {
+    "appSettingNumberOfMonthsToProject": {
       "type": "string"
+    },
+    "appSettingLimitForecast": {
+      "type": "bool"
     },
     "appSettingLoggingRedisConnectionString": {
       "type": "string"
     },
     "appSettingLoggingRedisKey": {
       "type": "string"
-    },
-    "appSettingAllowedHashstringCharacters": {
-      "type": "string"
-    },
-    "appSettingHashString": {
-      "type": "string"
-    },
-    "appSettingNumberOfMonthsToProject": {
-      "type": "string"
-    },
-    "databaseConnectionString": {
-      "type": "string"
-    },
-    "appSettingLimitForecast": {
-      "type": "bool"
     },
     "configurationStorageConnectionString": {
       "type": "string"
@@ -69,9 +57,6 @@
       "type": "string"
     },
     "secretDatabaseConnectionString": {
-      "type": "string"
-    },
-    "secretLoggingRedisConnectionString": {
       "type": "string"
     },
     "secretHashString": {
@@ -132,30 +117,18 @@
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
-          },
-          "RedisConnection": {
-            "value": "[parameters('appSettingRedisConnection')]"
-          },
-          "LoggingRedisConnectionString": {
-            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
-          },
-          "LoggingRedisKey": {
-            "value": "[parameters('appSettingLoggingRedisKey')]"
-          },
-          "AllowedHashstringCharacters": {
-            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
-          },
-          "HashString": {
-            "value": "[parameters('appSettingHashString')]"
-          },
-          "DatabaseConnectionString": {
-            "value": "[parameters('DatabaseConnectionString')]"
-          },
+          },          
           "LimitForecast": {
             "value": "[parameters('appSettingLimitForecast')]"
           },
           "KeyVaultName": {
             "value": "[parameters('keyVaultName')]"
+          },
+          "LoggingRedisConnectionString" : {
+            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          },
+          "LoggingRedisKey" : {
+            "value": "[parameters('appSettingLoggingRedisKey')]"
           }
         }
       }
@@ -199,21 +172,6 @@
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
           },
-          "DatabaseConnectionString": {
-            "value": "[parameters('DatabaseConnectionString')]"
-          },
-          "LoggingRedisConnectionString": {
-            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
-          },
-          "LoggingRedisKey": {
-            "value": "[parameters('appSettingLoggingRedisKey')]"
-          },
-          "HashString": {
-            "value": "[parameters('appSettingHashString')]"
-          },
-          "AllowedHashstringCharacters": {
-            "value": "[parameters('appSettingAllowedHashstringCharacters')]"
-          },
           "SecondsToWaitToAllowProjections": {
             "value": "[parameters('appSettingSecondsToWaitToAllowProjections')]"
           },
@@ -222,6 +180,12 @@
           },
           "NumberOfMonthsToProject": {
             "value": "[parameters('appSettingNumberOfMonthsToProject')]"
+          },
+          "LoggingRedisConnectionString" : {
+            "value": "[parameters('appSettingLoggingRedisConnectionString')]"
+          },
+          "LoggingRedisKey" : {
+            "value": "[parameters('appSettingLoggingRedisKey')]"
           }
         }
       }
@@ -268,9 +232,6 @@
           },
           "DatabaseConnectionString": {
             "value": "[parameters('secretDatabaseConnectionString')]"
-          },
-          "LoggingRedisConnectionString": {
-            "value": "[parameters('secretLoggingRedisConnectionString')]"
           },
           "HashString": {
             "value": "[parameters('secretHashString')]"

@@ -26,12 +26,6 @@
         "description": "The database connection string"
       }
     },
-    "loggingRedisConnectionString": {
-      "type": "string",
-      "metadata": {
-        "description": "The connection string used to connect to redis for logging"
-      }
-    },
     "hashString": {
       "type": "string",
       "metadata": {
@@ -104,17 +98,6 @@
           "apiVersion": "2015-06-01",
           "properties": {
             "value": "[parameters('databaseConnectionString')]"
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
-          ]
-        },
-        {
-          "type": "secrets",
-          "name": "LoggingRedisConnectionString",
-          "apiVersion": "2015-06-01",
-          "properties": {
-            "value": "[parameters('loggingRedisConnectionString')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
