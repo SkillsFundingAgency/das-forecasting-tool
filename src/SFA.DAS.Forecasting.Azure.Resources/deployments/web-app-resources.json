@@ -36,6 +36,9 @@
     "LimitForecast": {
       "type": "bool",
       "defaultValue": true
+    },
+    "KeyVaultName": {
+      "type": "string"
     }
   },
   "resources": [
@@ -87,10 +90,13 @@
             {
               "name": "LimitForecast",
               "value": "[parameters('LimitForecast')]"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "[parameters('KeyVaultName')]"
             }
           ],
-          "alwaysOn": true,
-          "phpVersion": ""
+          "alwaysOn": true
         },
         "name": "[parameters('name')]",
         "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",

@@ -38,6 +38,9 @@
     },
     "ConfigurationStorageConnectionString": {
       "type": "string"
+    },
+    "KeyVaultName": {
+      "type": "string"
     }
   },
   "resources": [
@@ -105,10 +108,13 @@
             {
               "name": "SecondsToWaitToAllowProjections",
               "value": "[parameters('SecondsToWaitToAllowProjections')]"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "[parameters('KeyVaultName')]"
             }
           ],
-          "alwaysOn": true,
-          "phpVersion": ""
+          "alwaysOn": true
         },
         "name": "[parameters('funAppName')]",
         "clientAffinityEnabled": false,

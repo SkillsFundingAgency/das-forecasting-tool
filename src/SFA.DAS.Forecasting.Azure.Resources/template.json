@@ -47,7 +47,7 @@
     "storageName": {
       "type": "string"
     },
-    "kvName": {
+    "keyVaultName": {
       "type": "string"
     },
     "kvSecretsPermissionsList": {
@@ -138,6 +138,9 @@
           },
           "LimitForecast": {
             "value": "[parameters('appSettingLimitForecast')]"
+          },
+          "KeyVaultName": {
+            "value": "[parameters('keyVaultName')]"
           }
         }
       }
@@ -198,6 +201,9 @@
           },
           "SecondsToWaitToAllowProjections": {
             "value": "[parameters('appSettingSecondsToWaitToAllowProjections')]"
+          },
+          "KeyVaultName": {
+            "value": "[parameters('keyVaultName')]"
           }
         }
       }
@@ -217,7 +223,7 @@
         },
         "parameters": {
           "name": {
-            "value": "[parameters('kvName')]"
+            "value": "[parameters('keyVaultName')]"
           },
           "webAppObjectId": {
             "value": "[reference('web-app-resources-deployment').outputs.webAppIdentity.value]"

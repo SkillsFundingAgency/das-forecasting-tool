@@ -50,16 +50,14 @@
     "storageName": {
       "value": ""
     },
-    "kvName": {
+    "keyVaultName": {
       "value": ""
     },
     "kvSecretsPermissionsList": {
-      "value": [
-      ]
+      "value": []
     },
     "funAppNames": {
-      "value": [
-      ]
+      "value": []
     },
     "funAppHostingEnvironment": {
       "value": ""
