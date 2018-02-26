@@ -27,17 +27,17 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 DatabaseConnectionString = GetConnectionString("DatabaseConnectionString"),
                 EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
                 StorageConnectionString = GetConnectionString("StorageConnectionString"),
-                Hashstring = GetAppSetting("HashString",true),
-                AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters",true),
-                NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject",false) ?? "0"),
-                SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections",false) ?? "0"),
-                BackLink = GetAppSetting("BackLink",false),
-                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast",false) ?? "false"),
+                Hashstring = GetAppSetting("HashString", true),
+                AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters", true),
+                NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject", false) ?? "0"),
+                SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
+                BackLink = GetAppSetting("BackLink", false),
+                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
                 AccountApi = GetAccount(),
                 PaymentEventsApi = new PaymentsEventsApiConfiguration
                 {
-                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl",true),
-                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken",true),
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
                 }
             };
             return configuration;
@@ -69,9 +69,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return string.IsNullOrEmpty(value) || IsDevEnvironment || isSensitive
-                ? value
-                : GetSecret(value).Result;
+            return !IsDevEnvironment || isSensitive
+                ? GetSecret(keyName).Result
+                : value;
         }
 
         public static bool IsDevEnvironment =>
@@ -98,7 +98,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 environment = GetAppSetting("EnvironmentName", false);
             }
 
-            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString",true);
+            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(serviceName, environment, "1.0"));
