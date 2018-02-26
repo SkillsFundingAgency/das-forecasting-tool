@@ -69,9 +69,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return !IsDevEnvironment || isSensitive
-                ? GetSecret(keyName).Result
-                : value;
+            return IsDevEnvironment || !isSensitive
+                ? value 
+                : GetSecret(keyName).Result;
         }
 
         public static bool IsDevEnvironment =>
