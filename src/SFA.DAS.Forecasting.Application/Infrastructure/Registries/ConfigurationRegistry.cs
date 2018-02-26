@@ -33,26 +33,35 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
                 BackLink = GetAppSetting("BackLink", false),
                 LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
-                AccountApi = GetAccount(),
-                PaymentEventsApi = new PaymentsEventsApiConfiguration
-                {
-                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
-                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
-                }
+                ApiConfiguration = IsDevEnvironment ? GetApiConfiguration() : GetApiConfigurationTableStorage()
             };
+
             return configuration;
         }
 
-        private AccountApiConfiguration GetAccount()
+        private ApiConfiguration GetApiConfiguration()
         {
-            return new AccountApiConfiguration
+            return new ApiConfiguration
             {
-                Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
-                ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
-                ClientSecret = CloudConfigurationManager.GetSetting("AccountApi-ClientSecret"),
-                ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
-                IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
+                AccountApi = new AccountApiConfiguration
+                    {
+                        Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
+                        ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
+                        ClientSecret = CloudConfigurationManager.GetSetting("AccountApi-ClientSecret"),
+                        ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
+                        IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
+                    },
+                PaymentEventsApi = new PaymentsEventsApiConfiguration
+                    {
+                        ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
+                        ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
+                    }
             };
+        }
+
+        private ApiConfiguration GetApiConfigurationTableStorage()
+        {
+            return SetUpConfiguration<ApiConfiguration>("SFA.DAS.Forecasting.Functions");
         }
 
 
@@ -90,7 +99,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 : GetSecret(connectionString).Result;
         }
 
-        public TConfig SetUpConfiguration<TConfigInterface, TConfig>(string serviceName) where TConfig : class, TConfigInterface
+        public TConfig SetUpConfiguration<TConfig>(string serviceName) where TConfig : class
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
@@ -98,13 +107,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 environment = GetAppSetting("EnvironmentName", false);
             }
 
-            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
+            var storageConnectionString = GetAppSetting("StorageConnectionString", false);
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(serviceName, environment, "1.0"));
 
             var result = configurationService.Get<TConfig>();
-            ForSingletonOf<TConfigInterface>().Use(result);
             return result;
         }
     }

@@ -164,6 +164,7 @@
     <Compile Include="Commitments\Handlers\RecordCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Infrastructure\Configuration\ApiConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
