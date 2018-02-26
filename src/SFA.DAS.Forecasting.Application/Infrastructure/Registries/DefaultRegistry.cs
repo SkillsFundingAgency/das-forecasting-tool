@@ -31,9 +31,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             For<IAccountApiClient>()
                 .Use<AccountApiClient>()
                 .Ctor<IAccountApiConfiguration>()
-                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApiConfiguration.AccountApi);
+                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AccountApi);
             For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
-                .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApiConfiguration.PaymentEventsApi);
+                .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
         }
     }
 }

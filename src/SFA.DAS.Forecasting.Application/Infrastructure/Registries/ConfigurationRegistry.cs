@@ -32,36 +32,39 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject", false) ?? "0"),
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
                 BackLink = GetAppSetting("BackLink", false),
-                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
-                ApiConfiguration = IsDevEnvironment ? GetApiConfiguration() : GetApiConfigurationTableStorage()
+                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false")
             };
+
+            if (IsDevEnvironment)
+                SetApiConfiguration(configuration);
+            else
+                SetApiConfigurationTableStorage(configuration);
 
             return configuration;
         }
 
-        private ApiConfiguration GetApiConfiguration()
+        private void SetApiConfiguration(ApplicationConfiguration config)
         {
-            return new ApiConfiguration
+            config.AccountApi = new AccountApiConfiguration
             {
-                AccountApi = new AccountApiConfiguration
-                    {
-                        Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
-                        ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
-                        ClientSecret = CloudConfigurationManager.GetSetting("AccountApi-ClientSecret"),
-                        ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
-                        IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
-                    },
-                PaymentEventsApi = new PaymentsEventsApiConfiguration
-                    {
-                        ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
-                        ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
-                    }
+                Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
+                ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
+                ClientSecret = CloudConfigurationManager.GetSetting("AccountApi-ClientSecret"),
+                ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
+                IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
+            };
+
+            config.PaymentEventsApi = new PaymentsEventsApiConfiguration
+            {
+                ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
+                ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
             };
         }
 
-        private ApiConfiguration GetApiConfigurationTableStorage()
+        private void SetApiConfigurationTableStorage(ApplicationConfiguration config)
         {
-            return SetUpConfiguration<ApiConfiguration>("SFA.DAS.Forecasting.Functions");
+            config.AccountApi = SetUpConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
+            config.PaymentEventsApi = SetUpConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
 
 
