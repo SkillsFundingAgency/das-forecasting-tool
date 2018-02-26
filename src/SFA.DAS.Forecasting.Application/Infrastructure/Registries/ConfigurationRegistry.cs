@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using SFA.DAS.Configuration;
+using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using StructureMap;
@@ -25,17 +27,17 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 DatabaseConnectionString = GetConnectionString("DatabaseConnectionString"),
                 EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
                 StorageConnectionString = GetConnectionString("StorageConnectionString"),
-                Hashstring = GetAppSetting("HashString"),
-                AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters"),
-                NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject") ?? "0"),
-                SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections") ?? "0"),
-                BackLink = GetAppSetting("BackLink"),
-                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast") ?? "false"),
+                Hashstring = GetAppSetting("HashString",true),
+                AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters",true),
+                NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject",false) ?? "0"),
+                SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections",false) ?? "0"),
+                BackLink = GetAppSetting("BackLink",false),
+                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast",false) ?? "false"),
                 AccountApi = GetAccount(),
                 PaymentEventsApi = new PaymentsEventsApiConfiguration
                 {
-                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl"),
-                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken"),
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl",true),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken",true),
                 }
             };
             return configuration;
@@ -64,10 +66,10 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             return secret.Value;
         }
 
-        public string GetAppSetting(string keyName)
+        public string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return string.IsNullOrEmpty(value) || IsDevEnvironment
+            return string.IsNullOrEmpty(value) || IsDevEnvironment || isSensitive
                 ? value
                 : GetSecret(value).Result;
         }
@@ -81,11 +83,29 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             var connectionString = ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
             if (string.IsNullOrEmpty(connectionString))
-                return GetAppSetting(name);
-            
+                return GetAppSetting(name, true);
+
             return IsDevEnvironment
                 ? connectionString
                 : GetSecret(connectionString).Result;
+        }
+
+        public TConfig SetUpConfiguration<TConfigInterface, TConfig>(string serviceName) where TConfig : class, TConfigInterface
+        {
+            var environment = Environment.GetEnvironmentVariable("DASENV");
+            if (string.IsNullOrEmpty(environment))
+            {
+                environment = GetAppSetting("EnvironmentName", false);
+            }
+
+            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString",true);
+            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
+            var configurationService = new ConfigurationService(configurationRepository,
+                new ConfigurationOptions(serviceName, environment, "1.0"));
+
+            var result = configurationService.Get<TConfig>();
+            ForSingletonOf<TConfigInterface>().Use(result);
+            return result;
         }
     }
 }

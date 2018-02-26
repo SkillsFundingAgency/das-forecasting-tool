@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Configuration;
+using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
