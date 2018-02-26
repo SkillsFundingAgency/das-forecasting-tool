@@ -1,18 +1,11 @@
 {
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
-    "levFunAppName": {
-      "type": "string"
-    },
-    "payFunAppName": {
-      "type": "string"
-    },
-    "prjFunAppName": {
+    "funAppName": {
       "type": "string"
     },
     "storageName": {
-      "type": "string"
-    },
-    "storageAccountResourceGroup": {
       "type": "string"
     },
     "hostingPlanName": {
@@ -24,72 +17,45 @@
     "serverFarmResourceGroup": {
       "type": "string"
     },
-    "subscriptionId": {
-      "type": "string"
-    },
-    "StorageConnectionString": {
-      "type": "string"
-    },
-    "DatabaseConnectionString": {
-      "type": "string"
-    },
-    "LoggingRedisConnectionString": {
-      "type": "string"
-    },
-    "LoggingRedisKey": {
-      "type": "string"
-    },
     "EnvironmentName": {
       "type": "string"
     },
-    "HashString": {
-      "type": "string"
-    },
-    "AllowedHashstringCharacters": {
-      "type": "string"
-    },
-    "AccountApiTenant": {
-      "type": "string"
-    },
-    "AccountApiClientId": {
-      "type": "string"
-    },
-    "AccountApiClientSecret": {
-      "type": "string"
-    },
-    "AccountApiApiBaseUrl": {
-      "type": "string"
-    },
-    "AccountApiIdentifierUri": {
-      "type": "string"
-    },
-    "PaymentsEventApiBaseUrl": {
-      "type": "string"
-    },
-    "PaymentsEventClientToken": {
-      "type": "string"
-    },
     "SecondsToWaitToAllowProjections": {
+      "type": "string"
+    },
+    "ConfigurationStorageConnectionString": {
+      "type": "string"
+    },
+    "KeyVaultName": {
+      "type": "string"
+    },
+    "NumberOfMonthsToProject": {
+      "type": "string"
+    },
+    "LoggingRedisConnectionString" : {
+      "type": "string"
+    },
+    "LoggingRedisKey" : {
       "type": "string"
     }
   },
   "resources": [
     {
-      "name": "[parameters('levFunAppName')]",
+      "name": "[parameters('funAppName')]",
       "type": "Microsoft.Web/sites",
       "dependsOn": [
-        "[resourceId('microsoft.insights/components/', parameters('levFunAppName'))]"
+        "[resourceId('microsoft.insights/components/', parameters('funAppName'))]"
       ],
       "properties": {
         "siteConfig": {
           "appSettings": [
             {
               "name": "AzureWebJobsDashboard",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
             },
             {
               "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
             },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -101,15 +67,27 @@
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('microsoft.insights/components/', parameters('levFunAppName')), '2015-05-01').InstrumentationKey]"
+              "value": "[reference(resourceId('microsoft.insights/components/', parameters('funAppName')), '2015-05-01').InstrumentationKey]"
             },
             {
-              "name": "StorageConnectionString",
-              "value": "[parameters('StorageConnectionString')]"
+              "name": "EnvironmentName",
+              "value": "[parameters('EnvironmentName')]"
             },
             {
-              "name": "DatabaseConnectionString",
-              "value": "[parameters('DatabaseConnectionString')]"
+              "name": "ConfigurationStorageConnectionString",
+              "value": "[parameters('ConfigurationStorageConnectionString')]"
+            },
+            {
+              "name": "SecondsToWaitToAllowProjections",
+              "value": "[parameters('SecondsToWaitToAllowProjections')]"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "[parameters('KeyVaultName')]"
+            },
+            {
+              "name": "NumberOfMonthsToProject",
+              "value": "[parameters('NumberOfMonthsToProject')]"
             },
             {
               "name": "LoggingRedisConnectionString",
@@ -118,58 +96,13 @@
             {
               "name": "LoggingRedisKey",
               "value": "[parameters('LoggingRedisKey')]"
-            },
-            {
-              "name": "EnvironmentName",
-              "value": "[parameters('EnvironmentName')]"
-            },
-            {
-              "name": "HashString",
-              "value": "[parameters('HashString')]"
-            },
-            {
-              "name": "AllowedHashstringCharacters",
-              "value": "[parameters('AllowedHashstringCharacters')]"
-            },
-            {
-              "name": "AccountApi-Tenant",
-              "value": "[parameters('AccountApiTenant')]"
-            },
-            {
-              "name": "AccountApi-ClientId",
-              "value": "[parameters('AccountApiClientId')]"
-            },
-            {
-              "name": "AccountApi-ClientSecret",
-              "value": "[parameters('AccountApiClientSecret')]"
-            },
-            {
-              "name": "AccountApi-ApiBaseUrl",
-              "value": "[parameters('AccountApiApiBaseUrl')]"
-            },
-            {
-              "name": "AccountApi-IdentifierUri",
-              "value": "[parameters('AccountApiIdentifierUri')]"
-            },
-            {
-              "name": "PaymentsEvent-ApiBaseUrl",
-              "value": "[parameters('PaymentsEventApiBaseUrl')]"
-            },
-            {
-              "name": "PaymentsEvent-ClientToken",
-              "value": "[parameters('PaymentsEventClientToken')]"
-            },
-            {
-              "name": "SecondsToWaitToAllowProjections",
-              "value": "[parameters('SecondsToWaitToAllowProjections')]"
             }
           ],
-          "alwaysOn": true,
-          "phpVersion": ""
+          "alwaysOn": true
         },
-        "name": "[parameters('levFunAppName')]",
+        "name": "[parameters('funAppName')]",
         "clientAffinityEnabled": false,
-        "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "hostingEnvironment": "[parameters('hostingEnvironment')]"
       },
       "apiVersion": "2016-03-01",
@@ -177,281 +110,23 @@
       "identity": {
         "type": "SystemAssigned"
       },
-      "tags": {
-        "[concat('hidden-related:', '/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
-      },
-      "kind": "functionapp"
-    },
-    {
-      "name": "[parameters('payFunAppName')]",
-      "type": "Microsoft.Web/sites",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components/', parameters('payFunAppName'))]"
-      ],
-      "properties": {
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "AzureWebJobsDashboard",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~1"
-            },
-            {
-              "name": "WEBSITE_NODE_DEFAULT_VERSION",
-              "value": "6.5.0"
-            },
-            {
-              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('microsoft.insights/components/', parameters('payFunAppName')), '2015-05-01').InstrumentationKey]"
-            },
-            {
-              "name": "StorageConnectionString",
-              "value": "[parameters('StorageConnectionString')]"
-            },
-            {
-              "name": "DatabaseConnectionString",
-              "value": "[parameters('DatabaseConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisConnectionString",
-              "value": "[parameters('LoggingRedisConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisKey",
-              "value": "[parameters('LoggingRedisKey')]"
-            },
-            {
-              "name": "EnvironmentName",
-              "value": "[parameters('EnvironmentName')]"
-            },
-            {
-              "name": "HashString",
-              "value": "[parameters('HashString')]"
-            },
-            {
-              "name": "AllowedHashstringCharacters",
-              "value": "[parameters('AllowedHashstringCharacters')]"
-            },
-            {
-              "name": "AccountApi-Tenant",
-              "value": "[parameters('AccountApiTenant')]"
-            },
-            {
-              "name": "AccountApi-ClientId",
-              "value": "[parameters('AccountApiClientId')]"
-            },
-            {
-              "name": "AccountApi-ClientSecret",
-              "value": "[parameters('AccountApiClientSecret')]"
-            },
-            {
-              "name": "AccountApi-ApiBaseUrl",
-              "value": "[parameters('AccountApiApiBaseUrl')]"
-            },
-            {
-              "name": "AccountApi-IdentifierUri",
-              "value": "[parameters('AccountApiIdentifierUri')]"
-            },
-            {
-              "name": "PaymentsEvent-ApiBaseUrl",
-              "value": "[parameters('PaymentsEventApiBaseUrl')]"
-            },
-            {
-              "name": "PaymentsEvent-ClientToken",
-              "value": "[parameters('PaymentsEventClientToken')]"
-            },
-            {
-              "name": "SecondsToWaitToAllowProjections",
-              "value": "[parameters('SecondsToWaitToAllowProjections')]"
-            }
-          ],
-          "alwaysOn": true,
-          "phpVersion": ""
-        },
-        "name": "[parameters('payFunAppName')]",
-        "clientAffinityEnabled": false,
-        "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-        "hostingEnvironment": "[parameters('hostingEnvironment')]"
-      },
-      "apiVersion": "2016-03-01",
-      "location": "[resourceGroup().location]",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "tags": {
-        "[concat('hidden-related:', '/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
-      },
-      "kind": "functionapp"
-    },
-    {
-      "name": "[parameters('prjFunAppName')]",
-      "type": "Microsoft.Web/sites",
-      "dependsOn": [
-        "[resourceId('microsoft.insights/components/', parameters('prjFunAppName'))]"
-      ],
-      "properties": {
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "AzureWebJobsDashboard",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(parameters('storageAccountResourceGroup'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
-            },
-            {
-              "name": "FUNCTIONS_EXTENSION_VERSION",
-              "value": "~1"
-            },
-            {
-              "name": "WEBSITE_NODE_DEFAULT_VERSION",
-              "value": "6.5.0"
-            },
-            {
-              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-              "value": "[reference(resourceId('microsoft.insights/components/', parameters('prjFunAppName')), '2015-05-01').InstrumentationKey]"
-            },
-            {
-              "name": "StorageConnectionString",
-              "value": "[parameters('StorageConnectionString')]"
-            },
-            {
-              "name": "DatabaseConnectionString",
-              "value": "[parameters('DatabaseConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisConnectionString",
-              "value": "[parameters('LoggingRedisConnectionString')]"
-            },
-            {
-              "name": "LoggingRedisKey",
-              "value": "[parameters('LoggingRedisKey')]"
-            },
-            {
-              "name": "EnvironmentName",
-              "value": "[parameters('EnvironmentName')]"
-            },
-            {
-              "name": "HashString",
-              "value": "[parameters('HashString')]"
-            },
-            {
-              "name": "AllowedHashstringCharacters",
-              "value": "[parameters('AllowedHashstringCharacters')]"
-            },
-            {
-              "name": "AccountApi-Tenant",
-              "value": "[parameters('AccountApiTenant')]"
-            },
-            {
-              "name": "AccountApi-ClientId",
-              "value": "[parameters('AccountApiClientId')]"
-            },
-            {
-              "name": "AccountApi-ClientSecret",
-              "value": "[parameters('AccountApiClientSecret')]"
-            },
-            {
-              "name": "AccountApi-ApiBaseUrl",
-              "value": "[parameters('AccountApiApiBaseUrl')]"
-            },
-            {
-              "name": "AccountApi-IdentifierUri",
-              "value": "[parameters('AccountApiIdentifierUri')]"
-            },
-            {
-              "name": "PaymentsEvent-ApiBaseUrl",
-              "value": "[parameters('PaymentsEventApiBaseUrl')]"
-            },
-            {
-              "name": "PaymentsEvent-ClientToken",
-              "value": "[parameters('PaymentsEventClientToken')]"
-            },
-            {
-              "name": "SecondsToWaitToAllowProjections",
-              "value": "[parameters('SecondsToWaitToAllowProjections')]"
-            }
-          ],
-          "alwaysOn": true,
-          "phpVersion": ""
-        },
-        "name": "[parameters('prjFunAppName')]",
-        "clientAffinityEnabled": false,
-        "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-        "hostingEnvironment": "[parameters('hostingEnvironment')]"
-      },
-      "apiVersion": "2016-03-01",
-      "location": "[resourceGroup().location]",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "tags": {
-        "[concat('hidden-related:', '/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
-      },
       "kind": "functionapp"
     },
     {
       "apiVersion": "2015-05-01",
-      "name": "[parameters('levFunAppName')]",
+      "name": "[parameters('funAppName')]",
       "type": "microsoft.insights/components",
       "location": "[resourceGroup().location]",
-      "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('levFunAppName'))]": "Resource"
-      },
       "properties": {
-        "ApplicationId": "[parameters('levFunAppName')]",
-        "Request_Source": "IbizaWebAppExtensionCreate"
-      }
-    },
-    {
-      "apiVersion": "2015-05-01",
-      "name": "[parameters('payFunAppName')]",
-      "type": "microsoft.insights/components",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('payFunAppName'))]": "Resource"
-      },
-      "properties": {
-        "ApplicationId": "[parameters('payFunAppName')]",
-        "Request_Source": "IbizaWebAppExtensionCreate"
-      }
-    },
-    {
-      "apiVersion": "2015-05-01",
-      "name": "[parameters('prjFunAppName')]",
-      "type": "microsoft.insights/components",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('prjFunAppName'))]": "Resource"
-      },
-      "properties": {
-        "ApplicationId": "[parameters('prjFunAppName')]",
+        "ApplicationId": "[parameters('funAppName')]",
         "Request_Source": "IbizaWebAppExtensionCreate"
       }
     }
   ],
   "outputs": {
-    "levFunAppIdentity": {
+    "funAppIdentity": {
       "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', parameters('levFunAppName')), '2016-03-01', 'Full').identity.principalId]"
-    },
-    "payFunAppIdentity": {
-      "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', parameters('payFunAppName')), '2016-03-01', 'Full').identity.principalId]"
-    },
-    "prjFunAppIdentity": {
-      "type": "string",
-      "value": "[reference(concat('Microsoft.Web/sites/', parameters('prjFunAppName')), '2016-03-01', 'Full').identity.principalId]"
+      "value": "[reference(concat('Microsoft.Web/sites/', parameters('funAppName')), '2016-03-01', 'Full').identity.principalId]"
     }
-  },
-  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0"
+  }
 }
