@@ -56,21 +56,29 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         }
 
 
+        private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
         private string KeyVaultBaseUrl => $"https://{CloudConfigurationManager.GetSetting("KeyVaultName")}.vault.azure.net";
 
         private async Task<string> GetSecret(string secretName)
         {
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            var secret = await keyVaultClient.GetSecretAsync(KeyVaultBaseUrl, secretName).ConfigureAwait(false);
-            return secret.Value;
+            try
+            {
+                var azureServiceTokenProvider = new AzureServiceTokenProvider();
+                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+                var secret = await keyVaultClient.GetSecretAsync(KeyVaultBaseUrl, secretName).ConfigureAwait(false);
+                return secret.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"There was an error getting the key vault secret. Secret name: {secretName}, KeyVault name: {KeyVaultName}, Error: {ex.Message}", ex);
+            }
         }
 
         public string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
             return IsDevEnvironment || !isSensitive
-                ? value 
+                ? value
                 : GetSecret(keyName).Result;
         }
 
