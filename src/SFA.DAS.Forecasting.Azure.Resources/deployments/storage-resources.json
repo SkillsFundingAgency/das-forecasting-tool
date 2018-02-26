@@ -1,38 +1,41 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "name": {
-            "type": "string"
-        },
-        "accountType": {
-            "type": "string"
-        }
-    },
-    "resources": [
-      {
-        "apiVersion": "2017-06-01",
-        "name": "[parameters('name')]",
-        "location": "[resourceGroup().location]",
-        "type": "Microsoft.Storage/storageAccounts",
-        "sku": {
-          "name": "[parameters('accountType')]"
-        },
-        "kind": "Storage",
-        "properties": {
-          "encryption": {
-            "services": {
-              "blob": {
-                "enabled": true
-              },
-              "file": {
-                "enabled": true
-              }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "name": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-06-01",
+      "name": "[parameters('name')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage",
+      "properties": {
+        "encryption": {
+          "services": {
+            "blob": {
+              "enabled": true
             },
-            "keySource": "Microsoft.Storage"
-          }
-        },
-        "dependsOn": []
-      }
-    ]
+            "file": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        }
+      },
+      "dependsOn": []
+    }
+  ],
+  "outputs": {
+    "storageConnectionString": {
+      "type": "string",
+      "value": "[Concat('DefaultEndpointsProtocol=https;AccountName=',parameters('name'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
+    }
+  }
 }

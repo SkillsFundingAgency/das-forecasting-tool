@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Domain.Events;
 using SFA.DAS.Forecasting.Models.Commitments;
 
@@ -41,7 +42,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     LearnerId = 3,
                     MonthlyInstallment = 10
                 }
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+            new CommitmentValidator());
             employerCommitments.AddCommitment(2, 3, DateTime.Today, DateTime.Today.AddDays(1), null, 87.27m, 240, 12);
             Assert.AreEqual(1, employerCommitments.Commitments.Count);
         }
@@ -62,7 +64,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     NumberOfInstallments = 24,
                     CompletionAmount = 3000
                 }
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+            new CommitmentValidator());
 
             for (var i = 0; i < 24; i++)
             {
@@ -108,7 +111,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     MonthlyInstallment = 10,
                     NumberOfInstallments = 10
                 },
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+                new CommitmentValidator());
+
             Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today).Item1);
             Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(3)).Item1);
             Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(6)).Item1);
@@ -151,7 +156,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     MonthlyInstallment = 10,
                     NumberOfInstallments = 10
                 },
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+            new CommitmentValidator());
+
             Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today).Item2.All(id => id == 1 || id == 2));
             Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).Item2.All(id => id == 2 || id == 3));
             Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(5)).Item2.All(id => id == 3));
@@ -172,7 +179,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     MonthlyInstallment = 10,
                     NumberOfInstallments = 2
                 },
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+                new CommitmentValidator());
             Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).Item1);
         }
 
@@ -203,7 +211,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     NumberOfInstallments = 5,
                     CompletionAmount = 50
                 }
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+            new CommitmentValidator());
             Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).Item1);
             Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).Item1);
             Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(5)).Item1);
@@ -237,7 +246,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                     NumberOfInstallments = 5,
                     CompletionAmount = 50
                 }
-            }, Moqer.GetMock<IEventPublisher>().Object);
+            }, Moqer.GetMock<IEventPublisher>().Object,
+            new CommitmentValidator());
+
             Assert.IsFalse(employerCommitments.GetTotalCompletionPayments(DateTime.Today).Item2.Any());
             Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).Item2.All(id => id == 1));
             Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(5)).Item2.All(id => id == 2));

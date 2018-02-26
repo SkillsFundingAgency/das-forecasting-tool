@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Configuration;
-using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
-using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
-using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
 namespace SFA.DAS.Forecasting.Functions.Framework
@@ -24,11 +17,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap();
-                using (container.GetNestedContainer())
+                using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(writer, container);
                     logger = container.GetInstance<ILog>();
-                    await runAction(container, logger);
+                    await runAction(nestedContainer, logger);
                 }
             }
             catch (Exception ex)
@@ -48,11 +41,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap();
-                using (container.GetNestedContainer())
+                using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(writer, container);
                     logger = container.GetInstance<ILog>();
-                    runAction(container, logger);
+                    runAction(nestedContainer, logger);
                 }
             }
             catch (Exception ex)
@@ -70,10 +63,10 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap();
-                using (container.GetNestedContainer())
+                using (var nestedContainer = container.GetNestedContainer())
                 {
                     container.Configure(c => c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType)));
-                    return runAction(container, container.GetInstance<ILog>());
+                    return runAction(nestedContainer, container.GetInstance<ILog>());
                 }
             }
             catch (Exception ex)
@@ -89,11 +82,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap();
-                using (container.GetNestedContainer())
+                using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(writer, container);
                     logger = container.GetInstance<ILog>();
-                    return await runAction(container, container.GetInstance<ILog>());
+                    return await runAction(nestedContainer, container.GetInstance<ILog>());
                 }
             }
             catch (Exception ex)
@@ -108,47 +101,10 @@ namespace SFA.DAS.Forecasting.Functions.Framework
 
         private static void ConfigureContainer(TraceWriter writer, IContainer container)
         {
-            var config = container.GetInstance<IApplicationConfiguration>();
             container.Configure(c =>
             {
                 c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType));
-                c.ForSingletonOf<IHashingService>()
-                    .Use<HashingService.HashingService>()
-                    .Ctor<string>("allowedCharacters").Is(config.AllowedHashstringCharacters)
-                    .Ctor<string>("hashstring").Is(config.Hashstring);
-
-                c.For<IAccountApiClient>().Use<AccountApiClient>()
-                    .Ctor<IAccountApiConfiguration>().Is(config.AccountApi);
-
-                c.For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
-                .Ctor<IPaymentsEventsApiConfiguration>().Is(config.PaymentEventsApi);
-
             });
-        }
-
-        private static T2 SetUpConfiguration<T1, T2>(string serviceName) where T2 : class, T1
-        {
-            var environment = Environment.GetEnvironmentVariable("DASENV");
-            if (string.IsNullOrEmpty(environment))
-            {
-                environment = ConfigurationManager.AppSettings["EnvironmentName"];
-            }
-
-            var storageConnectionString = Environment.GetEnvironmentVariable("StorageConnectionString", EnvironmentVariableTarget.Process);
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
-            var configurationService = new ConfigurationService(configurationRepository,
-                new ConfigurationOptions(serviceName, environment, "1.0"));
-
-
-            var result = configurationService.Get<T2>();
-
-            var container = ContainerBootstrapper.Bootstrap();
-            using (container.GetNestedContainer())
-            {
-                container.Configure(c => c.For<T1>().Use(result));
-            }
-
-            return result;
         }
     }
 }

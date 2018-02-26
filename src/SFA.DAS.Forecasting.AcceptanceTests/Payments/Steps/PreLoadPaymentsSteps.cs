@@ -17,12 +17,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
     {
         private const string FeatureName = "PreLoadPayments";
         private static IEnumerable<long> _accountIds = new List<long> { 8509 };
-        private static ApiHost _apiHost;
+        //private static ApiHost _apiHost;
 
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-            _apiHost = new ApiHost();
+          //  _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Payments.Functions");
             Thread.Sleep(1000);
         }
@@ -48,13 +48,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             var client = new HttpClient();
             await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
         }
-        
+
         [When(@"data have been processed")]
         public void WhenDataHaveBeenProcessed()
         {
             Thread.Sleep(500);
         }
-        
+
         [Then(@"there will be payments for all the employers")]
         public void ThenThereWillBePaymentsForAllTheEmployers()
         {
@@ -71,7 +71,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 return false;
             }, "Failed to find all the payments.");
 
-            _apiHost.Dispose();
+            //_apiHost.Dispose();
         }
 
         private void ClearDatabase()

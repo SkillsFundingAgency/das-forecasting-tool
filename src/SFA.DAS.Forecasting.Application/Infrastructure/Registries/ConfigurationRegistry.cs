@@ -53,11 +53,14 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             };
         }
 
-        private async Task<string> GetKeyValueSecret(string secretUri)
+
+        private string KeyVaultBaseUrl => $"https://{CloudConfigurationManager.GetSetting("KeyVaultName")}.vault.azure.net";
+
+        private async Task<string> GetSecret(string secretName)
         {
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
             var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            var secret = await keyVaultClient.GetSecretAsync(secretUri).ConfigureAwait(false);
+            var secret = await keyVaultClient.GetSecretAsync(KeyVaultBaseUrl, secretName).ConfigureAwait(false);
             return secret.Value;
         }
 
@@ -66,17 +69,23 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             var value = ConfigurationManager.AppSettings[keyName];
             return string.IsNullOrEmpty(value) || IsDevEnvironment
                 ? value
-                : GetKeyValueSecret(value).Result;
+                : GetSecret(value).Result;
         }
 
         public static bool IsDevEnvironment =>
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
         public string GetConnectionString(string name)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[name];
-            return connectionString?.ConnectionString ?? ConfigurationManager.AppSettings[name];
+            var connectionString = ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
+            if (string.IsNullOrEmpty(connectionString))
+                return GetAppSetting(name);
+            
+            return IsDevEnvironment
+                ? connectionString
+                : GetSecret(connectionString).Result;
         }
     }
 }

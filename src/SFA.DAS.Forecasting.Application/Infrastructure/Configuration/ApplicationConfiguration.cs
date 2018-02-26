@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.Provider.Events.Api.Client;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
@@ -16,11 +15,5 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public bool LimitForecast { get; set; }
         public string EmployerConnectionString { get; set; }
         public PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
-    }
-
-    public class PaymentsEventsApiConfiguration : IPaymentsEventsApiConfiguration
-    {
-        public string ClientToken { get; set; }
-        public string ApiBaseUrl { get; set; }
     }
 }

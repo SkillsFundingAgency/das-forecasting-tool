@@ -14,6 +14,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
             //TODO: replace with employer credentials
             EmployerHash = "MDDP87";
             Console.WriteLine("Employer hash: MDDP87");
+
+           
         }
 
         [Given(@"I have logged into my Apprenticeship Account")]

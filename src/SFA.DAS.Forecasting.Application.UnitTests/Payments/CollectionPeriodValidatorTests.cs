@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Validation;
@@ -27,8 +28,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 			var validator = new CollectionPeriodSuperficialValidator();
 			CollectionPeriod.Id = null;
 			var result = validator.Validate(CollectionPeriod);
-			Assert.IsNotEmpty(result);
-		}
+            result.IsValid.Should().BeFalse();
+        }
 
 		[TestCase("-1")]
 		[TestCase("0")]
@@ -38,7 +39,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 			var validator = new CollectionPeriodSuperficialValidator();
 			CollectionPeriod.Month = int.Parse(month);
 			var result = validator.Validate(CollectionPeriod);
-			Assert.IsNotEmpty(result);
+            result.IsValid.Should().BeFalse();
 		}
 
 		public void Fails_If_Year_Is_Invalid()
@@ -46,7 +47,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 			var validator = new CollectionPeriodSuperficialValidator();
 			CollectionPeriod.Month = -1;
 			var result = validator.Validate(CollectionPeriod);
-			Assert.IsNotEmpty(result);
-		}
+            result.IsValid.Should().BeFalse();
+        }
 	}
 }

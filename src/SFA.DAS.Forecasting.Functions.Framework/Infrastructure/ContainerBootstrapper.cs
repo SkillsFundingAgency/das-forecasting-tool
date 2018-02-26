@@ -15,8 +15,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                 {
                     c.Scan(o => {
                         o.LookForRegistries();
-                        o.AssembliesFromPath(Environment.CurrentDirectory);
-                        o.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith("SFA.DAS"));
+                        o.TheCallingAssembly();
+                        o.AssembliesFromPath(Environment.CurrentDirectory, a => a.GetName().Name.StartsWith("SFA.DAS.Forecasting"));
                         o.RegisterConcreteTypesAgainstTheFirstInterface();
                     });
                 }));

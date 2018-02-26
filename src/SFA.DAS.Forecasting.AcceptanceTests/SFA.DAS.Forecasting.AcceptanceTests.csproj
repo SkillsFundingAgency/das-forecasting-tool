@@ -135,6 +135,12 @@
     <Compile Include="EmployerApiStub\ProviderEventApiModule.cs" />
     <Compile Include="EmployerApiStub\ProviderEventTestData.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Levy\Feature\Build Projections From Levy Declarations.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Build Projections From Levy Declarations.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Levy\Steps\BuildProjectionsFromLevyDeclarations.cs" />
     <Compile Include="Payments\Payment.cs" />
     <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
       <AutoGen>True</AutoGen>
@@ -163,14 +169,13 @@
       <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
     </Compile>
     <Compile Include="Levy\Steps\PreLoadLevyEventsSteps.cs" />
-    <Compile Include="EmployerApiStub\Host.cs" />
     <Compile Include="EmployerApiStub\SimpleApiModule.cs" />
     <Compile Include="EmployerApiStub\TestData.cs" />
     <Compile Include="Levy\LevySubmission.cs" />
-    <Compile Include="Payments\Feature\ProcessPaymentEvent.feature.cs">
+    <Compile Include="Payments\Feature\Process Payment Event.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ProcessPaymentEvent.feature</DependentUpon>
+      <DependentUpon>Process Payment Event.feature</DependentUpon>
     </Compile>
     <Compile Include="PayrollPeriod.cs" />
     <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
@@ -204,6 +209,10 @@
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
     </None>
+    <None Include="Levy\Feature\Build Projections From Levy Declarations.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Build Projections From Levy Declarations.feature.cs</LastGenOutput>
+    </None>
     <None Include="Levy\Feature\PreLoadLevyEvents.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadLevyEvents.feature.cs</LastGenOutput>
@@ -217,9 +226,9 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadPayments.feature.cs</LastGenOutput>
     </None>
-    <None Include="Payments\Feature\ProcessPaymentEvent.feature">
+    <None Include="Payments\Feature\Process Payment Event.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ProcessPaymentEvent.feature.cs</LastGenOutput>
+      <LastGenOutput>Process Payment Event.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

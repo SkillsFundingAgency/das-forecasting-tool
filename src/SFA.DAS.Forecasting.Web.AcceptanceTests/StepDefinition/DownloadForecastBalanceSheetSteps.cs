@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.VisualBasic.FileIO;
 using NUnit.Framework;
+using Sfa.Automation.Framework.Selenium;
 using SFA.DAS.Forecasting.ReadModel.Projections;
 using SFA.DAS.Forecasting.Web.Automation;
 using System;
@@ -19,7 +20,7 @@ using TechTalk.SpecFlow.Assist;
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
     [Binding]
-    public class DownloadForecastBalanceSheetSteps : StepsBase
+    public class DownloadForecastBalanceSheetSteps : StepsBase 
     {
         private string[] downloadedFilesBefore;
         private string targetFilename;
@@ -31,7 +32,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             this.downloadedFilesBefore = FileManager.getCurrentDownloadFiles();
             var page = WebSite.NavigateToFundingProjectionPage();
-            Set(page);
+            Set(page);            
         }
 
         [When(@"I select download as csv")]
@@ -65,17 +66,16 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.True(readCsvHeader.Contains("Date,LevyCredit,CostOfTraining,CompletionPayments,Balance"), "ERROR: File header titles is {0}", readCsv.First());
+            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Future funds"), "ERROR: File header titles is {0}", readCsv.First());
                         
         }
-
 
         [Then(@"all of the rows have been downloaded")]
         public void ThenAllOfTheRowsHaveBeenDownloaded()
         {
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
-            Assert.AreEqual(lineCount, 8);
+            Assert.AreEqual(lineCount, 13);
 
 
             //if (File.Exists(newFilePath))
@@ -161,6 +161,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var projections = table.CreateSet<TestAccountProjection>().ToList();
             Projections = projections;
+
             DeleteAccountProjections();
             Store(Projections);
         }
