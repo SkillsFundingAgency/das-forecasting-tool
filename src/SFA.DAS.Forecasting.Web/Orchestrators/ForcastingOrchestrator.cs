@@ -49,12 +49,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 .Select(m => _mapper.ToCsvBalance(m));
         }
 
-        private async Task<IEnumerable<BalanceItemViewModel>> GetBalance(string hashedAccountId)
+        private async Task<List<BalanceItemViewModel>> GetBalance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var result = await _accountProjection.Get(accountId);
             return _mapper.MapBalance(result)
-                .Where(m => !_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate);
+                .Where(m => !_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate)
+                .ToList();
         }
     }
 }
