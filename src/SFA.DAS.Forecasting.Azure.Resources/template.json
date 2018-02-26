@@ -166,9 +166,6 @@
           "serverFarmResourceGroup": {
             "value": "[parameters('sharedServerFarmResourceGroup')]"
           },
-          "ConfigurationStorageConnectionString": {
-            "value": "[parameters('ConfigurationStorageConnectionString')]"
-          },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
           },
@@ -238,6 +235,9 @@
           },
           "AllowedHashstringCharacters": {
             "value": "[parameters('secretAllowedHashstringCharacters')]"
+          },          
+          "configurationStorageConnectionString": {
+            "value": "[parameters('configurationStorageConnectionString')]"
           }
         }
       }
