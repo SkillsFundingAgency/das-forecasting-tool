@@ -4305,3 +4305,12 @@ h2 .float-right {
     max-width: 290px;
   }
 }
+
+.chart-container {
+  display: none;
+}
+
+path.c3-line {
+  stroke-width: 4px;
+  stroke: #005ea5;
+}

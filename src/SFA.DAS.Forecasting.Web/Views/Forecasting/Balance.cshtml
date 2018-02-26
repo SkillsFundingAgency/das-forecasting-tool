@@ -48,9 +48,21 @@
         </div>
     </div>
 
+    <!-- CHART -->
     <div class="column-full">
-        <h4 class="heading-large">Your account projection</h4>
+        <div class="chart-container">
+            <div class="chart-data"
+                 data-dates="@Model.DatesStringArray"
+                 data-values="@Model.BalanceStringArray">
 
+            </div>
+            <h4 class="heading-large">Funding Projection Chart</h4>
+            <p>Account funds over time</p>
+            <div id="chart"></div>
+        </div>
+
+        <!-- Projection -->
+        <h4 class="heading-large">Your account projection</h4>
         <div class="grid-row" style="margin-bottom: 30px;">
             <div class="column-two-thirds">
                 <p>A month by month projection of your account balance.</p>
@@ -106,15 +118,15 @@
             </thead>
             <tbody>
                 @foreach (var item in Model.BalanceItemViewModels)
-                {
-                    <tr>
-                        <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                        <td class="financial">@item.LevyCredit.FormatCost()</td>
-                        <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                        <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                        <td class="financial">@item.Balance.FormatCost()</td>
-                    </tr>
-                }
+            {
+                <tr>
+                    <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                    <td class="financial">@item.LevyCredit.FormatCost()</td>
+                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                    <td class="financial">@item.Balance.FormatCost()</td>
+                </tr>
+        }
             </tbody>
         </table>
     </div>
@@ -130,7 +142,6 @@
     </div>
 
 </div>
-
 
 @section breadcrumb {
     @if (!string.IsNullOrEmpty(Model.BackLink))
