@@ -11,6 +11,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>    
+    <PackageReference Include="FluentValidation" Version="7.4.0" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.1.0-beta4" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.1.0-beta4" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />    

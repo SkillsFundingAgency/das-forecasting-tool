@@ -5,6 +5,7 @@ using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Domain.Events;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -37,7 +38,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 CompletionAmount = 3000
             };
             _commitments = new List<Commitment> { _commitment };
-            var employerCommitments = new EmployerCommitments(1, _commitments, Moqer.GetMock<IEventPublisher>().Object);
+            var employerCommitments = new EmployerCommitments(1, _commitments, Moqer.GetMock<IEventPublisher>().Object, new CommitmentValidator());
             Moqer.SetInstance(employerCommitments);
         }
 

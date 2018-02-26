@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
@@ -22,6 +23,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 {
                     var body = await req.Content.ReadAsStringAsync();
                     var paymentEvent = JsonConvert.DeserializeObject<PaymentCreatedMessage>(body);
+	                paymentEvent.FundingSource = FundingSource.Levy;
+
 
                     logger.Info($"Added one payment to {QueueNames.PaymentProcessor} queue.");
                     return await Task.FromResult(paymentEvent);

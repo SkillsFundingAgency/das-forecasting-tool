@@ -3,9 +3,9 @@ using StructureMap;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
-    public class StructrMapRegistry: Registry
+    public class MediatrRegistry: Registry
     {
-        public StructrMapRegistry()
+        public MediatrRegistry()
         {
             Scan(scanner =>
             {

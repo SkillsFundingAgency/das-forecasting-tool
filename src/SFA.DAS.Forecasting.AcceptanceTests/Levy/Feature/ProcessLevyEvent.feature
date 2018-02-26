@@ -21,4 +21,4 @@ Scenario: AC1 - Store valid levy declarations
 Scenario: AC2 - Do not store invalid levy credit event data
 	Given I made some invalid levy declarations
 	When the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations
-	Then the Forecasting Levy service should not store the levy declarations	
+	Then the Forecasting Levy service should not store the levy declarations

@@ -15,12 +15,10 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
         public DevAccountBalanceService(IApplicationConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri(_configuration.AccountApi.ApiBaseUrl);
+            _httpClient = new HttpClient {BaseAddress = new Uri(_configuration.AccountApi.ApiBaseUrl)};
             _httpClient.DefaultRequestHeaders
                 .Accept
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
         }
 
         public async Task<decimal> GetAccountBalance(long accountId)

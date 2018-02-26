@@ -1,4 +1,6 @@
 {
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
       "type": "string"
@@ -12,13 +14,14 @@
     "serverFarmResourceGroup": {
       "type": "string"
     },
-    "subscriptionId": {
-      "type": "string"
-    },
     "EnvironmentName": {
       "type": "string"
     },
-    "RedisConnection": {
+    "LimitForecast": {
+      "type": "bool",
+      "defaultValue": true
+    },
+    "KeyVaultName": {
       "type": "string"
     },
     "LoggingRedisConnectionString": {
@@ -26,115 +29,74 @@
     },
     "LoggingRedisKey": {
       "type": "string"
-    },
-    "AllowedHashstringCharacters": {
-      "type": "string"
-    },
-    "HashString": {
-      "type": "string"
-    },
-    "DatabaseConnectionString": {
-      "type": "string"
-    },
-    "StorageConnectionString": {
-      "type": "string"
-    },
-    "LimitForecast": {
-      "type": "bool",
-      "defaultValue": true
     }
   },
-    "resources": [
-      {
+  "resources": [
+    {
+      "name": "[parameters('name')]",
+      "type": "Microsoft.Web/sites",
+      "dependsOn": [
+        "[resourceId('microsoft.insights/components/', parameters('name'))]"
+      ],
+      "properties": {
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+            },
+            {
+              "name": "EnvironmentName",
+              "value": "[parameters('EnvironmentName')]"
+            },
+            {
+              "name": "ForecastingRoutePrefix",
+              "value": "forecasting"
+            },
+            {
+              "name": "LimitForecast",
+              "value": "[parameters('LimitForecast')]"
+            },
+            {
+              "name": "KeyVaultName",
+              "value": "[parameters('KeyVaultName')]"
+            },
+            {
+              "name": "LoggingRedisConnectionString",
+              "value": "[parameters('LoggingRedisConnectionString')]"
+            },
+            {
+              "name": "LoggingRedisKey",
+              "value": "[parameters('LoggingRedisKey')]"
+            }
+          ],
+          "alwaysOn": true
+        },
         "name": "[parameters('name')]",
-        "type": "Microsoft.Web/sites",
-        "dependsOn": [
-          "[resourceId('microsoft.insights/components/', parameters('name'))]"
-        ],
-        "properties": {
-          "siteConfig": {
-            "appSettings": [
-              {
-                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
-              },
-              {
-                "name": "EnvironmentName",
-                "value": "[parameters('EnvironmentName')]"
-              },
-              {
-                "name": "RedisConnection",
-                "value": "[parameters('RedisConnection')]"
-              },
-              {
-                "name": "LoggingRedisConnectionString",
-                "value": "[parameters('LoggingRedisConnectionString')]"
-              },
-              {
-                "name": "LoggingRedisKey",
-                "value": "[parameters('LoggingRedisKey')]"
-              },
-              {
-                "name": "AllowedHashstringCharacters",
-                "value": "[parameters('AllowedHashstringCharacters')]"
-              },
-              {
-                "name": "HashString",
-                "value": "[parameters('HashString')]"
-              },
-              {
-                "name": "DatabaseConnectionString",
-                "value": "[parameters('DatabaseConnectionString')]"
-              },
-              {
-                "name": "StorageConnectionString",
-                "value": "[parameters('StorageConnectionString')]"
-              },
-              {
-                "name": "ForecastingRoutePrefix",
-                "value": "forecasting"
-              },
-              {
-                "name": "LimitForecast",
-                "value": "[parameters('LimitForecast')]"
-              }
-            ],
-            "alwaysOn": true,
-            "phpVersion": ""
-          },
-          "name": "[parameters('name')]",
-          "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-          "hostingEnvironment": "[parameters('hostingEnvironment')]"
-        },
-        "apiVersion": "2016-03-01",
-        "location": "[resourceGroup().location]",
-        "identity": {
-          "type": "SystemAssigned"
-        },
-        "tags": {
-          "[concat('hidden-related:', '/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "empty"
-        }
+        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "hostingEnvironment": "[parameters('hostingEnvironment')]"
       },
-      {
-        "apiVersion": "2015-05-01",
-        "name": "[parameters('name')]",
-        "type": "microsoft.insights/components",
-        "location": "[resourceGroup().location]",
-        "tags": {
-          "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('name'))]": "Resource"
-        },
-        "properties": {
-          "ApplicationId": "[parameters('name')]",
-          "Request_Source": "IbizaWebAppExtensionCreate"
-        }
-      }
-    ],    
-    "outputs": {
-      "webAppIdentity": {
-        "type": "string",
-        "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
+      "apiVersion": "2016-03-01",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
       }
     },
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0"
+    {
+      "apiVersion": "2015-05-01",
+      "name": "[parameters('name')]",
+      "type": "microsoft.insights/components",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "ApplicationId": "[parameters('name')]",
+        "Request_Source": "IbizaWebAppExtensionCreate"
+      }
+    }
+  ],
+  "outputs": {
+    "webAppIdentity": {
+      "type": "string",
+      "value": "[reference(concat('Microsoft.Web/sites/', parameters('name')), '2016-03-01', 'Full').identity.principalId]"
+    }
+  }
 }

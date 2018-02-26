@@ -159,9 +159,10 @@
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
+    <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
-    <Compile Include="Infrastructure\Registries\StructrMapRegistry.cs" />
+    <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />

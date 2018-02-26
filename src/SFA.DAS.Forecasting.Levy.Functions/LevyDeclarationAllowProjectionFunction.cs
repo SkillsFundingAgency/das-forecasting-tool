@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             [QueueTrigger(QueueNames.AllowProjection)]LevySchemeDeclarationUpdatedMessage message,
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventStoreFunction, GenerateAccountProjectionCommand>(writer,
+            return await FunctionRunner.Run<LevyDeclarationAllowProjectionFunction, GenerateAccountProjectionCommand>(writer,
                 async (container, logger) =>
                 {
                     logger.Debug("Getting levy declaration handler from container.");

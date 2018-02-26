@@ -36,12 +36,14 @@ namespace SFA.DAS.Forecasting.Domain.Levy
                     Scheme = scheme,
                     PayrollYear = payrollYear,
                     PayrollMonth = payrollMonth,
-                    PayrollDate = _payrollDateService.GetPayrollDate(payrollYear, payrollMonth)
+                    PayrollDate = _payrollDateService.GetPayrollDate(payrollYear, payrollMonth),
+
                 });
             }
 
             levyDeclaration.TransactionDate = transactionDate;
             levyDeclaration.LevyAmountDeclared = amount;
+            levyDeclaration.DateReceived = DateTime.UtcNow;
         }
 
         public decimal GetPeriodAmount()

@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System;
+using Dapper;
 using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
 using System.Collections.Generic;
 using System.Data;
@@ -16,7 +17,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     {
         private const string FeatureName= "PreLoadLevyEvents";
 
-        private static ApiHost _apiHost;
+        //private static ApiHost _iHost;
         
         private static IEnumerable<long> _accountIds = new List<long> { 497, 498, 499 };
 
@@ -47,7 +48,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public async Task ITriggerFunction()
         {
             var item = "{\"EmployerAccountIds\":[\"MJK9XV\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
-
+            Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
             var client = new HttpClient();
             await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
         }

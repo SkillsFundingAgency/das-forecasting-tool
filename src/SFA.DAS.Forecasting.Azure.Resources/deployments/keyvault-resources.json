@@ -1,102 +1,132 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
       "type": "string"
     },
-    "sku": {
-      "type": "string",
-      "defaultValue": "Standard",
-      "allowedValues": [
-        "Standard",
-        "standard",
-        "Premium",
-        "premium"
-      ],
-      "metadata": {
-        "description": "SKU for the vault"
-      }
-    },
     "webAppObjectId": {
-      "type": "string"
-    },
-    "levyFunAppObjectId": {
-      "type": "string"
-    },
-    "payFunAppObjectId": {
-      "type": "string"
-    },
-    "projFunAppObjectId": {
       "type": "string"
     },
     "secretsPermissionsList": {
       "type": "array"
     },
-    "enabledForDeployment": {
-      "type": "bool"
+    "funAppObjectIds": {
+      "type": "object"
     },
-    "enabledForTemplateDeployment": {
-      "type": "bool"
+    "storageConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string for the shared storage account"
+      }
     },
-    "enabledForDiskEncryption": {
-      "type": "bool"
+    "databaseConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "The database connection string"
+      }
+    },
+    "hashString": {
+      "type": "string",
+      "metadata": {
+        "description": "The string used for hashing"
+      }
+    },
+    "allowedHashstringCharacters": {
+      "type": "string",
+      "metadata": {
+        "description": "a lost of allowed characters that can be used for hashing"
+      }
     }
   },
-    "resources": [
+  "variables": {
+    "copy": [
       {
-        "apiVersion": "2015-06-01",
-        "name": "[parameters('name')]",
-        "location": "[resourceGroup().location]",
-        "type": "Microsoft.KeyVault/vaults",
-        "properties": {
-          "enabledForDeployment": "[parameters('enabledForDeployment')]",
-          "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
-          "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
-          "accessPolicies": [
-            {
-              "objectId": "[parameters('webAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "keys": [],
-                "secrets": "[parameters('secretsPermissionsList')]",
-                "certificates": []
-              }
-            },
-            {
-              "objectId": "[parameters('levyFunAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "keys": [],
-                "secrets": "[parameters('secretsPermissionsList')]",
-                "certificates": []
-              }
-            },
-            {
-              "objectId": "[parameters('payFunAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "keys": [],
-                "secrets": "[parameters('secretsPermissionsList')]",
-                "certificates": []
-              }
-            },
-            {
-              "objectId": "[parameters('projFunAppObjectId')]",
-              "tenantId": "[subscription().tenantId]",
-              "permissions": {
-                "keys": [],
-                "secrets": "[parameters('secretsPermissionsList')]",
-                "certificates": []
-              }
-            }
-          ],
+        "name": "keyVaultAccessPolicies",
+        "count": "[length(parameters('funAppObjectIds').objectIds)]",
+        "input": {
+          "objectId": "[parameters('funAppObjectIds').objectIds[copyIndex('keyVaultAccessPolicies')].identityId.value]",
           "tenantId": "[subscription().tenantId]",
-          "sku": {
-            "name": "[parameters('sku')]",
-            "family": "A"
+          "permissions": {
+            "secrets": "[parameters('secretsPermissionsList')]"
           }
         }
       }
+    ],
+    "webAppAccessPolicy": [
+      {
+        "objectId": "[parameters('webAppObjectId')]",
+        "tenantId": "[subscription().tenantId]",
+        "permissions": {
+          "secrets": "[parameters('secretsPermissionsList')]"
+        }
+      }
     ]
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-01",
+      "name": "[parameters('name')]",
+      "location": "[resourceGroup().location]",
+      "type": "Microsoft.KeyVault/vaults",
+      "properties": {
+        "enabledForDeployment": false,
+        "enabledForTemplateDeployment": true,
+        "enabledForDiskEncryption": false,
+        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'))]",
+        "tenantId": "[subscription().tenantId]",
+        "sku": {
+          "name": "Standard",
+          "family": "A"
+        }
+      },
+      "resources": [
+        {
+          "type": "secrets",
+          "name": "StorageConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('storageConnectionString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "DatabaseConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('databaseConnectionString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "HashString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('hashString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "AllowedHashstringCharacters",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('allowedHashstringCharacters')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        }
+      ]
+    }
+  ],
+  "outputs": {}
 }

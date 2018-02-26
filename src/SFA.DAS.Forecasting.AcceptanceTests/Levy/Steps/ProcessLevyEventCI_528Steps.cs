@@ -80,7 +80,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             };
         }
 
-
         [When(@"the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations")]
         public void WhenTheSFAEmployerHMRCLevyServiceNotifiesTheForecastingServiceOfTheLevyDeclarations()
         {

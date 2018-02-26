@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         [FunctionName("LevyDeclarationPreLoadHttpFunction")]
         [return: Queue(QueueNames.ValidateDeclaration)]
         public static async Task Run(
-            [HttpTrigger(AuthorizationLevel.Function, 
+            [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
             [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
             TraceWriter writer)
@@ -27,13 +27,13 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                    var body = await req.Content.ReadAsStringAsync();
                    var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
 
-                   var levyDataService = container.GetInstance<EmployerDataService>();
-
                    if (preLoadRequest == null)
                    {
                        logger.Warn($"{nameof(PreLoadRequest)} not valid. Function will exit.");
                        return;
                    }
+
+                   var levyDataService = container.GetInstance<IEmployerDataService>();
 
                    logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", preLoadRequest.EmployerAccountIds)}, {preLoadRequest.PeriodYear}, {preLoadRequest.PeriodMonth}");
 
@@ -41,11 +41,10 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                    foreach (var employerId in preLoadRequest.EmployerAccountIds)
                    {
                        var model = await levyDataService.LevyForPeriod(employerId, preLoadRequest.PeriodYear, preLoadRequest.PeriodMonth);
-                       if (model != null)
-                       {
-                           messageCount++;
-                           outputQueueMessage.Add(model);
-                       }
+                       if (model == null)
+                           continue;
+                       messageCount++;
+                       outputQueueMessage.Add(model);
                    }
 
                    logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateDeclaration} queue.");
