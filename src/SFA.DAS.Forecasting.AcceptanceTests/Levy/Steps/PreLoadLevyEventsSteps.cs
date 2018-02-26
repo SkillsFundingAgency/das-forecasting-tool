@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -26,16 +29,23 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public async Task BeforeScenario()
         {
             ClearDatabase();
+            var employerAccountId = "MJK9XV";
+            var levyUrl =
+                Config.ApiInsertLevyUrl.Replace("{employerAccountId}", employerAccountId);
+
+            var client = new HttpClient();
+            var levy = JsonConvert.SerializeObject(GetLevy(employerAccountId));
+            await client.PostAsync(levyUrl, new StringContent(levy));
             Thread.Sleep(500);
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
 
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
@@ -73,6 +83,40 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             parameters.Add("@employerAccountId", _accountId, DbType.Int64);
             var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
                     , param: parameters, commandType: CommandType.Text);
+        }
+
+        private static List<LevyDeclarationViewModel> GetLevy(string accountId)
+        {
+            return new List<LevyDeclarationViewModel>
+            {
+                new LevyDeclarationViewModel
+                {
+                    HashedAccountId = accountId,
+                    PayrollYear = "18-19",
+                    PayrollMonth = 1,
+                    CreatedDate = DateTime.UtcNow,
+                    PayeSchemeReference = "World",
+                    TotalAmount = 200
+                },
+                new LevyDeclarationViewModel
+                {
+                    HashedAccountId = accountId,
+                    PayrollYear = "18-19",
+                    PayrollMonth = 2,
+                    CreatedDate = DateTime.UtcNow,
+                    PayeSchemeReference = "World",
+                    TotalAmount = 300
+                },
+                new LevyDeclarationViewModel
+                {
+                    HashedAccountId = accountId,
+                    PayrollYear = "17-18",
+                    PayrollMonth = 12,
+                    CreatedDate = DateTime.UtcNow,
+                    PayeSchemeReference = "World",
+                    TotalAmount = 300
+                }
+            };
         }
     }
 }

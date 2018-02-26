@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Provider.Events.Api.Types;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -41,6 +43,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             ClearDatabase();
             await SetUpEmployerData();
+
+            var client = new HttpClient();
+            var payment = JsonConvert.SerializeObject(GetPayment());
+            await client.PostAsync(Config.ApiInsertPaymentUrl, new StringContent(payment));
+
             Thread.Sleep(500);
         }
 
@@ -113,12 +120,55 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     ApprenticeshipCourseStartDate = DateTime.Parse("2017-01-09"),
                     ApprenticeshipCourseLevel = 2,
                     ApprenticeName = "John Doe",
-                    FundingSource = FundingSource.Levy,
+                    FundingSource = Models.Payments.FundingSource.Levy,
                     PaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8") // Need to match Payment from ProviderEvents API // IN: ProviderEventTestData.cs
             };
             
             _tableStorageService.SetTable(_settings.StubEmployerPaymentTable);
             await _tableStorageService.Store(new List<EmployerPayment> { p2 }, _accountId.ToString(), $"{year}-{month}");
-        }  
+        }
+
+        internal static PageOfResults<Provider.Events.Api.Types.Payment> GetPayment()
+        {
+            var por = new PageOfResults<Provider.Events.Api.Types.Payment>();
+            por.PageNumber = 1;
+            por.TotalNumberOfPages = 1;
+            por.Items = new List<Provider.Events.Api.Types.Payment>
+            {
+                new Provider.Events.Api.Types.Payment
+                {
+                    Id = "f97840b3-d3bf-429c-bc3c-8a877f4f26f8",
+                    ApprenticeshipId = 11002,
+
+                    CollectionPeriod = new NamedCalendarPeriod
+                    {
+                        Id = "1617-r10",
+                        Year = 2017,
+                        Month = 5
+                    },
+                    EarningDetails = new List<Earning>
+                    {
+                        new Earning
+                        {
+                            ActualEndDate = DateTime.Parse("2017-03-01"),
+                            CompletionAmount = 5000,
+                            RequiredPaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8"),
+                            CompletionStatus = 1,
+                            MonthlyInstallment = 300,
+                            TotalInstallments = 24,
+                            StartDate = DateTime.Parse("2018-01-01"),
+                            PlannedEndDate = DateTime.Parse("2020-01-01"),
+                            EndpointAssessorId = "EOId-1"
+                        }
+                    },
+                    ContractType = ContractType.ContractWithSfa,
+                    FundingSource = Provider.Events.Api.Types.FundingSource.Levy,
+                    TransactionType = TransactionType.Balancing
+                }
+            }
+            .ToArray();
+
+            return por;
+        }
     }
 }

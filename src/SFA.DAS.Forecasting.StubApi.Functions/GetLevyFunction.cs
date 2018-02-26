@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -6,7 +7,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub.TestData;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
@@ -14,12 +15,15 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
     {
         [FunctionName("GetLevyFunction")]
         public static async Task<HttpResponseMessage> Run([
-            HttpTrigger(AuthorizationLevel.Function, "get", 
+            HttpTrigger(AuthorizationLevel.Function, "get",
             Route = "accounts/{accountId}/levy")]HttpRequestMessage req, string accountId, TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
+            log.Info($"C# HTTP trigger for {nameof(GetLevyFunction)} GET.");
 
-            var d = JsonConvert.SerializeObject(AccountsLevy.GetLevy(accountId));
+            IEnumerable<LevyDeclarationViewModel> data;
+            StubDataStore.LevyData.TryGetValue(accountId, out data);
+
+            var d = JsonConvert.SerializeObject(data);
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {

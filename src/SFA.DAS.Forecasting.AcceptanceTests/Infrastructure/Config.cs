@@ -20,6 +20,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));
         public string AzureStorageConnectionString => GetConnectionString("StorageConnectionString");
         public string ApiInsertBalanceUrl => GetAppSetting("ApiInsertBalanceUrl");
+        public string ApiInsertPaymentUrl => GetAppSetting("ApiInsertPaymentUrl");
+        public string ApiInsertLevyUrl => GetAppSetting("ApiInsertLevyUrl");
         public string StubEmployerPaymentTable => GetAppSetting("Stub-EmployerPaymentTable");
 
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
