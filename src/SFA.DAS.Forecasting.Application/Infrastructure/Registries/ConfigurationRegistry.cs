@@ -25,8 +25,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             var configuration = new ApplicationConfiguration
             {
                 DatabaseConnectionString = GetConnectionString("DatabaseConnectionString"),
-                EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
-                StorageConnectionString = GetConnectionString("StorageConnectionString"),
+                //EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
+                //StorageConnectionString = GetConnectionString("StorageConnectionString"),
                 Hashstring = GetAppSetting("HashString", true),
                 AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters", true),
                 NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject", false) ?? "0"),
@@ -36,8 +36,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 AccountApi = GetAccount(),
                 PaymentEventsApi = new PaymentsEventsApiConfiguration
                 {
-                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
-                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", false),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken", false),
                 }
             };
             return configuration;
