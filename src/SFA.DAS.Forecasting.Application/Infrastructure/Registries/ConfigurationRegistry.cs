@@ -110,7 +110,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 environment = GetAppSetting("EnvironmentName", false);
             }
 
-            var storageConnectionString = GetAppSetting("StorageConnectionString", true);
+            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
             var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(serviceName, environment, "1.0"));
