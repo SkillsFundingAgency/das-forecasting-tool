@@ -37,6 +37,10 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                     EndpointAssessorId = "EA-Id1",
                     ActualEndDate = DateTime.MinValue
                 },
+                ProviderName = "test provider",
+                ApprenticeName = "test apprentice",
+                CourseName = "test cource",
+                CourseLevel = 1,
                 Id = Guid.NewGuid().ToString("D"),
                 Ukprn = 2,
                 FundingSource = FundingSource.Levy
