@@ -87,7 +87,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             return IsDevEnvironment
                 ? connectionString
-                : GetSecret(connectionString).Result;
+                : GetSecret(name).Result;
         }
 
         public TConfig SetUpConfiguration<TConfigInterface, TConfig>(string serviceName) where TConfig : class, TConfigInterface
