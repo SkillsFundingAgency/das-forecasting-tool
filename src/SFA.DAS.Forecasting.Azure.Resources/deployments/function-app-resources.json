@@ -23,9 +23,6 @@
     "SecondsToWaitToAllowProjections": {
       "type": "string"
     },
-    "ConfigurationStorageConnectionString": {
-      "type": "string"
-    },
     "KeyVaultName": {
       "type": "string"
     },
@@ -72,10 +69,6 @@
             {
               "name": "EnvironmentName",
               "value": "[parameters('EnvironmentName')]"
-            },
-            {
-              "name": "ConfigurationStorageConnectionString",
-              "value": "[parameters('ConfigurationStorageConnectionString')]"
             },
             {
               "name": "SecondsToWaitToAllowProjections",

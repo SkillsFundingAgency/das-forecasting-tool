@@ -35,8 +35,7 @@ module.exports = function(grunt) {
         tasks: ['sass'],
         options: { nospawn: true }
       }
-    },
-
+    }
   });
 
   ;[

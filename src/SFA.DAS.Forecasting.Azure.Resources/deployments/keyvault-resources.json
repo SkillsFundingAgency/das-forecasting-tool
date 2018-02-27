@@ -35,7 +35,13 @@
     "allowedHashstringCharacters": {
       "type": "string",
       "metadata": {
-        "description": "a lost of allowed characters that can be used for hashing"
+        "description": "A list of allowed characters that can be used for hashing"
+      }
+    },
+    "configurationStorageConnectionString": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string for the configuration storage account"
       }
     }
   },
@@ -76,7 +82,7 @@
         "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'))]",
         "tenantId": "[subscription().tenantId]",
         "sku": {
-          "name": "Standard",
+          "name": "standard",
           "family": "A"
         }
       },
@@ -120,6 +126,17 @@
           "apiVersion": "2015-06-01",
           "properties": {
             "value": "[parameters('allowedHashstringCharacters')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "configurationStorageConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('configurationStorageConnectionString')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
