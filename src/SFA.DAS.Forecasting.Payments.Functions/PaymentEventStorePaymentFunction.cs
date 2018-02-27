@@ -15,10 +15,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	    [FunctionName("PaymentEventStorePaymentFunction")]
 	    [return: Queue(QueueNames.CommitmentProcessor)]
 		public static async Task<PaymentCreatedMessage> Run(
-            [QueueTrigger(QueueNames.PaymentProcessor)]PaymentCreatedMessage paymentCreatedMessage, 
+            [QueueTrigger(QueueNames.PaymentProcessor)]PaymentCreatedMessage paymentCreatedMessage,
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, PaymentCreatedMessage>(writer,
+            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, PaymentCreatedMessage>(writer, executionContext,
                 async (container, logger) =>
                 {
 	                var handler = container.GetInstance<ProcessEmployerPaymentHandler>();

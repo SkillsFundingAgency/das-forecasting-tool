@@ -13,12 +13,12 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     public class LevyDeclarationAllowProjectionFunction : IFunction
     {
         [FunctionName("LevyDeclarationAllowProjectionFunction")]
-        [return:Queue(QueueNames.GenerateProjections)]
+        [return: Queue(QueueNames.GenerateProjections)]
         public static async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.AllowProjection)]LevySchemeDeclarationUpdatedMessage message,
-            TraceWriter writer)
+            TraceWriter writer, ExecutionContext executionContext)
         {
-            return await FunctionRunner.Run<LevyDeclarationAllowProjectionFunction, GenerateAccountProjectionCommand>(writer,
+            return await FunctionRunner.Run<LevyDeclarationAllowProjectionFunction, GenerateAccountProjectionCommand>(writer, executionContext,
                 async (container, logger) =>
                 {
                     logger.Debug("Getting levy declaration handler from container.");

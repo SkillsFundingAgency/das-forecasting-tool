@@ -17,10 +17,10 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     {
         [FunctionName("LevyDeclarationEventStoreFunction")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.StoreLevyDeclaration)]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedMessage,
+            [QueueTrigger(QueueNames.StoreLevyDeclaration)]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedMessage, ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<LevyDeclarationEventStoreFunction>(writer,
+            await FunctionRunner.Run<LevyDeclarationEventStoreFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
                     logger.Debug("Getting levy declaration handler from container.");
