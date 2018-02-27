@@ -172,3 +172,16 @@ only screen and (max-width: 480px) {
 }
 
 // END Funding projection
+
+// Funding Projection Chart
+
+.chart-container {
+    display: none;
+}
+
+path.c3-line {
+    stroke-width: 4px;
+    stroke: #005ea5;
+}
+
+// END Funding Projection Chart
