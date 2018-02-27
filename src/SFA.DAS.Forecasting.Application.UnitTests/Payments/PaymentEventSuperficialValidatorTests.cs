@@ -20,9 +20,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                 EmployerAccountId = 1,
                 Amount = 100,
                 ApprenticeshipId = 1,
-				ProviderName = "ProviderName",
-				ApprenticeName = "ApprenticeName",
-				CourseName = "CourseName",
                 CollectionPeriod = new Application.Payments.Messages.CollectionPeriod
                 {
                     Id = Guid.NewGuid().ToString("D"),
