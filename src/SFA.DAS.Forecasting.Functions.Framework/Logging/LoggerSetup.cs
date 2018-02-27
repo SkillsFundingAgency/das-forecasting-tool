@@ -3,6 +3,8 @@ using NLog;
 using NLog.Config;
 using SFA.DAS.NLog.Logger;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
@@ -28,7 +30,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             LogManager.ThrowConfigExceptions = true;
             
             // Where shouuld we find the NLog.config?
-            LogManager.Configuration = new XmlLoggingConfiguration($"{Environment.CurrentDirectory}/NLog.config");
+            LogManager.Configuration = new XmlLoggingConfiguration($"{  Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),"..")}\\NLog.config");
             HookNLogToAzureLog(writer);
 
             var logger = new NLogLogger(type, null, null);
