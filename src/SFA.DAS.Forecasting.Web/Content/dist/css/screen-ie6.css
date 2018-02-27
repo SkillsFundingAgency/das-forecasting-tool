@@ -4322,3 +4322,11 @@ path.c3-line {
   stroke-width: 4px;
   stroke: #005ea5;
 }
+
+.c3-axis-y .tick {
+  display: none;
+}
+
+.c3-axis-y-label {
+  font-size: 20px;
+}

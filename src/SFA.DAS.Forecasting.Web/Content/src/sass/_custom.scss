@@ -184,4 +184,12 @@ path.c3-line {
     stroke: #005ea5;
 }
 
+.c3-axis-y .tick {
+    display: none;
+}
+
+.c3-axis-y-label {
+    font-size: 20px;
+}
+
 // END Funding Projection Chart
