@@ -99,13 +99,21 @@
         <table class="small" id="balancesheet">
             <thead>
                 <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
+                    <th></th>
+                </tr>
+                <tr>
                     <th class="nowrap">Date</th>
-                    <th class="financial">Funds in</th>
-                    <th class="financial">Cost of training</th>
-                    <th class="financial">Completion payments</th>
-                    <th>Your contribution</th>
-                    <th>Government contribution</th>
-                    <th class="financial">Future funds</th>
+                    <th class="numeric">Funds in</th>
+                    <th class="numeric">Cost of training</th>
+                    <th class="numeric">Completion payments</th>
+                    <th class="numeric grey-bg">Your contribution</th>
+                    <th class="numeric grey-bg">Government contribution</th>
+                    <th class="numeric">Future funds</th>
                 </tr>
             </thead>
             <tbody>
@@ -113,12 +121,12 @@
                 {
                 <tr>
                     <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="financial">@item.LevyCredit.FormatCost()</td>
-                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                    <td class="financial">@item.CoInvestmentEmployer.FormatCost()</td>
-                    <td class="financial">@item.CoInvestmentGovernment.FormatCost()</td>
-                    <td class="financial">@item.Balance.FormatCost()</td>
+                    <td class="numeric">@item.LevyCredit.FormatCost()</td>
+                    <td class="numeric">@item.CostOfTraining.FormatCost()</td>
+                    <td class="numeric">@item.CompletionPayments.FormatCost()</td>
+                    <td class="numeric grey-bg">@item.CoInvestmentEmployer.FormatCost()</td>
+                    <td class="numeric grey-bg">@item.CoInvestmentGovernment.FormatCost()</td>
+                    <td class="numeric">@item.Balance.FormatCost()</td>
                 </tr>
                 }
             </tbody>

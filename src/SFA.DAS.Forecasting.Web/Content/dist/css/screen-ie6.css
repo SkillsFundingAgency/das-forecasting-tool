@@ -4313,3 +4313,12 @@ h2 .float-right {
     max-width: 290px;
   }
 }
+
+/*coinvestment table*/
+#balancesheet .co-invest-head {
+  text-align: center;
+}
+
+#balancesheet .grey-bg {
+  background: #dee0e2;
+}

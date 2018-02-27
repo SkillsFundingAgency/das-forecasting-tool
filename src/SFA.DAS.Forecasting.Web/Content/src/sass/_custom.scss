@@ -172,3 +172,14 @@ only screen and (max-width: 480px) {
 }
 
 // END Funding projection
+
+
+/*coinvestment table*/
+#balancesheet {
+    .co-invest-head {
+        text-align: center;
+    }
+    .grey-bg {
+        background: $panel-colour;
+    }
+}
