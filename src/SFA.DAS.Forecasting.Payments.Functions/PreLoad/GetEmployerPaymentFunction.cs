@@ -8,7 +8,7 @@ using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 
-namespace SFA.DAS.Forecasting.Payments.Functions
+namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
 {
     public class GetEmployerPaymentFunction : IFunction
     {
@@ -16,12 +16,13 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         [return: Queue(QueueNames.PreLoadEarningDetailsPayment)]
         public static async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.PreLoadPayment)]PreLoadPaymentMessage message,
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
             // Store all payments in TableStorage
             // Sends a message to CreateEarningRecord
 
-            return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadPaymentMessage>(writer,
+            return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadPaymentMessage>(writer, executionContext,
                async (container, logger) =>
                {
                    var employerData = container.GetInstance<IEmployerDatabaseService>();

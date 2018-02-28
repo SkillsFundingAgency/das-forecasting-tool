@@ -18,10 +18,11 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         public static async Task Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
+            [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction>(writer,
+            await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction>(writer, executionContext,
                async (container, logger) =>
                {
                    var body = await req.Content.ReadAsStringAsync();
