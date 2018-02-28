@@ -15,9 +15,11 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     public class InitialiseFunction: IFunction
     {
         [FunctionName("InitialiseFunction")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req,
+            ExecutionContext executionContext,
+            TraceWriter log)
         {
-            await FunctionRunner.Run<InitialiseFunction>(log, async (container,logger) =>
+            await FunctionRunner.Run<InitialiseFunction>(log, executionContext, async (container,logger) =>
             {
                 log.Info("Initialising the Projections functions application.");
 

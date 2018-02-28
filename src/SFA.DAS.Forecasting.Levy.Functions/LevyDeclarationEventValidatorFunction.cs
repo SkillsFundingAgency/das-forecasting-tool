@@ -15,9 +15,9 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         [return:Queue(QueueNames.StoreLevyDeclaration)]
         public static LevySchemeDeclarationUpdatedMessage Run(
             [QueueTrigger(QueueNames.ValidateDeclaration)]LevySchemeDeclarationUpdatedMessage message, 
-            TraceWriter writer)
+            TraceWriter writer, ExecutionContext executionContext)
         {
-            return FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevySchemeDeclarationUpdatedMessage>(writer,
+            return FunctionRunner.Run<LevyDeclarationEventValidatorFunction, LevySchemeDeclarationUpdatedMessage>(writer, executionContext,
                 (container, logger) =>
                 {
                     var validationResults = container.GetInstance<LevyDeclarationEventValidator>()

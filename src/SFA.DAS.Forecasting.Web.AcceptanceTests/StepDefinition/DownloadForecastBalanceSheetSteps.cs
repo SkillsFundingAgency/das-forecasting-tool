@@ -75,13 +75,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
-            Assert.AreEqual(lineCount, 15);
-
-
-            //if (File.Exists(newFilePath))
-            //{
-            //    File.Delete(newFilePath);
-            //}
+            Assert.AreEqual(lineCount, 13);
             
         }
 

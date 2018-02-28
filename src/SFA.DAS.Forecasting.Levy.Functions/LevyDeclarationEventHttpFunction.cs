@@ -15,10 +15,10 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         [FunctionName("LevyDeclarationEventHttpFunction")]
         [return: Queue(QueueNames.ValidateDeclaration)]
         public static async Task<LevySchemeDeclarationUpdatedMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationEventHttpFunction")]HttpRequestMessage req, 
-            TraceWriter writer)
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationEventHttpFunction")]HttpRequestMessage req,
+            TraceWriter writer, ExecutionContext executionContext)
         {
-            return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevySchemeDeclarationUpdatedMessage>(writer,
+            return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevySchemeDeclarationUpdatedMessage>(writer, executionContext,
                  async (container, logger) =>
                 {
                     var body = await req.Content.ReadAsStringAsync();
@@ -28,5 +28,5 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                     return levySchemeUpdatedEvent;
                 });
         }
-    }   
+    }
 }

@@ -11,19 +11,19 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
   | Date   | Funds in | Total Cost Of Training | Completion Payments | Future Funds |
-  | Mar 18 | 51000    | 1590                   | 49900               | 1000         |
-  | Apr 18 | 14000    | 880                    | 32200               | 1000         |
-  | May 18 | 15000    | 880                    | 32200               | 1000         |
-  | Jun 18 | 91000    | 1800                   | 10000               | 1000         |
-  | Jul 18 | 21000    | 2350                   | 50000               | 1000         |
+  | Mar 18 | 51000    | 1590                   | 49900               | 140004       |
+  | Apr 18 | 14000    | 880                    | 32200               | 31000        |
+  | May 18 | 15000    | 880                    | 32200               | 17000        |
+  | Jun 18 | 91000    | 1800                   | 10000               | 23000        |
+  | Jul 18 | 21000    | 2350                   | 50000               | 23000        |
   | Aug 18 | 45200    | 850                    | 45000               | 1000         |
-  | Sep 18 | 55000    | 700                    | 37880               | 1000         |
+  | Sep 18 | 55000    | 700                    | 37880               | 12000        |
   | Oct 18 | 42000    | 700                    | 37880               | 1000         |
-  | Nov 18 | 22000    | 1800                   | 45000               | 1000         |
-  | Dec 18 | 42000    | 1400                   | 10000               | 1000         |
+  | Nov 18 | 22000    | 1800                   | 45000               | 5000         |
+  | Dec 18 | 42000    | 1400                   | 10000               | 4000         |
   | Jan 19 | 41000    | 2000                   | 10000               | 1000         |
   | Feb 19 | 10000    | 1800                   | 10000               | 1000         |
-  | Mar 19 | 15000    | 1800                   | 45000               | 1000         |
+  | Mar 19 | 15000    | 1800                   | 45000               | 31000        |
   | Apr 19 | 42500    | 2100                   | 10000               | 1000         |   
 
   And I'm on the Funding projection page
@@ -97,27 +97,27 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
 #  And completion payments are shown against the correct months
 #
 #
-#  Scenario: FundingProjectionPageAC4: Forecast data when negative balance
-#  Given I have generated the following projections
-#  
-  #| Date   | Funds in | Total Cost Of Training | Completion Payments | Future Funds |
-  #| Mar 18 | 51000    | 1590                   | 49900               | 1000         |
-  #| Apr 18 | 14000    | 880                    | 32200               | 1000         |
-  #| May 18 | 15000    | 880                    | 32200               | 1000         |
-  #| Jun 18 | 91000    | 1800                   | 10000               | 1000         |
-  #| Jul 18 | 21000    | 2350                   | 50000               | 1000         |
-  #| Aug 18 | 45200    | 850                    | 45000               | 1000         |
-  #| Sep 18 | 55000    | 700                    | 37880               | 1000         |
-  #| Oct 18 | 42000    | 700                    | 37880               | 1000         |
-  #| Nov 18 | 22000    | 1800                   | 45000               | 1000         |
-  #| Dec 18 | 42000    | 1400                   | 10000               | 1000         |
-  #| Jan 19 | 41000    | 2000                   | 10000               | 1000         |
-  #| Feb 19 | 10000    | 1800                   | 10000               | 1000         |
-  #| Mar 19 | 15000    | 1800                   | 45000               | 1000         |
-  #| Apr 19 | 42500    | 2100                   | 10000               | 1000         |   
-#
-#
-#
-#  And I'm on the Funding projection page
-#  When I have a negative balance in a forecast month
-#  Then the balance for that month is displayed correctly as £0
+  Scenario: FundingProjectionPageAC4: Forecast data when negative balance
+  Given I have generated the following projections
+  
+  | Date   | Funds in | Total Cost Of Training | Completion Payments | Future Funds |
+  | Mar 18 | 51000    | 1590                   | 49900               | 0            |
+  | Apr 18 | 14000    | 880                    | 32200               | 0            |
+  | May 18 | 15000    | 880                    | 32200               | 0            |
+  | Jun 18 | 91000    | 1800                   | 10000               | 0            |
+  | Jul 18 | 21000    | 2350                   | 50000               | 0            |
+  | Aug 18 | 45200    | 850                    | 45000               | 0            |
+  | Sep 18 | 55000    | 700                    | 37880               | 0            |
+  | Oct 18 | 42000    | 700                    | 37880               | 1000         |
+  | Nov 18 | 22000    | 1800                   | 45000               | 1000         |
+  | Dec 18 | 42000    | 1400                   | 10000               | 1000         |
+  | Jan 19 | 41000    | 2000                   | 10000               | 1000         |
+  | Feb 19 | 10000    | 1800                   | 10000               | 1000         |
+  | Mar 19 | 15000    | 1800                   | 45000               | 1000         |
+  | Apr 19 | 42500    | 2100                   | 10000               | 1000         |   
+
+
+
+  And I'm on the Funding projection page
+  When I have a negative balance in a forecast month
+  Then the balance for that month is displayed correctly as £0
