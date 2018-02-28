@@ -8,10 +8,9 @@ using Newtonsoft.Json;
 using SFA.DAS.EmployerAccounts.Events.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Payments.Functions;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Levy.Functions
+namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
 {
     public class PaymentPreLoadHttpFunction : IFunction
     {
@@ -20,6 +19,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "PaymentPreLoadHttpFunction")]HttpRequestMessage req,
             [Queue(QueueNames.PreLoadPayment)] ICollector<PreLoadPaymentMessage> outputQueueMessage,
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
             // Creates a msg for each EmployerAccountId

@@ -13,9 +13,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	    [return: Queue(QueueNames.PaymentValidator)]
 	    public static async Task<PaymentCreatedMessage> Run(
 		    [ServiceBusTrigger("LevyPeriod", "mysubscription", AccessRights.Manage)]PaymentCreatedMessage paymentCreatedMessage,
+		    ExecutionContext executionContext,
 		    TraceWriter writer)
 	    {
-		    return await FunctionRunner.Run<PaymentEventServiceBusFunction, PaymentCreatedMessage>(writer,
+		    return await FunctionRunner.Run<PaymentEventServiceBusFunction, PaymentCreatedMessage>(writer, executionContext,
 			    async (container, logger) =>
 			    {
 				    logger.Info($"Added {nameof(PaymentCreatedMessage)} to queue: {QueueNames.PaymentValidator},  for EmployerAccountId: {paymentCreatedMessage?.EmployerAccountId}");

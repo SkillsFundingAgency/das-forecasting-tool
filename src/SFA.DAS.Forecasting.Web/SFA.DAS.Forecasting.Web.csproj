@@ -616,7 +616,6 @@
     <Content Include="Content\src\sass\_tables.scss" />
     <Content Include="Content\src\sass\_typography.scss" />
     <Content Include="Views\Forecasting\Balance.cshtml" />
-    <Content Include="Views\Forecasting\Visualisation.cshtml" />
     <Content Include="Views\Forecasting\ForcastingMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>

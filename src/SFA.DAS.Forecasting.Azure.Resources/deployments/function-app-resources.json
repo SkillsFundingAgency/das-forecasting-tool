@@ -5,9 +5,6 @@
     "funAppName": {
       "type": "string"
     },
-    "storageName": {
-      "type": "string"
-    },
     "hostingPlanName": {
       "type": "string"
     },
@@ -29,10 +26,13 @@
     "NumberOfMonthsToProject": {
       "type": "string"
     },
-    "LoggingRedisConnectionString" : {
+    "LoggingRedisConnectionString": {
       "type": "string"
     },
-    "LoggingRedisKey" : {
+    "LoggingRedisKey": {
+      "type": "string"
+    },
+    "storageConnectionString": {
       "type": "string"
     }
   },
@@ -48,11 +48,11 @@
           "appSettings": [
             {
               "name": "AzureWebJobsDashboard",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[parameters('storageConnectionString')]"
             },
             {
               "name": "AzureWebJobsStorage",
-              "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+              "value": "[parameters('storageConnectionString')]"
             },
             {
               "name": "FUNCTIONS_EXTENSION_VERSION",
@@ -89,6 +89,10 @@
             {
               "name": "LoggingRedisKey",
               "value": "[parameters('LoggingRedisKey')]"
+            },
+            {
+              "name": "StorageConnectionString",
+              "value": "[parameters('storageConnectionString')]"
             }
           ],
           "alwaysOn": true

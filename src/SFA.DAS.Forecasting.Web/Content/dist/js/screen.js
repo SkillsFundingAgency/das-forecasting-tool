@@ -21,9 +21,25 @@ var chart = (function () {
         },
         axis: {
             y2: {
+<<<<<<< HEAD
                 show: true
             },
             y: { show: false },
+=======
+                show: true,
+                tick: {
+                    format: d3.format(",")
+                }
+            },
+            y: {
+                show: true,
+                label: {
+                    text: "Future funds (\243)",
+                    position: 'outer-middle',
+                    rotate: 180
+                }
+            },
+>>>>>>> cd85238052a41de3eda322e7bcf0e349b5e45d1a
             x: {
                 type: 'timeseries',
                 tick: {
@@ -34,9 +50,13 @@ var chart = (function () {
             }
         },
         padding: {
+<<<<<<< HEAD
             bottom: 40,
             left: 10,
             right: 40
+=======
+            
+>>>>>>> cd85238052a41de3eda322e7bcf0e349b5e45d1a
         },
     });
 
