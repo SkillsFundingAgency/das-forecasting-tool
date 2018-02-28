@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
             TraceWriter writer)
         {
             // Creates a msg for each EmployerAccountId
-            return await FunctionRunner.Run<PaymentPreLoadHttpFunction, string>(writer,
+            return await FunctionRunner.Run<PaymentPreLoadHttpFunction, string>(writer, executionContext,
                async (container, logger) =>
                {
                    var body = await req.Content.ReadAsStringAsync();
