@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             {
                 DatabaseConnectionString = GetConnectionString("DatabaseConnectionString"),
                 //EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
-                //StorageConnectionString = GetConnectionString("StorageConnectionString"),
+                StorageConnectionString = GetConnectionString("StorageConnectionString"),
                 Hashstring = GetAppSetting("HashString", true),
                 AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters", true),
                 NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject", false) ?? "0"),
