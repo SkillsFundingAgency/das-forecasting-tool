@@ -78,7 +78,11 @@ this.ScenarioSetup(scenarioInfo);
 #line 9
  testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 10
- testRunner.Then("there will be payments for all the employers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("there will be payments for the employer and no sensitive data will have been stor" +
+                    "ed in the database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 11
+ testRunner.And("there will be commitment for the employer and no sensitive data will have been st" +
+                    "ored in the database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

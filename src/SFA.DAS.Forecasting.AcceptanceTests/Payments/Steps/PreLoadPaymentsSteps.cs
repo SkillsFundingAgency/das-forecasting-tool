@@ -1,9 +1,8 @@
 ﻿using Dapper;
-using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
-using System;
+using FluentAssertions;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,8 +15,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
     public class PreLoadPaymentsSteps : StepsBase
     {
         private const string FeatureName = "PreLoadPayments";
-        private static IEnumerable<long> _accountIds = new List<long> { 8509 };
-        //private static ApiHost _apiHost;
+        private static long _employerAccountId = 8509;
+        private long _substitutionEmployerAccountId = 112233;
 
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
@@ -43,7 +42,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I trigger PreLoadPayment function some employers")]
         public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployers()
         {
-            var item = "{\"EmployerAccountIds\":[\"MN4YKL\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\"}";
+            var item = "{\"EmployerAccountIds\":[8509],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\"}";
+
+            var client = new HttpClient();
+            await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
+        }
+
+        [Given(@"I trigger PreLoadPayment function some employers with a substitution id")]
+        public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployersWithASubstitutionId()
+        {
+            var item = "{\"EmployerAccountIds\":[" + _employerAccountId + "],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\", \"SID\": " + _substitutionEmployerAccountId + "}";
 
             var client = new HttpClient();
             await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
@@ -60,30 +68,67 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             WaitForIt(() =>
             {
-                foreach (var accountId in _accountIds)
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
-                         , param: parameters, commandType: CommandType.Text);
-                    return count == 1;
-                }
-                return false;
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", _employerAccountId, DbType.Int64);
+                var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
+                return count == 1;
             }, "Failed to find all the payments.");
 
             //_apiHost.Dispose();
         }
 
+        [Then(@"there will be payments for the employer and no sensitive data will have been stored in the database")]
+        public void ThenThereWillBePaymentsForAllTheEmployersWithNoSensitiveData()
+        {
+            // ToDo: this
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", _substitutionEmployerAccountId, DbType.Int64);
+            var payments = Connection.ExecuteScalar<IEnumerable<Models.Payments.Payment>>("Select * from Payment where EmployerAccountId = @employerAccountId"
+                    , param: parameters, commandType: CommandType.Text);
+
+            var payment = payments.FirstOrDefault();
+
+            payment.Should().NotBeNull();
+
+            payment.ApprenticeshipId.Should().NotBe(1); // Not be the stame as input!
+            payment.ExternalPaymentId.Should().NotBe(""); // Not be the stame as input!
+            payment.EmployerAccountId.Should().Be(_substitutionEmployerAccountId);
+            payment.ProviderId.Should().Be(1);
+
+            payment.Amount.Should().Be(200); // Same as input
+        }
+
+        [Then(@"there will be commitment for the employer and no sensitive data will have been stored in the database")]
+        public void ThenThereWillBeCommitmentForTheEmployersWithNoSensitiveData()
+        {
+            // ToDo: this
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", _substitutionEmployerAccountId, DbType.Int64);
+            var payments = Connection.ExecuteScalar<IEnumerable<Models.Commitments.Commitment>>("Select * from Commitment where EmployerAccountId = @employerAccountId"
+                    , param: parameters, commandType: CommandType.Text);
+
+            var payment = payments.FirstOrDefault();
+
+            payment.Should().NotBeNull();
+
+            payment.ApprenticeshipId.Should().NotBe(1); // Not be the stame as input!
+            payment.EmployerAccountId.Should().Be(_substitutionEmployerAccountId);
+            payment.ProviderId.Should().Be(1);
+            payment.ProviderName.Should().Be("Provider Name");
+
+            payment.ApprenticeName.Should().Be("Apprentice Name");
+            payment.CourseName.Should().Be(""); // Same as input
+            payment.CourseLevel.Should().Be(1); // Same as input
+        }
+
         private void ClearDatabase()
         {
-            foreach (var accountId in _accountIds)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                var count = Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId = @employerAccountId"
-                     , param: parameters, commandType: CommandType.Text);
-
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("@id1", _employerAccountId, DbType.Int64);
+            parameters.Add("@id2", _substitutionEmployerAccountId, DbType.Int64);
+            var count = Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId IN [@id1, @id2]"
+                    , param: parameters, commandType: CommandType.Text);
         }
     }
 }

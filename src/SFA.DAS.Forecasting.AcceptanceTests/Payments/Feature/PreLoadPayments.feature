@@ -7,4 +7,5 @@
 Scenario: Pre load payment events
 	Given I trigger PreLoadPayment function some employers
 	When data have been processed
-	Then there will be payments for all the employers
+	Then there will be payments for the employer and no sensitive data will have been stored in the database
+	And there will be commitment for the employer and no sensitive data will have been stored in the database
