@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using SFA.DAS.Forecasting.Models.Levy;
+using FluentAssertions;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -20,6 +22,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         //private static ApiHost _iHost;
         
         private static IEnumerable<long> _accountIds = new List<long> { 497, 498, 499 };
+        private static long _accountId = 497;
 
         [Scope(Feature = FeatureName)]
         [BeforeFeature(Order = 1)]
@@ -53,6 +56,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
         }
 
+        [Given(@"I trigger PreLoadEvent function for some employers with a substitution id (.*)")]
+        public async Task ITriggerFunctionWithSubstitutionId(long substitutionId)
+        {
+            var item = "{\"EmployerAccountIds\":[\"MJK9XV\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1, \"SubstitutionId\": " + substitutionId + "}";
+            Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
+            var client = new HttpClient();
+            await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
+        }
+
         [When(@"data have been processed")]
         public void DataHaveBeenProcessed()
         {
@@ -74,6 +86,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                 }
                 return false;
             }, "Failed to find all the levy declarations.");
+        }
+
+
+        [Then(@"there will be a levy declaration for the employer (.*) and no sensitive data will have been stored in the database")]
+        public void ThereWillRecordInTheStorageWithNoSensitiveData(long substitutionId)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+            var declaration = Connection.ExecuteScalar<LevyDeclaration>("Select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                 , param: parameters, commandType: CommandType.Text);
+
+            declaration.Should().NotBeNull();
         }
 
         private void ClearDatabase()
