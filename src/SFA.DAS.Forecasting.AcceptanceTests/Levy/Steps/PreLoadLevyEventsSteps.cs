@@ -1,9 +1,6 @@
 ﻿using System;
 using Dapper;
-using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,22 +10,15 @@ using FluentAssertions;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
-    [Scope(Feature = FeatureName)]
+    [Scope(Feature = "PreLoadLevyEvents")]
     [Binding]
     public class PreLoadLevyEventsSteps : StepsBase
     {
-        private const string FeatureName= "PreLoadLevyEvents";
+        private static long _accountId = 12345;
 
-        //private static ApiHost _iHost;
-        
-        private static IEnumerable<long> _accountIds = new List<long> { 497, 498, 499 };
-        private static long _accountId = 497;
-
-        [Scope(Feature = FeatureName)]
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-//            _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
             Thread.Sleep(1000);
         }
@@ -50,7 +40,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
         public async Task ITriggerFunction()
         {
-            var item = "{\"EmployerAccountIds\":[\"MJK9XV\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
+            var item = "{\"EmployerAccountIds\":[" + _accountId + "],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
             Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
             var client = new HttpClient();
             await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
@@ -74,18 +64,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there will be (.*) records in the storage")]
         public void ThereWillBeThreeRecordsInTheStorage(int expectedCount)
         {
+            var count = 0;
             WaitForIt(() =>
             {
-                foreach (var accountId in _accountIds)
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where EmployerAccountId = @employerAccountId"
-                         , param: parameters, commandType: CommandType.Text);
-                    return count == 1;
-                }
-                return false;
-            }, "Failed to find all the levy declarations.");
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+                count = Connection.ExecuteScalar<int>("select Count(*) from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
+                return count == expectedCount;
+            }, $"Failed to find all the levy declarations. Found {count} expected {expectedCount} for {_accountId}");
         }
 
 
@@ -102,14 +89,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 
         private void ClearDatabase()
         {
-            foreach (var accountId in _accountIds)
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
-                     , param: parameters, commandType: CommandType.Text);
-                
-            }
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+            var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
+                    , param: parameters, commandType: CommandType.Text);
         }
     }
 }

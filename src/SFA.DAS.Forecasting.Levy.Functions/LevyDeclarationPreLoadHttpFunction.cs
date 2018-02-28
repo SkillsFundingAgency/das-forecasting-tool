@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -8,30 +10,39 @@ using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
     public class LevyDeclarationPreLoadHttpFunction : IFunction
     {
         [FunctionName("LevyDeclarationPreLoadHttpFunction")]
-        [return: Queue(QueueNames.ValidateDeclaration)]
-        public static async Task Run(
+        public static async Task<string> Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
             [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
             ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction>(writer, executionContext,
+            return await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction, string>(writer, executionContext,
                async (container, logger) =>
                {
                    var body = await req.Content.ReadAsStringAsync();
                    var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
+                   var hashingService = container.GetInstance<IHashingService>();
 
                    if (preLoadRequest == null)
                    {
-                       logger.Warn($"{nameof(PreLoadRequest)} not valid. Function will exit.");
-                       return;
+                       var msg = $"{nameof(PreLoadRequest)} not valid. Function will exit.";
+                       logger.Warn(msg);
+                       return msg;
+                   }
+
+                   if (preLoadRequest.SubstitutionId.HasValue && preLoadRequest.EmployerAccountIds.Count() != 1)
+                   {
+                       var msg = $"If {nameof(preLoadRequest.SubstitutionId)} is provided there must be exactly 1 EmployerAccountId";
+                       logger.Warn(msg);
+                       return msg;
                    }
 
                    var levyDataService = container.GetInstance<IEmployerDataService>();
@@ -44,11 +55,24 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                        var model = await levyDataService.LevyForPeriod(employerId, preLoadRequest.PeriodYear, preLoadRequest.PeriodMonth);
                        if (model == null)
                            continue;
+
+                       if (preLoadRequest.SubstitutionId.HasValue)
+                       {
+                           model.AccountId = preLoadRequest.SubstitutionId.Value;
+                           model.EmpRef = hashingService.HashValue(preLoadRequest.SubstitutionId.Value);
+                       }
+
                        messageCount++;
                        outputQueueMessage.Add(model);
                    }
 
                    logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateDeclaration} queue.");
+
+                   if (preLoadRequest.SubstitutionId.HasValue)
+                   {
+                       return $"{hashingService.HashValue(preLoadRequest.SubstitutionId.Value)}";
+                   }
+                   return $"Added {messageCount} levy declarations";
                });
         }
     }
@@ -60,5 +84,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         public string PeriodYear { get; set; }
 
         public short? PeriodMonth { get; set; }
+
+        public long? SubstitutionId { get; set; }
     }
 }
