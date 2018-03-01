@@ -30,7 +30,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Then the Account projection has the correct columns	
   And the first month displayed is the next calendar month
   And there are months up to 'Apr 19' displayed in the forecast
-  And the data is displayed correctly in each column
+#  And the data is displayed correctly in each column
 #  And the first month's levy credit is shown as the calculated levy value
 #  And the first month's balance includes the levy credit value
 #  And completion payments are shown against the correct months
@@ -88,7 +88,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Then the Account projection has the correct columns
   And the first month displayed is the next calendar month
   And there are months up to 'Apr 19' displayed in the forecast
-  And the data is displayed correctly in each column
+ #  And the data is displayed correctly in each column
 #  And the first month's levy credit is shown as the calculated levy value
 #  And the first month's balance uses a levy credit value of £0
 #  And completion payments are shown against the correct months
