@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -8,7 +7,7 @@ using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Payments.Functions
+namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
 {
     public class GetEarningDetailsFunction : IFunction
     {
@@ -16,9 +15,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         [return: Queue(QueueNames.AddEarningDetails)]
         public static async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, 
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer,
+            return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer, executionContext,
                 async (container, logger) => {
 
                     // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId

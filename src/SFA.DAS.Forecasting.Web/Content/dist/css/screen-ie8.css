@@ -4257,6 +4257,7 @@ h2 .float-right {
   }
 }
 
+
 /*coinvestment table*/
 #balancesheet .co-invest-head {
   text-align: center;
@@ -4264,4 +4265,20 @@ h2 .float-right {
 
 #balancesheet .grey-bg {
   background: #dee0e2;
+
+.chart-container {
+  display: none;
+}
+
+path.c3-line {
+  stroke-width: 4px;
+  stroke: #005ea5;
+}
+
+.c3-axis-y .tick {
+  display: none;
+}
+
+.c3-axis-y-label {
+  font-size: 20px;
 }

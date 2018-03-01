@@ -1,4 +1,5 @@
-﻿using Sfa.Automation.Framework.Selenium;
+﻿using OpenQA.Selenium;
+using Sfa.Automation.Framework.Selenium;
 using System;
 using System.IO;
 
@@ -29,6 +30,11 @@ namespace SFA.DAS.Forecasting.Web.Automation
             return new FundingProjectionPage(WebBrowserDriver);
         }
 
+        public IWebDriver getDriver()
+        {
+
+            return WebBrowserDriver;
+        }
 
 
 

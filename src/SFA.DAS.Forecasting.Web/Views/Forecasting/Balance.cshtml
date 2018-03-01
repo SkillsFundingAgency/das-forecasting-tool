@@ -50,9 +50,21 @@
         </div>
     </div>
 
+    <!-- CHART -->
     <div class="column-full">
-        <h4 class="heading-large">Your account projection</h4>
+        <div class="chart-container">
+            <div class="chart-data"
+                 data-dates="@Model.DatesStringArray"
+                 data-values="@Model.BalanceStringArray">
 
+            </div>
+            <h4 class="heading-large">Funding Projection Chart</h4>
+            <p>Account funds over time</p>
+            <div id="chart"></div>
+        </div>
+
+        <!-- Projection -->
+        <h4 class="heading-large">Your account projection</h4>
         <div class="grid-row" style="margin-bottom: 30px;">
             <div class="column-two-thirds">
                 <p>A month by month projection of your account balance.</p>
@@ -121,10 +133,10 @@
                 {
                 <tr>
                     <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="numeric">@item.LevyCredit.FormatCost()</td>
-                    <td class="numeric">@item.CostOfTraining.FormatCost()</td>
-                    <td class="numeric">@item.CompletionPayments.FormatCost()</td>
-                    <td class="numeric grey-bg">
+                    <td class="financial">@item.LevyCredit.FormatCost()</td>
+                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                    <td class="financial grey-bg">
                         @if (item.CoInvestmentEmployer == 0)
                         {
                             <span>–</span>
@@ -134,7 +146,7 @@
                             <span>@item.CoInvestmentEmployer.FormatCost()</span>
                         }
                     </td>
-                    <td class="numeric grey-bg">
+                    <td class="financial grey-bg">
                         @if (item.CoInvestmentGovernment == 0)
                         {
                             <span>–</span>
@@ -144,7 +156,7 @@
                             <span>@item.CoInvestmentGovernment.FormatCost()</span>
                         }
                     </td>
-                    <td class="numeric">@item.Balance.FormatCost()</td>
+                    <td class="financial">@item.Balance.FormatCost()</td>
 
                 </tr>
                 }
@@ -163,7 +175,6 @@
     </div>
 
 </div>
-
 
 @section breadcrumb {
     @if (!string.IsNullOrEmpty(Model.BackLink))
