@@ -124,9 +124,28 @@
                     <td class="numeric">@item.LevyCredit.FormatCost()</td>
                     <td class="numeric">@item.CostOfTraining.FormatCost()</td>
                     <td class="numeric">@item.CompletionPayments.FormatCost()</td>
-                    <td class="numeric grey-bg">@item.CoInvestmentEmployer.FormatCost()</td>
-                    <td class="numeric grey-bg">@item.CoInvestmentGovernment.FormatCost()</td>
+                    <td class="numeric grey-bg">
+                        @if (item.CoInvestmentEmployer == 0)
+                        {
+                            <span>–</span>
+                        }
+                        else
+                        {
+                            <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                        }
+                    </td>
+                    <td class="numeric grey-bg">
+                        @if (item.CoInvestmentGovernment == 0)
+                        {
+                            <span>–</span>
+                        }
+                        else
+                        {
+                            <span>@item.CoInvestmentGovernment.FormatCost()</span>
+                        }
+                    </td>
                     <td class="numeric">@item.Balance.FormatCost()</td>
+
                 </tr>
                 }
             </tbody>
