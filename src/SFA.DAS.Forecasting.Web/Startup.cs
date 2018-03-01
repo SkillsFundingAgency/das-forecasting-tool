@@ -5,7 +5,6 @@ using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.Azure;
 using Microsoft.Owin;
@@ -18,7 +17,6 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.OidcMiddleware;
@@ -30,12 +28,13 @@ namespace SFA.DAS.Forecasting.Web
     {
 	    private const string ServiceName = "SFA.DAS.ForecastingTool";
 
+		private static readonly StartupConfiguration _config = new StartupConfiguration();
+
 		public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
 
 	        //var config = GetConfigurationObject();
-	        var config = new StartupConfiguration();
 
 			var logger = LogManager.GetLogger("Startup");
 
@@ -54,31 +53,31 @@ namespace SFA.DAS.Forecasting.Web
 				AuthenticationMode = AuthenticationMode.Passive
 			});
 
-			var constants = new Constants(config.Identity);
+			var constants = new Constants(_config.Identity);
 
 			var urlHelper = new UrlHelper();
 
-			UserLinksViewModel.ChangePasswordLink = $"{constants.ChangePasswordLink()}{urlHelper.Encode("https://" + config.DashboardUrl + "/service/password/change")}";
-			UserLinksViewModel.ChangeEmailLink = $"{constants.ChangeEmailLink()}{urlHelper.Encode("https://" + config.DashboardUrl + "/service/email/change")}";
+			UserLinksViewModel.ChangePasswordLink = $"{constants.ChangePasswordLink()}{urlHelper.Encode("https://" + _config.DashboardUrl + "/service/password/change")}";
+			UserLinksViewModel.ChangeEmailLink = $"{constants.ChangeEmailLink()}{urlHelper.Encode("https://" + _config.DashboardUrl + "/service/email/change")}";
 
 			app.UseCodeFlowAuthentication(new OidcMiddlewareOptions
 			{
-				ClientId = config.Identity.ClientId,
-				ClientSecret = config.Identity.ClientSecret,
-				Scopes = config.Identity.Scopes,
+				ClientId = _config.Identity.ClientId,
+				ClientSecret = _config.Identity.ClientSecret,
+				Scopes = _config.Identity.Scopes,
 				BaseUrl = constants.Configuration.BaseAddress,
 				TokenEndpoint = constants.TokenEndpoint(),
 				UserInfoEndpoint = constants.UserInfoEndpoint(),
 				AuthorizeEndpoint = constants.AuthorizeEndpoint(),
-				TokenValidationMethod = config.Identity.UseCertificate ? TokenValidationMethod.SigningKey : TokenValidationMethod.BinarySecret,
-				TokenSigningCertificateLoader = GetSigningCertificate(config.Identity.UseCertificate),
+				TokenValidationMethod = _config.Identity.UseCertificate ? TokenValidationMethod.SigningKey : TokenValidationMethod.BinarySecret,
+				TokenSigningCertificateLoader = GetSigningCertificate(_config.Identity.UseCertificate),
 				AuthenticatedCallback = identity =>
 				{
 					PostAuthentiationAction(identity, logger, constants);
 				}
 			});
 
-			ConfigurationFactory.Current = new IdentityServerConfigurationFactory(config);
+			ConfigurationFactory.Current = new IdentityServerConfigurationFactory(_config);
 		}
 
 	    private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate)
@@ -94,7 +93,7 @@ namespace SFA.DAS.Forecasting.Web
 			    store.Open(OpenFlags.ReadOnly);
 			    try
 			    {
-				    var thumbprint = CloudConfigurationManager.GetSetting("TokenCertificateThumbprint");
+				    var thumbprint = _config.TokenCertificateThumbprint;
 				    var certificates = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
 
 				    if (certificates.Count < 1)

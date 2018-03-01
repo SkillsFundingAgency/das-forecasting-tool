@@ -13,7 +13,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 		public string DatabaseConnectionString { get; set; }
 		public string Hashstring { get; set; }
 		public string AllowedHashstringCharacters { get; set; }
-
+		public string TokenCertificateThumbprint { get; set; }
+		
 		public StartupConfiguration()
 		{
 			DatabaseConnectionString = GetConnectionString("DatabaseConnectionString");
@@ -46,6 +47,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 					DisplayName = GetAppSetting("DisplayName"),
 				}
 			};
+			TokenCertificateThumbprint = GetAppSetting("TokenCertificateThumbprint");
 		}
 
 		private async Task<string> GetKeyValueSecret(string secretUri)
