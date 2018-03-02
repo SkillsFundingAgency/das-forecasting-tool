@@ -96,10 +96,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Co inverstment")]
-        public virtual void CoInverstment()
+        [NUnit.Framework.DescriptionAttribute("Calculate Co-investment")]
+        public virtual void CalculateCo_Investment()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Co inverstment", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate Co-investment", ((string[])(null)));
 #line 16
 this.ScenarioSetup(scenarioInfo);
 #line 6

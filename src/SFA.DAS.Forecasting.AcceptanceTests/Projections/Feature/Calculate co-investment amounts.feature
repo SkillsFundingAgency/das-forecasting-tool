@@ -13,7 +13,7 @@ Background:
 	| ABC-1234 | 3000   | Today        |
 	And the current balance is 5000
 
-Scenario: Co inverstment 
+Scenario: Calculate Co-investment 
 	Given the following commitments have been recorded
 	| Apprentice Name   | Course Name   | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
 	| Test Apprentice   | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
