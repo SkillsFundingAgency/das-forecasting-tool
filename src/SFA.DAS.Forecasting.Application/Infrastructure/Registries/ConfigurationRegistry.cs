@@ -112,19 +112,26 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public TConfig SetUpConfiguration<TConfig>(string serviceName) where TConfig : class
         {
-            var environment = Environment.GetEnvironmentVariable("DASENV");
-            if (string.IsNullOrEmpty(environment))
+            try
             {
-                environment = GetAppSetting("EnvironmentName", false);
+                var environment = Environment.GetEnvironmentVariable("DASENV");
+                if (string.IsNullOrEmpty(environment))
+                {
+                    environment = GetAppSetting("EnvironmentName", false);
+                }
+
+                var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
+                var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
+                var configurationService = new ConfigurationService(configurationRepository,
+                    new ConfigurationOptions(serviceName, environment, "1.0"));
+
+                var result = configurationService.Get<TConfig>();
+                return result;
             }
-
-            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
-            var configurationService = new ConfigurationService(configurationRepository,
-                new ConfigurationOptions(serviceName, environment, "1.0"));
-
-            var result = configurationService.Get<TConfig>();
-            return result;
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error getting config of type {typeof(TConfig).FullName} for service '{serviceName}' from table storage configuration api.", ex);
+            }
         }
     }
 }
