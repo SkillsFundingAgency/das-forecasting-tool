@@ -7,7 +7,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 
-namespace SFA.DAS.Forecasting.Projections.Functions
+namespace SFA.DAS.Forecasting.Payments.Functions
 {
     public class InitialiseFunction: IFunction
     {
@@ -19,9 +19,9 @@ namespace SFA.DAS.Forecasting.Projections.Functions
             await FunctionRunner.Run<InitialiseFunction>(log, executionContext, async (container,logger) =>
             {
                 //TODO: create generic function or use custom binding
-                log.Info("Initialising the Projections functions application.");
+                log.Info("Initialising the Payments functions.");
                 await container.GetInstance<IFunctionInitialisationService>().Initialise<InitialiseFunction>();
-                log.Info("Finished initialising the Projections functions.");
+                log.Info("Finished initialising the Payments functions.");
             });
 
             return req.CreateResponse(HttpStatusCode.OK);
