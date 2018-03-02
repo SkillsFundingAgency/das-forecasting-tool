@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="ForecastingDashboardSteps.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Feature\RedirectToLoginPage.feature.cs">

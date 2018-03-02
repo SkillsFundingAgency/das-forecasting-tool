@@ -15,9 +15,10 @@ namespace SFA.DAS.Forecasting.Projections.Functions
         [return: Queue(QueueNames.BuildProjections)]
         public static async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.GetAccountBalance)]GenerateAccountProjectionCommand message,
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<GetAccountBalanceFunction, GenerateAccountProjectionCommand>(writer, async (container, logger) =>
+            return await FunctionRunner.Run<GetAccountBalanceFunction, GenerateAccountProjectionCommand>(writer, executionContext, async (container, logger) =>
                 {
                     logger.Debug("Resolving GetAccountBalanceHandler from container.");
                     var handler = container.GetInstance<GetAccountBalanceHandler>();

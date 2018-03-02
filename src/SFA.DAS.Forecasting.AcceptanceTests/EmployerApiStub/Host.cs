@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub
         NancyHost _host;
         public ApiHost()
         {
-            var config = new HostConfiguration { RewriteLocalhost = false };
+            var config = new HostConfiguration { RewriteLocalhost = true };
             config.UrlReservations.CreateAutomatically = true;
             _host = new NancyHost(config, new Uri("http://localhost:50002"));
             _host.Start();

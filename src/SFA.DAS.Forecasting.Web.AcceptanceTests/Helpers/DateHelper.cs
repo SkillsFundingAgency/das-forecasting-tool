@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Helpers
                 return 7;
             else if (dateString.StartsWith("Aug"))
                 return 8;
-            else if (dateString.StartsWith("Sept"))
+            else if (dateString.StartsWith("Sep"))
                 return 9;
             else if (dateString.StartsWith("Oct"))
                 return 10;
@@ -45,7 +45,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Helpers
                 "Jun",
                 "Jul",
                 "Aug",
-                "Sept",
+                "Sep",
                 "Oct",
                 "Nov",
                 "Dec"

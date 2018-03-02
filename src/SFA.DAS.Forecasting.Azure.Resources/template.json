@@ -117,7 +117,7 @@
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
-          },          
+          },
           "LimitForecast": {
             "value": "[parameters('appSettingLimitForecast')]"
           },
@@ -154,9 +154,6 @@
           "funAppName": {
             "value": "[parameters('funAppNames')[copyIndex()]]"
           },
-          "storageName": {
-            "value": "[parameters('storageName')]"
-          },
           "hostingPlanName": {
             "value": "[parameters('sharedHostingPlanName')]"
           },
@@ -165,9 +162,6 @@
           },
           "serverFarmResourceGroup": {
             "value": "[parameters('sharedServerFarmResourceGroup')]"
-          },
-          "ConfigurationStorageConnectionString": {
-            "value": "[parameters('ConfigurationStorageConnectionString')]"
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
@@ -186,6 +180,9 @@
           },
           "LoggingRedisKey" : {
             "value": "[parameters('appSettingLoggingRedisKey')]"
+          },
+          "storageConnectionString": {
+            "value": "[reference('storage-resources-deployment').outputs.StorageConnectionString.value]"
           }
         }
       }
@@ -238,6 +235,9 @@
           },
           "AllowedHashstringCharacters": {
             "value": "[parameters('secretAllowedHashstringCharacters')]"
+          },
+          "configurationStorageConnectionString": {
+            "value": "[parameters('configurationStorageConnectionString')]"
           }
         }
       }

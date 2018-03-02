@@ -90,92 +90,98 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Date",
                         "Funds in",
-                        "Cost Of Training",
+                        "Total Cost Of Training",
                         "Completion Payments",
                         "Future Funds"});
             table1.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
-                        "1000"});
-            table1.AddRow(new string[] {
                         "Apr 18",
-                        "1000",
+                        "14000",
                         "880",
                         "32200",
-                        "1000"});
+                        "31000"});
+            table1.AddRow(new string[] {
+                        "May 18",
+                        "15000",
+                        "880",
+                        "32200",
+                        "17000"});
             table1.AddRow(new string[] {
                         "Jun 18",
-                        "1000",
+                        "91000",
                         "1800",
                         "10000",
-                        "1000"});
+                        "23000"});
             table1.AddRow(new string[] {
                         "Jul 18",
-                        "1000",
+                        "21000",
                         "2350",
                         "50000",
-                        "1000"});
+                        "23000"});
             table1.AddRow(new string[] {
                         "Aug 18",
-                        "1000",
+                        "45200",
                         "850",
                         "45000",
                         "1000"});
             table1.AddRow(new string[] {
                         "Sep 18",
-                        "1000",
+                        "55000",
+                        "700",
+                        "37880",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Oct 18",
+                        "42000",
                         "700",
                         "37880",
                         "1000"});
             table1.AddRow(new string[] {
                         "Nov 18",
-                        "1000",
+                        "22000",
                         "1800",
                         "45000",
-                        "1000"});
+                        "5000"});
             table1.AddRow(new string[] {
                         "Dec 18",
-                        "1000",
+                        "42000",
                         "1400",
                         "10000",
-                        "1000"});
+                        "4000"});
             table1.AddRow(new string[] {
                         "Jan 19",
-                        "1000",
+                        "41000",
                         "2000",
                         "10000",
                         "1000"});
             table1.AddRow(new string[] {
                         "Feb 19",
-                        "1000",
+                        "10000",
                         "1800",
                         "10000",
                         "1000"});
             table1.AddRow(new string[] {
                         "Mar 19",
-                        "1000",
+                        "15000",
                         "1800",
                         "45000",
-                        "1000"});
+                        "31000"});
             table1.AddRow(new string[] {
                         "Apr 19",
-                        "1000",
+                        "42500",
                         "2100",
                         "10000",
                         "1000"});
 #line 11
   testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
-#line 27
-  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 28
-  testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 29
-  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 30
-  testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 31
+  testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 32
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -188,7 +194,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjectionPageAC2: Forecast data is displayed correctly when forecast betw" +
                     "een 23rd of month until end of month", ((string[])(null)));
-#line 38
+#line 39
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -196,92 +202,98 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "Date",
                         "Funds in",
-                        "Cost Of Training",
+                        "Total Cost Of Training",
                         "Completion Payments",
                         "Future Funds"});
             table2.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
+                        "Apr 18",
+                        "14000",
+                        "880",
+                        "32200",
                         "1000"});
             table2.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
+                        "May 18",
+                        "15000",
                         "880",
                         "32200",
                         "1000"});
             table2.AddRow(new string[] {
                         "Jun 18",
-                        "1000",
+                        "91000",
                         "1800",
                         "10000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Jul 18",
-                        "1000",
+                        "21000",
                         "2350",
                         "50000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Aug 18",
-                        "1000",
+                        "45200",
                         "850",
                         "45000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Sep 18",
-                        "1000",
+                        "55000",
+                        "700",
+                        "37880",
+                        "1000"});
+            table2.AddRow(new string[] {
+                        "Oct 18",
+                        "42000",
                         "700",
                         "37880",
                         "1000"});
             table2.AddRow(new string[] {
                         "Nov 18",
-                        "1000",
+                        "22000",
                         "1800",
                         "45000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Dec 18",
-                        "1000",
+                        "42000",
                         "1400",
                         "10000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Jan 19",
-                        "1000",
+                        "41000",
                         "2000",
                         "10000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Feb 19",
-                        "1000",
+                        "10000",
                         "1800",
                         "10000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Mar 19",
-                        "1000",
+                        "15000",
                         "1800",
                         "45000",
                         "1000"});
             table2.AddRow(new string[] {
                         "Apr 19",
-                        "1000",
+                        "42500",
                         "2100",
                         "10000",
                         "1000"});
-#line 39
+#line 40
   testRunner.Given("I have generated the following projections", ((string)(null)), table2, "Given ");
-#line 55
-  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 56
-  testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 57
-  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 58
-  testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 59
+  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 60
+  testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 61
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -294,7 +306,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjectionPageAC3: Forecast data is displayed correctly when forecast betw" +
                     "een 1st of month until next payments made", ((string[])(null)));
-#line 66
+#line 68
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -302,92 +314,98 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Date",
                         "Funds in",
-                        "Cost Of Training",
+                        "Total Cost Of Training",
                         "Completion Payments",
                         "Future Funds"});
             table3.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
+                        "Apr 18",
+                        "14000",
+                        "880",
+                        "32200",
                         "1000"});
             table3.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
+                        "May 18",
+                        "15000",
                         "880",
                         "32200",
                         "1000"});
             table3.AddRow(new string[] {
                         "Jun 18",
-                        "1000",
+                        "91000",
                         "1800",
                         "10000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Jul 18",
-                        "1000",
+                        "21000",
                         "2350",
                         "50000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Aug 18",
-                        "1000",
+                        "45200",
                         "850",
                         "45000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Sep 18",
-                        "1000",
+                        "55000",
+                        "700",
+                        "37880",
+                        "1000"});
+            table3.AddRow(new string[] {
+                        "Oct 18",
+                        "42000",
                         "700",
                         "37880",
                         "1000"});
             table3.AddRow(new string[] {
                         "Nov 18",
-                        "1000",
+                        "22000",
                         "1800",
                         "45000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Dec 18",
-                        "1000",
+                        "42000",
                         "1400",
                         "10000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Jan 19",
-                        "1000",
+                        "41000",
                         "2000",
                         "10000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Feb 19",
-                        "1000",
+                        "10000",
                         "1800",
                         "10000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Mar 19",
-                        "1000",
+                        "15000",
                         "1800",
                         "45000",
                         "1000"});
             table3.AddRow(new string[] {
                         "Apr 19",
-                        "1000",
+                        "42500",
                         "2100",
                         "10000",
                         "1000"});
-#line 67
+#line 69
   testRunner.Given("I have generated the following projections", ((string)(null)), table3, "Given ");
-#line 83
-  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 84
-  testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 85
-  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 86
-  testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 87
+  testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 88
+  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 89
+  testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 90
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

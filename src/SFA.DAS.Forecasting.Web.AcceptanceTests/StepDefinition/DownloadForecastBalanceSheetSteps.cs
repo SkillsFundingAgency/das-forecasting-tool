@@ -75,12 +75,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
             Assert.AreEqual(lineCount, 13);
-
-
-            //if (File.Exists(newFilePath))
-            //{
-            //    File.Delete(newFilePath);
-            //}
             
         }
 
@@ -115,7 +109,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                     parameters.Add("@projectionCreationDate", DateTime.Today, DbType.DateTime);
                     parameters.Add("@projectionGenerationType", 1, DbType.Int16);
                     parameters.Add("@month", GetMonth(accountProjectionReadModel.Date), DbType.Int16);
-                    parameters.Add("@year", 2018, DbType.Int32);
+                    parameters.Add("@year", accountProjectionReadModel.Date.Substring(4).Trim(), DbType.Int32);
                     parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
                     parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
@@ -144,7 +138,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 return 7;
             else if (dateString.StartsWith("Aug"))
                 return 8;
-            else if (dateString.StartsWith("Sept"))
+            else if (dateString.StartsWith("Sep"))
                 return 9;
             else if (dateString.StartsWith("Oct"))
                 return 10;

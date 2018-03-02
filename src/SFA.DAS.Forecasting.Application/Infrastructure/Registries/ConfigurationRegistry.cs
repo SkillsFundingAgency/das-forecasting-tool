@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using SFA.DAS.Configuration;
+using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using StructureMap;
@@ -23,27 +25,27 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             var configuration = new ApplicationConfiguration
             {
                 DatabaseConnectionString = GetConnectionString("DatabaseConnectionString"),
-                EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
+                //EmployerConnectionString = GetConnectionString("EmployerConnectionString"),
                 StorageConnectionString = GetConnectionString("StorageConnectionString"),
-                Hashstring = GetAppSetting("HashString"),
-                AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters"),
-                NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject") ?? "0"),
-                SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections") ?? "0"),
-                BackLink = GetAppSetting("BackLink"),
-                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast") ?? "false"),
-                AccountApi = GetAccount(),
-                PaymentEventsApi = new PaymentsEventsApiConfiguration
-                {
-                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl"),
-                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken"),
-                }
+                Hashstring = GetAppSetting("HashString", true),
+                AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters", true),
+                NumberOfMonthsToProject = int.Parse(GetAppSetting("NumberOfMonthsToProject", false) ?? "0"),
+                SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
+                BackLink = GetAppSetting("BackLink", false),
+                LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
             };
+
+            if (IsDevEnvironment)
+                SetApiConfiguration(configuration);
+            else
+                SetApiConfigurationTableStorage(configuration);
+
             return configuration;
         }
 
-        private AccountApiConfiguration GetAccount()
+        private void SetApiConfiguration(ApplicationConfiguration config)
         {
-            return new AccountApiConfiguration
+            config.AccountApi = new AccountApiConfiguration
             {
                 Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
                 ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
@@ -51,25 +53,45 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
                 IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
             };
+
+            config.PaymentEventsApi = new PaymentsEventsApiConfiguration
+            {
+                ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
+                ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
+            };
+        }
+
+        private void SetApiConfigurationTableStorage(ApplicationConfiguration config)
+        {
+            config.AccountApi = SetUpConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
+            config.PaymentEventsApi = SetUpConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
 
 
+        private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
         private string KeyVaultBaseUrl => $"https://{CloudConfigurationManager.GetSetting("KeyVaultName")}.vault.azure.net";
 
         private async Task<string> GetSecret(string secretName)
         {
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            var secret = await keyVaultClient.GetSecretAsync(KeyVaultBaseUrl, secretName).ConfigureAwait(false);
-            return secret.Value;
+            try
+            {
+                var azureServiceTokenProvider = new AzureServiceTokenProvider();
+                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+                var secret = await keyVaultClient.GetSecretAsync(KeyVaultBaseUrl, secretName).ConfigureAwait(false);
+                return secret.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"There was an error getting the key vault secret. Secret name: {secretName}, KeyVault name: {KeyVaultName}, Error: {ex.Message}", ex);
+            }
         }
 
-        public string GetAppSetting(string keyName)
+        public string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return string.IsNullOrEmpty(value) || IsDevEnvironment
+            return IsDevEnvironment || !isSensitive
                 ? value
-                : GetSecret(value).Result;
+                : GetSecret(keyName).Result;
         }
 
         public static bool IsDevEnvironment =>
@@ -81,11 +103,35 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             var connectionString = ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
             if (string.IsNullOrEmpty(connectionString))
-                return GetAppSetting(name);
-            
+                return GetAppSetting(name, true);
+
             return IsDevEnvironment
                 ? connectionString
-                : GetSecret(connectionString).Result;
+                : GetSecret(name).Result;
+        }
+
+        public TConfig SetUpConfiguration<TConfig>(string serviceName) where TConfig : class
+        {
+            try
+            {
+                var environment = Environment.GetEnvironmentVariable("DASENV");
+                if (string.IsNullOrEmpty(environment))
+                {
+                    environment = GetAppSetting("EnvironmentName", false);
+                }
+
+                var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
+                var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
+                var configurationService = new ConfigurationService(configurationRepository,
+                    new ConfigurationOptions(serviceName, environment, "1.0"));
+
+                var result = configurationService.Get<TConfig>();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error getting config of type {typeof(TConfig).FullName} for service '{serviceName}' from table storage configuration api.", ex);
+            }
         }
     }
 }
