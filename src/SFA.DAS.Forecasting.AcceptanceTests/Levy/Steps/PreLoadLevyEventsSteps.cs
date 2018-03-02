@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         {
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+            StartFunction("SFA.DAS.Forecasting.PreLoad.Functions");
             Thread.Sleep(1000);
         }
 
