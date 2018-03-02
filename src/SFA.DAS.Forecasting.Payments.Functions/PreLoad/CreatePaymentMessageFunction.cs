@@ -17,9 +17,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
         public static async Task Run(
             [QueueTrigger(QueueNames.AddEarningDetails)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<CreatePaymentMessageFunction>(writer,
+            await FunctionRunner.Run<CreatePaymentMessageFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");

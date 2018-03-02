@@ -286,11 +286,12 @@
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceViewModel.cs" />
-    <Compile Include="ViewModels\ChartItemViewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
-    <Compile Include="ViewModels\VisualisationViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\dist\c3\c3.min.css" />
+    <Content Include="Content\dist\c3\c3.min.js" />
+    <Content Include="Content\dist\c3\d3.min.js" />
     <Content Include="Content\dist\css\screen-ie6.css" />
     <Content Include="Content\dist\css\screen-ie7.css" />
     <Content Include="Content\dist\css\screen-ie8.css" />
@@ -302,6 +303,7 @@
     <Content Include="Content\dist\govuk-template-ie8.css" />
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
+    <Content Include="Content\dist\js\screen.js" />
     <Content Include="Content\Gruntfile.js" />
     <Content Include="Content\dist\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\dist\images\apple-touch-icon-152x152.png" />
@@ -614,7 +616,6 @@
     <Content Include="Content\src\sass\_tables.scss" />
     <Content Include="Content\src\sass\_typography.scss" />
     <Content Include="Views\Forecasting\Balance.cshtml" />
-    <Content Include="Views\Forecasting\Visualisation.cshtml" />
     <Content Include="Views\Forecasting\ForcastingMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -636,6 +637,9 @@
       <Project>{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}</Project>
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

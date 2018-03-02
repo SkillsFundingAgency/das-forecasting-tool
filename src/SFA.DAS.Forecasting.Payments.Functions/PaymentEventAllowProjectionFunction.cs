@@ -15,9 +15,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	    [return: Queue(QueueNames.GenerateProjections)]
 		public static async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.AllowProjection)]PaymentCreatedMessage paymentCreatedMessage, 
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GenerateAccountProjectionCommand>(writer,
+            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GenerateAccountProjectionCommand>(writer, executionContext,
                 async (container, logger) =>
                 {
 					logger.Debug("Getting payment declaration handler from container.");
