@@ -33,19 +33,19 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
                 BackLink = GetAppSetting("BackLink", false),
                 LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
-                AccountApi = GetAccount(),
-                PaymentEventsApi = new PaymentsEventsApiConfiguration
-                {
-                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", false),
-                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken", false),
-                }
             };
+
+            if (IsDevEnvironment)
+                SetApiConfiguration(configuration);
+            else
+                SetApiConfigurationTableStorage(configuration);
+
             return configuration;
         }
 
-        private AccountApiConfiguration GetAccount()
+        private void SetApiConfiguration(ApplicationConfiguration config)
         {
-            return new AccountApiConfiguration
+            config.AccountApi = new AccountApiConfiguration
             {
                 Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
                 ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
@@ -53,6 +53,18 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
                 IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
             };
+
+            config.PaymentEventsApi = new PaymentsEventsApiConfiguration
+            {
+                ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
+                ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
+            };
+        }
+
+        private void SetApiConfigurationTableStorage(ApplicationConfiguration config)
+        {
+            config.AccountApi = SetUpConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
+            config.PaymentEventsApi = SetUpConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
 
 
@@ -98,22 +110,28 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 : GetSecret(name).Result;
         }
 
-        public TConfig SetUpConfiguration<TConfigInterface, TConfig>(string serviceName) where TConfig : class, TConfigInterface
+        public TConfig SetUpConfiguration<TConfig>(string serviceName) where TConfig : class
         {
-            var environment = Environment.GetEnvironmentVariable("DASENV");
-            if (string.IsNullOrEmpty(environment))
+            try
             {
-                environment = GetAppSetting("EnvironmentName", false);
+                var environment = Environment.GetEnvironmentVariable("DASENV");
+                if (string.IsNullOrEmpty(environment))
+                {
+                    environment = GetAppSetting("EnvironmentName", false);
+                }
+
+                var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
+                var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
+                var configurationService = new ConfigurationService(configurationRepository,
+                    new ConfigurationOptions(serviceName, environment, "1.0"));
+
+                var result = configurationService.Get<TConfig>();
+                return result;
             }
-
-            var storageConnectionString = GetAppSetting("ConfigurationStorageConnectionString", true);
-            var configurationRepository = new AzureTableStorageConfigurationRepository(storageConnectionString);
-            var configurationService = new ConfigurationService(configurationRepository,
-                new ConfigurationOptions(serviceName, environment, "1.0"));
-
-            var result = configurationService.Get<TConfig>();
-            ForSingletonOf<TConfigInterface>().Use(result);
-            return result;
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error getting config of type {typeof(TConfig).FullName} for service '{serviceName}' from table storage configuration api.", ex);
+            }
         }
     }
 }
