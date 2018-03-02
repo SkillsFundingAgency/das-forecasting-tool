@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SFA.DAS.Forecasting.PreLoad.Functions": {
+      "commandName": "Project",
+      "commandLineArgs": "host start"
+    }
+  }
+}

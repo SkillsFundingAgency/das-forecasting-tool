@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -8,17 +7,17 @@ using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 
-namespace SFA.DAS.Forecasting.Levy.Functions
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class LevyDeclarationPreLoadHttpFunction : IFunction
     {
         [FunctionName("LevyDeclarationPreLoadHttpFunction")]
-        [return: Queue(QueueNames.ValidateDeclaration)]
         public static async Task Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
+            [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
             ExecutionContext executionContext,
             TraceWriter writer)
         {
@@ -48,17 +47,8 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                        outputQueueMessage.Add(model);
                    }
 
-                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateDeclaration} queue.");
+                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
                });
         }
-    }
-
-    internal class PreLoadRequest
-    {
-        public IEnumerable<string> EmployerAccountIds { get; set; }
-
-        public string PeriodYear { get; set; }
-
-        public short? PeriodMonth { get; set; }
     }
 }

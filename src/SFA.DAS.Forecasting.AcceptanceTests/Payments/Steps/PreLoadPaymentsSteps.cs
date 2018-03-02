@@ -34,7 +34,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             StartFunction("SFA.DAS.Forecasting.Payments.Functions");
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
-            
+            StartFunction("SFA.DAS.Forecasting.PreLoad.Functions");
+
             Thread.Sleep(1000);
         }
 

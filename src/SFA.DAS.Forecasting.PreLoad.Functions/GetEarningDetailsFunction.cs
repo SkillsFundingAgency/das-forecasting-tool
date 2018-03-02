@@ -9,7 +9,7 @@ using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class GetEarningDetailsFunction : IFunction
     {
