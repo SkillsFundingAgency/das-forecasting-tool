@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions.Models
 {
-    internal class PreLoadRequest
+    public class PreLoadRequest
     {
         public IEnumerable<string> EmployerAccountIds { get; set; }
 
