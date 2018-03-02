@@ -24,6 +24,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Projections.Functions");
+            //_apiHost = new ApiHost();
         }
 
         [Given(@"the following levy declarations have been recorded")]

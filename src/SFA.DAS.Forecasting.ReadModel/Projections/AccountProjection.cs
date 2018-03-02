@@ -16,5 +16,7 @@ namespace SFA.DAS.Forecasting.ReadModel.Projections
         public decimal CompletionPayments { get; set; }
         public decimal FutureFunds { get; set; }
         public List<long> Commitments { get; set; } = new List<long>();
+        public decimal CoInvestmentEmployer { get; set; }
+        public decimal CoInvestmentGovernment { get; set; }
     }
 }

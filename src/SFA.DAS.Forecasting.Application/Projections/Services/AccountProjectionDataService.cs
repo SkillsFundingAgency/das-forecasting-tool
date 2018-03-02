@@ -39,7 +39,9 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                            @fundsIn,
                            @totalCostOfTraining,
                            @completionPayments,
-                           @futureFunds)";
+                           @futureFunds,
+                           @coInvestmentEmployer,
+                           @coInvestmentGovernment)";
 
                     foreach (var accountProjectionReadModel in accountProjections)
                     {
@@ -53,6 +55,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                         parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
                         parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
                         parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
+                        parameters.Add("@coInvestmentEmployer", accountProjectionReadModel.CoInvestmentEmployer, DbType.Decimal);
+                        parameters.Add("@coInvestmentGovernment", accountProjectionReadModel.CoInvestmentGovernment, DbType.Decimal);
                         await cnn.ExecuteAsync(sql, parameters, commandType: CommandType.Text);
                     }
 

@@ -1156,11 +1156,11 @@ table th {
   font-weight: 700;
 }
 
-table th.numeric {
+table th.financial {
   text-align: right;
 }
 
-table td.numeric {
+table td.financial {
   font-family: "ntatabularnumbers", "nta", Arial, sans-serif;
   font-weight: 400;
   text-transform: none;
@@ -4304,6 +4304,15 @@ h2 .float-right {
     position: absolute;
     max-width: 290px;
   }
+}
+
+/*coinvestment table*/
+#balancesheet .co-invest-head {
+  text-align: center;
+}
+
+#balancesheet .grey-bg {
+  background: #dee0e2;
 }
 
 .chart-container {
