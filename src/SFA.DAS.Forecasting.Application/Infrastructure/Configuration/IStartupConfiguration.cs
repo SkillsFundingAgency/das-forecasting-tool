@@ -7,6 +7,6 @@
 		string DatabaseConnectionString { get; set; }
 		string Hashstring { get; set; }
 		IdentityServerConfiguration Identity { get; set; }
-		string ServiceBusConnectionString { get; set; }
+		//string ServiceBusConnectionString { get; set; }
 	}
 }
