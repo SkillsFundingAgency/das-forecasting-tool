@@ -15,10 +15,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         [FunctionName("PaymentEventValidatorFunction")]
         [return:Queue(QueueNames.PaymentProcessor)]
         public static PaymentCreatedMessage Run(
-            [QueueTrigger(QueueNames.PaymentValidator)]PaymentCreatedMessage paymentCreatedMessage, 
+            [QueueTrigger(QueueNames.PaymentValidator)]PaymentCreatedMessage paymentCreatedMessage,
+            ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer, (container, logger) =>
+            return FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer, executionContext, (container, logger) =>
                 {
                     var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
                         .Validate(paymentCreatedMessage);

@@ -42,15 +42,29 @@
                     <li>Funds in</li>
                     <li>Cost of training</li>
                     <li>Completion payments</li>
+                    <li>Your contribution</li>
+                    <li>Government contribution</li>
                     <li>Future funds</li>
                 </ul>
             </details>
         </div>
     </div>
 
+    <!-- CHART -->
     <div class="column-full">
-        <h4 class="heading-large">Your account projection</h4>
+        <div class="chart-container">
+            <div class="chart-data"
+                 data-dates="@Model.DatesStringArray"
+                 data-values="@Model.BalanceStringArray">
 
+            </div>
+            <h4 class="heading-large">Funding Projection Chart</h4>
+            <p>Account funds over time</p>
+            <div id="chart"></div>
+        </div>
+
+        <!-- Projection -->
+        <h4 class="heading-large">Your account projection</h4>
         <div class="grid-row" style="margin-bottom: 30px;">
             <div class="column-two-thirds">
                 <p>A month by month projection of your account balance.</p>
@@ -97,23 +111,54 @@
         <table class="small" id="balancesheet">
             <thead>
                 <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
+                    <th></th>
+                </tr>
+                <tr>
                     <th class="nowrap">Date</th>
                     <th class="financial">Funds in</th>
                     <th class="financial">Cost of training</th>
                     <th class="financial">Completion payments</th>
+                    <th class="financial grey-bg">Your contribution</th>
+                    <th class="financial grey-bg">Government contribution</th>
                     <th class="financial">Future funds</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model.BalanceItemViewModels)
                 {
-                    <tr>
-                        <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                        <td class="financial">@item.LevyCredit.FormatCost()</td>
-                        <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                        <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                        <td class="financial">@item.Balance.FormatCost()</td>
-                    </tr>
+                <tr>
+                    <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                    <td class="financial">@item.LevyCredit.FormatCost()</td>
+                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                    <td class="financial grey-bg">
+                        @if (item.CoInvestmentEmployer == 0)
+                        {
+                            <span>–</span>
+                        }
+                        else
+                        {
+                            <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                        }
+                    </td>
+                    <td class="financial grey-bg">
+                        @if (item.CoInvestmentGovernment == 0)
+                        {
+                            <span>–</span>
+                        }
+                        else
+                        {
+                            <span>@item.CoInvestmentGovernment.FormatCost()</span>
+                        }
+                    </td>
+                    <td class="financial">@item.Balance.FormatCost()</td>
+
+                </tr>
                 }
             </tbody>
         </table>
@@ -130,7 +175,6 @@
     </div>
 
 </div>
-
 
 @section breadcrumb {
     @if (!string.IsNullOrEmpty(Model.BackLink))

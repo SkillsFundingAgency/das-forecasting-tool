@@ -172,3 +172,33 @@ only screen and (max-width: 480px) {
 }
 
 // END Funding projection
+
+/*coinvestment table*/
+#balancesheet {
+    .co-invest-head {
+        text-align: center;
+    }
+    .grey-bg {
+        background: $panel-colour;
+    }
+}
+// Funding Projection Chart
+
+.chart-container {
+    display: none;
+}
+
+path.c3-line {
+    stroke-width: 4px;
+    stroke: #005ea5;
+}
+
+.c3-axis-y .tick {
+    display: none;
+}
+
+.c3-axis-y-label {
+    font-size: 20px;
+}
+
+// END Funding Projection Chart

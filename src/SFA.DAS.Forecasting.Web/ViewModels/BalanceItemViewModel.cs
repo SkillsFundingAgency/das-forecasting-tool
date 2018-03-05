@@ -15,5 +15,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public decimal ExpiredFunds { get; set; }
 
         public decimal Balance { get; set; }
+
+        public decimal CoInvestmentEmployer { get; set; }
+
+        public decimal CoInvestmentGovernment { get; set; }
     }
 }

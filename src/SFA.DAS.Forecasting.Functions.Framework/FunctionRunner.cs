@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Configuration;
+using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
@@ -11,7 +15,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
 {
     public class FunctionRunner
     {
-        public static async Task Run<TFunction>(TraceWriter writer, Func<IContainer, ILog, Task> runAction) where TFunction : IFunction
+        public static async Task Run<TFunction>(TraceWriter writer, ExecutionContext executionContext, Func<IContainer, ILog, Task> runAction) where TFunction : IFunction
         {
             ILog logger = null;
             try
@@ -19,7 +23,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(writer, container);
+                    ConfigureContainer(executionContext, writer, container);
                     logger = container.GetInstance<ILog>();
                     await runAction(nestedContainer, logger);
                 }
@@ -35,7 +39,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
         }
 
-        public static void Run<TFunction>(TraceWriter writer, Action<IContainer, ILog> runAction) where TFunction : IFunction
+        public static void Run<TFunction>(TraceWriter writer, ExecutionContext executionContext, Action<IContainer, ILog> runAction) where TFunction : IFunction
         {
             ILog logger = null;
             try
@@ -43,7 +47,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(writer, container);
+                    ConfigureContainer(executionContext, writer, container);
                     logger = container.GetInstance<ILog>();
                     runAction(nestedContainer, logger);
                 }
@@ -58,14 +62,14 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
         }
 
-        public static TReturn Run<TFunction, TReturn>(TraceWriter writer, Func<IContainer, ILog, TReturn> runAction) where TFunction : IFunction
+        public static TReturn Run<TFunction, TReturn>(TraceWriter writer, ExecutionContext executionContext, Func<IContainer, ILog, TReturn> runAction) where TFunction : IFunction
         {
             try
             {
                 var container = ContainerBootstrapper.Bootstrap();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    container.Configure(c => c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType)));
+                    ConfigureContainer(executionContext, writer, container);
                     return runAction(nestedContainer, container.GetInstance<ILog>());
                 }
             }
@@ -76,7 +80,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
         }
 
-        public static async Task<TReturn> Run<TFunction, TReturn>(TraceWriter writer, Func<IContainer, ILog, Task<TReturn>> runAction) where TFunction : IFunction
+        public static async Task<TReturn> Run<TFunction, TReturn>(TraceWriter writer, ExecutionContext executionContext, Func<IContainer, ILog, Task<TReturn>> runAction) where TFunction : IFunction
         {
             ILog logger = null;
             try
@@ -84,7 +88,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(writer, container);
+                    ConfigureContainer(executionContext, writer, container);
                     logger = container.GetInstance<ILog>();
                     return await runAction(nestedContainer, container.GetInstance<ILog>());
                 }
@@ -99,11 +103,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
         }
 
-        private static void ConfigureContainer(TraceWriter writer, IContainer container)
+        private static void ConfigureContainer(ExecutionContext executionContext, TraceWriter writer, IContainer container)
         {
             container.Configure(c =>
             {
-                c.For<ILog>().Use(x => LoggerSetup.Create(writer, x.ParentType));
+                c.For<ILog>().Use(x => LoggerSetup.Create(executionContext.FunctionAppDirectory, writer, x.ParentType));
             });
         }
     }

@@ -9,5 +9,7 @@
     [FundsIn] DECIMAL NOT NULL,
     [TotalCostOfTraining] DECIMAL NOT NULL,
     [CompletionPayments] DECIMAL NOT NULL,
-    [FutureFunds] DECIMAL NOT NULL
+    [FutureFunds] DECIMAL NOT NULL,
+	[CoInvestmentEmployer] DECIMAL NOT NULL default(0),
+	[CoInvestmentGovernment] DECIMAL NOT NULL default(0)
 )

@@ -53,6 +53,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var commitments = totalCostOfTraning.Item2;
             commitments.AddRange(completionPayments.Item2);
             commitments = commitments.Distinct().ToList();
+            var balance = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1;
             var projection = new AccountProjectionReadModel
             {
                 FundsIn = _account.LevyDeclared,
@@ -61,7 +62,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 Year = (short)period.Year,
                 TotalCostOfTraining = totalCostOfTraning.Item1,
                 CompletionPayments = completionPayments.Item1,
-                FutureFunds = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1,
+                CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
+                CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
+                FutureFunds = balance < 0 ? 0m : balance,
                 ProjectionCreationDate = DateTime.UtcNow,
                 ProjectionGenerationType = projectionGenerationType,
                 Commitments = commitments
