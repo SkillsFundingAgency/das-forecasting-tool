@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         public void WhenTheAccountProjectionIsDisplayed()
         {
             var page = Get<FundingProjectionPage>();
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
             Assert.IsTrue(page.AccountProjectionHeader.Displayed, "ERROR:The account projection header is not visible");
             Assert.IsTrue(page.AccountProjectionTable.Displayed, "ERROR:The account projection table is not visible");
         }

@@ -88,81 +88,107 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
                         "Date",
                         "Funds in",
-                        "Cost Of Training",
-                        "Completion Payments",
-                        "Future Funds"});
+                        "Cost of training",
+                        "Completion payments",
+                        "Your contribution",
+                        "Government contribution",
+                        "Future funds"});
             table1.AddRow(new string[] {
                         "Mar 18",
                         "1000",
                         "1590",
                         "49900",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Apr 18",
                         "1000",
                         "880",
                         "32200",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Jun 18",
                         "1000",
                         "1800",
                         "10000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Jul 18",
                         "1000",
                         "2350",
                         "50000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Aug 18",
                         "1000",
                         "850",
                         "45000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Sep 18",
                         "1000",
                         "700",
                         "37880",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Nov 18",
                         "1000",
                         "1800",
                         "45000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Dec 18",
                         "1000",
                         "1400",
                         "10000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Jan 19",
                         "1000",
                         "2000",
                         "10000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Feb 19",
                         "1000",
                         "1800",
                         "10000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Mar 19",
                         "1000",
                         "1800",
                         "45000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
             table1.AddRow(new string[] {
                         "Apr 19",
                         "1000",
                         "2100",
                         "10000",
-                        "1000"});
+                        "1000",
+                        "1339",
+                        "12000"});
 #line 11
      testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
 #line 26
