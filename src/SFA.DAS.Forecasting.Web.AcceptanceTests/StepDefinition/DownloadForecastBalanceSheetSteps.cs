@@ -113,7 +113,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                     parameters.Add("@month", GetMonth(accountProjectionReadModel.Date), DbType.Int16);
                     parameters.Add("@year", accountProjectionReadModel.Date.Substring(4).Trim(), DbType.Int32);
                     parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
-                    parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
+                    parameters.Add("@totalCostOfTraining", accountProjectionReadModel.CostOfTraining, DbType.Decimal);
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
                     parameters.Add("@Yourcontribution", accountProjectionReadModel.FutureFunds, DbType.Decimal);
                     parameters.Add("@Governmentcontribution", accountProjectionReadModel.FutureFunds, DbType.Decimal);
@@ -167,10 +167,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             public string Date { get; set; }
             public string FundsIn { get; set; }
-            public decimal TotalCostOfTraining { get; set; }
+            public decimal CostOfTraining { get; set; }
             public decimal CompletionPayments { get; set; }
-            public decimal Yourcontribution { get; set; }
-            public decimal Governmentcontribution { get; set; }
+            public decimal YourContribution { get; set; }
+            public decimal GovernmentContribution { get; set; }
             public decimal FutureFunds { get; set; }
         }
     }

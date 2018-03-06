@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public string[] GetAccountProjectionHeaders()
         {
-            var headersElements = Driver.FindElements(By.CssSelector("#balancesheet thead th"));
+            var headersElements = Driver.FindElements(By.CssSelector("#balancesheet thead tr:last-child th"));
             return headersElements
                 .Select((element) => element.Text)
                 .ToArray();

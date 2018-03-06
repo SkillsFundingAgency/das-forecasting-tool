@@ -32,16 +32,20 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             "Funds in",
             "Cost of training",
             "Completion payments",
+            "Your contribution",
+            "Government contribution",
             "Future funds"
         };
 
         private Dictionary<string, Func<string, string>> dataMappers = new Dictionary<string, Func<string, string>>
         {
-            {  "Date",  value => value },
+            { "Date",  value => value },
             { "FundsIn",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
             { "CostOfTraining",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
             { "CompletionPayments",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
-            { "FutureFunds",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) }
+            { "FutureFunds",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
+            { "YourContribution",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
+            { "GovernmentContribution",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) }
         };
 
 
