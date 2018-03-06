@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests
 {
@@ -29,7 +30,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 case "next year":
                     return DateTime.Today.AddYears(1);
                 default:
-                    return DateTime.Parse(value);
+                    return DateTime.ParseExact(value, new [] { "dd/MM/yyyy", "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm" }, new CultureInfo("en-GB"), DateTimeStyles.AllowWhiteSpaces);
             }
         }
     }
