@@ -32,11 +32,8 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public IWebDriver getDriver()
         {
-
             return WebBrowserDriver;
         }
-
-
 
         public T NavigateTo<T>() where T : ForecastingPage, new()
         {
@@ -44,14 +41,19 @@ namespace SFA.DAS.Forecasting.Web.Automation
             return page;
         }
 
-        public void Authenticate(string employerHash)
-        {
-            //TODO: probably login via finance dashbaord or manually add auth cookie
-            EmployerHash = employerHash ?? throw new ArgumentNullException(nameof(employerHash));
-            BaseUrl = BaseUrl.Combine(employerHash);
-        }
+		public void Authenticate(string employerHash)
+		{
+			//TODO: probably login via finance dashbaord or manually add auth cookie
+			EmployerHash = employerHash ?? throw new ArgumentNullException(nameof(employerHash));
+			AddEmployerHashToUrl(employerHash);
+		}
 
-        public void Close()
+	    public void AddEmployerHashToUrl(string employerHash)
+	    {
+		    BaseUrl = BaseUrl.Combine(employerHash);
+	    }
+
+		public void Close()
         {
             WebBrowserDriver.Quit();
         }

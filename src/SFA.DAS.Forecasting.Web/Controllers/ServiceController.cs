@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
-
+using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
@@ -8,11 +9,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     [ForecastingRoutePrefix("Service")]
     public class ServiceController : Controller
     {
-        [Route("signout")]
+	    public readonly IOwinWrapper OwinWrapper;
+
+		public ServiceController(IOwinWrapper owinWrapper)
+		{
+			OwinWrapper = owinWrapper;
+		}
+
+		[Route("signout")]
         public ActionResult SignOut()
         {
-            throw new NotImplementedException();
-        }
+			return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service", "signout", true));
+		}
 
         [Authorize]
         [HttpGet]

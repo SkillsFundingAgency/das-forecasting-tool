@@ -38,7 +38,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [When(@"I select download as csv")]
         public void WhenISelectDownloadAsCsv()
         {
-           
             var page = Get<FundingProjectionPage>();
             page.DownloadCSVButton.Click();
         }

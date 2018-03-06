@@ -14,18 +14,22 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
             //TODO: replace with employer credentials
             EmployerHash = "MDDP87";
             Console.WriteLine("Employer hash: MDDP87");
-
-           
         }
 
-        [Given(@"I have logged into my Apprenticeship Account")]
-        public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
-        {
-            //ScenarioContext.Current.Pending();
-            WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
-        }
+		[Given(@"I have logged into my Apprenticeship Account")]
+		public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
+		{
+			//ScenarioContext.Current.Pending();
+			WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
+		}
 
-        [When(@"I navigate to the Landing page of the Forecasting dashboard")]
+	    [Given(@"I am not logged into my Apprenticeship Account")]
+	    public void GivenIAmNotLoggedIntoMyApprenticeshipAccount()
+	    {
+		    WebSite.AddEmployerHashToUrl(EmployerHash);
+	    }
+
+		[When(@"I navigate to the Landing page of the Forecasting dashboard")]
         public void WhenINavigateToTheLandingPageOfTheForecastingPortal()
         {
             var dashboard = WebSite.NavigateToDashboard();
