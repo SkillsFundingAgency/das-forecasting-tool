@@ -1,13 +1,13 @@
 ﻿using System;
 using Dapper;
-using SFA.DAS.Forecasting.AcceptanceTests.EmployerApiStub;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -17,37 +17,42 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     {
         private const string FeatureName= "PreLoadLevyEvents";
 
-        //private static ApiHost _iHost;
-        
-        private static IEnumerable<long> _accountIds = new List<long> { 497, 498, 499 };
+        private static long _accountId = 497;
 
         [Scope(Feature = FeatureName)]
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-            //_apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+            StartFunction("SFA.DAS.Forecasting.PreLoad.Functions");
             Thread.Sleep(1000);
         }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public async Task BeforeScenario()
         {
             ClearDatabase();
+            var employerAccountId = "MJK9XV";
+            var levyUrl =
+                Config.ApiInsertLevyUrl.Replace("{employerAccountId}", employerAccountId);
+
+            var client = new HttpClient();
+            var levy = JsonConvert.SerializeObject(GetLevy(employerAccountId));
+            await client.PostAsync(levyUrl, new StringContent(levy));
             Thread.Sleep(500);
         }
 
         [AfterScenario]
         public void AfterScenario()
         {
-            //ClearDatabase();
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
         }
 
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
         public async Task ITriggerFunction()
         {
-            var item = "{\"EmployerAccountIds\":[\"MJK9XV\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
+            var item = "{\"EmployerAccountIds\":[\"MJK9XV\",\"MGXLRV\",\"MPN4YM\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":2}";
             Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
             var client = new HttpClient();
             await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
@@ -62,30 +67,57 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there will be (.*) records in the storage")]
         public void ThereWillBeThreeRecordsInTheStorage(int expectedCount)
         {
+            var count = 0;
             WaitForIt(() =>
             {
-                foreach (var accountId in _accountIds)
-                {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where EmployerAccountId = @employerAccountId"
-                         , param: parameters, commandType: CommandType.Text);
-                    return count == 1;
-                }
-                return false;
-            }, "Failed to find all the levy declarations.");
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+                count = Connection.ExecuteScalar<int>("Select Count(*) from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
+                return count == 1;
+            }, $"Failed to find all the levy declarations. Found {count} for {_accountId}");
         }
 
         private void ClearDatabase()
         {
-            foreach (var accountId in _accountIds)
+            var parameters = new DynamicParameters();
+            parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+            var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
+                    , param: parameters, commandType: CommandType.Text);
+        }
+
+        private static List<LevyDeclarationViewModel> GetLevy(string accountId)
+        {
+            return new List<LevyDeclarationViewModel>
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
-                     , param: parameters, commandType: CommandType.Text);
-                
-            }
+                new LevyDeclarationViewModel
+                {
+                    HashedAccountId = accountId,
+                    PayrollYear = "18-19",
+                    PayrollMonth = 1,
+                    CreatedDate = DateTime.UtcNow,
+                    PayeSchemeReference = "World",
+                    TotalAmount = 200
+                },
+                new LevyDeclarationViewModel
+                {
+                    HashedAccountId = accountId,
+                    PayrollYear = "18-19",
+                    PayrollMonth = 2,
+                    CreatedDate = DateTime.UtcNow,
+                    PayeSchemeReference = "World",
+                    TotalAmount = 300
+                },
+                new LevyDeclarationViewModel
+                {
+                    HashedAccountId = accountId,
+                    PayrollYear = "17-18",
+                    PayrollMonth = 12,
+                    CreatedDate = DateTime.UtcNow,
+                    PayeSchemeReference = "World",
+                    TotalAmount = 300
+                }
+            };
         }
     }
 }

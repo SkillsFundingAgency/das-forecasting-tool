@@ -10,7 +10,7 @@ using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class PaymentPreLoadHttpFunction : IFunction
     {

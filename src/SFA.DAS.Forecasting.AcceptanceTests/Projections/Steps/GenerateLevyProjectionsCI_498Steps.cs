@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Dapper;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Projections.Functions");
-            //_apiHost = new ApiHost();
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
         [Given(@"the following levy declarations have been recorded")]
@@ -45,12 +46,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         }
 
         [Given(@"the current balance is (.*)")]
-        public void GivenTheCurrentBalanceIs(decimal balance)
+        public async Task GivenTheCurrentBalanceIs(decimal balance)
         {
             Balance = balance;
             DeleteBalance();
-            EmployerApiStub.SimpleApiModule.AccountBalance = balance;
-            //InsertNewBalance(balance);
+
+            var client = new HttpClient();
+            await client.PostAsync(Config.ApiInsertBalanceUrl, new StringContent(balance.ToString()));
         }
 
         [When(@"the account projection is triggered after levy has been declared")]

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -7,7 +9,7 @@ using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class GetEarningDetailsFunction : IFunction
     {
@@ -31,6 +33,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
 
                     var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
                     var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, hashedAccountId);
+
+                    logger.Info($"Found {earningDetails.Count()} for Account: {hashedAccountId}");
 
                     foreach (var item in earningDetails)
                     {
