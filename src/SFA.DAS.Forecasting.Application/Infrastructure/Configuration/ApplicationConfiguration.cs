@@ -15,5 +15,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string EmployerConnectionString { get; set; }
         public AccountApiConfiguration AccountApi { get; set; }
         public PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
+        public string StubEmployerPaymentTable { get; set; }
     }
 }

@@ -2,12 +2,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 
-namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class GetEmployerPaymentFunction : IFunction
     {
@@ -29,6 +30,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
 
                    var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
 
+                   var paymentsJson = JsonConvert.SerializeObject(payments); 
                    if (payments == null || !payments.Any())
                    {
                        logger.Info($"No data found for {message.EmployerAccountId}");

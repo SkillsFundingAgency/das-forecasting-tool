@@ -72,12 +72,6 @@
     <Reference Include="Nancy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.2.0.0-clinteastwood\lib\net452\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Authentication.Forms, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.Authentication.Forms.2.0.0-clinteastwood\lib\net452\Nancy.Authentication.Forms.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.Hosting.Self.2.0.0-clinteastwood\lib\net452\Nancy.Hosting.Self.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -131,9 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
-    <Compile Include="EmployerApiStub\Models\PageOfResults.cs" />
-    <Compile Include="EmployerApiStub\ProviderEventApiModule.cs" />
-    <Compile Include="EmployerApiStub\ProviderEventTestData.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Levy\Feature\Build Projections From Levy Declarations.feature.cs">
       <AutoGen>True</AutoGen>
@@ -148,7 +139,6 @@
       <DependentUpon>PreLoadPayments.feature</DependentUpon>
     </Compile>
     <Compile Include="Payments\Steps\PreLoadPaymentsSteps.cs" />
-    <Compile Include="EmployerApiStub\NancyBootstrapper.cs" />
     <Compile Include="Projections\Feature\Calculate co-investment amounts.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -168,15 +158,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PreLoadLevyEvents.feature</DependentUpon>
     </Compile>
-    <Compile Include="EmployerApiStub\LevyDeclarationViewModel.cs" />
     <Compile Include="Levy\Feature\ProcessLevyEvent.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
     </Compile>
     <Compile Include="Levy\Steps\PreLoadLevyEventsSteps.cs" />
-    <Compile Include="EmployerApiStub\SimpleApiModule.cs" />
-    <Compile Include="EmployerApiStub\TestData.cs" />
     <Compile Include="Levy\LevySubmission.cs" />
     <Compile Include="Payments\Feature\Process Payment Event.feature.cs">
       <AutoGen>True</AutoGen>
@@ -201,6 +188,7 @@
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StepsBase.cs" />
+    <Compile Include="TableStorageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

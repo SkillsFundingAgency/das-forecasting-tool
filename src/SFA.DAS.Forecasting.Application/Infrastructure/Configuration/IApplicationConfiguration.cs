@@ -15,5 +15,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         string EmployerConnectionString { get; set; }
         AccountApiConfiguration AccountApi { get; set; }
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
+        string StubEmployerPaymentTable { get; set; }
     }
 }

@@ -114,6 +114,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             Console.WriteLine($"Starting the function cli. Path: {FunctionsCliPath}");
             var appPath = GetAppPath(functionName);
             Console.WriteLine($"Function path: {appPath}");
+            if (!Directory.Exists(appPath))
+            {
+                throw new Exception($"Function path: {appPath} path does not exist");
+            }
+
             var process = new Process
             {
                 StartInfo =

@@ -33,6 +33,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 SecondsToWaitToAllowProjections = int.Parse(GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
                 BackLink = GetAppSetting("BackLink", false),
                 LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
+                StubEmployerPaymentTable = GetAppSetting("Stub-EmployerPaymentTable", false),
+                PaymentEventsApi = new PaymentsEventsApiConfiguration
+                {
+                    ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", false),
+                    ClientToken = GetAppSetting("PaymentsEvent-ClientToken", false),
+                }
             };
 
             if (IsDevEnvironment)

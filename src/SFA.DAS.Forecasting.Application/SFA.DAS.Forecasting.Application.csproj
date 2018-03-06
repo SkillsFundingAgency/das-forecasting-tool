@@ -203,6 +203,7 @@
     <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
     <Compile Include="Projections\Services\AccountProjectionReadModelDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Services\EmployerTableStorageService.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />
     <Compile Include="Shared\Queues\QueueService.cs" />
     <Compile Include="Shared\Services\PaymentApiDataService.cs" />

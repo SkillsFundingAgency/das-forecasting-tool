@@ -14,6 +14,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Projections.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
         [Then(@"the training costs should be included in the correct months")]
