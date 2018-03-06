@@ -74,7 +74,6 @@ sfa.navigation = {
     init: function () {
         this.setupMenus(this.elems.userNav);
         this.setupEvents(this.elems.userNav);
-        return 1
     },
     setupMenus: function (menu) {
         menu.find('ul').addClass("js-hidden").attr("aria-hidden", "true");
