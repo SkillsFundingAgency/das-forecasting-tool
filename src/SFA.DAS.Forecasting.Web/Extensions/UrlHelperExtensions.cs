@@ -23,8 +23,6 @@ namespace SFA.DAS.Forecasting.Web.Extensions
 
         private static string GetBaseUrl()
         {
-            return "";
-            // ToDo: Use cloud settings? CloudConfigurationManager.GetSetting("MyaBaseUrl")
             return ConfigurationManager.AppSettings["MyaBaseUrl"].EndsWith("/")
                 ? ConfigurationManager.AppSettings["MyaBaseUrl"]
                 : ConfigurationManager.AppSettings["MyaBaseUrl"] + "/";

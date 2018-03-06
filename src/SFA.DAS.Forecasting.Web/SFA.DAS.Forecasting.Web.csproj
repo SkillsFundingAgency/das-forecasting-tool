@@ -323,7 +323,9 @@
     <Content Include="Content\dist\govuk-template-ie8.css" />
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
+    <Content Include="Content\dist\js\jquery-1.10.2.min.js" />
     <Content Include="Content\dist\js\screen.js" />
+    <Content Include="Content\dist\js\stacker.js" />
     <Content Include="Content\Gruntfile.js" />
     <Content Include="Content\dist\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\dist\images\apple-touch-icon-152x152.png" />

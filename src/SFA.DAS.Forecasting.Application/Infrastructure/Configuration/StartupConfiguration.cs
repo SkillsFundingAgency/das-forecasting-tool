@@ -78,7 +78,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
                 : GetSecret(keyName).Result;
         }
 
-        public static bool IsDevEnvironment =>
+        public bool IsDevEnvironment =>
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);

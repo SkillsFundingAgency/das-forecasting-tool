@@ -14,6 +14,10 @@ namespace SFA.DAS.Forecasting.Web
 
             bundles.Add(new StyleBundle("~/css/bundles/c3").Include("~/Content/dist/c3/c3.min.css"));
 
+            bundles.Add(new ScriptBundle("~/bundles/libs")
+                .Include("~/Content/dist/js/jquery-1.10.2.min.js")
+                .Include("~/Content/dist/js/stacker.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/c3")
                 .Include("~/Content/dist/c3/d3.min.js")
                 .Include("~/Content/dist/c3/c3.min.js"));

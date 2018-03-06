@@ -70,7 +70,7 @@ namespace SFA.DAS.Forecasting.Web
                 UserInfoEndpoint = constants.UserInfoEndpoint(),
                 AuthorizeEndpoint = constants.AuthorizeEndpoint(),
                 TokenValidationMethod = _config.Identity.UseCertificate ? TokenValidationMethod.SigningKey : TokenValidationMethod.BinarySecret,
-                TokenSigningCertificateLoader = GetSigningCertificate(_config.Identity.UseCertificate),
+                TokenSigningCertificateLoader = GetSigningCertificate(_config.Identity.UseCertificate, _config.IsDevEnvironment),
                 AuthenticatedCallback = identity =>
                 {
                     PostAuthentiationAction(identity, logger, constants);
@@ -80,7 +80,7 @@ namespace SFA.DAS.Forecasting.Web
             ConfigurationFactory.Current = new IdentityServerConfigurationFactory(_config);
         }
 
-        private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate)
+        private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate, bool isDevEnvironement)
         {
             if (!useCertificate)
             {
@@ -89,7 +89,8 @@ namespace SFA.DAS.Forecasting.Web
 
             return () =>
             {
-                var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+                var storeLocation = isDevEnvironement ? StoreLocation.LocalMachine : StoreLocation.CurrentUser;
+                var store = new X509Store(StoreName.My, storeLocation);
                 store.Open(OpenFlags.ReadOnly);
                 try
                 {
