@@ -23,6 +23,11 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
             var body = await req.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<IEnumerable<LevyDeclarationViewModel>>(body);
 
+            if (StubDataStore.LevyData.ContainsKey(accountId))
+            {
+                StubDataStore.LevyData.Remove(accountId);
+            }
+
             StubDataStore.LevyData.Add(accountId, data);
 
             return new HttpResponseMessage(HttpStatusCode.OK)

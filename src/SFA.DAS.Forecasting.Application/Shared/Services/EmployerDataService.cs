@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             if (res == null)
             {
-                _logger.Debug($"Account API client returned null for GetLevyDeclarations");
+                _logger.Debug($"Account API client returned null for GetLevyDeclarations for account {employerId}");
                 return null;
             }
 

@@ -10,6 +10,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using SFA.DAS.EAS.Account.Api.Types;
+using System.Linq;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -17,8 +18,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     [Binding]
     public class PreLoadLevyEventsSteps : StepsBase
     {
-        private static long _accountId = 12345;
-        //private static long _accountId = 497;
+        private string _hashedEmployerAccountId = "MJK9XV";
 
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
@@ -33,12 +33,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public async Task BeforeScenario()
         {
             ClearDatabase();
-            var employerAccountId = "MJK9XV";
             var levyUrl =
-                Config.ApiInsertLevyUrl.Replace("{employerAccountId}", employerAccountId);
+                Config.ApiInsertLevyUrl.Replace("{employerAccountId}", _hashedEmployerAccountId);
 
             var client = new HttpClient();
-            var levy = JsonConvert.SerializeObject(GetLevy(employerAccountId));
+            var levy = JsonConvert.SerializeObject(GetLevy(_hashedEmployerAccountId));
             await client.PostAsync(levyUrl, new StringContent(levy));
             Thread.Sleep(500);
         }
@@ -51,8 +50,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
         public async Task ITriggerFunction()
-        {
-            var item = "{\"EmployerAccountIds\":[" + _accountId + "],\"PeriodYear\":\"18-19\",\"PeriodMonth\":1}";
+        {           
+            var item = "{\"EmployerAccountIds\":[\"" + _hashedEmployerAccountId + "\"],\"PeriodYear\":\"18-19\",\"PeriodMonth\":2}";
             Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
             var client = new HttpClient();
             await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
@@ -74,29 +73,68 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Thread.Sleep(1000);
         }
 
-        [Then(@"there will be (.*) records in the storage")]
-        public void ThereWillBeThreeRecordsInTheStorage(int expectedCount)
+        [Then(@"there will be a record in the storage for employer (.*)")]
+        public void ThereWillBeThreeRecordsInTheStorage(long employerId)
+        {
+            LevyDeclaration declaration = null;
+            
+            WaitForIt(() => 
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", employerId, DbType.Int64);
+
+                var declarations = Connection.Query<LevyDeclaration>("select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
+
+                declaration = declarations.FirstOrDefault();
+
+                return declaration != null;
+
+            });
+
+            declaration.Should().NotBeNull();
+
+            declaration.PayrollYear.Should().EndWith("18-19");
+            declaration.LevyAmountDeclared.Should().Be(300);
+            declaration.TransactionDate.Should().BeCloseTo(DateTime.Now, precision: 60 * 1000);
+        }
+
+
+        [Then(@"there will be (.*) records in the storage for employer (.*)")]
+        public void ThereWillBeSomeRecordsInTheStorageForEmployer(int expectedCount, long employerId)
         {
             var count = 0;
+
             WaitForIt(() =>
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+                parameters.Add("@employerAccountId", employerId, DbType.Int64);
 
                 count = Connection.ExecuteScalar<int>("select Count(*) from LevyDeclaration where EmployerAccountId = @employerAccountId"
                         , param: parameters, commandType: CommandType.Text);
-                return count == expectedCount;
-            }, $"Failed to find all the levy declarations. Found {count} expected {expectedCount} for {_accountId}");
-        }
 
+                return count == expectedCount;
+            }, $"Expected {expectedCount} but found {count}");
+        }
 
         [Then(@"there will be a levy declaration for the employer (.*) and no sensitive data will have been stored in the database")]
         public void ThereWillRecordInTheStorageWithNoSensitiveData(long substitutionId)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", _accountId, DbType.Int64);
-            var declaration = Connection.ExecuteScalar<LevyDeclaration>("Select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
-                 , param: parameters, commandType: CommandType.Text);
+            LevyDeclaration declaration = null;
+
+            WaitForIt(() =>
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", substitutionId, DbType.Int64);
+
+                var declarations = Connection.Query<LevyDeclaration>("select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
+
+                declaration = declarations.FirstOrDefault();
+
+                return declaration != null;
+
+            });
 
             declaration.Should().NotBeNull();
         }
@@ -104,8 +142,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         private void ClearDatabase()
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", _accountId, DbType.Int64);
-            var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId = @employerAccountId"
+            parameters.Add("@employerAccountId1", 497, DbType.Int64);
+            parameters.Add("@employerAccountId2", 12345, DbType.Int64);
+            var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId IN [@employerAccountId1, @employerAccountId2]"
                     , param: parameters, commandType: CommandType.Text);
         }
 
