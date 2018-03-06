@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -12,7 +11,7 @@ using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Levy.Functions
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class LevyDeclarationPreLoadHttpFunction : IFunction
     {
@@ -20,7 +19,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
         public static async Task<string> Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.ValidateDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
+            [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
             ExecutionContext executionContext,
             TraceWriter writer)
         {
@@ -66,7 +65,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                        outputQueueMessage.Add(model);
                    }
 
-                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateDeclaration} queue.");
+                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
 
                    if (preLoadRequest.SubstitutionId.HasValue)
                    {

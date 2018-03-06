@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.8", "func.exe");
+        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.9", "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
@@ -114,6 +114,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             Console.WriteLine($"Starting the function cli. Path: {FunctionsCliPath}");
             var appPath = GetAppPath(functionName);
             Console.WriteLine($"Function path: {appPath}");
+            if (!Directory.Exists(appPath))
+            {
+                throw new Exception($"Function path: {appPath} path does not exist");
+            }
+
             var process = new Process
             {
                 StartInfo =

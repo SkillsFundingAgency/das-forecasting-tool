@@ -11,6 +11,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         {
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
             StartFunction("SFA.DAS.Forecasting.Projections.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
         
         [Given(@"no account projections have been generated")]

@@ -215,6 +215,7 @@
     <Compile Include="FunctionRunner.cs" />
     <Compile Include="IFunction.cs" />
     <Compile Include="Infrastructure\ContainerBootstrapper.cs" />
+    <Compile Include="Infrastructure\FunctionInitialisationService.cs" />
     <Compile Include="Logging\AzureFunctionLogTarget.cs" />
     <Compile Include="Logging\LoggerSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -232,6 +233,9 @@
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Monitoring\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

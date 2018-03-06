@@ -66,7 +66,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Future funds"), "ERROR: File header titles is {0}", readCsv.First());
+            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Future funds"), "ERROR: File header titles is {0}", readCsv.First());
                         
         }
 
@@ -76,12 +76,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
             Assert.AreEqual(lineCount, 13);
-
-
-            //if (File.Exists(newFilePath))
-            //{
-            //    File.Delete(newFilePath);
-            //}
             
         }
 
@@ -107,6 +101,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                            @fundsIn,
                            @totalCostOfTraining,
                            @completionPayments,
+                           @Yourcontribution,
+                           @Governmentcontribution,
                            @futureFunds)";
 
                 foreach (var accountProjectionReadModel in accountProjections)
@@ -120,6 +116,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                     parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
                     parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
+                    parameters.Add("@Yourcontribution", accountProjectionReadModel.FutureFunds, DbType.Decimal);
+                    parameters.Add("@Governmentcontribution", accountProjectionReadModel.FutureFunds, DbType.Decimal);
                     parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
                     Connection.Execute(sql, parameters, commandType: CommandType.Text);
                 }
@@ -172,6 +170,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             public string FundsIn { get; set; }
             public decimal TotalCostOfTraining { get; set; }
             public decimal CompletionPayments { get; set; }
+            public decimal Yourcontribution { get; set; }
+            public decimal Governmentcontribution { get; set; }
             public decimal FutureFunds { get; set; }
         }
     }
