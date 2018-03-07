@@ -64,6 +64,18 @@
     },
     "secretAllowedHashstringCharacters": {
       "type": "string"
+    },
+    "clientId": {
+      "type": "string"
+    },
+    "clientSecret": {
+      "type": "string"
+    },
+    "certificateName": {
+      "type": "string"
+    },
+    "certificatePfxBase64": {
+      "type": "securestring"
     }
   },
   "variables": {
@@ -238,6 +250,18 @@
           },
           "configurationStorageConnectionString": {
             "value": "[parameters('configurationStorageConnectionString')]"
+          },
+          "clientId": {
+            "value": "[parameters('clientId')]"
+          },
+          "clientSecret": {
+            "value": "[parameters('clientSecret')]"
+          },
+          "certificateName": {
+            "value": "[parameters('certificateName')]"
+          },
+          "certificatePfxBase64": {
+            "value": "[parameters('certificatePfxBase64')]"
           }
         }
       }
