@@ -67,6 +67,9 @@
       "metadata": {
         "description": "The PKCS 12 Base64 value of the cert."
       }
+    },
+    "vstsObjectId": {
+      "type": "string"
     }
   },
   "variables": {
@@ -100,6 +103,15 @@
           "secrets": [ "Get" ]
         }
       }
+    ],
+    "VSTSServicePrincipal": [
+      {
+        "objectId": "[parameters('vstsObjectId')]",
+        "tenantId": "[subscription().tenantId]",
+        "permissions": {
+          "certificates": [ "Import" ]
+        }
+      }
     ]
   },
   "resources": [
@@ -112,7 +124,7 @@
         "enabledForDeployment": false,
         "enabledForTemplateDeployment": true,
         "enabledForDiskEncryption": false,
-        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'),variables('Microsoft.Azure.WebSites'))]",
+        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'),variables('Microsoft.Azure.WebSites'),variables('VSTSServicePrincipal'))]",
         "tenantId": "[subscription().tenantId]",
         "sku": {
           "name": "standard",
