@@ -12,7 +12,7 @@
 	[StartDate] DATETIME NOT NULL,
     [PlannedEndDate] DATETIME NOT NULL,
     [ActualEndDate] DATETIME NULL,
-    [CompletionAmount] DECIMAL NOT NULL,
-    [MonthlyInstallment] DECIMAL NOT NULL,
+    [CompletionAmount] DECIMAL(18,2) NOT NULL,
+    [MonthlyInstallment] DECIMAL(18,2) NOT NULL,
     [NumberOfInstallments] SMALLINT NOT NULL
 )

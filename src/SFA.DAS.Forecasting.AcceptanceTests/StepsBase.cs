@@ -32,11 +32,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
-	    protected List<Payment> Payments { get => Get<List<Payment>>(); set => Set(value); }
-		protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
+        protected List<Payment> Payments { get => Get<List<Payment>>(); set => Set(value); }
+        protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
-        protected List<AccountProjectionReadModel> AccountProjections  { get => Get<List<AccountProjectionReadModel>>(); set => Set(value); }
+        protected List<AccountProjectionReadModel> AccountProjections { get => Get<List<AccountProjectionReadModel>>(); set => Set(value); }
 
         protected decimal Balance
         {
@@ -46,7 +46,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected static HttpClient HttpClient = new HttpClient();
 
-		public T Get<T>(string key = null) where T : class
+        public T Get<T>(string key = null) where T : class
         {
             return key == null ? ScenarioContext.Current.Get<T>() : ScenarioContext.Current.Get<T>(key);
         }
@@ -177,7 +177,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                parameters.Add("@amount", balance, DbType.Decimal);
+                parameters.Add("@amount", balance, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
                 parameters.Add("@balancePeriod", DateTime.Today, DbType.DateTime);
                 parameters.Add("@receivedDate", DateTime.Today, DbType.DateTime);
                 Connection.Execute(@"Insert into Balance values (@employerAccountId, @amount, @balancePeriod, @receivedDate)",
@@ -203,7 +203,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     parameters.Add("@payrollYear", period.PayrollYear, DbType.String);
                     parameters.Add("@payrollMonth", period.PayrollMonth, DbType.Int16);
                     parameters.Add("@payrollDate", payrollDate, DbType.DateTime);
-                    parameters.Add("@levyAmountDeclared", levySubmission.Amount, DbType.Decimal);
+                    parameters.Add("@levyAmountDeclared", levySubmission.Amount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
                     parameters.Add("@transactionDate", levySubmission.CreatedDateValue, DbType.DateTime);
                     parameters.Add("@dateReceived", DateTime.Now, DbType.DateTime);
                     Connection.Execute(@"Insert into LevyDeclaration values (@employerAccountId, @scheme, @payrollYear, @payrollMonth, @payrollDate, @levyAmountDeclared, @transactionDate, @dateReceived)",
@@ -232,8 +232,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     parameters.Add("@startDate", commitment.StartDateValue, DbType.DateTime);
                     parameters.Add("@plannedEndDate", commitment.PlannedEndDate, DbType.DateTime);
                     parameters.Add("@actualEndDate", null, DbType.DateTime);
-                    parameters.Add("@completionAmount", commitment.CompletionAmount, DbType.Decimal);
-                    parameters.Add("@monthlyInstallment", commitment.InstallmentAmount, DbType.Decimal);
+                    parameters.Add("@completionAmount", commitment.CompletionAmount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
+                    parameters.Add("@monthlyInstallment", commitment.InstallmentAmount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
                     parameters.Add("@numberOfInstallments", commitment.NumberOfInstallments, DbType.Int16);
                     Connection.Execute(@"Insert into Commitment values (@employerAccountId, @learnerId, @apprenticeshipId, @apprenticeName, @providerId, @providerName,@courseName, @courseLevel, @startDate, @plannedEndDate, @actualEndDate,@completionAmount, @monthlyInstallment, @numberOfInstallments)",
                         parameters, commandType: CommandType.Text);

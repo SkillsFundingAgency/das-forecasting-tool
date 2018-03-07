@@ -86,12 +86,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
                         "Created Date"});
             table2.AddRow(new string[] {
                         "ABC-1234",
-                        "3000",
+                        "64569.55",
                         "Today"});
 #line 11
  testRunner.And("the following levy declarations have been recorded", ((string)(null)), table2, "And ");
 #line 14
- testRunner.And("the current balance is 10000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the current balance is 623104.60", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
@@ -119,17 +119,143 @@ this.FeatureBackground();
                         "Test Course",
                         "1",
                         "Test Provider",
-                        "Yesterday",
-                        "250",
-                        "1500",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 3",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 4",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 5",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 6",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 7",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 8",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 9",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 10",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 11",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 12",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 13",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "12/06/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 14",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "12/06/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 15",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "12/06/2017 00:00",
+                        "133.33",
+                        "400.00",
                         "12"});
 #line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 20
+#line 34
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 21
+#line 35
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 22
+#line 36
  testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -142,7 +268,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Training cost multiple apprenticeships with different numbers of instalments" +
                     "", ((string[])(null)));
-#line 24
+#line 38
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -192,13 +318,13 @@ this.FeatureBackground();
                         "1000",
                         "6000",
                         "12"});
-#line 25
+#line 39
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
-#line 31
+#line 45
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 32
+#line 46
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 33
+#line 47
  testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[Balance]
 (
 	EmployerAccountId BIGINT NOT NULL CONSTRAINT PK_Balance PRIMARY KEY,
-	Amount DECIMAL NOT NULL CONSTRAINT DF_Balance__Amount DEFAULT (0),
+	Amount DECIMAL(18,2) NOT NULL CONSTRAINT DF_Balance__Amount DEFAULT (0),
 	BalancePeriod DATETIME NOT NULL,
 	ReceivedDate DATETIME NOT NULL CONSTRAINT DF_Balance__ReceivedDate DEFAULT (GETDATE()),
 )

@@ -5,7 +5,7 @@
 	[EmployerAccountId] BIGINT NOT NULL,
 	[ProviderId] BIGINT NOT NULL,
 	[ApprenticeshipId] BIGINT NOT NULL,
-	[Amount] DECIMAL NOT NULL,
+	[Amount] DECIMAL(18,2) NOT NULL,
 	[ReceivedTime] DATETIME NOT NULL,
 	[LearnerId] BIGINT NOT NULL, 
 	[CollectionPeriodMonth] INT NOT NULL,

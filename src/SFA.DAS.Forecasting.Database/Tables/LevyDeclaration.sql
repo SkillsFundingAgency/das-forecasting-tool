@@ -6,7 +6,7 @@
 	PayrollYear NVARCHAR(10) NOT NULL, 
 	PayrollMonth TINYINT NOT NULL,	
 	PayrollDate DATETIME NOT NULL,
-	LevyAmountDeclared DECIMAL NOT NULL,
+	LevyAmountDeclared DECIMAL(18,2) NOT NULL,
 	TransactionDate DATETIME NOT NULL,
 	DateReceived DATETIME NOT NULL constraint DF_LevyDeclaration__DateReceived default(getdate())
 )
