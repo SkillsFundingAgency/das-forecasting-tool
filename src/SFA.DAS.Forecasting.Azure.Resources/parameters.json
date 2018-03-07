@@ -76,6 +76,9 @@
     },
     "vstsObjectId": {
       "value": ""
+    },
+    "MAWObjectId": {
+      "value": ""
     }
   }
 }
