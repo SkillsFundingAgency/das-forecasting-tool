@@ -10,7 +10,7 @@ using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
 
-namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
+namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
     public class CreatePaymentMessageFunction : IFunction
     {
@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions.PreLoad
                 ApprenticeshipId = r.Next(10000, 99999),
                 Amount = payment.Amount,
                 ProviderName = "Provider Name",
-                ApprenticeName = " ",
+                ApprenticeName = "Apprentice Name",
                 CourseName = payment.ApprenticeshipCourseName,
                 CourseLevel = payment.ApprenticeshipCourseLevel,
                 Uln = 1234567890,

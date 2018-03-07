@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Payments.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
 		[Given(@"I have no existing payments")]

@@ -1159,11 +1159,11 @@ table th {
   font-weight: 700;
 }
 
-table th.numeric {
+table th.financial {
   text-align: right;
 }
 
-table td.numeric {
+table td.financial {
   font-family: "ntatabularnumbers", "nta", Arial, sans-serif;
   font-weight: 400;
   text-transform: none;
@@ -4314,6 +4314,15 @@ h2 .float-right {
   }
 }
 
+/*coinvestment table*/
+#balancesheet .co-invest-head {
+  text-align: center;
+}
+
+#balancesheet .grey-bg {
+  background: #dee0e2;
+}
+
 .chart-container {
   display: none;
 }
@@ -4322,8 +4331,6 @@ path.c3-line {
   stroke-width: 4px;
   stroke: #005ea5;
 }
-<<<<<<< HEAD
-=======
 
 .c3-axis-y .tick {
   display: none;
@@ -4332,4 +4339,3 @@ path.c3-line {
 .c3-axis-y-label {
   font-size: 20px;
 }
->>>>>>> cd85238052a41de3eda322e7bcf0e349b5e45d1a

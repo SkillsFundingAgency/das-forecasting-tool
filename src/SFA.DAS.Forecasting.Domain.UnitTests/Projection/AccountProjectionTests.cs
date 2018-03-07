@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMoq;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void SetUp()
         {
             Moqer = new AutoMoqer();
-            _account = new Account(1, 47700, 7000);
+            _account = new Account(1, 12000, 300);
             Moqer.SetInstance(_account);
             _commitment = new Commitment
             {
@@ -33,7 +34,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 LearnerId = 3,
                 StartDate = DateTime.Today,
                 PlannedEndDate = DateTime.Today.AddMonths(25),
-                MonthlyInstallment = 500,
+                MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
                 CompletionAmount = 3000
             };
@@ -63,7 +64,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
-            Assert.AreEqual(accountProjection.Projections.Count(projection => projection.FundsIn == 7000), 48);
+            Assert.AreEqual(accountProjection.Projections.Count(projection => projection.FundsIn == 300), 48);
         }
 
         [Test]
@@ -109,6 +110,20 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             Console.WriteLine(accountProjection.Projections.ToJson());
             Assert.AreEqual(_account.Balance - _commitment.MonthlyInstallment, accountProjection.Projections.FirstOrDefault()?.FutureFunds);
             Assert.AreEqual(accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment, accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds);
+        }
+
+        [Test]
+        public void Includes_Co_Invertment()
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 7);
+            accountProjection.Projections[5].CoInvestmentEmployer.Should().Be(0);
+            accountProjection.Projections[5].CoInvestmentGovernment.Should().Be(0);
+            accountProjection.Projections[5].FutureFunds.Should().Be(900);
+
+            accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(90);
+            accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(810);
+            accountProjection.Projections[6].FutureFunds.Should().Be(0);
         }
     }
 }

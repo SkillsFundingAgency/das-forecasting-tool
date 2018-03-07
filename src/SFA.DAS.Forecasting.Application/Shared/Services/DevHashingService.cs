@@ -7,6 +7,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         public string HashValue(long id)
         {
+            switch (id)
+            {
+                case 497: return "MJK9XV";
+                case 8509: return "MN4YKL";
+            }
+
             return "MDDP87";
         }
 
@@ -17,11 +23,23 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         public string HashValue(string id)
         {
+            switch (id)
+            {
+                case "497": return "MJK9XV";
+                case "8509": return "MN4YKL";
+            }
+
             return "MDDP87";
         }
 
         public long DecodeValue(string id)
         {
+            switch (id)
+            {
+                case "MJK9XV": return 497;
+                case "MN4YKL": return 8509;
+            }
+
             return 12345;
         }
 

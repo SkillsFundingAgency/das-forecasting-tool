@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public static void StartLevyFunction()
         {
             StartFunction("SFA.DAS.Forecasting.Levy.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
         [Given(@"I'm a levy paying employer")]

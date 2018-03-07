@@ -84,17 +84,124 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Date",
+                        "Funds in",
+                        "Cost of training",
+                        "Completion payments",
+                        "Your contribution",
+                        "Government contribution",
+                        "Future funds"});
+            table1.AddRow(new string[] {
+                        "Mar 18",
+                        "1000",
+                        "1590",
+                        "49900",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Apr 18",
+                        "1000",
+                        "880",
+                        "32200",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Jun 18",
+                        "1000",
+                        "1800",
+                        "10000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Jul 18",
+                        "1000",
+                        "2350",
+                        "50000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Aug 18",
+                        "1000",
+                        "850",
+                        "45000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Sep 18",
+                        "1000",
+                        "700",
+                        "37880",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Nov 18",
+                        "1000",
+                        "1800",
+                        "45000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Dec 18",
+                        "1000",
+                        "1400",
+                        "10000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Jan 19",
+                        "1000",
+                        "2000",
+                        "10000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Feb 19",
+                        "1000",
+                        "1800",
+                        "10000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Mar 19",
+                        "1000",
+                        "1800",
+                        "45000",
+                        "1000",
+                        "1339",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Apr 19",
+                        "1000",
+                        "2100",
+                        "10000",
+                        "1000",
+                        "1339",
+                        "12000"});
 #line 11
+     testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
+#line 26
   testRunner.Given("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 12
+#line 27
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 13
+#line 28
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 14
+#line 29
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 15
+#line 30
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 16
+#line 31
      testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -107,115 +214,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC2_Forecast data is displayed correctly when forecas" +
                     "t between payments made and 23rd of month", ((string[])(null)));
-#line 20
-  this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Date",
-                        "Funds in",
-                        "Cost Of Training",
-                        "Completion Payments",
-                        "Future Funds"});
-            table1.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
-                        "880",
-                        "32200",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Jun 18",
-                        "1000",
-                        "1800",
-                        "10000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Jul 18",
-                        "1000",
-                        "2350",
-                        "50000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Aug 18",
-                        "1000",
-                        "850",
-                        "45000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Sep 18",
-                        "1000",
-                        "700",
-                        "37880",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Nov 18",
-                        "1000",
-                        "1800",
-                        "45000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Dec 18",
-                        "1000",
-                        "1400",
-                        "10000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Jan 19",
-                        "1000",
-                        "2000",
-                        "10000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Feb 19",
-                        "1000",
-                        "1800",
-                        "10000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Mar 19",
-                        "1000",
-                        "1800",
-                        "45000",
-                        "1000"});
-            table1.AddRow(new string[] {
-                        "Apr 19",
-                        "1000",
-                        "2100",
-                        "10000",
-                        "1000"});
-#line 22
-  testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
-#line 38
-  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 39
-  testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 40
-  testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 41
-  testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 42
-  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 43
-  testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("DownloadForecastBalanceSheetAC3_Forecast data is displayed correctly when forecas" +
-            "t between 23rd of month until next payments made")]
-        public virtual void DownloadForecastBalanceSheetAC3_ForecastDataIsDisplayedCorrectlyWhenForecastBetween23RdOfMonthUntilNextPaymentsMade()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC3_Forecast data is displayed correctly when forecas" +
-                    "t between 23rd of month until next payments made", ((string[])(null)));
-#line 45
+#line 35
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -298,30 +297,32 @@ this.FeatureBackground();
                         "2100",
                         "10000",
                         "1000"});
-#line 47
+#line 37
   testRunner.Given("I have generated the following projections", ((string)(null)), table2, "Given ");
-#line 62
+#line 53
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 63
+#line 54
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 64
+#line 55
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 65
+#line 56
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 66
+#line 57
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 67
+#line 58
   testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("DownloadForecastBalanceSheetAC4_Forecast data when negative balance")]
-        public virtual void DownloadForecastBalanceSheetAC4_ForecastDataWhenNegativeBalance()
+        [NUnit.Framework.DescriptionAttribute("DownloadForecastBalanceSheetAC3_Forecast data is displayed correctly when forecas" +
+            "t between 23rd of month until next payments made")]
+        public virtual void DownloadForecastBalanceSheetAC3_ForecastDataIsDisplayedCorrectlyWhenForecastBetween23RdOfMonthUntilNextPaymentsMade()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC4_Forecast data when negative balance", ((string[])(null)));
-#line 69
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC3_Forecast data is displayed correctly when forecas" +
+                    "t between 23rd of month until next payments made", ((string[])(null)));
+#line 60
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -404,19 +405,125 @@ this.FeatureBackground();
                         "2100",
                         "10000",
                         "1000"});
-#line 71
+#line 62
   testRunner.Given("I have generated the following projections", ((string)(null)), table3, "Given ");
-#line 86
+#line 77
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 87
+#line 78
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 88
+#line 79
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 89
+#line 80
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 90
+#line 81
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 91
+#line 82
+  testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("DownloadForecastBalanceSheetAC4_Forecast data when negative balance")]
+        public virtual void DownloadForecastBalanceSheetAC4_ForecastDataWhenNegativeBalance()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC4_Forecast data when negative balance", ((string[])(null)));
+#line 84
+  this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Date",
+                        "Funds in",
+                        "Cost Of Training",
+                        "Completion Payments",
+                        "Future Funds"});
+            table4.AddRow(new string[] {
+                        "Mar 18",
+                        "1000",
+                        "1590",
+                        "49900",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Apr 18",
+                        "1000",
+                        "880",
+                        "32200",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Jun 18",
+                        "1000",
+                        "1800",
+                        "10000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Jul 18",
+                        "1000",
+                        "2350",
+                        "50000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Aug 18",
+                        "1000",
+                        "850",
+                        "45000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Sep 18",
+                        "1000",
+                        "700",
+                        "37880",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Nov 18",
+                        "1000",
+                        "1800",
+                        "45000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Dec 18",
+                        "1000",
+                        "1400",
+                        "10000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Jan 19",
+                        "1000",
+                        "2000",
+                        "10000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Feb 19",
+                        "1000",
+                        "1800",
+                        "10000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Mar 19",
+                        "1000",
+                        "1800",
+                        "45000",
+                        "1000"});
+            table4.AddRow(new string[] {
+                        "Apr 19",
+                        "1000",
+                        "2100",
+                        "10000",
+                        "1000"});
+#line 86
+  testRunner.Given("I have generated the following projections", ((string)(null)), table4, "Given ");
+#line 101
+  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 102
+  testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 103
+  testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 104
+  testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 105
+  testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 106
   testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

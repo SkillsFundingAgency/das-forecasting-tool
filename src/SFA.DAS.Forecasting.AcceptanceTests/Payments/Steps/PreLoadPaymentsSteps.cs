@@ -3,6 +3,11 @@ using FluentAssertions;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Newtonsoft.Json;
+using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
+using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Provider.Events.Api.Types;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,26 +15,42 @@ using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
-    [Scope(Feature = FeatureName)]
+    [Scope(Feature = "PreLoadPayments")]
     [Binding]
     public class PreLoadPaymentsSteps : StepsBase
     {
-        private const string FeatureName = "PreLoadPayments";
-        private static long _employerAccountId = 8509;
+        private static long _accountId = 497;
         private long _substitutionEmployerAccountId = 112233;
+
+        private TableStorageService _tableStorageService;
+        private readonly Config _settings;
+
+        public PreLoadPaymentsSteps()
+        {
+            _tableStorageService = ParentContainer.GetInstance<TableStorageService>();
+            _settings = ParentContainer.GetInstance<Config>();
+        }
 
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
         {
-          //  _apiHost = new ApiHost();
             StartFunction("SFA.DAS.Forecasting.Payments.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+            StartFunction("SFA.DAS.Forecasting.PreLoad.Functions");
+
             Thread.Sleep(1000);
         }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public async Task BeforeScenario()
         {
             ClearDatabase();
+            await SetUpEmployerData();
+
+            var client = new HttpClient();
+            var payment = JsonConvert.SerializeObject(GetPayment());
+            await client.PostAsync(Config.ApiInsertPaymentUrl, new StringContent(payment));
+
             Thread.Sleep(500);
         }
 
@@ -42,7 +63,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I trigger PreLoadPayment function some employers")]
         public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployers()
         {
-            var item = "{\"EmployerAccountIds\":[8509],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\"}";
+            var item = "{\"EmployerAccountIds\":["+ _accountId +"],\"PeriodYear\":\"2017\",\"PeriodMonth\":5,\"PeriodId\": \"1617-R10\"}";
 
             var client = new HttpClient();
             await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
@@ -51,7 +72,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I trigger PreLoadPayment function some employers with a substitution id")]
         public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployersWithASubstitutionId()
         {
-            var item = "{\"EmployerAccountIds\":[" + _employerAccountId + "],\"PeriodYear\":\"2017\",\"PeriodMonth\":1,\"PeriodId\": \"1617-R10\", \"SID\": " + _substitutionEmployerAccountId + "}";
+            var item = "{\"EmployerAccountIds\":[" + _accountId + "],\"PeriodYear\":\"2017\",\"PeriodMonth\":5,\"PeriodId\": \"1617-R10\", \"SubstitutionId\": " + _substitutionEmployerAccountId + "}";
 
             var client = new HttpClient();
             await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
@@ -66,69 +87,158 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Then(@"there will be payments for all the employers")]
         public void ThenThereWillBePaymentsForAllTheEmployers()
         {
+            var count = 0;
             WaitForIt(() =>
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", _employerAccountId, DbType.Int64);
-                var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
+                parameters.Add("@employerAccountId", _accountId, DbType.Int64);
+                count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
                         , param: parameters, commandType: CommandType.Text);
-                return count == 1;
-            }, "Failed to find all the payments.");
+                    return count == 1;
 
-            //_apiHost.Dispose();
+            }, $"Failed to find all the payments. Found: {count}");
         }
 
         [Then(@"there will be payments for the employer and no sensitive data will have been stored in the database")]
         public void ThenThereWillBePaymentsForAllTheEmployersWithNoSensitiveData()
         {
-            // ToDo: this
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", _substitutionEmployerAccountId, DbType.Int64);
-            var payments = Connection.ExecuteScalar<IEnumerable<Models.Payments.Payment>>("Select * from Payment where EmployerAccountId = @employerAccountId"
-                    , param: parameters, commandType: CommandType.Text);
+            IEnumerable<Models.Payments.Payment> payments = new List<Models.Payments.Payment>();
+            WaitForIt(() =>
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", _substitutionEmployerAccountId, DbType.Int64);
+                payments = Connection.Query<Models.Payments.Payment>("Select * from Payment where EmployerAccountId = @employerAccountId"
+                        , param: parameters, commandType: CommandType.Text);
+                return payments != null && payments.Any();
+
+            });
 
             var payment = payments.FirstOrDefault();
 
             payment.Should().NotBeNull();
 
-            payment.ApprenticeshipId.Should().NotBe(1); // Not be the stame as input!
-            payment.ExternalPaymentId.Should().NotBe(""); // Not be the stame as input!
+            var originalPayment = GetPayment().Items.First();
+            payment.ApprenticeshipId.Should().NotBe(originalPayment.ApprenticeshipId, "Cannot be the same as input data");
+            payment.ExternalPaymentId.Should().NotBe(originalPayment.Id, "Cannot be the same as input data");
             payment.EmployerAccountId.Should().Be(_substitutionEmployerAccountId);
             payment.ProviderId.Should().Be(1);
 
-            payment.Amount.Should().Be(200); // Same as input
+            payment.Amount.Should().Be(payment.Amount);
         }
 
         [Then(@"there will be commitment for the employer and no sensitive data will have been stored in the database")]
         public void ThenThereWillBeCommitmentForTheEmployersWithNoSensitiveData()
         {
-            // ToDo: this
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", _substitutionEmployerAccountId, DbType.Int64);
-            var payments = Connection.ExecuteScalar<IEnumerable<Models.Commitments.Commitment>>("Select * from Commitment where EmployerAccountId = @employerAccountId"
+            var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
                     , param: parameters, commandType: CommandType.Text);
 
-            var payment = payments.FirstOrDefault();
+            commitments.Count().Should().Be(1);
 
-            payment.Should().NotBeNull();
+            var commitment = commitments.FirstOrDefault();
 
-            payment.ApprenticeshipId.Should().NotBe(1); // Not be the stame as input!
-            payment.EmployerAccountId.Should().Be(_substitutionEmployerAccountId);
-            payment.ProviderId.Should().Be(1);
-            payment.ProviderName.Should().Be("Provider Name");
+            commitment.Should().NotBeNull();
 
-            payment.ApprenticeName.Should().Be("Apprentice Name");
-            payment.CourseName.Should().Be(""); // Same as input
-            payment.CourseLevel.Should().Be(1); // Same as input
+            var originalPayment = GetPayment().Items.First();
+            
+            commitment.ApprenticeshipId.Should().NotBe(originalPayment.ApprenticeshipId, "Cannot be the same as input data");
+            commitment.EmployerAccountId.Should().Be(_substitutionEmployerAccountId);
+            commitment.ProviderId.Should().Be(1);
+            commitment.ProviderName.Should().Be("Provider Name", $"{nameof(commitment.ProviderName)} shold be blanked");
+
+            commitment.ApprenticeName.Should().Be("Apprentice Name", $"{nameof(commitment.ApprenticeName)} shold be blanked");
+            commitment.CourseName.Should().Be("Chemical Engineering", "Needs to be the same as input");
+            commitment.CourseLevel.Should().Be(2, "Needs to be the same as input");
         }
 
         private void ClearDatabase()
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@id1", _employerAccountId, DbType.Int64);
+            parameters.Add("@id1", _accountId, DbType.Int64);
             parameters.Add("@id2", _substitutionEmployerAccountId, DbType.Int64);
-            var count = Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId IN [@id1, @id2]"
+
+            Connection.ExecuteScalar<int>("DELETE Payment WHERE EmployerAccountId IN (@id1, @id2)"
                     , param: parameters, commandType: CommandType.Text);
+
+            Connection.ExecuteScalar<int>("DELETE Commitment WHERE EmployerAccountId IN (@id1, @id2)"
+                    , param: parameters, commandType: CommandType.Text);
+        }
+
+        private async Task SetUpEmployerData()
+        {
+            var year = 2017;
+            var month = 5;
+            var p2 = new EmployerPayment
+            {
+                    Ukprn = 10001378,
+                    Uln = 2002,
+                    AccountId = _accountId,
+                    ApprenticeshipId = 6666,
+                    CollectionPeriodId = "1617-r10",
+                    CollectionPeriodMonth = month,
+                    CollectionPeriodYear = year,
+                    Amount = 50.00000m,
+                    PaymentMetaDataId = 690,
+                    ProviderName = "CHESTERFIELD COLLEGE",
+                    StandardCode = 4,
+                    FrameworkCode = 0,
+                    ProgrammeType = 0,
+                    PathwayCode = 0,
+                    PathwayName = null,
+                    ApprenticeshipCourseName = "Chemical Engineering",
+                    ApprenticeshipCourseStartDate = DateTime.Parse("2017-01-09"),
+                    ApprenticeshipCourseLevel = 2,
+                    ApprenticeName = "John Doe",
+                    FundingSource = Models.Payments.FundingSource.Levy,
+                    PaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8") // Need to match Payment from ProviderEvents API // IN: ProviderEventTestData.cs
+            };
+            
+            _tableStorageService.SetTable(_settings.StubEmployerPaymentTable);
+            await _tableStorageService.Store(new List<EmployerPayment> { p2 }, _accountId.ToString(), $"{year}-{month}");
+        }
+
+        internal static PageOfResults<Provider.Events.Api.Types.Payment> GetPayment()
+        {
+            var por = new PageOfResults<Provider.Events.Api.Types.Payment>();
+            por.PageNumber = 1;
+            por.TotalNumberOfPages = 1;
+            por.Items = new List<Provider.Events.Api.Types.Payment>
+            {
+                new Provider.Events.Api.Types.Payment
+                {
+                    Id = "f97840b3-d3bf-429c-bc3c-8a877f4f26f8",
+                    ApprenticeshipId = 11002,
+                    EmployerAccountId = "MJK9XV", 
+                    CollectionPeriod = new NamedCalendarPeriod
+                    {
+                        Id = "1617-r10",
+                        Year = 2017,
+                        Month = 5
+                    },
+                    EarningDetails = new List<Earning>
+                    {
+                        new Earning
+                        {
+                            ActualEndDate = DateTime.Parse("2017-03-01"),
+                            CompletionAmount = 5000,
+                            RequiredPaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8"),
+                            CompletionStatus = 1,
+                            MonthlyInstallment = 300,
+                            TotalInstallments = 24,
+                            StartDate = DateTime.Parse("2018-01-01"),
+                            PlannedEndDate = DateTime.Parse("2020-01-01"),
+                            EndpointAssessorId = "EOId-1"
+                        }
+                    },
+                    ContractType = ContractType.ContractWithSfa,
+                    FundingSource = Provider.Events.Api.Types.FundingSource.Levy,
+                    TransactionType = TransactionType.Balancing
+                }
+            }
+            .ToArray();
+
+            return por;
         }
     }
 }
