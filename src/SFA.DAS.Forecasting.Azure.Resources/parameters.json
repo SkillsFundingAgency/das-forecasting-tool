@@ -73,6 +73,9 @@
     },
     "certificatePfxBase64": {
       "value": ""
+    },
+    "vstsObjectId": {
+      "value": ""
     }
   }
 }

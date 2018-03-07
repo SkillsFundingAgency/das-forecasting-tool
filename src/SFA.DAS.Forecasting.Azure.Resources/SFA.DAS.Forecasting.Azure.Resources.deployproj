@@ -28,6 +28,7 @@
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
+    <Content Include="deployments\intialise-keyvault-resources.json" />
     <Content Include="deployments\keyvault-resources.json" />
     <Content Include="deployments\storage-resources.json" />
     <Content Include="deployments\function-app-resources.json" />
