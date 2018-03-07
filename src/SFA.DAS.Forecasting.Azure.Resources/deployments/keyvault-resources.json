@@ -43,6 +43,30 @@
       "metadata": {
         "description": "The connection string for the configuration storage account"
       }
+    },
+    "clientId": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string for the configuration storage account"
+      }
+    },
+    "clientSecret": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string for the configuration storage account"
+      }
+    },
+    "certificateName": {
+      "type": "string",
+      "metadata": {
+        "description": "The connection string for the configuration storage account"
+      }
+    },
+    "certificatePfxBase64": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The PKCS 12 Base64 value of the cert."
+      }
     }
   },
   "variables": {
@@ -67,6 +91,15 @@
           "secrets": "[parameters('secretsPermissionsList')]"
         }
       }
+    ],
+    "Microsoft.Azure.WebSites": [
+      {
+        "objectId": "abfa0a7c-a6b6-4736-8310-5855508787cd",
+        "tenantId": "[subscription().tenantId]",
+        "permissions": {
+          "secrets": [ "Get" ]
+        }
+      }
     ]
   },
   "resources": [
@@ -79,7 +112,7 @@
         "enabledForDeployment": false,
         "enabledForTemplateDeployment": true,
         "enabledForDiskEncryption": false,
-        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'))]",
+        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'),variables('Microsoft.Azure.WebSites'))]",
         "tenantId": "[subscription().tenantId]",
         "sku": {
           "name": "standard",
@@ -137,6 +170,40 @@
           "apiVersion": "2015-06-01",
           "properties": {
             "value": "[parameters('configurationStorageConnectionString')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "ClientId",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('clientId')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "ClientSecret",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('clientSecret')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "[parameters('certificateName')]",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "contentType": "application/x-pkcs12",
+            "value": "[parameters('certificatePfxBase64')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
