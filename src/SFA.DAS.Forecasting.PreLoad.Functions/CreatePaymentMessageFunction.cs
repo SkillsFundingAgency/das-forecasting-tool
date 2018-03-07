@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,10 +30,22 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var payments = dataService.GetPayments(message.EmployerAccountId);
                     var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId);
 
-                    var paymentCreatedMessage = payments
-                        .Select(p => CreatePayment(p, earningDetails))
-                        .Where(p => p != null)
-                        .ToList();
+                    List<PaymentCreatedMessage> paymentCreatedMessage;
+                    if (message.SubstitutionId != null)
+                    {
+                        paymentCreatedMessage =
+                            payments
+                            .Select(p => CreatePaymentSubstituteData(p, earningDetails, message.SubstitutionId))
+                            .Where(p => p != null)
+                            .ToList();
+                    }
+                    else {
+                        paymentCreatedMessage = 
+                            payments
+                            .Select(p => CreatePayment(p, earningDetails))
+                            .Where(p => p != null)
+                            .ToList();
+                    }
 
                     foreach (var p in paymentCreatedMessage)
                     {
@@ -44,6 +57,35 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
                 });
+        }
+
+        private static PaymentCreatedMessage CreatePaymentSubstituteData(EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long? substitutionId)
+        {
+            var ed = earningDetails.FirstOrDefault(m => m.RequiredPaymentId == payment.PaymentId);
+            if (payment == null || ed == null)
+                return null;
+
+            Random r = new Random();
+
+            var paymentId = Guid.NewGuid();
+            ed.RequiredPaymentId = paymentId;
+            return new PaymentCreatedMessage
+            {
+                Id = paymentId.ToString(),
+                EmployerAccountId = substitutionId.Value,
+                Ukprn = 1,
+                ApprenticeshipId = r.Next(10000, 99999),
+                Amount = payment.Amount,
+                ProviderName = "Provider Name",
+                ApprenticeName = "Apprentice Name",
+                CourseName = payment.ApprenticeshipCourseName,
+                CourseLevel = payment.ApprenticeshipCourseLevel,
+                Uln = 1234567890,
+                CourseStartDate = payment.ApprenticeshipCourseStartDate,
+                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                EarningDetails = ed,
+                FundingSource = payment.FundingSource
+            };
         }
 
         public static PaymentCreatedMessage CreatePayment(EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)

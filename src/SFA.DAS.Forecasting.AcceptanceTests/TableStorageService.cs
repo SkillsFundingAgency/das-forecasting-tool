@@ -2,11 +2,6 @@
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests
@@ -18,9 +13,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         public TableStorageService(Config settings)
         {
-            //CloudStorageAccount storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
-            //var tableClient = storageAccount.CreateCloudTableClient();
-            //_table = tableClient.GetTableReference("PaymentTable");
             _settings = settings;
         }
 
