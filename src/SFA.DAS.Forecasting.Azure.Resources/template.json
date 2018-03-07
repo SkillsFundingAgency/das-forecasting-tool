@@ -136,14 +136,17 @@
           "KeyVaultName": {
             "value": "[parameters('keyVaultName')]"
           },
-          "LoggingRedisConnectionString" : {
+          "LoggingRedisConnectionString": {
             "value": "[parameters('appSettingLoggingRedisConnectionString')]"
           },
-          "LoggingRedisKey" : {
+          "LoggingRedisKey": {
             "value": "[parameters('appSettingLoggingRedisKey')]"
+          },
+          "certificateName": {
+            "value": "[parameters('certificateName')]"
+
           }
         }
-      }
     },
     {
       "apiVersion": "2017-08-01",
