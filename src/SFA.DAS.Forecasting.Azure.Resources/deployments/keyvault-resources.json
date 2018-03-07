@@ -94,7 +94,7 @@
     ],
     "Microsoft.Azure.WebSites": [
       {
-        "objectId": "7fa23fd6-537e-4d28-b0ca-54d075cce842",
+        "objectId": "abfa0a7c-a6b6-4736-8310-5855508787cd",
         "tenantId": "[subscription().tenantId]",
         "permissions": {
           "secrets": [ "Get" ]

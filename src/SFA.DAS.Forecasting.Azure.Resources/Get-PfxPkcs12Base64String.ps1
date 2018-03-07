@@ -21,7 +21,7 @@ Param(
     [String[]]$PfxFilePath,
     [Parameter(Mandatory = $true)]
     [SecureString]$PfxPassword,
-    [Parameter(Mandatory = $true)]
+    [Parameter(Mandatory = $false)]
     [String]$VstsVariableToSet
 )
 
@@ -33,10 +33,10 @@ try{
     $Collection.Import($PfxFilePath, $PfxPassword, $Flag) 
     $ClearBytes = $Collection.Export($Pkcs12ContentType) 
     $FileContentEncoded = [System.Convert]::ToBase64String($ClearBytes) 
-    #$PfxBase64 = ConvertTo-SecureString -String $fileContentEncoded -AsPlainText –Force
+    $PfxBase64 = ConvertTo-SecureString -String $fileContentEncoded -AsPlainText –Force
     
     if($VstsVariableToSet){
-	   Write-Host ("##vso[task.setvariable variable=$VstsVariableToSet;issecret=true;]$FileContentEncoded")
+	   Write-Host ("##vso[task.setvariable variable=$VstsVariableToSet;issecret=true;]$PfxBase64")
     }
 }
 catch{
