@@ -144,7 +144,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId1", 497, DbType.Int64);
             parameters.Add("@employerAccountId2", 12345, DbType.Int64);
-            var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId IN [@employerAccountId1, @employerAccountId2]"
+            var count = Connection.ExecuteScalar<int>("DELETE LevyDeclaration WHERE EmployerAccountId IN (@employerAccountId1, @employerAccountId2)"
                     , param: parameters, commandType: CommandType.Text);
         }
 
