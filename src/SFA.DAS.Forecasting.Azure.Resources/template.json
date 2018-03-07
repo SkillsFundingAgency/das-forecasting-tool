@@ -144,9 +144,9 @@
           },
           "certificateName": {
             "value": "[parameters('certificateName')]"
-
           }
         }
+      }
     },
     {
       "apiVersion": "2017-08-01",
