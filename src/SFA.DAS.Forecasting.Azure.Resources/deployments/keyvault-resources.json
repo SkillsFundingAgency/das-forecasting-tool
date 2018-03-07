@@ -51,7 +51,7 @@
       }
     },
     "clientSecret": {
-      "type": "string",
+      "type": "securestring",
       "metadata": {
         "description": "The connection string for the configuration storage account"
       }
@@ -69,7 +69,10 @@
       }
     },
     "vstsObjectId": {
-      "type": "string"
+      "type": "securestring"
+    },
+    "MAWObjectId": {
+      "type": "securestring"
     }
   },
   "variables": {
@@ -97,7 +100,7 @@
     ],
     "Microsoft.Azure.WebSites": [
       {
-        "objectId": "abfa0a7c-a6b6-4736-8310-5855508787cd",
+        "objectId": "[parameters('MAWObjectId')]",
         "tenantId": "[subscription().tenantId]",
         "permissions": {
           "secrets": [ "Get" ]

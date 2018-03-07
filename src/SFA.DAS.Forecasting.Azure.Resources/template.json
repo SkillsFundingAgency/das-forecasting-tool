@@ -79,6 +79,9 @@
     },
     "vstsObjectId": {
       "type": "string"
+    },
+    "MAWObjectId": {
+      "type": "string"
     }
   },
   "variables": {
@@ -115,6 +118,9 @@
           },
           "certificatePfxBase64": {
             "value": "[parameters('certificatePfxBase64')]"
+          },
+          "MAWObjectId": {
+            "value": "[parameters('MAWObjectId')]"
           }
         }
       }
@@ -299,6 +305,12 @@
           },
           "certificatePfxBase64": {
             "value": "[parameters('certificatePfxBase64')]"
+          },
+          "vstsObjectId": {
+            "value": "[parameters('vstsObjectId')]"
+          },
+          "MAWObjectId": {
+            "value": "[parameters('MAWObjectId')]"
           }
         }
       }
