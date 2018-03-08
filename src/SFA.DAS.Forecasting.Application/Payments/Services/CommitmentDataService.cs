@@ -53,8 +53,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			parameters.Add("@startDate", commitment.StartDate, DbType.DateTime);
 			parameters.Add("@plannedEndDate", commitment.PlannedEndDate, DbType.DateTime);
 			parameters.Add("@actualEndDate", commitment.ActualEndDate, DbType.DateTime);
-			parameters.Add("@completionAmount", commitment.CompletionAmount, DbType.Decimal);
-			parameters.Add("@monthlyInstallment", commitment.MonthlyInstallment, DbType.Decimal);
+			parameters.Add("@completionAmount", commitment.CompletionAmount, DbType.Decimal, ParameterDirection.Input, null, 10, 5);
+			parameters.Add("@monthlyInstallment", commitment.MonthlyInstallment, DbType.Decimal, ParameterDirection.Input, null, 10, 5);
 			parameters.Add("@numberOfInstallments", commitment.NumberOfInstallments, DbType.Int16);
 			parameters.Add("@providerId", commitment.ProviderId, DbType.Int64);
 			parameters.Add("@providerName", commitment.ProviderName, DbType.String);

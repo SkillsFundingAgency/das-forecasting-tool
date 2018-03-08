@@ -132,7 +132,13 @@
       <DependentUpon>Build Projections From Levy Declarations.feature</DependentUpon>
     </Compile>
     <Compile Include="Levy\Steps\BuildProjectionsFromLevyDeclarations.cs" />
-    <Compile Include="Payments\Payment.cs" />
+    <Compile Include="Payments\Feature\Build Projections From Payment Run.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Build Projections From Payment Run.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Payments\Steps\BuildProjectionsFromPaymentRun.cs" />
+    <Compile Include="Payments\TestPayment.cs" />
     <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -216,6 +222,10 @@
       <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Payments\Feature\Build Projections From Payment Run.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Build Projections From Payment Run.feature.cs</LastGenOutput>
+    </None>
     <None Include="Payments\Feature\PreLoadPayments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadPayments.feature.cs</LastGenOutput>

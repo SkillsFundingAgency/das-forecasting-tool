@@ -74,7 +74,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			parameters.Add("@employerAccountId", employerPayment.EmployerAccountId, DbType.Int64);
 			parameters.Add("@providerId", employerPayment.ProviderId, DbType.Int64);
 			parameters.Add("@apprenticeshipId", employerPayment.ApprenticeshipId, DbType.Int64);
-			parameters.Add("@amount", employerPayment.Amount, DbType.Decimal);
+			parameters.Add("@amount", employerPayment.Amount, DbType.Decimal, ParameterDirection.Input, null, 10, null);
 			parameters.Add("@learnerId", employerPayment.LearnerId, DbType.Int64);
 			parameters.Add("@receivedTime", employerPayment.ReceivedTime, DbType.DateTime);
 			parameters.Add("@collectionPeriodMonth", employerPayment.CollectionPeriod.Month, DbType.Int32);

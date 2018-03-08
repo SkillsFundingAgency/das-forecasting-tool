@@ -4,7 +4,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 
-namespace SFA.DAS.Forecasting.Application.Shared.Queues
+namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IQueueService
     {
@@ -13,10 +13,10 @@ namespace SFA.DAS.Forecasting.Application.Shared.Queues
 
 	public class QueueService: IQueueService
 	{
-		public void SendMessageWithVisibilityDelay<T>(T element, string queueName, TimeSpan visibilityDelay) 
+		public void SendMessageWithVisibilityDelay<T>(T message, string queueName, TimeSpan visibilityDelay) 
 			where  T : class 
 		{
-			var message = new CloudQueueMessage(JsonConvert.SerializeObject(element));
+			var cloudMessage = new CloudQueueMessage(JsonConvert.SerializeObject(message));
 
 			// Retrieve storage account from connection string.
 			var storageAccount = CloudStorageAccount.Parse(
@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Queues
 			// Create the queue if it doesn't already exist
 			queue.CreateIfNotExists();
 
-			queue.AddMessage(message, null, visibilityDelay);
+			queue.AddMessage(cloudMessage, null, visibilityDelay);
 		}
 	}
 }

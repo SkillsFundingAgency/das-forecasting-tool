@@ -18,21 +18,22 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Process Payment Event")]
-    public partial class ProcessPaymentEventFeature
+    [NUnit.Framework.DescriptionAttribute("Build Projections From Payment Run")]
+    public partial class BuildProjectionsFromPaymentRunFeature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Process Payment Event.feature"
+#line 1 "Build Projections From Payment Run.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Process Payment Event", "\tAs an employer\r\n\tI want my payments to be forecast for the next 4 years\r\n\tSo tha" +
-                    "t I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Build Projections From Payment Run", "\tAs an employer with a pay bill over £3 million each year and therefore must now " +
+                    "pay the apprenticeship levy\r\n\tI want my levy credit to be forecast for the next " +
+                    "4 years\r\n\tSo that I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -68,23 +69,47 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         {
 #line 6
 #line 7
- testRunner.Given("I have no existing payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payroll Year",
+                        "Payroll Month"});
+            table1.AddRow(new string[] {
+                        "18-19",
+                        "1"});
 #line 8
- testRunner.And("I have no existing commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the payroll period is", ((string)(null)), table1, "And ");
+#line 11
+ testRunner.And("I have no existing levy declarations for the payroll period", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 12
+ testRunner.And("no account projections have been generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC1: Store payment event data")]
-        public virtual void AC1StorePaymentEventData()
+        [NUnit.Framework.DescriptionAttribute("Payment run triggers build of projections")]
+        public virtual void PaymentRunTriggersBuildOfProjections()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: Store payment event data", ((string[])(null)));
-#line 10
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Payment run triggers build of projections", ((string[])(null)));
+#line 14
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table2.AddRow(new string[] {
+                        "ABC-1234",
+                        "64569.55",
+                        "Today"});
+#line 15
+ testRunner.Given("the following levy declarations have been recorded", ((string)(null)), table2, "Given ");
+#line 18
+ testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Payment Amount",
                         "Apprentice Name",
                         "Course Name",
@@ -94,7 +119,7 @@ this.FeatureBackground();
                         "Installment Amount",
                         "Completion Amount",
                         "Number Of Installments"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice",
                         "Test Course",
@@ -104,7 +129,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 2",
                         "Test Course",
@@ -114,7 +139,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 3",
                         "Test Course",
@@ -124,7 +149,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 4",
                         "Test Course",
@@ -134,7 +159,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 5",
                         "Test Course",
@@ -144,7 +169,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 6",
                         "Test Course",
@@ -154,7 +179,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 7",
                         "Test Course",
@@ -164,7 +189,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 8",
                         "Test Course",
@@ -174,7 +199,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
+            table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 9",
                         "Test Course",
@@ -184,37 +209,13 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-#line 11
- testRunner.Given("I have made the following payments", ((string)(null)), table1, "Given ");
-#line 22
- testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
-                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 23
- testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 24
- testRunner.And("the Forecasting Payment service should store the commitment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC2: do not store invalid data")]
-        public virtual void AC2DoNotStoreInvalidData()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: do not store invalid data", ((string[])(null)));
-#line 26
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 27
- testRunner.Given("I made some invalid payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 28
- testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
-                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 29
- testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 19
+ testRunner.And("I have made the following payments", ((string)(null)), table3, "And ");
 #line 30
- testRunner.And("the Forecasting Payment service should not store commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 31
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

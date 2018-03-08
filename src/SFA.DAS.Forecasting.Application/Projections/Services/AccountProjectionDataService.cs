@@ -51,12 +51,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                         parameters.Add("@projectionGenerationType", (short)accountProjectionReadModel.ProjectionGenerationType, DbType.Int16);
                         parameters.Add("@month", accountProjectionReadModel.Month, DbType.Int16);
                         parameters.Add("@year", accountProjectionReadModel.Year, DbType.Int32);
-                        parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
-                        parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal);
-                        parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
-                        parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
-                        parameters.Add("@coInvestmentEmployer", accountProjectionReadModel.CoInvestmentEmployer, DbType.Decimal);
-                        parameters.Add("@coInvestmentGovernment", accountProjectionReadModel.CoInvestmentGovernment, DbType.Decimal);
+                        parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal, ParameterDirection.Input, null, 10, null);
+                        parameters.Add("@totalCostOfTraining", accountProjectionReadModel.TotalCostOfTraining, DbType.Decimal, ParameterDirection.Input, null, 10, null);
+                        parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal, ParameterDirection.Input, null, 10, null);
+                        parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal, ParameterDirection.Input, null, 10, null);
+                        parameters.Add("@coInvestmentEmployer", accountProjectionReadModel.CoInvestmentEmployer, DbType.Decimal, ParameterDirection.Input, null, 10, null);
+                        parameters.Add("@coInvestmentGovernment", accountProjectionReadModel.CoInvestmentGovernment, DbType.Decimal, ParameterDirection.Input, null, 10, null);
                         await cnn.ExecuteAsync(sql, parameters, commandType: CommandType.Text);
                     }
 

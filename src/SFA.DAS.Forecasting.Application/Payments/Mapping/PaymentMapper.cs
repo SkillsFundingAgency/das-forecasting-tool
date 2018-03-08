@@ -5,8 +5,14 @@ using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 {
-	public class PaymentMapper
-	{
+    public interface IPaymentMapper
+    {
+        Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
+        Commitment MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
+    }
+
+    public class PaymentMapper: IPaymentMapper
+    {
 		public Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
 		{
 			return new Payment

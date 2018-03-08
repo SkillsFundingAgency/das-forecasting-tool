@@ -61,6 +61,27 @@
     },
     "secretAllowedHashstringCharacters": {
       "value": ""
+    },
+    "clientId": {
+      "value": ""
+    },
+    "clientSecret": {
+      "value": ""
+    },
+    "certificateName": {
+      "value": ""
+    },
+    "certificatePfxBase64": {
+      "value": ""
+    },
+    "vstsObjectId": {
+      "value": ""
+    },
+    "MAWObjectId": {
+      "value": ""
+    },
+    "employerConnectionString": {
+      "value": ""
     }
   }
 }

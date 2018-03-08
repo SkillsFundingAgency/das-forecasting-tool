@@ -87,10 +87,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC3 - Levy Declaration triggers build of projections")]
-        public virtual void AC3_LevyDeclarationTriggersBuildOfProjections()
+        [NUnit.Framework.DescriptionAttribute("Levy Declaration triggers build of projections")]
+        public virtual void LevyDeclarationTriggersBuildOfProjections()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3 - Levy Declaration triggers build of projections", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Levy Declaration triggers build of projections", ((string[])(null)));
 #line 14
 this.ScenarioSetup(scenarioInfo);
 #line 6

@@ -6,10 +6,10 @@
     [ProjectionGenerationType] SMALLINT NOT NULL,
     [Month] SMALLINT NOT NULL,
     [Year] INT NOT NULL,
-    [FundsIn] DECIMAL NOT NULL,
-    [TotalCostOfTraining] DECIMAL NOT NULL,
-    [CompletionPayments] DECIMAL NOT NULL,
-    [FutureFunds] DECIMAL NOT NULL,
-	[CoInvestmentEmployer] DECIMAL NOT NULL default(0),
-	[CoInvestmentGovernment] DECIMAL NOT NULL default(0)
+    [FundsIn] DECIMAL(18,2) NOT NULL,
+    [TotalCostOfTraining] DECIMAL(18,2) NOT NULL,
+    [CompletionPayments] DECIMAL(18,2) NOT NULL,
+    [FutureFunds] DECIMAL(18,2) NOT NULL,
+	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0),
+	[CoInvestmentGovernment] DECIMAL(18,2) NOT NULL default(0)
 )
