@@ -1,13 +1,15 @@
-﻿using System.Web.Http;
-using System.Web.Http.Controllers;
+﻿using System.Web;
+using System.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Attributes
 {
     public class AuthorizeForecastingAttribute : AuthorizeAttribute
     {
-        protected override bool IsAuthorized(HttpActionContext actionContext)
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            return actionContext.Request.RequestUri.IsLoopback || base.IsAuthorized(actionContext);
+            return
+                httpContext.Request.Url.IsLoopback || 
+                base.AuthorizeCore(httpContext);
         }
     }
 }
