@@ -95,10 +95,7 @@
     {
       "apiVersion": "2017-08-01",
       "name": "initialise-keyvault-resources-deployment",
-      "dependsOn": [
-        "function-app-copy",
-        "storage-resources-deployment"
-      ],
+      "dependsOn": [],
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -146,7 +143,9 @@
     {
       "apiVersion": "2017-08-01",
       "name": "web-app-resources-deployment",
-      "dependsOn": [],
+      "dependsOn": [
+        "initialise-keyvault-resources-deployment"
+      ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -247,7 +246,8 @@
       "name": "keyvault-resources-deployment",
       "dependsOn": [
         "function-app-copy",
-        "storage-resources-deployment"
+        "storage-resources-deployment",
+        "web-app-resources-deployment"
       ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
