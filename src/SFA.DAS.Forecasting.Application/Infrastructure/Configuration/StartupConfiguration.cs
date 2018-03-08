@@ -79,7 +79,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         }
 
         public bool IsDevEnvironment =>
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("AT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
