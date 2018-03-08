@@ -73,6 +73,9 @@
     },
     "MAWObjectId": {
       "type": "securestring"
+    },
+    "employerConnectionString": {
+      "type": "securestring"
     }
   },
   "variables": {
@@ -219,6 +222,17 @@
           "properties": {
             "contentType": "application/x-pkcs12",
             "value": "[parameters('certificatePfxBase64')]"
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
+          ]
+        },
+        {
+          "type": "secrets",
+          "name": "EmployerConnectionString",
+          "apiVersion": "2015-06-01",
+          "properties": {
+            "value": "[parameters('employerConnectionString')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"

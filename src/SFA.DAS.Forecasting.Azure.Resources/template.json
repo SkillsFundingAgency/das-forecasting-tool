@@ -82,6 +82,9 @@
     },
     "MAWObjectId": {
       "type": "string"
+    },
+    "employerConnectionString": {
+      "type": "string"
     }
   },
   "variables": {
@@ -311,6 +314,9 @@
           },
           "MAWObjectId": {
             "value": "[parameters('MAWObjectId')]"
+          },
+          "employerConnectionString": {
+            "value": "[parameters('employerConnectionString')]"
           }
         }
       }
