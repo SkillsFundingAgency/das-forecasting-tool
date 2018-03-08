@@ -78,13 +78,13 @@
       "type": "securestring"
     },
     "vstsObjectId": {
-      "type": "string"
+      "type": "securestring"
     },
     "MAWObjectId": {
-      "type": "string"
+      "type": "securestring"
     },
     "employerConnectionString": {
-      "type": "string"
+      "type": "securestring"
     }
   },
   "variables": {
