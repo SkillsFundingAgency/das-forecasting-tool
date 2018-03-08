@@ -198,22 +198,103 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC2: do not store invalid data")]
+        [NUnit.Framework.DescriptionAttribute("AC2: Do not store invalid data")]
         public virtual void AC2DoNotStoreInvalidData()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: do not store invalid data", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Do not store invalid data", ((string[])(null)));
 #line 26
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table2.AddRow(new string[] {
+                        "0",
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table2.AddRow(new string[] {
+                        "133.33",
+                        "",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table2.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 3",
+                        "",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table2.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 4",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "01/01/0001 00:00",
+                        "133.33",
+                        "400.00",
+                        "12"});
+            table2.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 5",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "0",
+                        "400.00",
+                        "12"});
+            table2.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 6",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "0",
+                        "12"});
+            table2.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 7",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "29/05/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "0"});
 #line 27
- testRunner.Given("I made some invalid payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 28
+ testRunner.Given("I made some invalid payments", ((string)(null)), table2, "Given ");
+#line 36
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 29
+#line 37
  testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 30
+#line 38
  testRunner.And("the Forecasting Payment service should not store commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
