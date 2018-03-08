@@ -54,21 +54,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
         [Given(@"I made some invalid payments")]
-        public void GivenIHaveMadeSomeInvalidPayments()
+        public void GivenIHaveMadeSomeInvalidPayments(Table table)
         {
-            Payments = new List<TestPayment>
-            {
-                new TestPayment
-                {
-                    ApprenticeshipId = -1,
-                    ProviderId = 3
-                },
-                new TestPayment
-                {
-                    ApprenticeshipId = 3,
-                    ProviderId = -2
-                },
-            };
+            Payments = table.CreateSet<TestPayment>().ToList();
         }
 
         [When(@"the SFA Employer HMRC Payment service notifies the Forecasting service of the payment")]
