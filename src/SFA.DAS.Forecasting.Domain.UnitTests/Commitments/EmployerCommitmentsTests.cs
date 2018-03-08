@@ -39,13 +39,27 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 {
                     EmployerAccountId = 1,
                     ApprenticeshipId = 2,
-                    LearnerId = 3,
-                    MonthlyInstallment = 10
+                    LearnerId = 0,
+                    ApprenticeName = string.Empty,
+                    ProviderName = string.Empty,
+                    ProviderId = 0,
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 1,
+                    CompletionAmount = 50,
+                    CourseLevel = 0,
                 }
             }, Moqer.GetMock<IEventPublisher>().Object,
             new CommitmentValidator());
-            employerCommitments.AddCommitment(2, 3, DateTime.Today, DateTime.Today.AddDays(1), null, 87.27m, 240, 12);
+            employerCommitments.AddCommitment(2, 3, "test apprentice", "test course", 1, 4, "test provider", DateTime.Today, 
+                DateTime.Today.AddDays(1), null, 87.27m, 240, 12);
             Assert.AreEqual(1, employerCommitments.Commitments.Count);
+            var commitment = employerCommitments.Commitments.First();
+            Assert.AreEqual(commitment.ApprenticeName,"test apprentice");
+            Assert.AreEqual(commitment.ProviderName, "test provider");
+            Assert.AreEqual(commitment.CourseName, "test course");
+            Assert.AreEqual(commitment.ProviderId, 4);
+            Assert.AreEqual(commitment.LearnerId, 3);
+            Assert.AreEqual(commitment.CourseLevel, 1);
         }
 
         [Test]
