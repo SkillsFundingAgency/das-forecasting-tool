@@ -79,6 +79,9 @@
     },
     "MAWObjectId": {
       "value": ""
+    },
+    "employerConnectionString": {
+      "value": ""
     }
   }
 }
