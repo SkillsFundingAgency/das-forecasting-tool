@@ -48,17 +48,7 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
 
             For<HttpContextBase>().Use(() => new HttpContextWrapper(HttpContext.Current));
 
-
-
-            if (AuthorizeUser())
-                For<IMembershipService>().Use<MembershipService>();
-            else
-                For<IMembershipService>().Use<LocalMembershipService>();
-        }
-
-        private bool AuthorizeUser()
-        {
-            return ConfigurationManager.AppSettings["AuthorizeUser"]?.Equals("true") ?? false;
+            For<IMembershipService>().Use<MembershipService>();
         }
 
         private void ConfigureLogging()

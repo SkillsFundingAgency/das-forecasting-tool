@@ -320,13 +320,13 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Attributes\AuthorizeForecastingAttribute.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
-    <Compile Include="Authentication\LocalMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\IdentityServerConfigurationFactory.cs" />
-    <Compile Include="Authentication\ValidateMembershipAttribute.cs" />
+    <Compile Include="Attributes\ValidateMembershipAttribute.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\ForecastingController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />

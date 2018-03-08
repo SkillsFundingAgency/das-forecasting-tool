@@ -44,7 +44,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 }
             }, Moqer.GetMock<IEventPublisher>().Object,
             new CommitmentValidator());
-            employerCommitments.AddCommitment(2, 3, DateTime.Today, DateTime.Today.AddDays(1), null, 87.27m, 240, 12);
+            employerCommitments.AddCommitment(2, 3, "apprenticeName", "courseName", 1, 1, "providerName", DateTime.Today, DateTime.Today.AddDays(1), null, 87.27m, 240, 12);
             Assert.AreEqual(1, employerCommitments.Commitments.Count);
         }
 
