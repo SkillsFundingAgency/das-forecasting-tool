@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
 		public async Task UpdateClaims()
 		{
-			var constants = new Constants(_configuration.Identity);
+            var constants = new Constants(_configuration.Identity);
 			var userInfoEndpoint = constants.UserInfoEndpoint();
 			var accessToken = GetClaimValue("access_token");
 
@@ -86,22 +86,20 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
 		}
 
-		public SignInMessage GetSignInMessage(string id)
-		{
-			return _owinContext.Environment.GetSignInMessage(id);
-		}
-		public void IssueLoginCookie(string id, string displayName)
-		{
-			//var env = _owinContext.Environment;
-			//env.IssueLoginCookie(new AuthenticatedLogin
-			//{
-			//    Subject = id,
-			//    Name = displayName
-			//});
-		}
-		public void RemovePartialLoginCookie()
-		{
-			//_owinContext.Environment.RemovePartialLoginCookie();
-		}
-	}
+
+        public bool IsUserAuthenticated()
+        {
+            return HttpContext.Current.GetOwinContext().Authentication.User.Identity.IsAuthenticated;
+        }
+
+        public bool TryGetClaimValue(string key, out string value)
+        {
+            var identity = _owinContext.Authentication.User.Identity as ClaimsIdentity;
+            var claim = identity?.Claims.FirstOrDefault(c => c.Type == key);
+
+            value = claim?.Value;
+
+            return value != null;
+        }
+    }
 }

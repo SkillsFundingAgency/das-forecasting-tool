@@ -169,6 +169,7 @@
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
+    <Compile Include="Infrastructure\Registries\ConfigurationHelper.cs" />
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
     <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
@@ -206,6 +207,8 @@
     <Compile Include="Shared\Services\PayrollDateService.cs" />
     <Compile Include="Shared\Services\QueueService.cs" />
     <Compile Include="Shared\Services\PaymentApiDataService.cs" />
+    <Compile Include="EmployerUsers\MembershipContext.cs" />
+    <Compile Include="EmployerUsers\MembershipProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

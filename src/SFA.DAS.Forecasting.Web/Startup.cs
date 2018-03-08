@@ -176,6 +176,9 @@ namespace SFA.DAS.Forecasting.Web
             Configuration = configuration;
         }
 
+        public static string UserExternalIdClaimKeyName = "sub";
+        public static string AccountHashedIdRouteKeyName = "HashedAccountId";
+
         public string AuthorizeEndpoint() => $"{Configuration.BaseAddress}{Configuration.AuthorizeEndPoint}";
         public string ChangeEmailLink() => Configuration.BaseAddress.Replace("/identity", "") + string.Format(Configuration.ChangeEmailLink, Configuration.ClientId);
         public string ChangePasswordLink() => Configuration.BaseAddress.Replace("/identity", "") + string.Format(Configuration.ChangePasswordLink, Configuration.ClientId);
@@ -189,5 +192,6 @@ namespace SFA.DAS.Forecasting.Web
         public string RequiresVerification() => _baseUrl + "requires_verification";
         public string TokenEndpoint() => $"{Configuration.BaseAddress}{Configuration.TokenEndpoint}";
         public string UserInfoEndpoint() => $"{Configuration.BaseAddress}{Configuration.UserInfoEndpoint}";
+        
     }
 }
