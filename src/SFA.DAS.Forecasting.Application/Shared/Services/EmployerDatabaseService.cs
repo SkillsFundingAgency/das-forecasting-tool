@@ -13,7 +13,6 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
-        // ToDo: move file
         Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
     }
 

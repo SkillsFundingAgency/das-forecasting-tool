@@ -97,7 +97,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
             parameters.Add("@payrollYear", levyDeclaration.PayrollYear, DbType.String);
             parameters.Add("@payrollMonth", levyDeclaration.PayrollMonth, DbType.Byte);
             parameters.Add("@payrollDate", levyDeclaration.PayrollDate, DbType.DateTime);
-            parameters.Add("@levyAmountDeclared", levyDeclaration.LevyAmountDeclared, DbType.Decimal,ParameterDirection.Input,null,10,null);
+            parameters.Add("@levyAmountDeclared", levyDeclaration.LevyAmountDeclared, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
             parameters.Add("@transactionDate", levyDeclaration.TransactionDate, DbType.DateTime);
 
             await connection.ExecuteAsync(

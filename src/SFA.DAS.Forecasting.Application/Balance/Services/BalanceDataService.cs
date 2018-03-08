@@ -44,7 +44,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", balance.EmployerAccountId, DbType.Int64);
-                parameters.Add("@amount", balance.Amount, DbType.Decimal);
+                parameters.Add("@amount", balance.Amount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
                 parameters.Add("@balancePeriod", balance.BalancePeriod, DbType.DateTime);
                 parameters.Add("@receivedDate", balance.ReceivedDate, DbType.DateTime);
 

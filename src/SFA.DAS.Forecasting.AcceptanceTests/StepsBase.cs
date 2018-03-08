@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
-        protected List<Payment> Payments { get => Get<List<Payment>>(); set => Set(value); }
+        protected List<TestPayment> Payments { get => Get<List<TestPayment>>(); set => Set(value); }
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }

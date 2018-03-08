@@ -161,7 +161,7 @@
     <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
     <Compile Include="Balance\Services\IAccountBalanceService.cs" />
-    <Compile Include="Commitments\Handlers\RecordCommitmentHandler.cs" />
+    <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
@@ -174,11 +174,8 @@
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
-    <Compile Include="Payments\Handlers\GenerateAccountProjectionHandler.cs" />
-    <Compile Include="Payments\Handlers\ProcessEmployerCommitmentHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentMessage.cs" />
-    <Compile Include="Payments\Services\CommitmentDataService.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataService.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
     <Compile Include="Projections\Handlers\BuildAccountProjectionHandler.cs" />
@@ -207,7 +204,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Services\EmployerTableStorageService.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />
-    <Compile Include="Shared\Queues\QueueService.cs" />
+    <Compile Include="Shared\Services\QueueService.cs" />
     <Compile Include="Shared\Services\PaymentApiDataService.cs" />
   </ItemGroup>
   <ItemGroup>

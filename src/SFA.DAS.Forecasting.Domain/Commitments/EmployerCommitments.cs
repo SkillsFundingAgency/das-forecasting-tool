@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly long _employerAccountId;
         private readonly List<Commitment> _commitments;
         private readonly IEventPublisher _eventPublisher;
-        private readonly CommitmentValidator _commitmentValidator;
+        private readonly ICommitmentValidator _commitmentValidator;
         public ReadOnlyCollection<Commitment> Commitments => _commitments.AsReadOnly();
 
 
@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             long employerAccountId, 
             List<Commitment> commitments, 
             IEventPublisher eventPublisher, 
-            CommitmentValidator commitmentValidator)
+            ICommitmentValidator commitmentValidator)
         {
             _employerAccountId = employerAccountId;
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
@@ -30,31 +30,39 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _commitmentValidator = commitmentValidator;
         }
 
-        public bool AddCommitment(long apprenticeshipId, long learnerId, DateTime startDate, DateTime plannedEndDate,
+        public bool AddCommitment(long apprenticeshipId, long learnerId, string apprenticeName, string courseName, int? courseLevel,
+            long providerId, string providerName, DateTime startDate, DateTime plannedEndDate,
             DateTime? actualEndDate, decimal monthlyInstallment, decimal completionAmount, short numberOfInstallments)
         {
+            if (actualEndDate.HasValue && actualEndDate == DateTime.MinValue)
+                actualEndDate = null;
+
             var commitment = new Commitment
             {
                 EmployerAccountId = _employerAccountId,
                 ApprenticeshipId = apprenticeshipId,
+                ApprenticeName = apprenticeName,
                 LearnerId = learnerId,
+                CourseLevel = courseLevel,
+                CourseName = courseName,
+                ProviderId = providerId,
+                ProviderName = providerName,
                 StartDate = startDate,
                 PlannedEndDate = plannedEndDate,
                 ActualEndDate = actualEndDate,
                 MonthlyInstallment = monthlyInstallment,
                 CompletionAmount = completionAmount,
-                NumberOfInstallments = numberOfInstallments
+                NumberOfInstallments = numberOfInstallments,
             };
 
-            var results = _commitmentValidator.Validate(commitment);
-            if (!results.IsValid)
+            if (!_commitmentValidator.IsValid(commitment))
             {
-                _eventPublisher.Publish(results);
+                //_eventPublisher.Publish(results);
                 return false;
             }
 
             var existingCommitment = _commitments.FirstOrDefault(c =>
-                c.ApprenticeshipId == commitment.ApprenticeshipId && c.LearnerId == commitment.LearnerId);
+                c.ApprenticeshipId == commitment.ApprenticeshipId);
             if (existingCommitment != null)
             {
                 existingCommitment.ActualEndDate = actualEndDate;

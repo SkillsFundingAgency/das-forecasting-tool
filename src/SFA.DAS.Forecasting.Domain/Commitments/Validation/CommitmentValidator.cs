@@ -1,13 +1,17 @@
-﻿using FluentValidation;
-using SFA.DAS.Forecasting.Models.Commitments;
+﻿using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments.Validation
 {
-    public class CommitmentValidator : AbstractValidator<Commitment>
+    public interface ICommitmentValidator
     {
-        public CommitmentValidator()
+        bool IsValid(Commitment commitment);
+    }
+    public class CommitmentValidator : ICommitmentValidator
+    {
+        public bool IsValid(Commitment commitment)
         {
-            RuleFor(m => m.ActualEndDate).NotNull();
+            //TODO:  Find out if completion payment has ActualEndDate populated.
+            return true;
         }
     }
 }
