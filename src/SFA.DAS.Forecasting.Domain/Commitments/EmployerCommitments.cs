@@ -19,9 +19,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
 
         public EmployerCommitments(
-            long employerAccountId, 
-            List<Commitment> commitments, 
-            IEventPublisher eventPublisher, 
+            long employerAccountId,
+            List<Commitment> commitments,
+            IEventPublisher eventPublisher,
             ICommitmentValidator commitmentValidator)
         {
             _employerAccountId = employerAccountId;
@@ -71,6 +71,12 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 existingCommitment.StartDate = startDate;
                 existingCommitment.CompletionAmount = completionAmount;
                 existingCommitment.NumberOfInstallments = numberOfInstallments;
+                existingCommitment.ApprenticeName = apprenticeName;
+                existingCommitment.ProviderName = providerName;
+                existingCommitment.ProviderId = providerId;
+                existingCommitment.CourseName = courseName;
+                existingCommitment.CourseLevel = courseLevel;
+                existingCommitment.LearnerId = learnerId;
             }
             else
                 _commitments.Add(commitment);
