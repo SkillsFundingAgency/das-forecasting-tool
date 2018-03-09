@@ -33,7 +33,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Then(@"the completion payments should be included in the correct month")]
         public void ThenTheCompletionPaymentsShouldBeIncludedInTheCorrectMonth()
         {
-            Commitments.GroupBy(commitment => commitment.StartDateValue.AddMonths(commitment.NumberOfInstallments+1))
+            Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
                 .Select( g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount)})
                 .ToList()
                 .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.CompletionPayments == completionAmount.CompletionAmount),$"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}") );
@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Then(@"the completion payments should not be included in the projection")]
         public void ThenTheCompletionPaymentsShouldNotBeIncludedInTheProjection()
         {
-            Commitments.GroupBy(commitment => commitment.StartDateValue.AddMonths(commitment.NumberOfInstallments + 1))
+            Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
                 .Select(g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount) })
                 .ToList()
                 .ForEach(completionAmount => Assert.IsFalse(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.CompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));

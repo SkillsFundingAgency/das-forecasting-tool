@@ -19,9 +19,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
 
         public EmployerCommitments(
-            long employerAccountId, 
-            List<Commitment> commitments, 
-            IEventPublisher eventPublisher, 
+            long employerAccountId,
+            List<Commitment> commitments,
+            IEventPublisher eventPublisher,
             ICommitmentValidator commitmentValidator)
         {
             _employerAccountId = employerAccountId;
@@ -61,38 +61,35 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 return false;
             }
 
+            //TODO: Refactor and make simpler when we move to using EF rather than dapper
             var existingCommitment = _commitments.FirstOrDefault(c =>
                 c.ApprenticeshipId == commitment.ApprenticeshipId);
+
             if (existingCommitment != null)
             {
-                existingCommitment.ActualEndDate = actualEndDate;
-                existingCommitment.MonthlyInstallment = monthlyInstallment;
-                existingCommitment.PlannedEndDate = plannedEndDate;
-                existingCommitment.StartDate = startDate;
-                existingCommitment.CompletionAmount = completionAmount;
-                existingCommitment.NumberOfInstallments = numberOfInstallments;
+                commitment.Id = existingCommitment.Id;
+                _commitments.Remove(existingCommitment);
             }
-            else
-                _commitments.Add(commitment);
+            _commitments.Add(commitment);
 
             return true;
         }
 
         public virtual Tuple<decimal, List<long>> GetTotalCostOfTraining(DateTime date)
         {
-            var startOfMonth = date.GeStartOfMonth();
+            var startOfMonth = date.GetStartOfMonth();
             var commitments = _commitments.Where(commitment =>
-                    commitment.StartDate.GeStartOfMonth() <= startOfMonth &&
-                    commitment.PlannedEndDate.GeStartOfMonth().AddMonths(-1) >= startOfMonth)
+                    commitment.StartDate.GetStartOfMonth() < startOfMonth &&
+                    commitment.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= startOfMonth)
                 .ToList();
             return new Tuple<decimal, List<long>>(commitments.Sum(c => c.MonthlyInstallment), commitments.Select(c => c.Id).ToList());
         }
 
         public virtual Tuple<decimal, List<long>> GetTotalCompletionPayments(DateTime date)
         {
-            var startOfMonth = date.GeStartOfMonth();
+            var startOfMonth = date.GetStartOfMonth();
             var commitments = _commitments.Where(commitment =>
-                   commitment.PlannedEndDate.GeStartOfMonth() == startOfMonth)
+                   commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) == startOfMonth)
                 .ToList();
             return new Tuple<decimal, List<long>>(commitments.Sum(c => c.CompletionAmount), commitments.Select(c => c.Id).ToList());
         }
