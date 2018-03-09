@@ -22,6 +22,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected ForecastingWebSite WebSite { get => Get<ForecastingWebSite>(); set => Set(value); }
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
+        protected string EmployeeLogin { get => Get<string>("employer_login"); set => Set(value, "employer_login"); }
+        protected string EmployeePassword { get => Get<string>("employer_password"); set => Set(value, "employer_password"); }
 
         public T Get<T>(string key = null) where T : class
         {
