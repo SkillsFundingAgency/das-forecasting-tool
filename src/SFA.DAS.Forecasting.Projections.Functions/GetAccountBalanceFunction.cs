@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Projections.Functions
                     logger.Debug("Resolving GetAccountBalanceHandler from container.");
                     var handler = container.GetInstance<GetAccountBalanceHandler>();
                     if (handler == null)
-                        throw new InvalidOperationException("Faild to resolve GetAccountBalanceHandler from container.");
+                        throw new InvalidOperationException("Failed to resolve GetAccountBalanceHandler from container.");
                     await handler.Handle(message);
                     logger.Info($"Finished generating the account projection in response to payment run: {message.EmployerAccountId}");
                     return message;

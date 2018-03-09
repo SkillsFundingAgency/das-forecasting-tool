@@ -22,9 +22,19 @@ namespace SFA.DAS.Forecasting.Core
             return !date.HasValue || date.Value.Year == 1;
         }
 
-        public static DateTime GeStartOfMonth(this DateTime date)
+        public static DateTime GetStartOfMonth(this DateTime date)
         {
-            return date.AddDays(date.Day * -1).AddDays(1);
+            return new DateTime(date.Year, date.Month, 1);
+        }
+
+        public static bool IsLastDayOfMonth(this DateTime date)
+        {
+            return DateTime.DaysInMonth(date.Year, date.Month) == date.Day;
+        }
+
+        public static DateTime GetLastPaymentDate(this DateTime plannedEndDate)
+        {
+            return plannedEndDate.IsLastDayOfMonth() ? plannedEndDate.AddMonths(1) : plannedEndDate;
         }
     }
 }

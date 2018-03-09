@@ -21,7 +21,10 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         public async Task Handle(GenerateAccountProjectionCommand message)
         {
             var projections = await _accountProjectionRepository.Get(message.EmployerAccountId);
-            projections.BuildLevyTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
+            if (message.ProjectionSource==ProjectionSource.LevyDeclaration)
+                projections.BuildLevyTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
+            else
+                projections.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
             await _accountProjectionRepository.Store(projections);
         }
     }
