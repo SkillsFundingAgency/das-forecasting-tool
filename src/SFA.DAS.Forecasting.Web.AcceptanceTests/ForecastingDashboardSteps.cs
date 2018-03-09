@@ -13,14 +13,18 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         {
             //TODO: replace with employer credentials
             EmployerHash = "MDDP87";
+            EmployeeLogin = "lynkmiilimited+100del@gmail.com";
+            EmployeePassword = "Dell1507";
             Console.WriteLine("Employer hash: MDDP87");
         }
 
 		[Given(@"I have logged into my Apprenticeship Account")]
 		public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
 		{
-			//ScenarioContext.Current.Pending();
-			WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
+            //ScenarioContext.Current.Pending();
+            WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
+            var loginPage = WebSite.NavigateToLoginPage();
+            loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 		}
 
 	    [Given(@"I am not logged into my Apprenticeship Account")]
