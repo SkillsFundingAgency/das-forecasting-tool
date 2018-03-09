@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
@@ -33,10 +34,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         private bool IsIncluded(TestCommitment commitment, short month, int year)
         {
             var projectionDate = new DateTime(year, month, 1);
-            var commitmentDate = new DateTime(commitment.StartDateValue.Year, commitment.StartDateValue.Month,1);
-            return commitmentDate.AddMonths(commitment.NumberOfInstallments) >= projectionDate
-                   && commitmentDate <= projectionDate;
-        }
+            if (commitment.StartDateValue.GetStartOfMonth() >= projectionDate)
+                return false;
+            var lastPaymentDate = DateTime.DaysInMonth(commitment.PlannedEndDate.Year, commitment.PlannedEndDate.Month) ==
+                commitment.PlannedEndDate.Day
+                    ? commitment.PlannedEndDate.AddMonths(1)
+                    : commitment.PlannedEndDate;
 
+            return lastPaymentDate.GetStartOfMonth() >= projectionDate;
+        }
     }
 }

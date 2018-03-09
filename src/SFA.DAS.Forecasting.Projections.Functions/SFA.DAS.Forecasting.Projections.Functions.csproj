@@ -8,11 +8,13 @@
   <ItemGroup>
     <Content Include="NLog.Config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TransformOnBuild>true</TransformOnBuild>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.1.0-beta4" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
+    <PackageReference Include="Microsoft.VisualStudio.SlowCheetah" Version="3.0.61" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.0.0.47445" />

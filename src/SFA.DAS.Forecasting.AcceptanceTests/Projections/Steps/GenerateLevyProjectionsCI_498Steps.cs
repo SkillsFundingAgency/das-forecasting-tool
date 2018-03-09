@@ -24,8 +24,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunction()
         {
-            StartFunction("SFA.DAS.Forecasting.Projections.Functions");
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+            StartFunction("SFA.DAS.Forecasting.Projections.Functions");
         }
 
         [Given(@"the following levy declarations have been recorded")]
@@ -51,6 +51,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Balance = balance;
             DeleteBalance();
 
+            Console.WriteLine($"Setting balance. Uri: {Config.ApiInsertBalanceUrl}, balance: {balance}");
             var client = new HttpClient();
             await client.PostAsync(Config.ApiInsertBalanceUrl, new StringContent(balance.ToString()));
         }
@@ -64,7 +65,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Console.WriteLine($"Sending levy event to levy function: {projectionUrl}");
             var response = HttpClient.PostAsync(projectionUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-
         }
 
         [Then(@"the account projection should be generated")]
@@ -83,7 +83,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 });
                 if (!projections.Any())
                     return false;
-                projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}"));
+                projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}, Co-Investment: {p.CoInvestmentEmployer} / {p.CoInvestmentGovernment}"));
                 AccountProjections = projections;
                 return true;
             }, "Account projection failed.");
