@@ -34,7 +34,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             {
                 //process.WaitForExit()
                 var processName = process.ProcessName;
-                process.Kill();
+                if (!process.HasExited)
+                    process.Kill();
                 //foreach (var process1 in Process.GetProcessesByName(processName))
                 //{
                 //    process1.Kill();

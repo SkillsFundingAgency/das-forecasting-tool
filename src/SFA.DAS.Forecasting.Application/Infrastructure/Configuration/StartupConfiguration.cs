@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
             AllowedHashstringCharacters = GetAppSetting("AllowedHashstringCharacters", true);
             Identity = new IdentityServerConfiguration
             {
-                ClientId = GetAppSetting("ClientId", false),
+                ClientId = GetAppSetting("ClientId", true),
                 ClientSecret = GetAppSetting("ClientSecret", true),
                 BaseAddress = GetAppSetting("BaseAddress", false),
                 AuthorizeEndPoint = GetAppSetting("AuthorizeEndPoint", false),
