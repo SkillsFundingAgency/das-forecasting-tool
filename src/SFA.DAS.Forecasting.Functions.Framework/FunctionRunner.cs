@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
@@ -44,7 +44,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
@@ -66,7 +66,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
@@ -85,7 +85,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
