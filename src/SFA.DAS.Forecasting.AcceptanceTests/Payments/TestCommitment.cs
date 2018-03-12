@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
         public string ProviderName { get; set; }
         public string StartDate { get; set; }
         public DateTime StartDateValue => StartDate.ToDateTime();
-        public DateTime PlannedEndDate => StartDateValue.AddMonths(NumberOfInstallments + 1);
+        public DateTime PlannedEndDate => StartDateValue.AddMonths(NumberOfInstallments);
         public decimal InstallmentAmount { get; set; }
         public decimal CompletionAmount { get; set; }
         public int NumberOfInstallments { get; set; }
