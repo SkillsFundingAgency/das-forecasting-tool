@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                         .Validate(message);
                     if (!validationResults.IsValid)
                     {
-                        logger.Warn($"Levy declaration event failed superficial validation. Event: {message.ToJson()}");
+                        logger.Warn($"Levy declaration event failed superficial validation. Employer id: {message.AccountId}, Period: {message.PayrollMonth}, {message.PayrollYear}, Scheme: {message.EmpRef}.");
                         return null;
                     }
 
