@@ -19,8 +19,11 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             return await FunctionRunner.Run<PaymentEventStorePaymentFunction, PaymentCreatedMessage>(writer, executionContext,
                 async (container, logger) =>
                 {
+                    logger.Debug($"Storing the payment.  Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.");
                     var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
+                    logger.Debug("Resolved handler");
                     await handler.Handle(paymentCreatedMessage, QueueNames.AllowProjection);
+                    logger.Info($"Finished storing payment. Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.");
                     return paymentCreatedMessage;
                 });
         }

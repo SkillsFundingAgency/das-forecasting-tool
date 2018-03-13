@@ -18,8 +18,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             await FunctionRunner.Run<PaymentEventStoreCommitmentFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
+                    logger.Debug($"Storing commitment. Account: {paymentCreatedMessage.EmployerAccountId}, apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
 	                var handler = container.GetInstance<StoreCommitmentHandler>();
 					await handler.Handle(paymentCreatedMessage);
+                    logger.Info($"Stored commitment. Apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
                 });
         }
     }

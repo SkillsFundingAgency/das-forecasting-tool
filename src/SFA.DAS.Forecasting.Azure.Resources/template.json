@@ -85,6 +85,9 @@
     },
     "employerConnectionString": {
       "type": "securestring"
+    },
+    "baseAddress": {
+      "type": "string"
     }
   },
   "variables": {
@@ -186,6 +189,9 @@
           },
           "certificateName": {
             "value": "[parameters('certificateName')]"
+          },
+          "BaseAddress": {
+            "value": "[parameters('baseAddress')]"
           }
         }
       }

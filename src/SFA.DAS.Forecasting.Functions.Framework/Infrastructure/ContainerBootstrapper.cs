@@ -3,6 +3,11 @@ using System.IO;
 using System.Reflection;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Domain.Balance;
+using SFA.DAS.Forecasting.Application.Balance.Services;
+using Microsoft.Azure.WebJobs;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
 {
@@ -10,7 +15,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
     {
         private static readonly object LockObject = new object();
         private static IContainer _container;
-        public static IContainer Bootstrap(TraceWriter writer)
+        public static IContainer Bootstrap(TraceWriter writer, ExecutionContext executionContext)
         {
             lock (LockObject)
             {
@@ -19,14 +24,22 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                     c.AddRegistry<ConfigurationRegistry>();
                     c.AddRegistry<DefaultRegistry>();
                     c.AddRegistry<MediatrRegistry>();
-                    var binPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    writer.Verbose($"Scanning {binPath} for registries.");
+                    var binPath = Path.Combine(executionContext.FunctionAppDirectory, "bin");
+                    writer.Verbose($"Root function bin: {binPath}");
+                    var binFolders = new List<string>() { binPath };
+                    binFolders.AddRange(Directory.GetDirectories(binPath, "*.", SearchOption.AllDirectories));
                     c.Scan(assScanner =>
                     {
-                        //assScanner.LookForRegistries();                        
+                        //assScanner.LookForRegistries();   
+                        assScanner.AssemblyContainingType<CurrentBalance>();
+                        assScanner.AssemblyContainingType<IAccountBalanceService>();
                         assScanner.TheCallingAssembly();
-                        assScanner.AssembliesFromPath(binPath, a => a.GetName().Name.StartsWith("SFA.DAS.Forecasting"));
+                        foreach (var folder in binFolders)
+                        {
+                            assScanner.AssembliesFromPath(folder, a => a.GetName().Name.StartsWith("SFA.DAS.Forecasting"));
+                        }
                         assScanner.RegisterConcreteTypesAgainstTheFirstInterface();
+                        assScanner.WithDefaultConventions();
                     });
                 }));
             }
