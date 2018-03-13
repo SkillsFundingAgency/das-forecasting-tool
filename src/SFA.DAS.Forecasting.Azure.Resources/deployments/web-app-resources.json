@@ -32,6 +32,9 @@
     },
     "certificateName": {
       "type": "string"
+    },
+    "baseAddress": {
+      "type": "string"
     }
   },
   "resources": [
@@ -86,6 +89,10 @@
             {
               "name": "WEBSITE_LOAD_CERTIFICATES",
               "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
+            },
+            {
+              "name": "BaseAddress",
+              "value": "[parameters('baseAddress')]"
             }
           ],
           "alwaysOn": true,

@@ -82,6 +82,9 @@
     },
     "employerConnectionString": {
       "value": ""
+    },
+    "baseAddress": {
+      "value": ""
     }
   }
 }
