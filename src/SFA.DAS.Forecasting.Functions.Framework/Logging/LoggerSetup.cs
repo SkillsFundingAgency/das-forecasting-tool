@@ -3,6 +3,7 @@ using NLog;
 using NLog.Config;
 using SFA.DAS.NLog.Logger;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -30,9 +31,20 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
         {
             LogManager.ThrowConfigExceptions = true;
             LogManager.Configuration = new XmlLoggingConfiguration(Path.Combine(functionPath, "NLog.config"));
+
+            if (IsDevEnvironment)
+            {
+                LogManager.Configuration.AddRule(LogLevel.Info, LogLevel.Fatal, "Disk");
+            }
+
             HookNLogToAzureLog(writer);
             var logger = new NLogLogger(type);
             return logger;
         }
+
+        public static bool IsDevEnvironment =>
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
     }
 }
