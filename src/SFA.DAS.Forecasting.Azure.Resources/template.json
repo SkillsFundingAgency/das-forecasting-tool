@@ -88,6 +88,18 @@
     },
     "baseAddress": {
       "type": "string"
+    },
+    "keyvaultCertificateName": {
+      "type": "string"
+    },
+    "sharedKeyVaultName": {
+      "type": "string"
+    },
+    "sharedManagementResourceGroup": {
+      "type": "string"
+    },
+    "customHostname": {
+      "type": "string"
     }
   },
   "variables": {
@@ -192,6 +204,18 @@
           },
           "BaseAddress": {
             "value": "[parameters('baseAddress')]"
+          },
+          "keyvaultCertificateName": {
+            "type": "[parameters('keyvaultCertificateName')]"
+          },
+          "sharedKeyVaultName": {
+            "type": "[parameters('sharedKeyVaultName')]"
+          },
+          "sharedManagementResourceGroup": {
+            "type": "[parameters('sharedManagementResourceGroup')]"
+          },
+          "customHostname": {
+            "type": "[parameters('customHostname')]"
           }
         }
       }
