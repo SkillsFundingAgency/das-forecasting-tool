@@ -47,6 +47,9 @@
     },
     "customHostname": {
       "type": "string"
+    },
+    "certResourceGroup": {
+      "type": "string"
     }
   },
   "resources": [
@@ -62,31 +65,14 @@
       }
     },
     {
-      "type": "Microsoft.Web/certificates",
-      "name": "[parameters('keyvaultCertificateName')]",
-      "apiVersion": "2016-03-01",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "keyVaultId": "[resourceId(parameters('sharedManagementResourceGroup'), 'Microsoft.KeyVault/vaults/', parameters('sharedKeyVaultName'))]",
-        "keyVaultSecretName": "[parameters('keyvaultCertificateName')]",
-        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Web/sites/',parameters('name'))]"
-      ]
-    },
-    {
       "type": "Microsoft.Web/sites/hostnameBindings",
       "name": "[concat(parameters('name'), '/', parameters('customHostname'))]",
       "apiVersion": "2016-03-01",
       "location": "[resourceGroup().location]",
       "properties": {
         "sslState": "SniEnabled",
-        "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('keyvaultCertificateName'))).Thumbprint]"
-      },
-      "dependsOn": [
-        "[concat('Microsoft.Web/certificates/',parameters('keyvaultCertificateName'))]"
-      ]
+        "thumbprint": "[reference(resourceId(parameters('certResourceGroup'),'Microsoft.Web/certificates', parameters('keyvaultCertificateName'))).Thumbprint]"
+      }
     },
     {
       "name": "[parameters('name')]",
