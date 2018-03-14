@@ -71,7 +71,7 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "sslState": "SniEnabled",
-        "thumbprint": "[parameters('certResourceGroup')]"
+        "thumbprint": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('keyvaultCertificateName')), '2016-03-01').Thumbprint]"
       }
     },
     {
