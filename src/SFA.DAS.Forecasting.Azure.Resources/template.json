@@ -206,16 +206,16 @@
             "value": "[parameters('baseAddress')]"
           },
           "keyvaultCertificateName": {
-            "type": "[parameters('keyvaultCertificateName')]"
+            "value": "[parameters('keyvaultCertificateName')]"
           },
           "sharedKeyVaultName": {
-            "type": "[parameters('sharedKeyVaultName')]"
+            "value": "[parameters('sharedKeyVaultName')]"
           },
           "sharedManagementResourceGroup": {
-            "type": "[parameters('sharedManagementResourceGroup')]"
+            "value": "[parameters('sharedManagementResourceGroup')]"
           },
           "customHostname": {
-            "type": "[parameters('customHostname')]"
+            "value": "[parameters('customHostname')]"
           }
         }
       }
