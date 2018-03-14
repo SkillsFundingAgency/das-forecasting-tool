@@ -94,12 +94,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         [Test]
         public void Includes_Completion_Payments()
         {
-            _commitment.StartDate = DateTime.Today.AddMonths(-23);
-            _commitment.PlannedEndDate = DateTime.Today.AddMonths(1);
+            _commitment.StartDate = DateTime.Today.AddMonths(-1);
+            _commitment.PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(1);
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
             Console.WriteLine(accountProjection.Projections.ToJson());
-            Assert.AreEqual(accountProjection.Projections.FirstOrDefault()?.FutureFunds, _account.Balance - _commitment.CompletionAmount);
+            Assert.AreEqual(accountProjection.Projections.Skip(1).FirstOrDefault()?.CompletionPayments, _commitment.CompletionAmount);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         }
 
         [Test]
-        public void Includes_Co_Invertment()
+        public void Includes_Co_Investment()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 7);

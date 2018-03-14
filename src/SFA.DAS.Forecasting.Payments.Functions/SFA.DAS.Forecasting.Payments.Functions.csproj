@@ -3,6 +3,9 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="PaymentEventServiceBusFunction.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="NLog.Config" />
   </ItemGroup>
   <ItemGroup>

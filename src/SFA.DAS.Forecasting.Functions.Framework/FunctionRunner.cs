@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Configuration;
-using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
 using SFA.DAS.NLog.Logger;
@@ -20,7 +16,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
@@ -44,7 +40,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
@@ -66,7 +62,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);
@@ -85,7 +81,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             ILog logger = null;
             try
             {
-                var container = ContainerBootstrapper.Bootstrap();
+                var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
                     ConfigureContainer(executionContext, writer, container);

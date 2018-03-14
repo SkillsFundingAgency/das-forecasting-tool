@@ -233,6 +233,10 @@
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
+      <Project>{737c7231-3bf2-4d0b-992e-a227d95eaa53}</Project>
+      <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Monitoring\" />
