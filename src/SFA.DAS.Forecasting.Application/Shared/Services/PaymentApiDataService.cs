@@ -1,50 +1,59 @@
-﻿using SFA.DAS.Forecasting.Application.Payments.Messages;
+﻿using System;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Provider.Events.Api.Client;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public class PaymentApiDataService
     {
         private readonly IPaymentsEventsApiClient _paymentsEventsApiClient;
+        private readonly ILog _logger;
 
-        public PaymentApiDataService(IPaymentsEventsApiClient paymentsEventsApiClient)
+        public PaymentApiDataService(IPaymentsEventsApiClient paymentsEventsApiClient, ILog logger)
         {
             _paymentsEventsApiClient = paymentsEventsApiClient;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<IEnumerable<EarningDetails>> PaymentForPeriod(string periodId, long employerAccountId)
+        public async Task<List<EarningDetails>> PaymentForPeriod(string periodId, long employerAccountId)
         {
-            List<EarningDetails> result = new List<EarningDetails>();
+            var result = new List<EarningDetails>();
             var maxPages = 10000;
             for (int i = 1; i < maxPages; i++)
             {
-                var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId.ToString(), page: i);
-                var paymentEarningDetails = page.Items
-                    .Select(m => m.EarningDetails);
-
-                foreach (var item in paymentEarningDetails)
+                var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId.ToString(), i);
+                if (!page.Items.Any())
                 {
-                    var earningDetails = item.Select(m => 
+                    _logger.Info($"No payments returned for page {i}.");
+                    break;
+                }
+
+                _logger.Debug($"Got {page.Items.Length} payments for page {i}.");
+                var paymentEarningDetails = page.Items
+                    .Where(p => p.EarningDetails.Any())
+                    .SelectMany(p => p.EarningDetails, (p, e) =>
                         new EarningDetails
                         {
-                            ActualEndDate = m.ActualEndDate,
-                            PlannedEndDate = m.PlannedEndDate,
-                            EndpointAssessorId = m.EndpointAssessorId,
-                            CompletionAmount = m.CompletionAmount,
-                            CompletionStatus = m.CompletionStatus,
-                            MonthlyInstallment = m.MonthlyInstallment,
-                            RequiredPaymentId = m.RequiredPaymentId,
-                            StartDate = m.StartDate,
-                            TotalInstallments = m.TotalInstallments
-
-                        });
-
-                    result.AddRange(earningDetails);
-                }
-                if (page.PageNumber == page.PageNumber)
+                            ActualEndDate = e.ActualEndDate,
+                            PlannedEndDate = e.PlannedEndDate,
+                            EndpointAssessorId = e.EndpointAssessorId,
+                            CompletionAmount = e.CompletionAmount,
+                            CompletionStatus = e.CompletionStatus,
+                            MonthlyInstallment = e.MonthlyInstallment,
+                            RequiredPaymentId = e.RequiredPaymentId,
+                            ApprenticeshipId = p.ApprenticeshipId ?? 0,
+                            PaymentId = p.Id,
+                            StartDate = e.StartDate,
+                            TotalInstallments = e.TotalInstallments
+                        })
+                    .ToList();
+                _logger.Debug($"Got {paymentEarningDetails.Count} payments for page {i}.");
+                result.AddRange(paymentEarningDetails);
+                if (page.PageNumber == page.TotalNumberOfPages)
                     break;
             }
             return result;

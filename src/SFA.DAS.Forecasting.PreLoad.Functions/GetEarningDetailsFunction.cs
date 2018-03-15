@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
 
                     var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
-                    logger.Info($"Found {earningDetails.Count()} for Account: {hashedAccountId}");
+                    logger.Info($"Found {earningDetails.Count} for Account: {hashedAccountId}");
 
                     foreach (var item in earningDetails)
                     {

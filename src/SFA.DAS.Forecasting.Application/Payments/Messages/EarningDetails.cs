@@ -7,6 +7,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
 	/// </summary>
 	public class EarningDetails
     {
+        public string PaymentId { get; set; }
+        public long ApprenticeshipId { get; set; }
         public Guid RequiredPaymentId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime PlannedEndDate { get; set; }
