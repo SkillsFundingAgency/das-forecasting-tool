@@ -54,17 +54,6 @@
   },
   "resources": [
     {
-      "type": "Microsoft.Web/certificates",
-      "name": "[parameters('certificateName')]",
-      "apiVersion": "2016-03-01",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('KeyVaultName'))]",
-        "keyVaultSecretName": "[parameters('certificateName')]",
-        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-      }
-    },
-    {
       "type": "Microsoft.Web/sites/hostnameBindings",
       "name": "[concat(parameters('name'), '/', parameters('customHostname'))]",
       "apiVersion": "2016-03-01",
@@ -113,7 +102,7 @@
             },
             {
               "name": "WEBSITE_LOAD_CERTIFICATES",
-              "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
+              "value": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
             },
             {
               "name": "BaseAddress",
