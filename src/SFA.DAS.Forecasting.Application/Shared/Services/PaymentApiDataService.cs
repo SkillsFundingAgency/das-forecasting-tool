@@ -15,13 +15,13 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             _paymentsEventsApiClient = paymentsEventsApiClient;
         }
 
-        public async Task<IEnumerable<EarningDetails>> PaymentForPeriod(string periodId, string employerAccountId)
+        public async Task<IEnumerable<EarningDetails>> PaymentForPeriod(string periodId, long employerAccountId)
         {
             List<EarningDetails> result = new List<EarningDetails>();
             var maxPages = 10000;
             for (int i = 1; i < maxPages; i++)
             {
-                var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId, page: i);
+                var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId.ToString(), page: i);
                 var paymentEarningDetails = page.Items
                     .Select(m => m.EarningDetails);
 
