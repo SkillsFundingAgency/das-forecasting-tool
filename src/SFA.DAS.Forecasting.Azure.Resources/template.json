@@ -103,6 +103,9 @@
     },
     "certResourceGroup": {
       "type": "string"
+    },
+    "myaBaseUrl": {
+      "type": "string"
     }
   },
   "variables": {
@@ -211,17 +214,14 @@
           "keyvaultCertificateName": {
             "value": "[parameters('keyvaultCertificateName')]"
           },
-          "sharedKeyVaultName": {
-            "value": "[parameters('sharedKeyVaultName')]"
-          },
-          "sharedManagementResourceGroup": {
-            "value": "[parameters('sharedManagementResourceGroup')]"
-          },
           "customHostname": {
             "value": "[parameters('customHostname')]"
           },
           "certResourceGroup": {
             "value": "[parameters('certResourceGroup')]"
+          },
+          "myaBaseUrl": {
+            "value": "[parameters('myaBaseUrl')]"
           }
         }
       }

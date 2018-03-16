@@ -39,16 +39,13 @@
     "keyvaultCertificateName": {
       "type": "string"
     },
-    "sharedKeyVaultName": {
-      "type": "string"
-    },
-    "sharedManagementResourceGroup": {
-      "type": "string"
-    },
     "customHostname": {
       "type": "string"
     },
     "certResourceGroup": {
+      "type": "string"
+    },
+    "myaBaseUrl": {
       "type": "string"
     }
   },
@@ -110,6 +107,10 @@
             {
               "name": "BaseAddress",
               "value": "[parameters('baseAddress')]"
+            },
+            {
+              "name": "MyaBaseUrl",
+              "value": "[parameters('myaBaseUrl')]"
             }
           ],
           "alwaysOn": true,
