@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             else
                 AddRedisTarget(appName);
 
-            //AddAzureTarget(writer);
+            AddAzureTarget(writer);
             return new NLogLogger(type);
         }
 
