@@ -61,7 +61,10 @@
       "properties": {
         "sslState": "SniEnabled",
         "thumbprint": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('keyvaultCertificateName')), '2016-03-01').Thumbprint]"
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('name'))]"
+      ]
     },
     {
       "name": "[parameters('name')]",
