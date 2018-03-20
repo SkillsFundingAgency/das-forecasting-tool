@@ -79,7 +79,11 @@
                         <p>The 'cost of training' column shows the total monthly training costs that have been calculated for future months.</p>
                         <p>The 'completion payments' column shows the total of completion payments that happen in that month.</p>
                         <p>Payments are usually made on the 5th working day of each month and are updated in the forecast.</p>
-
+                        <p>
+                            The funding projection does not include any overdue completion
+                            payments where the apprenticeships have overrun the planned
+                            completion date.
+                        </p>
                     </div>
                 </details>
 
@@ -107,7 +111,12 @@
 
                     </div>
                 </details>
-
+            </div>
+            <div class="column-one-third">
+                <div class="panel panel-width-thin">
+                    <p>Pending completion payments</p>
+                    <span class="heading-medium">@Model.OverdueCompletionPayments.FormatCost()</span>
+                </div>
             </div>
         </div>
 

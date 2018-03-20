@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Projections.Services;
+using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -14,6 +15,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionReadModelDataService _accountProjection;
+        private readonly ICommitmentsDataService _commitmentsDataService;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly Mapper _mapper;
 
@@ -22,11 +24,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public ForecastingOrchestrator(
             IHashingService hashingService,
             IAccountProjectionReadModelDataService accountProjection,
+            ICommitmentsDataService commitmentsDataService,
             IApplicationConfiguration applicationConfiguration,
             Mapper mapper)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;
+            _commitmentsDataService = commitmentsDataService;
             _applicationConfiguration = applicationConfiguration;
             _mapper = mapper;
         }
@@ -34,13 +38,21 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
             var balance = await GetBalance(hashedAccountId);
+            var var1 = await GetOverdueCompletionPayments(hashedAccountId);
             return new BalanceViewModel {
                 BalanceItemViewModels = balance,
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd")))
+                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                OverdueCompletionPayments = var1
             };
+        }
+
+        private Task<decimal> GetOverdueCompletionPayments(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            return _commitmentsDataService.GetOverdueCompletionPayments(accountId);
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
