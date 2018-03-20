@@ -118,6 +118,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FundingProjectionPage _Accountprojection.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\FundingProjectionPage _PendingCompletion.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FundingProjectionPage _PendingCompletion.feature</DependentUpon>
+    </Compile>
     <Compile Include="FileManager.cs" />
     <Compile Include="Forecasting Dashboard.feature.cs">
       <AutoGen>True</AutoGen>
@@ -137,6 +142,7 @@
     <Compile Include="Security\Steps\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />
     <Compile Include="StepDefinition\FundingProjectionPage_AccountprojectionSteps.cs" />
+    <Compile Include="StepDefinition\FundingProjectionPage_PendingCompletionSteps.cs" />
     <Compile Include="StepsBase.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +156,10 @@
     <None Include="Features\FundingProjectionPage _Accountprojection.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>FundingProjectionPage _Accountprojection.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\FundingProjectionPage _PendingCompletion.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>FundingProjectionPage _PendingCompletion.feature.cs</LastGenOutput>
     </None>
     <None Include="Forecasting Dashboard.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

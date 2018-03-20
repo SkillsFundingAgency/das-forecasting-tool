@@ -9,6 +9,7 @@ using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
@@ -19,7 +20,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly ICommitmentsDataService _commitmentsDataService;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly Mapper _mapper;
-
+        private readonly ILog _logger;
         private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
@@ -27,20 +28,23 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             IAccountProjectionReadModelDataService accountProjection,
             ICommitmentsDataService commitmentsDataService,
             IApplicationConfiguration applicationConfiguration,
-            Mapper mapper)
+            Mapper mapper,
+            ILog logger)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;
             _commitmentsDataService = commitmentsDataService;
             _applicationConfiguration = applicationConfiguration;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
             var balance = await GetBalance(hashedAccountId);
-            var firstMonth = balance.Any() ? balance.Min(m => m.Date) : DateTime.Now; 
-            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId, firstMonth);
+            
+
+            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId);
 
             return new BalanceViewModel {
                 BalanceItemViewModels = balance,
@@ -52,10 +56,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             };
         }
 
-        private Task<decimal> GetOverdueCompletionPayments(string hashedAccountId, DateTime firstMonth)
+        private async Task<decimal> GetOverdueCompletionPayments(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            return _commitmentsDataService.GetOverdueCompletionPayments(accountId, firstMonth.GetFirstDayOfMonthDate());
+            return await _commitmentsDataService.GetOverdueCompletionPayments(accountId);
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)

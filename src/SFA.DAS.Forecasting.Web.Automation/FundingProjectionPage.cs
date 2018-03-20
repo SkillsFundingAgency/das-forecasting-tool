@@ -16,6 +16,9 @@ namespace SFA.DAS.Forecasting.Web.Automation
         [FindsBy(How = How.CssSelector, Using = "#balancesheet")]
         public IWebElement AccountProjectionTable { get; set; }
 
+        [FindsBy(How = How.CssSelector, Using = ".pending-completion-payments .heading-medium")]
+        public IWebElement PendingComletionPayment { get; set; }
+
         public FundingProjectionPage(IWebDriver webDriver) : base(webDriver)
         {
         }

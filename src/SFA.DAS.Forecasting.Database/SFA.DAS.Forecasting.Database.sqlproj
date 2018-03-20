@@ -71,6 +71,7 @@
     <Build Include="Tables\AccountProjectionCommitment.sql" />
     <Build Include="Tables\FundingSource.sql" />
     <PostDeploy Include="PostDeployment\Script.PostDeployment1.sql" />
+    <Build Include="Tables\AccountPendingCompletionPayment.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestData\ResetBalanceData.sql" />
