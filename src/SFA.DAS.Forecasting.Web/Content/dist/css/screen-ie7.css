@@ -4284,6 +4284,15 @@ h2 .float-right {
   color: #4c2c92;
 }
 
+/*Funding projection page*/
+#account-projection {
+  margin-bottom: 60px;
+}
+
+.pending-completion-payments p {
+  margin-bottom: 5px;
+}
+
 .funding-projection .info-summary {
   max-width: 30em;
   background: #eaebf3;
