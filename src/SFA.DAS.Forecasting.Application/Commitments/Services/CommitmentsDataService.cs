@@ -53,23 +53,24 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             });
         }
 
-        public async Task<decimal> GetOverdueCompletionPayments(long employerAccountId)
+        public async Task<decimal> GetOverdueCompletionPayments(long employerAccountId, DateTime firstForecastMonth)
         {
             return await WithConnection(async cnn =>
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
+                parameters.Add("@firstForecastMonth", firstForecastMonth, DbType.DateTime);
 
                 var sql = @"SELECT sum(CompletionAmount) FROM [SFA.DAS.Forecasting.Database].[dbo].[Commitment]
                         WHERE ActualEndDate is null
-                        and PlannedEndDate< '2019-04-01'
+                        and PlannedEndDate < @firstForecastMonth
                         and EmployerAccountId = @employerAccountId";
 
-                var val = await cnn.QueryAsync<decimal>(
+                var result = await cnn.QueryAsync<decimal?>(
                     sql,
                     parameters,
                     commandType: CommandType.Text);
-                return val.FirstOrDefault();
+                return result?.FirstOrDefault() ?? 0;
             });
         }
 

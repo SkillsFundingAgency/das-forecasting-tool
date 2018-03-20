@@ -17,6 +17,16 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         }
 
         /// <summary>
+        /// Returns DateTime for first day of month for given date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetFirstDayOfMonthDate(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, 1);
+        }
+
+        /// <summary>
         /// GDS format: d MMM yyyy
         /// </summary>
         /// <param name="date"></param>

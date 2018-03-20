@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -38,21 +39,23 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
             var balance = await GetBalance(hashedAccountId);
-            var var1 = await GetOverdueCompletionPayments(hashedAccountId);
+            var firstMonth = balance.Any() ? balance.Min(m => m.Date) : DateTime.Now; 
+            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId, firstMonth);
+
             return new BalanceViewModel {
                 BalanceItemViewModels = balance,
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
                 DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd"))),
-                OverdueCompletionPayments = var1
+                OverdueCompletionPayments = overdueCompletionPayments
             };
         }
 
-        private Task<decimal> GetOverdueCompletionPayments(string hashedAccountId)
+        private Task<decimal> GetOverdueCompletionPayments(string hashedAccountId, DateTime firstMonth)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            return _commitmentsDataService.GetOverdueCompletionPayments(accountId);
+            return _commitmentsDataService.GetOverdueCompletionPayments(accountId, firstMonth.GetFirstDayOfMonthDate());
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
