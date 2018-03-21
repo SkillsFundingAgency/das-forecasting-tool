@@ -28,16 +28,12 @@
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
-    <Content Include="deployments\initialise-keyvault-resources.json" />
     <Content Include="deployments\keyvault-resources.json" />
     <Content Include="deployments\storage-resources.json" />
     <Content Include="deployments\function-app-resources.json" />
     <Content Include="deployments\web-app-resources.json" />
     <Content Include="parameters.json" />
     <Content Include="template.json" />
-    <None Include="Get-PfxPkcs12Base64String.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Initialise-FunctionApps.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
