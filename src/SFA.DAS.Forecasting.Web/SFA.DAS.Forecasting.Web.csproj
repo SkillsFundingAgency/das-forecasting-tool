@@ -325,6 +325,7 @@
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
+    <Compile Include="Attributes\AuthorizeForecastingAttribute.cs" />
     <Compile Include="Authentication\OwinWrapper.cs" />
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\IdentityServerConfigurationFactory.cs" />

@@ -4,6 +4,9 @@ param(
 )
 
 $SubscriptionId = (Get-AzureRmContext).Subscription.Id
+if(!$SubscriptionId){
+    $SubscriptionId = (Get-AzureRmContext).Subscription.SubscriptionId
+}
 foreach ($FunctionApp in $FunctionAppNames) {
     Write-Host "Initialising $FunctionApp"
     $ResourceActionParams = @{

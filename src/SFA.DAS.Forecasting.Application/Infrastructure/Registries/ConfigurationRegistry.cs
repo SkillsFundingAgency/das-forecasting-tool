@@ -35,6 +35,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 BackLink = GetAppSetting("BackLink", false),
                 LimitForecast = Boolean.Parse(GetAppSetting("LimitForecast", false) ?? "false"),
                 StubEmployerPaymentTable = GetAppSetting("Stub-EmployerPaymentTable", false),
+                AllowTriggerProjections = bool.Parse(GetAppSetting("AllowTriggerProjections", false) ?? "true"),
                 PaymentEventsApi = new PaymentsEventsApiConfiguration
                 {
                     ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", false),

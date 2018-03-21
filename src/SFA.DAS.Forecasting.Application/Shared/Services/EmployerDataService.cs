@@ -1,18 +1,21 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EAS.Account.Api.Types;
-using SFA.DAS.EmployerAccounts.Events.Messages;
+﻿using System;
+using System.Collections.Generic;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDataService
     {
-        Task<LevySchemeDeclarationUpdatedMessage> LevyForPeriod(string employerId, string periodYear, short? periodMonth);
+        Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string employerId, string periodYear, short? periodMonth);
     }
+
+    public class LevyDeclarations: List<LevyDeclarationViewModel>, IAccountResource { }
 
     public class EmployerDataService : IEmployerDataService
     {
@@ -30,36 +33,34 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             _logger = logger;
         }
 
-        public async Task<LevySchemeDeclarationUpdatedMessage> LevyForPeriod(string employerId, string periodYear, short? periodMonth)
+        public async Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string hashedAccountId, string periodYear, short? periodMonth)
         {
-            var res = await _accountApiClient.GetLevyDeclarations(employerId);
+            var resource = $"api/accounts/{hashedAccountId}/levy/{periodYear}/{periodMonth}";
+            var res = await _accountApiClient.GetResource<LevyDeclarations>(resource);
 
             if (res == null)
             {
-                _logger.Debug($"Account API client returned null for GetLevyDeclarations for account {employerId}");
+                _logger.Debug($"Account API client returned null for GetLevyDeclarations for account {hashedAccountId}, period: {periodYear}, {periodMonth}");
                 return null;
             }
 
-            var matches = res.Where(m => m.PayrollYear == periodYear && m.PayrollMonth == periodMonth);
-
-            if (matches.Count() != 1)
+            _logger.Info($"Got {res.Count} levy declarations for employer {hashedAccountId}.");
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            return res.Select(levy => new LevySchemeDeclarationUpdatedMessage
             {
-                _logger.Info($"Can't find any declarations for {employerId}, Year: {periodYear}, Month: {periodMonth}");
-                return null;
-            }
-
-            var levy = matches.SingleOrDefault();
-            var accountId = _hashingService.DecodeValue(levy.HashedAccountId);
-
-            return new LevySchemeDeclarationUpdatedMessage
-            {
+                Id = levy.Id,
                 AccountId = accountId,
-                EmpRef = employerId,
-                PayrollYear = levy.PayrollYear,
+                CreatedAt = levy.CreatedDate,
+                CreatedDate = levy.CreatedDate,
+                DateCeased = levy.DateCeased,
+                EmpRef = levy.PayeSchemeReference,
                 PayrollMonth = levy.PayrollMonth,
-                LevyDeclaredInMonth = levy.TotalAmount,
-                CreatedDate = levy.CreatedDate
-            };
+                PayrollYear = levy.PayrollYear,
+                LevyDeclaredInMonth = levy.LevyDeclaredInMonth,
+                LevyAllowanceForYear = levy.LevyAllowanceForYear ?? 0,
+                SubmissionDate = levy.SubmissionDate ?? DateTime.MinValue,
+                TotalAmount = levy.TotalAmount
+            }).ToList();
         }
     }
 }

@@ -26,6 +26,11 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
             Logger.Debug($"Now checking if projections can be generated for levy declaration events: {levySchemeDeclaration.ToDebugJson()}");
             if (levySchemeDeclaration.PayrollMonth == null)
                 throw new InvalidOperationException($"Received invalid levy declaration. No month specified. Data: ");
+            if (!ApplicationConfiguration.AllowTriggerProjections)
+            {
+                Logger.Warn("Triggering of projections is disabled.");
+                return false;
+            }
             var levyPeriod = await Repository.Get(levySchemeDeclaration.AccountId, levySchemeDeclaration.PayrollYear,
                 levySchemeDeclaration.PayrollMonth.Value);
             var lastReceivedTime = levyPeriod.GetLastTimeReceivedLevy();

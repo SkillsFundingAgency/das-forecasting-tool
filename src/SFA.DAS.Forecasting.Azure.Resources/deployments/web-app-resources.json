@@ -35,19 +35,33 @@
     },
     "baseAddress": {
       "type": "string"
+    },
+    "keyvaultCertificateName": {
+      "type": "string"
+    },
+    "customHostname": {
+      "type": "string"
+    },
+    "certResourceGroup": {
+      "type": "string"
+    },
+    "myaBaseUrl": {
+      "type": "string"
     }
   },
   "resources": [
     {
-      "type": "Microsoft.Web/certificates",
-      "name": "[parameters('certificateName')]",
+      "type": "Microsoft.Web/sites/hostnameBindings",
+      "name": "[concat(parameters('name'), '/', parameters('customHostname'))]",
       "apiVersion": "2016-03-01",
       "location": "[resourceGroup().location]",
       "properties": {
-        "keyVaultId": "[resourceId('Microsoft.KeyVault/vaults', parameters('KeyVaultName'))]",
-        "keyVaultSecretName": "[parameters('certificateName')]",
-        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-      }
+        "sslState": "SniEnabled",
+        "thumbprint": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('keyvaultCertificateName')), '2016-03-01').Thumbprint]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('name'))]"
+      ]
     },
     {
       "name": "[parameters('name')]",
@@ -88,15 +102,20 @@
             },
             {
               "name": "WEBSITE_LOAD_CERTIFICATES",
-              "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName'))).Thumbprint]"
+              "value": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
             },
             {
               "name": "BaseAddress",
               "value": "[parameters('baseAddress')]"
+            },
+            {
+              "name": "MyaBaseUrl",
+              "value": "[parameters('myaBaseUrl')]"
             }
           ],
           "alwaysOn": true,
-          "phpVersion": ""
+          "phpVersion": "",
+          "httpsOnly": true
         },
         "name": "[parameters('name')]",
         "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",

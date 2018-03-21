@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EAS.Account.Api.Client;
@@ -8,6 +9,7 @@ using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
@@ -35,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
         [Test]
         public async Task Should_generate_levy_declaration()
         {
-            var result = await _levyEmployerDataService.LevyForPeriod("ABBA12", "2018-19", 2);
+            var result = (await _levyEmployerDataService.LevyForPeriod("ABBA12", "2018-19", 2)).First();
 
             result.AccountId.Should().Be(112233, because: "Hashed employer id should be decoded to the acctual id");
 
@@ -47,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
         [Test]
         public async Task Should_be_null_if_multiple_matches()
         {
-            var result = await _levyEmployerDataService.LevyForPeriod("ABBA12", "2018-19", 3);
+            var result = (await _levyEmployerDataService.LevyForPeriod("ABBA12", "2018-19", 3)).First();
 
             result.Should().Be(null);
         }
@@ -55,7 +57,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
         [Test]
         public async Task Should_be_null_if_no_matches()
         {
-            var result = await _levyEmployerDataService.LevyForPeriod("ABBA12", "2018-19", 4);
+            var result = (await _levyEmployerDataService.LevyForPeriod("ABBA12", "2018-19", 4)).First();
 
             result.Should().Be(null);
         }
@@ -93,7 +95,5 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
 
             return await Task.FromResult(l);
         }
-
-
     }
 }

@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                     logger.Debug("Getting levy declaration handler from container.");
                     var handler = container.GetInstance<AllowAccountProjectionsHandler>();
                     if (handler == null)
-                        throw new InvalidOperationException($"Faild to get levy handler from container.");
+                        throw new InvalidOperationException("Faild to get levy handler from container.");
                     var allowProjections = await handler.Allow(message);
                     if (!allowProjections)
                     {
