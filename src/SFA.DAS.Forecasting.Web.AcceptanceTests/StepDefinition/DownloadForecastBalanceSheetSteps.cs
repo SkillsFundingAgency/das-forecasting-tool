@@ -106,12 +106,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 
                 foreach (var accountProjectionReadModel in accountProjections)
                 {
+                    var date = DateTime.Parse(accountProjectionReadModel.Date);
+
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
                     parameters.Add("@projectionCreationDate", DateTime.Today, DbType.DateTime);
                     parameters.Add("@projectionGenerationType", 1, DbType.Int16);
-                    parameters.Add("@month", GetMonth(accountProjectionReadModel.Date), DbType.Int16);
-                    parameters.Add("@year", accountProjectionReadModel.Date.Substring(4).Trim(), DbType.Int32);
+                    parameters.Add("@month", date.Month, DbType.Int16);
+                    parameters.Add("@year", date.Year, DbType.Int32);
                     parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
                     parameters.Add("@totalCostOfTraining", accountProjectionReadModel.CostOfTraining, DbType.Decimal);
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
@@ -123,35 +125,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 txScope.Complete();
             }
         }
-
-        public short GetMonth(string dateString)
-        {
-            if (dateString.StartsWith("Jan"))
-                return 1;
-            else if (dateString.StartsWith("Feb"))
-                return 2;
-            else if (dateString.StartsWith("Mar"))
-                return 3;
-            else if (dateString.StartsWith("Apr"))
-                return 4;
-            else if (dateString.StartsWith("May"))
-                return 5;
-            else if (dateString.StartsWith("Jun"))
-                return 6;
-            else if (dateString.StartsWith("Jul"))
-                return 7;
-            else if (dateString.StartsWith("Aug"))
-                return 8;
-            else if (dateString.StartsWith("Sep"))
-                return 9;
-            else if (dateString.StartsWith("Oct"))
-                return 10;
-            else if (dateString.StartsWith("Nov"))
-                return 11;
-            else  
-                return 12;
-        }
-    
 
         [Given(@"I have generated the following projections")]
         public void GivenIHaveGeneratedTheFollowingProjections(Table table)

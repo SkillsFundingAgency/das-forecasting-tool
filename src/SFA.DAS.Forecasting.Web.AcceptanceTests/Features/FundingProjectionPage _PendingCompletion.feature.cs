@@ -85,17 +85,91 @@ this.ScenarioSetup(scenarioInfo);
 this.FeatureBackground();
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Amount",
-                        "CreatedOn"});
+                        "EmployerAccountId",
+                        "LearnerId",
+                        "ProviderId",
+                        "ProviderName",
+                        "ApprenticeshipId",
+                        "ApprenticeName",
+                        "CourseName",
+                        "CourseLevel",
+                        "StartDate",
+                        "PlannedEndDate",
+                        "ActualEndDate",
+                        "CompletionAmount",
+                        "MonthlyInstallment",
+                        "NumberOfInstallments"});
             table1.AddRow(new string[] {
-                        "11008",
-                        "2018-10-01"});
+                        "12345",
+                        "1",
+                        "2",
+                        "Test Provider 2",
+                        "222",
+                        "Apprentice Name 1",
+                        "Test Provider\tTest Course 2",
+                        "1",
+                        "2018-03-20",
+                        "2020-03-20",
+                        "NULL",
+                        "3000.00",
+                        "500.00",
+                        "24"});
+            table1.AddRow(new string[] {
+                        "12345",
+                        "2",
+                        "3",
+                        "Test Provider 3",
+                        "333",
+                        "Apprentice Name 2",
+                        "Test Provider\tTest Course 3",
+                        "1",
+                        "2016-03-21",
+                        "2018-03-21",
+                        "NULL",
+                        "2000.00",
+                        "250.00",
+                        "24"});
 #line 10
- testRunner.Given("I have generated the following completion payments", ((string)(null)), table1, "Given ");
-#line 15
- testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("I have generated the following commitments", ((string)(null)), table1, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Date",
+                        "Funds in",
+                        "Cost Of Training",
+                        "Completion Payments",
+                        "Your Contribution",
+                        "Government Contribution",
+                        "Future Funds"});
+            table2.AddRow(new string[] {
+                        "Apr 18",
+                        "14000",
+                        "880",
+                        "32200",
+                        "31000",
+                        "31000",
+                        "31000"});
+            table2.AddRow(new string[] {
+                        "May 18",
+                        "15000",
+                        "880",
+                        "32200",
+                        "17000",
+                        "17000",
+                        "17000"});
+            table2.AddRow(new string[] {
+                        "Jun 18",
+                        "91000",
+                        "1800",
+                        "10000",
+                        "23000",
+                        "23000",
+                        "23000"});
 #line 16
- testRunner.Then("Pending completion payments should be £11,008", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("I have generated the following projections", ((string)(null)), table2, "And ");
+#line 23
+ testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 24
+ testRunner.Then("Pending completion payments should be £2,000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }
