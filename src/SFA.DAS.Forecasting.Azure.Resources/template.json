@@ -74,12 +74,6 @@
     "certificateName": {
       "type": "string"
     },
-    "certificatePfxBase64": {
-      "type": "securestring"
-    },
-    "vstsObjectId": {
-      "type": "securestring"
-    },
     "MAWObjectId": {
       "type": "securestring"
     },
@@ -90,12 +84,6 @@
       "type": "string"
     },
     "keyvaultCertificateName": {
-      "type": "string"
-    },
-    "sharedKeyVaultName": {
-      "type": "string"
-    },
-    "sharedManagementResourceGroup": {
       "type": "string"
     },
     "customHostname": {
@@ -109,43 +97,12 @@
     }
   },
   "variables": {
-    "keyvaultInitialiseResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/initialise-keyvault-resources.json')]",
     "storageResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/storage-resources.json')]",
     "webappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/web-app-resources.json')]",
     "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]",
     "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]"
   },
   "resources": [
-    {
-      "apiVersion": "2017-08-01",
-      "name": "initialise-keyvault-resources-deployment",
-      "dependsOn": [],
-      "type": "Microsoft.Resources/deployments",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('keyvaultInitialiseResourcesTemplateUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "name": {
-            "value": "[parameters('keyVaultName')]"
-          },
-          "vstsObjectId": {
-            "value": "[parameters('vstsObjectId')]"
-          },
-          "certificateName": {
-            "value": "[parameters('certificateName')]"
-          },
-          "certificatePfxBase64": {
-            "value": "[parameters('certificatePfxBase64')]"
-          },
-          "MAWObjectId": {
-            "value": "[parameters('MAWObjectId')]"
-          }
-        }
-      }
-    },
     {
       "apiVersion": "2017-08-01",
       "name": "storage-resources-deployment",
@@ -167,9 +124,6 @@
     {
       "apiVersion": "2017-08-01",
       "name": "web-app-resources-deployment",
-      "dependsOn": [
-        "initialise-keyvault-resources-deployment"
-      ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -338,15 +292,6 @@
           },
           "clientSecret": {
             "value": "[parameters('clientSecret')]"
-          },
-          "certificateName": {
-            "value": "[parameters('certificateName')]"
-          },
-          "certificatePfxBase64": {
-            "value": "[parameters('certificatePfxBase64')]"
-          },
-          "vstsObjectId": {
-            "value": "[parameters('vstsObjectId')]"
           },
           "MAWObjectId": {
             "value": "[parameters('MAWObjectId')]"
