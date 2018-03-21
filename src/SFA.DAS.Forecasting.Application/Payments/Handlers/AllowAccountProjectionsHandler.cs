@@ -29,6 +29,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 			var employerPayment = new EmployerPaymentService(Repository);
             Logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.ToDebugJson()}");
 
+            if (!ApplicationConfiguration.AllowTriggerProjections)
+            {
+                Logger.Warn("Triggering of projections is disabled.");
+                return false;
+            }
 	        var payments = await Repository.GetPayments(paymentCreatedMessage.EmployerAccountId,
 		        paymentCreatedMessage.CollectionPeriod.Month, paymentCreatedMessage.CollectionPeriod.Year);
 	        var lastReceivedTime = employerPayment.GetLastTimeReceivedPayment(payments);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -19,7 +20,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static async Task<string> Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage, 
+            [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
@@ -45,24 +46,29 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    }
 
                    var levyDataService = container.GetInstance<IEmployerDataService>();
-
                    logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", preLoadRequest.EmployerAccountIds)}, {preLoadRequest.PeriodYear}, {preLoadRequest.PeriodMonth}");
-
                    var messageCount = 0;
+                   var schemes = new Dictionary<string, string>();
                    foreach (var employerId in preLoadRequest.EmployerAccountIds)
                    {
-                       var model = await levyDataService.LevyForPeriod(employerId, preLoadRequest.PeriodYear, preLoadRequest.PeriodMonth);
-                       if (model == null)
-                           continue;
-
-                       if (preLoadRequest.SubstitutionId.HasValue)
+                       var levyDeclarations = await levyDataService.LevyForPeriod(employerId, preLoadRequest.PeriodYear, preLoadRequest.PeriodMonth);
+                       if (levyDeclarations.Count < 1)
                        {
-                           model.AccountId = preLoadRequest.SubstitutionId.Value;
-                           model.EmpRef = hashingService.HashValue(preLoadRequest.SubstitutionId.Value);
+                           logger.Warn($"No levy declarations found for employer: {employerId}");
+                           continue;
                        }
-
-                       messageCount++;
-                       outputQueueMessage.Add(model);
+                       levyDeclarations.ForEach(ld =>
+                       {
+                           messageCount++;
+                           if (preLoadRequest.SubstitutionId.HasValue)
+                           {
+                               ld.AccountId = preLoadRequest.SubstitutionId.Value;
+                               if (!schemes.ContainsKey(ld.EmpRef))
+                                   schemes.Add(ld.EmpRef, Guid.NewGuid().ToString("N"));
+                               ld.EmpRef = schemes[ld.EmpRef];
+                           }
+                           outputQueueMessage.Add(ld);
+                       });
                    }
 
                    logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");

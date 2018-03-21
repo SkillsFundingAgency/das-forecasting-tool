@@ -23,8 +23,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 		{
             //ScenarioContext.Current.Pending();
             WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
-            var loginPage = WebSite.NavigateToLoginPage();
-            loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
+            //var loginPage = WebSite.NavigateToLoginPage();
+            //loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 		}
 
 	    [Given(@"I am not logged into my Apprenticeship Account")]

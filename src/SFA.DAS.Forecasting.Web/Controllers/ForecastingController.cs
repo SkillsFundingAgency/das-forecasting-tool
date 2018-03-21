@@ -3,13 +3,14 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
+using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-	[Authorize]
-	[ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
+    [AuthorizeForecasting]
+    [ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
         private readonly ForecastingOrchestrator _orchestrator;

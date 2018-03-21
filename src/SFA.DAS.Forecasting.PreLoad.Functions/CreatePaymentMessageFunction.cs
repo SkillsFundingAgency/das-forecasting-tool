@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using NLog;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -35,14 +37,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         paymentCreatedMessage =
                             payments
-                            .Select(p => CreatePaymentSubstituteData(p, earningDetails, message.SubstitutionId))
+                            .Select(p => CreatePaymentSubstituteData(logger,p, earningDetails, message.SubstitutionId.Value))
                             .Where(p => p != null)
                             .ToList();
                     }
                     else {
                         paymentCreatedMessage = 
                             payments
-                            .Select(p => CreatePayment(p, earningDetails))
+                            .Select(p => CreatePayment(logger, p, earningDetails))
                             .Where(p => p != null)
                             .ToList();
                     }
@@ -59,20 +61,28 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 });
         }
 
-        private static PaymentCreatedMessage CreatePaymentSubstituteData(EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long? substitutionId)
+        private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {
-            var ed = earningDetails.FirstOrDefault(m => m.RequiredPaymentId == payment.PaymentId);
-            if (payment == null || ed == null)
+            if (payment == null)
+            {
+                logger.Warn("No payment passed to CreatePaymentSubstituteData");
                 return null;
+            }
+            var earningDetail = earningDetails.FirstOrDefault(ed => ed.PaymentId == payment.PaymentId.ToString() || ed.ApprenticeshipId == payment.ApprenticeshipId);
+            if (earningDetail == null)
+            {
+                logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
+                return null;
+            }
+                
 
-            Random r = new Random();
-
+            Random r = new Random(Guid.NewGuid().GetHashCode());
             var paymentId = Guid.NewGuid();
-            ed.RequiredPaymentId = paymentId;
+            earningDetail.RequiredPaymentId = paymentId;
             return new PaymentCreatedMessage
             {
                 Id = paymentId.ToString(),
-                EmployerAccountId = substitutionId.Value,
+                EmployerAccountId = substitutionId,
                 Ukprn = 1,
                 ApprenticeshipId = r.Next(10000, 99999),
                 Amount = payment.Amount,
@@ -83,16 +93,24 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Uln = 1234567890,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
-                EarningDetails = ed,
+                EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };
         }
 
-        public static PaymentCreatedMessage CreatePayment(EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)
+        public static PaymentCreatedMessage CreatePayment(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)
         {
-            var ed = earningDetails.FirstOrDefault(m => m.RequiredPaymentId == payment.PaymentId);
-            if (payment == null || ed == null)
+            if (payment == null)
+            {
+                logger.Warn("No payment passed to CreatePaymentSubstituteData");
                 return null;
+            }
+            var earningDetail = earningDetails.FirstOrDefault(ed => ed.PaymentId == payment.PaymentId.ToString() || ed.ApprenticeshipId == payment.ApprenticeshipId);
+            if (earningDetail == null)
+            {
+                logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
+                return null;
+            }
 
             return new PaymentCreatedMessage
             {
@@ -108,7 +126,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Uln = payment.Uln,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
-                EarningDetails = ed,
+                EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };
         }
