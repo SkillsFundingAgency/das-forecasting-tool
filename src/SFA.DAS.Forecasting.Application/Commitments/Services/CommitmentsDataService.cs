@@ -53,7 +53,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             });
         }
 
-        public async Task<decimal> GetOverdueCompletionPayments(long employerAccountId)
+        public async Task<decimal> GetPendingCompletionPayments(long employerAccountId)
         {
             return await WithConnection(async cnn =>
             {
