@@ -145,24 +145,24 @@ this.FeatureBackground();
                         "14000",
                         "880",
                         "32200",
-                        "31000",
-                        "31000",
+                        "0",
+                        "0",
                         "31000"});
             table2.AddRow(new string[] {
                         "May 18",
                         "15000",
                         "880",
                         "32200",
-                        "17000",
-                        "17000",
+                        "0",
+                        "0",
                         "17000"});
             table2.AddRow(new string[] {
                         "Jun 18",
                         "91000",
                         "1800",
                         "10000",
-                        "23000",
-                        "23000",
+                        "0",
+                        "0",
                         "23000"});
 #line 16
  testRunner.And("I have generated the following projections", ((string)(null)), table2, "And ");

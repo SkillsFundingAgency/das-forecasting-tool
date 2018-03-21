@@ -16,9 +16,9 @@ Scenario: AC1: Reading completion payment
 	And I have generated the following projections
   
 	| Date   | Funds in | Cost Of Training	   | Completion Payments | Your Contribution | Government Contribution | Future Funds |
-	| Apr 18 | 14000    | 880                    | 32200               | 31000			 | 31000				   | 31000        |
-	| May 18 | 15000    | 880                    | 32200               | 17000			 | 17000				   | 17000        |
-	| Jun 18 | 91000    | 1800                   | 10000               | 23000			 | 23000				   | 23000        |
+	| Apr 18 | 14000    | 880                    | 32200               | 0  			 | 0     				   | 31000        |
+	| May 18 | 15000    | 880                    | 32200               | 0  			 | 0     				   | 17000        |
+	| Jun 18 | 91000    | 1800                   | 10000               | 0  			 | 0     				   | 23000        |
 
 	And I'm on the Funding projection page
 	Then Pending completion payments should be £2,000
