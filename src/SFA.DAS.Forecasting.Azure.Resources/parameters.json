@@ -71,12 +71,6 @@
     "certificateName": {
       "value": ""
     },
-    "certificatePfxBase64": {
-      "value": ""
-    },
-    "vstsObjectId": {
-      "value": ""
-    },
     "MAWObjectId": {
       "value": ""
     },

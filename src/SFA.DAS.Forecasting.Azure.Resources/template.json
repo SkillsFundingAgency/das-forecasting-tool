@@ -74,12 +74,6 @@
     "certificateName": {
       "type": "string"
     },
-    "certificatePfxBase64": {
-      "type": "securestring"
-    },
-    "vstsObjectId": {
-      "type": "securestring"
-    },
     "MAWObjectId": {
       "type": "securestring"
     },
