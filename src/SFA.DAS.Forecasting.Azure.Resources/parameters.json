@@ -89,12 +89,6 @@
     "keyvaultCertificateName": {
       "value": ""
     },
-    "sharedKeyVaultName": {
-      "value": ""
-    },
-    "sharedManagementResourceGroup": {
-      "value": ""
-    },
     "customHostname": {
       "value": ""
     },
