@@ -15,8 +15,13 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Configuration;
 using System.Net.NetworkInformation;
+using System.Web;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
+using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
@@ -40,6 +45,10 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
                 });
 
             ConfigureLogging();
+
+            For<HttpContextBase>().Use(() => new HttpContextWrapper(HttpContext.Current));
+
+            For<IMembershipService>().Use<MembershipService>();
         }
 
         private void ConfigureLogging()

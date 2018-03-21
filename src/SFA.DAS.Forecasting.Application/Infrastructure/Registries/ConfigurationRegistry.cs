@@ -71,8 +71,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         private void SetApiConfigurationTableStorage(ApplicationConfiguration config)
         {
-            config.AccountApi = SetUpConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
-            config.PaymentEventsApi = SetUpConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
+            config.AccountApi = ConfigurationHelper.GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
+            config.PaymentEventsApi = ConfigurationHelper.GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
 
 
