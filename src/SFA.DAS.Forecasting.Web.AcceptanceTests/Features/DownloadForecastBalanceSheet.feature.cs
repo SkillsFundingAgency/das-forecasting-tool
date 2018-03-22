@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("DownloadForecastBalanceSheetAC1_Forecast between payments made and 23rd of month")]
-        public virtual void DownloadForecastBalanceSheetAC1_ForecastBetweenPaymentsMadeAnd23RdOfMonth()
+        public virtual void DownloadForecastBalanceSheetAC1_ForecastBetweenPaymxentsMadeAnd23RdOfMonth()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC1_Forecast between payments made and 23rd of month", ((string[])(null)));
 #line 10
