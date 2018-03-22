@@ -16,7 +16,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string Hashstring { get; set; }
         public string AllowedHashstringCharacters { get; set; }
         public string TokenCertificateThumbprint { get; set; }
-        public string ApprenticeshipApiBaseUrl { get; set; }
 
         public StartupConfiguration()
         {
@@ -51,7 +50,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
                 }
             };
             TokenCertificateThumbprint = GetAppSetting("WEBSITE_LOAD_CERTIFICATES", false);
-            ApprenticeshipApiBaseUrl = GetAppSetting("ApprenticeshipApiBaseUrl", false);
     }
 
         private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");

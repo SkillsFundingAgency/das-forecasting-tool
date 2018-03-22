@@ -174,6 +174,7 @@
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Infrastructure\Configuration\ApprenticeshipApiConfig.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />

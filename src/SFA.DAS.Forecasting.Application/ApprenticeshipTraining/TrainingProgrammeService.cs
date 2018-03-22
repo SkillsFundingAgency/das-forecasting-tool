@@ -10,13 +10,10 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipTraining
 {
     public class TrainingProgrammeService
     {
-        private const string StandardsKey = "Standards";
-        private const string FrameworksKey = "Frameworks";
-
-        private readonly StartupConfiguration _configuration;
+        private readonly ApprenticeshipApiConfig _configuration;
         private readonly ICache _cache;
 
-        public TrainingProgrammeService(StartupConfiguration configuration, ICache cache)
+        public TrainingProgrammeService(ApprenticeshipApiConfig configuration, ICache cache)
         {
             _configuration = configuration;
             _cache = cache;
@@ -37,32 +34,32 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipTraining
                 .OrderBy(m => m.Title);
         }
 
-        public async Task<IEnumerable<ITrainingProgramme>> GetStandards(bool refreshCache = false)
+        private async Task<IEnumerable<ITrainingProgramme>> GetStandards(bool refreshCache = false)
         {
-            if (!await _cache.Exists(StandardsKey) || refreshCache)
+            if (!await _cache.Exists(_configuration.StandardsKey) || refreshCache)
             {
                 var api = new StandardApiClient(_configuration.ApprenticeshipApiBaseUrl);
 
                 var standards = api.FindAll().OrderBy(x => x.Title).ToList();
 
-                await _cache.Set(StandardsKey, standards.Select(Map));
+                await _cache.Set(_configuration.StandardsKey, standards.Select(Map));
             }
 
-            return await _cache.Get<IEnumerable<TrainingProgramme>>(StandardsKey);
+            return await _cache.Get<IEnumerable<TrainingProgramme>>(_configuration.StandardsKey);
         }
 
-        public async Task<IEnumerable<ITrainingProgramme>> GetFrameworks(bool refreshCache = false)
+        private async Task<IEnumerable<ITrainingProgramme>> GetFrameworks(bool refreshCache = false)
         {
-            if (!await _cache.Exists(FrameworksKey) || refreshCache)
+            if (!await _cache.Exists(_configuration.FrameworksKey) || refreshCache)
             {
                 var api = new FrameworkApiClient(_configuration.ApprenticeshipApiBaseUrl);
 
                 var frameworks = api.FindAll().OrderBy(x => x.Title).ToList();
 
-                await _cache.Set(FrameworksKey, frameworks.Select(Map));
+                await _cache.Set(_configuration.FrameworksKey, frameworks.Select(Map));
             }
 
-            return await _cache.Get<IEnumerable<TrainingProgramme>>(FrameworksKey);
+            return await _cache.Get<IEnumerable<TrainingProgramme>>(_configuration.FrameworksKey);
         }
 
         private TrainingProgramme Map(StandardSummary standard)
