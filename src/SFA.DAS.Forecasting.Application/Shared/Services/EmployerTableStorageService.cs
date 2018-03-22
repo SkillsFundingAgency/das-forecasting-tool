@@ -48,5 +48,10 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 table.Create();
             }
         }
+
+        public Task<List<LevyDeclarationView>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

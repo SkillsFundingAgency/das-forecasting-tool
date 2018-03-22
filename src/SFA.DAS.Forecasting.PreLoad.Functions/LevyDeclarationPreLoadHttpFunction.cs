@@ -88,7 +88,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
         public string PeriodYear { get; set; }
 
-        public short? PeriodMonth { get; set; }
+        public short PeriodMonth { get; set; }
 
         public long? SubstitutionId { get; set; }
     }
