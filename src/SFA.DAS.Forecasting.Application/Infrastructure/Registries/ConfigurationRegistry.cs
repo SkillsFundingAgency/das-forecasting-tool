@@ -43,38 +43,15 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 }
             };
 
-            if (IsDevEnvironment)
-                SetApiConfiguration(configuration);
-            else
-                SetApiConfigurationTableStorage(configuration);
-
+            SetApiConfiguration(configuration);
             return configuration;
         }
 
         private void SetApiConfiguration(ApplicationConfiguration config)
         {
-            config.AccountApi = new AccountApiConfiguration
-            {
-                Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
-                ClientId = CloudConfigurationManager.GetSetting("AccountApi-ClientId"),
-                ClientSecret = CloudConfigurationManager.GetSetting("AccountApi-ClientSecret"),
-                ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
-                IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
-            };
-
-            config.PaymentEventsApi = new PaymentsEventsApiConfiguration
-            {
-                ApiBaseUrl = GetAppSetting("PaymentsEvent-ApiBaseUrl", true),
-                ClientToken = GetAppSetting("PaymentsEvent-ClientToken", true),
-            };
+            config.AccountApi = ConfigurationHelper.GetAccountApiConfiguration();
+            config.PaymentEventsApi = ConfigurationHelper.GetPaymentsEventsApiConfiguration();
         }
-
-        private void SetApiConfigurationTableStorage(ApplicationConfiguration config)
-        {
-            config.AccountApi = ConfigurationHelper.GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
-            config.PaymentEventsApi = ConfigurationHelper.GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
-        }
-
 
         private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
         private string KeyVaultBaseUrl => $"https://{CloudConfigurationManager.GetSetting("KeyVaultName")}.vault.azure.net";

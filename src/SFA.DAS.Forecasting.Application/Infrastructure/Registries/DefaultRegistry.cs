@@ -33,7 +33,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     .Use<EmployerDatabaseService>();
             }
 
-            var apiConfig = ConfigurationHelper.GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
+            var apiConfig = ConfigurationHelper.GetAccountApiConfiguration();
             For<IAccountApiClient>()
                 .Use<AccountApiClient>()
                 .Ctor<IAccountApiConfiguration>()
