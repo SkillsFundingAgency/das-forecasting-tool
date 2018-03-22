@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
                 }
             };
             TokenCertificateThumbprint = GetAppSetting("WEBSITE_LOAD_CERTIFICATES", false);
-        }
+    }
 
         private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
         private string KeyVaultBaseUrl => $"https://{CloudConfigurationManager.GetSetting("KeyVaultName")}.vault.azure.net";

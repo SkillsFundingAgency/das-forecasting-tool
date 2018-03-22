@@ -92,6 +92,12 @@
     <Reference Include="Polly, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Polly.5.1.0\lib\net45\Polly.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Apprenticeships.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Client.0.10.138\lib\net462\SFA.DAS.Apprenticeships.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.10.139\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.Configuration, Version=1.0.0.53229, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Configuration.1.0.0.53229\lib\net45\SFA.DAS.Configuration.dll</HintPath>
     </Reference>
@@ -131,6 +137,7 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
     </Reference>
@@ -157,6 +164,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApprenticeshipTraining\ITrainingProgramme.cs" />
+    <Compile Include="ApprenticeshipTraining\TrainingProgramme.cs" />
+    <Compile Include="ApprenticeshipTraining\TrainingProgrammeService.cs" />
     <Compile Include="Balance\Services\AccountBalanceService.cs" />
     <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
@@ -164,6 +174,7 @@
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Infrastructure\Configuration\ApprenticeshipApiConfig.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
@@ -203,6 +214,8 @@
     <Compile Include="Projections\Services\AccountProjectionReadModelDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Services\EmployerTableStorageService.cs" />
+    <Compile Include="Shared\Services\ICache.cs" />
+    <Compile Include="Shared\Services\InMemoryCache.cs" />
     <Compile Include="Shared\Services\LevyDeclarationView.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />
     <Compile Include="Shared\Services\QueueService.cs" />
