@@ -40,11 +40,16 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 parameters.Add("@accountId", accountId, DbType.Int64);
                 parameters.Add("@payrollYear", payrollYear, DbType.String);
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
+                var sql = @"SELECT *
+FROM [employer_financial].[GetLevyDeclarationAndTopUp] x
+WHERE x.AccountId = @accountId
+AND x.PayrollYear = @payrollYear
+AND x.PayrollMonth = @payrollMonth";
 
                 return await c.QueryAsync<LevyDeclarationView>(
-                    sql: "[employer_financial].[GetLevyDeclarations_ByAccountPayrollMonthPayrollYear]",
-                    param: parameters,
-                    commandType: CommandType.StoredProcedure);
+                    sql,
+                    parameters,
+                    commandType: CommandType.Text);
             });
 
             return result.ToList();
