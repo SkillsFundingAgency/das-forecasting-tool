@@ -5,15 +5,16 @@ using System;
 using System.Configuration;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Azure.KeyVault;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
     public static class ConfigurationHelper
     {
-        public static bool IsDevEnvironment =>
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
+        private static string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
+        private static string KeyVaultBaseUrl => $"https://{CloudConfigurationManager.GetSetting("KeyVaultName")}.vault.azure.net";
 
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
@@ -45,14 +46,53 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             var environment = Environment.GetEnvironmentVariable("DASENV");
             if (string.IsNullOrEmpty(environment))
             {
-                environment = CloudConfigurationManager.GetSetting("EnvironmentName");
+                environment = GetAppSetting("EnvironmentName", false);
             }
 
-            var configurationRepository = new AzureTableStorageConfigurationRepository(CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString"));
+            var configurationRepository = new AzureTableStorageConfigurationRepository(GetAppSetting("ConfigurationStorageConnectionString", true));
             var configurationService = new ConfigurationService(configurationRepository,
                 new ConfigurationOptions(serviceName, environment, "1.0"));
 
             return configurationService.Get<T>();
+        }
+
+        public static string GetAppSetting(string keyName, bool isSensitive)
+        {
+            var value = ConfigurationManager.AppSettings[keyName];
+            return IsDevEnvironment || !isSensitive
+                ? value
+                : GetSecret(keyName).Result;
+        }
+
+        public static string GetConnectionString(string name)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
+            if (string.IsNullOrEmpty(connectionString))
+                return GetAppSetting(name, true);
+
+            return IsDevEnvironment
+                ? connectionString
+                : GetSecret(name).Result;
+        }
+
+        public static bool IsDevEnvironment =>
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
+
+        private static async Task<string> GetSecret(string secretName)
+        {
+            try
+            {
+                var azureServiceTokenProvider = new AzureServiceTokenProvider();
+                var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+                var secret = await keyVaultClient.GetSecretAsync(KeyVaultBaseUrl, secretName).ConfigureAwait(false);
+                return secret.Value;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"There was an error getting the key vault secret. Secret name: {secretName}, KeyVault name: {KeyVaultName}, Error: {ex.Message}", ex);
+            }
         }
     }
 }
