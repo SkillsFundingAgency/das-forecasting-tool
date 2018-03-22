@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class BalanceCsvItemViewModel
+    public class ProjectionsCsvItemViewModel
     {
         public string Date { get; set; }
 

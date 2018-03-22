@@ -81,10 +81,6 @@
               "value": "[parameters('EnvironmentName')]"
             },
             {
-              "name": "ForecastingRoutePrefix",
-              "value": "forecasting"
-            },
-            {
               "name": "LimitForecast",
               "value": "[parameters('LimitForecast')]"
             },

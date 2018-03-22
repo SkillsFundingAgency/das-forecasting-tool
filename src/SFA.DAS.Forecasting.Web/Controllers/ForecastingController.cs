@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
 using SFA.DAS.Forecasting.Web.Attributes;
-using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [AuthorizeForecasting]
-    [ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
+    [RoutePrefix("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
         private readonly ForecastingOrchestrator _orchestrator;
@@ -21,18 +20,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("", Name = "ForecastingBalance")]
-        public async Task<ActionResult> Balance(string hashedAccountId)
+        [Route("projections", Name = "Forecastingprojections")]
+        public async Task<ActionResult> Projections(string hashedAccountId)
         {
-            var viewModel = await _orchestrator.Balance(hashedAccountId);
+            var viewModel = await _orchestrator.Projections(hashedAccountId);
             return View(viewModel);
         }
 
         [HttpGet]
-        [Route("download", Name = "DownloadCsv")]
+        [Route("projections/download", Name = "DownloadCsv")]
         public async Task<ActionResult> Csv(string hashedAccountId)
         {
-            var results = await _orchestrator.BalanceCsv(hashedAccountId);
+            var results = await _orchestrator.ProjectionsCsv(hashedAccountId);
             
             using (var memoryStream = new MemoryStream())
             {
