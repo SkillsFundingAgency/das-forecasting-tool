@@ -9,10 +9,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public class Mapper
     {
-        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjectionReadModel> data)
+        public IEnumerable<ProjectionsItemViewModel> MapProjections(IEnumerable<AccountProjectionReadModel> data)
         {
             return data.Select(x =>
-                new BalanceItemViewModel
+                new ProjectionsItemViewModel
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
                     LevyCredit = x.FundsIn,
@@ -25,9 +25,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 });
         }
 
-        public BalanceCsvItemViewModel ToCsvBalance(BalanceItemViewModel x)
+        public ProjectionsCsvItemViewModel ToCsvProjections(ProjectionsItemViewModel x)
         {
-            return new BalanceCsvItemViewModel
+            return new ProjectionsCsvItemViewModel
             {
                 Date = x.Date.ToGdsFormatShortMonthWithoutDay(),
                 LevyCredit = x.LevyCredit,

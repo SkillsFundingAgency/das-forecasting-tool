@@ -2,11 +2,10 @@
 using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ForecastingRoutePrefix("Service")]
+    [RoutePrefix("Service")]
     public class ServiceController : Controller
     {
 	    public readonly IOwinWrapper OwinWrapper;

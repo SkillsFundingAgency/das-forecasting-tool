@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
-@model SFA.DAS.Forecasting.Web.ViewModels.BalanceViewModel
+@model SFA.DAS.Forecasting.Web.ViewModels.ProjectionsViewModel
 
 @{
     ViewBag.Title = "Funding projection";
@@ -132,7 +132,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.BalanceItemViewModels)
+                @foreach (var item in Model.ProjectionsItemViewModels)
                 {
                 <tr>
                     <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>

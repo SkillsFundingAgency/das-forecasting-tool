@@ -26,13 +26,13 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public DashboardPage NavigateToDashboard()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/balance"));
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/projections"));
             return new DashboardPage(WebBrowserDriver);
         }
 
         public FundingProjectionPage NavigateToFundingProjectionPage()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/projections"));
             return new FundingProjectionPage(WebBrowserDriver);
         }
 

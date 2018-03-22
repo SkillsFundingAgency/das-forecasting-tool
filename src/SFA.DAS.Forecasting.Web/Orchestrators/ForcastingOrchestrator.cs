@@ -31,29 +31,29 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             _mapper = mapper;
         }
 
-        public async Task<BalanceViewModel> Balance(string hashedAccountId)
+        public async Task<ProjectionsViewModel> Projections(string hashedAccountId)
         {
-            var balance = await GetBalance(hashedAccountId);
-            return new BalanceViewModel {
-                BalanceItemViewModels = balance,
+            var projections = await GetProjections(hashedAccountId);
+            return new ProjectionsViewModel {
+                ProjectionsItemViewModels = projections,
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
-                BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd")))
+                BalanceStringArray = string.Join(",", projections.Select(m => m.Balance.ToString())),
+                DatesStringArray = string.Join(",", projections.Select(m => m.Date.ToString("yyyy-MM-dd")))
             };
         }
 
-        public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
+        public async Task<IEnumerable<ProjectionsCsvItemViewModel>> ProjectionsCsv(string hashedAccountId)
         {
-            return (await GetBalance(hashedAccountId))
-                .Select(m => _mapper.ToCsvBalance(m));
+            return (await GetProjections(hashedAccountId))
+                .Select(m => _mapper.ToCsvProjections(m));
         }
 
-        private async Task<List<BalanceItemViewModel>> GetBalance(string hashedAccountId)
+        private async Task<List<ProjectionsItemViewModel>> GetProjections(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var result = await _accountProjection.Get(accountId);
-            return _mapper.MapBalance(result)
+            return _mapper.MapProjections(result)
                 .Where(m => !_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate)
                 .ToList();
         }
