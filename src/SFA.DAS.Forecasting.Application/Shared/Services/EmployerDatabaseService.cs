@@ -8,12 +8,16 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
         Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
+
+        Task<List<LevyDeclarationView>> GetAccountLevyDeclarations(long accountId, string payrollYear,
+            short payrollMonth);
     }
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
@@ -26,6 +30,24 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             : base(config.EmployerConnectionString, logger)
         {
             _logger = logger;
+        }
+
+        public async Task<List<LevyDeclarationView>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
+        {
+            var result = await WithConnection(async c =>
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@accountId", accountId, DbType.Int64);
+                parameters.Add("@payrollYear", payrollYear, DbType.String);
+                parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
+
+                return await c.QueryAsync<LevyDeclarationView>(
+                    sql: "[employer_financial].[GetLevyDeclarations_ByAccountPayrollMonthPayrollYear]",
+                    param: parameters,
+                    commandType: CommandType.StoredProcedure);
+            });
+
+            return result.ToList();
         }
 
         public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
