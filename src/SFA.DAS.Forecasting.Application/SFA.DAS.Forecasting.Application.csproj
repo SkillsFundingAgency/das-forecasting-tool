@@ -216,6 +216,7 @@
     <Compile Include="Shared\Services\EmployerTableStorageService.cs" />
     <Compile Include="Shared\Services\ICache.cs" />
     <Compile Include="Shared\Services\InMemoryCache.cs" />
+    <Compile Include="Shared\Services\LevyDeclarationView.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />
     <Compile Include="Shared\Services\QueueService.cs" />
     <Compile Include="Shared\Services\PaymentApiDataService.cs" />
