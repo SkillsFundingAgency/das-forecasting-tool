@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
         }
 
-        public Task<List<LevyDeclarationView>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
+        public Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
         {
             throw new System.NotImplementedException();
         }

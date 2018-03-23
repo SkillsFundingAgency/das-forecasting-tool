@@ -63,14 +63,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 AccountId = accountId,
                 CreatedAt = levy.CreatedDate,
                 CreatedDate = levy.CreatedDate,
-                DateCeased = levy.DateCeased,
                 EmpRef = levy.EmpRef,
                 PayrollMonth = levy.PayrollMonth,
                 PayrollYear = levy.PayrollYear,
-                LevyDeclaredInMonth = levy.LevyDeclaredInMonth,
-                LevyAllowanceForYear = levy.LevyAllowanceForYear,
+                LevyDeclaredInMonth = levy.Amount,
                 SubmissionDate = levy.SubmissionDate,
-                TotalAmount = levy.TotalAmount
             }).ToList();
         }
     }

@@ -203,7 +203,7 @@
     <Compile Include="Projections\Services\AccountProjectionReadModelDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Services\EmployerTableStorageService.cs" />
-    <Compile Include="Shared\Services\LevyDeclarationView.cs" />
+    <Compile Include="Shared\Services\LevyDeclaration.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />
     <Compile Include="Shared\Services\QueueService.cs" />
     <Compile Include="Shared\Services\PaymentApiDataService.cs" />

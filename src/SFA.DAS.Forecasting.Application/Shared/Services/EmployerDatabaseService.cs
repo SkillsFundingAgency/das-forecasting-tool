@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
 
-        Task<List<LevyDeclarationView>> GetAccountLevyDeclarations(long accountId, string payrollYear,
+        Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
             short payrollMonth);
     }
 
@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             _logger = logger;
         }
 
-        public async Task<List<LevyDeclarationView>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
+        public async Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
         {
             var result = await WithConnection(async c =>
             {
@@ -40,13 +40,23 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 parameters.Add("@accountId", accountId, DbType.Int64);
                 parameters.Add("@payrollYear", payrollYear, DbType.String);
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
-                var sql = @"SELECT *
-FROM [employer_financial].[GetLevyDeclarationAndTopUp] x
-WHERE x.AccountId = @accountId
-AND x.PayrollYear = @payrollYear
-AND x.PayrollMonth = @payrollMonth";
+                var sql = @"Select 
+	ldt.Id,
+	ldt.AccountId,
+	ldt.EmpRef,
+	ldt.CreatedDate,
+	ldt.SubmissionDate,
+	ldt.SubmissionId,
+	ldt.PayrollYear,
+	ldt.PayrollMonth,
+	tl.Amount
+    from [employer_financial].[TransactionLine] tl
+    join [employer_financial].GetLevyDeclarationAndTopUp ldt on tl.SubmissionId = ldt.SubmissionId
+	where tl.AccountId = @accountId 
+	and ldt.PayrollMonth = @payrollMonth
+	and ldt.PayrollYear = @payrollYear";
 
-                return await c.QueryAsync<LevyDeclarationView>(
+                return await c.QueryAsync<LevyDeclaration>(
                     sql,
                     parameters,
                     commandType: CommandType.Text);
