@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using NLog;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
@@ -37,12 +36,13 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         paymentCreatedMessage =
                             payments
-                            .Select(p => CreatePaymentSubstituteData(logger,p, earningDetails, message.SubstitutionId.Value))
+                            .Select(p => CreatePaymentSubstituteData(logger, p, earningDetails, message.SubstitutionId.Value))
                             .Where(p => p != null)
                             .ToList();
                     }
-                    else {
-                        paymentCreatedMessage = 
+                    else
+                    {
+                        paymentCreatedMessage =
                             payments
                             .Select(p => CreatePayment(logger, p, earningDetails))
                             .Where(p => p != null)
@@ -61,6 +61,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 });
         }
 
+        private static readonly Dictionary<long, long> Apprenticeships = new Dictionary<long, long>();
+
         private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {
             if (payment == null)
@@ -74,9 +76,10 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
                 return null;
             }
-                
 
-            Random r = new Random(Guid.NewGuid().GetHashCode());
+            if (!Apprenticeships.ContainsKey(payment.ApprenticeshipId))
+                Apprenticeships[payment.ApprenticeshipId] = Guid.NewGuid().GetHashCode();
+
             var paymentId = Guid.NewGuid();
             earningDetail.RequiredPaymentId = paymentId;
             return new PaymentCreatedMessage
@@ -84,7 +87,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Id = paymentId.ToString(),
                 EmployerAccountId = substitutionId,
                 Ukprn = 1,
-                ApprenticeshipId = r.Next(10000, 99999),
+                ApprenticeshipId = Apprenticeships[payment.ApprenticeshipId],
                 Amount = payment.Amount,
                 ProviderName = "Provider Name",
                 ApprenticeName = "Apprentice Name",
