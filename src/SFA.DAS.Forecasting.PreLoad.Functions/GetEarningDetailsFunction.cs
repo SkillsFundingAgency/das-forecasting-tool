@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     public class GetEarningDetailsFunction : IFunction
     {
         [FunctionName("GetEarningDetailsFunction")]
-        [return: Queue(QueueNames.AddEarningDetails)]
+        [return: Queue(QueueNames.CreatePaymentMessage)]
         public static async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, 
             ExecutionContext executionContext,
@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                         await dataService.StoreEarningDetails(message.EmployerAccountId, item);
                     }
 
-                    logger.Info($"Sending message {nameof(message)} to {QueueNames.AddEarningDetails}");
+                    logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
                     return message;
                 });
         }
