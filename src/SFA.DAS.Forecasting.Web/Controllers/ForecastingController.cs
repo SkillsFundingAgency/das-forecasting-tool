@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [ValidateMembership]
     [AuthorizeForecasting]
-    [ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
+    [RoutePrefixAttribute("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
         private readonly ForecastingOrchestrator _orchestrator;
@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("", Name = "Balance")]
+        [Route("projections", Name = "Balance")]
         public async Task<ActionResult> Balance(string hashedAccountId)
         {
             var viewModel = await _orchestrator.Balance(hashedAccountId);
