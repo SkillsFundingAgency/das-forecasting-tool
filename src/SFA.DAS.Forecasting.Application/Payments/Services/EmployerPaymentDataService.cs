@@ -57,11 +57,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 				parameters.Add("@deliveryPeriodMonth", month, DbType.Int32);
 
 				var employerPayments = await cnn.QueryAsync<Payment>(
-					sql:
-					"SELECT Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear " +
+                    "SELECT Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, DeliveryPeriodMonth, DeliveryPeriodYear " +
 					"FROM [dbo].[Payment] " +
 					"WHERE EmployerAccountId = @employerAccountId and DeliveryPeriodYear = @deliveryPeriodYear and DeliveryPeriodMonth = @deliveryPeriodMonth",
-					param: parameters,
+					parameters,
 					commandType: CommandType.Text);
 				return employerPayments.ToList();
 			});
