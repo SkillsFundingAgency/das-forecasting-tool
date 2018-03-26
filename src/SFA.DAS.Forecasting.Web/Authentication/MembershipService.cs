@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
             long accountId;
             if (!_hashingService.TryDecodeValue(accountHashedId.ToString(), out accountId))
             {
-                _logger.Info($"Unable to find memebership due to hashing service not ablet to decode value {accountHashedId}");
+                _logger.Info($"Unable to find memebership due to hashing service not able to decode value {accountHashedId}");
                 return null;
             }
 
