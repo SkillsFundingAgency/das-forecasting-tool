@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
-    public class CollectionPeriodSuperficialValidator : AbstractValidator<CollectionPeriod>
+    public class CollectionPeriodSuperficialValidator : AbstractValidator<NamedCalendarPeriod>
     {
         public CollectionPeriodSuperficialValidator()
         {

@@ -8,12 +8,16 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
         Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
+
+        Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
+            short payrollMonth);
     }
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
@@ -28,20 +32,54 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             _logger = logger;
         }
 
+        public async Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
+        {
+            var result = await WithConnection(async c =>
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@accountId", accountId, DbType.Int64);
+                parameters.Add("@payrollYear", payrollYear, DbType.String);
+                parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
+                var sql = @"Select 
+	ldt.Id,
+	ldt.AccountId,
+	ldt.EmpRef,
+	ldt.CreatedDate,
+	ldt.SubmissionDate,
+	ldt.SubmissionId,
+	ldt.PayrollYear,
+	ldt.PayrollMonth,
+	tl.Amount
+    from [employer_financial].[TransactionLine] tl
+    join [employer_financial].GetLevyDeclarationAndTopUp ldt on tl.SubmissionId = ldt.SubmissionId
+	where tl.AccountId = @accountId 
+	and ldt.PayrollMonth = @payrollMonth
+	and ldt.PayrollYear = @payrollYear";
+
+                return await c.QueryAsync<LevyDeclaration>(
+                    sql,
+                    parameters,
+                    commandType: CommandType.Text);
+            });
+
+            return result.ToList();
+        }
+
         public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
-            // Get all Payments where AccountId and  ,CollectionPeriodMonth ,CollectionPeriodYear --> 10005694, 5, 2017
+            // Get all Payments where AccountId and  ,DeliveryPeriodMonth ,DeliveryPeriodYear --> 10005694, 5, 2017
             var sql = "SELECT" +
                         "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
-                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[Amount],[PaymentMetaDataId],[ProviderName] " +
+                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount]" +
+                        ",[PaymentMetaDataId],[ProviderName] " +
                         ",[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
                         ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource]" +
                     "FROM [employer_financial].[Payment] " +
                     "inner join [employer_financial].[PaymentMetaData] metaData " +
                     "on payment.PaymentMetaDataId = metaData.Id " +
-                    "where AccountId = @employerAccountId " + 
-                    "and CollectionPeriodYear = @year " +  
-                    "and CollectionPeriodMonth = @month ";
+                    "where AccountId = @employerAccountId " +
+                    "and DeliveryPeriodYear = @year " +
+                    "and DeliveryPeriodMonth = @month ";
 
             try
             {

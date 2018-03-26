@@ -53,14 +53,14 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			{
 				var parameters = new DynamicParameters();
 				parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
-				parameters.Add("@collectionPeriodYear", year, DbType.Int32);
-				parameters.Add("@collectionPeriodMonth", month, DbType.Int32);
+				parameters.Add("@deliveryPeriodYear", year, DbType.Int32);
+				parameters.Add("@deliveryPeriodMonth", month, DbType.Int32);
 
 				var employerPayments = await cnn.QueryAsync<Payment>(
 					sql:
 					"SELECT Id, ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear " +
 					"FROM [dbo].[Payment] " +
-					"WHERE EmployerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth",
+					"WHERE EmployerAccountId = @employerAccountId and DeliveryPeriodYear = @deliveryPeriodYear and DeliveryPeriodMonth = @deliveryPeriodMonth",
 					param: parameters,
 					commandType: CommandType.Text);
 				return employerPayments.ToList();
@@ -79,23 +79,25 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			parameters.Add("@receivedTime", employerPayment.ReceivedTime, DbType.DateTime);
 			parameters.Add("@collectionPeriodMonth", employerPayment.CollectionPeriod.Month, DbType.Int32);
 			parameters.Add("@collectionPeriodYear", employerPayment.CollectionPeriod.Year, DbType.Int32);
+		    parameters.Add("@deliveryPeriodMonth", employerPayment.DeliveryPeriod.Month, DbType.Int32);
+		    parameters.Add("@deliveryPeriodYear", employerPayment.DeliveryPeriod.Year, DbType.Int32);
 			parameters.Add("@fundingSource", employerPayment.FundingSource, DbType.Int16);
 
             await connection.ExecuteAsync(
                 @"MERGE Payment AS target 
-                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear, @receivedTime, @fundingSource) 
-					AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
+                    USING(SELECT @externalPaymentId, @employerAccountId, @providerId, @apprenticeshipId, @amount, @learnerId, @collectionPeriodMonth, @collectionPeriodYear, @deliveryPeriodMonth, @deliveryPeriodYear, @receivedTime, @fundingSource) 
+					AS source(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, DeliveryPeriodMonth, DeliveryPeriodYear, ReceivedTime, FundingSource)
                     ON(target.EmployerAccountId = source.EmployerAccountId 
 						and target.ExternalPaymentId = source.ExternalPaymentId 
 						and target.ProviderId = source.ProviderId 
 						and target.LearnerId = source.LearnerId 
-						and target.CollectionPeriodMonth = source.CollectionPeriodMonth 
-						and target.CollectionPeriodYear = source.CollectionPeriodYear)
+						and target.DeliveryPeriodMonth = source.DeliveryPeriodMonth
+						and target.DeliveryPeriodYear = source.DeliveryPeriodYear)
                     WHEN MATCHED THEN
                         UPDATE SET Amount = source.Amount, ReceivedTime = source.ReceivedTime
                     WHEN NOT MATCHED THEN
-                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, ReceivedTime, FundingSource)
-                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear, source.ReceivedTime, source.FundingSource);",
+                        INSERT(ExternalPaymentId, EmployerAccountId, ProviderId, ApprenticeshipId, Amount, LearnerId, CollectionPeriodMonth, CollectionPeriodYear, DeliveryPeriodMonth, DeliveryPeriodYear, ReceivedTime, FundingSource)
+                        VALUES(source.ExternalPaymentId, source.EmployerAccountId, source.ProviderId, source.ApprenticeshipId, source.Amount, source.LearnerId, source.CollectionPeriodMonth, source.CollectionPeriodYear, source.DeliveryPeriodMonth, source.DeliveryPeriodYear, source.ReceivedTime, source.FundingSource);",
 				parameters,
 				commandType: CommandType.Text);
 		}

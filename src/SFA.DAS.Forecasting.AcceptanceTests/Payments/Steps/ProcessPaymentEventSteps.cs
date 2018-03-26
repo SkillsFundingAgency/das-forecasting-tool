@@ -13,7 +13,7 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Payments;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
-using CollectionPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.CollectionPeriod;
+using NamedCalendarPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.NamedCalendarPeriod;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
@@ -75,9 +75,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 Id = payment.PaymentId,
                 EmployerAccountId = Config.EmployerAccountId,
                 Amount = payment.PaymentAmount,
-                CollectionPeriod = new CollectionPeriod
+                CollectionPeriod = new NamedCalendarPeriod
                 {
                     Id = "1718-R01",
+                    Month = DateTime.Now.Month,
+                    Year = DateTime.Now.Year
+                },
+                DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod
+                {
                     Month = DateTime.Now.Month,
                     Year = DateTime.Now.Year
                 },

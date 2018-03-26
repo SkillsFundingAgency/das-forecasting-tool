@@ -43,7 +43,8 @@
     <Compile Include="Balance\Balance.cs" />
     <Compile Include="Commitments\Commitment.cs" />
     <Compile Include="Levy\LevyDeclaration.cs" />
-    <Compile Include="Payments\CollectionPeriod.cs" />
+    <Compile Include="Payments\CalendarPeriod.cs" />
+    <Compile Include="Payments\NamedCalendarPeriod.cs" />
     <Compile Include="Payments\EmployerPayment.cs" />
     <Compile Include="Payments\EmployerTotalCostOfTraining.cs" />
     <Compile Include="Payments\FundingSource.cs" />

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using NLog;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
@@ -31,18 +31,18 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
                     var payments = dataService.GetPayments(message.EmployerAccountId);
                     var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId);
-
                     List<PaymentCreatedMessage> paymentCreatedMessage;
                     if (message.SubstitutionId != null)
                     {
                         paymentCreatedMessage =
                             payments
-                            .Select(p => CreatePaymentSubstituteData(logger,p, earningDetails, message.SubstitutionId.Value))
+                            .Select(p => CreatePaymentSubstituteData(logger, p, earningDetails, message.SubstitutionId.Value))
                             .Where(p => p != null)
                             .ToList();
                     }
-                    else {
-                        paymentCreatedMessage = 
+                    else
+                    {
+                        paymentCreatedMessage =
                             payments
                             .Select(p => CreatePayment(logger, p, earningDetails))
                             .Where(p => p != null)
@@ -61,6 +61,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 });
         }
 
+        private static readonly Dictionary<long, long> Apprenticeships = new Dictionary<long, long>();
+
         private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {
             if (payment == null)
@@ -74,9 +76,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
                 return null;
             }
-                
 
-            Random r = new Random(Guid.NewGuid().GetHashCode());
+            if (!Apprenticeships.ContainsKey(payment.ApprenticeshipId))
+                Apprenticeships[payment.ApprenticeshipId] = Guid.NewGuid().GetHashCode();
+
+            logger.Info($"Creating payment event for apprenticeship: {Apprenticeships[payment.ApprenticeshipId]}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
             var paymentId = Guid.NewGuid();
             earningDetail.RequiredPaymentId = paymentId;
             return new PaymentCreatedMessage
@@ -84,7 +88,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Id = paymentId.ToString(),
                 EmployerAccountId = substitutionId,
                 Ukprn = 1,
-                ApprenticeshipId = r.Next(10000, 99999),
+                ApprenticeshipId = Apprenticeships[payment.ApprenticeshipId],
                 Amount = payment.Amount,
                 ProviderName = "Provider Name",
                 ApprenticeName = "Apprentice Name",
@@ -92,7 +96,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CourseLevel = payment.ApprenticeshipCourseLevel,
                 Uln = 1234567890,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
-                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };
@@ -125,7 +129,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CourseLevel = payment.ApprenticeshipCourseLevel,
                 Uln = payment.Uln,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
-                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };

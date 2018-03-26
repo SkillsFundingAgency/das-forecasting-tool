@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using NamedCalendarPeriod = SFA.DAS.Provider.Events.Api.Types.NamedCalendarPeriod;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {

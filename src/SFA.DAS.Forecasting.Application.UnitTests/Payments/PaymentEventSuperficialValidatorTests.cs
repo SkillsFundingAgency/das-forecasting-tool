@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                 EmployerAccountId = 1,
                 Amount = 100,
                 ApprenticeshipId = 1,
-                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod
+                CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod
                 {
                     Id = Guid.NewGuid().ToString("D"),
                     Month = 1,
