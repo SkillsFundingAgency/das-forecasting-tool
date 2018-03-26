@@ -8,7 +8,8 @@
         // Payment
         public const string PreLoadPayment = "forecasting-payment-create-preload";
         public const string PreLoadEarningDetailsPayment = "forecasting-payment-load-earning-details";
-        public const string AddEarningDetails = "forecasting-payment-add-earning-details";
+        public const string CreatePaymentMessage = "forecasting-payment-create-payment-message";
+        public const string RemovePreLoadData = "forecasting-payment-remove-preload-data";
         public const string PaymentValidator = "forecasting-payment-validate-payment";
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
@@ -9,7 +8,6 @@ using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
@@ -17,14 +15,15 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     public class CreatePaymentMessageFunction : IFunction
     {
         [FunctionName("CreatePaymentMessageFunction")]
-        public static async Task Run(
-            [QueueTrigger(QueueNames.AddEarningDetails)]PreLoadPaymentMessage message,
+        [return:Queue(QueueNames.RemovePreLoadData)]
+        public static PreLoadPaymentMessage Run(
+            [QueueTrigger(QueueNames.CreatePaymentMessage)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<CreatePaymentMessageFunction>(writer, executionContext,
-                async (container, logger) =>
+            return  FunctionRunner.Run<CreatePaymentMessageFunction, PreLoadPaymentMessage>(writer, executionContext,
+                (container, logger) =>
                 {
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
 
@@ -53,11 +52,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         outputQueueMessage.Add(p);
                     }
-
-                    await dataService.DeletePayment(message.EmployerAccountId);
-                    await dataService.DeleteEarningDetails(message.EmployerAccountId);
-
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
+                    return message;
                 });
         }
 
@@ -78,7 +74,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             }
 
             if (!Apprenticeships.ContainsKey(payment.ApprenticeshipId))
-                Apprenticeships[payment.ApprenticeshipId] = Guid.NewGuid().GetHashCode();
+            {
+                var random = new Random(Guid.NewGuid().GetHashCode());
+                var id = random.Next(1, 9999999);
+                var cnt = 0;
+                while(Apprenticeships.ContainsValue(id) && cnt < 1000)
+                    id = random.Next(1, 9999999);
+                Apprenticeships[payment.ApprenticeshipId] = id;
+            }
 
             logger.Info($"Creating payment event for apprenticeship: {Apprenticeships[payment.ApprenticeshipId]}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
             var paymentId = Guid.NewGuid();
