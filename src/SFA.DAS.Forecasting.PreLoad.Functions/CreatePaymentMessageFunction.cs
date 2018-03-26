@@ -97,6 +97,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Uln = 1234567890,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };
