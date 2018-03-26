@@ -172,6 +172,7 @@
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
     <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
+    <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
@@ -193,9 +194,8 @@
     <Compile Include="Shared\Services\EmployerDataService.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationEventValidator.cs" />
     <Compile Include="Payments\Mapping\PaymentMapper.cs" />
-    <Compile Include="Payments\Messages\CollectionPeriod.cs" />
+    <Compile Include="Payments\Messages\NamedCalendarPeriod.cs" />
     <Compile Include="Payments\Messages\EarningDetails.cs" />
-    <Compile Include="Payments\Messages\EmployerPeriod.cs" />
     <Compile Include="Payments\Messages\PaymentCreatedMessage.cs" />
     <Compile Include="Payments\Validation\CollectionPeriodSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />

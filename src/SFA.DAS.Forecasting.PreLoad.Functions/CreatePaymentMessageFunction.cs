@@ -9,6 +9,7 @@ using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
@@ -30,7 +31,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
                     var payments = dataService.GetPayments(message.EmployerAccountId);
                     var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId);
-
                     List<PaymentCreatedMessage> paymentCreatedMessage;
                     if (message.SubstitutionId != null)
                     {
@@ -80,6 +80,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             if (!Apprenticeships.ContainsKey(payment.ApprenticeshipId))
                 Apprenticeships[payment.ApprenticeshipId] = Guid.NewGuid().GetHashCode();
 
+            logger.Info($"Creating payment event for apprenticeship: {Apprenticeships[payment.ApprenticeshipId]}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
             var paymentId = Guid.NewGuid();
             earningDetail.RequiredPaymentId = paymentId;
             return new PaymentCreatedMessage
@@ -95,7 +96,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CourseLevel = payment.ApprenticeshipCourseLevel,
                 Uln = 1234567890,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
-                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };
@@ -128,7 +129,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CourseLevel = payment.ApprenticeshipCourseLevel,
                 Uln = payment.Uln,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
-                CollectionPeriod = new Application.Payments.Messages.CollectionPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };

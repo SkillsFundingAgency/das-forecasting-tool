@@ -67,18 +67,19 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
-            // Get all Payments where AccountId and  ,CollectionPeriodMonth ,CollectionPeriodYear --> 10005694, 5, 2017
+            // Get all Payments where AccountId and  ,DeliveryPeriodMonth ,DeliveryPeriodYear --> 10005694, 5, 2017
             var sql = "SELECT" +
                         "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
-                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[Amount],[PaymentMetaDataId],[ProviderName] " +
+                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount]" +
+                        ",[PaymentMetaDataId],[ProviderName] " +
                         ",[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
                         ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource]" +
                     "FROM [employer_financial].[Payment] " +
                     "inner join [employer_financial].[PaymentMetaData] metaData " +
                     "on payment.PaymentMetaDataId = metaData.Id " +
-                    "where AccountId = @employerAccountId " + 
-                    "and CollectionPeriodYear = @year " +  
-                    "and CollectionPeriodMonth = @month ";
+                    "where AccountId = @employerAccountId " +
+                    "and DeliveryPeriodYear = @year " +
+                    "and DeliveryPeriodMonth = @month ";
 
             try
             {

@@ -12,7 +12,8 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public decimal Amount { get; set; }
         public DateTime ReceivedTime { get; set; }
         public long LearnerId { get; set; }
-        public CollectionPeriod CollectionPeriod { get; set; }
+        public NamedCalendarPeriod CollectionPeriod { get; set; }
+        public CalendarPeriod DeliveryPeriod { get; set; }
         public FundingSource FundingSource { get; set; }
     }
 }

@@ -36,9 +36,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 			_logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, year: {employerPayment.CollectionPeriod.Year}, month: {employerPayment.CollectionPeriod.Month}, Payment: {employerPayment.ToJson()}");
 			await _repository.StorePayment(employerPayment);
             _logger.Info($"Finished adding the employer payment. Employer payment: {JsonConvert.SerializeObject(employerPayment)}");
-            
             _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint, TimeSpan.FromSeconds(_configuration.SecondsToWaitToAllowProjections));
-
         }
     }
 }
