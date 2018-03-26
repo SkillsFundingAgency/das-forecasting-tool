@@ -42,8 +42,17 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
         public async Task Should_get_levy_declaration_for_period()
         {
             var results = await _levyEmployerDataService.LevyForPeriod("ABBA12", "18-19", 2);
-            results.Count.Should().Be(3, "Failed to return expected number of results.");
-            results.All(res => LevyDeclarations().Result.Any(levy =>
+            results.Count.Should().Be(2, "Failed to return expected number of results.");
+            results.All(res => res.PayrollYear == "18-19" &&
+                               res.PayrollMonth == 2).Should().BeTrue("Did not return the expected results");
+        }
+
+        [Test]
+        public async Task Should_Map_Levy_Declarations_Properly()
+        {
+            var results = await _levyEmployerDataService.LevyForPeriod("ABBA12", "18-19", 2);
+            results.All(res => LevyDeclarations().Result.Where(levy => levy.PayrollYear == "18-19" &&
+                                                               levy.PayrollMonth == 2).Any(levy =>
                 res.AccountId == 112233 && res.PayrollYear == levy.PayrollYear &&
                 res.PayrollMonth == levy.PayrollMonth &&
                 res.LevyDeclaredInMonth == levy.LevyDeclaredInMonth && res.TotalAmount == levy.TotalAmount &&
@@ -72,7 +81,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
                 new LevyDeclarationViewModel
                 {
                     HashedAccountId = "ABBA12",
-                    PayrollYear = "2018-19",
+                    PayrollYear = "18-19",
                     PayrollMonth = 2,
                     PayeSchemeReference = "ABC123",
                     TotalAmount = 2300
@@ -80,7 +89,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
                     new LevyDeclarationViewModel
                 {
                     HashedAccountId = "ABBA12",
-                    PayrollYear = "2018-19",
+                    PayrollYear = "18-19",
                     PayrollMonth = 2,
                     PayeSchemeReference = "DEF456",
                     TotalAmount = 2300
@@ -88,8 +97,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
                 new LevyDeclarationViewModel
                 {
                     HashedAccountId = "ABBA12",
-                    PayrollYear = "2018-19",
-                    PayrollMonth = 2,
+                    PayrollYear = "18-19",
+                    PayrollMonth = 3,
                     PayeSchemeReference = "GHI789",
                     TotalAmount = 3400
                 }
