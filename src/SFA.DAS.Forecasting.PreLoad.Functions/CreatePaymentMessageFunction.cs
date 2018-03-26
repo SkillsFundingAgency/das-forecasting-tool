@@ -58,7 +58,23 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         }
 
         private static readonly Dictionary<long, long> Apprenticeships = new Dictionary<long, long>();
+        private static readonly object LockObject = new object();
 
+        private static long GetApprenticeshipId(long originalApprenticeshipId)
+        {
+            lock (LockObject)
+            {
+                if (Apprenticeships.ContainsKey(originalApprenticeshipId))
+                    return Apprenticeships[originalApprenticeshipId];
+                var random = new Random(Guid.NewGuid().GetHashCode());
+                var id = random.Next(1, 9999999);
+                var cnt = 0;
+                while (Apprenticeships.ContainsValue(id) && cnt++ < 1000)
+                    id = random.Next(1, 9999999);
+                Apprenticeships[originalApprenticeshipId] = id;
+            }
+            return Apprenticeships[originalApprenticeshipId];
+        }
         private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {
             if (payment == null)
@@ -73,17 +89,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 return null;
             }
 
-            if (!Apprenticeships.ContainsKey(payment.ApprenticeshipId))
-            {
-                var random = new Random(Guid.NewGuid().GetHashCode());
-                var id = random.Next(1, 9999999);
-                var cnt = 0;
-                while(Apprenticeships.ContainsValue(id) && cnt < 1000)
-                    id = random.Next(1, 9999999);
-                Apprenticeships[payment.ApprenticeshipId] = id;
-            }
-
-            logger.Info($"Creating payment event for apprenticeship: {Apprenticeships[payment.ApprenticeshipId]}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
+            var apprenticeshipId = GetApprenticeshipId(payment.ApprenticeshipId);
+            logger.Info($"Creating payment event for apprenticeship: {apprenticeshipId}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
             var paymentId = Guid.NewGuid();
             earningDetail.RequiredPaymentId = paymentId;
             return new PaymentCreatedMessage
@@ -91,7 +98,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Id = paymentId.ToString(),
                 EmployerAccountId = substitutionId,
                 Ukprn = 1,
-                ApprenticeshipId = Apprenticeships[payment.ApprenticeshipId],
+                ApprenticeshipId = apprenticeshipId,
                 Amount = payment.Amount,
                 ProviderName = "Provider Name",
                 ApprenticeName = "Apprentice Name",
@@ -134,6 +141,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 Uln = payment.Uln,
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
+                DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource
             };
