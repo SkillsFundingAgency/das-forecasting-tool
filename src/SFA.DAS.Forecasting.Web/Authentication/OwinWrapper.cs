@@ -18,11 +18,12 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 	{
 		private readonly IOwinContext _owinContext;
 		private readonly IApplicationConfiguration _configuration;
-
+	    private readonly HttpContext _httpContext;
 		public OwinWrapper(IApplicationConfiguration configuration)
 		{
 			_configuration = configuration;
 			_owinContext = HttpContext.Current.GetOwinContext();
+		    _httpContext = HttpContext.Current;
 		}
 
 		public void SignInUser(string id, string displayName, string email)
@@ -51,7 +52,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
 		public string GetClaimValue(string claimKey)
 		{
-			var claimIdentity = ((ClaimsIdentity)HttpContext.Current.User.Identity).Claims.FirstOrDefault(claim => claim.Type == claimKey);
+			var claimIdentity = ((ClaimsIdentity)_httpContext.User.Identity).Claims.FirstOrDefault(claim => claim.Type == claimKey);
 
 			return claimIdentity == null ? "" : claimIdentity.Value;
 
@@ -89,7 +90,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
         public bool IsUserAuthenticated()
         {
-            return HttpContext.Current.GetOwinContext().Authentication.User.Identity.IsAuthenticated;
+            return _owinContext.Authentication.User.Identity.IsAuthenticated;
         }
 
         public bool TryGetClaimValue(string key, out string value)
