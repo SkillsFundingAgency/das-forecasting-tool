@@ -20,8 +20,8 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
         public MembershipService(
             IMembershipProvider membershipProvider,
-            HttpContextBase httpContext, 
-            IOwinWrapper authenticationService, 
+            HttpContextBase httpContext,
+            IOwinWrapper authenticationService,
             IHashingService hashingService,
             ILog logger)
         {
@@ -45,55 +45,43 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return null;
             }
 
-            string userExternalIdClaimValue;
-            if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out userExternalIdClaimValue))
+            if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out var userExternalIdClaimValue))
             {
                 _logger.Info("Unable to find memebership due to external id not found");
                 return null;
             }
 
-            Guid userExternalId;
-            if (!Guid.TryParse(userExternalIdClaimValue, out userExternalId))
+            if (!Guid.TryParse(userExternalIdClaimValue, out var userExternalId))
             {
                 _logger.Info("Unable to find memebership due to error parsing external user id");
                 return null;
             }
 
-            object accountHashedId;
-            if (!_httpContext.Request.RequestContext.RouteData.Values.TryGetValue(Constants.AccountHashedIdRouteKeyName, out accountHashedId))
+            if (!_httpContext.Request.RequestContext.RouteData.Values.TryGetValue(Constants.AccountHashedIdRouteKeyName, out var accountHashedId))
             {
                 _logger.Info($"Unable to find memebership due to {nameof(Constants.AccountHashedIdRouteKeyName)} not found in RouteData");
                 return null;
             }
 
-            long accountId;
-            if (!_hashingService.TryDecodeValue(accountHashedId.ToString(), out accountId))
-            {
-                _logger.Info($"Unable to find memebership due to hashing service not able to decode value {accountHashedId}");
-                return null;
-            }
-
-            var memberships = (await _membershipProvider.GetMemberships(accountHashedId.ToString()));
-
-            var membership = 
-                memberships
-                .FirstOrDefault(m => m.UserRef == userExternalId.ToString());
+            var memberships = (await _membershipProvider.GetMemberships(accountHashedId.ToString())).ToList();
+            var membership = memberships.FirstOrDefault(m => m.UserRef == userExternalId.ToString());
 
             if (membership == null)
             {
-                _logger.Info($"Unable to find memebership due to {userExternalId} is missing from memberships, Total {memberships.Count()} memberships found");
+                _logger.Info($"Unable to find memebership due to {userExternalId} is missing from memberships, Total {memberships.Count} memberships found");
                 return null;
             }
 
+            _logger.Info($"User {userExternalId} is a member of {membership.HashedAccountId}.");
             _httpContext.Items[Key] = membership;
-
             return membership;
         }
 
         public async Task<bool> ValidateMembership()
         {
+            _logger.Info("Geting memberships.");
             var membership = await GetMembershipContext();
-
+            _logger.Info($"Found user membership: {membership == null}");
             return membership != null;
         }
     }
