@@ -28,8 +28,9 @@ namespace SFA.DAS.Forecasting.Web.Attributes
         {
             if (filterContext.HttpContext.Request.Url?.IsLoopback ?? false)
                 return;
-
-            if (_membershipService().ValidateMembership().Result) return;
+            var taskResult = Task.Run(() => _membershipService().ValidateMembership());
+            taskResult.Wait();
+            if (taskResult.Result) return;
 
             //if (!result.Wait(TimeSpan.FromSeconds(5)))
             //{
