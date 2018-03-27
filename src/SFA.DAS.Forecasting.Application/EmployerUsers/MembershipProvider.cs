@@ -27,7 +27,6 @@ namespace SFA.DAS.Forecasting.Application.EmployerUsers
         {
             try
             {
-                var account = await _accountApiClient.GetAccount(hashedAccountId);
                 var users = await _accountApiClient.GetAccountUsers(hashedAccountId);
                 return 
                     users
