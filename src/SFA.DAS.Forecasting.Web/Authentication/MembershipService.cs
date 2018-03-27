@@ -45,19 +45,22 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return null;
             }
 
-            if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out var userExternalIdClaimValue))
+            string userExternalIdClaimValue;
+            if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out userExternalIdClaimValue))
             {
                 _logger.Info("Unable to find memebership due to external id not found");
                 return null;
             }
 
-            if (!Guid.TryParse(userExternalIdClaimValue, out var userExternalId))
+            Guid userExternalId;
+            if (!Guid.TryParse(userExternalIdClaimValue, out userExternalId))
             {
                 _logger.Info("Unable to find memebership due to error parsing external user id");
                 return null;
             }
 
-            if (!_httpContext.Request.RequestContext.RouteData.Values.TryGetValue(Constants.AccountHashedIdRouteKeyName, out var accountHashedId))
+            object accountHashedId;
+            if (!_httpContext.Request.RequestContext.RouteData.Values.TryGetValue(Constants.AccountHashedIdRouteKeyName, out accountHashedId))
             {
                 _logger.Info($"Unable to find memebership due to {nameof(Constants.AccountHashedIdRouteKeyName)} not found in RouteData");
                 return null;

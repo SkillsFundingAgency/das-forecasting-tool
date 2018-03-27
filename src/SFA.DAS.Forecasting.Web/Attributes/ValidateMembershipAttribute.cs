@@ -29,14 +29,13 @@ namespace SFA.DAS.Forecasting.Web.Attributes
             if (filterContext.HttpContext.Request.Url?.IsLoopback ?? false)
                 return;
 
-            var result = _membershipService().ValidateMembership();
-            if (!result.Wait(TimeSpan.FromSeconds(5)))
-            {
-                _logger.Warn($"Task for {nameof(_membershipService)} not able to complete. ");
-                throw new HttpResponseException(HttpStatusCode.InternalServerError);
-            }
+            if (_membershipService().ValidateMembership().Result) return;
 
-            if (result.Result) return;
+            //if (!result.Wait(TimeSpan.FromSeconds(5)))
+            //{
+            //    _logger.Warn($"Task for {nameof(_membershipService)} not able to complete. ");
+            //    throw new HttpResponseException(HttpStatusCode.InternalServerError);
+            //}
             _logger.Warn("Not able to validate user");
             throw new HttpResponseException(HttpStatusCode.Unauthorized);
         }
