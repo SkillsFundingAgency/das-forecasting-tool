@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.HashingService;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Application.EmployerUsers;
@@ -39,12 +40,14 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return _httpContext.Items[Key] as MembershipContext;
             }
 
+            _logger.Debug("Membership cnot found in http context.");
             if (!_authenticationService.IsUserAuthenticated())
             {
                 _logger.Info("Unable to find memebership due to user is not authenticated");
                 return null;
             }
 
+            _logger.Debug("Getting membersip external id claim.");
             string userExternalIdClaimValue;
             if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out userExternalIdClaimValue))
             {
@@ -52,6 +55,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return null;
             }
 
+            _logger.Debug("Got membership external id claim, now parsing to guid.");
             Guid userExternalId;
             if (!Guid.TryParse(userExternalIdClaimValue, out userExternalId))
             {
@@ -59,6 +63,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return null;
             }
 
+            _logger.Debug("Now getting the hashed account id from the route.");
             object accountHashedId;
             if (!_httpContext.Request.RequestContext.RouteData.Values.TryGetValue(Constants.AccountHashedIdRouteKeyName, out accountHashedId))
             {
@@ -66,12 +71,13 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return null;
             }
 
-            var memberships = (await _membershipProvider.GetMemberships(accountHashedId.ToString())).ToList();
+            _logger.Debug($"Got the hashed account id: {accountHashedId}, now getting the memberships for the account.");
+            var memberships = await _membershipProvider.GetMemberships(accountHashedId.ToString());
+            _logger.Debug("Got the account memberships");
             var membership = memberships.FirstOrDefault(m => m.UserRef == userExternalId.ToString());
-
             if (membership == null)
             {
-                _logger.Info($"Unable to find memebership due to {userExternalId} is missing from memberships, Total {memberships.Count} memberships found");
+                _logger.Info($"Unable to find memebership due to {userExternalId} is missing from memberships, Total {memberships.Count()} memberships found");
                 return null;
             }
 
