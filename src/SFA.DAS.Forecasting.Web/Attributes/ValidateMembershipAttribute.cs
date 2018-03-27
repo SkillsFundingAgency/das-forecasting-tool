@@ -26,23 +26,19 @@ namespace SFA.DAS.Forecasting.Web.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Request.Url.IsLoopback)
+            if (filterContext.HttpContext.Request.Url?.IsLoopback ?? false)
                 return;
 
             var result = _membershipService().ValidateMembership();
-            var taskIsComplete = Task.WaitAll(new[] { result }, 2 * 1000);
-
-            if (!taskIsComplete)
+            if (!result.Wait(TimeSpan.FromSeconds(5)))
             {
                 _logger.Warn($"Task for {nameof(_membershipService)} not able to complete. ");
                 throw new HttpResponseException(HttpStatusCode.InternalServerError);
             }
 
-            if (!result.Result)
-            {
-                _logger.Info("Not able to validate user");
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
-            }
+            if (result.Result) return;
+            _logger.Warn("Not able to validate user");
+            throw new HttpResponseException(HttpStatusCode.Unauthorized);
         }
     }
 }
