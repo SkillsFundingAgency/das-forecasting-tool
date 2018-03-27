@@ -40,14 +40,14 @@ namespace SFA.DAS.Forecasting.Web.Authentication
                 return _httpContext.Items[Key] as MembershipContext;
             }
 
-            _logger.Debug("Membership cnot found in http context.");
+            _logger.Debug("Membership not found in http context.  Generating new membership context.");
             if (!_authenticationService.IsUserAuthenticated())
             {
                 _logger.Info("Unable to find memebership due to user is not authenticated");
                 return null;
             }
 
-            _logger.Debug("Getting membersip external id claim.");
+            _logger.Debug("Getting membership external id claim.");
             string userExternalIdClaimValue;
             if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out userExternalIdClaimValue))
             {
@@ -72,7 +72,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
             }
 
             _logger.Debug($"Got the hashed account id: {accountHashedId}, now getting the memberships for the account.");
-            var memberships = await _membershipProvider.GetMemberships(accountHashedId.ToString());
+            var memberships = (await _membershipProvider.GetMemberships(accountHashedId.ToString()).ConfigureAwait(false)).ToList();
             _logger.Debug("Got the account memberships");
             var membership = memberships.FirstOrDefault(m => m.UserRef == userExternalId.ToString());
             if (membership == null)
@@ -89,7 +89,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
         public async Task<bool> ValidateMembership()
         {
             _logger.Info("Geting memberships.");
-            var membership = await GetMembershipContext();
+            var membership = await GetMembershipContext().ConfigureAwait(false);
             _logger.Info($"Found user membership: {membership == null}");
             return membership != null;
         }

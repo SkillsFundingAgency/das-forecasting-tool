@@ -18,7 +18,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
-            return IsDevEnvironment
+            return 
+                IsDevEnvironment
                 ? new AccountApiConfiguration
                 {
                     Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
@@ -27,7 +28,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
                     IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
                 }
-                : GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
+                : 
+                GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
         }
 
         public static PaymentsEventsApiConfiguration GetPaymentsEventsApiConfiguration()

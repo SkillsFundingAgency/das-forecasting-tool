@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.EmployerUsers
         {
             try
             {
-                var users = await _accountApiClient.GetAccountUsers(hashedAccountId);
+                var users = await _accountApiClient.GetAccountUsers(hashedAccountId).ConfigureAwait(false);
                 return 
                     users
                     .Select(m => new MembershipContext
