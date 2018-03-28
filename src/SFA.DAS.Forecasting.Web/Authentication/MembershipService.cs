@@ -48,18 +48,10 @@ namespace SFA.DAS.Forecasting.Web.Authentication
             }
 
             _logger.Debug("Getting membership external id claim.");
-            string userExternalIdClaimValue;
-            if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out userExternalIdClaimValue))
+            string userExternalId;
+            if (!_authenticationService.TryGetClaimValue(Constants.UserExternalIdClaimKeyName, out userExternalId))
             {
                 _logger.Info("Unable to find memebership due to external id not found");
-                return null;
-            }
-
-            _logger.Debug("Got membership external id claim, now parsing to guid.");
-            Guid userExternalId;
-            if (!Guid.TryParse(userExternalIdClaimValue, out userExternalId))
-            {
-                _logger.Info("Unable to find memebership due to error parsing external user id");
                 return null;
             }
 
@@ -74,10 +66,10 @@ namespace SFA.DAS.Forecasting.Web.Authentication
             _logger.Debug($"Got the hashed account id: {accountHashedId}, now getting the memberships for the account.");
             var memberships = (await _membershipProvider.GetMemberships(accountHashedId.ToString()).ConfigureAwait(false)).ToList();
             _logger.Debug("Got the account memberships");
-            var membership = memberships.FirstOrDefault(m => m.UserRef == userExternalId.ToString());
+            var membership = memberships.FirstOrDefault(m => m.UserRef.Equals(userExternalId, StringComparison.OrdinalIgnoreCase));
             if (membership == null)
             {
-                _logger.Info($"Unable to find memebership due to {userExternalId} is missing from memberships, Total {memberships.Count()} memberships found");
+                _logger.Info($"Unable to find membership due to {userExternalId} is missing from memberships, Total {memberships.Count} memberships found");
                 return null;
             }
 
