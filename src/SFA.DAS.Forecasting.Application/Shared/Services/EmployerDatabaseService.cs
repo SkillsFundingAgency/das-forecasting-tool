@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
     {
-        private ILog _logger;
+        private readonly ILog _logger;
 
         public EmployerDatabaseService(
             IApplicationConfiguration config,
@@ -70,16 +70,13 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             // Get all Payments where AccountId and  ,DeliveryPeriodMonth ,DeliveryPeriodYear --> 10005694, 5, 2017
             var sql = "SELECT" +
                         "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
-                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount]" +
-                        ",[PaymentMetaDataId],[ProviderName] " +
-                        ",[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
-                        ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource]" +
+                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount] " +
+                        ",[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
+                        ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource] " +
                     "FROM [employer_financial].[Payment] " +
-                    "inner join [employer_financial].[PaymentMetaData] metaData " +
-                    "on payment.PaymentMetaDataId = metaData.Id " +
                     "where AccountId = @employerAccountId " +
                     "and DeliveryPeriodYear = @year " +
-                    "and DeliveryPeriodMonth = @month ";
+                    "and DeliveryPeriodMonth = @month";
 
             try
             {
@@ -90,11 +87,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                     parameters.Add("@year", year, DbType.Int32);
                     parameters.Add("@month", month, DbType.Int32);
 
-                    var levyDeclarations = await cnn.QueryAsync<EmployerPayment>(
+                    var payments = await cnn.QueryAsync<EmployerPayment>(
                             sql,
                                 parameters,
                                 commandType: CommandType.Text);
-                    return levyDeclarations.ToList();
+                    return payments.ToList();
                 });
             }
             catch (Exception ex)

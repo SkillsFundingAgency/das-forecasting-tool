@@ -64,7 +64,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I trigger PreLoadPayment function some employers")]
         public async Task GivenITriggerPreLoadPaymentFunctionSomeEmployers()
         {
-            var item = "{\"EmployerAccountIds\":["+ _accountId +"],\"PeriodYear\":\"2017\",\"PeriodMonth\":5,\"PeriodId\": \"1617-R10\"}";
+            var item = "{\"EmployerAccountIds\":[" + _accountId + "],\"PeriodYear\":\"2017\",\"PeriodMonth\":5,\"PeriodId\": \"1617-R10\"}";
 
             var client = new HttpClient();
             await client.PostAsync(Config.PaymentPreLoadHttpFunction, new StringContent(item));
@@ -95,7 +95,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 parameters.Add("@employerAccountId", _accountId, DbType.Int64);
                 count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where EmployerAccountId = @employerAccountId"
                         , param: parameters, commandType: CommandType.Text);
-                    return count == 1;
+                return count == 1;
 
             }, $"Failed to find all the payments. Found: {count}");
         }
@@ -142,7 +142,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             commitment.Should().NotBeNull();
 
             var originalPayment = GetPayment().Items.First();
-            
+
             commitment.ApprenticeshipId.Should().NotBe(originalPayment.ApprenticeshipId, "Cannot be the same as input data");
             commitment.EmployerAccountId.Should().Be(_substitutionEmployerAccountId);
             commitment.ProviderId.Should().Be(1);
@@ -172,29 +172,31 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             var month = 5;
             var p2 = new EmployerPayment
             {
-                    Ukprn = 10001378,
-                    Uln = 2002,
-                    AccountId = _accountId,
-                    ApprenticeshipId = 6666,
-                    CollectionPeriodId = "1617-r10",
-                    CollectionPeriodMonth = month,
-                    CollectionPeriodYear = year,
-                    Amount = 50.00000m,
-                    PaymentMetaDataId = 690,
-                    ProviderName = "CHESTERFIELD COLLEGE",
-                    StandardCode = 4,
-                    FrameworkCode = 0,
-                    ProgrammeType = 0,
-                    PathwayCode = 0,
-                    PathwayName = null,
-                    ApprenticeshipCourseName = "Chemical Engineering",
-                    ApprenticeshipCourseStartDate = DateTime.Parse("2017-01-09"),
-                    ApprenticeshipCourseLevel = 2,
-                    ApprenticeName = "John Doe",
-                    FundingSource = Models.Payments.FundingSource.Levy,
-                    PaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8") // Need to match Payment from ProviderEvents API // IN: ProviderEventTestData.cs
+                Ukprn = 10001378,
+                Uln = 2002,
+                AccountId = _accountId,
+                ApprenticeshipId = 6666,
+                CollectionPeriodId = "1617-r10",
+                CollectionPeriodMonth = month,
+                CollectionPeriodYear = year,
+                DeliveryPeriodMonth = month,
+                DeliveryPeriodYear = year,
+                Amount = 50.00000m,
+                PaymentMetaDataId = 690,
+                ProviderName = "CHESTERFIELD COLLEGE",
+                StandardCode = 4,
+                FrameworkCode = 0,
+                ProgrammeType = 0,
+                PathwayCode = 0,
+                PathwayName = null,
+                ApprenticeshipCourseName = "Chemical Engineering",
+                ApprenticeshipCourseStartDate = DateTime.Parse("2017-01-09"),
+                ApprenticeshipCourseLevel = 2,
+                ApprenticeName = "John Doe",
+                FundingSource = Models.Payments.FundingSource.Levy,
+                PaymentId = Guid.Parse("f97840b3-d3bf-429c-bc3c-8a877f4f26f8") // Need to match Payment from ProviderEvents API // IN: ProviderEventTestData.cs
             };
-            
+
             _tableStorageService.SetTable(_settings.StubEmployerPaymentTable);
             await _tableStorageService.Store(new List<EmployerPayment> { p2 }, _accountId.ToString(), $"{year}-{month}");
         }
@@ -210,7 +212,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 {
                     Id = "f97840b3-d3bf-429c-bc3c-8a877f4f26f8",
                     ApprenticeshipId = 11002,
-                    EmployerAccountId = "MJK9XV", 
+                    EmployerAccountId = "MJK9XV",
                     CollectionPeriod = new NamedCalendarPeriod
                     {
                         Id = "1617-r10",

@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
     {
         public DefaultRegistry()
         {
-            if (ConfigurationRegistry.IsDevEnvironment)
+            if (ConfigurationHelper.IsDevEnvironment)
             {
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
@@ -32,10 +32,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 For<IEmployerDatabaseService>()
                     .Use<EmployerDatabaseService>();
             }
+
+            var apiConfig = ConfigurationHelper.GetAccountApiConfiguration();
             For<IAccountApiClient>()
                 .Use<AccountApiClient>()
                 .Ctor<IAccountApiConfiguration>()
-                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AccountApi);
+                .Is(apiConfig);
+
             For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
                 .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
         }
