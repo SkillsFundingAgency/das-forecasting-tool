@@ -54,7 +54,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
             var tableModel = new TableEntry
             {
                 PartitionKey = employerAccountId.ToString(),
-                RowKey = earningDetails.PaymentId,
+                RowKey = earningDetails.PaymentId.ToLower(),
                 Data = JsonConvert.SerializeObject(earningDetails)
             };
 
@@ -70,7 +70,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
             var tableModel = new TableEntry
             {
                 PartitionKey = payment.AccountId.ToString(),
-                RowKey = payment.PaymentId.ToString(),
+                RowKey = payment.PaymentId.ToString().ToLower(),
                 Data = JsonConvert.SerializeObject(payment)
             };
 

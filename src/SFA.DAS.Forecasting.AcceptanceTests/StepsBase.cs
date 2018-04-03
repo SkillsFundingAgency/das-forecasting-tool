@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Transactions;
 using Dapper;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
@@ -29,6 +30,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.9", "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
+
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
@@ -37,6 +39,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
         protected List<AccountProjectionReadModel> AccountProjections { get => Get<List<AccountProjectionReadModel>>(); set => Set(value); }
+        protected List<Models.Payments.Payment> RecordedPayments { get => Get<List<Models.Payments.Payment>>(); set => Set(value); }
+        protected List<Models.Commitments.Commitment> RecordedCommitments { get => Get<List<Models.Commitments.Commitment>>(); set => Set(value); }
 
         protected decimal Balance
         {
@@ -46,7 +50,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected static HttpClient HttpClient = new HttpClient();
 
-        public T Get<T>(string key = null) where T : class
+        public T Get<T>(string key = null)// where T : class
         {
             return key == null ? ScenarioContext.Current.Get<T>() : ScenarioContext.Current.Get<T>(key);
         }
@@ -249,5 +253,26 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 txScope.Complete();
             }
         }
+
+        protected void ExecuteSql(Action<TransactionScope> action)
+        {
+            using (var txScope = new TransactionScope())
+            {
+                action(txScope);
+                txScope.Complete();
+            }
+        }
+
+        protected void Send<T>(string endpoint, T payload, string description = "Posting content to api.")
+        {
+            Send(endpoint, JsonConvert.SerializeObject(payload), description);
+        }
+
+        protected void Send(string endpoint, string payload, string description = "Posting content to api.")
+        {
+            Console.WriteLine($"{description} Uri: {endpoint}, Payload: {payload}");
+            HttpClient.PostAsync(endpoint, new StringContent(payload)).Wait();
+        }
+
     }
 }

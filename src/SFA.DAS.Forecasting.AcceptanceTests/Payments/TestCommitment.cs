@@ -4,6 +4,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
 {
     public class TestCommitment
     {
+        public int LearnerId { get; set; }
         public string ApprenticeName { get; set; }
         public string CourseName { get; set; }
         public int CourseLevel { get; set; }

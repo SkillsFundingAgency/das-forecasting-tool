@@ -137,6 +137,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Build Projections From Payment Run.feature</DependentUpon>
     </Compile>
+    <Compile Include="Payments\Steps\Pre_LoadPaymentsSteps.cs" />
     <Compile Include="Payments\Steps\BuildProjectionsFromPaymentRun.cs" />
     <Compile Include="Payments\TestPayment.cs" />
     <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
@@ -144,7 +145,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PreLoadPayments.feature</DependentUpon>
     </Compile>
-    <Compile Include="Payments\Steps\PreLoadPaymentsSteps.cs" />
     <Compile Include="Projections\Feature\Calculate co-investment amounts.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

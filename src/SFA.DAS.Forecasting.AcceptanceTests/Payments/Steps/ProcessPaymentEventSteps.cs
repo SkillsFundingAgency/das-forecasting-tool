@@ -29,20 +29,22 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
         [Given(@"I have no existing payments")]
+        [Given(@"I have no existing payments recorded in the forecasting service")]
         public void GivenIHaveNoExistingPayments()
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Payment where employerAccountId = @employerAccountId",
+            Connection.Execute("Delete from Payment where employerAccountId = @employerAccountId or employerAccountId = '112233'",
                 parameters, commandType: CommandType.Text);
         }
 
         [Given(@"I have no existing commitments")]
+        [Given(@"I have no existing commitments recorded in the forecasting service")]
         public void GivenIHaveNoExistingCommitments()
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId",
+            Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId or employerAccountId = '112233'",
                 parameters, commandType: CommandType.Text);
         }
 

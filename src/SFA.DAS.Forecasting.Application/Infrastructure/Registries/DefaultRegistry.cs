@@ -18,8 +18,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     .Use<DevAccountBalanceService>();
                 For<IHashingService>()
                     .Use<DevHashingService>();
-                For<IEmployerDatabaseService>()
-                    .Use<EmployerTableStorageService>();
             }
             else
             {
@@ -29,8 +27,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     .Use<HashingService.HashingService>()
                     .Ctor<string>("allowedCharacters").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AllowedHashstringCharacters)
                     .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().Hashstring);
-                For<IEmployerDatabaseService>()
-                    .Use<EmployerDatabaseService>();
             }
 
             var apiConfig = ConfigurationHelper.GetAccountApiConfiguration();
@@ -41,6 +37,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
                 .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
+
+            For<IEmployerDatabaseService>()
+                .Use<EmployerDatabaseService>();
         }
     }
 }

@@ -67,16 +67,16 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
-            // Get all Payments where AccountId and  ,DeliveryPeriodMonth ,DeliveryPeriodYear --> 10005694, 5, 2017
-            var sql = "SELECT" +
-                        "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
-                        ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount] " +
-                        ",[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
-                        ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource] " +
-                    "FROM [employer_financial].[Payment] " +
-                    "where AccountId = @employerAccountId " +
-                    "and DeliveryPeriodYear = @year " +
-                    "and DeliveryPeriodMonth = @month";
+            const string sql = "SELECT" +
+                               "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
+                               ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount] " +
+                               ",[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
+                               ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource] " +
+                               "FROM [employer_financial].[Payment] p " +
+                               "join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
+                               "where p.AccountId = @employerAccountId " +
+                               "and CollectionPeriodYear = @year " +
+                               "and CollectionPeriodMonth = @month";
 
             try
             {
