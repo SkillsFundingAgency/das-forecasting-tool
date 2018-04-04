@@ -10,6 +10,7 @@ using Dapper;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.ReadModel.Projections;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -19,6 +20,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
     [Binding]
     public class GenerateLevyProjectionsCI_498Steps : StepsBase
     {
+
+        protected CalendarPeriod ProjectionsStartPeriod
+        {
+            get => Get<CalendarPeriod>("projections_start_period");
+            set => Set(value, "projections_start_period");
+        }
 
         [Scope(Feature = "Generate Levy Projections [CI-498]")]
         [BeforeFeature(Order = 1)]
@@ -56,6 +63,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             await client.PostAsync(Config.ApiInsertBalanceUrl, new StringContent(balance.ToString()));
         }
 
+        [Given(@"the start month should be this month rather than next month")]
+        public void GivenTheStartMonthShouldBeThisMonthRatherThanNextMonth()
+        {
+            ProjectionsStartPeriod = new CalendarPeriod { Month = DateTime.Today.Month - 1, Year = DateTime.Today.Year };
+        }
+
+
         [When(@"the account projection is triggered after levy has been declared")]
         public void WhenTheAccountProjectionIsGenerated()
         {
@@ -92,7 +106,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Then(@"calculated levy credit value should be the amount declared for the single linked PAYE scheme")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSingleLinkedPAYEScheme()
         {
-            AccountProjections.ForEach(projection => Assert.AreEqual(projection.FundsIn,LevySubmissions.FirstOrDefault()?.Amount,$"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.FundsIn}"));
+            AccountProjections.ForEach(projection => Assert.AreEqual(projection.FundsIn, LevySubmissions.FirstOrDefault()?.Amount, $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.FundsIn}"));
         }
 
         [Then(@"calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes")]
