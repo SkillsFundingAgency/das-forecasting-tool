@@ -315,14 +315,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\EmailService.cs" />
-    <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\HandleErrorFilter.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\SmsService.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Orchestrators\EstimationOrchestrator.cs" />
+    <Compile Include="Properties\App_Start\BundleConfig.cs" />
+    <Compile Include="Properties\App_Start\EmailService.cs" />
+    <Compile Include="Properties\App_Start\FilterConfig.cs" />
+    <Compile Include="Properties\App_Start\HandleErrorFilter.cs" />
+    <Compile Include="Properties\App_Start\RouteConfig.cs" />
+    <Compile Include="Properties\App_Start\SmsService.cs" />
+    <Compile Include="Properties\App_Start\Startup.Auth.cs" />
+    <Compile Include="Properties\App_Start\StructuremapMvc.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
     <Compile Include="Attributes\AuthorizeForecastingAttribute.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Authentication\IdentityServerConfigurationFactory.cs" />
     <Compile Include="Attributes\ValidateMembershipAttribute.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\EstimationController.cs" />
     <Compile Include="Controllers\ForecastingController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="DependencyResolution\DefaultRegistry.cs" />
@@ -354,6 +356,9 @@
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceViewModel.cs" />
+    <Compile Include="ViewModels\EstimationApprenticeshipViewModel.cs" />
+    <Compile Include="ViewModels\EstimationPageViewModel.cs" />
+    <Compile Include="ViewModels\EstimationTransferAllowanceVewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
