@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Balance\Balance.cs" />
     <Compile Include="Commitments\Commitment.cs" />
+    <Compile Include="Estimation\AvailableApprenticeship.cs" />
     <Compile Include="Levy\LevyDeclaration.cs" />
     <Compile Include="Payments\CalendarPeriod.cs" />
     <Compile Include="Payments\NamedCalendarPeriod.cs" />
