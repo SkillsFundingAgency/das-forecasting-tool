@@ -358,7 +358,6 @@
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceItemViewModel.cs" />
     <Compile Include="ViewModels\BalanceViewModel.cs" />
-    <Compile Include="ViewModels\ApprenticeshipRemoveViewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -702,7 +701,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Appenticeships\AddApprenticeships.cshtml" />
-    <Content Include="Views\Appenticeships\RemoveApprenticeships.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
