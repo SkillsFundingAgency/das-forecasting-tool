@@ -8,10 +8,12 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     public class AppenticeshipsController: Controller
     {
+        // once using named estimation....
+        //accounts/{hashed_account_id}/forecasting/estimations/{estimation_name}/apprenticeship/add
 
 
         [HttpGet]
-        [Route("accounts/{hashedAccountId}/add-apprenticeships", Name = "AddApprenticeships")]
+        [Route("accounts/{hashed_account_id}/forecasting/estimations/apprenticeship/add", Name = "AddApprenticeships")]
         public ActionResult AddApprenticeships(string hashedAccountId)
         {
             var vm =  new AddApprenticeshipsViewModel
