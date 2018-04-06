@@ -66,6 +66,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                     Date = startDate.ToString(DATE_FORMAT),
                     RemainingAllowance = "£14,466.67",
                     Cost = "£533.33",
+                    IsLessThanCost = true
                 }
             };
 
@@ -75,7 +76,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             {
                 Apprenticeships = fakeEstimateApprentiships,
                 TransferAllowances = fakeEstimationTransferAllowance,
-                CanFund = true
+                CanFund = false
             };
 
             return await Task.FromResult(result);
