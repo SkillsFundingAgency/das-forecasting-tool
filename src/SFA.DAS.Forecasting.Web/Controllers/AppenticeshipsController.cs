@@ -6,17 +6,20 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
+    //[ValidateMembership]
+    //[AuthorizeForecasting]
+   //[Route("accounts/{hashedAccountId}/forecasting")]
     public class AppenticeshipsController: Controller
     {
-        // once using named estimation....
-        //accounts/{hashed_account_id}/forecasting/estimations/{estimation_name}/apprenticeship/add
-
+        public AppenticeshipsController()
+        {
+        }
 
         [HttpGet]
-        [Route("accounts/{hashed_account_id}/forecasting/estimations/apprenticeship/add", Name = "AddApprenticeships")]
-        public ActionResult AddApprenticeships(string hashedAccountId)
+        [Route("accounts/{hashedAccountId}/forecasting/estimations/{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
+        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            var vm =  new AddApprenticeshipsViewModel
+            var vm =  new ApprenticeshipAddViewModel
             {
                 Name = "Add Apprenticeships",
                 AvailableApprenticeships = new List<AvailableApprenticeship>
@@ -802,6 +805,20 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                     new AvailableApprenticeship {Id = "447-2-1", Cap = 2500, Duration = 12, Title = "Youth Work: Youth Work - Level 3" }
                 }
             };
+            return View(vm);
+        }
+
+
+        [HttpGet]
+        [Route("accounts/{hashedAccountId}/forecasting/estimations/{estimationName}/apprenticeship/remove/{rowId}", Name = "RemoveApprenticeships")]
+        public ActionResult RemoveApprenticeships(string hashedAccountId, string estimationName, string rowId)
+        {
+               var vm =  new ApprenticeshipRemoveViewModel
+            {
+                Name = "Add Apprenticeships",
+                RowId = rowId,
+                EstimationName = estimationName
+              };
             return View(vm);
         }
     }
