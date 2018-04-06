@@ -189,6 +189,41 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC3: Use specified start month when generating levy triggered projections")]
+        public virtual void AC3UseSpecifiedStartMonthWhenGeneratingLevyTriggeredProjections()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: Use specified start month when generating levy triggered projections", ((string[])(null)));
+#line 38
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table5.AddRow(new string[] {
+                        "ABC-1234",
+                        "3000",
+                        "Today"});
+#line 39
+ testRunner.Given("the following levy declarations have been recorded", ((string)(null)), table5, "Given ");
+#line 42
+ testRunner.And("the start month should be this month rather than next month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 43
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 44
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 45
+ testRunner.Then("calculated levy credit value should be the amount declared for the single linked " +
+                    "PAYE scheme", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 46
+ testRunner.And("each future month\'s forecast levy credit should be the same", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

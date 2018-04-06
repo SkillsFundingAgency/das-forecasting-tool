@@ -1,5 +1,7 @@
 ﻿using System;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
@@ -10,6 +12,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             var config = GetConfiguration();
             ForSingletonOf<IApplicationConfiguration>().Use(config);
+            ForSingletonOf<IAccountApiConfiguration>().Use(config.AccountApi);
+            ForSingletonOf<IPaymentsEventsApiConfiguration>().Use(config.PaymentEventsApi);
         }
 
         private IApplicationConfiguration GetConfiguration()

@@ -1,4 +1,5 @@
 ﻿using System;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Messages.Projections
 {
@@ -6,5 +7,6 @@ namespace SFA.DAS.Forecasting.Messages.Projections
     {
         public long EmployerAccountId { get; set; }
         public ProjectionSource ProjectionSource { get; set; }
+        public CalendarPeriod StartPeriod { get; set; }
     }
 }

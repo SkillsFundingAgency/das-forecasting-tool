@@ -105,7 +105,7 @@
     }
     @if (HttpContext.Current.User.Identity.IsAuthenticated)
     {
-        if (string.IsNullOrWhiteSpace(ViewBag.HideNav))
+        if (string.IsNullOrWhiteSpace(ViewBag.HideNav?.ToString()))
         {
             <div class="header-organisation" role="navigation">
 
