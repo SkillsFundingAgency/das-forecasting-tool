@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = Model.Name;
-    ViewBag.Description = "Add Apprenticeships to the Estimator Tool";
+    ViewBag.Description = "Add Apprenticeships to your Estimation";
 }
 <main class="estimate-add-apprenticeship" id="content" role="main" tabindex="-1">
     <a href="#" class="link-back">Back</a>
@@ -34,7 +34,11 @@
         </ul>
 
     </div>    
-    
+    <div class="success-summary hidden" id="apprenticeshipAdded">
+        <h3 class="heading-medium">Apprenticeship added</h3>
+        <p>The apprenticeship <span class="apprenticeship-name">{apprenticeship}</span> has been added.</p>
+    </div>
+
     <div class="grid-row">
         <div class="column-two-thirds">
             <div class="hgroup form-group">
@@ -71,7 +75,7 @@
 <div class="form-group">
 <label class="form-label-bold" for="email">Choose apprenticeship <span class="hidden">standard</span></label>
 <span class="error-message hidden">You must choose 1 apprenticeship</span>
-<span class="error-message hidden">You must choose 1 apprenticeship</span>
+
                     
                     
                     
