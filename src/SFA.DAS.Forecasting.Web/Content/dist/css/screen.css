@@ -4885,3 +4885,71 @@ path.c3-line {
 .c3-axis-y-label {
   font-size: 20px;
 }
+
+#tabs-container {
+  margin-bottom: 10px;
+}
+
+#tabs-container .tabs-menu {
+  float: left;
+  border-bottom: 1px solid #d4d4d1;
+  width: 100%;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+#tabs-container .tabs-menu li {
+  display: inline-block;
+  float: left;
+  text-align: center;
+  margin-right: 5px;
+  color: #000;
+  background-color: #dee0e2;
+  border-top: 1px solid #bfc1c3;
+  border-right: 1px solid #bfc1c3;
+  border-left: 1px solid #bfc1c3;
+  bottom: -1px;
+  line-height: 44px;
+}
+
+#tabs-container .tabs-menu li:hover {
+  line-height: 51px;
+  margin-top: -6px;
+  margin-bottom: -1px;
+  background: #f8f8f8;
+  text-decoration: underline;
+}
+
+#tabs-container .tabs-menu li.current {
+  position: relative;
+  background-color: #fff;
+  border-bottom: 1px solid #fff;
+  z-index: 5;
+  line-height: 50px;
+  margin-bottom: -1px;
+  margin-top: -7px;
+}
+
+#tabs-container .tabs-menu li.current a {
+  color: #000;
+}
+
+#tabs-container .tabs-menu li a {
+  padding: 15px;
+  margin-top: 0px;
+  color: #005EA5;
+  text-decoration: none;
+}
+
+#tabs-container .tabs-menu li a:focus {
+  background: none;
+  border: 0;
+  outline: 0;
+}
+
+#tabs-container .tab-content {
+  overflow: auto;
+  border: 1px solid #bfc1c3;
+  border-top: 0;
+  padding: 15px;
+}

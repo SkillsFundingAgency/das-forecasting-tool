@@ -1,34 +1,30 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using CsvHelper;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [ValidateMembership]
     [AuthorizeForecasting]
-    [Route("accounts/{hashedaccountId}/estimation")]
+    [Route("accounts/{hashedaccountId}/forecasting")]
     public class EstimationController : Controller
     {
-        private readonly EstimationOrchestrator _orchestrator;
+        private readonly IEstimationOrchestrator _orchestrator;
         private readonly IMembershipService _membershipService;
 
-        public EstimationController(EstimationOrchestrator orchestrator, IMembershipService membershipService)
+        public EstimationController(IEstimationOrchestrator orchestrator, IMembershipService membershipService)
         {
             _orchestrator = orchestrator;
             _membershipService = membershipService;
         }
 
         [HttpGet]
-        [Route("", Name = "EstimatedCost")]
-        public async Task<ActionResult> CostEstimations(string hashedAccountId)
+        [Route("estimations/{estimateName}", Name = "EstimatedCost")]
+        public async Task<ActionResult> CostEstimation(string hashedAccountId, string estimateName)
         {
-            var viewModel = await _orchestrator.Balance(hashedAccountId);
+            var viewModel = await _orchestrator.CostEstimation(hashedAccountId, estimateName);
             return View(viewModel);
         }
 

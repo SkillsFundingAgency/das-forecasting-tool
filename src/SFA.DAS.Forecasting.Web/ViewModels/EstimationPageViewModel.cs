@@ -5,7 +5,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class EstimationPageViewModel
     {
+        public bool  CanFund { get; set; }
         public IEnumerable<EstimationTransferAllowanceVewModel> TransferAllowances { get; set; }
-        public IEnumerable<EstimationApprenticeshipViewModel> Apprenticeships { get; set; }
+        public EstimationApprenticeshipsViewModel Apprenticeships { get; set; }
     }
 }
