@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 		[Route("signout")]
         public ActionResult SignOut()
         {
-			return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service", "signout", true));
+			return OwinWrapper.SignOutUser(Url.ExternalUrlAction(string.Empty));
 		}
 
         [Authorize]
