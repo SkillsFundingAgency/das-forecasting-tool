@@ -122,5 +122,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             var fundsIn = LevySubmissions.Sum(levy => levy.Amount);
             Assert.IsTrue(AccountProjections.All(projection => projection.FundsIn == fundsIn));
         }
+
+        [Then(@"the first month should be this month rather than next month")]
+        public void ThenTheFirstMonthShouldBeThisMonthRatherThanNextMonth()
+        {
+            Assert.AreEqual(AccountProjections.First().Month, DateTime.Today.Month, $"Expected the first month to be {DateTime.Today.Month} but was {AccountProjections.First().Month}");
+        }
     }
 }
