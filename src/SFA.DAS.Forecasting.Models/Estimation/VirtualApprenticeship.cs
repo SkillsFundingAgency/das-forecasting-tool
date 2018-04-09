@@ -17,6 +17,6 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public decimal MonthlyPayment { get; set; }
         public int TotalInstallments { get; set; }
         public decimal TotalCost { get; set; }
-
+        public decimal CompletionPayment { get; set; }
     }
 }
