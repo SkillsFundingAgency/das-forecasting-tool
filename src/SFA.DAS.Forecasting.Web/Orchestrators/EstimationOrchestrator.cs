@@ -39,6 +39,17 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                     MonthlyPayment = "£533.33",
                     MonthlyPaymentCount = 18,
                     ComplementionPayment = "£2,400.00"
+                },
+                 new EstimationApprenticeshipViewModel
+                {
+                    Id= "ABC001",
+                    CourseTitle = "Construction Building: Wood Occupations",
+                    Level = 2,
+                    Count = 2,
+                    StartDate = startDate.ToString(DATE_FORMAT),
+                    MonthlyPayment = "£533.33",
+                    MonthlyPaymentCount = 18,
+                    ComplementionPayment = "£2,400.00"
                 }
             };
 
@@ -66,7 +77,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                     Date = startDate.ToString(DATE_FORMAT),
                     RemainingAllowance = "£14,466.67",
                     Cost = "£533.33",
-                    IsLessThanCost = true
+                    IsLessThanCost = false
                 }
             };
 
@@ -76,7 +87,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             {
                 Apprenticeships = fakeEstimateApprentiships,
                 TransferAllowances = fakeEstimationTransferAllowance,
-                CanFund = false
+                CanFund = true
             };
 
             return await Task.FromResult(result);
