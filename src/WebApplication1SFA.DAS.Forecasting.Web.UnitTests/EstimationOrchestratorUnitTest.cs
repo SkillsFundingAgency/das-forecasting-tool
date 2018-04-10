@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
         private EstimationOrchestrator _estimationOrchestrator;
         private Mock<IAccountEstimationBuilderService> _accountEstimationBuilder;
 
-        private const string  HashedAccountId = "VT6098";
+        private const string HashedAccountId = "VT6098";
         private const string EstimationName = "default";
 
         [SetUp]
@@ -38,21 +38,25 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
                     {
                        new VirtualApprenticeship
                        {
-                           CourseTitle = "Plumbering Level 2",
-                           TotalInstallments = 12,
-                           MonthlyPayment = 1000.1m
+                           CourseTitle = "Construction Building: Wood Occupations",
+                           Level  = 2,
+                           ApprenticesCount = 2,
+                           TotalInstallments = 18,
+                           StartDate = new DateTime(2018, 5, 1),
+                           TotalCost = 12000m,
+                           MonthlyPayment = 533.33m,
+                           CompletionPayment = 2400m,
                        }
                     },
-                    TotalApprenticeshipCount = 2,
-                    TotalCompletionPayment = 12000.12m,
-                    TotalMonthlyPayment = 1000.1m,
                     Estimations = new List<AccountProjectionReadModel>
                     {
                         new AccountProjectionReadModel
                         {
                             EmployerAccountId = 10000,
                             Month = 4,
-                            Year = 2018
+                            Year = 2018,
+                            FutureFunds = 15000m,
+                            TotalCostOfTraining = 0m
                         }
                     }
                 }));
@@ -64,13 +68,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
         }
 
         [Test]
-        public async Task GivenAccountIdAndEstimationNameShouldReturnEstimatioViewnModel()
+        public async Task GivenAccountIdAndEstimationNameShouldReturnValidEstimationViewModel()
         {
             //Act
             var estimationViewModel = await _estimationOrchestrator.CostEstimation(HashedAccountId, EstimationName);
 
             // Assert
             estimationViewModel.Should().NotBeNull();
+            estimationViewModel.CanFund.Should().BeTrue();
+
         }
 
 
