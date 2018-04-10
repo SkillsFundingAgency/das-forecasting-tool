@@ -19,8 +19,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
     {
         private AutoMoqer _autoMoq;
         private EstimationOrchestrator _estimationOrchestrator;
-        private Mock<IAccountEstimationBuilderService> _accountEstimationBuilder;
-
         private const string HashedAccountId = "VT6098";
         private const string EstimationName = "default";
 
@@ -28,8 +26,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
         public void Setup()
         {
 
-            _accountEstimationBuilder = new Mock<IAccountEstimationBuilderService>();
-            _accountEstimationBuilder
+            _autoMoq = new AutoMoqer();
+
+            _autoMoq.GetMock<IAccountEstimationBuilderService>()
                 .Setup(o => o.CostBuildEstimations(HashedAccountId, EstimationName))
                 .Returns(Task.FromResult(new AccountEstimation
                 {
@@ -61,17 +60,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
                     }
                 }));
 
-            ///_autoMoq = new AutoMoqer();
-
-            _estimationOrchestrator = new EstimationOrchestrator(_accountEstimationBuilder.Object);
-
+            _estimationOrchestrator = _autoMoq.Resolve<EstimationOrchestrator>();
         }
 
         [Test]
         public async Task GivenAccountIdAndEstimationNameShouldReturnValidEstimationViewModel()
         {
             //Act
-            var estimationViewModel = await _estimationOrchestrator.CostEstimation(HashedAccountId, EstimationName);
+            var estimationViewModel = await _estimationOrchestrator.CostEstimation(HashedAccountId, EstimationName, false);
 
             // Assert
             estimationViewModel.Should().NotBeNull();
