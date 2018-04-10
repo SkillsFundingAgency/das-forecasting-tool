@@ -13,7 +13,11 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Service
     }
 
 
-    public class AccountEstimationBuilderService
+    public class AccountEstimationBuilderService : IAccountEstimationBuilderService
     {
+        public Task<AccountEstimation> CostBuildEstimations(string accountId, string estimationName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
