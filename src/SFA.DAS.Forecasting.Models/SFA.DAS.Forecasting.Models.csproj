@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="Balance\Balance.cs" />
     <Compile Include="Commitments\Commitment.cs" />
-    <Compile Include="Estimation\AccountEstimation.cs" />
+    <Compile Include="Estimation\AccountEstimationModel.cs" />
     <Compile Include="Estimation\AvailableApprenticeship.cs" />
     <Compile Include="Estimation\VirtualApprenticeship.cs" />
     <Compile Include="Levy\LevyDeclaration.cs" />

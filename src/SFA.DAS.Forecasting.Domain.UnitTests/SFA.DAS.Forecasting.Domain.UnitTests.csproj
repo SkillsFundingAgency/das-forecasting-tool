@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Balance\CurrentBalanceTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentsTests.cs" />
+    <Compile Include="Estimations\AccountEstimationTests.cs" />
     <Compile Include="Projection\AccountProjectionTests.cs" />
     <Compile Include="Levy\LevyDeclarationHandlerTests.cs" />
     <Compile Include="Levy\LevyPeriodTests.cs" />

@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Service
 {
     public interface IAccountEstimationBuilderService
     {
-       Task<AccountEstimation> CostBuildEstimations(string accountId, string estimationName);
+       Task<AccountEstimationModel> CostBuildEstimations(string accountId, string estimationName);
     }
 
 

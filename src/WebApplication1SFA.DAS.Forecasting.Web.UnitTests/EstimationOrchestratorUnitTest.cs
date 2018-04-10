@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
             _accountEstimationBuilder = new Mock<IAccountEstimationBuilderService>();
             _accountEstimationBuilder
                 .Setup(o => o.CostBuildEstimations(It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(Task.FromResult(new AccountEstimation
+                .Returns(Task.FromResult(new AccountEstimationModel
                 {
                     EstimationName = EstimationName,
                     Apprenticeships = new List<VirtualApprenticeship>

@@ -79,6 +79,9 @@
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
     <Compile Include="Commitments\Validation\CommitmentValidator.cs" />
+    <Compile Include="Estimations\AccountEstimation.cs" />
+    <Compile Include="Estimations\AccountEstimationRepository.cs" />
+    <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Payments\EmployerPaymentRepository.cs" />
     <Compile Include="Payments\EmployerPaymentService.cs" />
