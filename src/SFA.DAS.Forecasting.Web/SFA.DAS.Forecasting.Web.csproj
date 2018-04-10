@@ -707,6 +707,7 @@
     <Content Include="Views\Shared\NotFound.cshtml" />
     <Content Include="Views\Appenticeships\AddApprenticeships.cshtml" />
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
+    <Content Include="Views\Estimation\StartEstimation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
