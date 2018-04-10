@@ -22,10 +22,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("estimations/start-transfer", Name = "EstimationStart")]
-        public async Task<ActionResult> StartEstimation(string hashedAccountId, string estimateName)
+        public ActionResult StartEstimation(string hashedAccountId)
         {
-            var viewModel = await _orchestrator.CostEstimation(hashedAccountId, estimateName);
-            return View(viewModel);
+            return View();
         }
 
         [HttpGet]
