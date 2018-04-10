@@ -5,6 +5,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
     public interface IEstimationOrchestrator
     {
-        Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName);
+        Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved);
     }
 }

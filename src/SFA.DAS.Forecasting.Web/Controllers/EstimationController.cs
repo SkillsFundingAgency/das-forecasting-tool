@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [ValidateMembership]
     [AuthorizeForecasting]
-    [Route("accounts/{hashedaccountId}/forecasting")]
+    [RoutePrefixAttribute("accounts/{hashedaccountId}/forecasting")]
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _orchestrator;
@@ -43,12 +43,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("estimations/{estimateName}", Name = "EstimatedCost")]
-        public async Task<ActionResult> CostEstimation(string hashedAccountId, string estimateName)
+        [Route("estimations/{estimateName}/{apprenticeshipRemoved?}", Name = "EstimatedCost")]
+        public async Task<ActionResult> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
         {
-            var viewModel = await _orchestrator.CostEstimation(hashedAccountId, estimateName);
+            var viewModel = await _orchestrator.CostEstimation(hashedAccountId, estimateName, apprenticeshipRemoved);
             return View(viewModel);
         }
+
 
 
     }

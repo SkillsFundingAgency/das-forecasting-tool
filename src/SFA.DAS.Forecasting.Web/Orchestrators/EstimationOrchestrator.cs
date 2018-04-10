@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Estimations.Service;
-using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
@@ -17,7 +16,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             _accountEstimationBuilder = accountEstimationBuilder;
         }
 
-        public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName)
+        public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
         {
             var viewModel = new EstimationPageViewModel();
             var accountEstimations = await _accountEstimationBuilder.CostBuildEstimations(hashedAccountId, estimateName);
@@ -45,10 +44,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                         Date = new DateTime(o.Year, o.Month, 1),
                         Cost = o.TotalCostOfTraining,
                         RemainingAllowance = o.FutureFunds
-                    })
+                    }),
+                   
                 };
             }
 
+            viewModel.ApprenticeshipRemoved = apprenticeshipRemoved.GetValueOrDefault();
 
             return viewModel;
         }

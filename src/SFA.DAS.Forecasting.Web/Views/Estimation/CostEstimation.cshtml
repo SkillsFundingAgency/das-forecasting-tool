@@ -26,8 +26,9 @@
                 </div>
             }
         }
-        else
-        {
+
+        
+        @if(Model.ApprenticeshipRemoved){
             <div class="success-summary">
                 <h3 class="heading-medium">Apprenticeship Removed</h3>
             </div>
@@ -115,9 +116,9 @@
                         }
 
                         <tr class="@tableRowClass">
-                            <td>@costEstimate.Date</td>
-                            <td class="@tableCellClass">@costEstimate.RemainingAllowance</td>
-                            <td>@costEstimate.Cost</td>
+                            <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                            <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+                            <td>@costEstimate.Cost.FormatCost()</td>
                         </tr>
                     }
 
@@ -147,11 +148,11 @@
                     {
                         <tr>
                             <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
-                            <td data-label="Number of apprentices">@apprenticeship.Count</td>
-                            <td data-label="Start Date">@apprenticeship.StartDate</td>
-                            <td data-label="Monthly payment">@apprenticeship.MonthlyPayment</td>
+                            <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
+                            <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
+                            <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
                             <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
-                            <td data-label="Completion payment">@apprenticeship.ComplementionPayment</td>
+                            <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
                             <td> @Html.ActionLink("Remove", "", "", new { id = apprenticeship.Id }, null) </td>
                         </tr>
                     }
@@ -166,11 +167,11 @@
                         </td>
                         <td>&nbsp;</td>
                         <td data-label="Monthly payment">
-                            <span class="bold-xsmall">@Model.Apprenticeships.TotalMonthlyPayment</span>
+                            <span class="bold-xsmall">@Model.Apprenticeships.TotalMonthlyPayment.FormatCost()</span>
                         </td>
                         <td>&nbsp;</td>
                         <td data-label="Completion payment">
-                            <span class="bold-xsmall">@Model.Apprenticeships.TotalCompletionPayment</span>
+                            <span class="bold-xsmall">@Model.Apprenticeships.TotalCompletionPayment.FormatCost() </span>
                         </td>
                         <td></td>
                     </tr>
