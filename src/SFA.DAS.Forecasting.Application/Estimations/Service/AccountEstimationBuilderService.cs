@@ -9,13 +9,13 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Service
 {
     public interface IAccountEstimationBuilderService
     {
-       Task<AccountEstimation> CostBuildEstimations(string accountId, string estimationName);
+       Task<AccountEstimationModel> CostBuildEstimations(string accountId, string estimationName);
     }
 
 
     public class AccountEstimationBuilderService : IAccountEstimationBuilderService
     {
-        public Task<AccountEstimation> CostBuildEstimations(string accountId, string estimationName)
+        public Task<AccountEstimationModel> CostBuildEstimations(string accountId, string estimationName)
         {
             throw new NotImplementedException();
         }

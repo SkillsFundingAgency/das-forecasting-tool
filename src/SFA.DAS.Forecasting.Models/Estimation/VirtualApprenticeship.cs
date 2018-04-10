@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Models.Estimation
     public class VirtualApprenticeship
     {
         public string Id { get; set; }
-        public long CourseId { get; set; }
+        public int CourseId { get; set; }
         public string CourseTitle { get; set; }
         public int Level { get; set; }
         public int ApprenticesCount { get; set; }
