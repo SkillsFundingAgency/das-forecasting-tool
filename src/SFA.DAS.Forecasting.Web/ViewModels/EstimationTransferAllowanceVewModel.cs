@@ -1,11 +1,13 @@
 ﻿
+using System;
+
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class EstimationTransferAllowanceVewModel
     {
-        public string Date { get; set; }
-        public string RemainingAllowance { get; set; }
-        public string Cost { get; set; }
-        public bool IsLessThanCost { get; set; }
+        public DateTime Date { get; set; }
+        public decimal RemainingAllowance { get; set; }
+        public decimal Cost { get; set; }
+        public bool IsLessThanCost => RemainingAllowance < Cost;
     }
 }

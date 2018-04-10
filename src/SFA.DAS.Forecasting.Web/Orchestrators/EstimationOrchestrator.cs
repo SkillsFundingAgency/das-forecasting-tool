@@ -1,97 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Estimations.Service;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
     public class EstimationOrchestrator : IEstimationOrchestrator
     {
-        private readonly IHashingService _hashingService;
-        private readonly Mapper _mapper;
+        private readonly IAccountEstimationBuilderService _accountEstimationBuilder;
 
-
-        public EstimationOrchestrator(
-            IHashingService hashingService,
-            Mapper mapper)
+        public EstimationOrchestrator(IAccountEstimationBuilderService accountEstimationBuilder)
         {
-            _hashingService = hashingService;
-            _mapper = mapper;
+            _accountEstimationBuilder = accountEstimationBuilder;
         }
 
         public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName)
         {
-            /// TODO Get Data From Service
-            var startDate = new DateTime(2018, 5, 1);
-            const string DATE_FORMAT = "MMM yyyy";
-
-            var fakeApprenticeships = new List<EstimationApprenticeshipViewModel>
+            var viewModel = new EstimationPageViewModel();
+            var accountEstimations = await _accountEstimationBuilder.CostBuildEstimations(hashedAccountId, estimateName);
+            if (accountEstimations != null)
             {
-                new EstimationApprenticeshipViewModel
+                viewModel = new EstimationPageViewModel
                 {
-                    Id= "ABC001",
-                    CourseTitle = "Construction Building: Wood Occupations",
-                    Level = 2,
-                    Count = 2,
-                    StartDate = startDate.ToString(DATE_FORMAT),
-                    MonthlyPayment = "£533.33",
-                    MonthlyPaymentCount = 18,
-                    ComplementionPayment = "£2,400.00"
-                },
-                 new EstimationApprenticeshipViewModel
-                {
-                    Id= "ABC001",
-                    CourseTitle = "Construction Building: Wood Occupations",
-                    Level = 2,
-                    Count = 2,
-                    StartDate = startDate.ToString(DATE_FORMAT),
-                    MonthlyPayment = "£533.33",
-                    MonthlyPaymentCount = 18,
-                    ComplementionPayment = "£2,400.00"
-                }
-            };
+                    Apprenticeships = new EstimationApprenticeshipsViewModel
+                    {
+                        VirtualApprenticeships = accountEstimations.Apprenticeships?.Select(o => new EstimationApprenticeshipViewModel
+                        {
+                            Id = o.Id,
+                            CompletionPayment = o.CompletionPayment,
+                            ApprenticesCount = o.ApprenticesCount,
+                            CourseTitle = o.CourseTitle,
+                            Level = o.Level,
+                            MonthlyPayment = o.MonthlyPayment,
+                            MonthlyPaymentCount = o.TotalInstallments,
+                            StartDate = o.StartDate
+                        }),
+                    },
+                    EstimationName = accountEstimations.EstimationName,
+                    TransferAllowances = accountEstimations.Estimations?.Select(o => new EstimationTransferAllowanceVewModel
+                    {
+                        Date = new DateTime(o.Year, o.Month, 1),
+                        Cost = o.TotalCostOfTraining,
+                        RemainingAllowance = o.FutureFunds
+                    })
+                };
+            }
 
 
-            var fakeEstimateApprentiships = new EstimationApprenticeshipsViewModel
-            {
-                VirtualApprenticeships = fakeApprenticeships,
-                TotalApprenticeshipCount = 2,
-                TotalMonthlyPayment = "£533.33",
-                TotalCompletionPayment = "£2,400.00"
-            };
-
-
-
-            var fakeEstimationTransferAllowance = new List<EstimationTransferAllowanceVewModel>
-            {
-                new EstimationTransferAllowanceVewModel
-                {
-                    Date = startDate.ToString(DATE_FORMAT),
-                    RemainingAllowance = "£15,000.00",
-                    Cost = "£0.00",
-                },
-                new EstimationTransferAllowanceVewModel
-                {
-                    Date = startDate.ToString(DATE_FORMAT),
-                    RemainingAllowance = "£14,466.67",
-                    Cost = "£533.33",
-                    IsLessThanCost = false
-                }
-            };
-
-           
-
-            var result = new EstimationPageViewModel
-            {
-                Apprenticeships = fakeEstimateApprentiships,
-                TransferAllowances = fakeEstimationTransferAllowance,
-                CanFund = true
-            };
-
-            return await Task.FromResult(result);
+            return viewModel;
         }
+
 
     }
 }
