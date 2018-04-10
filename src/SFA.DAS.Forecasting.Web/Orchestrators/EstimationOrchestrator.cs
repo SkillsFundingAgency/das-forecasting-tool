@@ -38,16 +38,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                             MonthlyPaymentCount = o.TotalInstallments,
                             StartDate = o.StartDate
                         }),
-
                     },
-                    CanFund = accountEstimations.Estimations == null ? false : accountEstimations.Estimations.Any(o => o.TotalCostOfTraining > o.FutureFunds),
                     EstimationName = accountEstimations.EstimationName,
                     TransferAllowances = accountEstimations.Estimations?.Select(o => new EstimationTransferAllowanceVewModel
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
                         Cost = o.TotalCostOfTraining,
-                        RemainingAllowance = o.FutureFunds,
-                        IsLessThanCost = o.FutureFunds < o.TotalCostOfTraining
+                        RemainingAllowance = o.FutureFunds
                     })
                 };
             }

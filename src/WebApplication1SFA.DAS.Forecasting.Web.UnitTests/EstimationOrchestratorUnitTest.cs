@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
         private EstimationOrchestrator _estimationOrchestrator;
         private Mock<IAccountEstimationBuilderService> _accountEstimationBuilder;
 
-        private const string  AccountId = "VT6098";
+        private const string  HashedAccountId = "VT6098";
         private const string EstimationName = "default";
 
         [SetUp]
@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
 
             _accountEstimationBuilder = new Mock<IAccountEstimationBuilderService>();
             _accountEstimationBuilder
-                .Setup(o => o.CostBuildEstimations(It.IsAny<string>(), It.IsAny<string>()))
+                .Setup(o => o.CostBuildEstimations(HashedAccountId, EstimationName))
                 .Returns(Task.FromResult(new AccountEstimation
                 {
                     EstimationName = EstimationName,
@@ -67,7 +67,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
         public async Task GivenAccountIdAndEstimationNameShouldReturnEstimatioViewnModel()
         {
             //Act
-            var estimationViewModel = await _estimationOrchestrator.CostEstimation(AccountId, EstimationName);
+            var estimationViewModel = await _estimationOrchestrator.CostEstimation(HashedAccountId, EstimationName);
 
             // Assert
             estimationViewModel.Should().NotBeNull();
