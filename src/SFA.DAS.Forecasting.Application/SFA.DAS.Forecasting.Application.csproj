@@ -163,6 +163,7 @@
     <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
+    <Compile Include="Estimations\Service\AccountEstimationBuilderService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
@@ -231,10 +232,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049CCE-774A-4377-B682-1C01B95C2CF3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
-      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
-      <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
