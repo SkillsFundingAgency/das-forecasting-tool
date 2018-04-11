@@ -47,6 +47,16 @@
     },
     "myaBaseUrl": {
       "type": "string"
+    },
+    "environments": {
+      "defaultValue": [
+        "staging"
+      ],
+      "type": "array",
+      "metadata": {
+        "description": "Array with the names for the environment slots"
+      },
+      "maxLength": 19
     }
   },
   "resources": [
@@ -125,6 +135,27 @@
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
+      }
+    },
+    {
+      "apiVersion": "2016-03-01",
+      "type": "Microsoft.Web/sites/slots",
+      "name": "[concat(parameters('name'), '/', parameters('environments')[copyIndex()])]",
+      "kind": "app",
+      "location": "[resourceGroup().location]",
+      "comments": "This specifies the web app slots.",
+      "tags": {
+        "displayName": "WebAppSlots"
+      },
+      "properties": {
+        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/Sites', parameters('name'))]"
+      ],
+      "copy": {
+        "name": "webPortalSlot",
+        "count": "[length(parameters('environments'))]"
       }
     },
     {
