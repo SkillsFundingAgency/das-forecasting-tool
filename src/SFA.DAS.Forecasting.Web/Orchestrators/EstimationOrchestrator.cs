@@ -15,7 +15,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly IAccountEstimationRepository _estimationRepository;
         private readonly IHashingService _hashingService;
 
-        public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository, IAccountEstimationRepository estimationRepository, 
+        public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository, 
+            IAccountEstimationRepository estimationRepository, 
             IHashingService hashingService)
         {
             _estimationProjectionRepository = estimationProjectionRepository ?? throw new ArgumentNullException(nameof(estimationProjectionRepository));
