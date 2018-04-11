@@ -1,31 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Models.Estimation;
-using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
     public class AccountEstimation
     {
-        private readonly AccountEstimationModel _model;
+        internal AccountEstimationModel Model { get; }
+        private readonly IVirtualApprenticeshipValidator _validator;
 
-        public IReadOnlyCollection<VirtualApprenticeship> VirtualApprenticeships => _model.Apprenticeships.AsReadOnly();
-        public string Name => _model.EstimationName;
-        public bool HasValidApprenticeships => throw new NotImplementedException();
+        public IReadOnlyCollection<VirtualApprenticeship> VirtualApprenticeships => Model.Apprenticeships.AsReadOnly();
+        public string Name => Model.EstimationName;
+        public bool HasValidApprenticeships => Model.Apprenticeships.Any(); //TODO: will also need to make sure all courses start after today
+        public long EmployerAccountId => Model.EmployerAccountId;
 
-        public AccountEstimation(AccountEstimationModel model)
+        public AccountEstimation(AccountEstimationModel model, IVirtualApprenticeshipValidator validator)
         {
-            _model = model ?? throw new ArgumentNullException(nameof(model));
+            Model = model ?? throw new ArgumentNullException(nameof(model));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
-        public bool AddVirtualAppreniceship(VirtualApprenticeship virtualApprenticeship)
+        public VirtualApprenticeship AddVirtualAppreniceship(string courseId, string courseTitle, int level, int startMonth, int startYear, int numberOfApprentices, int numberOfMonths, decimal totalCost)
         {
-            throw new NotImplementedException();
+            var virtualApprenticeship = new VirtualApprenticeship
+            {
+                CourseId = courseId,
+                CourseTitle = courseTitle,
+                Level = level,
+                ApprenticesCount = numberOfApprentices,
+                StartDate = new DateTime(startYear, startMonth, 1),
+                TotalCost = totalCost,
+                TotalInstallments = numberOfMonths
+            };
+            var validationResults = _validator.Validate(virtualApprenticeship);
+            if (!validationResults.All(result => result.IsValid))
+                throw new InvalidOperationException($"The virtual apprenticeship is invalid.  Failures: {validationResults.Aggregate(string.Empty, (currText, failure) => $"{currText}{failure}, ")}");
+            virtualApprenticeship.Id = Guid.NewGuid().ToString("N");
+            Model.Apprenticeships.Add(virtualApprenticeship);
+            return virtualApprenticeship;
         }
 
-        public void RemoveVirtualApprenticeship(string virtualApprenticeshipId)
+        public bool RemoveVirtualApprenticeship(string virtualApprenticeshipId)
         {
-            throw new NotImplementedException();
+            var virtualApprenticeship = Model.Apprenticeships.FirstOrDefault(apprenticeship =>
+                apprenticeship.Id.Equals(virtualApprenticeshipId, StringComparison.OrdinalIgnoreCase));
+            return virtualApprenticeship != null && Model.Apprenticeships.Remove(virtualApprenticeship);
         }
     }
 }
