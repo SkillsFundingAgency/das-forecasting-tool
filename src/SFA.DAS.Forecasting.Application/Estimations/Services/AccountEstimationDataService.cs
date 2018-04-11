@@ -4,11 +4,11 @@ using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.Estimations.Services
 {
-    public class AccountEstimationDataService: IAccountEstimationDataService
+    public class AccountEstimationDataService : IAccountEstimationDataService
     {
         public Task<AccountEstimationModel> Get(long accountId)
         {
-            return null;
+            return Task.FromResult<AccountEstimationModel>(null);
         }
 
         public Task Store(AccountEstimationModel model)
