@@ -12,8 +12,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 {
     public interface IAccountEstimationProjectionRepository
     {
-        Task<AccountEstimationProjection> Get(long accountId);
-        Task<AccountEstimationProjection> Get(AccountEstimation accountEstimation);
+        Task<IAccountEstimationProjection> Get(long accountId);
+        Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation);
     }
 
     public class AccountEstimationProjectionRepository: IAccountEstimationProjectionRepository
@@ -32,13 +32,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             _commitmentsValidator = commitmentsValidator ?? throw new ArgumentNullException(nameof(commitmentsValidator));
         }
 
-        public async Task<AccountEstimationProjection> Get(long accountId)
+        public async Task<IAccountEstimationProjection> Get(long accountId)
         {
             var accountEstimation = await _accountEstimationRepository.Get(accountId);
             return await Get(accountEstimation);
         }
 
-        public async Task<AccountEstimationProjection> Get(AccountEstimation accountEstimation)
+        public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation)
         {
             var balance = await _currentBalanceRepository.Get(accountEstimation.EmployerAccountId);
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, new List<Commitment>(), _eventPublisher, _commitmentsValidator);

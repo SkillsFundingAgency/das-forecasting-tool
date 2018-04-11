@@ -9,7 +9,14 @@ using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
-    public class AccountEstimationProjection
+    public interface IAccountEstimationProjection
+    {
+        ReadOnlyCollection<AccountProjectionReadModel> Projections { get; }
+
+        void BuildProjections();
+    }
+
+    public class AccountEstimationProjection : IAccountEstimationProjection
     {
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;

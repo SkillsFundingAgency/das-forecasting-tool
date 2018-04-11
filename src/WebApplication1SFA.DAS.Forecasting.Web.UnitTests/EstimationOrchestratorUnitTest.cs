@@ -15,6 +15,7 @@ using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.HashingService;
+using System.Collections.ObjectModel;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests
 {
@@ -41,9 +42,25 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
                 EstimationName = "default"
             };
 
-            _autoMoq.GetMock<AccountEstimationProjection>()
-                   .Setup(x => x.BuildProjections())
-                   .Verifiable();
+            var p = _autoMoq.GetMock<IAccountEstimationProjection>();
+
+            p.Setup(x => x.BuildProjections()).Verifiable();
+
+
+            IList<AccountProjectionReadModel> projectionModel = new List<AccountProjectionReadModel>
+                    {
+                        new AccountProjectionReadModel
+                        {
+                            EmployerAccountId = 10000,
+                            Month = 4,
+                            Year = 2018,
+                            FutureFunds = 15000m,
+                            TotalCostOfTraining = 0m
+                        }
+                    };
+
+            p.Setup(o => o.Projections)
+                .Returns(new ReadOnlyCollection<AccountProjectionReadModel>(projectionModel));
 
             _autoMoq.SetInstance(_model);
 
@@ -57,7 +74,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
 
             _autoMoq.GetMock<IAccountEstimationProjectionRepository>()
                   .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
-                  .Returns(Task.FromResult(_autoMoq.Resolve<AccountEstimationProjection>()));
+                  .Returns(Task.FromResult(p.Object));
 
 
             //_autoMoq.GetMock<IVirtualApprenticeshipValidator>()
