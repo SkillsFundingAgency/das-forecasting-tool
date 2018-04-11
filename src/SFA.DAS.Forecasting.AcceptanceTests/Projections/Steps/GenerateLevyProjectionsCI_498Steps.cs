@@ -11,7 +11,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.Forecasting.ReadModel.Projections;
+using SFA.DAS.Forecasting.Models.Projections;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 

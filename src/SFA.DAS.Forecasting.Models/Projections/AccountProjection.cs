@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Forecasting.ReadModel.Projections
+namespace SFA.DAS.Forecasting.Models.Projections
 {
     public class AccountProjectionReadModel
     {

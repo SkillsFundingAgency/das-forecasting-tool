@@ -1,0 +1,194 @@
+﻿@using SFA.DAS.Forecasting.Web.Extensions
+@model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
+
+@{
+    ViewBag.Title = "Estimated Cost";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+
+        @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
+        {
+            if (Model.CanFund)
+            {
+                <div class="success-summary">
+                    <h3 class="heading-medium">Yes, you can fund these apprenticeships</h3>
+                    <p>For more detail look at the remaining transfer allowance table.</p>
+                </div>
+            }
+            else
+            {
+                <div class="error-summary" id="errorOne">
+                    <h3 class="heading-medium">You can’t fund these apprenticeships</h3>
+                    <p>You don't have enough transfer allowance.</p>
+                    <p class="hidden">You don't have enough transfer allowance from December 2018 to support this transfer.</p>
+                </div>
+            }
+        }
+
+        
+        @if(Model.ApprenticeshipRemoved){
+            <div class="success-summary">
+                <h3 class="heading-medium">Apprenticeship Removed</h3>
+            </div>
+        }
+
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="hgroup form-group">
+            <h1 class="heading-xlarge">Estimated costs</h1>
+            <p class="lede">This page shows:</p>
+            <ul class="list list-bullet">
+                <li>your available transfer allowance</li>
+                <li>cost of apprenticeships you've estimated</li>
+            </ul>
+
+            <p>
+                @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
+                {
+                    @Html.ActionLink("Add more apprenticeships to your current estimate", "", "", new { @class = "button" })
+                }
+                else
+                {
+                    @Html.ActionLink("Add apprenticeships to your current estimate", "", "", new { @class = "button" })
+                }
+            </p>
+
+            @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
+            {
+                <details role="group">
+                    <summary role="button" aria-controls="details-content-0" aria-expanded="false">What does this table show</summary>
+                    <div class="panel panel-width-thin" id="details-content-0" aria-hidden="true">
+                        <p>
+                            The ‘remaining transfer allowance’ table shows a monthly breakdown of your projected transfer allowance and the apprenticeship costs you’ve estimated for a transfer. Your transfer 	allowance will reset every April.
+                        </p>
+                        <p> The ‘apprenticeships added’ table shows the details of apprenticeships you’ve added to your estimate.</p>
+                    </div>
+                </details>
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+@if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
+{
+
+    <div id="tabs-container">
+        <ul class="tabs-menu">
+            <li class="current"><a href="#tab-1">Remaining transfer allowance</a></li>
+            <li><a href="#tab-2">Apprenticeships added</a></li>
+        </ul>
+
+        <div id="tab-1" class="tab-content">
+
+            @{
+                var tableBodyClass = Model.CanFund ? "" : "errorTable";
+                var tableRowClass = "";
+                var tableCellClass = "";
+            }
+
+            <table class="small responsive">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Remaining transfer allowance</th>
+                        <th>Estimated costs</th>
+                    </tr>
+                </thead>
+                <tbody class="@tableBodyClass">
+
+                    @foreach (var costEstimate in Model.TransferAllowances)
+                    {
+                        if (costEstimate.IsLessThanCost)
+                        {
+                            tableRowClass = "error-row";
+                            tableCellClass = "error-message";
+                        }
+
+                        <tr class="@tableRowClass">
+                            <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                            <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+                            <td>@costEstimate.Cost.FormatCost()</td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+
+
+
+        <div id="tab-2" class="tab-content" style="display: none;">
+            <table class="small responsive">
+                <thead>
+                    <tr>
+                        <th>Apprenticeship <span class="form-hint">Level</span></th>
+                        <th>Number of apprentices</th>
+                        <th>Start date</th>
+                        <th>Monthly payment</th>
+                        <th>Number of monthly payments</th>
+                        <th>Completion payment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var apprenticeship in Model.Apprenticeships.VirtualApprenticeships)
+                    {
+                        <tr>
+                            <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
+                            <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
+                            <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
+                            <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
+                            <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
+                            <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
+                            <td> @Html.ActionLink("Remove", "", "", new { id = apprenticeship.Id }, null) </td>
+                        </tr>
+                    }
+                </tbody>
+
+
+                <tfoot class="total">
+                    <tr class="total">
+                        <td data-label="Totals">&nbsp;</td>
+                        <td data-label="Number of apprentices">
+                            <span class="bold-xsmall"> @Model.Apprenticeships.TotalApprenticeshipCount </span>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td data-label="Monthly payment">
+                            <span class="bold-xsmall">@Model.Apprenticeships.TotalMonthlyPayment.FormatCost()</span>
+                        </td>
+                        <td>&nbsp;</td>
+                        <td data-label="Completion payment">
+                            <span class="bold-xsmall">@Model.Apprenticeships.TotalCompletionPayment.FormatCost() </span>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="panel panel-width-thin">
+                <p>You have not selected any apprenticeships for your estimation. You need to <a href="#">select at least one apprenticeship</a> to make an estimation.</p>
+            </div>
+        </div>
+    </div>
+}
+
