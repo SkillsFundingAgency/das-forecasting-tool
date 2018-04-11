@@ -31,9 +31,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("estimations/start-redirect", Name = "EstimationStartRedirect")]
         public ActionResult RedirectEstimationStart(string hashedAccountId)
         {
-            var foundEstimation = true;
+            var foundAccountEstimation = true;
 
-            if (foundEstimation)
+            if (foundAccountEstimation)
             {
                 return RedirectToAction("CostEstimation", new { hashedaccountId = hashedAccountId, estimateName = "default" });
             }
