@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using Moq;
@@ -56,12 +57,41 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         {
             _moqer.GetMock<IVirtualApprenticeshipValidator>()
                 .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
-                .Returns(new List<ValidationResult>{new ValidationResult {}});
+                .Returns(new List<ValidationResult> { ValidationResult.Failed("test fail") });
+            var estimation = ResolveEstimation();
+            Assert.Throws<InvalidOperationException>(() => estimation.AddVirtualAppreniceship("course-1", "test course", 1, 1, 2019, 5, 18, 1000), "Should throw an exception if the apprenticeship fails validation");
+        }
+
+        [Test]
+        public void Valid_Apprenticeships_Are_Added_To_The_Model()
+        {
             var estimation = ResolveEstimation();
             var apprenticeship = estimation.AddVirtualAppreniceship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
-            Assert.IsNotNull(apprenticeship, "Invalid virtual apprenticeship generated.");
-            Assert.IsNotNull(apprenticeship.Id, "Apprentieship id not populated.");
+            Assert.IsTrue(estimation.VirtualApprenticeships.Any(x => x.Id == apprenticeship.Id));
+        }
 
+        [Test]
+        public void Remove_Returns_False_If_Apprenticeship_Not_Found()
+        {
+            var estimation = ResolveEstimation();
+            Assert.IsFalse(estimation.RemoveVirtualApprenticeship("apprenticeship-1"));
+        }
+
+        [Test]
+        public void Remove_Returns_True_If_Apprenticeship_Removed()
+        {
+            _model.Apprenticeships.Add(new VirtualApprenticeship { Id = "apprenticeship-1" });
+            var estimation = ResolveEstimation();
+            Assert.IsTrue(estimation.RemoveVirtualApprenticeship("apprenticeship-1"));
+        }
+
+        [Test]
+        public void Remove_Apprenticeship_Removes_Apprenticeship()
+        {
+            _model.Apprenticeships.Add(new VirtualApprenticeship { Id = "apprenticeship-1" });
+            var estimation = ResolveEstimation();
+            estimation.RemoveVirtualApprenticeship("apprenticeship-1");
+            Assert.IsTrue(estimation.VirtualApprenticeships.All(x => x.Id != "apprenticeship-1"));
         }
     }
 }
