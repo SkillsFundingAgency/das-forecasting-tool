@@ -163,7 +163,7 @@
     <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
-    <Compile Include="Estimations\Service\AccountEstimationBuilderService.cs" />
+    <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />

@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             _projections.Clear();
             var lastBalance = _account.RemainingTransferBalance;
             var startDate = _virtualEmployerCommitments.GetEarliestCommitmentStartDate().GetStartOfMonth();
-            var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().GetStartOfMonth();
+            var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(1).GetStartOfMonth();
             if (endDate < startDate)
                 throw new InvalidOperationException($"The start date for the earliest commitment is after the last planned end date. Account: {_account.EmployerAccountId}, Start date: {startDate}, End date: {endDate}");
 
