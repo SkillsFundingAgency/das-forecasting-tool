@@ -24,6 +24,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("estimations/start-transfer", Name = "EstimationStart")]
         public ActionResult StartEstimation(string hashedAccountId)
         {
+            ViewBag.HashedAccountId = hashedAccountId;
             return View();
         }
 
@@ -31,14 +32,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("estimations/start-redirect", Name = "EstimationStartRedirect")]
         public ActionResult RedirectEstimationStart(string hashedAccountId)
         {
-            var foundAccountEstimation = true;
+            var accountEstimation = _orchestrator.GetEstimation(hashedAccountId);
 
-            if (foundAccountEstimation)
+            if (accountEstimation != null)
             {
-                return RedirectToAction("CostEstimation", new { hashedaccountId = hashedAccountId, estimateName = "default" });
+                return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = "default" });
             }
 
-            return RedirectToAction("", "", null);
+            return RedirectToRoute("AddApprenticeships",new { hashedAccountId });
         }
 
         [HttpGet]

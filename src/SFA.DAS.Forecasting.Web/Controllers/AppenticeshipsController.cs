@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpGet]
-        [Route("accounts/{hashed_account_id}/forecasting/estimations/apprenticeship/add", Name = "AddApprenticeships")]
+        [Route("accounts/{hashedAccountId}/forecasting/estimations/apprenticeship/add", Name = "AddApprenticeships")]
         public ActionResult AddApprenticeships(string hashedAccountId)
         {
             var vm =  new AddApprenticeshipsViewModel
