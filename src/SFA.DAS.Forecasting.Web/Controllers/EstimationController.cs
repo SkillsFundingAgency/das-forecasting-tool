@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [ValidateMembership]
     [AuthorizeForecasting]
-    [RoutePrefixAttribute("accounts/{hashedaccountId}/forecasting")]
+    [RoutePrefix("accounts/{hashedaccountId}/forecasting")]
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _orchestrator;
@@ -30,13 +30,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("estimations/start-redirect", Name = "EstimationStartRedirect")]
-        public ActionResult RedirectEstimationStart(string hashedAccountId)
+        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
-            var accountEstimation = _orchestrator.GetEstimation(hashedAccountId);
+            var accountEstimation = await _orchestrator.GetEstimation(hashedAccountId);
 
-            if (accountEstimation != null)
+            if (accountEstimation != null && accountEstimation.HasValidApprenticeships)
             {
-                return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = "default" });
+                return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = accountEstimation.Name });
             }
 
             return RedirectToRoute("AddApprenticeships",new { hashedAccountId });
