@@ -11,5 +11,10 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public long EmployerAccountId { get; set; }
 
         public List<VirtualApprenticeship> Apprenticeships { get; set; }
+
+        public AccountEstimationModel()
+        {
+            Apprenticeships = new List<VirtualApprenticeship>();
+        }
     }
 }
