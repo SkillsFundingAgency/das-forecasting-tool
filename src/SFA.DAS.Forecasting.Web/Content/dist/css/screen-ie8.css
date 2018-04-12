@@ -2062,7 +2062,7 @@ table.top-border {
 }
 
 .breadcrumbs li {
-  background-image: url("/comt-assets/images/separator.png");
+  background-image: url("/Content/dist/images/separator.png");
 }
 
 .breadcrumbs a {
@@ -2425,13 +2425,13 @@ a#link-settings:focus {
   border-left: 2px solid #003a69;
   padding-top: 20px;
   padding-left: 6px;
-  background: url(/comt-assets/images/org_crest_13px.png) no-repeat 5px 0;
+  background: url(/Content/dist/images/org_crest_13px.png) no-repeat 5px 0;
   padding-top: 30px;
   padding-left: 7px;
-  background: url(/comt-assets/images/org_crest_18px.png) no-repeat 5px 0;
+  background: url(/Content/dist/images/org_crest_18px.png) no-repeat 5px 0;
   padding-top: 45px;
   padding-left: 10px;
-  background: url(/comt-assets/images/org_crest_27px.png) no-repeat 10px 0;
+  background: url(/Content/dist/images/org_crest_27px.png) no-repeat 10px 0;
 }
 
 .organisation-logo {
@@ -2600,7 +2600,7 @@ a#link-settings:focus {
 }
 
 .previous-next-navigation li a:before {
-  background: url("/comt-assets/images/arrow-sprite.png");
+  background: url("/Content/dist/images/arrow-sprite.png");
   background-position: -4px -2px;
   margin-top: -2px;
   margin-left: -30px;
@@ -2680,7 +2680,7 @@ legend {
 }
 
 .button-start {
-  background-image: url("/comt-assets/images/icon-pointer.png");
+  background-image: url("/Content/dist/images/icon-pointer.png");
 }
 
 .button-secondary {
@@ -2949,7 +2949,7 @@ legend {
   text-indent: -5000px;
   color: #fff;
   background-color: #005ea5;
-  background-image: url(/comt-assets/images/icon-search.png);
+  background-image: url(/Content/dist/images/icon-search.png);
   background-repeat: no-repeat;
   background-position: 12px 13px;
 }
@@ -4233,6 +4233,20 @@ h2 .float-right {
 .floating-menu nav#user-nav #settings-menu a.sub-menu-item {
   color: #fff;
   color: #4c2c92;
+}
+
+.panel-border-wide {
+  border-color: #2e358b;
+  background: #dee0e2;
+}
+
+/*Estimator start page*/
+#estimate-start-transfer .disclaimer {
+  margin-top: 30px;
+}
+
+#estimate-start-transfer .button-start {
+  margin-top: 40px;
 }
 
 .funding-projection .info-summary {
