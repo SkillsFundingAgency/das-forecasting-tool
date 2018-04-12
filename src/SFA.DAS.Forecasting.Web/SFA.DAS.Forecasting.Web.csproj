@@ -323,7 +323,9 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Orchestrators\ApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\EstimationOrchestrator.cs" />
+    <Compile Include="Orchestrators\IApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\IEstimationOrchestrator.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
@@ -353,7 +355,7 @@
     <Compile Include="Orchestrators\Mappers\Mapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\AddApprenticeshipsViewModel.cs" />
+    <Compile Include="ViewModels\ApprenticeshipAddViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipPageViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />

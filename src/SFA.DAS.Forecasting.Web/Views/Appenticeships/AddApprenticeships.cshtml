@@ -1,8 +1,8 @@
-﻿@model SFA.DAS.Forecasting.Web.ViewModels.AddApprenticeshipsViewModel
+﻿@model SFA.DAS.Forecasting.Web.ViewModels.ApprenticeshipAddViewModel
 
 @{
     ViewBag.Title = Model.Name;
-    ViewBag.Description = "Add Apprenticeships to the Estimator Tool";
+    ViewBag.Description = "Add Apprenticeships to your Estimation";
 }
 <main class="estimate-add-apprenticeship" id="content" role="main" tabindex="-1">
     <a href="#" class="link-back">Back</a>
@@ -34,7 +34,11 @@
         </ul>
 
     </div>    
-    
+    <div class="success-summary hidden" id="apprenticeshipAdded">
+        <h3 class="heading-medium">Apprenticeship added</h3>
+        <p>The apprenticeship <span class="apprenticeship-name">{apprenticeship}</span> has been added.</p>
+    </div>
+
     <div class="grid-row">
         <div class="column-two-thirds">
             <div class="hgroup form-group">
@@ -46,131 +50,125 @@
         </div>
     </div>
     
-<div class="grid-row">
-<div class="column-two-thirds">
-<form>
-<div class="form-group hidden">
-    <fieldset class="inline">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <form>
+                <div class="form-group hidden">
+                    <fieldset class="inline">
 
-        <legend>
-            <h1 class="heading-small">
-                Are you transferring funds to another employer for this apprenticeship?       </h1>
-        </legend>
+                        <legend>
+                            <h1 class="heading-small">
+                                Are you transferring funds to another employer for this apprenticeship?       </h1>
+                        </legend>
 
-        <div class="multiple-choice">
-            <input id="radio-inline-1" type="radio" name="radio-inline-group" value="1">
-            <label for="radio-inline-1">Yes</label>
-        </div>
-        <div class="multiple-choice">
-            <input id="radio-inline-2" type="radio" name="radio-inline-group" value="0">
-            <label for="radio-inline-2">No</label>
-        </div>
+                        <div class="multiple-choice">
+                            <input id="radio-inline-1" type="radio" name="radio-inline-group" value="1">
+                            <label for="radio-inline-1">Yes</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input id="radio-inline-2" type="radio" name="radio-inline-group" value="0">
+                            <label for="radio-inline-2">No</label>
+                        </div>
 
-    </fieldset>
-</div>
-<div class="form-group">
-<label class="form-label-bold" for="email">Choose apprenticeship <span class="hidden">standard</span></label>
-<span class="error-message hidden">You must choose 1 apprenticeship</span>
-<span class="error-message hidden">You must choose 1 apprenticeship</span>
+                    </fieldset>
+                </div>
+                <div class="form-group">
+                    <label class="form-label-bold" for="email">Choose apprenticeship <span class="hidden">standard</span></label>
+                    <span class="error-message hidden">You must choose 1 apprenticeship</span>
+
                     
                     
                     
                     
-<select name="apprenticeship" id="standardNew" class="typeahead form-control training-standard select2-control select2-hidden-accessible" aria-label="Training apprenticeship" tabindex="-1" aria-hidden="true">
-    <option value="noselection">Select one</option>
-    @{
-        foreach (var item in Model.AvailableApprenticeships)
-        {
-            <option value="@item.Id">@item.Title</option>
-        }
-    }
-    </select> 
-@*@Html.DropDownList("Apprenticeships", @Model.ApprenticeshipList(),new { @class = "typeahead form-control training-standard select2-control select2-hidden-accessible" )*@
-</div>
+                    <select name="apprenticeship" id="standardNew" class="typeahead form-control training-standard select2-control select2-hidden-accessible" aria-label="Training apprenticeship" tabindex="-1" aria-hidden="true">
+                        <option value="noselection">Select one</option>
+                        @{
+                            foreach (var item in Model.AvailableApprenticeships)
+                            {
+                                <option value="@item.Id">@item.Title</option>
+                            }
+                        }
+                    </select> 
+                    @*@Html.DropDownList("Apprenticeships", @Model.ApprenticeshipList(),new { @class = "typeahead form-control training-standard select2-control select2-hidden-accessible" )*@
+                </div>
 
                 
                 
-<div class="form-group hidden">
-    <label class="form-label-bold" for="email">Cost per apprentice</label>
-    <span class="form-hint">Choose an apprenticeship to see the cost</span>
-</div>
+                <div class="form-group hidden">
+                    <label class="form-label-bold" for="email">Cost per apprentice</label>
+                    <span class="form-hint">Choose an apprenticeship to see the cost</span>
+                </div>
 
                 
-<div class="form-group">
-    <label class="form-label-bold" for="email">Number of apprentices</label>
-    <span class="error-message hidden">You must enter 1 or more apprentices</span>
-    <input name="cohorts" id="cohortsNew" type="number" class="form-control cohort-size" aria-label="Number of apprentices" min="1" max="1000000" style="width: 50px;">
-</div>
+                <div class="form-group">
+                    <label class="form-label-bold" for="email">Number of apprentices</label>
+                    <span class="error-message hidden">You must enter 1 or more apprentices</span>
+                    <input name="cohorts" id="cohortsNew" type="number" class="form-control cohort-size" aria-label="Number of apprentices" min="1" max="1000000" style="width: 50px;">
+                </div>
                 
       
-<div class="form-group">
-    <label class="form-label-bold" for="levy-length">Number of months</label>
-    <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>                    
-    <span class="error-message hidden">You must enter 12 or more months</span>
-    <span class="error-message hidden">You must enter 12 or more months</span>
-    <input class="form-control" id="levy-length" name="levy-length" type="text" style="width: 50px;" />
-</div>
+                <div class="form-group">
+                    <label class="form-label-bold" for="levy-length">Number of months</label>
+                    <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>                    
+                    <span class="error-message hidden">You must enter 12 or more months</span>
+                    <span class="error-message hidden">You must enter 12 or more months</span>
+                    <input class="form-control" id="levy-length" name="levy-length" type="text" style="width: 50px;" />
+                </div>
                 
-<div class="form-group" id="dateWrapper">
-    <fieldset>
-        <legend class="form-label-bold">Start date</legend>
-        <span class="error-message hidden" id="declareDate">TThe start date entered must be in the next 4 years</span>
-        <span class="error-message hidden" id="2018montherror">Apprenticeships starting in 2018 must start after May</span>
-        <span class="error-message hidden" id="2019yearerror">Apprenticeships starting in 2019 must start before the end of the academic year of September</span>
+                <div class="form-group" id="dateWrapper">
+                    <fieldset>
+                        <legend class="form-label-bold">Start date</legend>
+                        <span class="error-message hidden" id="declareDate">TThe start date entered must be in the next 4 years</span>
+                        <span class="error-message hidden" id="2018montherror">Apprenticeships starting in 2018 must start after May</span>
+                        <span class="error-message hidden" id="2019yearerror">Apprenticeships starting in 2019 must start before the end of the academic year of September</span>
                         
-        <div class="form-date">
-            <div class="form-group form-group-month">
-                <label for="startDateMonth">Month</label>
-                <input name="startDateMonth" id="startDateMonth" type="number" pattern="[0-9]*" min="0" max="12" class="form-control" placeholder="MM">
-            </div>
-            <div class="form-group form-group-year">
-                <label for="startDateYear">Year</label>
-                <input name="startDateYear" id="startDateYear" type="number" pattern="[0-9]*" min="17" max="21" class="form-control" placeholder="YYYY">
-            </div>
-        </div>
-    </fieldset>
+                        <div class="form-date">
+                            <div class="form-group form-group-month">
+                                <label for="startDateMonth">Month</label>
+                                <input name="startDateMonth" id="startDateMonth" type="number" pattern="[0-9]*" min="0" max="12" class="form-control" placeholder="MM">
+                            </div>
+                            <div class="form-group form-group-year">
+                                <label for="startDateYear">Year</label>
+                                <input name="startDateYear" id="startDateYear" type="number" pattern="[0-9]*" min="17" max="21" class="form-control" placeholder="YYYY">
+                            </div>
+                        </div>
+                    </fieldset>
 
-</div>
+                </div>
 
                      
-<div class="form-group">
-    <label class="form-label-bold">Government funding cap</label>
-    <span class="form-hint">Choose an apprenticeship and number of apprentices to see this figure <br><a href="#">More information about government funding caps</a></span>
-    <span id="levy-cap" class="form-hint bold-xsmall"></span>
-    <span id="levy-total-cap" class="form-hint bold-xsmall"></span>
-</div>
+                <div class="form-group">
+                    <label class="form-label-bold">Government funding cap</label>
+                    <span class="form-hint">Choose an apprenticeship and number of apprentices to see this figure <br><a href="#">More information about government funding caps</a></span>
+                    <span id="levy-cap" class="form-hint bold-xsmall"></span>
+                    <span id="levy-total-cap" class="form-hint bold-xsmall"></span>
+                </div>
                 
                
-<div class="form-group">
-    <label class="form-label-bold" for="levy-value">Total cost</label>
-    <span class="form-hint">Only change this number if the total cost is below the total government funding cap<br>The total cost should not be more than the total government funding cap</span>
-    <span class="error-message hidden">You need to let us know a total cost of the apprenticeship added</span>
-    <span class="error-message hidden">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</span>
-    <label for="levy-value-2" class="text-box-unit">£</label>
-    <input class="form-control text-box-with-unit-before money-mask" id="levy-value" name="levy-value" type="text" />
-</div>
-</form>
-</div>
-</div>
-    
-<hr />
-
-<div class="grid-row">
-
-    <div class="column-full">
-        <a class="button save" id="save" href="outcomes.html">Check if I can fund these</a>
-        <a class="button text-link pull-right" href="#" style="float:right;">Cancel</a>
-
+                <div class="form-group">
+                    <label class="form-label-bold" for="levy-value">Total cost</label>
+                    <span class="form-hint">Only change this number if the total cost is below the total government funding cap<br>The total cost should not be more than the total government funding cap</span>
+                    <span class="error-message hidden">You need to let us know a total cost of the apprenticeship added</span>
+                    <span class="error-message hidden">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</span>
+                    <label for="levy-value-2" class="text-box-unit">£</label>
+                    <input class="form-control text-box-with-unit-before money-mask" id="levy-value" name="levy-value" type="text" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div class="grid-row hidden" id="existingApps">
-<div class="column-full">
-<h3 class="heading-medium">Estimated transfer costs by apprenticeships
-</h3>
-
-    </div>
-</div>
     
-
+    <hr />
+    <div class="grid-row">
+        <div class="column-full">
+            <a class="button save" id="save" href="outcomes.html">Check if I can fund these</a>
+            <a class="button text-link pull-right" href="#" style="float:right;">Cancel</a>
+        </div>
+    </div>
+    <div class="grid-row hidden" id="existingApps">
+        <div class="column-full">
+            <h3 class="heading-medium">Estimated transfer costs by apprenticeships
+            </h3>
+        </div>
+    </div>
+    
 </main>
