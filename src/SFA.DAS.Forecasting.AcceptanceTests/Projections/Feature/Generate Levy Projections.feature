@@ -42,5 +42,4 @@ Scenario: AC3: Use specified start month when generating levy triggered projecti
 	And the start month should be this month rather than next month
 	When the account projection is triggered after levy has been declared
 	Then the account projection should be generated
-	Then calculated levy credit value should be the amount declared for the single linked PAYE scheme
-	And each future month's forecast levy credit should be the same
+	And the first month should be this month rather than next month	
