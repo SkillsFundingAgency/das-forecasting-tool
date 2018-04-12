@@ -1,0 +1,36 @@
+﻿@using SFA.DAS.Forecasting.Web.Extensions
+
+@{
+    ViewBag.Title = "Start Estimation";
+}
+
+<div class="estimate-start-transfer">
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="hgroup form-group">
+                <h1 class="heading-xlarge">
+                    Estimate the funds you could transfer
+                </h1>
+                <p>Use this tool to see your transfer allowance and estimate the cost of apprenticeships, so you can see how much you can transfer to another employer.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <a class="button button-start" href='@Url.Action("RedirectEstimationStart",new { hashedAccountId =  ViewBag.HashedAccountId })' >Start</a>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="info-highlighted">
+                <h3 class="heading-medium">Disclaimer</h3>
+                <p>This tool is designed to illustrate what your funds will look like if there are no changes made to your apprenticeships.</p>
+                <p>The Department for Education is not responsible for the consequences of any decisions or actions taken, based on the information provided by this tool.</p>
+            </div>
+        </div>
+    </div>
+
+</div>

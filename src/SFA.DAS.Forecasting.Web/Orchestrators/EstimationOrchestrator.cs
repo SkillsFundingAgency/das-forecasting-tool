@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Estimations.Service;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -15,7 +14,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly IAccountEstimationRepository _estimationRepository;
         private readonly IHashingService _hashingService;
 
-        public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository, IAccountEstimationRepository estimationRepository, 
+        public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
+            IAccountEstimationRepository estimationRepository,
             IHashingService hashingService)
         {
             _estimationProjectionRepository = estimationProjectionRepository ?? throw new ArgumentNullException(nameof(estimationProjectionRepository));
@@ -25,8 +25,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var accountEstimation = await _estimationRepository.Get(accountId);
+            var accountEstimation = await GetEstimation(hashedAccountId);
             var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation);
             estimationProjector.BuildProjections();
             var viewModel = new EstimationPageViewModel
@@ -58,6 +57,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             return viewModel;
         }
 
-
+        public async Task<AccountEstimation> GetEstimation(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            return await _estimationRepository.Get(accountId);
+        }
     }
 }

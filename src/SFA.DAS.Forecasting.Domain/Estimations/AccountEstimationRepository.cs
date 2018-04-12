@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Estimations.Services;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
+using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
@@ -25,7 +26,12 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
         public async Task<AccountEstimation> Get(long accountId)
         {
-            var model = await _dataService.Get(accountId);
+            var model = await _dataService.Get(accountId) ?? new AccountEstimationModel
+            {
+                Id = accountId.ToString(),  //this will need to change when we support naming estimations
+                EstimationName = "default",
+                EmployerAccountId = accountId
+            };
             return new AccountEstimation(model, _validator);
         }
 
