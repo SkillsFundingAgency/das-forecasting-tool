@@ -134,71 +134,84 @@ h2{
             }
 }
 
+/*select2 styles*/
+.select2-container--default .select2-selection--single {
+    border: 2px solid #0b0c0c;
+    border-radius: 0;
+    height: 37px;
+}
 
-//all mobile media query breakpoints
-//==================================
-@media only screen and (max-device-width: 640px),
-only screen and (max-device-width: 667px),
-only screen and (max-width: 480px) {
-
+#estimate-add-apprenticeship {
+    .no-of-apprentice,
+    .no-of-months{
+            input {width: 50px;}
+        }
 }
 
 
-// Funding projection
 
-.funding-projection {
 
-    .info-summary {
-        max-width: 30em;
-        background: #eaebf3;
-        border: none;
-        border-left: solid 10px #2e358b;
+
+
+
+
+
+
+    //all mobile media query breakpoints
+    //==================================
+    @media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
     }
+    // Funding projection
+    .funding-projection {
 
-    .related {
-        border-top-color: #005ea5;
-        border-top-style: solid;
-        border-top-width: 10px;
-        margin-top: 15px;
-    }
+        .info-summary {
+            max-width: 30em;
+            background: #eaebf3;
+            border: none;
+            border-left: solid 10px #2e358b;
+        }
 
-    @media (min-width: 641px) {
         .related {
-            margin-top: 70px;
-            position: absolute;
-            max-width: 290px;
+            border-top-color: #005ea5;
+            border-top-style: solid;
+            border-top-width: 10px;
+            margin-top: 15px;
+        }
+
+        @media (min-width: 641px) {
+            .related {
+                margin-top: 70px;
+                position: absolute;
+                max-width: 290px;
+            }
         }
     }
-}
+    // END Funding projection
+    /*coinvestment table*/
+    #balancesheet {
+        .co-invest-head {
+            text-align: center;
+        }
 
-// END Funding projection
-
-/*coinvestment table*/
-#balancesheet {
-    .co-invest-head {
-        text-align: center;
+        .grey-bg {
+            background: $panel-colour;
+        }
     }
-    .grey-bg {
-        background: $panel-colour;
+    // Funding Projection Chart
+    .chart-container {
+        display: none;
     }
-}
-// Funding Projection Chart
 
-.chart-container {
-    display: none;
-}
+    path.c3-line {
+        stroke-width: 4px;
+        stroke: #005ea5;
+    }
 
-path.c3-line {
-    stroke-width: 4px;
-    stroke: #005ea5;
-}
+    .c3-axis-y .tick {
+        display: none;
+    }
 
-.c3-axis-y .tick {
-    display: none;
-}
-
-.c3-axis-y-label {
-    font-size: 20px;
-}
-
-// END Funding Projection Chart
+    .c3-axis-y-label {
+        font-size: 20px;
+    }
+    // END Funding Projection Chart
