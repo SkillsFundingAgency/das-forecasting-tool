@@ -62,7 +62,5 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             return await _estimationRepository.Get(accountId);
         }
-
-
     }
 }
