@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using SFA.DAS.Forecasting.Application.Estimations.Service;
 using Moq;
 using AutoMoq;
 using SFA.DAS.Forecasting.Models.Estimation;
