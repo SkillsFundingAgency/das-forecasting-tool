@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         {
             var model = await _dataService.Get(accountId) ?? new AccountEstimationModel
             {
-                Id = Guid.NewGuid().ToString("D"),
+                Id = accountId.ToString(),  //this will need to change when we support naming estimations
                 EstimationName = "default",
                 EmployerAccountId = accountId
             };
