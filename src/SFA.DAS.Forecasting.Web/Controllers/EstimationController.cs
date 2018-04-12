@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = accountEstimation.Name });
             }
 
-            return RedirectToRoute("AddApprenticeships",new { hashedAccountId });
+            return RedirectToAction("AddApprenticeships", "Apprenticeships", new { hashedAccountId, estimateName = "default" });
         }
 
         [HttpGet]
