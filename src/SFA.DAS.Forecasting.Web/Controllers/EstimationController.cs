@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [ValidateMembership]
     [AuthorizeForecasting]
-    [RoutePrefix("accounts/{hashedaccountId}/forecasting")]
+    [RoutePrefix("accounts/{hashedAccountId}/forecasting/estimations")]
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _orchestrator;
@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("estimations/start-transfer", Name = "EstimationStart")]
+        [Route("start-transfer", Name = "EstimationStart")]
         public ActionResult StartEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("estimations/start-redirect", Name = "EstimationStartRedirect")]
+        [Route("start-redirect", Name = "EstimationStartRedirect")]
         public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
             var accountEstimation = await _orchestrator.GetEstimation(hashedAccountId);
@@ -44,7 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("estimations/{estimateName}/{apprenticeshipRemoved?}", Name = "EstimatedCost")]
+        [Route("{estimateName}/{apprenticeshipRemoved?}", Name = "EstimatedCost")]
         public async Task<ActionResult> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
         {
             var viewModel = await _orchestrator.CostEstimation(hashedAccountId, estimateName, apprenticeshipRemoved);

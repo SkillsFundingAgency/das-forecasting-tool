@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
@@ -17,11 +18,11 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
         }
 
-        public async Task<decimal> GetAccountBalance(long accountId)
+        public async Task<AccountDetailViewModel> GetAccountBalance(long accountId)
         {
             var hashedAccountId = _hashingService.HashValue(accountId);
             var account = await _accountApiClient.GetAccount(hashedAccountId);
-            return account.Balance;
+            return account;
         }
     }
 }
