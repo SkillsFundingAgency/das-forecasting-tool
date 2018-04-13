@@ -54,10 +54,10 @@
             </div>
         </div>
     </div>
-    
+<form method="post">
     <div class="grid-row">
         <div class="column-two-thirds">
-            <form method="post">
+            
                 <div class="form-group hidden">
                     <fieldset class="inline">
 
@@ -168,15 +168,19 @@
                     @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCost, new { @class = "form-control text-box-with-unit-before money-mask", id = "levy-value", name = "levy-value", type = "text" })
                 </div>
 
-                <button type="submit" id="btnSave" name="Command" value="Create">Save</button>
-            </form>
+               
+                
+
+            
         </div>
     </div>
     
     <hr />
     <div class="grid-row">
         <div class="column-full">
-            <a class="button save" id="save" href="outcomes.html">Check if I can fund these</a>
+            @*<a class="button save" id="save" href="outcomes.html">Check if I can fund these</a>*@
+            @*<button type="submit" id="btnSave" name="Command" value="Create">Save</button>*@
+            <button type="submit" id="save" name="Command" value="Create" class="button save">Check if I can fund these</button>
             <a class="button text-link pull-right" href="#" style="float:right;">Cancel</a>
         </div>
     </div>
@@ -186,6 +190,6 @@
             </h3>
         </div>
     </div>
-    
+</form>
 </main>
 }

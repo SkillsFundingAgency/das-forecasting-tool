@@ -55,7 +55,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("estimations/{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
+        [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
         public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
         {
             var vm = await _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-        [Route("estimations/{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
+        [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
         public ActionResult Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var estimationCostsUrl = $"estimations/{vm.EstimationName}";
