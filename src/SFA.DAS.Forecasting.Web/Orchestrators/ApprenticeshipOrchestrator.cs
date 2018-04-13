@@ -28,6 +28,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var result = new ApprenticeshipAddViewModel
             {
                 Name = "Add Apprenticeships",
+                HashedAccountId = hashedAccountId,
+                EstimationName = estimationName,
                 AvailableApprenticeships = new List<AvailableApprenticeship>
                 {
                     new AvailableApprenticeship {Id = "34", Cap = 9000, Duration = 18, Title = "Able seafarer (deck) - Level 2", Level = 2 },
@@ -817,8 +819,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
      
 
-        public void StoreApprenticeship(string hashedAccountId, string estimationName, ApprenticeshipAddViewModel vm)
+        public void StoreApprenticeship(ApprenticeshipAddViewModel vm)
         {
+            var hashedAccountId = vm.HashedAccountId;
+            var estimationName = vm.EstimationName;
+            // TODO: estimationName ignored for now as 'default' is assumed, but needs wiring in to the repo.Get call at some point
 
             var courseId = vm.CourseId;
 
@@ -829,8 +834,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            // TODO: estimationName ignored for now as 'default' is assumed, but needs wiring in to the repo.Get call at some point
-
+        
             var currentEstimationDetails = _accountEstimationRepository.Get(accountId);
             var accountEstimation = currentEstimationDetails.Result;
 

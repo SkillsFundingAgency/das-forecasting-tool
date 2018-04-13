@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
+using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
@@ -27,6 +28,17 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             var vm = await _orchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
 
             return View(vm);
+        }
+
+        [HttpPost]
+        public ActionResult Store(ApprenticeshipAddViewModel vm)
+        {
+            var estimationCostsUrl = "";
+
+            _orchestrator.StoreApprenticeship(vm);
+
+            return RedirectToAction(estimationCostsUrl);
+
         }
     }
 }

@@ -8,6 +8,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     {
         Task<ApprenticeshipAddViewModel> GetApprenticeshipAddSetup(string hashedAccountId, string estimationName);
 
-        void StoreApprenticeship(string hashedAccountId, string estimationName, ApprenticeshipAddViewModel viewModel);
+        void StoreApprenticeship(ApprenticeshipAddViewModel viewModel);
     }
 }
