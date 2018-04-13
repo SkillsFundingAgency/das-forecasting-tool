@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void SetUp()
         {
             Moqer = new AutoMoqer();
-            _account = new Account(1, 12000, 300);
+            _account = new Account(1, 12000, 300, 0, 0);
             Moqer.SetInstance(_account);
             _commitment = new Commitment
             {
