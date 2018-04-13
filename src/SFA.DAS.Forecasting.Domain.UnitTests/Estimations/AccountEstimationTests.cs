@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Add_Virtual_Apprenticeship_Assigns_Id_To_Apprenticeship()
         {
             var estimation = ResolveEstimation();
-            var apprenticeship = estimation.AddVirtualAppreniceship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
+            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
             Assert.IsNotNull(apprenticeship, "Invalid virtual apprenticeship generated.");
             Assert.IsNotNull(apprenticeship.Id, "Apprentieship id not populated.");
         }
@@ -59,14 +59,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
                 .Returns(new List<ValidationResult> { ValidationResult.Failed("test fail") });
             var estimation = ResolveEstimation();
-            Assert.Throws<InvalidOperationException>(() => estimation.AddVirtualAppreniceship("course-1", "test course", 1, 1, 2019, 5, 18, 1000), "Should throw an exception if the apprenticeship fails validation");
+            Assert.Throws<InvalidOperationException>(() => estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000), "Should throw an exception if the apprenticeship fails validation");
         }
 
         [Test]
         public void Valid_Apprenticeships_Are_Added_To_The_Model()
         {
             var estimation = ResolveEstimation();
-            var apprenticeship = estimation.AddVirtualAppreniceship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
+            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
             Assert.IsTrue(estimation.VirtualApprenticeships.Any(x => x.Id == apprenticeship.Id));
         }
 
