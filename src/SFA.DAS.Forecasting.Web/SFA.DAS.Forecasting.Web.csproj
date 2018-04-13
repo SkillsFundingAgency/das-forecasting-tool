@@ -706,12 +706,13 @@
     <Content Include="Views\Shared\AccessDenied.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
-    <Content Include="Views\Appenticeships\AddApprenticeships.cshtml" />
+    <Content Include="Views\Estimation\AddApprenticeships.cshtml" />
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Appenticeships\" />
     <Folder Include="Views\Download\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>
