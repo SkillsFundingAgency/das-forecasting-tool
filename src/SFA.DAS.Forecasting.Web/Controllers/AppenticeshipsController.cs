@@ -12,33 +12,17 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     public class AppenticeshipsController : Controller
     {
 
-        private readonly IApprenticeshipOrchestrator _orchestrator;
+        private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
 
-              public AppenticeshipsController(IApprenticeshipOrchestrator orchestrator, IMembershipService membershipService)
+              public AppenticeshipsController(IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService)
         {
-            _orchestrator = orchestrator;
+            _apprenticeshipOrchestrator = apprenticeshipOrchestrator;
             _membershipService = membershipService;
         }
 
-        [HttpGet]
-        [Route("estimations/{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
-        public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
-        {
-            var vm = await _orchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
+       
 
-            return View(vm);
-        }
-
-        [HttpPost]
-        public ActionResult Store(ApprenticeshipAddViewModel vm)
-        {
-            var estimationCostsUrl = "";
-
-            _orchestrator.StoreApprenticeship(vm);
-
-            return RedirectToAction(estimationCostsUrl);
-
-        }
+      
     }
 }
