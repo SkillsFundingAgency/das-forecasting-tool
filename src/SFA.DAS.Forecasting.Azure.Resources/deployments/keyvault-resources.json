@@ -63,7 +63,7 @@
       "type": "securestring"
     },
     "cosmosDbConnectionString" : {
-      "type": "securestring"
+      "type": "string"
     }
   },
   "variables": {
