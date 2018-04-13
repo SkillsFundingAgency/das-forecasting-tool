@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
-        public VirtualApprenticeship AddVirtualAppreniceship(string courseId, string courseTitle, int level, int startMonth, int startYear, int numberOfApprentices, int numberOfMonths, decimal totalCost)
+        public VirtualApprenticeship AddVirtualApprenticeship(string courseId, string courseTitle, int level, int startMonth, int startYear, int numberOfApprentices, int numberOfMonths, decimal totalCost)
         {
             var virtualApprenticeship = new VirtualApprenticeship
             {

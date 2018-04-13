@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.9", "func.exe");
+        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.10", "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
 
