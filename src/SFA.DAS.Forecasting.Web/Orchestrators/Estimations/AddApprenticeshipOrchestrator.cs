@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -8,16 +6,16 @@ using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 
-namespace SFA.DAS.Forecasting.Web.Orchestrators
+namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
-    public class ApprenticeshipOrchestrator : IApprenticeshipOrchestrator
+    public class AddApprenticeshipOrchestrator : IAddApprenticeshipOrchestrator
     {
         private readonly IHashingService _hashingService;
         private readonly Mapper _mapper;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
         private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
 
-        public ApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
+        public AddApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
         {
             _hashingService = hashingService;
             _mapper = mapper;
@@ -26,9 +24,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         }
 
 
-        public async Task<ApprenticeshipAddViewModel> GetApprenticeshipAddSetup(string hashedAccountId, string estimationName)
+        public async Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup(string hashedAccountId, string estimationName)
         {
-            var result = new ApprenticeshipAddViewModel
+            var result = new AddApprenticeshipViewModel
             {
                 Name = "Add Apprenticeships",
                 HashedAccountId = hashedAccountId,
@@ -42,7 +40,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
      
 
-        public void StoreApprenticeship(ApprenticeshipAddViewModel vm)
+        public void StoreApprenticeship(AddApprenticeshipViewModel vm)
         {
             var hashedAccountId = vm.HashedAccountId;
             var estimationName = vm.EstimationName;

@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class ApprenticeshipAddViewModel
+    public class AddApprenticeshipViewModel
     {
         public string Name { get; set; }
         public IEnumerable<ApprenticeshipCourse> AvailableApprenticeships { get; set; }

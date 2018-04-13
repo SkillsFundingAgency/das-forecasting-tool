@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
+using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
@@ -13,14 +14,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _estimationOrchestrator;
-        private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
+        private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
 
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService)
+        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, IMembershipService membershipService)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
-            _apprenticeshipOrchestrator = apprenticeshipOrchestrator;
+            _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
         }
 
         [HttpGet]
@@ -57,32 +58,25 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("estimations/{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
         public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            var vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
+            var vm = await _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
 
             return View(vm);
         }
 
 
         [HttpPost]
-        public ActionResult Save(ApprenticeshipAddViewModel vm)
+        [Route("estimations/{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
+        public ActionResult Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var estimationCostsUrl = $"estimations/{vm.EstimationName}";
 
 
-            _apprenticeshipOrchestrator.StoreApprenticeship(vm);
+            _addApprenticeshipOrchestrator.StoreApprenticeship(vm);
 
-            return RedirectToAction(estimationCostsUrl);
+            return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
+
 
         }
-
-
-        //[HttpPost]
-        //public ActionResult Save()
-        //{
-        //    var estimationCostsUrl = $"estimations/default";
-        //    return RedirectToAction(estimationCostsUrl);
-
-        //}
     }
 
 }
