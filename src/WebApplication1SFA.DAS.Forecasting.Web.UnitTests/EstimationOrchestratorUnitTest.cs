@@ -70,53 +70,26 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
             _autoMoq.GetMock<IAccountEstimationProjectionRepository>()
                   .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
                   .Returns(Task.FromResult(p.Object));
-
-
-            //_autoMoq.GetMock<IVirtualApprenticeshipValidator>()
-            //    .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
-            //    .Returns(new List<ValidationResult>());
-
-
-
-            //_autoMoq.GetMock<IAccountEstimationBuilderService>()
-            //    .Setup(o => o.CostBuildEstimations(HashedAccountId, EstimationName))
-            //    .Returns(Task.FromResult(new AccountEstimation
-            //    {
-            //        EstimationName = EstimationName,
-            //        Apprenticeships = new List<VirtualApprenticeship>
-            //        {
-            //           new VirtualApprenticeship
-            //           {
-            //               CourseTitle = "Construction Building: Wood Occupations",
-            //               Level  = 2,
-            //               ApprenticesCount = 2,
-            //               TotalInstallments = 18,
-            //               StartDate = new DateTime(2018, 5, 1),
-            //               TotalCost = 12000m,
-            //               MonthlyPayment = 533.33m,
-            //               CompletionPayment = 2400m,
-            //           }
-            //        },
-            //        Estimations = new List<AccountProjectionReadModel>
-            //        {
-            //            new AccountProjectionReadModel
-            //            {
-            //                EmployerAccountId = 10000,
-            //                Month = 4,
-            //                Year = 2018,
-            //                FutureFunds = 15000m,
-            //                TotalCostOfTraining = 0m
-            //            }
-            //        }
-            //    }));
-
+            
             _estimationOrchestrator = _autoMoq.Resolve<EstimationOrchestrator>();
         }
 
 
+        [Test]
+        public async Task WhenRetrivingCostEstimationItShouldCallRequiredService()
+        {
+            //Act
+            var estimationViewModel = await _estimationOrchestrator.CostEstimation(HashedAccountId, EstimationName, false);
+
+            // Assert
+            _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId));
+            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
+            _autoMoq.Verify<IAccountEstimationProjectionRepository>(o => o.Get(It.IsAny<AccountEstimation>()));
+        }
+
 
         [Test]
-        public async Task GivenAccountIdAndEstimationNameShouldReturnValidEstimationViewModel()
+        public async Task GivenAccountIdAndEstimationNameCostEstimationShouldReturnValidEstimationViewModel()
         {
             //Act
             var estimationViewModel = await _estimationOrchestrator.CostEstimation(HashedAccountId, EstimationName, false);
@@ -124,10 +97,30 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
             // Assert
             estimationViewModel.Should().NotBeNull();
             estimationViewModel.CanFund.Should().BeTrue();
-
         }
 
 
+        [Test]
+        public async Task GetEstimationMethodShouldCallRequiredService()
+        {
+            //Act
+            var estimationViewModel = await _estimationOrchestrator.GetEstimation(HashedAccountId);
+
+            // Assert
+            _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId));
+            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
+        }
+
+        [Test]
+        public async Task GetEstimationMethodShouldReturnAccountEstimation()
+        {
+            //Act
+            var accountEstimation = await _estimationOrchestrator.GetEstimation(HashedAccountId);
+
+            // Assert
+            accountEstimation.Should().NotBeNull();
+            accountEstimation.Should().BeOfType<AccountEstimation>();
+        }
 
     }
 }
