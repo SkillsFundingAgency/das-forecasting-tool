@@ -7,6 +7,7 @@
         public string Title { get; set; }
         public float Cap { get; set; }
 
+        public int Level { get; set; }
         public int Duration { get; set; }
     }
 }
