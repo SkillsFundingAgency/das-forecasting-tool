@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<decimal> GetAccountBalance(long accountId)
+        public async Task<AccountDetailViewModel> GetAccountBalance(long accountId)
         {
             var uri = $"{_configuration.AccountApi.ApiBaseUrl}/api/accounts/{accountId}";
             
@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 throw new InvalidOperationException($"Error getting account balance using dev account api. Uri: {uri}, Status: {response.StatusCode}, Error: {response.Content}");
             var payload = await response.Content.ReadAsStringAsync();
             var account = JsonConvert.DeserializeObject<AccountDetailViewModel>(payload);
-            return account?.Balance ?? 0;
+            return account;
         }
     }
 }
