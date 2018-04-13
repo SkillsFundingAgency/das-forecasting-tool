@@ -94,13 +94,26 @@
     },
     "myaBaseUrl": {
       "type": "string"
+    },
+    "cosmosDbName": {
+      "type": "string"
+    },
+    "cosmosDbDatabaseName": {
+      "type": "string"
+    },
+    "cosmosDbCollectionName": {
+      "type": "string"
+    },
+    "cosmosDbThroughput": {
+      "type": "string"
     }
   },
   "variables": {
     "storageResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/storage-resources.json')]",
     "webappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/web-app-resources.json')]",
     "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]",
-    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]"
+    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]",
+    "cosmosDbResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/cosmos-db-resources.json')]"
   },
   "resources": [
     {
@@ -240,7 +253,8 @@
       "dependsOn": [
         "function-app-copy",
         "storage-resources-deployment",
-        "web-app-resources-deployment"
+        "web-app-resources-deployment",
+        "cosmos-db-resources-deployment"
       ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -298,6 +312,36 @@
           },
           "employerConnectionString": {
             "value": "[parameters('employerConnectionString')]"
+          },
+          "cosmosDbConnectionString": {
+            "value": "[reference('cosmos-db-resources-deployment').Outputs.CustomConnectionString.value]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-08-01",
+      "name": "cosmos-db-resources-deployment",
+      "dependsOn": [],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('cosmosDbResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "cosmosDbName": {
+            "value": "[parameters('cosmosDbName')]"
+          },
+          "databaseName": {
+            "value": "[parameters('cosmosDbDatabaseName')]"
+          },
+          "collectionName": {
+            "value": "[parameters('cosmosDbCollectionName')]"
+          },
+          "throughput": {
+            "value": "[parameters('cosmosDbThroughput')]"
           }
         }
       }

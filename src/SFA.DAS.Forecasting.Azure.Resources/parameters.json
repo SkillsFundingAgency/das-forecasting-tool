@@ -91,6 +91,9 @@
     },
     "myaBaseUrl": {
       "value": ""
+    },
+    "cosmosDbName": {
+      "value": ""
     }
   }
 }
