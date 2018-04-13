@@ -143,9 +143,14 @@ h2{
 
 #estimate-add-apprenticeship {
     .no-of-apprentice,
-    .no-of-months{
-            input {width: 50px;}
+    .no-of-months {
+        input {
+            width: 50px;
         }
+    }
+    .levy-value{
+        width:200px;
+    }
 }
 
 

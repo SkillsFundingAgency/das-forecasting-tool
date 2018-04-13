@@ -4296,6 +4296,10 @@ h2 .float-right {
   width: 50px;
 }
 
+#estimate-add-apprenticeship .levy-value {
+  width: 200px;
+}
+
 .funding-projection .info-summary {
   max-width: 30em;
   background: #eaebf3;
