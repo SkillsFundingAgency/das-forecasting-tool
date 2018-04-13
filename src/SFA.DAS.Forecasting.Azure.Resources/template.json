@@ -97,6 +97,15 @@
     },
     "cosmosDbName": {
       "type": "string"
+    },
+    "cosmosDbDatabaseName": {
+      "type": "string"
+    },
+    "cosmosDbCollectionName": {
+      "type": "string"
+    },
+    "cosmosDbThroughput": {
+      "type": "string"
     }
   },
   "variables": {
@@ -244,7 +253,8 @@
       "dependsOn": [
         "function-app-copy",
         "storage-resources-deployment",
-        "web-app-resources-deployment"
+        "web-app-resources-deployment",
+        "cosmos-db-resources-deployment"
       ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -302,6 +312,9 @@
           },
           "employerConnectionString": {
             "value": "[parameters('employerConnectionString')]"
+          },
+          "cosmosDbConnectionString": {
+            "value": "[reference('cosmos-db-resources-deployment').Outputs.CustomConnectionString.value]"
           }
         }
       }
@@ -320,6 +333,15 @@
         "parameters": {
           "cosmosDbName": {
             "value": "[parameters('cosmosDbName')]"
+          },
+          "databaseName": {
+            "value": "[parameters('cosmosDbDatabaseName')]"
+          },
+          "collectionName": {
+            "value": "[parameters('cosmosDbCollectionName')]"
+          },
+          "throughput": {
+            "value": "[parameters('cosmosDbThroughput')]"
           }
         }
       }

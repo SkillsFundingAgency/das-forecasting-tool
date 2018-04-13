@@ -4,7 +4,19 @@
     "parameters": {
         "cosmosDbName": {
             "type": "string"
+        },
+        "databaseName": {
+            "type": "string"
+        },
+        "collectionName": {
+            "type": "string"
+        },
+        "throughput": {
+            "type": "string"
         }
+    },
+    "variables": {
+        "PartialConnectionString": "[concat('Database=', parameters('databaseName'), ';', 'Collection=', parameters('collectionName'), ';', 'ThroughputOffer=', parameters('throughput'))]"
     },
     "resources": [
         {
@@ -21,5 +33,10 @@
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "CustomConnectionString": {
+            "type": "securestring",
+            "value": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/;AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbName')), '2015-11-06').primaryMasterKey, ';', variables('PartialConnectionString'))]"
+        }
+    }
 }
