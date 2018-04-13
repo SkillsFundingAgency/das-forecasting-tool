@@ -314,7 +314,7 @@
             "value": "[parameters('employerConnectionString')]"
           },
           "cosmosDbConnectionString": {
-            "value": "[reference('cosmos-db-resources-deployment').outputs.CustomConnectionString]"
+            "value": "[reference('cosmos-db-resources-deployment').outputs.CustomConnectionString.value]"
           }
         }
       }
