@@ -141,6 +141,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Balance\BalanceHandlerTests.cs" />
+    <Compile Include="Estimations\ApprenticeshipCourseServiceTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
     <Compile Include="Payments\CollectionPeriodValidatorTests.cs" />

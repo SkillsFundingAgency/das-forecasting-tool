@@ -322,9 +322,9 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
-    <Compile Include="Orchestrators\ApprenticeshipOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\AddApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\EstimationOrchestrator.cs" />
-    <Compile Include="Orchestrators\IApprenticeshipOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\IAddApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\IEstimationOrchestrator.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
@@ -333,7 +333,6 @@
     <Compile Include="Authentication\IOwinWrapper.cs" />
     <Compile Include="Authentication\IdentityServerConfigurationFactory.cs" />
     <Compile Include="Attributes\ValidateMembershipAttribute.cs" />
-    <Compile Include="Controllers\AppenticeshipsController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EstimationController.cs" />
     <Compile Include="Controllers\ForecastingController.cs" />
@@ -354,7 +353,7 @@
     <Compile Include="Orchestrators\Mappers\Mapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="ViewModels\ApprenticeshipAddViewModel.cs" />
+    <Compile Include="ViewModels\AddApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipPageViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
@@ -706,12 +705,13 @@
     <Content Include="Views\Shared\AccessDenied.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\NotFound.cshtml" />
-    <Content Include="Views\Appenticeships\AddApprenticeships.cshtml" />
+    <Content Include="Views\Estimation\AddApprenticeships.cshtml" />
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Appenticeships\" />
     <Folder Include="Views\Download\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>
