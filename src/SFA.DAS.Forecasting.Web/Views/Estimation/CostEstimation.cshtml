@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Mvc
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
 @{
@@ -27,8 +28,9 @@
             }
         }
 
-        
-        @if(Model.ApprenticeshipRemoved){
+
+        @if (Model.ApprenticeshipRemoved)
+        {
             <div class="success-summary">
                 <h3 class="heading-medium">Apprenticeship Removed</h3>
             </div>
@@ -50,11 +52,16 @@
             <p>
                 @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
                 {
-                    @Html.ActionLink("Add more apprenticeships to your current estimate", "", "", new { @class = "button" })
+                    <a class="button" href="apprenticeship/add"> Add more apprenticeships to your current estimate</a>
                 }
                 else
                 {
-                    @Html.ActionLink("Add apprenticeships to your current estimate", "", "", new { @class = "button" })
+                    <a  class="button" href="@Url.RouteUrl("AddApprenticeships",
+                                            new
+                                            {
+                                                hashedAccountId = Model.HashedAccountId,
+                                                estimationName = Model.EstimationName,
+                                            })"> Add apprenticeships to your current estimate </a>
                 }
             </p>
 
