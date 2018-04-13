@@ -373,6 +373,7 @@
     <Content Include="Content\dist\css\screen-ie7.css" />
     <Content Include="Content\dist\css\screen-ie8.css" />
     <Content Include="Content\dist\css\screen.css" />
+    <Content Include="Content\dist\css\select2.min.css" />
     <Content Include="Content\dist\fonts-ie8.css" />
     <Content Include="Content\dist\fonts.css" />
     <Content Include="Content\dist\govuk-template-ie6.css" />
@@ -380,8 +381,10 @@
     <Content Include="Content\dist\govuk-template-ie8.css" />
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
+    <Content Include="Content\dist\js\custom.js" />
     <Content Include="Content\dist\js\jquery-1.10.2.min.js" />
     <Content Include="Content\dist\js\screen.js" />
+    <Content Include="Content\dist\js\select2.min.js" />
     <Content Include="Content\dist\js\showhide-content.js" />
     <Content Include="Content\dist\js\stacker.js" />
     <Content Include="Content\Gruntfile.js" />
@@ -708,10 +711,10 @@
     <Content Include="Views\Estimation\AddApprenticeships.cshtml" />
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
+    <Content Include="Views\Estimation\AddApprenticeships_Original.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Appenticeships\" />
     <Folder Include="Views\Download\" />
     <Folder Include="Views\Service\" />
   </ItemGroup>
