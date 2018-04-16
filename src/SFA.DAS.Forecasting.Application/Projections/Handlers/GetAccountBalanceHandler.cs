@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             var balance = await _accountBalanceService.GetAccountBalance(message.EmployerAccountId);
             _logger.Debug($"Got account balance for account: {message.EmployerAccountId}.");
             var currentBalance = await _currentBalanceRepository.Get(message.EmployerAccountId);
-            currentBalance.SetCurrentBalance(balance, DateTime.UtcNow);
+            currentBalance.SetCurrentBalance(balance.Balance, balance.TransferAllowance, balance.TransferAllowance, DateTime.UtcNow);
             await _currentBalanceRepository.Store(currentBalance);
             _logger.Info($"Finished updating recorded balance for account: {message.EmployerAccountId}");
         }

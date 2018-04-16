@@ -93,5 +93,18 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 .ToList();
             return new Tuple<decimal, List<long>>(commitments.Sum(c => c.CompletionAmount), commitments.Select(c => c.Id).ToList());
         }
+
+        public DateTime GetEarliestCommitmentStartDate()
+        {
+            return _commitments.OrderBy(commitment => commitment.StartDate)
+                .Select(commitment => commitment.StartDate)
+                .FirstOrDefault();
+        }
+        public DateTime GetLastCommitmentPlannedEndDate()
+        {
+            return _commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
+                .Select(commitment => commitment.PlannedEndDate)
+                .FirstOrDefault();
+        }
     }
 }

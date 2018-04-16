@@ -26,7 +26,9 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
 	                            [EmployerAccountId],
 	                            [Amount],
 	                            [BalancePeriod],
-	                            [ReceivedDate]
+	                            [ReceivedDate],
+                                [TransferAllowance],
+                                [RemainingTransferBalance]
                                 From Balance
                                 Where EmployerAccountId = @employerAccountId";
 
@@ -45,25 +47,27 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", balance.EmployerAccountId, DbType.Int64);
                 parameters.Add("@amount", balance.Amount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
+                parameters.Add("@transferAllowance", balance.TransferAllowance, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
+                parameters.Add("@remainingTransferBalance", balance.RemainingTransferBalance, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
                 parameters.Add("@balancePeriod", balance.BalancePeriod, DbType.DateTime);
                 parameters.Add("@receivedDate", balance.ReceivedDate, DbType.DateTime);
 
                 return await connection.ExecuteAsync(
                     @"MERGE Balance AS target 
-                                    USING(SELECT @employerAccountId, @amount, @balancePeriod, @ReceivedDate) AS source (EmployerAccountId, Amount, BalancePeriod, ReceivedDate)
+                                    USING(SELECT @employerAccountId, @amount, @transferAllowance, @remainingTransferBalance, @balancePeriod, @ReceivedDate) AS source (EmployerAccountId, Amount, TransferAllowance, RemainingTransferBalance, BalancePeriod, ReceivedDate)
                                     ON (target.EmployerAccountId = source.EmployerAccountId)
                                     WHEN MATCHED THEN
                                         UPDATE SET Amount = source.Amount, 
+                                            TransferAllowance = source.TransferAllowance,
+                                            RemainingTransferBalance = source.RemainingTransferBalance,
                                             BalancePeriod = source.BalancePeriod, 
                                             ReceivedDate = source.ReceivedDate 
                                     WHEN NOT MATCHED THEN
-                                        INSERT(EmployerAccountId, Amount, BalancePeriod, ReceivedDate)
-                                        VALUES(source.EmployerAccountId, source.Amount, source.BalancePeriod, source.ReceivedDate);",
+                                        INSERT(EmployerAccountId, Amount, TransferAllowance, RemainingTransferBalance, BalancePeriod, ReceivedDate)
+                                        VALUES(source.EmployerAccountId, source.Amount, source.TransferAllowance, source.RemainingTransferBalance, source.BalancePeriod, source.ReceivedDate);",
                     parameters,
                     commandType: CommandType.Text);
             });
         }
-
-
     }
 }

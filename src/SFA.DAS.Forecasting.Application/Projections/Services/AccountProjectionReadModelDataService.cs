@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
 {
     public interface IAccountProjectionReadModelDataService
     {
-        Task<IEnumerable<ReadModel.Projections.AccountProjectionReadModel>> Get(long employerId);
+        Task<IEnumerable<Models.Projections.AccountProjectionReadModel>> Get(long employerId);
     }
 
     public class AccountProjectionReadModelDataService : BaseRepository, IAccountProjectionReadModelDataService
@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         {
         }
 
-        public async Task<IEnumerable<ReadModel.Projections.AccountProjectionReadModel>> Get(long employerId)
+        public async Task<IEnumerable<Models.Projections.AccountProjectionReadModel>> Get(long employerId)
         {
             return await WithConnection(
                 async c =>
@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", employerId, DbType.Int64);
 
-                    var result = await c.QueryAsync<ReadModel.Projections.AccountProjectionReadModel>(
+                    var result = await c.QueryAsync<Models.Projections.AccountProjectionReadModel>(
                                 "SELECT * FROM [dbo].[AccountProjection] WHERE EmployerAccountId = @employerAccountId"
                                 ,parameters ,
                                 commandType: CommandType.Text);

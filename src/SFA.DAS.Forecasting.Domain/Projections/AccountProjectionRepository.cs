@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var balance = _currentBalanceRepository.Get(employerAccountId);
             var commitments = _commitmentsRepository.Get(employerAccountId);
             await Task.WhenAll(levy, balance, commitments);
-            return new AccountProjection(new Account(employerAccountId, balance.Result.Amount, levy.Result), commitments.Result);
+            return new AccountProjection(new Account(employerAccountId, balance.Result.Amount, levy.Result, 0, 0), commitments.Result);
         }
 
         public async Task Store(AccountProjection accountProjection)

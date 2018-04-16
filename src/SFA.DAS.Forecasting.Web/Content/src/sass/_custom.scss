@@ -1,5 +1,5 @@
 ﻿@mixin green-tick {
-  background:url(/comt-assets/images/icon-green-tick.png) no-repeat 0 -4px;
+  background:url(/Content/dist/images/icon-green-tick.png) no-repeat 0 -4px;
   width: 30px;
   height: 22px;
   margin-left: -2px;
@@ -7,6 +7,8 @@
   display: inline-block;
   float: left;
 }
+
+
 
 // custom to overwrite the GDS defaults
 .hr-double {
@@ -134,13 +136,31 @@ h2{
             }
 }
 
+.panel-border-wide {
+    border-color: $purple;
+    background: $grey-3;
+}
+
+
+/*Estimator start page*/
+#estimate-start-transfer{
+    .disclaimer{
+        margin-top: 30px;
+    }
+    .button-start{
+        margin-top:40px;
+    }
+
+}
+
+
+
 
 //all mobile media query breakpoints
 //==================================
 @media only screen and (max-device-width: 640px),
 only screen and (max-device-width: 667px),
 only screen and (max-width: 480px) {
-
 }
 
 
@@ -202,3 +222,20 @@ path.c3-line {
 }
 
 // END Funding Projection Chart
+
+// Estimation Style
+
+table.small th, table.small td {
+    font-size: 16px;
+}
+
+table.small th, table.small td, table.small .form-hint {
+    font-size: 16px;
+}
+
+.errorTable tr.error-row {
+    box-shadow: -5px 0px 0px 0px #f7e7e9, -10px 0px 0px 0px #b10e1e;
+    background: #f7e7e9;
+}
+
+// END Estimation Style

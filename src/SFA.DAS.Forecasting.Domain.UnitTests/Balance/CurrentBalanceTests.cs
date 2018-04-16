@@ -25,13 +25,27 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
         [Test]
         public void Rejects_Balances_Generated_Prior_To_Current_Balance()
         {
-            Assert.IsFalse(_currentBalance.SetCurrentBalance(10000,_balance.BalancePeriod.AddDays(-1)));
+            Assert.IsFalse(_currentBalance.SetCurrentBalance(10000,0,0,_balance.BalancePeriod.AddDays(-1)));
         }
 
         [Test]
         public void Allows_Balances_Generated_After_Current_Balance()
         {
-            Assert.IsTrue(_currentBalance.SetCurrentBalance(10000, _balance.BalancePeriod.AddDays(1)));
+            Assert.IsTrue(_currentBalance.SetCurrentBalance(10000, 0,0,_balance.BalancePeriod.AddDays(1)));
+        }
+
+        [Test]
+        public void Records_Transfer_Allowance()
+        {
+            _currentBalance.SetCurrentBalance(0, 1050, 0, _balance.BalancePeriod);
+            Assert.AreEqual(_currentBalance.TransferAllowance,1050);
+        }
+
+        [Test]
+        public void Records_Transfer_Balance()
+        {
+            _currentBalance.SetCurrentBalance(0, 0, 1122, _balance.BalancePeriod);
+            Assert.AreEqual(_currentBalance.RemainingTransferBalance, 1122);
         }
     }
 }
