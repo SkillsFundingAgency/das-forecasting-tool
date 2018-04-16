@@ -13,10 +13,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string CourseId { get; set; }
         public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
 
-        //public string EstimationName { get; set; }
-        //public string HashedAccountId { get; set; }
-
-
         public IEnumerable<SelectListItem> ApprenticeshipList()
         {
             var res = AvailableApprenticeships.Select(item => new SelectListItem {Value = item.Id, Text = item.Title}).ToList();

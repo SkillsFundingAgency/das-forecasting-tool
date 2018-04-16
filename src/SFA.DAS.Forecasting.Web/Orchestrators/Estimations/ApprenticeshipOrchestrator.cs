@@ -29,8 +29,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var result = new AddApprenticeshipViewModel
             {
                 Name = "Add Apprenticeships",
-                //HashedAccountId = hashedAccountId,
-                //EstimationName = estimationName,
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
                 AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses()
             };
@@ -42,10 +40,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public void StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            //var hashedAccountId = vm.HashedAccountId;
-            //var estimationName = vm.EstimationName;
-            //// TODO: estimationName ignored for now as 'default' is assumed, but needs wiring in to the repo.Get call at some point
-
             var courseId = vm.CourseId;
 
             var apprenticeshipToAdd = vm.ApprenticeshipToAdd;
@@ -54,24 +48,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var level = course.Level;
 
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-
-        
-            //var currentEstimationDetails = _accountEstimationRepository.Get(accountId).ConfigureAwait(false);
-
             var task = Task.Run(async () => await _accountEstimationRepository.Get(accountId).ConfigureAwait(false));
 
 
             var accountEstimation = task.Result;
-
+            
 
             accountEstimation.AddVirtualApprenticeship(courseId,
                                                         courseTitle,
                                                         level,
                                                         apprenticeshipToAdd.StartMonth.GetValueOrDefault(),
-                                                        apprenticeshipToAdd.StartYear,
-                                                        apprenticeshipToAdd.ApprenticesCount,
-                                                        apprenticeshipToAdd.NumberOfMonths,
-                                                        apprenticeshipToAdd.TotalCost);
+                                                        apprenticeshipToAdd.StartYear.GetValueOrDefault(),
+                                                        apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(),
+                                                        apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
+                                                        apprenticeshipToAdd.TotalCost.GetValueOrDefault());
 
             _accountEstimationRepository.Store(accountEstimation);
         }
