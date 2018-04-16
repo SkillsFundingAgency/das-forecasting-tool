@@ -323,9 +323,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Orchestrators\Estimations\AddApprenticeshipOrchestrator.cs" />
-    <Compile Include="Orchestrators\EstimationOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\EstimationOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\IAddApprenticeshipOrchestrator.cs" />
-    <Compile Include="Orchestrators\IEstimationOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\IEstimationOrchestrator.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
     <Compile Include="Attributes\AuthorizeForecastingAttribute.cs" />
@@ -353,6 +353,7 @@
     <Compile Include="Orchestrators\Mappers\Mapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\RemoveApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\AddApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipPageViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipViewModel.cs" />
@@ -708,6 +709,7 @@
     <Content Include="Views\Estimation\AddApprenticeships.cshtml" />
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
+    <Content Include="Views\Estimation\RemoveApprenticeships.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

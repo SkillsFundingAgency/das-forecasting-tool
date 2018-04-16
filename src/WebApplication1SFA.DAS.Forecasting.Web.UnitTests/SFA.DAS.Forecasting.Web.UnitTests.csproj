@@ -76,7 +76,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EstimationOrchestratorUnitTest.cs" />
+    <Compile Include="Estimations\EstimationOrchestratorUnitTest.cs" />
+    <Compile Include="Estimations\ApprenticeshipOrchestratorUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

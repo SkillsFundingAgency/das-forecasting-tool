@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return await Task.FromResult(result);
         }
 
-     
+
 
         public void StoreApprenticeship(AddApprenticeshipViewModel vm)
         {
@@ -55,7 +55,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-        
+
             //var currentEstimationDetails = _accountEstimationRepository.Get(accountId).ConfigureAwait(false);
 
             var task = Task.Run(async () => await _accountEstimationRepository.Get(accountId).ConfigureAwait(false));
@@ -75,5 +75,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             _accountEstimationRepository.Store(accountEstimation);
         }
+
+
+        public async Task RemoveApprenticeship(string hashedAccountId, string apprenticeshipId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var estimations = await _accountEstimationRepository.Get(accountId);
+            estimations?.RemoveVirtualApprenticeship(apprenticeshipId);
+           await _accountEstimationRepository.Store(estimations);
+        }
+
     }
 }

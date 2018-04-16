@@ -78,6 +78,15 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         }
+
+        [HttpGet]
+        [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
+        public async Task<ActionResult> RemoveApprenticeships(string hashedAccountId, string estimationName, string id)
+        {
+            var vm = await _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
+            return View(vm);
+        }
+
     }
 
 }
