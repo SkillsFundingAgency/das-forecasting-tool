@@ -15,14 +15,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _estimationOrchestrator;
-        private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
+        private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
 
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, IMembershipService membershipService)
+        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
-            _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
+            _apprenticeshipOrchestrator = apprenticeshipOrchestrator;
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
         public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            var vm = await _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
+            var vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
 
             return View(vm);
         }
@@ -69,10 +69,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
         public ActionResult Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            var estimationCostsUrl = $"estimations/{vm.EstimationName}";
-
-
-            _addApprenticeshipOrchestrator.StoreApprenticeship(vm);
+            _apprenticeshipOrchestrator.StoreApprenticeship(vm, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
 
