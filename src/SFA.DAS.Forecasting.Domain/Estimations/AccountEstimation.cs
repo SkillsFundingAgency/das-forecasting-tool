@@ -32,12 +32,14 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 ApprenticesCount = numberOfApprentices,
                 StartDate = new DateTime(startYear, startMonth, 1),
                 TotalCost = totalCost,
-                TotalInstallments = numberOfMonths
+                TotalInstallments = (short)numberOfMonths,
             };
             var validationResults = _validator.Validate(virtualApprenticeship);
             if (!validationResults.All(result => result.IsValid))
                 throw new InvalidOperationException($"The virtual apprenticeship is invalid.  Failures: {validationResults.Aggregate(string.Empty, (currText, failure) => $"{currText}{failure}, ")}");
             virtualApprenticeship.Id = Guid.NewGuid().ToString("N");
+            virtualApprenticeship.TotalCompletionAmount = (totalCost / 100) * 20;
+            virtualApprenticeship.TotalInstallmentAmount = ((totalCost / 100) * 80) / numberOfMonths;
             Model.Apprenticeships.Add(virtualApprenticeship);
             return virtualApprenticeship;
         }
