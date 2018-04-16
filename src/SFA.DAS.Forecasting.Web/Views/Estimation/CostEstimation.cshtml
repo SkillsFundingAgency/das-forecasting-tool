@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Mvc
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
 @{
@@ -27,8 +28,9 @@
             }
         }
 
-        
-        @if(Model.ApprenticeshipRemoved){
+
+        @if (Model.ApprenticeshipRemoved)
+        {
             <div class="success-summary">
                 <h3 class="heading-medium">Apprenticeship Removed</h3>
             </div>
@@ -50,11 +52,16 @@
             <p>
                 @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
                 {
-                    @Html.ActionLink("Add more apprenticeships to your current estimate", "", "", new { @class = "button" })
+                    <a class="button" href="apprenticeship/add"> Add more apprenticeships to your current estimate</a>
                 }
                 else
                 {
-                    @Html.ActionLink("Add apprenticeships to your current estimate", "", "", new { @class = "button" })
+                    <a class="button" href="@Url.RouteUrl("AddApprenticeships",
+                                            new
+                                            {
+                                                hashedAccountId = Model.HashedAccountId,
+                                                estimationName = Model.EstimationName,
+                                            })">Add apprenticeships to your current estimate</a>
                 }
             </p>
 
@@ -85,11 +92,11 @@
 
     <div id="tabs-container">
         <ul class="tabs-menu">
-            <li class="current"><a href="#tab-1">Remaining transfer allowance</a></li>
-            <li><a href="#tab-2">Apprenticeships added</a></li>
+            <li ><a href="#tab-1">Remaining transfer allowance</a></li>
+            <li class="current" ><a href="#tab-2">Apprenticeships added</a></li>
         </ul>
 
-        <div id="tab-1" class="tab-content">
+        <div id="tab-1" class="tab-content" style="display: none;" >
 
             @{
                 var tableBodyClass = Model.CanFund ? "" : "errorTable";
@@ -107,21 +114,23 @@
                 </thead>
                 <tbody class="@tableBodyClass">
 
-                    @foreach (var costEstimate in Model.TransferAllowances)
+                    @if (Model.TransferAllowances != null)
                     {
-                        if (costEstimate.IsLessThanCost)
+                        foreach (var costEstimate in Model.TransferAllowances)
                         {
-                            tableRowClass = "error-row";
-                            tableCellClass = "error-message";
+                            if (costEstimate.IsLessThanCost)
+                            {
+                                tableRowClass = "error-row";
+                                tableCellClass = "error-message";
+                            }
+
+                            <tr class="@tableRowClass">
+                                <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+                                <td>@costEstimate.Cost.FormatCost()</td>
+                            </tr>
                         }
-
-                        <tr class="@tableRowClass">
-                            <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
-                            <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
-                            <td>@costEstimate.Cost.FormatCost()</td>
-                        </tr>
                     }
-
                 </tbody>
 
             </table>
@@ -129,7 +138,7 @@
 
 
 
-        <div id="tab-2" class="tab-content" style="display: none;">
+        <div id="tab-2" class="tab-content"  >
             <table class="small responsive">
                 <thead>
                     <tr>

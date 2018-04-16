@@ -1,5 +1,5 @@
 ﻿@mixin green-tick {
-  background:url(/comt-assets/images/icon-green-tick.png) no-repeat 0 -4px;
+  background:url(/Content/dist/images/icon-green-tick.png) no-repeat 0 -4px;
   width: 30px;
   height: 22px;
   margin-left: -2px;
@@ -7,6 +7,8 @@
   display: inline-block;
   float: left;
 }
+
+
 
 // custom to overwrite the GDS defaults
 .hr-double {
@@ -140,6 +142,25 @@ h2{
     border-radius: 0;
     height: 37px;
 }
+.panel-border-wide {
+    border-color: $purple;
+    background: $grey-3;
+}
+
+
+/*Estimator start page*/
+#estimate-start-transfer{
+    .disclaimer{
+        margin-top: 30px;
+    }
+    .button-start{
+        margin-top:40px;
+    }
+
+}
+
+
+
 
 #estimate-add-apprenticeship {
     .no-of-apprentice,
@@ -148,7 +169,6 @@ h2{
             width: 50px;
         }
     }
-
     .levy-value {
         width: 200px;
     }

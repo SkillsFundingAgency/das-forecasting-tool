@@ -28,11 +28,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var accountEstimation = await GetEstimation(hashedAccountId);
             var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation);
             estimationProjector.BuildProjections();
+
             var viewModel = new EstimationPageViewModel
             {
+                HashedAccountId = hashedAccountId,
+                EstimationName = accountEstimation == null ? estimateName : accountEstimation.Name,
+                ApprenticeshipRemoved = apprenticeshipRemoved.GetValueOrDefault(),
                 Apprenticeships = new EstimationApprenticeshipsViewModel
                 {
-                    VirtualApprenticeships = accountEstimation.VirtualApprenticeships?.Select(o =>
+                    VirtualApprenticeships = accountEstimation?.VirtualApprenticeships?.Select(o =>
                         new EstimationApprenticeshipViewModel
                         {
                             Id = o.Id,
@@ -45,16 +49,16 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                             StartDate = o.StartDate
                         }),
                 },
-                EstimationName = accountEstimation.Name,
-                TransferAllowances = estimationProjector.Projections.Select(o => new EstimationTransferAllowanceVewModel
+                TransferAllowances = estimationProjector?.Projections?.Select(o => new EstimationTransferAllowanceVewModel
                 {
                     Date = new DateTime(o.Year, o.Month, 1),
                     Cost = o.TotalCostOfTraining,
                     RemainingAllowance = o.FutureFunds
-                }),
-                ApprenticeshipRemoved = apprenticeshipRemoved.GetValueOrDefault(),
+                })
             };
+
             return viewModel;
+
         }
 
         public async Task<AccountEstimation> GetEstimation(string hashedAccountId)

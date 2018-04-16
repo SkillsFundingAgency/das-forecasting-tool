@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -43,7 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = accountEstimation.Name });
             }
 
-            return RedirectToRoute("AddApprenticeships",new { hashedAccountId });
+            return RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
         }
 
         [HttpGet]
