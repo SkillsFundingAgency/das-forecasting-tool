@@ -13,12 +13,14 @@
                 <p>Use this tool to see your transfer allowance and estimate the cost of apprenticeships, so you can see how much you can transfer to another employer.</p>
             </div>
         </div>
-    </div>
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId})'>Start</a>
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId})'>Start</a>
+            </div>
         </div>
+
         <div class="grid-row disclaimer">
             <div class="column-two-thirds">
                 <div class="panel panel-border-wide">
@@ -28,5 +30,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </main>
