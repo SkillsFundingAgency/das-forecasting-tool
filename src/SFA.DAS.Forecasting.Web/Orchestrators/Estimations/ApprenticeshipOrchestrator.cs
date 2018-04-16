@@ -8,14 +8,14 @@ using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
-    public class AddApprenticeshipOrchestrator : IAddApprenticeshipOrchestrator
+    public class ApprenticeshipOrchestrator : IApprenticeshipOrchestrator
     {
         private readonly IHashingService _hashingService;
         private readonly Mapper _mapper;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
         private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
 
-        public AddApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
+        public ApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
         {
             _hashingService = hashingService;
             _mapper = mapper;
@@ -29,8 +29,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var result = new AddApprenticeshipViewModel
             {
                 Name = "Add Apprenticeships",
-                HashedAccountId = hashedAccountId,
-                EstimationName = estimationName,
+                //HashedAccountId = hashedAccountId,
+                //EstimationName = estimationName,
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
                 AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses()
             };
@@ -40,11 +40,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
      
 
-        public void StoreApprenticeship(AddApprenticeshipViewModel vm)
+        public void StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            var hashedAccountId = vm.HashedAccountId;
-            var estimationName = vm.EstimationName;
-            // TODO: estimationName ignored for now as 'default' is assumed, but needs wiring in to the repo.Get call at some point
+            //var hashedAccountId = vm.HashedAccountId;
+            //var estimationName = vm.EstimationName;
+            //// TODO: estimationName ignored for now as 'default' is assumed, but needs wiring in to the repo.Get call at some point
 
             var courseId = vm.CourseId;
 
@@ -67,7 +67,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             accountEstimation.AddVirtualApprenticeship(courseId,
                                                         courseTitle,
                                                         level,
-                                                        apprenticeshipToAdd.StartMonth,
+                                                        apprenticeshipToAdd.StartMonth.GetValueOrDefault(),
                                                         apprenticeshipToAdd.StartYear,
                                                         apprenticeshipToAdd.ApprenticesCount,
                                                         apprenticeshipToAdd.NumberOfMonths,

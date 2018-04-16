@@ -9,9 +9,9 @@
     <main id="content" role="main" tabindex="-1">
         <div id="estimate-add-apprenticeship">
             <a href="#" class="link-back">Back</a>
-            @Html.HiddenFor(model => model.EstimationName)
+            @*@Html.HiddenFor(model => model.EstimationName)*@
             @Html.HiddenFor(model => model.Name)
-            @Html.HiddenFor(model => model.HashedAccountId)
+            @*@Html.HiddenFor(model => model.HashedAccountId)*@
             
             <div class="error-summary hidden" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
                 <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
@@ -69,30 +69,21 @@
 
 
                 <div class="form-group">
-                    <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
-                    <select name="chosse-apprenticeship" id="chosse-apprenticeship" class="form-control form-control-3-4" aria-label="Apprenticeship training course">
-                        <option value="noselection">Select one</option>
-                        @{
-                            foreach (var item in Model.AvailableApprenticeships)
-                            {
-                                <option value="@item.Id">@item.Title</option>
-                            }
-                        }
-                    </select>
-                    @*@Html.DropDownList("Apprenticeships", @Model.ApprenticeshipList(),new { @class = "typeahead form-control training-standard select2-control select2-hidden-accessible" )*@
-                </div>
+                    <label class="form-label-bold" for="chosse-apprenticeship">Choose apprenticeship</label>
+                    @Html.DropDownListFor(model => model.CourseId,  @Model.ApprenticeshipList(),new { @class="form-control form-control-3-4",  aria_label="Apprenticeship training course", name="chosse-apprenticeship", id="chosse-apprenticeship" })
+               </div>
 
 
                 <div class="form-group no-of-apprentice">
                     <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                    <input name="no-of-app" id="no-of-app" type="number" class="form-control" aria-label="Number of apprentices" min="1" max="999">
+                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new {@class="form-control", aria_label = "Number of apprentices", min = "1", max = "999", name = "no-of-app", id = "no-of-app", type = "number" })
                 </div>
 
 
                 <div class="form-group no-of-months">
                     <label class="form-label-bold" for="levy-length">Number of months</label>
                     <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
-                    <input class="form-control" id="levy-length" name="levy-length" type="text"/>
+                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.NumberOfMonths, new {@class="form-control", id = "levy-length", name = "levy-length", type = "text" })
                 </div>
 
                 <div class="form-group" id="dateWrapper">
@@ -102,11 +93,11 @@
                     <div class="form-date">
                         <div class="form-group form-group-month">
                             <label for="startDateMonth">Month</label>
-                            <input name="startDateMonth" id="startDateMonth" type="number" pattern="[0-9]*" min="0" max="12" class="form-control" placeholder="MM">
-                        </div>
+                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", min = "0", max = "12", placeholder = "MM" })
+                                </div>
                         <div class="form-group form-group-year">
                             <label for="startDateYear">Year</label>
-                            <input name="startDateYear" id="startDateYear" type="number" pattern="[0-9]*" min="17" max="21" class="form-control" placeholder="YYYY">
+                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", min = "17", max = "2021", placeholder="YYYY" })
                         </div>
                     </div>
 
@@ -125,7 +116,8 @@
                     <span class="form-hint">Only change this number if the total cost is below the total government funding cap<br>The total cost should not be more than the total government funding cap</span>
                     <label for="levy-value-2" class="form-label-bold">
                         £
-                        <input class="form-control levy-value" id="levy-value" name="levy-value" type="text"/>
+                        @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCost, new { @class = "form-control levy-value", id = "levy-value", name = "levy-value", type = "text" })
+        
                     </label>
                 </div>
                    </div>
@@ -137,8 +129,7 @@
             <div class="grid-row">
 
                 <div class="column-full">
-                    <a class="button save" id="save" href="outcomes.html">Check if I can fund these</a>
-                    <button type="submit" id="save" name="Command" value="Create" class="button save">Check if I can fund these</button>
+                    <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
                     <a class="button text-link pull-right" href="#" style="float: right;">Cancel</a>
 
                 </div>

@@ -8,9 +8,9 @@
        
     <main class="estimate-add-apprenticeship" id="content" role="main" tabindex="-1">
         <a href="#" class="link-back">Back</a>
-        @Html.HiddenFor(model => model.EstimationName)
+        @*@Html.HiddenFor(model => model.EstimationName)*@
         @Html.HiddenFor(model => model.Name)
-        @Html.HiddenFor(model => model.HashedAccountId)
+        @*@Html.HiddenFor(model => model.HashedAccountId)*@
 
 
     
@@ -142,7 +142,7 @@
                                 <div class="form-group form-group-year">
                                     <label for="startDateYear">Year</label>
                                     @*<input name="startDateYear" id="startDateYear" type="number" pattern="[0-9]*" min="17" max="21" class="form-control" placeholder="YYYY">*@
-                                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartYear, new { @class = "form-control", name = "startDateYear", id = "startDateMonth", type = "number", pattern = "[0-9]*", min = "17", max = "21", placeholder="YYYY" })
+                                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", min = "17", max = "21", placeholder="YYYY" })
                                 </div>
                             </div>
                         </fieldset>
