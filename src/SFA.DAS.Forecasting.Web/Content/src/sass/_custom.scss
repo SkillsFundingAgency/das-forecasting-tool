@@ -136,6 +136,12 @@ h2{
             }
 }
 
+/*select2 styles*/
+.select2-container--default .select2-selection--single {
+    border: 2px solid #0b0c0c;
+    border-radius: 0;
+    height: 37px;
+}
 .panel-border-wide {
     border-color: $purple;
     background: $grey-3;
@@ -156,16 +162,25 @@ h2{
 
 
 
-//all mobile media query breakpoints
-//==================================
-@media only screen and (max-device-width: 640px),
-only screen and (max-device-width: 667px),
-only screen and (max-width: 480px) {
+#estimate-add-apprenticeship {
+    .no-of-apprentice,
+    .no-of-months {
+        input {
+            width: 50px;
+        }
+    }
+    .levy-value {
+        width: 200px;
+    }
 }
 
 
-// Funding projection
 
+//all mobile media query breakpoints
+//==================================
+@media only screen and (max-device-width: 640px), only screen and (max-device-width: 667px), only screen and (max-width: 480px) {
+}
+// Funding projection
 .funding-projection {
 
     .info-summary {
@@ -190,20 +205,18 @@ only screen and (max-width: 480px) {
         }
     }
 }
-
 // END Funding projection
-
 /*coinvestment table*/
 #balancesheet {
     .co-invest-head {
         text-align: center;
     }
+
     .grey-bg {
         background: $panel-colour;
     }
 }
 // Funding Projection Chart
-
 .chart-container {
     display: none;
 }
@@ -220,7 +233,6 @@ path.c3-line {
 .c3-axis-y-label {
     font-size: 20px;
 }
-
 // END Funding Projection Chart
 
 // Estimation Style
