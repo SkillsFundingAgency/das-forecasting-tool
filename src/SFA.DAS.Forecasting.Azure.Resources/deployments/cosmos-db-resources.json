@@ -36,7 +36,7 @@
     "outputs": {
         "CustomConnectionString": {
             "type": "string",
-            "value": "[concat('https://', parameters('cosmosDbName'), '.documents.azure.com:443/;AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbName')), '2015-11-06').primaryMasterKey, ';', variables('PartialConnectionString'))]"
+            "value": "[concat('AccountEndpoint=https://', parameters('cosmosDbName'), '.documents.azure.com:443/;AccountKey=', listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('cosmosDbName')), '2015-11-06').primaryMasterKey, ';', variables('PartialConnectionString'))]"
         }
     }
 }
