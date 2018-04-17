@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public int Level { get; set; }
         public int ApprenticesCount { get; set; }
         public DateTime StartDate { get; set; }
-        public int TotalInstallments { get; set; }
+        public short TotalInstallments { get; set; }
         public decimal TotalCost { get; set; }
         public decimal TotalCompletionAmount { get; set; }
         public decimal TotalInstallmentAmount { get; set; }

@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         }
 
 
-        public async Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup(string hashedAccountId, string estimationName)
+        public async Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup()
         {
             var result = new AddApprenticeshipViewModel
             {
