@@ -5,6 +5,7 @@ using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
+using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
@@ -67,14 +68,39 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
-        public ActionResult Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
+        public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            _apprenticeshipOrchestrator.StoreApprenticeship(vm, hashedAccountId, estimationName);
+            await _apprenticeshipOrchestrator.StoreApprenticeship(vm, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
 
+        }
+
+        [HttpGet]
+        [Route("{estimationName}/apprenticeship/{id}/ConfirmRemoval", Name = "ConfirmRemoval")]
+        public async Task<ActionResult> ConfirmApprenticeshipsRemoval(string hashedAccountId, string estimationName, string id)
+        {
+            try
+            {
+                var vm = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(hashedAccountId, id);
+                return View(vm);
+            }
+            catch (ApprenticeshipAlreadyRemovedException)
+            {
+                return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName, apprenticeshipRemoved = true });
+            }
 
         }
+
+
+        [HttpPost]
+        [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
+        public async Task<ActionResult> RemoveApprenticeships(string hashedAccountId, string estimationName, string id)
+        {
+            await _apprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
+            return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName, apprenticeshipRemoved = true });
+        }
+
     }
 
 }
