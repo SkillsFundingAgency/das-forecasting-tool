@@ -2,6 +2,7 @@
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -11,14 +12,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
     public class ApprenticeshipOrchestrator : IApprenticeshipOrchestrator
     {
         private readonly IHashingService _hashingService;
-        private readonly Mapper _mapper;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
         private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
 
-        public ApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
+        public ApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
         {
             _hashingService = hashingService;
-            _mapper = mapper;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
         }
@@ -36,9 +35,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return await Task.FromResult(result);
         }
 
-     
-
-        public void StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
+        public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var courseId = vm.CourseId;
 
@@ -47,10 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var courseTitle = course.Title;
             var level = course.Level;
 
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var task = Task.Run(async () => await _accountEstimationRepository.Get(accountId).ConfigureAwait(false));
-
-            var accountEstimation = task.Result; 
+            var accountEstimation = await GetAccountAutomation(hashedAccountId);
 
             accountEstimation.AddVirtualApprenticeship(courseId,
                                                         courseTitle,
@@ -61,7 +55,41 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                                                         apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
                                                         apprenticeshipToAdd.TotalCost.GetValueOrDefault());
 
-            _accountEstimationRepository.Store(accountEstimation);
+            await _accountEstimationRepository.Store(accountEstimation);
         }
+
+        public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId)
+        {
+            var estimations = await GetAccountAutomation(hashedAccountId);
+            var virtualApprenticeships = estimations.FindVirtualApprenticeship(apprenticeshipsId);
+
+            if (virtualApprenticeships == null) throw new ApprenticeshipAlreadyRemovedException();
+
+            var vm = new RemoveApprenticeshipViewModel
+            {
+                ApprenticeshipId = apprenticeshipsId,
+                HashedAccountId = hashedAccountId,
+                NumberOfApprentices = virtualApprenticeships.ApprenticesCount,
+                CourseTitle = virtualApprenticeships.CourseTitle,
+                Level = virtualApprenticeships.Level
+            };
+
+            return vm;
+
+        }
+
+        public async Task RemoveApprenticeship(string hashedAccountId, string apprenticeshipId)
+        {
+            var estimations = await GetAccountAutomation(hashedAccountId);
+            estimations?.RemoveVirtualApprenticeship(apprenticeshipId);
+            await _accountEstimationRepository.Store(estimations);
+        }
+
+        private async Task<AccountEstimation> GetAccountAutomation(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            return await _accountEstimationRepository.Get(accountId);
+        }
+
     }
 }

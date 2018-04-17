@@ -1,0 +1,57 @@
+﻿@model SFA.DAS.Forecasting.Web.ViewModels.RemoveApprenticeshipViewModel
+
+@{
+    ViewBag.Title = Model.CourseTitle;
+    ViewBag.Description = "Remove Apprenticeships from your Estimation";
+}
+@using (@Html.BeginForm("Save", "Estimation", FormMethod.Post)){
+
+<main class="estimate-add-apprenticeship" id="content" role="main" tabindex="-1">
+    <a href="#" class="link-back">Back</a>
+   
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="hgroup">
+                <h1 class="heading-xlarge">
+                    Remove apprenticeship
+                </h1>
+                <p class="lede">You are about to remove {numberOfApprentices} {apprenticeship} level {apprenticeshipLevel}.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-full">
+          @using (Html.BeginForm())
+
+                @Html.HiddenFor(model => model.EstimationName)
+                @Html.HiddenFor(model => model.HashedAccountId)
+
+                <div class="form-group form-group-error">
+                    <label class="form-label-bold" for="email">Are you sure you want to do this?</label>
+                    <span class="error-message">Please choose an option</span>
+                    <fieldset>
+                        <div class="multiple-choice">
+                            <input id="radio-1" type="radio" name="radio-group" value="yes">
+                            <label for="radio-1">Yes, I do want to remove this apprenticeship</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input id="radio-2" type="radio" name="radio-group" value="no">
+                            <label for="radio-2">No, I want to keep this apprenticeship</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <a class="button" href="details?msg=removed">Continue</a>
+
+            }
+        </div>
+    </div>
+
+
+
+
+
+
+</main>
+}

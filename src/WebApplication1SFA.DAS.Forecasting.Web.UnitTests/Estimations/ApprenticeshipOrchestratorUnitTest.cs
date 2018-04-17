@@ -1,32 +1,34 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMoq;
 using FluentAssertions;
 using Moq;
-using NUnit.Framework;
+using AutoMoq;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
+using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
-using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.HashingService;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
-using SFA.DAS.HashingService;
+using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 
-namespace SFA.DAS.Forecasting.Web.UnitTests
+namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
 {
     [TestFixture]
-    public class ApprenticeshipOrchestratorTests
+    public class ApprenticeshipOrchestratorUnitTest
     {
-        private AutoMoqer _autoMoq;
+
         private ApprenticeshipOrchestrator _apprenticeshipOrchestrator;
-     
-        private List<ApprenticeshipCourse> _apprenticeshipCourses;
+
+        private AutoMoqer _autoMoq;
+
         private const string HashedAccountId = "VT6098";
         private const string EstimationName = "default";
         private const long AccountId = 12345;
-        private AddApprenticeshipViewModel _vm;
+        private const string VirtualApprenticeshipId = "10000ABC";
         private ApprenticeshipToAdd _apprenticeshipToAdd;
         private string _courseId;
         private int? _apprenticesCount;
@@ -37,20 +39,31 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
         private string _courseTitle;
         private int _level;
         private decimal? _totalCost;
+        private List<ApprenticeshipCourse> _apprenticeshipCourses;
+        private AddApprenticeshipViewModel _addApprenticeshipViewModel;
 
         [SetUp]
         public void Setup()
         {
             _autoMoq = new AutoMoqer();
 
-            var _model = new AccountEstimationModel
+            var model = new AccountEstimationModel
             {
                 Id = Guid.NewGuid().ToString("N"),
-                Apprenticeships = new List<VirtualApprenticeship>(),
+                Apprenticeships = new List<VirtualApprenticeship>
+                {
+                    new VirtualApprenticeship
+                    {
+                        Id = VirtualApprenticeshipId,
+                        CourseTitle = "Wood work",
+                        Level = 2,
+                        ApprenticesCount = 5
+                    }
+                },
                 EmployerAccountId = AccountId,
                 EstimationName = "default"
             };
-            _autoMoq.SetInstance(_model);
+            _autoMoq.SetInstance(model);
 
             _courseTitle = "Seafaring Level 2";
             _level = 2;
@@ -73,9 +86,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
             _numberOfMonths = 12;
             _startYear = DateTime.Now.Year;
             _startMonth = 12;
-            
 
-            _apprenticeshipCourse = new ApprenticeshipCourse {Id = _courseId, Title = _courseTitle, Level = _level};
+
+            _apprenticeshipCourse = new ApprenticeshipCourse { Id = _courseId, Title = _courseTitle, Level = _level };
             _apprenticeshipToAdd = new ApprenticeshipToAdd
             {
                 ApprenticesCount = _apprenticesCount,
@@ -85,7 +98,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
                 TotalCost = _totalCost
             };
 
-            _vm = new AddApprenticeshipViewModel
+            _addApprenticeshipViewModel = new AddApprenticeshipViewModel
             {
                 ApprenticeshipToAdd = _apprenticeshipToAdd,
                 AvailableApprenticeships = null,
@@ -94,16 +107,12 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
             };
 
             _autoMoq.GetMock<IHashingService>()
-                .Setup(o => o.DecodeValue(HashedAccountId))
-                .Returns(AccountId);
+                    .Setup(o => o.DecodeValue(HashedAccountId))
+                    .Returns(AccountId);
 
             _autoMoq.GetMock<IAccountEstimationRepository>()
-                .Setup(o => o.Get(It.IsAny<long>()))
-                .Returns(Task.FromResult(_autoMoq.Resolve<AccountEstimation>()));
-
-            _autoMoq.GetMock<IAccountEstimationRepository>()
-                .Setup(x => x.Get(It.IsAny<long>()))
-                .Returns(Task.FromResult(_autoMoq.Resolve<AccountEstimation>()));
+                    .Setup(x => x.Get(It.IsAny<long>()))
+                    .Returns(Task.FromResult(_autoMoq.Resolve<AccountEstimation>()));
 
             _autoMoq.GetMock<IApprenticeshipCourseService>()
                 .Setup(x => x.GetApprenticeshipCourses())
@@ -113,10 +122,35 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
                 .Setup(x => x.GetApprenticeshipCourse(_courseId))
                 .Returns(_apprenticeshipCourse);
 
-        
-
             _apprenticeshipOrchestrator = _autoMoq.Resolve<ApprenticeshipOrchestrator>();
+
         }
+
+        [Test]
+        public async Task ConfirmRemovalShouldReturnValidViewModel()
+        {
+            //Act
+            var confirmRemovalViewModel = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(HashedAccountId, VirtualApprenticeshipId);
+            // Assert
+            _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId));
+            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
+
+            confirmRemovalViewModel.Should().NotBeNull();
+            confirmRemovalViewModel.Should().BeOfType<RemoveApprenticeshipViewModel>();
+        }
+
+        [Test]
+        public void ConfirmRemovalShouldThrowExceptionIfApprenticeshipIsAlreadyRemoved()
+        {
+            // Arrange
+            _autoMoq.Resolve<AccountEstimationModel>().Apprenticeships = null;
+
+            //Act
+            Func<Task> action = async () => { await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(HashedAccountId, VirtualApprenticeshipId); };
+
+            action.ShouldThrow<ApprenticeshipAlreadyRemovedException>();
+        }
+
 
         [Test]
         public async Task WhenRetrievingGetApprenticeshipAddSetupItShouldCallCourseServiceGetCourses()
@@ -148,26 +182,27 @@ namespace SFA.DAS.Forecasting.Web.UnitTests
                 .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
                 .Returns(validationResults);
 
-            _apprenticeshipOrchestrator.StoreApprenticeship(_vm, HashedAccountId, EstimationName);
+            _apprenticeshipOrchestrator.StoreApprenticeship(_addApprenticeshipViewModel, HashedAccountId, EstimationName);
             _autoMoq.Verify<IApprenticeshipCourseService>(o => o.GetApprenticeshipCourse(_courseId));
             _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId), Times.Once());
             _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
             _autoMoq.Verify<IVirtualApprenticeshipValidator>(o => o.Validate(It.IsAny<VirtualApprenticeship>()));
-           _autoMoq.Verify<IAccountEstimationRepository>(o => o.Store(It.IsAny<AccountEstimation>()));
+            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Store(It.IsAny<AccountEstimation>()));
         }
 
 
         [Test]
         public void WhenStoringTheApprenticeshipItShouldStoreWithNosuccessfulValidation()
         {
-            var validationResults = new List<ValidationResult> {ValidationResult.Failed("test fail")};
+            var validationResults = new List<ValidationResult> { ValidationResult.Failed("test fail") };
 
             _autoMoq.GetMock<IVirtualApprenticeshipValidator>()
                 .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
                 .Returns(validationResults);
 
-            Assert.Throws<InvalidOperationException>(() => _apprenticeshipOrchestrator.StoreApprenticeship(_vm, HashedAccountId, EstimationName), "Should throw an exception if the apprenticeship fails validation");
+            Assert.ThrowsAsync<InvalidOperationException>(() => _apprenticeshipOrchestrator.StoreApprenticeship(_addApprenticeshipViewModel, HashedAccountId, EstimationName), "Should throw an exception if the apprenticeship fails validation");
         }
+
 
     }
 }

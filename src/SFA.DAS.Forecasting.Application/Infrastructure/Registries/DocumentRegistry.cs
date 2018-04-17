@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
     {
         public DocumentRegistry()
         {
-            var connectionString = ConfigurationHelper.GetConnectionString("DocumentConnectionString");
+            var connectionString = ConfigurationHelper.GetConnectionString("CosmosDbConnectionString");
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException("No 'DocumentConnectionString' connection string found.");
             var documentConnectionString = new DocumentSessionConnectionString { ConnectionString = connectionString };
