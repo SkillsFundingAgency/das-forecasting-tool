@@ -102,7 +102,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             {
                 ApprenticeshipToAdd = _apprenticeshipToAdd,
                 AvailableApprenticeships = null,
-                CourseId = _courseId,
+                //CourseId = _courseId,
                 Name = ""
             };
 
