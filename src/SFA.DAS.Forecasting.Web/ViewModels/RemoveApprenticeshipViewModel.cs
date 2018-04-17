@@ -1,8 +1,4 @@
-﻿using SFA.DAS.Forecasting.Models.Estimation;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-
+﻿
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class RemoveApprenticeshipViewModel
@@ -10,5 +6,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string ApprenticeshipId { get; set; }
         public string EstimationName { get; set; }
         public string HashedAccountId { get; set; }
+        public string CourseTitle { get; set; }
+        public int Level { get; set; }
+        public int NumberOfApprentices { get; set; }
     }
 }

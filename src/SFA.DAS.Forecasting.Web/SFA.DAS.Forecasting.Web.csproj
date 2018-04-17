@@ -323,9 +323,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Orchestrators\Estimations\ApprenticeshipOrchestrator.cs" />
-    <Compile Include="Orchestrators\EstimationOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\EstimationOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\IApprenticeshipOrchestrator.cs" />
-    <Compile Include="Orchestrators\IEstimationOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\IEstimationOrchestrator.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
     <Compile Include="Attributes\AuthorizeForecastingAttribute.cs" />
@@ -349,6 +349,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Mvc\ForcastingRoutePrefix.cs" />
+    <Compile Include="Orchestrators\Exceptions\ApprenticeshipAlreadyRemovedException.cs" />
     <Compile Include="Orchestrators\ForcastingOrchestrator.cs" />
     <Compile Include="Orchestrators\Mappers\Mapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -713,7 +714,7 @@
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
     <Content Include="Views\Estimation\AddApprenticeships_Original.cshtml" />
-    <Content Include="Views\Estimation\RemoveApprenticeships.cshtml" />
+    <Content Include="Views\Estimation\ConfirmApprenticeshipsRemoval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -48,5 +48,12 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 apprenticeship.Id.Equals(virtualApprenticeshipId, StringComparison.OrdinalIgnoreCase));
             return virtualApprenticeship != null && Model.Apprenticeships.Remove(virtualApprenticeship);
         }
+
+        public VirtualApprenticeship FindVirtualApprenticeship(string virtualApprenticeshipId)
+        {
+            var virtualApprenticeship = Model.Apprenticeships?
+                .FirstOrDefault(apprenticeship => apprenticeship.Id.Equals(virtualApprenticeshipId, StringComparison.OrdinalIgnoreCase));
+            return virtualApprenticeship;
+        }
     }
 }
