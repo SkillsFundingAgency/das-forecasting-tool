@@ -82,7 +82,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             try
             {
-                var vm = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(hashedAccountId, id);
+                var vm = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(hashedAccountId, id, estimationName);
                 return View(vm);
             }
             catch (ApprenticeshipAlreadyRemovedException)
@@ -94,11 +94,32 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
-        public async Task<ActionResult> RemoveApprenticeships(string hashedAccountId, string estimationName, string id)
+         [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
+        public async Task<ActionResult> RemoveApprenticeships(RemoveApprenticeshipViewModel viewModel, string hashedAccountId, string estimationName, string id)
         {
-            await _apprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
-            return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName, apprenticeshipRemoved = true });
+            if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)
+            {
+                await _apprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
+                return RedirectToAction(nameof(CostEstimation),
+                    new
+                    {
+                        hashedaccountId = hashedAccountId,
+                        estimateName = estimationName,
+                        apprenticeshipRemoved = true
+                    });
+            }
+            else if (viewModel.ConfirmedDeletion.HasValue && !viewModel.ConfirmedDeletion.Value)
+            {
+                return RedirectToAction(nameof(CostEstimation),
+                   new
+                   {
+                       hashedaccountId = hashedAccountId,
+                       estimateName = estimationName,
+                       apprenticeshipRemoved = false
+                   });
+            }
+
+            return View(nameof(ConfirmApprenticeshipsRemoval),viewModel); 
         }
 
     }

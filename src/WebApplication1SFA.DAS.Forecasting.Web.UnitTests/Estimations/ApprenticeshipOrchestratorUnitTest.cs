@@ -130,7 +130,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
         public async Task ConfirmRemovalShouldReturnValidViewModel()
         {
             //Act
-            var confirmRemovalViewModel = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(HashedAccountId, VirtualApprenticeshipId);
+            var confirmRemovalViewModel = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(HashedAccountId, VirtualApprenticeshipId, EstimationName);
             // Assert
             _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId));
             _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
@@ -146,7 +146,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             _autoMoq.Resolve<AccountEstimationModel>().Apprenticeships = null;
 
             //Act
-            Func<Task> action = async () => { await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(HashedAccountId, VirtualApprenticeshipId); };
+            Func<Task> action = async () => { await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(HashedAccountId, VirtualApprenticeshipId, EstimationName); };
 
             action.ShouldThrow<ApprenticeshipAlreadyRemovedException>();
         }
