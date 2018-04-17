@@ -46,7 +46,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                             Level = o.Level,
                             MonthlyPayment = o.TotalInstallmentAmount,
                             MonthlyPaymentCount = o.TotalInstallments,
-                            StartDate = o.StartDate
+                            StartDate = o.StartDate,
+                            TotalCost = o.TotalCost
                         }),
                 },
                 TransferAllowances = estimationProjector?.Projections?.Select(o => new EstimationTransferAllowanceVewModel

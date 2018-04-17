@@ -145,8 +145,9 @@
                         <th>Apprenticeship <span class="form-hint">Level</span></th>
                         <th>Number of apprentices</th>
                         <th>Start date</th>
-                        <th>Monthly payment</th>
+                        <th>Total Cost </th>
                         <th>Number of monthly payments</th>
+                        <th>Monthly payment</th>
                         <th>Completion payment</th>
                         <th></th>
                     </tr>
@@ -155,15 +156,16 @@
 
                     @foreach (var apprenticeship in Model.Apprenticeships.VirtualApprenticeships)
                     {
-                        <tr>
-                            <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
-                            <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
-                            <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
-                            <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
-                            <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
-                            <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
-                            <td> @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id }) </td>
-                        </tr>
+                    <tr>
+                        <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
+                        <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
+                        <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
+                        <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
+                        <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
+                        <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
+                        <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
+                        <td> @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id }) </td>
+                    </tr>
                     }
                 </tbody>
 
@@ -175,10 +177,11 @@
                             <span class="bold-xsmall"> @Model.Apprenticeships.TotalApprenticeshipCount </span>
                         </td>
                         <td>&nbsp;</td>
+                        <td data-label="Total Cost">@Model.Apprenticeships.TotalCost.FormatCost()</td>
+                        <td>&nbsp;</td>
                         <td data-label="Monthly payment">
                             <span class="bold-xsmall">@Model.Apprenticeships.TotalMonthlyPayment.FormatCost()</span>
                         </td>
-                        <td>&nbsp;</td>
                         <td data-label="Completion payment">
                             <span class="bold-xsmall">@Model.Apprenticeships.TotalCompletionPayment.FormatCost() </span>
                         </td>
