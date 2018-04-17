@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SFA.DAS.Forecasting.Models.Estimation
+﻿namespace SFA.DAS.Forecasting.Models.Estimation
 {
     public class ApprenticeshipToAdd
     {
@@ -13,5 +7,10 @@ namespace SFA.DAS.Forecasting.Models.Estimation
             public int? StartMonth { get; set; }
             public int? StartYear { get; set; }
             public decimal? TotalCost { get; set; }
+
+            public string CourseId { get; set; }
+            public ApprenticeshipCourse AppenticeshipCourse { get;set; }
+
+        //public AddApprenticeshipValidationDetail AddApprenticeshipValidationDetail { get; set; }
     }
 }

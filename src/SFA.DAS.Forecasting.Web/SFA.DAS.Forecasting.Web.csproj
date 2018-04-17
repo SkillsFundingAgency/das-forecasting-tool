@@ -713,7 +713,6 @@
     <Content Include="Views\Estimation\AddApprenticeships.cshtml" />
     <Content Include="Views\Estimation\CostEstimation.cshtml" />
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
-    <Content Include="Views\Estimation\AddApprenticeships_Original.cshtml" />
     <Content Include="Views\Estimation\ConfirmApprenticeshipsRemoval.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using SFA.DAS.Forecasting.Application.Estimations.Services;
+using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
+using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Mvc;
@@ -18,11 +21,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
-
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService)
+        private readonly IVirtualApprenticeshipAddValidator _addValidator;
+        private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
+        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService, IVirtualApprenticeshipAddValidator addValidator, IApprenticeshipCourseService apprenticeshipCourseService)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
+            _addValidator = addValidator;
+            _apprenticeshipCourseService = apprenticeshipCourseService;
             _apprenticeshipOrchestrator = apprenticeshipOrchestrator;
         }
 
@@ -61,6 +67,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
         {
             var vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            vm.AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail();
 
             return View(vm);
         }
@@ -70,6 +77,27 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
         public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
+            var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
+
+            vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            vm.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
+
+            if (vm.ApprenticeshipToAdd.CourseId is null)
+            {
+                vm.ApprenticeshipToAdd.AppenticeshipCourse = null;
+            }
+            else
+            {
+                vm.ApprenticeshipToAdd.AppenticeshipCourse = _apprenticeshipCourseService.GetApprenticeshipCourse(vm.ApprenticeshipToAdd.CourseId);
+            }
+
+            vm.AddApprenticeshipValidationDetail = _addValidator.ValidateDetails(vm.ApprenticeshipToAdd);
+
+            if (!vm.AddApprenticeshipValidationDetail.IsValid)
+            {
+                return View("AddApprenticeships",vm);
+            }
+
             await _apprenticeshipOrchestrator.StoreApprenticeship(vm, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });

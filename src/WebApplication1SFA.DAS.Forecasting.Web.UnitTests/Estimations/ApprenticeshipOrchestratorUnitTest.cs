@@ -167,7 +167,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             var addApprenticeshipViewModel = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
             addApprenticeshipViewModel.Should().NotBeNull();
             addApprenticeshipViewModel.Name.Should().NotBeNull();
-            addApprenticeshipViewModel.CourseId.Should().BeNull();
+            addApprenticeshipViewModel.ApprenticeshipToAdd.CourseId.Should().BeNull();
             addApprenticeshipViewModel.ApprenticeshipToAdd.ShouldBeEquivalentTo(new ApprenticeshipToAdd());
             addApprenticeshipViewModel.AvailableApprenticeships.ShouldBeEquivalentTo(_apprenticeshipCourses);
         }

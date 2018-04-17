@@ -11,7 +11,7 @@
             <a href="#" class="link-back">Back</a>
             @Html.HiddenFor(model => model.Name)
               
-            <div class="error-summary hidden" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+            <div class="error-summary @Model.AddApprenticeshipValidationDetail.ValidationSummary" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
                 <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
                     Errors to fix
                 </h1>
@@ -19,15 +19,15 @@
                 <p>Please check the details you have entered against the information that's needed.</p>
 
                 <ul class="error-summary-list list list-links">
-                    <li class="hidden" id="noStandardSelected"><a href="#standardNew">You must choose 1 apprenticeship</a></li>
-                    <li class="hidden" id="noNumberOfApprentices"><a href="#cohortsNew">You must enter 1 or more apprentices</a></li>
-                    <li class="hidden" id="noLength"><a href="#levy-length">You must enter 12 or more months</a></li>
-                    <li class="hidden" id="shortLength"><a href="#levy-length">You must enter 12 or more months</a></li>
-                    <li class="hidden" id="wrongYears"><a href="#startDateYear">The start date entered must be in the next 4 years</a></li>
-                    <li class="hidden" id="wrong2018month"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
-                    <li class="hidden" id="wrong2019month"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
-                    <li class="hidden" id="overCap"><a href="#levy-value">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
-                    <li class="hidden" id="noCost"><a href="#levy-value">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoApprenticeshipSelected" id="noStandardSelected"><a href="#standardNew">You must choose 1 apprenticeship</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfApprentices" id="noNumberOfApprentices"><a href="#cohortsNew">You must enter 1 or more apprentices</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfMonths" id="noLength"><a href="#levy-length">You must enter 12 or more months</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.ShortNumberOfMonths" id="shortLength"><a href="#levy-length">You must enter 12 or more months</a></li>
+                @*    <li class="@Model.AddApprenticeshipValidationDetail.WrongYears" id="wrongYears"><a href="#startDateYear">The start date entered must be in the next 4 years</a></li>*@
+                    <li class="@Model.AddApprenticeshipValidationDetail.WrongDate" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
+                   @* <li class="hidden" id="wrong2019month"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>*@
+                    <li class="@Model.AddApprenticeshipValidationDetail.OverCap" id="overCap"><a href="#levy-value">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoCost" id="noCost"><a href="#levy-value">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
                 </ul>
             </div>
 
@@ -68,7 +68,7 @@
 
                 <div class="form-group">
                     <label class="form-label-bold" for="chosse-apprenticeship">Choose apprenticeship</label>
-                    @Html.DropDownListFor(model => model.CourseId,  @Model.ApprenticeshipList(),new { @class="form-control form-control-3-4",  aria_label="Apprenticeship training course", name="chosse-apprenticeship", id="chosse-apprenticeship" })
+                    @Html.DropDownListFor(model => model.ApprenticeshipToAdd.CourseId,  @Model.ApprenticeshipList(),new { @class="form-control form-control-3-4",  aria_label="Apprenticeship training course", name="chosse-apprenticeship", id="chosse-apprenticeship" })
                </div>
 
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using SFA.DAS.Forecasting.Domain.Shared.Validation;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
@@ -10,14 +11,16 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string Name { get; set; }
         public IEnumerable<ApprenticeshipCourse> AvailableApprenticeships { get; set; }
 
-        public string CourseId { get; set; }
-        public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
+          public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
+
+
+        public AddApprenticeshipValidationDetail AddApprenticeshipValidationDetail { get; set; }
 
         public IEnumerable<SelectListItem> ApprenticeshipList()
         {
             var res = AvailableApprenticeships.Select(item => new SelectListItem {Value = item.Id, Text = item.Title}).ToList();
 
-            res.Insert(0, new SelectListItem { Selected = true, Value = "noselection", Text = "Select one" } );
+            res.Insert(0, new SelectListItem { Selected = true, Value = "", Text = "Select one" } );
             return  res;
         }
     }
