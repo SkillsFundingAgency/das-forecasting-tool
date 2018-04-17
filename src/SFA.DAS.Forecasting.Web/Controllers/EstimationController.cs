@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
         public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            var vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup(hashedAccountId, estimationName);
+            var vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
 
             return View(vm);
         }

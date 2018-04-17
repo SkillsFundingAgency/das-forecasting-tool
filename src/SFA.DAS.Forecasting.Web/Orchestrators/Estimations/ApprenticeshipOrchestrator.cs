@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         }
 
 
-        public async Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup(string hashedAccountId, string estimationName)
+        public async Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup()
         {
             var result = new AddApprenticeshipViewModel
             {
@@ -50,9 +50,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var task = Task.Run(async () => await _accountEstimationRepository.Get(accountId).ConfigureAwait(false));
 
-
-            var accountEstimation = task.Result;
-            
+            var accountEstimation = task.Result; 
 
             accountEstimation.AddVirtualApprenticeship(courseId,
                                                         courseTitle,
