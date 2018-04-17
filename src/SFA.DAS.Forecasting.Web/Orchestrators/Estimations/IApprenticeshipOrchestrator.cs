@@ -11,6 +11,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         Task RemoveApprenticeship(string hashedAccountId, string apprenticeshipId);
 
-        Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId);
+        Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName);
     }
 }

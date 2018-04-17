@@ -50,19 +50,19 @@
             </ul>
 
             <p>
-                @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
-                {
-                    <a class="button" href="apprenticeship/add"> Add more apprenticeships to your current estimate</a>
+                @{
+                    var addApprenticeshipsCaption = "Add apprenticeships to your current estimate";
+                    if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
+                    {
+                        addApprenticeshipsCaption = "Add more apprenticeships to your current estimate";
+                    }
+
+                    <a class="button" href="@Url.RouteUrl("AddApprenticeships",new { hashedAccountId = Model.HashedAccountId,  estimationName = Model.EstimationName})">
+                        @addApprenticeshipsCaption
+                    </a>
+
                 }
-                else
-                {
-                    <a class="button" href="@Url.RouteUrl("AddApprenticeships",
-                                            new
-                                            {
-                                                hashedAccountId = Model.HashedAccountId,
-                                                estimationName = Model.EstimationName,
-                                            })">Add apprenticeships to your current estimate</a>
-                }
+
             </p>
 
             @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
@@ -92,11 +92,11 @@
 
     <div id="tabs-container">
         <ul class="tabs-menu">
-            <li ><a href="#tab-1">Remaining transfer allowance</a></li>
-            <li class="current" ><a href="#tab-2">Apprenticeships added</a></li>
+            <li><a href="#tab-1">Remaining transfer allowance</a></li>
+            <li class="current"><a href="#tab-2">Apprenticeships added</a></li>
         </ul>
 
-        <div id="tab-1" class="tab-content" style="display: none;" >
+        <div id="tab-1" class="tab-content" style="display: none;">
 
             @{
                 var tableBodyClass = Model.CanFund ? "" : "errorTable";
@@ -138,7 +138,7 @@
 
 
 
-        <div id="tab-2" class="tab-content"  >
+        <div id="tab-2" class="tab-content">
             <table class="small responsive">
                 <thead>
                     <tr>
@@ -162,7 +162,7 @@
                             <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
                             <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
                             <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
-                            <td> @Html.ActionLink("Remove", "", "", new { id = apprenticeship.Id }, null) </td>
+                            <td> @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id }) </td>
                         </tr>
                     }
                 </tbody>
