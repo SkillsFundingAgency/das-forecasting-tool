@@ -5,8 +5,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
     public interface IApprenticeshipOrchestrator
     {
-        Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup(string hashedAccountId, string estimationName);
+        Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup();
 
-        void StoreApprenticeship(AddApprenticeshipViewModel viewModel, string hashedAccountId, string estimationName);
+        Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName);
+
+        Task RemoveApprenticeship(string hashedAccountId, string apprenticeshipId);
+
+        Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName);
     }
 }

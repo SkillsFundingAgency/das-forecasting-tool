@@ -10,6 +10,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int Level { get; set; }
         public int ApprenticesCount { get; set; }
         public DateTime StartDate  { get; set; }
+        public decimal TotalCost { get; set; }
         public decimal MonthlyPayment { get; set; }
         public int MonthlyPaymentCount { get; set; }
         public decimal CompletionPayment { get; set; }
