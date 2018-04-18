@@ -16,10 +16,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
                 NoNumberOfMonths = "hidden",
                 NoApprenticeshipSelected = "hidden",
                 NoNumberOfApprentices = "hidden",
+                NoStartMonth = "hidden",
+                NoStartYear = "hidden",
                 OverCap = "hidden",
                 ShortNumberOfMonths = "hidden",
                 ValidationSummary = "hidden",
-                WrongDate = "hidden"
+                LateDate = "hidden",
+                StartDateInPast = "hidden"
             };
         }
 
@@ -50,11 +53,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
                 validationDetails.IsValid = false;
             }
 
-            if (!IsValidDate(apprenticeshipToAdd) )
-            {
-                validationDetails.WrongDate = string.Empty;
-                validationDetails.IsValid = false;
-            }
+            validationDetails = ProcessDatesAndReturnValidity(apprenticeshipToAdd, validationDetails);
 
             if (!apprenticeshipToAdd.TotalCost.HasValue || apprenticeshipToAdd.TotalCost <= 0)
             {
@@ -85,11 +84,27 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
             return validationDetails;
         }
 
-        private bool IsValidDate(ApprenticeshipToAdd apprenticeshipToAdd)
+        private AddApprenticeshipValidationDetail ProcessDatesAndReturnValidity(ApprenticeshipToAdd apprenticeshipToAdd, AddApprenticeshipValidationDetail validationDetails)
         {
-            if (!apprenticeshipToAdd.StartYear.HasValue || !apprenticeshipToAdd.StartMonth.HasValue)
+            var isValid = true;
+
+            if (!apprenticeshipToAdd.StartMonth.HasValue || apprenticeshipToAdd.StartMonth.Value < 1 || apprenticeshipToAdd.StartMonth.Value > 12)
             {
-                return false;
+                validationDetails.NoStartMonth = string.Empty;
+                isValid = false;
+            }
+
+            if (!apprenticeshipToAdd.StartYear.HasValue)
+            {
+                validationDetails.NoStartYear = string.Empty;
+                isValid = false;
+            }
+
+            if (!isValid)
+            {
+                validationDetails.ValidationSummary = string.Empty;
+                validationDetails.IsValid = false;
+                return validationDetails;
             }
 
             var startYear = apprenticeshipToAdd.StartYear;
@@ -100,9 +115,27 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
             
             var dateEntered = new DateTime((int)startYear, (int)apprenticeshipToAdd.StartMonth,1,0,0,0);
             var minDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
-            var maxDate = minDate.AddYears(4);
+            var maxDate = minDate.AddYears(4).AddMilliseconds(-1);
 
-            return dateEntered >= minDate && dateEntered < maxDate;
+            if (dateEntered < minDate)
+            {
+                validationDetails.StartDateInPast = string.Empty;
+                isValid = false;
+            }
+
+            if (dateEntered > maxDate)
+            {
+                validationDetails.LateDate = string.Empty;
+                isValid = false;
+            }
+            
+            if (!isValid)
+            {
+                validationDetails.ValidationSummary = string.Empty;
+                validationDetails.IsValid = false;
+            }
+
+            return validationDetails;
         }
     }
 

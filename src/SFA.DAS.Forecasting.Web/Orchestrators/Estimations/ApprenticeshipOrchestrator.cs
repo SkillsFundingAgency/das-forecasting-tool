@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
+using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
@@ -13,13 +14,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
+        private readonly IVirtualApprenticeshipAddValidator _addValidator;
         private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
 
-        public ApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
+        public ApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService, IVirtualApprenticeshipAddValidator addValidator)
         {
             _hashingService = hashingService;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
+            _addValidator = addValidator;
         }
 
 
@@ -31,6 +34,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
                 AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses()
             };
+
+            result.AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail();
 
             return await Task.FromResult(result);
         }
@@ -56,6 +61,48 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             await _accountEstimationRepository.Store(accountEstimation);
         }
+      
+        public async Task<AddApprenticeshipViewModel> ValidateAddApprenticeship(AddApprenticeshipViewModel vm)
+        {
+            var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
+
+            var viewModel = await GetApprenticeshipAddSetup();
+            viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
+
+            if (viewModel.ApprenticeshipToAdd.CourseId is null)
+            {
+                viewModel.ApprenticeshipToAdd.AppenticeshipCourse = null;
+            }
+            else
+            {
+                viewModel.ApprenticeshipToAdd.AppenticeshipCourse =
+                    _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.ApprenticeshipToAdd.CourseId);
+            }
+
+            viewModel.AddApprenticeshipValidationDetail = _addValidator.ValidateDetails(viewModel.ApprenticeshipToAdd);
+
+            viewModel = AdjustTotalCostApprenticeship(viewModel);
+
+            return viewModel;
+        }
+
+        public AddApprenticeshipViewModel AdjustTotalCostApprenticeship(AddApprenticeshipViewModel viewModel)
+        {
+            var fundingCap = viewModel.ApprenticeshipToAdd?.AppenticeshipCourse?.FundingCap;
+            var noOfApprenticeships = viewModel.ApprenticeshipToAdd?.ApprenticesCount;
+
+                if (fundingCap.HasValue &&
+            viewModel.ApprenticeshipToAdd.TotalCost.HasValue &&
+            noOfApprenticeships.HasValue && viewModel.ApprenticeshipToAdd.TotalCost > (fundingCap* noOfApprenticeships))
+            {
+                viewModel.ApprenticeshipToAdd.TotalCost = fundingCap* noOfApprenticeships;
+            }
+
+            return viewModel;
+        }
+
+
+
 
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId)
         {
@@ -90,5 +137,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return await _accountEstimationRepository.Get(accountId);
         }
 
+        
     }
 }

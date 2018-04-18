@@ -19,15 +19,16 @@
                 <p>Please check the details you have entered against the information that's needed.</p>
 
                 <ul class="error-summary-list list list-links">
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoApprenticeshipSelected" id="noStandardSelected"><a href="#standardNew">You must choose 1 apprenticeship</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfApprentices" id="noNumberOfApprentices"><a href="#cohortsNew">You must enter 1 or more apprentices</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfMonths" id="noLength"><a href="#levy-length">You must enter 12 or more months</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.ShortNumberOfMonths" id="shortLength"><a href="#levy-length">You must enter 12 or more months</a></li>
-                @*    <li class="@Model.AddApprenticeshipValidationDetail.WrongYears" id="wrongYears"><a href="#startDateYear">The start date entered must be in the next 4 years</a></li>*@
-                    <li class="@Model.AddApprenticeshipValidationDetail.WrongDate" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
-                   @* <li class="hidden" id="wrong2019month"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>*@
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoApprenticeshipSelected" id="noStandardSelected"><a href="#select2-chosse-apprenticeship-container">You must choose 1 apprenticeship</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfApprentices" id="noNumberOfApprentices"><a href="#no-of-app">Make sure you have at least 1 or more apprentices</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfMonths" id="noLength"><a href="#levy-length">The number of months was not entered</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.ShortNumberOfMonths" id="shortLength"><a href="#levy-length">The number of months must be 12 months or more</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoStartMonth" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoStartYear" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.LateDate" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.StartDateInPast" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
                     <li class="@Model.AddApprenticeshipValidationDetail.OverCap" id="overCap"><a href="#levy-value">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoCost" id="noCost"><a href="#levy-value">The agreed total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.NoCost" id="noCost"><a href="#levy-value">The total training cost was not entered</a></li>
                 </ul>
             </div>
 
