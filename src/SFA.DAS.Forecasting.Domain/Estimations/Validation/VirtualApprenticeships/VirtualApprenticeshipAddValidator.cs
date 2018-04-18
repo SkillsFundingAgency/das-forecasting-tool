@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
                 validationDetails.IsValid = false;
             }
 
-            if (apprenticeshipToAdd.NumberOfMonths == null || apprenticeshipToAdd.NumberOfMonths <= 0)
+            if (apprenticeshipToAdd.NumberOfMonths == null)
             {
                 validationDetails.NoNumberOfMonths = string.Empty;
                 validationDetails.IsValid = false;
@@ -66,14 +66,12 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
 
             if (apprenticeshipToAdd.TotalCost.HasValue 
                 && fundingCap.HasValue 
-                && noOfApprenticeships.HasValue 
+                && noOfApprenticeships.HasValue  && noOfApprenticeships.Value > 0
                 && apprenticeshipToAdd.TotalCost > (fundingCap * noOfApprenticeships))
             {
                 validationDetails.OverCap = string.Empty;
                 validationDetails.IsValid = false;
             }
-
-
 
             if (!validationDetails.IsValid)
             {
@@ -84,7 +82,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
             return validationDetails;
         }
 
-        private AddApprenticeshipValidationDetail ProcessDatesAndReturnValidity(ApprenticeshipToAdd apprenticeshipToAdd, AddApprenticeshipValidationDetail validationDetails)
+        public AddApprenticeshipValidationDetail ProcessDatesAndReturnValidity(ApprenticeshipToAdd apprenticeshipToAdd, AddApprenticeshipValidationDetail validationDetails)
         {
             var isValid = true;
 
@@ -144,6 +142,9 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
         AddApprenticeshipValidationDetail GetCleanValidationDetail();
 
         AddApprenticeshipValidationDetail ValidateDetails(ApprenticeshipToAdd apprenticeshipToAdd);
+
+        AddApprenticeshipValidationDetail ProcessDatesAndReturnValidity(ApprenticeshipToAdd apprenticeshipToAdd,
+            AddApprenticeshipValidationDetail validationDetails);
 
     }
 }

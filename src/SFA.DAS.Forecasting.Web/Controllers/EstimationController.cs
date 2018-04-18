@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
 
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService, IVirtualApprenticeshipAddValidator addValidator, IApprenticeshipCourseService apprenticeshipCourseService)
+        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService, IApprenticeshipCourseService apprenticeshipCourseService)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;

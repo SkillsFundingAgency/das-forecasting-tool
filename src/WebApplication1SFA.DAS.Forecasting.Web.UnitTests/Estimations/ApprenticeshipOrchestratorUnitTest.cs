@@ -164,7 +164,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
         [Test]
         public async Task WhenRetrievingGetApprenticeshipAddSetupItShouldCallCourseServiceGetCourses()
         {
-            var addApprenticeshipViewModel = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
             _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId), Times.Never());
             _autoMoq.Verify<IApprenticeshipCourseService>(o => o.GetApprenticeshipCourses());
             _autoMoq.Verify<IVirtualApprenticeshipAddValidator>(o => o.GetCleanValidationDetail());
