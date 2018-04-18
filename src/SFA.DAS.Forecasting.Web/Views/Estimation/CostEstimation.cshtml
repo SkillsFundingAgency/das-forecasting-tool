@@ -105,11 +105,8 @@
                         {
                             foreach (var costEstimate in Model.TransferAllowances)
                             {
-                                if (costEstimate.IsLessThanCost)
-                                {
-                                    tableRowClass = "error-row";
-                                    tableCellClass = "error-message";
-                                }
+                                tableRowClass = costEstimate.IsLessThanCost ? "error-row" : "";
+                                tableCellClass = costEstimate.IsLessThanCost ? "error-messsage" : "";
 
                                 <tr class="@tableRowClass">
                                     <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
