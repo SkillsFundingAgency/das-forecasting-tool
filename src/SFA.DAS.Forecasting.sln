@@ -53,7 +53,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.StubApi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.PreLoad.Functions", "SFA.DAS.Forecasting.PreLoad.Functions\SFA.DAS.Forecasting.PreLoad.Functions.csproj", "{1F221B45-8924-4260-89FB-7C94F4FB3E42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions", "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions\SFA.DAS.Forecasting.ApprenticeshipCourses.Functions.csproj", "{B1615636-19E9-499C-870E-65145E9E924B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions", "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions\SFA.DAS.Forecasting.ApprenticeshipCourses.Functions.csproj", "{B1615636-19E9-499C-870E-65145E9E924B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

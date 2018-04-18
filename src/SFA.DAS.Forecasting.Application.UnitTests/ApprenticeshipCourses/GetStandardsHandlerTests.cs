@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
         {
             var handler = _moqer.Resolve<GetStandardsHandler>();
             var courses = await handler.Handle(new RefreshCourses { RequestTime = DateTime.Now.AddMinutes(-4) });
-            Assert.AreEqual(0, courses.Count);
+            Assert.AreEqual(1, courses.Count);
         }
     }
 }
