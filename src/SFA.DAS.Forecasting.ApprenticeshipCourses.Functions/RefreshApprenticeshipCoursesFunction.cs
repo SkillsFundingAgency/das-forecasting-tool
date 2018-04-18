@@ -9,12 +9,11 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
     public static class RefreshApprenticeshipCoursesFunction
     {
         [FunctionName("RefreshApprenticeshipCoursesFunction")]
-        public static void Run([TimerTrigger("0 0 */1 * * *")]TimerInfo myTimer, TraceWriter log,
-            [Queue(QueueNames.GetStandards)]ICollector<RefreshCourses> getStandards)
+        [return:Queue(QueueNames.GetStandards)]
+        public static RefreshCourses Run([TimerTrigger("0 0 */1 * * *")]TimerInfo myTimer, TraceWriter log)
         {
             log.Verbose("Triggering scheduled run of refresh apprenticeship standards.");
-            getStandards.Add(new RefreshCourses { RequestTime = DateTime.Now });
-            log.Info("Triggered scheduled run of refresh apprenticeship standards.");
+            return new RefreshCourses { RequestTime = DateTime.Now };
         }
     }
 }

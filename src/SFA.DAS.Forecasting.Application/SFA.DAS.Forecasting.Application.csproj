@@ -167,7 +167,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApprenticeshipCourses\Handlers\GetStandardsHandler.cs" />
+    <Compile Include="ApprenticeshipCourses\Handlers\StoreCourseHandler.cs" />
+    <Compile Include="ApprenticeshipCourses\Services\ApprenticeshipCourseDataService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\StandardsService.cs" />
+    <Compile Include="ApprenticeshipCourses\Services\StandardSummaryMapper.cs" />
     <Compile Include="Balance\Services\AccountBalanceService.cs" />
     <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
@@ -175,7 +178,6 @@
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
-    <Compile Include="Estimations\Services\ApprenticeshipCourseService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -13,9 +14,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly Mapper _mapper;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
-        private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
+        private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
-        public ApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService)
+        public ApprenticeshipOrchestrator(IHashingService hashingService, Mapper mapper, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService)
         {
             _hashingService = hashingService;
             _mapper = mapper;
@@ -30,20 +31,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             {
                 Name = "Add Apprenticeships",
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
-                AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses()
+                AvailableApprenticeships = _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
             };
 
             return await Task.FromResult(result);
         }
 
-     
+
 
         public void StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var courseId = vm.CourseId;
-
             var apprenticeshipToAdd = vm.ApprenticeshipToAdd;
-            var course = _apprenticeshipCourseService.GetApprenticeshipCourse(vm.CourseId);
+            var course = Task.Run(async () => await _apprenticeshipCourseService.GetApprenticeshipCourse(vm.CourseId).ConfigureAwait(false))
+                .Result;
             var courseTitle = course.Title;
             var level = course.Level;
 
@@ -52,7 +53,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
 
             var accountEstimation = task.Result;
-            
+
 
             accountEstimation.AddVirtualApprenticeship(courseId,
                                                         courseTitle,
