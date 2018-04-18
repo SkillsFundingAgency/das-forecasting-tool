@@ -9,5 +9,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string CourseTitle { get; set; }
         public int Level { get; set; }
         public int NumberOfApprentices { get; set; }
+        public bool? ConfirmedDeletion { get; set; } = false;
+        public bool HasConfirmed => ConfirmedDeletion.HasValue;
     }
 }

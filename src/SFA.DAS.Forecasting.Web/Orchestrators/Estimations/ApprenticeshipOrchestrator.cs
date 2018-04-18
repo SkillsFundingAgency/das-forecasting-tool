@@ -104,7 +104,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
 
 
-        public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId)
+        public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
             var estimations = await GetAccountAutomation(hashedAccountId);
             var virtualApprenticeships = estimations.FindVirtualApprenticeship(apprenticeshipsId);
@@ -117,7 +117,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 HashedAccountId = hashedAccountId,
                 NumberOfApprentices = virtualApprenticeships.ApprenticesCount,
                 CourseTitle = virtualApprenticeships.CourseTitle,
-                Level = virtualApprenticeships.Level
+                Level = virtualApprenticeships.Level,
+                EstimationName = estimationName
             };
 
             return vm;

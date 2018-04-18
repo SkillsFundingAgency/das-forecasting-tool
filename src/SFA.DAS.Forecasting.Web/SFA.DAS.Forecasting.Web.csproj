@@ -723,6 +723,9 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Content\src\sass\_tabs.scss" />
+    <Content Include="Content\src\sass\forms\_form-date.scss" />
+    <Content Include="Content\src\sass\forms\_form-multiple-choice.scss" />
+    <Content Include="Content\src\sass\forms\_form-validation.scss" />
     <None Include="Project_Readme.html" />
     <Content Include="Views\Forecasting\Apprenticeships.cshtml" />
   </ItemGroup>

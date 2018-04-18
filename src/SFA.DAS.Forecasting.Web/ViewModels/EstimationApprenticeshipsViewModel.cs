@@ -10,5 +10,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int TotalApprenticeshipCount => VirtualApprenticeships?.Sum(o => o.ApprenticesCount) ?? 0;
         public decimal TotalMonthlyPayment => VirtualApprenticeships?.Sum(o => o.MonthlyPayment) ?? 0;
         public decimal TotalCompletionPayment => VirtualApprenticeships?.Sum(o => o.CompletionPayment) ?? 0;
+       public decimal TotalCost => VirtualApprenticeships?.Sum(o => o.TotalCost) ?? 0;
     }
 }
