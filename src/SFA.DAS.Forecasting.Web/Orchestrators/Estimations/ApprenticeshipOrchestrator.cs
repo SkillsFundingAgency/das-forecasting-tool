@@ -1,4 +1,5 @@
 ﻿
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
@@ -30,7 +31,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             {
                 Name = "Add Apprenticeships",
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
-                AvailableApprenticeships = _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
+                AvailableApprenticeships = _apprenticeshipCourseService
+                    .GetAllStandardApprenticeshipCourses()
+                    .OrderBy(course => course.Title)
+                    .ToList()
             };
             return result;
         }
