@@ -8,6 +8,8 @@ using AutoMoq;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Domain.Estimations;
+using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
+using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.HashingService;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -39,6 +41,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
         private decimal? _totalCost;
         private List<ApprenticeshipCourse> _apprenticeshipCourses;
         private AddApprenticeshipViewModel _addApprenticeshipViewModel;
+        private AddApprenticeshipValidationDetail _addApprenticeshipValidationDetail;
 
         [SetUp]
         public void Setup()
@@ -68,6 +71,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             _courseId = "ABC";
             _totalCost = 1234;
 
+            _addApprenticeshipValidationDetail = new AddApprenticeshipValidationDetail();
+
             _apprenticeshipCourses = new List<ApprenticeshipCourse>
             {
                 new ApprenticeshipCourse
@@ -93,14 +98,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
                 NumberOfMonths = _numberOfMonths,
                 StartYear = _startYear,
                 StartMonth = _startMonth,
-                TotalCost = _totalCost
+                TotalCost = _totalCost,
+                AppenticeshipCourse = _apprenticeshipCourse,
+                CourseId = _courseId
             };
 
             _addApprenticeshipViewModel = new AddApprenticeshipViewModel
             {
                 ApprenticeshipToAdd = _apprenticeshipToAdd,
                 AvailableApprenticeships = null,
-                //CourseId = _courseId,
                 Name = ""
             };
 
@@ -115,10 +121,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             _autoMoq.GetMock<IApprenticeshipCourseService>()
                 .Setup(x => x.GetApprenticeshipCourses())
                 .Returns(_apprenticeshipCourses);
-
+            
             _autoMoq.GetMock<IApprenticeshipCourseService>()
                 .Setup(x => x.GetApprenticeshipCourse(_courseId))
                 .Returns(_apprenticeshipCourse);
+
+            _autoMoq.GetMock<IVirtualApprenticeshipAddValidator>()
+                .Setup(x => x.GetCleanValidationDetail())
+                .Returns(_addApprenticeshipValidationDetail);
+          
 
             _apprenticeshipOrchestrator = _autoMoq.Resolve<ApprenticeshipOrchestrator>();
 
@@ -156,6 +167,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             var addApprenticeshipViewModel = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
             _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId), Times.Never());
             _autoMoq.Verify<IApprenticeshipCourseService>(o => o.GetApprenticeshipCourses());
+            _autoMoq.Verify<IVirtualApprenticeshipAddValidator>(o => o.GetCleanValidationDetail());
         }
 
 
@@ -168,6 +180,93 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             addApprenticeshipViewModel.ApprenticeshipToAdd.CourseId.Should().BeNull();
             addApprenticeshipViewModel.ApprenticeshipToAdd.ShouldBeEquivalentTo(new ApprenticeshipToAdd());
             addApprenticeshipViewModel.AvailableApprenticeships.ShouldBeEquivalentTo(_apprenticeshipCourses);
+            addApprenticeshipViewModel.AddApprenticeshipValidationDetail.ShouldBeEquivalentTo(_addApprenticeshipValidationDetail);
+        }
+
+        [Test]
+        public void WhenStoringTheApprenticeshipItShouldStoreWithSuccessfulValidation()
+        {
+
+            var validationResults = new List<ValidationResult>();
+
+            _autoMoq.GetMock<IVirtualApprenticeshipValidator>()
+                .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
+                .Returns(validationResults);
+
+            _apprenticeshipOrchestrator.StoreApprenticeship(_addApprenticeshipViewModel, HashedAccountId, EstimationName);
+            _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId), Times.Once());
+            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
+            _autoMoq.Verify<IVirtualApprenticeshipValidator>(o => o.Validate(It.IsAny<VirtualApprenticeship>()));
+            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Store(It.IsAny<AccountEstimation>()));
+        }
+
+        [Test]
+        public void WhenValidatingTheApprenticeshipWithCourseItShouldCallValidatorFunctions()
+        {
+            _autoMoq.GetMock<IVirtualApprenticeshipAddValidator>()
+                .Setup(x => x.ValidateDetails(It.IsAny<ApprenticeshipToAdd>()))
+                .Returns(_addApprenticeshipValidationDetail);
+
+            var vm = _apprenticeshipOrchestrator.ValidateAddApprenticeship(_addApprenticeshipViewModel);
+            _autoMoq.Verify<IVirtualApprenticeshipAddValidator>(o => o.GetCleanValidationDetail(), Times.Once());
+            _autoMoq.Verify<IVirtualApprenticeshipAddValidator>(o => o.ValidateDetails(It.IsAny<ApprenticeshipToAdd>()), Times.Once());
+            _autoMoq.Verify<IApprenticeshipCourseService>(o => o.GetApprenticeshipCourse(It.IsAny<string>()), Times.Once());       
+        }
+
+        [Test]
+        public void WhenValidatingTheApprenticeshipWithoutCourseItShouldCallValidatorFunctions()
+        {
+            var vmViewModel = new AddApprenticeshipViewModel
+            {
+                ApprenticeshipToAdd = _apprenticeshipToAdd,
+                AvailableApprenticeships = null,
+                Name = ""
+            };
+
+            vmViewModel.ApprenticeshipToAdd.CourseId = null;
+            vmViewModel.ApprenticeshipToAdd.AppenticeshipCourse = null;
+
+
+            _autoMoq.GetMock<IVirtualApprenticeshipAddValidator>()
+                .Setup(x => x.ValidateDetails(It.IsAny<ApprenticeshipToAdd>()))
+                .Returns(_addApprenticeshipValidationDetail);
+
+            var vm = _apprenticeshipOrchestrator.ValidateAddApprenticeship(vmViewModel);
+            _autoMoq.Verify<IVirtualApprenticeshipAddValidator>(o => o.GetCleanValidationDetail(), Times.Once());
+            _autoMoq.Verify<IVirtualApprenticeshipAddValidator>(o => o.ValidateDetails(It.IsAny<ApprenticeshipToAdd>()), Times.Once());
+            _autoMoq.Verify<IApprenticeshipCourseService>(o => o.GetApprenticeshipCourse(It.IsAny<string>()), Times.Never());
+        }
+
+
+        [TestCase(10000,1,5000,5000)]
+        [TestCase(5000, 3, 14000, 14000)]
+        [TestCase(5000, 3, 16000, 15000)]
+        [TestCase(null, 7, 16000, 16000)]
+        [TestCase(5000, null, 16000, 16000)]
+        [TestCase(null, null, 16000, 16000)]
+        [TestCase(5000, 3, null, null)]
+        public void WhenAdjustingTotalCostGiveExpectedResults(decimal? fundingCap,int? noOfApprenticeships, decimal? totalCost, decimal? expectedTotalCost)
+        {
+            ApprenticeshipCourse apprenticeshipCourse = null;
+
+            if (fundingCap.HasValue)
+                apprenticeshipCourse = new ApprenticeshipCourse {FundingCap = fundingCap.Value};
+
+            var model = new AddApprenticeshipViewModel
+            {
+                ApprenticeshipToAdd = new ApprenticeshipToAdd
+                {
+                    AppenticeshipCourse = apprenticeshipCourse,
+                    ApprenticesCount = noOfApprenticeships,
+                    TotalCost = totalCost
+                }
+            };
+
+
+           var vm = _apprenticeshipOrchestrator.AdjustTotalCostApprenticeship(model);
+            vm.ApprenticeshipToAdd.TotalCost.Should().Be(expectedTotalCost);
+
+
         }
     }
 }

@@ -4,7 +4,6 @@ using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
-using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -32,12 +31,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             {
                 Name = "Add Apprenticeships",
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
-                AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses()
-            };
+                AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses(),
+                AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail()
+        };
 
-            result.AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail();
-
-            return await Task.FromResult(result);
+                return await Task.FromResult(result);
         }
 
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
@@ -100,9 +98,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             return viewModel;
         }
-
-
-
 
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
