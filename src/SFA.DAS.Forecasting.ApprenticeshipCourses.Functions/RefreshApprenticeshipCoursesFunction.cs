@@ -16,4 +16,6 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
             return new RefreshCourses { RequestTime = DateTime.Now };
         }
     }
+
+
 }
