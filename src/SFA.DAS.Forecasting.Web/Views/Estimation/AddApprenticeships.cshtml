@@ -74,7 +74,7 @@
 
                 <div class="form-group no-of-apprentice">
                     <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new {@class="form-control", aria_label = "Number of apprentices", min = "1", max = "999", name = "no-of-app", id = "no-of-app", type = "number" })
+                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new {@class="form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number" })
                 </div>
 
 
@@ -91,11 +91,11 @@
                     <div class="form-date">
                         <div class="form-group form-group-month">
                             <label for="startDateMonth">Month</label>
-                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", min = "0", max = "12", placeholder = "MM" })
+                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*",  placeholder = "MM" })
                                 </div>
                         <div class="form-group form-group-year">
                             <label for="startDateYear">Year</label>
-                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", min = "17", max = "2021", placeholder="YYYY" })
+                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder="YYYY" })
                         </div>
                     </div>
 

@@ -37,8 +37,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-           
-
             var apprenticeshipToAdd = vm.ApprenticeshipToAdd;
             var course = vm.ApprenticeshipToAdd.AppenticeshipCourse;
             var courseId = course.Id;

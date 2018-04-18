@@ -8,8 +8,6 @@ using AutoMoq;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Domain.Estimations;
-using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
-using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.HashingService;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -171,38 +169,5 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
             addApprenticeshipViewModel.ApprenticeshipToAdd.ShouldBeEquivalentTo(new ApprenticeshipToAdd());
             addApprenticeshipViewModel.AvailableApprenticeships.ShouldBeEquivalentTo(_apprenticeshipCourses);
         }
-
-        [Test]
-        public void WhenStoringTheApprenticeshipItShouldStoreWithSuccessfulValidation()
-        {
-
-            var validationResults = new List<ValidationResult>();
-
-            _autoMoq.GetMock<IVirtualApprenticeshipValidator>()
-                .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
-                .Returns(validationResults);
-
-            _apprenticeshipOrchestrator.StoreApprenticeship(_addApprenticeshipViewModel, HashedAccountId, EstimationName);
-            _autoMoq.Verify<IApprenticeshipCourseService>(o => o.GetApprenticeshipCourse(_courseId));
-            _autoMoq.Verify<IHashingService>(o => o.DecodeValue(HashedAccountId), Times.Once());
-            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Get(It.IsAny<long>()));
-            _autoMoq.Verify<IVirtualApprenticeshipValidator>(o => o.Validate(It.IsAny<VirtualApprenticeship>()));
-            _autoMoq.Verify<IAccountEstimationRepository>(o => o.Store(It.IsAny<AccountEstimation>()));
-        }
-
-
-        [Test]
-        public void WhenStoringTheApprenticeshipItShouldStoreWithNosuccessfulValidation()
-        {
-            var validationResults = new List<ValidationResult> { ValidationResult.Failed("test fail") };
-
-            _autoMoq.GetMock<IVirtualApprenticeshipValidator>()
-                .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
-                .Returns(validationResults);
-
-            Assert.ThrowsAsync<InvalidOperationException>(() => _apprenticeshipOrchestrator.StoreApprenticeship(_addApprenticeshipViewModel, HashedAccountId, EstimationName), "Should throw an exception if the apprenticeship fails validation");
-        }
-
-
     }
 }

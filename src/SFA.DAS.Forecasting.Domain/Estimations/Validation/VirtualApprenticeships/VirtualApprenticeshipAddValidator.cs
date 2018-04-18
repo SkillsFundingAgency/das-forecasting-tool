@@ -56,6 +56,23 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
                 validationDetails.IsValid = false;
             }
 
+            if (!apprenticeshipToAdd.TotalCost.HasValue || apprenticeshipToAdd.TotalCost <= 0)
+            {
+                validationDetails.NoCost = string.Empty;
+                validationDetails.IsValid = false;
+            }
+
+            var fundingCap = apprenticeshipToAdd.AppenticeshipCourse?.FundingCap;
+            var noOfApprenticeships = apprenticeshipToAdd.ApprenticesCount;
+
+            if (apprenticeshipToAdd.TotalCost.HasValue 
+                && fundingCap.HasValue 
+                && noOfApprenticeships.HasValue 
+                && apprenticeshipToAdd.TotalCost > (fundingCap * noOfApprenticeships))
+            {
+                validationDetails.OverCap = string.Empty;
+                validationDetails.IsValid = false;
+            }
 
 
 
@@ -70,7 +87,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeshi
 
         private bool IsValidDate(ApprenticeshipToAdd apprenticeshipToAdd)
         {
-            if (!apprenticeshipToAdd.StartYear.HasValue || apprenticeshipToAdd.StartMonth.HasValue)
+            if (!apprenticeshipToAdd.StartYear.HasValue || !apprenticeshipToAdd.StartMonth.HasValue)
             {
                 return false;
             }
