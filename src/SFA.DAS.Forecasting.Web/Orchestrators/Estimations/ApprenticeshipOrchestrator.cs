@@ -40,7 +40,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     
                     
         };
-
             return result;
         }
 
@@ -54,15 +53,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var level = course.Level;
 
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
-
-            accountEstimation.AddVirtualApprenticeship(courseId,
-                                                        courseTitle,
-                                                        level,
-                                                        apprenticeshipToAdd.StartMonth.GetValueOrDefault(),
-                                                        apprenticeshipToAdd.StartYear.GetValueOrDefault(),
-                                                        apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(),
-                                                        apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
-                                                        apprenticeshipToAdd.TotalCost.GetValueOrDefault());
+            accountEstimation.AddVirtualApprenticeship(courseId,courseTitle,level,apprenticeshipToAdd.StartMonth.GetValueOrDefault(),
+                apprenticeshipToAdd.StartYear.GetValueOrDefault(),apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(),
+                apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),apprenticeshipToAdd.TotalCost.GetValueOrDefault());
          
             await _accountEstimationRepository.Store(accountEstimation);
         }
@@ -139,6 +132,5 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             return await _accountEstimationRepository.Get(accountId);
         }
-        
     }
 }
