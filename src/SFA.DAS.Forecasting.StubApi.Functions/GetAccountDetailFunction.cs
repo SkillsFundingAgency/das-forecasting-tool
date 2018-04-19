@@ -21,6 +21,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
             {
                 AccountId = accountId,
                 Balance = StubDataStore.Balance,
+                TransferAllowance = StubDataStore.Balance > 0 ? (StubDataStore.Balance / 100) * 10 : 0,
                 DasAccountName = "Test Employer",
                 DateRegistered = DateTime.Today,
                 HashedAccountId = "MDDP87",
