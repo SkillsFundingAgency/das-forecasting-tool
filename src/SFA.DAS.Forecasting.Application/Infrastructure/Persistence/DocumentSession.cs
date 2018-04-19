@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
         Task Store<T>(T item) where T : class, IDocument;
     }
 
-    public class DocumentSession: IDocumentSession
+    public class DocumentSession : IDocumentSession
     {
         private readonly IDocumentClient _client;
         private readonly DocumentCollection _documentCollection;
@@ -37,11 +37,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
                 .Select(adapter => adapter.Document);
         }
 
+        public static string GenerateDocumentId<T>(string id) where T : class, IDocument => $"{typeof(T).Name}-{id.ToLower()}";
+
         public async Task<T> Get<T>(string id) where T : class, IDocument
         {
             try
             {
-                var response = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _documentCollection.Id,id));
+                var response = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _documentCollection.Id, GenerateDocumentId<T>(id)));
                 var adapter = JsonConvert.DeserializeObject<DocumentAdapter<T>>(response.Resource.ToString());
                 return adapter?.Document;
             }
@@ -55,8 +57,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
 
         public async Task Store<T>(T item) where T : class, IDocument
         {
-            await _client.UpsertDocumentAsync(_documentCollection.SelfLink, new DocumentAdapter<T>(item));
+            await _client.UpsertDocumentAsync(_documentCollection.SelfLink, new DocumentAdapter<T>(GenerateDocumentId<T>(item.Id), item));
         }
-
     }
 }

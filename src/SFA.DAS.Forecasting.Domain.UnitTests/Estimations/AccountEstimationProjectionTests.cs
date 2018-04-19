@@ -79,7 +79,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
             estimationProjection.BuildProjections();
             estimationProjection.Projections.Where(p => p.Month == 4).ToList()
-                .ForEach(p => Assert.AreEqual((decimal)(_account.TransferAllowance - p.TotalCostOfTraining - p.CompletionPayments), p.FutureFunds,$"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance - p.TotalCostOfTraining - p.CompletionPayments}, actual: {p.FutureFunds}"));
+                .ForEach(p => Assert.AreEqual((decimal)(_account.TransferAllowance), p.FutureFunds,$"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance - p.TotalCostOfTraining - p.CompletionPayments}, actual: {p.FutureFunds}"));
         }
     }
 }

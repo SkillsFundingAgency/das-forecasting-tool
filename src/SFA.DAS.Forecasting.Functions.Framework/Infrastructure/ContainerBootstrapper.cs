@@ -24,6 +24,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                     c.AddRegistry<ConfigurationRegistry>();
                     c.AddRegistry<DefaultRegistry>();
                     c.AddRegistry<MediatrRegistry>();
+                    c.AddRegistry<DocumentRegistry>();
                     var binPath = Path.Combine(executionContext.FunctionAppDirectory, "bin");
                     writer.Verbose($"Root function bin: {binPath}");
                     var binFolders = new List<string>() { binPath };

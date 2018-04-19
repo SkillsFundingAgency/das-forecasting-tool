@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using SFA.DAS.Forecasting.Application.Estimations.Services;
-using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
@@ -20,7 +18,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
 
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService, IApprenticeshipCourseService apprenticeshipCourseService)
+        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
@@ -59,9 +57,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
-        public async Task<ActionResult> AddApprenticeships(string hashedAccountId, string estimationName)
+        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            var vm = await _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            var vm = _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
            
             return View(vm);
         }

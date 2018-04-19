@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Estimations.Services;
+﻿
+using System.Linq;
+using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -14,9 +16,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
         private readonly IVirtualApprenticeshipAddValidator _addValidator;
-        private readonly IApprenticeshipCourseService _apprenticeshipCourseService;
+        private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
-        public ApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseService apprenticeshipCourseService, IVirtualApprenticeshipAddValidator addValidator)
+        public ApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IVirtualApprenticeshipAddValidator addValidator)
         {
             _hashingService = hashingService;
             _accountEstimationRepository = accountEstimationRepository;
@@ -24,29 +26,34 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             _addValidator = addValidator;
         }
 
-
-        public async Task<AddApprenticeshipViewModel> GetApprenticeshipAddSetup()
-        {
+        public AddApprenticeshipViewModel GetApprenticeshipAddSetup()
+          {
             var result = new AddApprenticeshipViewModel
             {
                 Name = "Add Apprenticeships",
                 ApprenticeshipToAdd = new ApprenticeshipToAdd(),
-                AvailableApprenticeships = _apprenticeshipCourseService.GetApprenticeshipCourses(),
-                AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail()
+                AvailableApprenticeships = _apprenticeshipCourseService
+                    .GetAllStandardApprenticeshipCourses()
+                    .OrderBy(course => course.Title)
+                    .ToList(),
+                    AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail()
+                    
+                    
         };
 
-                return await Task.FromResult(result);
+            return result;
         }
 
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var apprenticeshipToAdd = vm.ApprenticeshipToAdd;
             var course = vm.ApprenticeshipToAdd.AppenticeshipCourse;
+
             var courseId = course.Id;
             var courseTitle = course.Title;
             var level = course.Level;
 
-            var accountEstimation = await GetAccountAutomation(hashedAccountId);
+            var accountEstimation = await GetAccountEstimation(hashedAccountId);
 
             accountEstimation.AddVirtualApprenticeship(courseId,
                                                         courseTitle,
@@ -56,7 +63,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                                                         apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(),
                                                         apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
                                                         apprenticeshipToAdd.TotalCost.GetValueOrDefault());
-
+         
             await _accountEstimationRepository.Store(accountEstimation);
         }
       
@@ -64,7 +71,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
 
-            var viewModel = await GetApprenticeshipAddSetup();
+            var viewModel = GetApprenticeshipAddSetup();
             viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
 
             if (viewModel.ApprenticeshipToAdd.CourseId is null)
@@ -74,7 +81,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             else
             {
                 viewModel.ApprenticeshipToAdd.AppenticeshipCourse =
-                    _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.ApprenticeshipToAdd.CourseId);
+                   await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.ApprenticeshipToAdd.CourseId);
             }
 
             viewModel.AddApprenticeshipValidationDetail = _addValidator.ValidateDetails(viewModel.ApprenticeshipToAdd);
@@ -101,11 +108,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
-            var estimations = await GetAccountAutomation(hashedAccountId);
+            var estimations = await GetAccountEstimation(hashedAccountId);
+
             var virtualApprenticeships = estimations.FindVirtualApprenticeship(apprenticeshipsId);
 
             if (virtualApprenticeships == null) throw new ApprenticeshipAlreadyRemovedException();
-
             var vm = new RemoveApprenticeshipViewModel
             {
                 ApprenticeshipId = apprenticeshipsId,
@@ -117,22 +124,21 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             };
 
             return vm;
-
         }
 
         public async Task RemoveApprenticeship(string hashedAccountId, string apprenticeshipId)
         {
-            var estimations = await GetAccountAutomation(hashedAccountId);
+            var estimations = await GetAccountEstimation(hashedAccountId);
+
             estimations?.RemoveVirtualApprenticeship(apprenticeshipId);
             await _accountEstimationRepository.Store(estimations);
         }
 
-        private async Task<AccountEstimation> GetAccountAutomation(string hashedAccountId)
+        private async Task<AccountEstimation> GetAccountEstimation(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             return await _accountEstimationRepository.Get(accountId);
         }
-
         
     }
 }

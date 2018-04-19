@@ -43,21 +43,21 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             {
                 if (projectionDate.Month == 4)
                     lastBalance = _account.TransferAllowance;
-                var projection = CreateProjection(projectionDate, 0, lastBalance);
+                var projection = CreateProjection(projectionDate, lastBalance);
                 _projections.Add(projection);
-                lastBalance = projection.FutureFunds;
+                lastBalance = projection.FutureFunds - projection.TotalCostOfTraining - projection.CompletionPayments;
                 projectionDate = projectionDate.AddMonths(1);
             }
         }
 
-        private AccountProjectionReadModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance)
+        private AccountProjectionReadModel CreateProjection(DateTime period, decimal lastBalance)
         {
             var totalCostOfTraning = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
             var commitments = totalCostOfTraning.Item2;
             commitments.AddRange(completionPayments.Item2);
             commitments = commitments.Distinct().ToList();
-            var balance = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1;
+            var balance = lastBalance;
             var projection = new AccountProjectionReadModel
             {
                 FundsIn = _account.LevyDeclared,
