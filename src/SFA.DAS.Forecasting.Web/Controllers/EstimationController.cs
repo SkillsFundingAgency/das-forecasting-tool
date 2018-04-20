@@ -98,8 +98,6 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return Json(result);
         }
 
-
-
         [HttpGet]
         [Route("{estimationName}/apprenticeship/{id}/ConfirmRemoval", Name = "ConfirmRemoval")]
         public async Task<ActionResult> ConfirmApprenticeshipsRemoval(string hashedAccountId, string estimationName, string id)
@@ -113,9 +111,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             {
                 return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName, apprenticeshipRemoved = true });
             }
-
         }
-
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
