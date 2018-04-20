@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public LoginPage NavigateToLoginPage()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine(""));
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/projections"));
             return new LoginPage(WebBrowserDriver);
         }
 
