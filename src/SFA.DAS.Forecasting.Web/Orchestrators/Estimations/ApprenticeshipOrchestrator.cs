@@ -100,6 +100,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return viewModel;
         }
 
+        public async Task<decimal?> GetFundingCapForCourse(string courseId)
+        {
+            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
+            var res = course.FundingCap;
+
+            return res;
+
+        }
+
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
             var estimations = await GetAccountEstimation(hashedAccountId);

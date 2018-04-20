@@ -5,8 +5,17 @@
     ViewBag.Title = Model.Name;
     ViewBag.Description = "Add Apprenticeships to your Estimation";
 }
+
+<style>
+
+    .HideFundingCapMessage {
+        display: none !important;
+    }
+</style>
+
 @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
 {
+
     <main id="content" role="main" tabindex="-1">
         <div id="estimate-add-apprenticeship">
             <a href="#" class="link-back">Back</a>
@@ -108,22 +117,36 @@
 
                         <div class="form-group">
                             <label class="form-label-bold">Government funding cap</label>
-                            @if (Model.ApprenticeshipToAdd.CalculatedTotalCap.HasValue && Model.ApprenticeshipToAdd.CalculatedTotalCap>0)
-                            {
-                                <span id="details-about-funding" class="form-hint">
-                                    Government funding cap for this apprenticeship is @Model.ApprenticeshipToAdd.AppenticeshipCourse.FundingCap.FormatCost()<br />
-                                    Total government funding cap for <b>@Model.ApprenticeshipToAdd.ApprenticesCount</b> apprentices is <b>@Model.ApprenticeshipToAdd.CalculatedTotalCap.FormatCost() </b>
-                                </span>
-                            }
-                            else
-                            {
-                                <span id="details-about-funding" class="form-hint">
-                                    Choose an apprenticeship and number of apprentices to see this figure <br>
-                                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">More information about government funding caps</a>
-                                </span>
+
+                            @{
+                                var CalculatedFundingCapMessageClass = "HideFundingCapMessage";
+                                var defaultFundingCapMessageClass = "";
+
+                                decimal? fundingCap = null;
+                                int? apprenticeCount = null;
+                                decimal? totalCap = null;
+
+                                if (Model.ApprenticeshipToAdd.CalculatedTotalCap.HasValue && Model.ApprenticeshipToAdd.CalculatedTotalCap > 0)
+                                {
+                                    fundingCap = Model.ApprenticeshipToAdd.AppenticeshipCourse.FundingCap;
+                                    apprenticeCount = Model.ApprenticeshipToAdd.ApprenticesCount;
+                                    totalCap = Model.ApprenticeshipToAdd.CalculatedTotalCap;
+                                    CalculatedFundingCapMessageClass = "";
+                                    defaultFundingCapMessageClass = "HideFundingCapMessage";
+                                }
+                              
+                                    <span id="details-about-funding-calculated" class="form-hint @CalculatedFundingCapMessageClass">
+                                        Government funding cap for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                                        Total government funding cap for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
+                                    </span>
+                               
+                                    <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
+                                        Choose an apprenticeship and number of apprentices to see this figure <br>
+                                        <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">More information about government funding caps</a>
+                                    </span>
+
 
                             }
-
                         </div>
 
 
@@ -162,4 +185,58 @@
 
         </div>
     </main>
+}
+
+@section script {
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $("#chosse-apprenticeship").change(function() {
+                calculateTotalCost();
+            });
+
+            $("#no-of-app").change(function() {
+                calculateTotalCost();
+            });
+        });
+
+
+        function calculateTotalCost() {
+            var courseId = $('#chosse-apprenticeship').val();
+            var noOfApprentices = parseInt($('#no-of-app').val());
+            var levyValue = parseFloat($('#levy-value').val());
+
+            var requestObject = {
+                courseId: courseId,
+                numberOfApprentices: noOfApprentices,
+                levyValue: levyValue
+            };
+
+            if (courseId !== "" && noOfApprentices > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.RouteUrl("CalculateTotalCost", null)',
+                    data: JSON.stringify(requestObject),
+                    contentType: "application/json; charset=utf-8",
+                    success: function(result) {
+
+                        $('#funding-cap-details').html(result.FundingCap);
+                        $('#apprentice-count-details').html(result.NumberOfApprentices);
+                        $('#total-cap-details').html(result.TotalFundingCap);
+                        $('#details-about-funding').addClass("HideFundingCapMessage");
+                        $('#details-about-funding-calculated').removeClass("HideFundingCapMessage");
+                        $('#levy-value').val(result.TotalFundingCapValue);
+                    }
+                });
+
+            } else {
+                $('#details-about-funding').removeClass("HideFundingCapMessage");
+                $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
+            }
+
+
+        }
+    </script>
+
 }
