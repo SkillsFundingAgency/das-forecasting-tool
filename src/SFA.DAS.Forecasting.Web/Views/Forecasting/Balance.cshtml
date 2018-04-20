@@ -118,7 +118,10 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
+                    @if (Model.DisplayCoInvestment)
+                    {
+                        <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
+                    }
                     <th></th>
                 </tr>
                 <tr>
@@ -126,8 +129,11 @@
                     <th class="financial">Funds in</th>
                     <th class="financial">Cost of training</th>
                     <th class="financial">Completion payments</th>
-                    <th class="financial grey-bg">Your contribution (10%)</th>
-                    <th class="financial grey-bg">Government contribution (90%)</th>
+                    @if (Model.DisplayCoInvestment)
+                    {
+                        <th class="financial grey-bg">Your contribution (10%)</th>
+                        <th class="financial grey-bg">Government contribution (90%)</th>
+                    }
                     <th class="financial">Future funds</th>
                 </tr>
             </thead>
@@ -139,26 +145,29 @@
                     <td class="financial">@item.LevyCredit.FormatCost()</td>
                     <td class="financial">@item.CostOfTraining.FormatCost()</td>
                     <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                    <td class="financial grey-bg">
-                        @if (item.CoInvestmentEmployer == 0)
-                        {
-                            <span>–</span>
-                        }
-                        else
-                        {
-                            <span>@item.CoInvestmentEmployer.FormatCost()</span>
-                        }
-                    </td>
-                    <td class="financial grey-bg">
-                        @if (item.CoInvestmentGovernment == 0)
-                        {
-                            <span>–</span>
-                        }
-                        else
-                        {
-                            <span>@item.CoInvestmentGovernment.FormatCost()</span>
-                        }
-                    </td>
+                    @if (Model.DisplayCoInvestment)
+                    {
+                        <td class="financial grey-bg">
+                            @if (item.CoInvestmentEmployer == 0)
+                            {
+                                <span>–</span>
+                            }
+                            else
+                            {
+                                <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                            }
+                        </td>
+                        <td class="financial grey-bg">
+                            @if (item.CoInvestmentGovernment == 0)
+                            {
+                                <span>–</span>
+                            }
+                            else
+                            {
+                                <span>@item.CoInvestmentGovernment.FormatCost()</span>
+                            }
+                        </td>
+                    }
                     <td class="financial">@item.Balance.FormatCost()</td>
 
                 </tr>

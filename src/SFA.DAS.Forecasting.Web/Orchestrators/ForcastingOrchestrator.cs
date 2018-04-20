@@ -39,7 +39,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd")))
+                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                DisplayCoInvestment = balance.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0)
             };
         }
 
