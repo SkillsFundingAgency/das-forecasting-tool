@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             var projectionDate = startDate.AddMonths(1).GetStartOfMonth();
             while (projectionDate <= endDate)
             {
-                if (projectionDate.Month == 4)
+                if (projectionDate.Month == 5)
                     lastBalance = _account.TransferAllowance;
                 var projection = CreateProjection(projectionDate, lastBalance);
                 _projections.Add(projection);

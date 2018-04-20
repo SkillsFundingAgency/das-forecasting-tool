@@ -74,11 +74,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         }
 
         [Test]
-        public void Transfer_Balance_Should_Be_Reset_To_Transfer_Allowance_Each_April()
+        public void Transfer_Balance_Should_Be_Reset_To_Transfer_Allowance_Each_May()
         {
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
             estimationProjection.BuildProjections();
-            estimationProjection.Projections.Where(p => p.Month == 4).ToList()
+            estimationProjection.Projections.Where(p => p.Month == 5).ToList()
                 .ForEach(p => Assert.AreEqual((decimal)(_account.TransferAllowance), p.FutureFunds,$"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance - p.TotalCostOfTraining - p.CompletionPayments}, actual: {p.FutureFunds}"));
         }
     }
