@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NLog;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.NLog.Logger;
 
@@ -24,10 +25,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         public async Task Handle(GenerateAccountProjectionCommand message)
         {
             _logger.Debug($"Getting balances for account: {message.EmployerAccountId}");
-            var balance = await _accountBalanceService.GetAccountBalance(message.EmployerAccountId);
-            _logger.Debug($"Got account balance for account: {message.EmployerAccountId}.");
             var currentBalance = await _currentBalanceRepository.Get(message.EmployerAccountId);
-            currentBalance.SetCurrentBalance(balance.Balance, balance.TransferAllowance, balance.TransferAllowance, DateTime.UtcNow);
+            if (!await currentBalance.RefreshBalance())
+            {
+                _logger.Warn($"Failed to refresh the account balance for account {message.EmployerAccountId}.  It's possible the account has been refreshed recently.");
+                return;
+            }
             await _currentBalanceRepository.Store(currentBalance);
             _logger.Info($"Finished updating recorded balance for account: {message.EmployerAccountId}");
         }

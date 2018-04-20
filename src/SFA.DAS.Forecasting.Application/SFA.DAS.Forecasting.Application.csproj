@@ -174,7 +174,6 @@
     <Compile Include="Balance\Services\AccountBalanceService.cs" />
     <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
-    <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />

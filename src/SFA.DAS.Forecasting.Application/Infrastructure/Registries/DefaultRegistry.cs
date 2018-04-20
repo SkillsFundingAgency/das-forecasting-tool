@@ -3,6 +3,7 @@ using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Shared.Services;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
 using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;

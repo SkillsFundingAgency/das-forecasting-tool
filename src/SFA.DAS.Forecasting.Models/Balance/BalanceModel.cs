@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.Models.Balance
 {
-    public class Balance
+    public class BalanceModel
     {
         public long EmployerAccountId { get; set; }
         public decimal Amount { get; set; }

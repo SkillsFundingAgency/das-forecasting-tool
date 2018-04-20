@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Balance\Balance.cs" />
+    <Compile Include="Balance\BalanceModel.cs" />
     <Compile Include="Commitments\Commitment.cs" />
     <Compile Include="Estimation\AccountEstimationModel.cs" />
     <Compile Include="Estimation\ApprenticeshipCourseType.cs" />

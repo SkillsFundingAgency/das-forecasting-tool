@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Models.Balance;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
 {
@@ -21,7 +23,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 .Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<AccountDetailViewModel> GetAccountBalance(long accountId)
+        public async Task<BalanceModel> GetAccountBalance(long accountId)
         {
             var uri = $"{_configuration.AccountApi.ApiBaseUrl}/api/accounts/{accountId}";
             
@@ -30,7 +32,13 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 throw new InvalidOperationException($"Error getting account balance using dev account api. Uri: {uri}, Status: {response.StatusCode}, Error: {response.Content}");
             var payload = await response.Content.ReadAsStringAsync();
             var account = JsonConvert.DeserializeObject<AccountDetailViewModel>(payload);
-            return account;
+            return new BalanceModel
+            {
+                EmployerAccountId = account.AccountId,
+                Amount = account.Balance,
+                TransferAllowance = account.TransferAllowance,
+                RemainingTransferBalance = account.TransferAllowance
+            };
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
         {
         }
 
-        public async Task<Models.Balance.Balance> Get(long employerAccountId)
+        public async Task<Models.Balance.BalanceModel> Get(long employerAccountId)
         {
             return await WithConnection(async connection =>
              {
@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                                 From Balance
                                 Where EmployerAccountId = @employerAccountId";
 
-                 var balance = await connection.QueryAsync<Models.Balance.Balance>(
+                 var balance = await connection.QueryAsync<Models.Balance.BalanceModel>(
                      sql,
                      parameters,
                      commandType: CommandType.Text);
@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
              });
         }
 
-        public async Task Store(Models.Balance.Balance balance)
+        public async Task Store(Models.Balance.BalanceModel balance)
         {
             await WithConnection(async connection =>
             {

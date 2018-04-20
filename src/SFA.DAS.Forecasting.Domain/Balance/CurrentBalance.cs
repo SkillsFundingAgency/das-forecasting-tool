@@ -1,31 +1,42 @@
 ﻿using System;
+using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 
 namespace SFA.DAS.Forecasting.Domain.Balance
 {
     public class CurrentBalance
     {
-        private readonly Models.Balance.Balance _balance;
-        public long EmployerAccountId => _balance.EmployerAccountId;
-        public decimal Amount => _balance.Amount;
+        private readonly Models.Balance.BalanceModel _balance;
+        private readonly IAccountBalanceService _accountBalanceService;
+        public virtual long EmployerAccountId => _balance.EmployerAccountId;
+        public virtual decimal Amount => _balance.Amount;
         public decimal TransferAllowance => _balance.TransferAllowance;
         public decimal RemainingTransferBalance => _balance.RemainingTransferBalance;
         public DateTime Period => _balance.BalancePeriod;
         public DateTime ReceivedDate => _balance.ReceivedDate;
 
-        public CurrentBalance(Models.Balance.Balance balance)
+        protected CurrentBalance() { }
+
+        public CurrentBalance(Models.Balance.BalanceModel balance, IAccountBalanceService accountBalanceService)
         {
             _balance = balance ?? throw new ArgumentNullException(nameof(balance));
+            _accountBalanceService = accountBalanceService ?? throw new ArgumentNullException(nameof(accountBalanceService));
         }
 
-        public bool SetCurrentBalance(decimal amount, decimal transferAllowance, decimal remainingTransferBalance, DateTime balancePeriod)
+        public virtual async Task<bool> RefreshBalance()
         {
-            if (balancePeriod < _balance.BalancePeriod)
+            if (Period > DateTime.UtcNow.AddMonths(-1))
                 return false;
-            _balance.Amount = amount;
-            _balance.BalancePeriod = balancePeriod;
+
+            var currentBalance = await _accountBalanceService.GetAccountBalance(EmployerAccountId);
+            if (currentBalance == null)
+                throw new InvalidOperationException($"Failed to get the account balances for account: {EmployerAccountId}");
+
+            _balance.Amount = currentBalance.Amount;
+            _balance.TransferAllowance = currentBalance.TransferAllowance;
+            _balance.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
+            _balance.BalancePeriod = DateTime.UtcNow;
             _balance.ReceivedDate = DateTime.UtcNow;
-            _balance.TransferAllowance = transferAllowance;
-            _balance.RemainingTransferBalance = remainingTransferBalance;
             return true;
         }
     }

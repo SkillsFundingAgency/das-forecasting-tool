@@ -37,14 +37,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("start-redirect", Name = "EstimationStartRedirect")]
         public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
-            var accountEstimation = await _estimationOrchestrator.GetEstimation(hashedAccountId);
-
-            if (accountEstimation != null && accountEstimation.HasValidApprenticeships)
-            {
-                return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = accountEstimation.Name });
-            }
-
-            return RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
+            return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
+                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName })
+                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
         }
 
         [HttpGet]
@@ -60,7 +55,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
             var vm = _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
-           
+
             return View(vm);
         }
 
@@ -83,7 +78,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         }
 
-       
+
 
         [HttpGet]
         [Route("{estimationName}/apprenticeship/{id}/ConfirmRemoval", Name = "ConfirmRemoval")]
@@ -103,7 +98,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-         [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
+        [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
         public async Task<ActionResult> RemoveApprenticeships(RemoveApprenticeshipViewModel viewModel, string hashedAccountId, string estimationName, string id)
         {
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)
@@ -128,7 +123,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                    });
             }
 
-            return View(nameof(ConfirmApprenticeshipsRemoval),viewModel); 
+            return View(nameof(ConfirmApprenticeshipsRemoval), viewModel);
         }
 
     }

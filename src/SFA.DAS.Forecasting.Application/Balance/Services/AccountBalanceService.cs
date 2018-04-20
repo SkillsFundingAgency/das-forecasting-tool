@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
 {
-    public class AccountBalanceService: IAccountBalanceService
+    public class AccountBalanceService : IAccountBalanceService
     {
         private readonly IAccountApiClient _accountApiClient;
         private readonly IHashingService _hashingService;
@@ -18,11 +18,17 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
         }
 
-        public async Task<AccountDetailViewModel> GetAccountBalance(long accountId)
+        public async Task<Models.Balance.BalanceModel> GetAccountBalance(long accountId)
         {
             var hashedAccountId = _hashingService.HashValue(accountId);
             var account = await _accountApiClient.GetAccount(hashedAccountId);
-            return account;
+            return new Models.Balance.BalanceModel
+            {
+                EmployerAccountId = accountId,
+                RemainingTransferBalance = account.TransferAllowance,
+                TransferAllowance = account.TransferAllowance,
+                Amount = account.Balance
+            };
         }
     }
 }
