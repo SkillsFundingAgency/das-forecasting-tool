@@ -343,7 +343,6 @@
     <Compile Include="DependencyResolution\StructureMapScopeModule.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DecimalExtensions.cs" />
-    <Compile Include="Extensions\HashingServiceExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

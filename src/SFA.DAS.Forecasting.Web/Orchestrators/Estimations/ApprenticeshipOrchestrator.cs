@@ -86,17 +86,27 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public AddApprenticeshipViewModel AdjustTotalCostApprenticeship(AddApprenticeshipViewModel viewModel)
         {
-            var fundingCap = viewModel.ApprenticeshipToAdd?.AppenticeshipCourse?.FundingCap;
-            var noOfApprenticeships = viewModel.ApprenticeshipToAdd?.ApprenticesCount;
+            var apprenticeToAdd = viewModel.ApprenticeshipToAdd;
 
-                if (fundingCap.HasValue &&
-            viewModel.ApprenticeshipToAdd.TotalCost.HasValue &&
-            noOfApprenticeships.HasValue && viewModel.ApprenticeshipToAdd.TotalCost > (fundingCap* noOfApprenticeships))
-            {
-                viewModel.ApprenticeshipToAdd.TotalCost = fundingCap* noOfApprenticeships;
-            }
+            if (apprenticeToAdd is null)
+                return viewModel;
+            
+            if (apprenticeToAdd.CalculatedTotalCap.HasValue &&
+                    (apprenticeToAdd.TotalCost.HasValue == false || apprenticeToAdd.TotalCost > apprenticeToAdd.CalculatedTotalCap))
+                {
+                viewModel.ApprenticeshipToAdd.TotalCost = apprenticeToAdd.CalculatedTotalCap;
+                }
 
             return viewModel;
+        }
+
+        public async Task<decimal?> GetFundingCapForCourse(string courseId)
+        {
+            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
+            var res = course.FundingCap;
+
+            return res;
+
         }
 
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)

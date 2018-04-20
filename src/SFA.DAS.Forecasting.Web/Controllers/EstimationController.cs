@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
@@ -76,6 +77,25 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
 
+        }
+
+            
+        [HttpPost]
+        [Route("CalculateTotalCost", Name = "CalculateTotalCost")]
+        public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue)
+        {
+            //TODO: this should be in the orchestrator
+            var fundingCap = await _apprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
+            var totalValue = (fundingCap * numberOfApprentices);
+            var result = new
+            {
+                FundingCap = fundingCap.FormatCost(),
+                TotalFundingCap = totalValue.FormatCost(),
+                NumberOfApprentices = numberOfApprentices,
+                TotalFundingCapValue = totalValue
+            };
+
+            return Json(result);
         }
 
 
