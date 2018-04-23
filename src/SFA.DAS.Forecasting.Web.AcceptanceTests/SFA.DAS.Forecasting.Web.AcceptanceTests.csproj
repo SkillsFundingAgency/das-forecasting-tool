@@ -163,9 +163,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
-      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
-      <Name>SFA.DAS.Forecasting.ReadModel</Name>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
+      <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
+      <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Web.Automation\SFA.DAS.Forecasting.Web.Automation.csproj">
       <Project>{5ea585e1-4da6-40be-8611-b8f2535f7085}</Project>

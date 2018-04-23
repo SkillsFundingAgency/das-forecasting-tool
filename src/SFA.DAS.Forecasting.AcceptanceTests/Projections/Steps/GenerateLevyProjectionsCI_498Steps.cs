@@ -10,8 +10,9 @@ using Dapper;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.Forecasting.ReadModel.Projections;
+using SFA.DAS.Forecasting.Models.Projections;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -77,7 +78,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             var projectionUrl =
                 Config.ProjectionLevyFunctionUrl.Replace("{employerAccountId}", Config.EmployerAccountId.ToString());
             Console.WriteLine($"Sending levy event to levy function: {projectionUrl}");
-            var response = HttpClient.PostAsync(projectionUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
+            var response = HttpClient.PostAsync(projectionUrl, new StringContent(ProjectionsStartPeriod?.ToJson(), Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 

@@ -1,0 +1,63 @@
+﻿@model SFA.DAS.Forecasting.Web.ViewModels.RemoveApprenticeshipViewModel
+
+@{
+    ViewBag.Title = Model.CourseTitle;
+    ViewBag.Description = "Remove Apprenticeships from your Estimation";
+}
+<a href="@Url.RouteUrl("EstimatedCost", new { hashedaccountId = Model.HashedAccountId, estimateName = Model.EstimationName, apprenticeshipRemoved = false })" class="link-back">Back</a>
+
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="hgroup">
+            <h1 class="heading-xlarge">
+                Remove apprenticeship
+            </h1>
+            <p class="lede">You are about to remove @Model.NumberOfApprentices @Model.CourseTitle level @Model.Level.</p>
+        </div>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+
+
+        @using (Html.BeginForm("RemoveApprenticeships", "Estimation", FormMethod.Post))
+        {
+
+            @Html.HiddenFor(model => model.EstimationName)
+            @Html.HiddenFor(model => model.HashedAccountId)
+            @Html.HiddenFor(model => model.ApprenticeshipId)
+
+            var errorClass = "";
+
+            if (!Model.HasConfirmed)
+            {
+                errorClass = "form-group-error";
+            }
+
+            <div class="form-group @errorClass">
+
+                <label class="form-label-bold" for="email">Are you sure you want to do this?</label>
+                @if (!Model.HasConfirmed)
+                {
+                    <span class="error-message">Please choose an option</span>
+                }
+
+                <fieldset>
+                    <div class="multiple-choice">
+                        @Html.RadioButtonFor(m => m.ConfirmedDeletion, true, new { id = "radio-1" })
+
+                        <label for="radio-1">Yes, I do want to remove this apprenticeship</label>
+                    </div>
+                    <div class="multiple-choice">
+                        @Html.RadioButtonFor(m => m.ConfirmedDeletion, false, new { id = "radio-2" })
+                        <label for="radio-2">No, I want to keep this apprenticeship</label>
+                    </div>
+                </fieldset>
+            </div>
+            <button type="submit" class="button">Continue</button>
+
+        }
+    </div>
+</div>

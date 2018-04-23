@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Messages.Projections;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Projections.Functions
 {
@@ -11,18 +12,19 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     public static class TriggerGenerateLevyProjectionsHttpFunction
     {
         [FunctionName("TriggerGenerateLevyProjectionsHttpFunction")]
-        public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "TriggerGenerateLevyProjections/{employerAccountId}")]HttpRequestMessage req, long employerAccountId,
-            [Queue(QueueNames.GenerateProjections)]ICollector<GenerateAccountProjectionCommand> messages,
+        [return:Queue(QueueNames.GenerateProjections)]
+        public static GenerateAccountProjectionCommand Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "TriggerGenerateLevyProjections/{employerAccountId}")] CalendarPeriod req, 
+            long employerAccountId,
             TraceWriter log)
         {
             log.Verbose($"Received http request to generate projections for employer: {employerAccountId}");
-            messages.Add(new GenerateAccountProjectionCommand
+            return new GenerateAccountProjectionCommand
             {
                 EmployerAccountId = employerAccountId,
-                ProjectionSource = ProjectionSource.LevyDeclaration
-            } );
-
-            return req.CreateResponse(HttpStatusCode.OK);
+                ProjectionSource = ProjectionSource.LevyDeclaration,
+                StartPeriod = req
+            };
         }
     }
 }

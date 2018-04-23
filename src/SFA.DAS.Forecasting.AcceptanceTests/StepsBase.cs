@@ -15,7 +15,7 @@ using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
-using SFA.DAS.Forecasting.ReadModel.Projections;
+using SFA.DAS.Forecasting.Models.Projections;
 using StructureMap;
 using TechTalk.SpecFlow;
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.9", "func.exe");
+        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.10", "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
 
