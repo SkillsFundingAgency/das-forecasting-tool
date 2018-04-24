@@ -7,7 +7,6 @@
 }
 
 <style>
-
     .HideFundingCapMessage {
         display: none !important;
     }
@@ -20,8 +19,7 @@
         <div id="estimate-add-apprenticeship">
             <a href="#" class="link-back">Back</a>
             @Html.HiddenFor(model => model.Name)
-
-            <div class="error-summary @Model.AddApprenticeshipValidationDetail.ValidationSummary  validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+            <div class="error-summary @HideShowValidation("")  validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
                 <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
                     Errors to fix
                 </h1>
@@ -29,16 +27,16 @@
                 <p>Please check the details you have entered against the information that's needed.</p>
 
                 <ul class="error-summary-list list list-links">
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoApprenticeshipSelected" id="noStandardSelected"><a href="#select2-chosse-apprenticeship-container">You must choose 1 apprenticeship</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfApprentices" id="noNumberOfApprentices"><a href="#no-of-app">Make sure you have at least 1 or more apprentices</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoNumberOfMonths" id="noLength"><a href="#levy-length">The number of months was not entered</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.ShortNumberOfMonths" id="shortLength"><a href="#levy-length">The number of months must be 12 months or more</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoStartMonth" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoStartYear" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.LateDate" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.StartDateInPast" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.OverCap" id="overCap"><a href="#levy-value">The total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.NoCost" id="noCost"><a href="#levy-value">The total training cost was not entered</a></li>
+                    <li class="@HideShowValidation("NoApprenticeshipSelected")" id="noStandardSelected"><a href="#select2-chosse-apprenticeship-container">You must choose 1 apprenticeship</a></li>
+                    <li class="@HideShowValidation("NoNumberOfApprentices")" id="noNumberOfApprentices"><a href="#no-of-app">Make sure you have at least 1 or more apprentices</a></li>
+                        <li class="@HideShowValidation("NoNumberOfMonths")" id="noLength"><a href="#levy-length">The number of months was not entered</a></li>
+                        <li class="@HideShowValidation("ShortNumberOfMonths")" id="shortLength"><a href="#levy-length">The number of months must be 12 months or more</a></li>
+                        <li class="@HideShowValidation("NoStartMonth")" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
+                        <li class="@HideShowValidation("NoStartYear")" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
+                        <li class="@HideShowValidation("LateDate")" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
+                        <li class="@HideShowValidation("StartDateInPast")" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
+                        <li class="@HideShowValidation("OverCap")" id="overCap"><a href="#levy-value">The total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
+                        <li class="@HideShowValidation("NoCost")" id="noCost"><a href="#levy-value">The total training cost was not entered</a></li>
                 </ul>
             </div>
 
@@ -134,16 +132,16 @@
                                     CalculatedFundingCapMessageClass = "";
                                     defaultFundingCapMessageClass = "HideFundingCapMessage";
                                 }
-                              
-                                    <span id="details-about-funding-calculated" class="form-hint @CalculatedFundingCapMessageClass">
-                                        Government funding cap for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                        Total government funding cap for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
-                                    </span>
-                               
-                                    <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
-                                        Choose an apprenticeship and number of apprentices to see this figure <br>
-                                        <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">More information about government funding caps</a>
-                                    </span>
+
+                                <span id="details-about-funding-calculated" class="form-hint @CalculatedFundingCapMessageClass">
+                                    Government funding cap for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                                    Total government funding cap for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
+                                </span>
+
+                                <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
+                                    Choose an apprenticeship and number of apprentices to see this figure <br>
+                                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">More information about government funding caps</a>
+                                </span>
 
 
                             }
@@ -185,6 +183,18 @@
 
         </div>
     </main>
+}
+
+@functions{
+    public string HideShowValidation(string validatorToCheck)
+    {
+        if (validatorToCheck == string.Empty)
+        {
+            return Model.ValidationResults.Count > 0 ? string.Empty : "hidden";
+        }
+        
+        return Model.ValidationResults.Count(x => x.FailureReason == validatorToCheck) > 0 ? string.Empty : "hidden";
+    }
 }
 
 @section script {

@@ -3,7 +3,7 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
-    public interface IApprenticeshipOrchestrator
+    public interface IAddApprenticeshipOrchestrator
     {
         AddApprenticeshipViewModel GetApprenticeshipAddSetup();
 
