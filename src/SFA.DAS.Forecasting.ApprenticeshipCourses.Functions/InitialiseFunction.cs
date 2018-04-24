@@ -22,9 +22,10 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
             return await FunctionRunner.Run<InitialiseFunction, RefreshCourses>(log, executionContext, async (container, logger) =>
              {
                 //TODO: create generic function or use custom binding
-                log.Info("Initialising the Levy functions.");
-                 await container.GetInstance<IFunctionInitialisationService>().Initialise<InitialiseFunction>();
-                 log.Info("Finished initialising the Levy functions.");
+                log.Info("Initialising the Apprenticeship Courses function application.");
+                 await container.GetInstance<IFunctionInitialisationService>()
+                     .Initialise<InitialiseFunction>();
+                 log.Info("Finished initialising the Apprenticeship Courses function application.");
                  return new RefreshCourses { RequestTime = DateTime.Now };
              });
         }
