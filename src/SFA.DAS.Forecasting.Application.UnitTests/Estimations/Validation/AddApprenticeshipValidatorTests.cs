@@ -160,8 +160,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         public void WhenCallingValidateDetailWithValidStartMonthAndYearShouldReturnExpectedDetails()
         {
             var deets = GetCleanApprenticeshipToAdd();
-            deets.StartYear = DateTime.Now.Year;
-            deets.StartMonth = DateTime.Now.Month;
+            var dateNextMonth = DateTime.Now.AddMonths(1);
+            deets.StartYear = dateNextMonth.Year;
+            deets.StartMonth = dateNextMonth.Month;
 
             var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
 
@@ -172,8 +173,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         public void WhenCallingValidateDetailWithValidStartMonthAndShortYearShouldReturnExpectedDetails()
         {
             var deets = GetCleanApprenticeshipToAdd();
-            deets.StartYear = DateTime.Now.Year - 2000;
-            deets.StartMonth = DateTime.Now.Month;
+            var dateTakeOff2000 = DateTime.Now.AddYears(-2000).AddMonths(1);
+            deets.StartYear = dateTakeOff2000.Year;
+            deets.StartMonth = dateTakeOff2000.Month;
 
             var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
 
@@ -189,7 +191,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
             var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
 
-            var validationResult = ValidationResult.Failed("StartDateInPast");
+            var validationResult = new ValidationResult();
+            var minDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
+            var firstOfMay2018 = new DateTime(2018, 5, 1, 0, 0, 0);
+            validationResult = ValidationResult.Failed(minDate < firstOfMay2018 ? "StartDateBeforeMay2018" : "StartDateInPast");
+
             res.ShouldBeEquivalentTo(new List<ValidationResult> { validationResult });
         }
 

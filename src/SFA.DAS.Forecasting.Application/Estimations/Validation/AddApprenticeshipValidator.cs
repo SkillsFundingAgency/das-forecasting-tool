@@ -78,10 +78,16 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
                 var dateEntered = new DateTime(startYear, (int) apprenticeshipToAdd.StartMonth, 1, 0, 0, 0);
                 var minDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
 
+                var firstOfMay2018 = new DateTime(2018, 5, 1, 0, 0, 0);
+                if (dateEntered < firstOfMay2018 && minDate < firstOfMay2018)
+                {
+                    return ValidationResult.Failed("StartDateBeforeMay2018");
+                }
+
                 if (dateEntered < minDate)
                 {
                     return ValidationResult.Failed("StartDateInPast");
-                }
+                } 
             }
 
             return ValidationResult.Success;
