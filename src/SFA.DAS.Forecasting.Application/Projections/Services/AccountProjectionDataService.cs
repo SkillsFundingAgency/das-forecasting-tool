@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         {
         }
         
-        public async Task Store(long employerAccountId, IEnumerable<ReadModel.Projections.AccountProjectionReadModel> accountProjections)
+        public async Task Store(long employerAccountId, IEnumerable<Models.Projections.AccountProjectionReadModel> accountProjections)
         {
             using (var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {

@@ -31,7 +31,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 BackLink = ConfigurationHelper.GetAppSetting("BackLink", false),
                 LimitForecast = Boolean.Parse(ConfigurationHelper.GetAppSetting("LimitForecast", false) ?? "false"),
                 StubEmployerPaymentTable = ConfigurationHelper.GetAppSetting("Stub-EmployerPaymentTable", false),
-                AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true")
+                AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true"),
+                ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false)
             };
 
             SetApiConfiguration(configuration);

@@ -1,7 +1,9 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
+﻿using SFA.DAS.Apprenticeships.Api.Client;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Shared.Services;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
 using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
@@ -40,6 +42,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IEmployerDatabaseService>()
                 .Use<EmployerDatabaseService>();
+
+            For<IStandardApiClient>()
+                .Use<StandardApiClient>()
+                .Ctor<string>("baseUri")
+                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApprenticeshipsApiBaseUri);
         }
     }
 }

@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.Application.Balance.Services;
 using Microsoft.Azure.WebJobs;
 using System.Linq;
 using System.Collections.Generic;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
 {
@@ -24,6 +25,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                     c.AddRegistry<ConfigurationRegistry>();
                     c.AddRegistry<DefaultRegistry>();
                     c.AddRegistry<MediatrRegistry>();
+                    c.AddRegistry<DocumentRegistry>();
                     var binPath = Path.Combine(executionContext.FunctionAppDirectory, "bin");
                     writer.Verbose($"Root function bin: {binPath}");
                     var binFolders = new List<string>() { binPath };

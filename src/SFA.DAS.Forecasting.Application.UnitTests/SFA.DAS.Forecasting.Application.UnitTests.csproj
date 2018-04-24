@@ -87,11 +87,17 @@
     <Reference Include="Polly, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Polly.5.1.0\lib\net45\Polly.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Apprenticeships.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Client.0.11.30\lib\net462\SFA.DAS.Apprenticeships.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.30\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.2.0.58438\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.3.32\lib\net45\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.2.0.58438\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.3.32\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.57835, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
@@ -140,6 +146,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ApprenticeshipCourses\GetStandardsHandlerTests.cs" />
+    <Compile Include="ApprenticeshipCourses\StandardsServiceTests.cs" />
+    <Compile Include="ApprenticeshipCourses\StandardSummaryMapperTest.cs" />
+    <Compile Include="ApprenticeshipCourses\StoreCourseHandlerTests.cs" />
+    <Compile Include="Balance\BalanceHandlerTests.cs" />
+    <Compile Include="Estimations\ApprenticeshipCourseServiceTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
     <Compile Include="Payments\CollectionPeriodValidatorTests.cs" />
@@ -161,11 +173,20 @@
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
+      <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
+      <Name>SFA.DAS.Forecasting.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Messages\SFA.DAS.Forecasting.Messages.csproj">
+      <Project>{ECF5F114-FF6F-4D2C-AB19-B430D02EFBE7}</Project>
+      <Name>SFA.DAS.Forecasting.Messages</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

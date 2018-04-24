@@ -10,6 +10,6 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
         public static IDictionary<string, IEnumerable<LevyDeclarationViewModel>> LevyData { get; set; }
             = new Dictionary<string, IEnumerable<LevyDeclarationViewModel>>();
 
-        public static decimal Balance { get; set; }
+        public static decimal Balance { get; set; } = 500000;
     }
 }
