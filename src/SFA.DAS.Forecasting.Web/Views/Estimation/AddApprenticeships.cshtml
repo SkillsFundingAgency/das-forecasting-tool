@@ -37,7 +37,7 @@
                     <li class="@Model.AddApprenticeshipValidationDetail.NoStartYear" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
                     <li class="@Model.AddApprenticeshipValidationDetail.LateDate" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
                     <li class="@Model.AddApprenticeshipValidationDetail.StartDateInPast" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
-                    <li class="@Model.AddApprenticeshipValidationDetail.OverCap" id="overCap"><a href="#levy-value">The total cost can't be higher than the total government funding cap for this apprenticeship</a></li>
+                    <li class="@Model.AddApprenticeshipValidationDetail.OverCap" id="overCap"><a href="#levy-value">The total cost can't be higher than the total government funding band maximum for this apprenticeship</a></li>
                     <li class="@Model.AddApprenticeshipValidationDetail.NoCost" id="noCost"><a href="#levy-value">The total training cost was not entered</a></li>
                 </ul>
             </div>
@@ -116,7 +116,7 @@
 
 
                         <div class="form-group">
-                            <label class="form-label-bold">Government funding cap</label>
+                            <label class="form-label-bold">Government funding band maximum</label>
 
                             @{
                                 var CalculatedFundingCapMessageClass = "HideFundingCapMessage";
@@ -136,13 +136,13 @@
                                 }
                               
                                     <span id="details-about-funding-calculated" class="form-hint @CalculatedFundingCapMessageClass">
-                                        Government funding cap for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                        Total government funding cap for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
+                                        Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                                        Total government funding band maximum for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
                                     </span>
                                
                                     <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
                                         Choose an apprenticeship and number of apprentices to see this figure <br>
-                                        <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">More information about government funding caps</a>
+                                        <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands">More information about maximum government funding bands</a>
                                     </span>
 
 
