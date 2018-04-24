@@ -2062,7 +2062,7 @@ table.top-border {
 }
 
 .breadcrumbs li {
-  background-image: url("/comt-assets/images/separator.png");
+  background-image: url("/Content/dist/images/separator.png");
 }
 
 .breadcrumbs a {
@@ -2425,13 +2425,13 @@ a#link-settings:focus {
   border-left: 2px solid #003a69;
   padding-top: 20px;
   padding-left: 6px;
-  background: url(/comt-assets/images/org_crest_13px.png) no-repeat 5px 0;
+  background: url(/Content/dist/images/org_crest_13px.png) no-repeat 5px 0;
   padding-top: 30px;
   padding-left: 7px;
-  background: url(/comt-assets/images/org_crest_18px.png) no-repeat 5px 0;
+  background: url(/Content/dist/images/org_crest_18px.png) no-repeat 5px 0;
   padding-top: 45px;
   padding-left: 10px;
-  background: url(/comt-assets/images/org_crest_27px.png) no-repeat 10px 0;
+  background: url(/Content/dist/images/org_crest_27px.png) no-repeat 10px 0;
 }
 
 .organisation-logo {
@@ -2600,7 +2600,7 @@ a#link-settings:focus {
 }
 
 .previous-next-navigation li a:before {
-  background: url("/comt-assets/images/arrow-sprite.png");
+  background: url("/Content/dist/images/arrow-sprite.png");
   background-position: -4px -2px;
   margin-top: -2px;
   margin-left: -30px;
@@ -2680,7 +2680,7 @@ legend {
 }
 
 .button-start {
-  background-image: url("/comt-assets/images/icon-pointer.png");
+  background-image: url("/Content/dist/images/icon-pointer.png");
 }
 
 .button-secondary {
@@ -2949,7 +2949,7 @@ legend {
   text-indent: -5000px;
   color: #fff;
   background-color: #005ea5;
-  background-image: url(/comt-assets/images/icon-search.png);
+  background-image: url(/Content/dist/images/icon-search.png);
   background-repeat: no-repeat;
   background-position: 12px 13px;
 }
@@ -4235,6 +4235,36 @@ h2 .float-right {
   color: #4c2c92;
 }
 
+/*select2 styles*/
+.select2-container--default .select2-selection--single {
+  border: 2px solid #0b0c0c;
+  border-radius: 0;
+  height: 37px;
+}
+
+.panel-border-wide {
+  border-color: #2e358b;
+  background: #dee0e2;
+}
+
+/*Estimator start page*/
+#estimate-start-transfer .disclaimer {
+  margin-top: 30px;
+}
+
+#estimate-start-transfer .button-start {
+  margin-top: 40px;
+}
+
+#estimate-add-apprenticeship .no-of-apprentice input,
+#estimate-add-apprenticeship .no-of-months input {
+  width: 50px;
+}
+
+#estimate-add-apprenticeship .levy-value {
+  width: 200px;
+}
+
 .funding-projection .info-summary {
   max-width: 30em;
   background: #eaebf3;
@@ -4281,4 +4311,17 @@ path.c3-line {
 
 .c3-axis-y-label {
   font-size: 20px;
+}
+
+table.small th, table.small td {
+  font-size: 16px;
+}
+
+table.small th, table.small td, table.small .form-hint {
+  font-size: 16px;
+}
+
+.errorTable tr.error-row {
+  box-shadow: -5px 0px 0px 0px #f7e7e9, -10px 0px 0px 0px #b10e1e;
+  background: #f7e7e9;
 }

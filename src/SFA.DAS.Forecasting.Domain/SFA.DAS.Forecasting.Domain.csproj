@@ -74,11 +74,23 @@
   <ItemGroup>
     <Compile Include="Balance\CurrentBalance.cs" />
     <Compile Include="Balance\CurrentBalanceRepository.cs" />
+    <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Balance\Services\IBalanceDataService.cs" />
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
     <Compile Include="Commitments\Validation\CommitmentValidator.cs" />
+    <Compile Include="Estimations\AccountEstimation.cs" />
+    <Compile Include="Estimations\AccountEstimationProjection.cs" />
+    <Compile Include="Estimations\AccountEstimationProjectionRepository.cs" />
+    <Compile Include="Estimations\AccountEstimationRepository.cs" />
+    <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\BaseVirtualApprenticeshipValidator.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipAddValidator.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipCourseDetailsValidator.cs" />
+    <Compile Include="Shared\Validation\AddApprenticeshipValidationDetail.cs" />
+    <Compile Include="Shared\Validation\ValidationResult.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipValidator.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Payments\EmployerPaymentRepository.cs" />
     <Compile Include="Payments\EmployerPaymentService.cs" />
@@ -105,10 +117,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
-      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
-      <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

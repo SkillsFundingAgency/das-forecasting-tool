@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.StubApi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.PreLoad.Functions", "SFA.DAS.Forecasting.PreLoad.Functions\SFA.DAS.Forecasting.PreLoad.Functions.csproj", "{1F221B45-8924-4260-89FB-7C94F4FB3E42}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions", "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions\SFA.DAS.Forecasting.ApprenticeshipCourses.Functions.csproj", "{B1615636-19E9-499C-870E-65145E9E924B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,6 +162,7 @@ Global
 		{F36C43B1-49D5-4820-BCA7-32C73B110C99} = {520C268E-E13A-4578-A05F-64F42F471AE5}
 		{ACF14987-C84D-4EEF-BEAF-4194191A4050} = {520C268E-E13A-4578-A05F-64F42F471AE5}
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42} = {520C268E-E13A-4578-A05F-64F42F471AE5}
+		{B1615636-19E9-499C-870E-65145E9E924B} = {520C268E-E13A-4578-A05F-64F42F471AE5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89553F32-71A1-4EE1-8BD1-BC5BCC7E5E70}
