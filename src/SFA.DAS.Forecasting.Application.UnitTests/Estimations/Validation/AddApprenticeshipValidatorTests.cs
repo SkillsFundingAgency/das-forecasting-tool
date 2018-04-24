@@ -60,6 +60,47 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
             res.ShouldBeEquivalentTo(new List<ValidationResult> { validationResult });
         }
 
+
+        [Test]
+        public void WhenCallingValidateDetailWithNoCourseAndNoNumberOfMonthsShouldReturnExpectedDetails()
+        {
+            var deets = GetCleanApprenticeshipToAdd();
+            deets.CourseId = null;
+            deets.NumberOfMonths = null;
+
+            var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
+            
+            res.Count.Should().Be(2);
+            res.Should().Contain(x => x.FailureReason == "NoApprenticeshipSelected");
+            res.Should().Contain(x => x.FailureReason == "NoNumberOfMonths");
+        }
+
+        [Test]
+        public void WhenCallingASetOfInvalidDetailsShouldReturnExpectedDetails()
+        {
+            var deets = new ApprenticeshipToAdd
+            {
+                CourseId = null,
+                ApprenticesCount = null,
+                NumberOfMonths = null,
+                StartMonth = null,
+                StartYear = null,
+                TotalCost = null,
+                AppenticeshipCourse = null
+            };
+           
+            var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
+
+            res.Count.Should().Be(6);
+            res.Should().Contain(x => x.FailureReason == "NoApprenticeshipSelected");
+            res.Should().Contain(x => x.FailureReason == "NoNumberOfMonths");
+            res.Should().Contain(x => x.FailureReason == "NoNumberOfApprentices");
+            res.Should().Contain(x => x.FailureReason == "NoStartMonth");
+            res.Should().Contain(x => x.FailureReason == "NoStartYear");
+            res.Should().Contain(x => x.FailureReason == "NoCost");
+        }
+
+
         [Test]
         public void WhenCallingValidateDetailWithShortNumberOfMonthsShouldReturnExpectedDetails()
         {

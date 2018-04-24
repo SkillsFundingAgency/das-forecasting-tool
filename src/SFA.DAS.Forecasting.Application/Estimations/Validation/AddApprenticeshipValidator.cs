@@ -8,9 +8,6 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
 {
     public class AddApprenticeshipValidator : IAddApprenticeshipValidator
     {
-   
-    
-    
         public List<ValidationResult> ValidateApprenticeship(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             var validationResults = new List<ValidationResult>
@@ -30,15 +27,14 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return validationResults.Where(res => res.IsValid == false).ToList();
         }
 
-        public ValidationResult ApprenticeshipSelected(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult ApprenticeshipSelected(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             return apprenticeshipToAdd.CourseId == null
                 ? ValidationResult.Failed("NoApprenticeshipSelected")
                 : ValidationResult.Success;
-            ;
         }
 
-        public ValidationResult NumberOfApprenticeshipsEntered(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult NumberOfApprenticeshipsEntered(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (apprenticeshipToAdd.ApprenticesCount == null || apprenticeshipToAdd.ApprenticesCount <= 0)
             {
@@ -48,7 +44,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return ValidationResult.Success;
         }
 
-        public ValidationResult NumberOMonthsEntered(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult NumberOMonthsEntered(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (apprenticeshipToAdd.NumberOfMonths == null)
             {
@@ -58,7 +54,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return ValidationResult.Success;
         }
 
-        public ValidationResult NumberOfMonthsAcceptable(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult NumberOfMonthsAcceptable(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (apprenticeshipToAdd.NumberOfMonths.HasValue && apprenticeshipToAdd.NumberOfMonths < 12)
             {
@@ -68,7 +64,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return ValidationResult.Success;
         }
 
-        public ValidationResult StartMonthEntered(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult StartMonthEntered(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (!apprenticeshipToAdd.StartMonth.HasValue || apprenticeshipToAdd.StartMonth.Value < 1 ||
                 apprenticeshipToAdd.StartMonth.Value > 12)
@@ -80,14 +76,14 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
         }
 
 
-        public ValidationResult StartYearEntered(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult StartYearEntered(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             return !apprenticeshipToAdd.StartYear.HasValue
                 ? ValidationResult.Failed("NoStartYear")
                 : ValidationResult.Success;
         }
 
-        public ValidationResult StartDateNotInPast(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult StartDateNotInPast(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (StartMonthAndStartYearAreAcceptable(apprenticeshipToAdd))
             {
@@ -108,9 +104,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return ValidationResult.Success;
         }
 
-      
-
-        public ValidationResult StartDateNotInFarFuture(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult StartDateNotInFarFuture(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (StartMonthAndStartYearAreAcceptable(apprenticeshipToAdd))
             {
@@ -132,7 +126,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return ValidationResult.Success;
         }
 
-        public ValidationResult WithinTotalCap(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult WithinTotalCap(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             var fundingCap = apprenticeshipToAdd.AppenticeshipCourse?.FundingCap;
             var noOfApprenticeships = apprenticeshipToAdd.ApprenticesCount;
@@ -148,7 +142,7 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
             return ValidationResult.Success;
         }
 
-        public ValidationResult TotalCapEntered(ApprenticeshipToAdd apprenticeshipToAdd)
+        private static ValidationResult TotalCapEntered(ApprenticeshipToAdd apprenticeshipToAdd)
         {
             if (!apprenticeshipToAdd.TotalCost.HasValue || apprenticeshipToAdd.TotalCost <= 0)
             {
@@ -167,18 +161,5 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation
     public interface IAddApprenticeshipValidator
     {
         List<ValidationResult> ValidateApprenticeship(ApprenticeshipToAdd apprenticeshipToAdd);
-
-        ValidationResult ApprenticeshipSelected(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult NumberOfApprenticeshipsEntered(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult NumberOMonthsEntered(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult NumberOfMonthsAcceptable(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult StartMonthEntered(ApprenticeshipToAdd apprenticeshipToAdd);
-
-        ValidationResult StartYearEntered(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult StartDateNotInPast(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult StartDateNotInFarFuture(ApprenticeshipToAdd apprenticeshipToAdd);
-
-        ValidationResult WithinTotalCap(ApprenticeshipToAdd apprenticeshipToAdd);
-        ValidationResult TotalCapEntered(ApprenticeshipToAdd apprenticeshipToAdd);
     }
 }
