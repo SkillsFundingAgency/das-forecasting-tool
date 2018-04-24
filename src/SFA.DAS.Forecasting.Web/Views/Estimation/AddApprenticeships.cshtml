@@ -54,7 +54,7 @@
                 <div class="column-two-thirds">
                     <div class="hgroup form-group">
                         <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
-                        <p>Add the apprenticeship details so you can estimate the cost and see how much you could transfer to another employer. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.</p>
+                        <p>Add the apprenticeship details so you can estimate the cost and see how much you could transfer to another employer. We will show the funding band maximum value for the apprenticeship and you can adjust this figure should you need to.</p>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@
                         <div class="form-group" id="dateWrapper">
 
                             <span class="form-label-bold">Start date</span>
-                            <span class="form-hint">For example, 09 2017</span>
+                            <span class="form-hint">For example, 09 2018</span>
                             <div class="form-date">
                                 <div class="form-group form-group-month">
                                     <label for="startDateMonth">Month</label>
@@ -152,7 +152,7 @@
 
                         <div class="form-group">
                             <label class="form-label-bold" for="levy-value">Total cost</label>
-                            <span class="form-hint">Only change this number if the total cost is below the total government funding cap<br>The total cost should not be more than the total government funding cap</span>
+                            <span class="form-hint">Only change this number if the total cost is below the total government funding cap<br>You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                             <label for="levy-value-2" class="form-label-bold">
                                 £
                                 @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCost, new { @class = "form-control levy-value", id = "levy-value", name = "levy-value", type = "text" })
