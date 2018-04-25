@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
         
         [Test]
-        public void WhenCallingValidateDetailWithNoCourseShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithNoCourseShouldReturnNoApprenticeshipSelected()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.CourseId = null;
@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
         [TestCase(null)]
         [TestCase(0)]
-        public void WhenCallingValidateDetailWithNoApprenticeshipCountShouldReturnExpectedDetails(int? noOfApprentices)
+        public void WhenCallingValidateDetailWithNoApprenticeshipCountShouldReturnNoNumberOfApprentices(int? noOfApprentices)
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.ApprenticesCount = noOfApprentices;
@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         }
 
         [Test]
-        public void WhenCallingValidateDetailWithNoNumberOfMonthsShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithNoNumberOfMonthsShouldReturnNoNumberOfMonths()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.NumberOfMonths = null;
@@ -62,7 +62,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
 
         [Test]
-        public void WhenCallingValidateDetailWithNoCourseAndNoNumberOfMonthsShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithNoCourseAndNoNumberOfMonthsShouldReturnNoApprenticeshipSelectedAndNoNumberOfMonths()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.CourseId = null;
@@ -76,7 +76,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         }
 
         [Test]
-        public void WhenCallingASetOfInvalidDetailsShouldReturnExpectedDetails()
+        public void WhenCallingASetOfInvalidDetailsShouldReturnSixExpectedValidationResultFailures()
         {
             var deets = new ApprenticeshipToAdd
             {
@@ -102,7 +102,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
 
         [Test]
-        public void WhenCallingValidateDetailWithShortNumberOfMonthsShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithShortNumberOfMonthsShouldReturnShortNumberOfMonths()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.NumberOfMonths = 11;
@@ -115,7 +115,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
         [TestCase(null)]
         [TestCase(0)]
-        public void WhenCallingValidateDetailWithInvalidTotalCostShouldReturnExpectedDetails(decimal? totalCost)
+        public void WhenCallingValidateDetailWithInvalidTotalCostShouldReturnNoCost(decimal? totalCost)
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.TotalCost = totalCost;
@@ -130,7 +130,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         [TestCase(null)]
         [TestCase(0)]
         [TestCase(13)]
-        public void WhenCallingValidateDetailWithInvalidStartMonthShouldReturnExpectedDetails(int? startMonth)
+        public void WhenCallingValidateDetailWithInvalidStartMonthShouldReturnNoStartMonth(int? startMonth)
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.StartMonth = startMonth;
@@ -144,7 +144,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
 
         [Test]
-        public void WhenCallingValidateDetailWithInvalidStartYearShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithInvalidStartYearShouldReturnNoStartYear()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.StartYear = null;
@@ -157,7 +157,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
 
         [Test]
-        public void WhenCallingValidateDetailWithValidStartMonthAndYearShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithValidStartMonthAndYearShouldReturnNoValidationFailureResult()
         {
             var deets = GetCleanApprenticeshipToAdd();
             var dateNextMonth = DateTime.Now.AddMonths(1);
@@ -170,7 +170,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         }
 
         [Test]
-        public void WhenCallingValidateDetailWithValidStartMonthAndShortYearShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithValidStartMonthAndShortYearShouldReturnNoValidationFailureResult()
         {
             var deets = GetCleanApprenticeshipToAdd();
             var dateTakeOff2000 = DateTime.Now.AddYears(-2000).AddMonths(1);
@@ -183,7 +183,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         }
 
         [Test]
-        public void WhenCallingValidateDetailWithPastStartMonthAndShortYearShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithPastStartMonthAndShortYearShouldReturnMatchingStartDateInPastMessage()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.StartYear = DateTime.Now.AddMonths(-1).Year;
@@ -191,16 +191,15 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
             var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
 
-            var validationResult = new ValidationResult();
             var minDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
             var firstOfMay2018 = new DateTime(2018, 5, 1, 0, 0, 0);
-            validationResult = ValidationResult.Failed(minDate < firstOfMay2018 ? "StartDateBeforeMay2018" : "StartDateInPast");
+            var validationResult = ValidationResult.Failed(minDate < firstOfMay2018 ? "StartDateBeforeMay2018" : "StartDateInPast");
 
             res.ShouldBeEquivalentTo(new List<ValidationResult> { validationResult });
         }
 
         [Test]
-        public void WhenCallingValidateDetailWithFarInFutureStartMonthAndShortYearShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithFarInFutureStartMonthAndShortYearShouldReturnLateDate()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.StartYear = DateTime.Now.AddYears(4).Year;
@@ -232,7 +231,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         [TestCase(5000, 4000, 2, true)]
         [TestCase(8000, 4000, 2, true)]
         [TestCase(8000, null, 2, true)]
-        public void WhenCallingValidateDetailWithFundingDetailsShouldReturnExpectedDetails(decimal? totalCost, decimal? fundingCap, int? apprenticeshipsCount, bool isValid)
+        public void WhenCallingValidateDetailWithFundingDetailsShouldReturnOverCapOrSuccessDetails(decimal? totalCost, decimal? fundingCap, int? apprenticeshipsCount, bool isValid)
         {
 
             //var classSetting = isValid ? "hidden" : string.Empty;

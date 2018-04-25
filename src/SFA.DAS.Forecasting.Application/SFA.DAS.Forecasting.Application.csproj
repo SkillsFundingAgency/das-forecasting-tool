@@ -177,6 +177,16 @@
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\NumberOfMonthsAcceptable.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\CourseSelected.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\NumberOfApprenticesAdded.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\NumberOfMonthsEntered.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\TotalCapEntered.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\ValidStartDate.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\ValidStartYear.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\ValidStartMonth.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\WithinTotalCap.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidation\IAddApprenticeshipValidation.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidator.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
