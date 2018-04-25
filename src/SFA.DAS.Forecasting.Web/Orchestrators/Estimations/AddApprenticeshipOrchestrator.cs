@@ -1,9 +1,10 @@
-﻿
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Application.Estimations.Validation;
 using SFA.DAS.Forecasting.Domain.Estimations;
-using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
+using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -11,19 +12,19 @@ using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
-    public class ApprenticeshipOrchestrator : IApprenticeshipOrchestrator
+    public class AddApprenticeshipOrchestrator : IAddApprenticeshipOrchestrator
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
-        private readonly IVirtualApprenticeshipAddValidator _addValidator;
+        private readonly IAddApprenticeshipValidator _validator;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
-        public ApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IVirtualApprenticeshipAddValidator addValidator)
+        public AddApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IAddApprenticeshipValidator validator)
         {
             _hashingService = hashingService;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
-            _addValidator = addValidator;
+            _validator = validator;
         }
 
         public AddApprenticeshipViewModel GetApprenticeshipAddSetup()
@@ -36,9 +37,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     .GetAllStandardApprenticeshipCourses()
                     .OrderBy(course => course.Title)
                     .ToList(),
-                    AddApprenticeshipValidationDetail = _addValidator.GetCleanValidationDetail()
-                    
-                    
+                ValidationResults = new List<ValidationResult>()     
         };
             return result;
         }
@@ -77,7 +76,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                    await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.ApprenticeshipToAdd.CourseId);
             }
 
-            viewModel.AddApprenticeshipValidationDetail = _addValidator.ValidateDetails(viewModel.ApprenticeshipToAdd);
+            viewModel.ValidationResults = _validator.ValidateApprenticeship(viewModel.ApprenticeshipToAdd);
 
             viewModel = AdjustTotalCostApprenticeship(viewModel);
 

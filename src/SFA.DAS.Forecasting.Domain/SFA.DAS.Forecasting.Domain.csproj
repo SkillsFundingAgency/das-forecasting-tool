@@ -86,7 +86,6 @@
     <Compile Include="Estimations\AccountEstimationRepository.cs" />
     <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\BaseVirtualApprenticeshipValidator.cs" />
-    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipAddValidator.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipCourseDetailsValidator.cs" />
     <Compile Include="Shared\Validation\AddApprenticeshipValidationDetail.cs" />
     <Compile Include="Shared\Validation\ValidationResult.cs" />
