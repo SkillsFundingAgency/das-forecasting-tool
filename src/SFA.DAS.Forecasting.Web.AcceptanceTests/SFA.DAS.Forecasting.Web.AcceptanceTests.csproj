@@ -107,15 +107,35 @@
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Features\DisplayModelledApprenticeships.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisplayModelledApprenticeships.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DownloadForecastBalanceSheet.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\EstimateCostsPage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EstimateCostsPage.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\EstimatorStartPage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EstimatorStartPage.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\FundingProjectionPage _Accountprojection.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FundingProjectionPage _Accountprojection.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\RemoveModelledApprenticeship.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RemoveModelledApprenticeship.feature</DependentUpon>
     </Compile>
     <Compile Include="FileManager.cs" />
     <Compile Include="Forecasting Dashboard.feature.cs">
@@ -135,6 +155,7 @@
     </Compile>
     <Compile Include="Security\Steps\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />
+    <Compile Include="StepDefinition\EstimatorStartPageSteps.cs" />
     <Compile Include="StepDefinition\FundingProjectionPage_AccountprojectionSteps.cs" />
     <Compile Include="StepsBase.cs" />
   </ItemGroup>
@@ -142,13 +163,29 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Features\DisplayModelledApprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DisplayModelledApprenticeships.feature.cs</LastGenOutput>
+    </None>
     <None Include="Features\DownloadForecastBalanceSheet.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DownloadForecastBalanceSheet.feature.cs</LastGenOutput>
     </None>
+    <None Include="Features\EstimateCostsPage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EstimateCostsPage.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\EstimatorStartPage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EstimatorStartPage.feature.cs</LastGenOutput>
+    </None>
     <None Include="Features\FundingProjectionPage _Accountprojection.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>FundingProjectionPage _Accountprojection.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\RemoveModelledApprenticeship.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>RemoveModelledApprenticeship.feature.cs</LastGenOutput>
     </None>
     <None Include="Forecasting Dashboard.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -179,14 +216,14 @@
     <Folder Include="Pages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.34.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.34.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.34.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.34.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
     <Error Condition="!Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets'))" />
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
   </Target>
   <Import Project="..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" />
+  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
 </Project>

@@ -18,10 +18,18 @@ namespace SFA.DAS.Forecasting.Web.Automation
             Current = this;
         }
 
+
+        public void SetEmployeeHash(string hash)
+        {
+            EmployerHash = hash;
+        }
+
         public LoginPage NavigateToLoginPage()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
-            return new LoginPage(WebBrowserDriver);
+            // WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl);
+            var homepage = new HomePage(WebBrowserDriver);
+            return homepage.MoveToLoginPage();
         }
 
         public DashboardPage NavigateToDashboard()
@@ -34,6 +42,31 @@ namespace SFA.DAS.Forecasting.Web.Automation
         {
             WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
             return new FundingProjectionPage(WebBrowserDriver);
+        }
+
+        public EstimateFundsStartPage NavigateToEstimateFundsStartPage()
+        {
+            var currentUrl = new Uri(WebBrowserDriver.Url);
+            // TODO its a workaround to move on the page until estimations link implemented on employer
+            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
+            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/forecasting/estimations/start-transfer");
+            return new EstimateFundsStartPage(WebBrowserDriver);
+        }
+
+        public EstimateCostsPage NavigateToEstimageCostsPage()
+        {
+            var currentUrl = new Uri(WebBrowserDriver.Url);
+            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
+            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/forecasting/estimations/default");
+            return new EstimateCostsPage(WebBrowserDriver);
+        }
+
+        public AccountHomePage NavigateToAccountHomePage()
+        {
+            var currentUrl = new Uri(WebBrowserDriver.Url);
+            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
+            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/teams");
+            return new AccountHomePage(WebBrowserDriver);
         }
 
         public IWebDriver getDriver()
