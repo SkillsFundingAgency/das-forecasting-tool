@@ -1,4 +1,7 @@
-﻿using System;
+﻿using NUnit.Framework;
+using Sfa.Automation.Framework.Extensions;
+using SFA.DAS.Forecasting.Web.Automation;
+using System;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
@@ -35,31 +38,45 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 page.RemoveFirstApprenticeship();
                 isAnyapprenticeshipExist = page.IsApprenticeshipsTableVisible();
             }
-            WebSite.NavigateToEstimateFundsStartPage();
         }
         
         [When(@"I have current modelled apprenticeships")]
         public void WhenIHaveCurrentModelledApprenticeships()
         {
-            ScenarioContext.Current.Pending();
+            var page = WebSite.NavigateToEstimateFundsStartPage();
+            var addApprenticeshipPage = page.ClickStartForAccountWithoutApprenticeships();
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary");
+            addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
+            addApprenticeshipPage.NumberOfMonthsInput.EnterTextInThisElement("12");
+            addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
+            addApprenticeshipPage.StartDateYearInput.EnterTextInThisElement("2019");
+            //addApprenticeshipPage.TotalCostInput.Clear();
+            //addApprenticeshipPage.TotalCostInput.EnterTextInThisElement("18000");
+            addApprenticeshipPage.ContinueButton.ClickThisElement();
+            addApprenticeshipPage.ContinueButton.ClickThisElement();
         }
         
         [Then(@"by clicking the Start button I am taken to the Add apprenticeship page")]
         public void ThenByClickingTheStartButtonIAmTakenToTheAddApprenticeshipPage()
         {
-            ScenarioContext.Current.Pending();
+            var page = WebSite.NavigateToEstimateFundsStartPage();
+            var addApprenticeshipPage = page.ClickStartForAccountWithoutApprenticeships();
+            Assert.IsTrue(addApprenticeshipPage.IsPageVisible());
         }
         
         [Then(@"by clicking the Start button I am taken to the Estimated costs page")]
         public void ThenByClickingTheStartButtonIAmTakenToTheEstimatedCostsPage()
         {
-            ScenarioContext.Current.Pending();
+            var page = WebSite.NavigateToEstimateFundsStartPage();
+            var estimatedCostsPage = page.ClickStartForAccountWithApprenticeships();
+            Set(estimatedCostsPage);
         }
         
         [Then(@"the Remaining transfers allowance tab is displayed")]
         public void ThenTheRemainingTransfersAllowanceTabIsDisplayed()
         {
-            ScenarioContext.Current.Pending();
+            var page = Get<EstimateCostsPage>();
+            
         }
         
         [Then(@"the previously modelled apprenticeships costs are displayed")]

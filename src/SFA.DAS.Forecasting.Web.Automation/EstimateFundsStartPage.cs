@@ -16,5 +16,17 @@ namespace SFA.DAS.Forecasting.Web.Automation
         {
 
         }
+
+        public AddApprenticeshipsToEstimateCostPage ClickStartForAccountWithoutApprenticeships()
+        {
+            StartButton.ClickThisElement();
+            return new AddApprenticeshipsToEstimateCostPage(Driver);
+        }
+
+        public EstimateCostsPage ClickStartForAccountWithApprenticeships()
+        {
+            StartButton.ClickThisElement();
+            return new EstimateCostsPage(Driver);
+        }
     }
 }
