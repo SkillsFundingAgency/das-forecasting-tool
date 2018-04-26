@@ -25,6 +25,13 @@
 // ReSharper disable RedundantOverridenMember
 // ReSharper disable UseNameofExpression
 // TargetFrameworkVersion = 4.6
+
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.SqlServer;
+using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Models.Balance;
+
 #pragma warning disable 1591    //  Ignore "Missing XML Comment" warning
 
 
@@ -37,7 +44,7 @@ namespace SFA.DAS.Forecasting.Data
     {
         System.Data.Entity.DbSet<AccountProjection> AccountProjections { get; set; } // AccountProjection
         System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
-        System.Data.Entity.DbSet<Balance> Balances { get; set; } // Balance
+        System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         System.Data.Entity.DbSet<Commitment> Commitments { get; set; } // Commitment
         System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         System.Data.Entity.DbSet<LevyDeclaration> LevyDeclarations { get; set; } // LevyDeclaration
@@ -60,13 +67,23 @@ namespace SFA.DAS.Forecasting.Data
     #endregion
 
     #region Database context
+    public class myDBContextConfig : DbConfiguration
+    {
+        public myDBContextConfig()
+        {
+            SetProviderServices("System.Data.EntityClient",
+                SqlProviderServices.Instance);
+            SetDefaultConnectionFactory(new SqlConnectionFactory());
+        }
+    }
 
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
+    [DbConfigurationType(typeof(myDBContextConfig))]
     public partial class ForecastingDataContext : System.Data.Entity.DbContext, IForecastingDataContext
     {
         public System.Data.Entity.DbSet<AccountProjection> AccountProjections { get; set; } // AccountProjection
         public System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
-        public System.Data.Entity.DbSet<Balance> Balances { get; set; } // Balance
+        public System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         public System.Data.Entity.DbSet<Commitment> Commitments { get; set; } // Commitment
         public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         public System.Data.Entity.DbSet<LevyDeclaration> LevyDeclarations { get; set; } // LevyDeclaration
@@ -81,6 +98,13 @@ namespace SFA.DAS.Forecasting.Data
             : base("Name=DatabaseConnectionString")
         {
             InitializePartial();
+        }
+
+        public ForecastingDataContext(IApplicationConnectionStrings config) 
+            : base(config.DatabaseConnectionString)
+        {
+            InitializePartial();
+             
         }
 
         public ForecastingDataContext(string connectionString)
@@ -233,27 +257,27 @@ namespace SFA.DAS.Forecasting.Data
     }
 
     // Balance
-    [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class Balance
-    {
-        public long EmployerAccountId { get; set; } // EmployerAccountId (Primary key)
-        public decimal Amount { get; set; } // Amount
-        public decimal TransferAllowance { get; set; } // TransferAllowance
-        public decimal RemainingTransferBalance { get; set; } // RemainingTransferBalance
-        public System.DateTime BalancePeriod { get; set; } // BalancePeriod
-        public System.DateTime ReceivedDate { get; set; } // ReceivedDate
+    //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
+    //public partial class Balance
+    //{
+    //    public long EmployerAccountId { get; set; } // EmployerAccountId (Primary key)
+    //    public decimal Amount { get; set; } // Amount
+    //    public decimal TransferAllowance { get; set; } // TransferAllowance
+    //    public decimal RemainingTransferBalance { get; set; } // RemainingTransferBalance
+    //    public System.DateTime BalancePeriod { get; set; } // BalancePeriod
+    //    public System.DateTime ReceivedDate { get; set; } // ReceivedDate
 
-        public Balance()
-        {
-            Amount = 0m;
-            TransferAllowance = 0m;
-            RemainingTransferBalance = 0m;
-            ReceivedDate = System.DateTime.Now;
-            InitializePartial();
-        }
+    //    public Balance()
+    //    {
+    //        Amount = 0m;
+    //        TransferAllowance = 0m;
+    //        RemainingTransferBalance = 0m;
+    //        ReceivedDate = System.DateTime.Now;
+    //        InitializePartial();
+    //    }
 
-        partial void InitializePartial();
-    }
+    //    partial void InitializePartial();
+    //}
 
     // Commitment
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
@@ -433,7 +457,7 @@ namespace SFA.DAS.Forecasting.Data
 
     // Balance
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class BalanceConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Balance>
+    public partial class BalanceConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<BalanceModel>
     {
         public BalanceConfiguration()
             : this("dbo")

@@ -3,6 +3,8 @@ using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Shared.Services;
+using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
 using SFA.DAS.Provider.Events.Api.Client;
@@ -47,6 +49,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Use<StandardApiClient>()
                 .Ctor<string>("baseUri")
                 .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApprenticeshipsApiBaseUri);
+
+            ForSingletonOf<ForecastingDataContextFactory>();
+
+            For<IForecastingDataContext>()
+                .Use<ForecastingDataContext>()
+                .Ctor<IApplicationConnectionStrings>("config")
+                .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>());
         }
     }
 }
