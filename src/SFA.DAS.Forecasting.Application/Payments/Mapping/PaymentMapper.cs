@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
     public interface IPaymentMapper
     {
         Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
-        Commitment MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
+        CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
     }
 
     public class PaymentMapper: IPaymentMapper
@@ -39,9 +39,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 			};
 		}
 
-		public Commitment MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
+		public CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
 		{
-			return new Commitment
+			return new CommitmentModel
 			{
 				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,

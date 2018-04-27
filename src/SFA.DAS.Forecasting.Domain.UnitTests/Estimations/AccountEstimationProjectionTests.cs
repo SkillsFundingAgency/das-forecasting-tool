@@ -20,15 +20,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
     public class AccountEstimationProjectionTests
     {
         private AutoMoq.AutoMoqer _moqer;
-        private List<Commitment> _commitments;
+        private List<CommitmentModel> _commitments;
         private Account _account;
         [SetUp]
         public void SetUp()
         {
             _moqer = new AutoMoqer();
-            _commitments = new List<Commitment>
+            _commitments = new List<CommitmentModel>
             {
-                new Commitment
+                new CommitmentModel
                 {
                     CompletionAmount = 100,
                     EmployerAccountId = 12345,
@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     StartDate = new DateTime(2018, 1, 1),
                     NumberOfInstallments = 5
                 },
-                new Commitment
+                new CommitmentModel
                 {
                     CompletionAmount = 100,
                     EmployerAccountId = 12345,
@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     NumberOfInstallments = 5
                 }
             };
-            var employerCommitments = new EmployerCommitments(12345, _commitments, _moqer.GetMock<IEventPublisher>().Object, _moqer.GetMock<ICommitmentValidator>().Object);
+            var employerCommitments = new EmployerCommitments(12345, _commitments);
             _moqer.SetInstance(employerCommitments);
             _account = new Account(12345, 10000, 0, 15000, 10000);
             _moqer.SetInstance(_account);

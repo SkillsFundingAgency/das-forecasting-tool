@@ -31,6 +31,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.SqlServer;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 #pragma warning disable 1591    //  Ignore "Missing XML Comment" warning
 
@@ -45,7 +46,7 @@ namespace SFA.DAS.Forecasting.Data
         System.Data.Entity.DbSet<AccountProjection> AccountProjections { get; set; } // AccountProjection
         System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
         System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
-        System.Data.Entity.DbSet<Commitment> Commitments { get; set; } // Commitment
+        System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
         System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         System.Data.Entity.DbSet<LevyDeclaration> LevyDeclarations { get; set; } // LevyDeclaration
         System.Data.Entity.DbSet<Payment> Payments { get; set; } // Payment
@@ -67,9 +68,9 @@ namespace SFA.DAS.Forecasting.Data
     #endregion
 
     #region Database context
-    public class myDBContextConfig : DbConfiguration
+    public class ForecastingDbConfiguration : DbConfiguration
     {
-        public myDBContextConfig()
+        public ForecastingDbConfiguration()
         {
             SetProviderServices("System.Data.EntityClient",
                 SqlProviderServices.Instance);
@@ -78,13 +79,13 @@ namespace SFA.DAS.Forecasting.Data
     }
 
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    [DbConfigurationType(typeof(myDBContextConfig))]
+    [DbConfigurationType(typeof(ForecastingDbConfiguration))]
     public partial class ForecastingDataContext : System.Data.Entity.DbContext, IForecastingDataContext
     {
         public System.Data.Entity.DbSet<AccountProjection> AccountProjections { get; set; } // AccountProjection
         public System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
         public System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
-        public System.Data.Entity.DbSet<Commitment> Commitments { get; set; } // Commitment
+        public System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
         public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         public System.Data.Entity.DbSet<LevyDeclaration> LevyDeclarations { get; set; } // LevyDeclaration
         public System.Data.Entity.DbSet<Payment> Payments { get; set; } // Payment
@@ -246,7 +247,7 @@ namespace SFA.DAS.Forecasting.Data
         /// <summary>
         /// Parent Commitment pointed by [AccountProjectionCommitment].([CommitmentId]) (FK_AccountProjectionCommitment__Commitment)
         /// </summary>
-        public virtual Commitment Commitment { get; set; } // FK_AccountProjectionCommitment__Commitment
+        public virtual CommitmentModel Commitment { get; set; } // FK_AccountProjectionCommitment__Commitment
 
         public AccountProjectionCommitment()
         {
@@ -280,40 +281,40 @@ namespace SFA.DAS.Forecasting.Data
     //}
 
     // Commitment
-    [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class Commitment
-    {
-        public long Id { get; set; } // Id (Primary key)
-        public long EmployerAccountId { get; set; } // EmployerAccountId
-        public long LearnerId { get; set; } // LearnerId
-        public long ProviderId { get; set; } // ProviderId
-        public string ProviderName { get; set; } // ProviderName (length: 200)
-        public long ApprenticeshipId { get; set; } // ApprenticeshipId
-        public string ApprenticeName { get; set; } // ApprenticeName (length: 200)
-        public string CourseName { get; set; } // CourseName (length: 200)
-        public int? CourseLevel { get; set; } // CourseLevel
-        public System.DateTime StartDate { get; set; } // StartDate
-        public System.DateTime PlannedEndDate { get; set; } // PlannedEndDate
-        public System.DateTime? ActualEndDate { get; set; } // ActualEndDate
-        public decimal CompletionAmount { get; set; } // CompletionAmount
-        public decimal MonthlyInstallment { get; set; } // MonthlyInstallment
-        public short NumberOfInstallments { get; set; } // NumberOfInstallments
+    //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
+    //public partial class Commitment
+    //{
+    //    public long Id { get; set; } // Id (Primary key)
+    //    public long EmployerAccountId { get; set; } // EmployerAccountId
+    //    public long LearnerId { get; set; } // LearnerId
+    //    public long ProviderId { get; set; } // ProviderId
+    //    public string ProviderName { get; set; } // ProviderName (length: 200)
+    //    public long ApprenticeshipId { get; set; } // ApprenticeshipId
+    //    public string ApprenticeName { get; set; } // ApprenticeName (length: 200)
+    //    public string CourseName { get; set; } // CourseName (length: 200)
+    //    public int? CourseLevel { get; set; } // CourseLevel
+    //    public System.DateTime StartDate { get; set; } // StartDate
+    //    public System.DateTime PlannedEndDate { get; set; } // PlannedEndDate
+    //    public System.DateTime? ActualEndDate { get; set; } // ActualEndDate
+    //    public decimal CompletionAmount { get; set; } // CompletionAmount
+    //    public decimal MonthlyInstallment { get; set; } // MonthlyInstallment
+    //    public short NumberOfInstallments { get; set; } // NumberOfInstallments
 
-        // Reverse navigation
+    //    // Reverse navigation
 
-        /// <summary>
-        /// Child AccountProjectionCommitments where [AccountProjectionCommitment].[CommitmentId] point to this entity (FK_AccountProjectionCommitment__Commitment)
-        /// </summary>
-        public virtual System.Collections.Generic.ICollection<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment.FK_AccountProjectionCommitment__Commitment
+    //    /// <summary>
+    //    /// Child AccountProjectionCommitments where [AccountProjectionCommitment].[CommitmentId] point to this entity (FK_AccountProjectionCommitment__Commitment)
+    //    /// </summary>
+    //    public virtual System.Collections.Generic.ICollection<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment.FK_AccountProjectionCommitment__Commitment
 
-        public Commitment()
-        {
-            AccountProjectionCommitments = new System.Collections.Generic.List<AccountProjectionCommitment>();
-            InitializePartial();
-        }
+    //    public Commitment()
+    //    {
+    //        AccountProjectionCommitments = new System.Collections.Generic.List<AccountProjectionCommitment>();
+    //        InitializePartial();
+    //    }
 
-        partial void InitializePartial();
-    }
+    //    partial void InitializePartial();
+    //}
 
     // FundingSource
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
@@ -449,7 +450,7 @@ namespace SFA.DAS.Forecasting.Data
 
             // Foreign keys
             HasRequired(a => a.AccountProjection).WithMany(b => b.AccountProjectionCommitments).HasForeignKey(c => c.AccountProjectionId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__AccountProjection
-            HasRequired(a => a.Commitment).WithMany(b => b.AccountProjectionCommitments).HasForeignKey(c => c.CommitmentId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__Commitment
+            //HasRequired(a => a.Commitment).WithMany(b => b.AccountProjectionCommitments).HasForeignKey(c => c.CommitmentId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__Commitment
             InitializePartial();
         }
         partial void InitializePartial();
@@ -482,7 +483,7 @@ namespace SFA.DAS.Forecasting.Data
 
     // Commitment
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class CommitmentConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<Commitment>
+    public partial class CommitmentConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<CommitmentModel>
     {
         public CommitmentConfiguration()
             : this("dbo")

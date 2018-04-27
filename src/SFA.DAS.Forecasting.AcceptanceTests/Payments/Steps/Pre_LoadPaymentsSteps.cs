@@ -349,7 +349,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
+                var commitments = Connection.Query<Models.Commitments.CommitmentModel>("Select * from Commitment where EmployerAccountId = @employerAccountId"
                     , parameters, commandType: CommandType.Text).ToList();
                 Console.WriteLine($"Got {commitments.Count} commitments from projections commitments table.");
                 if (commitments.Count != Payments.Count)
@@ -367,7 +367,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", "112233", DbType.Int64);
-                var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
+                var commitments = Connection.Query<Models.Commitments.CommitmentModel>("Select * from Commitment where EmployerAccountId = @employerAccountId"
                     , parameters, commandType: CommandType.Text).ToList();
                 Console.WriteLine($"Got {commitments.Count} commitments from projections commitments table.");
                 if (commitments.Count != Payments.Count)
@@ -384,7 +384,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", "112233", DbType.Int64);
-                var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
+                var commitments = Connection.Query<Models.Commitments.CommitmentModel>("Select * from Commitment where EmployerAccountId = @employerAccountId"
                     , parameters, commandType: CommandType.Text).ToList();
                 Console.WriteLine($"Got {commitments.Count} commitments from projections commitments table.");
                 if (commitments.Count != 1)
