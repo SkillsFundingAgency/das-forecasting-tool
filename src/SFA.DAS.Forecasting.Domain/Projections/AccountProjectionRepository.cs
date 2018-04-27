@@ -20,25 +20,25 @@ namespace SFA.DAS.Forecasting.Domain.Projections
     {
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
-        private readonly ILevyDataService _levyDataService;
+        private readonly ILevyDataSession _levyDataSession;
         private readonly IAccountProjectionDataService _accountProjectionDataService;
 
         public AccountProjectionRepository(IEmployerCommitmentsRepository commitmentsRepository, ICurrentBalanceRepository currentBalanceRepository,
-            ILevyDataService levyDataService, IAccountProjectionDataService accountProjectionDataService)
+            ILevyDataSession levyDataSession, IAccountProjectionDataService accountProjectionDataService)
         {
             _commitmentsRepository = commitmentsRepository ?? throw new ArgumentNullException(nameof(commitmentsRepository));
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
-            _levyDataService = levyDataService ?? throw new ArgumentNullException(nameof(levyDataService));
+            _levyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
             _accountProjectionDataService = accountProjectionDataService ?? throw new ArgumentNullException(nameof(accountProjectionDataService));
         }
 
         public async Task<AccountProjection> Get(long employerAccountId)
         {
-            var levy = _levyDataService.GetLatestLevyAmount(employerAccountId);
-            var balance = _currentBalanceRepository.Get(employerAccountId);
-            var commitments = _commitmentsRepository.Get(employerAccountId);
-            await Task.WhenAll(levy, balance, commitments);
-            return new AccountProjection(new Account(employerAccountId, balance.Result.Amount, levy.Result, 0, 0), commitments.Result);
+            var levy = await _levyDataSession.GetLatestLevyAmount(employerAccountId);
+            var balance = await _currentBalanceRepository.Get(employerAccountId);
+            var commitments = await _commitmentsRepository.Get(employerAccountId);
+            
+            return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), commitments);
         }
 
         public async Task Store(AccountProjection accountProjection)
