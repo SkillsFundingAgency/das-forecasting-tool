@@ -48,7 +48,7 @@
     <Compile Include="Estimation\ApprenticeshipCourse.cs" />
     <Compile Include="Estimation\VirtualApprenticeship.cs" />
     <Compile Include="IDocument.cs" />
-    <Compile Include="Levy\LevyDeclaration.cs" />
+    <Compile Include="Levy\LevyDeclarationModel.cs" />
     <Compile Include="Payments\CalendarPeriod.cs" />
     <Compile Include="Payments\NamedCalendarPeriod.cs" />
     <Compile Include="Payments\EmployerPayment.cs" />

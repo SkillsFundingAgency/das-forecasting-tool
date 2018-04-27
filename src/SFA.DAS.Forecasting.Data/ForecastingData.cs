@@ -32,6 +32,7 @@ using System.Data.Entity.SqlServer;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Levy;
 
 #pragma warning disable 1591    //  Ignore "Missing XML Comment" warning
 
@@ -48,7 +49,7 @@ namespace SFA.DAS.Forecasting.Data
         System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
         System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
-        System.Data.Entity.DbSet<LevyDeclaration> LevyDeclarations { get; set; } // LevyDeclaration
+        System.Data.Entity.DbSet<LevyDeclarationModel> LevyDeclarations { get; set; } // LevyDeclaration
         System.Data.Entity.DbSet<Payment> Payments { get; set; } // Payment
 
         int SaveChanges();
@@ -87,7 +88,7 @@ namespace SFA.DAS.Forecasting.Data
         public System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         public System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
         public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
-        public System.Data.Entity.DbSet<LevyDeclaration> LevyDeclarations { get; set; } // LevyDeclaration
+        public System.Data.Entity.DbSet<LevyDeclarationModel> LevyDeclarations { get; set; } // LevyDeclaration
         public System.Data.Entity.DbSet<Payment> Payments { get; set; } // Payment
 
         static ForecastingDataContext()
@@ -339,28 +340,28 @@ namespace SFA.DAS.Forecasting.Data
         partial void InitializePartial();
     }
 
-    // LevyDeclaration
-    [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class LevyDeclaration
-    {
-        public long Id { get; set; } // Id (Primary key)
-        public long EmployerAccountId { get; set; } // EmployerAccountId
-        public string Scheme { get; set; } // Scheme (length: 50)
-        public string PayrollYear { get; set; } // PayrollYear (length: 10)
-        public byte PayrollMonth { get; set; } // PayrollMonth
-        public System.DateTime PayrollDate { get; set; } // PayrollDate
-        public decimal LevyAmountDeclared { get; set; } // LevyAmountDeclared
-        public System.DateTime TransactionDate { get; set; } // TransactionDate
-        public System.DateTime DateReceived { get; set; } // DateReceived
+    //// LevyDeclaration
+    //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
+    //public partial class LevyDeclaration
+    //{
+    //    public long Id { get; set; } // Id (Primary key)
+    //    public long EmployerAccountId { get; set; } // EmployerAccountId
+    //    public string Scheme { get; set; } // Scheme (length: 50)
+    //    public string PayrollYear { get; set; } // PayrollYear (length: 10)
+    //    public byte PayrollMonth { get; set; } // PayrollMonth
+    //    public System.DateTime PayrollDate { get; set; } // PayrollDate
+    //    public decimal LevyAmountDeclared { get; set; } // LevyAmountDeclared
+    //    public System.DateTime TransactionDate { get; set; } // TransactionDate
+    //    public System.DateTime DateReceived { get; set; } // DateReceived
 
-        public LevyDeclaration()
-        {
-            DateReceived = System.DateTime.Now;
-            InitializePartial();
-        }
+    //    public LevyDeclaration()
+    //    {
+    //        DateReceived = System.DateTime.Now;
+    //        InitializePartial();
+    //    }
 
-        partial void InitializePartial();
-    }
+    //    partial void InitializePartial();
+    //}
 
     // Payment
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
@@ -538,7 +539,7 @@ namespace SFA.DAS.Forecasting.Data
 
     // LevyDeclaration
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class LevyDeclarationConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<LevyDeclaration>
+    public partial class LevyDeclarationConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<LevyDeclarationModel>
     {
         public LevyDeclarationConfiguration()
             : this("dbo")

@@ -76,14 +76,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there will be a record in the storage for employer (.*)")]
         public void ThereWillBeThreeRecordsInTheStorage(long employerId)
         {
-            LevyDeclaration declaration = null;
+            LevyDeclarationModel declaration = null;
             
             WaitForIt(() => 
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", employerId, DbType.Int64);
 
-                var declarations = Connection.Query<LevyDeclaration>("select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                var declarations = Connection.Query<LevyDeclarationModel>("select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
                         , param: parameters, commandType: CommandType.Text);
 
                 declaration = declarations.FirstOrDefault();
@@ -120,14 +120,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Then(@"there will be a levy declaration for the employer (.*) and no sensitive data will have been stored in the database")]
         public void ThereWillRecordInTheStorageWithNoSensitiveData(long substitutionId)
         {
-            LevyDeclaration declaration = null;
+            LevyDeclarationModel declaration = null;
 
             WaitForIt(() =>
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", substitutionId, DbType.Int64);
 
-                var declarations = Connection.Query<LevyDeclaration>("select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
+                var declarations = Connection.Query<LevyDeclarationModel>("select * from LevyDeclaration where EmployerAccountId = @employerAccountId"
                         , param: parameters, commandType: CommandType.Text);
 
                 declaration = declarations.FirstOrDefault();

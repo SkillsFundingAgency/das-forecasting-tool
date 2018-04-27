@@ -22,11 +22,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
     public class GenerateLevyProjectionsCI_498Steps : StepsBase
     {
 
-        protected CalendarPeriod ProjectionsStartPeriod
-        {
-            get => Get<CalendarPeriod>("projections_start_period");
-            set => Set(value, "projections_start_period");
-        }
+
 
         [Scope(Feature = "Generate Levy Projections [CI-498]")]
         [BeforeFeature(Order = 1)]
@@ -70,15 +66,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             ProjectionsStartPeriod = new CalendarPeriod { Month = DateTime.Today.Month - 1, Year = DateTime.Today.Year };
         }
 
-
         [When(@"the account projection is triggered after levy has been declared")]
         public void WhenTheAccountProjectionIsGenerated()
         {
+            var startPeriodJson = ScenarioContext.Current.ContainsKey("projections_start_period")
+                ? ProjectionsStartPeriod.ToJson()
+                : string.Empty;
+
             DeleteAccountProjections();
             var projectionUrl =
                 Config.ProjectionLevyFunctionUrl.Replace("{employerAccountId}", Config.EmployerAccountId.ToString());
             Console.WriteLine($"Sending levy event to levy function: {projectionUrl}");
-            var response = HttpClient.PostAsync(projectionUrl, new StringContent(ProjectionsStartPeriod?.ToJson(), Encoding.UTF8, "application/json")).Result;
+            var response = HttpClient.PostAsync(projectionUrl, new StringContent(startPeriodJson, Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 

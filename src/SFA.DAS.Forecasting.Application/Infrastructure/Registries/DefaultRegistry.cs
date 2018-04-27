@@ -50,12 +50,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Ctor<string>("baseUri")
                 .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApprenticeshipsApiBaseUri);
 
-            ForSingletonOf<ForecastingDataContextFactory>();
-
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()
                 .Ctor<IApplicationConnectionStrings>("config")
-                .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>());
+                .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>())
+                .ContainerScoped();
         }
     }
 }

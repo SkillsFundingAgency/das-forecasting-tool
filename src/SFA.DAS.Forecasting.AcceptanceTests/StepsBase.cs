@@ -15,6 +15,7 @@ using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
+using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
 using StructureMap;
 using TechTalk.SpecFlow;
@@ -41,7 +42,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected List<AccountProjectionReadModel> AccountProjections { get => Get<List<AccountProjectionReadModel>>(); set => Set(value); }
         protected List<Models.Payments.Payment> RecordedPayments { get => Get<List<Models.Payments.Payment>>(); set => Set(value); }
         protected List<Models.Commitments.CommitmentModel> RecordedCommitments { get => Get<List<Models.Commitments.CommitmentModel>>(); set => Set(value); }
-
+        protected CalendarPeriod ProjectionsStartPeriod
+        {
+            get => Get<CalendarPeriod>("projections_start_period");
+            set => Set(value, "projections_start_period");
+        } 
         protected decimal Balance
         {
             get => (decimal)Get<object>("current_balance");
