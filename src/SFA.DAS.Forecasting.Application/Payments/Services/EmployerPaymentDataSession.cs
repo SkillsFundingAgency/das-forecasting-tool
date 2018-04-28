@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public void Store(PaymentModel payment)
         {
-            if (payment.Id > 0)
+            if (payment.Id <= 0)
                 _dataContext.Payments.Add(payment);
         }
 

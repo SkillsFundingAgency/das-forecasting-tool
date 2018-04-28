@@ -53,6 +53,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ForecastingData.tt</DependentUpon>
     </Compile>
+    <Compile Include="ForecastingDbConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

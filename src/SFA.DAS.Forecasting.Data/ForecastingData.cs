@@ -25,19 +25,14 @@
 // ReSharper disable RedundantOverridenMember
 // ReSharper disable UseNameofExpression
 // TargetFrameworkVersion = 4.6
+#pragma warning disable 1591    //  Ignore "Missing XML Comment" warning
 
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.SqlServer;
-using SFA.DAS.Forecasting.Core;
+
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
-
-#pragma warning disable 1591    //  Ignore "Missing XML Comment" warning
-
 
 namespace SFA.DAS.Forecasting.Data
 {
@@ -50,7 +45,7 @@ namespace SFA.DAS.Forecasting.Data
         System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
         System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
-        System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
+        //System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         System.Data.Entity.DbSet<LevyDeclarationModel> LevyDeclarations { get; set; } // LevyDeclaration
         System.Data.Entity.DbSet<PaymentModel> Payments { get; set; } // Payment
 
@@ -71,25 +66,15 @@ namespace SFA.DAS.Forecasting.Data
     #endregion
 
     #region Database context
-    public class ForecastingDbConfiguration : DbConfiguration
-    {
-        public ForecastingDbConfiguration()
-        {
-            SetProviderServices("System.Data.EntityClient",
-                SqlProviderServices.Instance);
-            SetDefaultConnectionFactory(new SqlConnectionFactory());
-        }
-    }
 
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    [DbConfigurationType(typeof(ForecastingDbConfiguration))]
     public partial class ForecastingDataContext : System.Data.Entity.DbContext, IForecastingDataContext
     {
         public System.Data.Entity.DbSet<AccountProjectionReadModel> AccountProjections { get; set; } // AccountProjection
         public System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
         public System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         public System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
-        public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
+        //public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         public System.Data.Entity.DbSet<LevyDeclarationModel> LevyDeclarations { get; set; } // LevyDeclaration
         public System.Data.Entity.DbSet<PaymentModel> Payments { get; set; } // Payment
 
@@ -102,13 +87,6 @@ namespace SFA.DAS.Forecasting.Data
             : base("Name=DatabaseConnectionString")
         {
             InitializePartial();
-        }
-
-        public ForecastingDataContext(IApplicationConnectionStrings config) 
-            : base(config.DatabaseConnectionString)
-        {
-            InitializePartial();
-             
         }
 
         public ForecastingDataContext(string connectionString)
@@ -158,7 +136,7 @@ namespace SFA.DAS.Forecasting.Data
             modelBuilder.Configurations.Add(new AccountProjectionCommitmentConfiguration());
             modelBuilder.Configurations.Add(new BalanceConfiguration());
             modelBuilder.Configurations.Add(new CommitmentConfiguration());
-            modelBuilder.Configurations.Add(new FundingSourceConfiguration());
+            //modelBuilder.Configurations.Add(new FundingSourceConfiguration());
             modelBuilder.Configurations.Add(new LevyDeclarationConfiguration());
             modelBuilder.Configurations.Add(new PaymentConfiguration());
 
@@ -171,7 +149,7 @@ namespace SFA.DAS.Forecasting.Data
             modelBuilder.Configurations.Add(new AccountProjectionCommitmentConfiguration(schema));
             modelBuilder.Configurations.Add(new BalanceConfiguration(schema));
             modelBuilder.Configurations.Add(new CommitmentConfiguration(schema));
-            modelBuilder.Configurations.Add(new FundingSourceConfiguration(schema));
+            //modelBuilder.Configurations.Add(new FundingSourceConfiguration(schema));
             modelBuilder.Configurations.Add(new LevyDeclarationConfiguration(schema));
             modelBuilder.Configurations.Add(new PaymentConfiguration(schema));
             return modelBuilder;
@@ -204,7 +182,7 @@ namespace SFA.DAS.Forecasting.Data
     //    public long Id { get; set; } // Id (Primary key)
     //    public long EmployerAccountId { get; set; } // EmployerAccountId
     //    public System.DateTime ProjectionCreationDate { get; set; } // ProjectionCreationDate
-    //    public short ProjectionGenerationType { get; set; } // ProjectionGenerationType
+    //    public SFA.DAS.Forecasting.Models.Projections.ProjectionGenerationType ProjectionGenerationType { get; set; } // ProjectionGenerationType
     //    public short Month { get; set; } // Month
     //    public int Year { get; set; } // Year
     //    public decimal FundsIn { get; set; } // FundsIn
@@ -232,7 +210,7 @@ namespace SFA.DAS.Forecasting.Data
     //    partial void InitializePartial();
     //}
 
-    //// AccountProjectionCommitment
+    // AccountProjectionCommitment
     //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
     //public partial class AccountProjectionCommitment
     //{
@@ -250,7 +228,7 @@ namespace SFA.DAS.Forecasting.Data
     //    /// <summary>
     //    /// Parent Commitment pointed by [AccountProjectionCommitment].([CommitmentId]) (FK_AccountProjectionCommitment__Commitment)
     //    /// </summary>
-    //    public virtual CommitmentModel Commitment { get; set; } // FK_AccountProjectionCommitment__Commitment
+    //    public virtual Commitment Commitment { get; set; } // FK_AccountProjectionCommitment__Commitment
 
     //    public AccountProjectionCommitment()
     //    {
@@ -320,29 +298,21 @@ namespace SFA.DAS.Forecasting.Data
     //}
 
     // FundingSource
-    [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class FundingSource
-    {
-        public byte Id { get; set; } // Id (Primary key)
-        public string Name { get; set; } // Name (length: 200)
+    //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
+    //public partial class FundingSource
+    //{
+    //    public byte Id { get; set; } // Id (Primary key)
+    //    public string Name { get; set; } // Name (length: 200)
 
-        // Reverse navigation
+    //    public FundingSource()
+    //    {
+    //        InitializePartial();
+    //    }
 
-        /// <summary>
-        /// Child Payments where [Payment].[FundingSource] point to this entity (FK_Payment__FundingSource)
-        /// </summary>
-        public virtual System.Collections.Generic.ICollection<PaymentModel> Payments { get; set; } // Payment.FK_Payment__FundingSource
+    //    partial void InitializePartial();
+    //}
 
-        public FundingSource()
-        {
-            Payments = new System.Collections.Generic.List<PaymentModel>();
-            InitializePartial();
-        }
-
-        partial void InitializePartial();
-    }
-
-    //// LevyDeclaration
+    // LevyDeclaration
     //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
     //public partial class LevyDeclaration
     //{
@@ -365,7 +335,7 @@ namespace SFA.DAS.Forecasting.Data
     //    partial void InitializePartial();
     //}
 
-    // Payment
+    //// Payment
     //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
     //public partial class Payment
     //{
@@ -381,14 +351,8 @@ namespace SFA.DAS.Forecasting.Data
     //    public int CollectionPeriodYear { get; set; } // CollectionPeriodYear
     //    public int DeliveryPeriodMonth { get; set; } // DeliveryPeriodMonth
     //    public int DeliveryPeriodYear { get; set; } // DeliveryPeriodYear
-    //    public byte FundingSource { get; set; } // FundingSource
+    //    public SFA.DAS.Forecasting.Models.Payments.FundingSource FundingSource { get; set; } // FundingSource
 
-    //    // Foreign keys
-
-    //    /// <summary>
-    //    /// Parent FundingSource pointed by [Payment].([FundingSource]) (FK_Payment__FundingSource)
-    //    /// </summary>
-    //    public virtual FundingSource FundingSource_FundingSource { get; set; } // FK_Payment__FundingSource
 
     //    public Payment()
     //    {
@@ -452,8 +416,8 @@ namespace SFA.DAS.Forecasting.Data
             Property(x => x.CommitmentId).HasColumnName(@"CommitmentId").HasColumnType("bigint").IsRequired();
 
             // Foreign keys
-            HasRequired(a => a.AccountProjectionReadModel).WithMany(b => b.Commitments).HasForeignKey(c => c.AccountProjectionId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__AccountProjection
-            //HasRequired(a => a.Commitment).WithMany(b => b.AccountProjectionCommitments).HasForeignKey(c => c.CommitmentId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__Commitment
+            HasRequired(a => a.AccountProjection).WithMany(b => b.Commitments).HasForeignKey(c => c.AccountProjectionId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__AccountProjection
+            HasRequired(a => a.Commitment).WithMany().HasForeignKey(c => c.CommitmentId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__Commitment
             InitializePartial();
         }
         partial void InitializePartial();
@@ -519,25 +483,25 @@ namespace SFA.DAS.Forecasting.Data
     }
 
     // FundingSource
-    [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class FundingSourceConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<FundingSource>
-    {
-        public FundingSourceConfiguration()
-            : this("dbo")
-        {
-        }
+    //[System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
+    //public partial class FundingSourceConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<FundingSource>
+    //{
+    //    public FundingSourceConfiguration()
+    //        : this("dbo")
+    //    {
+    //    }
 
-        public FundingSourceConfiguration(string schema)
-        {
-            ToTable("FundingSource", schema);
-            HasKey(x => x.Id);
+    //    public FundingSourceConfiguration(string schema)
+    //    {
+    //        ToTable("FundingSource", schema);
+    //        HasKey(x => x.Id);
 
-            Property(x => x.Id).HasColumnName(@"Id").HasColumnType("tinyint").IsRequired().HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None);
-            Property(x => x.Name).HasColumnName(@"Name").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
-            InitializePartial();
-        }
-        partial void InitializePartial();
-    }
+    //        Property(x => x.Id).HasColumnName(@"Id").HasColumnType("tinyint").IsRequired().HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None);
+    //        Property(x => x.Name).HasColumnName(@"Name").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
+    //        InitializePartial();
+    //    }
+    //    partial void InitializePartial();
+    //}
 
     // LevyDeclaration
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
@@ -595,8 +559,6 @@ namespace SFA.DAS.Forecasting.Data
             Property(x => x.DeliveryPeriod.Year).HasColumnName(@"DeliveryPeriodYear").HasColumnType("int").IsRequired();
             Property(x => x.FundingSource).HasColumnName(@"FundingSource").HasColumnType("tinyint").IsRequired();
 
-            // Foreign keys
-            //HasRequired(a => a.FundingSource).WithMany().HasForeignKey(c => c.FundingSource).WillCascadeOnDelete(false); // FK_Payment__FundingSource
             InitializePartial();
         }
         partial void InitializePartial();

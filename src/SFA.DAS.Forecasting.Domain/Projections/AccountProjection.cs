@@ -66,7 +66,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,
                 ProjectionCreationDate = DateTime.UtcNow,
-                ProjectionGenerationType = (short)projectionGenerationType,
+                ProjectionGenerationType = projectionGenerationType,
                 Commitments = commitments.Select(commitmentId => new AccountProjectionCommitment { CommitmentId = commitmentId }).ToList()
             };
             return projection;

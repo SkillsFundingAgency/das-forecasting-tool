@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
         public async Task<bool> Allow(PaymentCreatedMessage paymentCreatedMessage)
         {
-            Logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.ToDebugJson()}");
+            Logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.EmployerAccountId}, {paymentCreatedMessage.Id}");
             if (!ApplicationConfiguration.AllowTriggerProjections)
             {
                 Logger.Warn("Triggering of projections is disabled.");

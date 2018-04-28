@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Models.Projections
 {
@@ -26,7 +25,7 @@ namespace SFA.DAS.Forecasting.Models.Projections
         public long Id { get; set; } // Id (Primary key)
         public long EmployerAccountId { get; set; } // EmployerAccountId
         public System.DateTime ProjectionCreationDate { get; set; } // ProjectionCreationDate
-        public short ProjectionGenerationType { get; set; } // ProjectionGenerationType
+        public SFA.DAS.Forecasting.Models.Projections.ProjectionGenerationType ProjectionGenerationType { get; set; } // ProjectionGenerationType
         public short Month { get; set; } // Month
         public int Year { get; set; } // Year
         public decimal FundsIn { get; set; } // FundsIn
@@ -49,29 +48,6 @@ namespace SFA.DAS.Forecasting.Models.Projections
             CoInvestmentGovernment = 0m;
             Commitments = new System.Collections.Generic.List<AccountProjectionCommitment>();
         }
-    }
 
-    public  class AccountProjectionCommitment
-    {
-        public long Id { get; set; } // Id (Primary key)
-        public long AccountProjectionId { get; set; } // AccountProjectionId
-        public long CommitmentId { get; set; } // CommitmentId
-
-        // Foreign keys
-
-        /// <summary>
-        /// Parent AccountProjection pointed by [AccountProjectionCommitment].([AccountProjectionId]) (FK_AccountProjectionCommitment__AccountProjection)
-        /// </summary>
-        public virtual AccountProjectionReadModel AccountProjectionReadModel { get; set; } // FK_AccountProjectionCommitment__AccountProjection
-
-        /// <summary>
-        /// Parent Commitment pointed by [AccountProjectionCommitment].([CommitmentId]) (FK_AccountProjectionCommitment__Commitment)
-        /// </summary>
-        public virtual CommitmentModel Commitment { get; set; } // FK_AccountProjectionCommitment__Commitment
-
-        public AccountProjectionCommitment()
-        {
-
-        }
     }
 }

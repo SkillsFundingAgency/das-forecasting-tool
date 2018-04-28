@@ -21,13 +21,13 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 
         public async Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration)
         {
-            Logger.Debug($"Now handling the levy declaration event: {levySchemeDeclaration.ToDebugJson()}");
+            Logger.Debug($"Now handling the levy declaration event: {levySchemeDeclaration.AccountId}, {levySchemeDeclaration.EmpRef}");
             if (levySchemeDeclaration.PayrollMonth == null)
                 throw new InvalidOperationException($"Received invalid levy declaration. No month specified. Data: ");
             var levyDeclaration = await Repository.Get(levySchemeDeclaration.AccountId, levySchemeDeclaration.EmpRef, levySchemeDeclaration.PayrollYear,
                 (byte)levySchemeDeclaration.PayrollMonth.Value);
             Logger.Debug("Now adding levy declaration to levy period.");
-            levyDeclaration.RegisterLevyDeclaration(levyDeclaration.LevyAmountDeclared, levySchemeDeclaration.CreatedDate);
+            levyDeclaration.RegisterLevyDeclaration(levySchemeDeclaration.LevyDeclaredInMonth, levySchemeDeclaration.CreatedDate);
             Logger.Debug($"Now storing the levy period. Employer: {levySchemeDeclaration.AccountId}, year: {levySchemeDeclaration.PayrollYear}, month: {levySchemeDeclaration.PayrollMonth}");
             await Repository.Store(levyDeclaration);
             Logger.Info($"Finished adding the levy declaration to the levy period. Levy declaration: {levyDeclaration.Id}");
