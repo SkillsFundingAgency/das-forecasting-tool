@@ -86,13 +86,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         {
             WaitForIt(() =>
             {
-                var projections = new List<AccountProjectionReadModel>();
+                var projections = new List<AccountProjectionModel>();
                 ExecuteSql(() =>
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
 
-                    projections = Connection.Query<AccountProjectionReadModel>(
+                    projections = Connection.Query<AccountProjectionModel>(
                         "Select * from AccountProjection where EmployerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
                 });
                 if (!projections.Any())

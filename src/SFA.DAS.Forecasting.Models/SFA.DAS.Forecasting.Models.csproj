@@ -57,7 +57,7 @@
     <Compile Include="Payments\PaymentModel.cs" />
     <Compile Include="Balance\Account.cs" />
     <Compile Include="Projections\AccountProjectionCommitment.cs" />
-    <Compile Include="Projections\AccountProjectionReadModel.cs" />
+    <Compile Include="Projections\AccountProjectionModel.cs" />
     <Compile Include="Projections\ProjectionGenerationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

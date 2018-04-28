@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Models.Projections
         /// <summary>
         /// Parent AccountProjection pointed by [AccountProjectionCommitment].([AccountProjectionId]) (FK_AccountProjectionCommitment__AccountProjection)
         /// </summary>
-        public virtual AccountProjectionReadModel AccountProjection { get; set; } // FK_AccountProjectionCommitment__AccountProjection
+        public virtual AccountProjectionModel AccountProjection { get; set; } // FK_AccountProjectionCommitment__AccountProjection
 
         /// <summary>
         /// Parent Commitment pointed by [AccountProjectionCommitment].([CommitmentId]) (FK_AccountProjectionCommitment__Commitment)

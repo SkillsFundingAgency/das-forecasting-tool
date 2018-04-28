@@ -71,7 +71,7 @@
     <Compile Include="Payments\EmployerPayment.cs" />
     <Compile Include="Payments\Services\IEmployerPaymentDataSession.cs" />
     <Compile Include="Projections\AccountProjection.cs" />
-    <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
+    <Compile Include="Projections\Services\IAccountProjectionDataSession.cs" />
     <Compile Include="Projections\AccountProjectionRepository.cs" />
     <Compile Include="Levy\LevyPeriod.cs" />
     <Compile Include="Levy\LevyPeriodRepository.cs" />

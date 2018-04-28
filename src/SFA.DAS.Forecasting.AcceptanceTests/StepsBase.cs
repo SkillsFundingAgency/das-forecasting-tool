@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
-        protected List<AccountProjectionReadModel> AccountProjections { get => Get<List<AccountProjectionReadModel>>(); set => Set(value); }
+        protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }
         protected List<Models.Commitments.CommitmentModel> RecordedCommitments { get => Get<List<Models.Commitments.CommitmentModel>>(); set => Set(value); }
         protected CalendarPeriod ProjectionsStartPeriod

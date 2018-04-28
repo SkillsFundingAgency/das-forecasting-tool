@@ -218,7 +218,7 @@
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
     <Compile Include="Projections\Handlers\BuildAccountProjectionHandler.cs" />
     <Compile Include="Projections\Handlers\GetAccountBalanceHandler.cs" />
-    <Compile Include="Projections\Services\AccountProjectionDataService.cs" />
+    <Compile Include="Projections\Services\AccountProjectionDataSession.cs" />
     <Compile Include="Infrastructure\Configuration\ApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
     <Compile Include="Levy\Handlers\AllowAccountProjectionsHandler.cs" />
@@ -237,7 +237,6 @@
     <Compile Include="Payments\Validation\CollectionPeriodSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
-    <Compile Include="Projections\Services\AccountProjectionReadModelDataService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\Services\EmployerTableStorageService.cs" />
     <Compile Include="Shared\Services\LevyDeclaration.cs" />

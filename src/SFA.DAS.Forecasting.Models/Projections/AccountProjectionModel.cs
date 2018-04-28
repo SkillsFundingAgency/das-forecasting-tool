@@ -20,12 +20,12 @@ namespace SFA.DAS.Forecasting.Models.Projections
     //    public decimal CoInvestmentGovernment { get; set; }
     //}
 
-    public class AccountProjectionReadModel
+    public class AccountProjectionModel
     {
         public long Id { get; set; } // Id (Primary key)
         public long EmployerAccountId { get; set; } // EmployerAccountId
         public System.DateTime ProjectionCreationDate { get; set; } // ProjectionCreationDate
-        public SFA.DAS.Forecasting.Models.Projections.ProjectionGenerationType ProjectionGenerationType { get; set; } // ProjectionGenerationType
+        public ProjectionGenerationType ProjectionGenerationType { get; set; } // ProjectionGenerationType
         public short Month { get; set; } // Month
         public int Year { get; set; } // Year
         public decimal FundsIn { get; set; } // FundsIn
@@ -42,11 +42,11 @@ namespace SFA.DAS.Forecasting.Models.Projections
         /// </summary>
         public virtual System.Collections.Generic.ICollection<AccountProjectionCommitment> Commitments { get; set; } // AccountProjectionCommitment.FK_AccountProjectionCommitment__AccountProjection
 
-        public AccountProjectionReadModel()
+        public AccountProjectionModel()
         {
             CoInvestmentEmployer = 0m;
             CoInvestmentGovernment = 0m;
-            Commitments = new System.Collections.Generic.List<AccountProjectionCommitment>();
+            Commitments = new List<AccountProjectionCommitment>();
         }
 
     }

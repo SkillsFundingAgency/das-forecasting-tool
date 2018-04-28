@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 {
     public interface IAccountEstimationProjection
     {
-        ReadOnlyCollection<AccountProjectionReadModel> Projections { get; }
+        ReadOnlyCollection<AccountProjectionModel> Projections { get; }
 
         void BuildProjections();
     }
@@ -21,13 +21,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     {
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;
-        private readonly List<AccountProjectionReadModel> _projections;
-        public ReadOnlyCollection<AccountProjectionReadModel> Projections => _projections.AsReadOnly();
+        private readonly List<AccountProjectionModel> _projections;
+        public ReadOnlyCollection<AccountProjectionModel> Projections => _projections.AsReadOnly();
         public AccountEstimationProjection(Account account, EmployerCommitments virtualEmployerCommitments)
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _virtualEmployerCommitments = virtualEmployerCommitments ?? throw new ArgumentNullException(nameof(virtualEmployerCommitments));
-            _projections = new List<AccountProjectionReadModel>();
+            _projections = new List<AccountProjectionModel>();
         }
 
         public void BuildProjections()
@@ -51,7 +51,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             }
         }
 
-        private AccountProjectionReadModel CreateProjection(DateTime period, decimal lastBalance)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal lastBalance)
         {
             var totalCostOfTraning = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             commitments.AddRange(completionPayments.Item2);
             commitments = commitments.Distinct().ToList();
             var balance = lastBalance;
-            var projection = new AccountProjectionReadModel
+            var projection = new AccountProjectionModel
             {
                 FundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,

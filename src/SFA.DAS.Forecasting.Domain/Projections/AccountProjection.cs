@@ -10,15 +10,16 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 {
     public class AccountProjection
     {
+        public long EmployerAccountId => _account.EmployerAccountId;
         private readonly Account _account;
         private readonly EmployerCommitments _employerCommitments;
-        private readonly List<AccountProjectionReadModel> _projections;
-        public ReadOnlyCollection<AccountProjectionReadModel> Projections => _projections.AsReadOnly();
+        private readonly List<AccountProjectionModel> _projections;
+        public ReadOnlyCollection<AccountProjectionModel> Projections => _projections.AsReadOnly();
         public AccountProjection(Account account, EmployerCommitments employerCommitments)
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
-            _projections = new List<AccountProjectionReadModel>();
+            _projections = new List<AccountProjectionModel>();
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
@@ -46,7 +47,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             }
         }
 
-        private AccountProjectionReadModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType)
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
@@ -54,7 +55,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             commitments.AddRange(completionPayments.Item2);
             commitments = commitments.Distinct().ToList();
             var balance = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1;
-            var projection = new AccountProjectionReadModel
+            var projection = new AccountProjectionModel
             {
                 FundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,

@@ -22,15 +22,15 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly ILevyDataSession _levyDataSession;
-        private readonly IAccountProjectionDataService _accountProjectionDataService;
+        private readonly IAccountProjectionDataSession _accountProjectionDataSession;
 
         public AccountProjectionRepository(IEmployerCommitmentsRepository commitmentsRepository, ICurrentBalanceRepository currentBalanceRepository,
-            ILevyDataSession levyDataSession, IAccountProjectionDataService accountProjectionDataService)
+            ILevyDataSession levyDataSession, IAccountProjectionDataSession accountProjectionDataSession)
         {
             _commitmentsRepository = commitmentsRepository ?? throw new ArgumentNullException(nameof(commitmentsRepository));
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
             _levyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
-            _accountProjectionDataService = accountProjectionDataService ?? throw new ArgumentNullException(nameof(accountProjectionDataService));
+            _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
         }
 
         public async Task<AccountProjection> Get(long employerAccountId)
@@ -46,7 +46,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             if (!accountProjection.Projections.Any())
                 return;
-            await _accountProjectionDataService.Store(accountProjection.Projections.First().EmployerAccountId, accountProjection.Projections);
+            await _accountProjectionDataSession.DeleteAll(accountProjection.EmployerAccountId);
+            _accountProjectionDataSession.Store(accountProjection.Projections);
+            await _accountProjectionDataSession.SaveChanges();
         }
     }
 }
