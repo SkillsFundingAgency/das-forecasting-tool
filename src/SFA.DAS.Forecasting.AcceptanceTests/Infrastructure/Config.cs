@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Configuration;
+using SFA.DAS.Forecasting.Core;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
 {
-    public class Config
+    public class Config: IApplicationConnectionStrings
     {
         public TimeSpan TimeToWait => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToWait"] ?? "00:00:30");
         public TimeSpan TimeToPause => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"] ?? "00:00:05");
         public string Environment => GetAppSetting("Environment");
         public string DatabaseConnectionString => GetConnectionString("DatabaseConnectionString");
+        public string StorageConnectionString => GetConnectionString("StorageConnectionString");
+        public string EmployerConnectionString => GetConnectionString("EmployerConnectionString");
+
         public bool IsDevEnvironment => (Environment?.Equals("DEVELOPMENT", StringComparison.OrdinalIgnoreCase) ?? false) ||
                                         (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);
         public string LevyFunctionUrl => GetAppSetting("LevyFunctionUrl");

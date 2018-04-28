@@ -166,10 +166,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void DeleteCommitments()
         {
+            DataContext.AccountProjectionCommitments
+                .RemoveRange(DataContext.AccountProjectionCommitments
+                .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId).ToList());
             var commitments = DataContext.Commitments
                 .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId)
                 .ToList();
             DataContext.Commitments.RemoveRange(commitments);
+            DataContext.SaveChanges();
         }
 
         protected void DeleteBalance()
@@ -238,7 +242,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CourseLevel = commitment.CourseLevel,
                     StartDate = commitment.StartDateValue,
                     PlannedEndDate = commitment.PlannedEndDate,
-                    ActualEndDate = commitment.PlannedEndDate,
+                    ActualEndDate = null,
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments

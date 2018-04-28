@@ -21,11 +21,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
             });
 
             ForSingletonOf<Config>().Use(new Config());
+            
 
-            For<ForecastingDataContext>()
+            For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()
-                .Ctor<string>("connectionString")
-                .Is(ctx => ctx.GetInstance<Config>().DatabaseConnectionString)
+                .Ctor<IApplicationConnectionStrings>("config")
+                .Is(ctx => ctx.GetInstance<Config>())
                 .ContainerScoped();
 
             For<IDbConnection>()
