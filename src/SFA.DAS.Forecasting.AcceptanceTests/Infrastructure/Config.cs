@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public TimeSpan TimeToWait => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToWait"] ?? "00:00:30");
         public TimeSpan TimeToPause => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"] ?? "00:00:05");
         public string Environment => GetAppSetting("Environment");
-
+        public string DatabaseConnectionString => GetConnectionString("DatabaseConnectionString");
         public bool IsDevEnvironment => (Environment?.Equals("DEVELOPMENT", StringComparison.OrdinalIgnoreCase) ?? false) ||
                                         (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);
         public string LevyFunctionUrl => GetAppSetting("LevyFunctionUrl");

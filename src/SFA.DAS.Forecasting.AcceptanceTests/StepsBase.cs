@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
@@ -15,6 +16,9 @@ using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
+using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
 using StructureMap;
@@ -31,7 +35,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.10", "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
-
+        protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
@@ -46,7 +50,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         {
             get => Get<CalendarPeriod>("projections_start_period");
             set => Set(value, "projections_start_period");
-        } 
+        }
         protected decimal Balance
         {
             get => (decimal)Get<object>("current_balance");
@@ -151,47 +155,43 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void DeleteLevyDeclarations(string payrollYear, short payrollMonth)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            parameters.Add("@payrollYear", payrollYear, DbType.String);
-            parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
-            Connection.Execute("Delete from LevyDeclaration where employerAccountId = @employerAccountId and PayrollYear = @payrollYear and PayrollMonth = @payrollMonth",
-                parameters, commandType: CommandType.Text);
+            var levyDeclarations = DataContext.LevyDeclarations
+                .Where(levy => levy.EmployerAccountId == Config.EmployerAccountId &&
+                               levy.PayrollMonth == payrollMonth &&
+                               levy.PayrollYear == payrollYear)
+                .ToList();
+            DataContext.LevyDeclarations.RemoveRange(levyDeclarations);
+            DataContext.SaveChanges();
         }
 
         protected void DeleteCommitments()
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
+            var commitments = DataContext.Commitments
+                .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId)
+                .ToList();
+            DataContext.Commitments.RemoveRange(commitments);
         }
 
         protected void DeleteBalance()
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Balance where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
+            var balance = DataContext.Balances.FirstOrDefault(b => b.EmployerAccountId == EmployerAccountId);
+            if (balance == null)
+                return;
+            DataContext.Balances.Remove(balance);
+            DataContext.SaveChanges();
         }
 
         protected void DeleteAccountProjections()
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from AccountProjection where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
-        }
-
-        protected void InsertNewBalance(decimal balance)
-        {
-            ExecuteSql(() =>
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                parameters.Add("@amount", balance, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
-                parameters.Add("@balancePeriod", DateTime.Today, DbType.DateTime);
-                parameters.Add("@receivedDate", DateTime.Today, DbType.DateTime);
-                Connection.Execute(@"Insert into Balance values (@employerAccountId, @amount, @balancePeriod, @receivedDate)",
-                    parameters, commandType: CommandType.Text);
-            });
+            var projectionCommitments = DataContext.AccountProjectionCommitments
+                .Where(ap => ap.AccountProjection.EmployerAccountId == Config.EmployerAccountId)
+                .ToList();
+            DataContext.AccountProjectionCommitments.RemoveRange(projectionCommitments);
+            var projections = DataContext.AccountProjections
+                .Where(projection => projection.EmployerAccountId == Config.EmployerAccountId)
+                .ToList();
+            DataContext.AccountProjections.RemoveRange(projections);
+            DataContext.SaveChanges();
         }
 
         protected void InsertLevyDeclarations(IEnumerable<LevySubmission> levySubmissions)
@@ -202,52 +202,50 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected void InsertLevyDeclarations(PayrollPeriod period, IEnumerable<LevySubmission> levySubmissions)
         {
             var payrollDate = new PayrollDateService().GetPayrollDate(period.PayrollYear, period.PayrollMonth);
-            ExecuteSql(() =>
+            foreach (var levySubmission in levySubmissions)
             {
-                foreach (var levySubmission in levySubmissions)
+                DataContext.LevyDeclarations.Add(new LevyDeclarationModel
                 {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                    parameters.Add("@scheme", levySubmission.Scheme, DbType.String);
-                    parameters.Add("@payrollYear", period.PayrollYear, DbType.String);
-                    parameters.Add("@payrollMonth", period.PayrollMonth, DbType.Int16);
-                    parameters.Add("@payrollDate", payrollDate, DbType.DateTime);
-                    parameters.Add("@levyAmountDeclared", levySubmission.Amount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
-                    parameters.Add("@transactionDate", levySubmission.CreatedDateValue, DbType.DateTime);
-                    parameters.Add("@dateReceived", DateTime.Now, DbType.DateTime);
-                    Connection.Execute(@"Insert into LevyDeclaration values (@employerAccountId, @scheme, @payrollYear, @payrollMonth, @payrollDate, @levyAmountDeclared, @transactionDate, @dateReceived)",
-                        parameters, commandType: CommandType.Text);
-                }
-            });
+                    EmployerAccountId = Config.EmployerAccountId,
+                    DateReceived = DateTime.Now,
+                    LevyAmountDeclared = levySubmission.Amount,
+                    PayrollDate = payrollDate,
+                    PayrollMonth = (byte)period.PayrollMonth,
+                    PayrollYear = period.PayrollYear,
+                    Scheme = levySubmission.Scheme,
+                    TransactionDate = levySubmission.CreatedDateValue
+                });
+            }
+
+            DataContext.SaveChanges();
         }
 
         protected void InsertCommitments(List<TestCommitment> commitments)
         {
-            ExecuteSql(() =>
+            for (var i = 0; i < commitments.Count; i++)
             {
-                for (int i = 0; i < commitments.Count; i++)
-                {
-                    var commitment = commitments[i];
+                var commitment = commitments[i];
 
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                    parameters.Add("@learnerId", i + 1, DbType.Int64);
-                    parameters.Add("@apprenticeshipId", i + 2, DbType.Int64);
-                    parameters.Add("@apprenticeName", commitment.ApprenticeName, DbType.String);
-                    parameters.Add("@providerId", i + 3, DbType.Int64);
-                    parameters.Add("@providerName", commitment.ProviderName, DbType.String);
-                    parameters.Add("@courseName", commitment.CourseName, DbType.String);
-                    parameters.Add("@courseLevel", commitment.CourseLevel, DbType.Int32);
-                    parameters.Add("@startDate", commitment.StartDateValue, DbType.DateTime);
-                    parameters.Add("@plannedEndDate", commitment.PlannedEndDate, DbType.DateTime);
-                    parameters.Add("@actualEndDate", null, DbType.DateTime);
-                    parameters.Add("@completionAmount", commitment.CompletionAmount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
-                    parameters.Add("@monthlyInstallment", commitment.InstallmentAmount, DbType.Decimal, ParameterDirection.Input, null, 18, 2);
-                    parameters.Add("@numberOfInstallments", commitment.NumberOfInstallments, DbType.Int16);
-                    Connection.Execute(@"Insert into Commitment values (@employerAccountId, @learnerId, @apprenticeshipId, @apprenticeName, @providerId, @providerName,@courseName, @courseLevel, @startDate, @plannedEndDate, @actualEndDate,@completionAmount, @monthlyInstallment, @numberOfInstallments)",
-                        parameters, commandType: CommandType.Text);
-                }
-            });
+                DataContext.Commitments.Add(new CommitmentModel
+                {
+                    EmployerAccountId = Config.EmployerAccountId,
+                    LearnerId = i + 1,
+                    ApprenticeshipId = i + 2,
+                    ApprenticeName = commitment.ApprenticeName,
+                    ProviderId = i + 3,
+                    ProviderName = commitment.ProviderName,
+                    CourseName = commitment.CourseName,
+                    CourseLevel = commitment.CourseLevel,
+                    StartDate = commitment.StartDateValue,
+                    PlannedEndDate = commitment.PlannedEndDate,
+                    ActualEndDate = commitment.PlannedEndDate,
+                    CompletionAmount = commitment.CompletionAmount,
+                    MonthlyInstallment = commitment.InstallmentAmount,
+                    NumberOfInstallments = (short)commitment.NumberOfInstallments
+                });
+            }
+
+            DataContext.SaveChanges();
         }
 
         protected void ExecuteSql(Action action)
