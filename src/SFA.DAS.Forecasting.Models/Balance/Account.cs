@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Models.Projections
+﻿namespace SFA.DAS.Forecasting.Models.Balance
 {
     public class Account
     {

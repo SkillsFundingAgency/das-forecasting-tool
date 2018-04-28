@@ -5,6 +5,7 @@ using System.Linq;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Estimations.Services;
+using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
@@ -70,8 +71,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,
                 ProjectionCreationDate = DateTime.UtcNow,
-                ProjectionGenerationType = ProjectionGenerationType.PayrollPeriodEnd,
-                Commitments = commitments
+                ProjectionGenerationType = (short)ProjectionGenerationType.PayrollPeriodEnd,
+                Commitments = commitments.Select(id => new AccountProjectionCommitment { CommitmentId = id }).ToList()
             };
             return projection;
         }

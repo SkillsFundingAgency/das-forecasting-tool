@@ -11,6 +11,7 @@ using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Domain.Events;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
+using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Projections;

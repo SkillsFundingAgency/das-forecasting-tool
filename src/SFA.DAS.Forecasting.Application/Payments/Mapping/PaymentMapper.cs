@@ -7,15 +7,15 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 {
     public interface IPaymentMapper
     {
-        Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
+        PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
         CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
     }
 
     public class PaymentMapper: IPaymentMapper
     {
-		public Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
+		public PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
 		{
-			return new Payment
+			return new PaymentModel
 			{
 				ExternalPaymentId = paymentCreatedMessage.Id,
 				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,

@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.Models.Payments
 {
-    public class Payment
+    public class PaymentModel
     {
         public long Id { get; set; }
         public string ExternalPaymentId { get; set; }

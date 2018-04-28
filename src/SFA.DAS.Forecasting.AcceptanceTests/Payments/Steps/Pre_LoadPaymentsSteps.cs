@@ -315,7 +315,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var payments = Connection.Query<Models.Payments.Payment>("Select * from Payment where EmployerAccountId = @employerAccountId"
+                var payments = Connection.Query<Models.Payments.PaymentModel>("Select * from Payment where EmployerAccountId = @employerAccountId"
                     , parameters, commandType: CommandType.Text).ToList();
                 Console.WriteLine($"Got {payments.Count} payments from projections payments table.");
                 if (payments.Count != Payments.Count)
@@ -332,7 +332,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", "112233", DbType.Int64);
-                var payments = Connection.Query<Models.Payments.Payment>("Select * from Payment where EmployerAccountId = @employerAccountId"
+                var payments = Connection.Query<Models.Payments.PaymentModel>("Select * from Payment where EmployerAccountId = @employerAccountId"
                     , parameters, commandType: CommandType.Text).ToList();
                 Console.WriteLine($"Got {payments.Count} payments from projections payments table.");
                 if (payments.Count != Payments.Count)
