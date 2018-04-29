@@ -1,5 +1,4 @@
-﻿using Dapper;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+﻿using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 using SFA.DAS.Sql.Client;
@@ -8,7 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.EAS.Account.Api.Types;
+using Dapper;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {

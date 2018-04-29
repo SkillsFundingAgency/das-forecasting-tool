@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.Models.Commitments
 {
-    public class Commitment
+    public class CommitmentModel
     {
         public long Id { get; set; }
         public long EmployerAccountId { get; set; }
