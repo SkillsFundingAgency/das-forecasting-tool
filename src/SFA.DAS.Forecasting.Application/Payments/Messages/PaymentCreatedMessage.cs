@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
         public DateTime? CourseStartDate { get; set; }
 
         public EarningDetails EarningDetails { get; set; }
-	    public CollectionPeriod CollectionPeriod { get; set; }
+	    public NamedCalendarPeriod CollectionPeriod { get; set; }
+        public CalendarPeriod DeliveryPeriod { get; set; }
     }
 }

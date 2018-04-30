@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Forecasting.ReadModel.Projections;
+using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public class Mapper
     {
-        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjectionReadModel> data)
+        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
                 new BalanceItemViewModel
@@ -39,6 +39,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
             };
 
         }
+
         
     }
 }

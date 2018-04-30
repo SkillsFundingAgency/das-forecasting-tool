@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Domain.Events;
+using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
 
@@ -18,16 +19,16 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
     {
         protected AutoMoqer Moqer { get; private set; }
         private Account _account;
-        private Commitment _commitment;
-        private List<Commitment> _commitments;
+        private CommitmentModel _commitment;
+        private List<CommitmentModel> _commitments;
 
         [SetUp]
         public void SetUp()
         {
             Moqer = new AutoMoqer();
-            _account = new Account(1, 12000, 300);
+            _account = new Account(1, 12000, 300, 0, 0);
             Moqer.SetInstance(_account);
-            _commitment = new Commitment
+            _commitment = new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -38,8 +39,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 NumberOfInstallments = 24,
                 CompletionAmount = 3000
             };
-            _commitments = new List<Commitment> { _commitment };
-            var employerCommitments = new EmployerCommitments(1, _commitments, Moqer.GetMock<IEventPublisher>().Object, new CommitmentValidator());
+            _commitments = new List<CommitmentModel> { _commitment };
+            var employerCommitments = new EmployerCommitments(1, _commitments);
             Moqer.SetInstance(employerCommitments);
         }
 

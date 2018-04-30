@@ -6,6 +6,7 @@ using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
+using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
@@ -20,32 +21,34 @@ namespace SFA.DAS.Forecasting.Domain.Projections
     {
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
-        private readonly ILevyDataService _levyDataService;
-        private readonly IAccountProjectionDataService _accountProjectionDataService;
+        private readonly ILevyDataSession _levyDataSession;
+        private readonly IAccountProjectionDataSession _accountProjectionDataSession;
 
         public AccountProjectionRepository(IEmployerCommitmentsRepository commitmentsRepository, ICurrentBalanceRepository currentBalanceRepository,
-            ILevyDataService levyDataService, IAccountProjectionDataService accountProjectionDataService)
+            ILevyDataSession levyDataSession, IAccountProjectionDataSession accountProjectionDataSession)
         {
             _commitmentsRepository = commitmentsRepository ?? throw new ArgumentNullException(nameof(commitmentsRepository));
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
-            _levyDataService = levyDataService ?? throw new ArgumentNullException(nameof(levyDataService));
-            _accountProjectionDataService = accountProjectionDataService ?? throw new ArgumentNullException(nameof(accountProjectionDataService));
+            _levyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
+            _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
         }
 
         public async Task<AccountProjection> Get(long employerAccountId)
         {
-            var levy = _levyDataService.GetLatestLevyAmount(employerAccountId);
-            var balance = _currentBalanceRepository.Get(employerAccountId);
-            var commitments = _commitmentsRepository.Get(employerAccountId);
-            await Task.WhenAll(levy, balance, commitments);
-            return new AccountProjection(new Account(employerAccountId, balance.Result.Amount, levy.Result), commitments.Result);
+            var levy = await _levyDataSession.GetLatestLevyAmount(employerAccountId);
+            var balance = await _currentBalanceRepository.Get(employerAccountId);
+            var commitments = await _commitmentsRepository.Get(employerAccountId);
+            
+            return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), commitments);
         }
 
         public async Task Store(AccountProjection accountProjection)
         {
             if (!accountProjection.Projections.Any())
                 return;
-            await _accountProjectionDataService.Store(accountProjection.Projections.First().EmployerAccountId, accountProjection.Projections);
+            await _accountProjectionDataSession.DeleteAll(accountProjection.EmployerAccountId);
+            _accountProjectionDataSession.Store(accountProjection.Projections);
+            await _accountProjectionDataSession.SaveChanges();
         }
     }
 }

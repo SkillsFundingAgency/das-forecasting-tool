@@ -9,18 +9,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     [ForecastingRoutePrefix("Service")]
     public class ServiceController : Controller
     {
-	    public readonly IOwinWrapper OwinWrapper;
+        public readonly IOwinWrapper OwinWrapper;
 
-		public ServiceController(IOwinWrapper owinWrapper)
-		{
-			OwinWrapper = owinWrapper;
-		}
+        public ServiceController(IOwinWrapper owinWrapper)
+        {
+            OwinWrapper = owinWrapper;
+        }
 
-		[Route("signout")]
+        [Route("signout")]
         public ActionResult SignOut()
         {
-			return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service", "signout", true));
-		}
+            return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service", "signOut", true));
+        }
 
         [Authorize]
         [HttpGet]

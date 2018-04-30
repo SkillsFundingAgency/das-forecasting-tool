@@ -80,6 +80,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddApprenticeshipsToEstimateCostPage.cs" />
+    <Compile Include="RemoveApprenticeshipPage.cs" />
+    <Compile Include="EstimateCostsPage.cs" />
+    <Compile Include="FinancePage.cs" />
+    <Compile Include="EstimateFundsStartPage.cs" />
+    <Compile Include="AccountHomePage.cs" />
+    <Compile Include="HomePage.cs" />
     <Compile Include="LoginPage.cs" />
     <Compile Include="FundingProjectionPage.cs" />
     <Compile Include="DashboardPage.cs" />

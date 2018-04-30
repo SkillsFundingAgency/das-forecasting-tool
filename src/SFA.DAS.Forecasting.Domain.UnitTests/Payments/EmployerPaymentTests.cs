@@ -1,95 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Moq;
-using NUnit.Framework;
-using SFA.DAS.Forecasting.Domain.Payments;
+﻿using NUnit.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
+using EmployerPayment = SFA.DAS.Forecasting.Domain.Payments.EmployerPayment;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
 {
     [TestFixture]
     public class EmployerPaymentTests
     {
-        private Mock<IEmployerPaymentRepository> _levyRepository;
-        private EmployerPaymentService _service;
-
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void Stores_Payment_Info()
         {
-            _levyRepository = new Mock<IEmployerPaymentRepository>();
-            
-            _service = new EmployerPaymentService(_levyRepository.Object);
+            var id = "testId";
+            var employerAccountId = 123456;
+            var ukprn = 123456;
+            var apprenticeshipId = 654321;
+            var amount = 123m;
+            var learnerId = 12;
+
+            var payment = new EmployerPayment(new PaymentModel { EmployerAccountId = employerAccountId, ExternalPaymentId = id });
+            payment.RegisterPayment(new PaymentModel
+            {
+                ExternalPaymentId = id,
+                EmployerAccountId = employerAccountId,
+                Amount = amount,
+                ApprenticeshipId = apprenticeshipId,
+                LearnerId = learnerId,
+                ProviderId = ukprn
+            });
+
+            Assert.AreEqual(id, payment.ExternalPaymentId);
+            Assert.AreEqual(employerAccountId, payment.EmployerAccountId);
+            Assert.AreEqual(ukprn, payment.ProviderId);
+            Assert.AreEqual(apprenticeshipId, payment.ApprenticeshipId);
+            Assert.AreEqual(amount, payment.Amount);
         }
-
-		[Test]
-		public async Task Stores_Valid_Payment()
-		{
-			var id = "testId";
-			var employerAccountId = 123456;
-			var ukprn = 123456;
-			var apprenticeshipId = 654321;
-			var amount = 123m;
-
-			Payment payment = null;
-			_levyRepository
-				.Setup(m => m.StorePayment(It.IsAny<Payment>()))
-				.Callback<Payment>(p => payment = p)
-				.Returns(Task.Run(() => 1));
-
-			await _service.AddPayment(new Payment
-			{
-				ExternalPaymentId = id,
-				EmployerAccountId = employerAccountId,
-				ProviderId = ukprn,
-				ApprenticeshipId = apprenticeshipId,
-				Amount = amount,
-				FundingSource = FundingSource.Levy
-			});
-
-			Assert.AreEqual(id, payment.ExternalPaymentId);
-			Assert.AreEqual(employerAccountId, payment.EmployerAccountId);
-			Assert.AreEqual(ukprn, payment.ProviderId);
-			Assert.AreEqual(apprenticeshipId, payment.ApprenticeshipId);
-			Assert.AreEqual(amount, payment.Amount);
-
-			_levyRepository.Verify(repo => repo.StorePayment(
-				It.IsAny<Payment>()));
-		}
-
-	    [Test]
-	    public void ReturnsCorrectLastTimeReceivedPayment()
-	    {
-		    var payments = new List<Payment>
-		    {
-				new Payment
-			    {
-					EmployerAccountId = 1,
-				    ReceivedTime = DateTime.Now.AddMinutes(-2)
-			    },
-			    new Payment
-			    {
-					EmployerAccountId = 2,
-				    ReceivedTime = DateTime.Now.AddMinutes(-1)
-			    },
-			    new Payment
-			    {
-					EmployerAccountId = 3,
-				    ReceivedTime = DateTime.Now.AddMinutes(-3)
-			    },
-			    new Payment
-			    {
-					EmployerAccountId = 4,
-				    ReceivedTime = DateTime.Now.AddMinutes(-5)
-			    },
-			};
-
-		    var lastReceivedTime = _service.GetLastTimeReceivedPayment(payments);
-
-			Assert.IsNotNull(lastReceivedTime);
-
-		    Assert.AreEqual(lastReceivedTime, payments.FirstOrDefault(x => x.EmployerAccountId == 2).ReceivedTime);
-	    }
-	}
+    }
 }

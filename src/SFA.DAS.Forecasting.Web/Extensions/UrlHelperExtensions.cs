@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 
 namespace SFA.DAS.Forecasting.Web.Extensions
 {
@@ -13,6 +13,8 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         {
 
             var baseUrl = GetBaseUrl();
+            if (controllerName.IsNullOrWhiteSpace())
+                return baseUrl;
 
             var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
 

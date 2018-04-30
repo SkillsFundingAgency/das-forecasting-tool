@@ -27,6 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Payment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.AcceptanceTests", "SFA.DAS.Forecasting.AcceptanceTests\SFA.DAS.Forecasting.AcceptanceTests.csproj", "{B0AB734A-AA53-4F32-92A0-0C7ADD6A336C}"
 	ProjectSection(ProjectDependencies) = postProject
+		{1F221B45-8924-4260-89FB-7C94F4FB3E42} = {1F221B45-8924-4260-89FB-7C94F4FB3E42}
 		{4E2AC790-1A6F-4B56-8609-0F576BFF3613} = {4E2AC790-1A6F-4B56-8609-0F576BFF3613}
 		{F36C43B1-49D5-4820-BCA7-32C73B110C99} = {F36C43B1-49D5-4820-BCA7-32C73B110C99}
 		{602A91CA-3FC9-4A33-8B50-2714173EA22C} = {602A91CA-3FC9-4A33-8B50-2714173EA22C}
@@ -37,8 +38,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Functions", "Functions", "{520C268E-E13A-4578-A05F-64F42F471AE5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Levy.Functions", "SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj", "{602A91CA-3FC9-4A33-8B50-2714173EA22C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.ReadModel", "SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj", "{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Projections.Functions", "SFA.DAS.Forecasting.Projections.Functions\SFA.DAS.Forecasting.Projections.Functions.csproj", "{F36C43B1-49D5-4820-BCA7-32C73B110C99}"
 EndProject
@@ -51,6 +50,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.StubApi.Functions", "SFA.DAS.Forecasting.StubApi.Functions\SFA.DAS.Forecasting.StubApi.Functions.csproj", "{ACF14987-C84D-4EEF-BEAF-4194191A4050}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.PreLoad.Functions", "SFA.DAS.Forecasting.PreLoad.Functions\SFA.DAS.Forecasting.PreLoad.Functions.csproj", "{1F221B45-8924-4260-89FB-7C94F4FB3E42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions", "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions\SFA.DAS.Forecasting.ApprenticeshipCourses.Functions.csproj", "{B1615636-19E9-499C-870E-65145E9E924B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Data", "SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj", "{97D35DA3-C286-40BC-82FC-408084233B46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,10 +115,6 @@ Global
 		{602A91CA-3FC9-4A33-8B50-2714173EA22C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{602A91CA-3FC9-4A33-8B50-2714173EA22C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{602A91CA-3FC9-4A33-8B50-2714173EA22C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F36C43B1-49D5-4820-BCA7-32C73B110C99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F36C43B1-49D5-4820-BCA7-32C73B110C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F36C43B1-49D5-4820-BCA7-32C73B110C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -140,6 +139,14 @@ Global
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1615636-19E9-499C-870E-65145E9E924B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97D35DA3-C286-40BC-82FC-408084233B46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97D35DA3-C286-40BC-82FC-408084233B46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97D35DA3-C286-40BC-82FC-408084233B46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97D35DA3-C286-40BC-82FC-408084233B46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +162,7 @@ Global
 		{F36C43B1-49D5-4820-BCA7-32C73B110C99} = {520C268E-E13A-4578-A05F-64F42F471AE5}
 		{ACF14987-C84D-4EEF-BEAF-4194191A4050} = {520C268E-E13A-4578-A05F-64F42F471AE5}
 		{1F221B45-8924-4260-89FB-7C94F4FB3E42} = {520C268E-E13A-4578-A05F-64F42F471AE5}
+		{B1615636-19E9-499C-870E-65145E9E924B} = {520C268E-E13A-4578-A05F-64F42F471AE5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {89553F32-71A1-4EE1-8BD1-BC5BCC7E5E70}

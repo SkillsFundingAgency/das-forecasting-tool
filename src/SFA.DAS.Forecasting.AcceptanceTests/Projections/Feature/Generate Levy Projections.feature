@@ -34,3 +34,12 @@ Scenario: AC2: Calculate forecast levy credit value when multiple linked PAYE sc
 	Then the account projection should be generated
 	Then calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes
 	And each future month's forecast levy credit should be the same
+
+Scenario: AC3: Use specified start month when generating levy triggered projections
+	Given the following levy declarations have been recorded
+	| Scheme   | Amount | Created Date |
+	| ABC-1234 | 3000   | Today        |
+	And the start month should be this month rather than next month
+	When the account projection is triggered after levy has been declared
+	Then the account projection should be generated
+	And the first month should be this month rather than next month	

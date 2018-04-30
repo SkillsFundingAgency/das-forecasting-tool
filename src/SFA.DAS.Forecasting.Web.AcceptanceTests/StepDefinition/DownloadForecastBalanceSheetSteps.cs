@@ -2,7 +2,7 @@
 using Microsoft.VisualBasic.FileIO;
 using NUnit.Framework;
 using Sfa.Automation.Framework.Selenium;
-using SFA.DAS.Forecasting.ReadModel.Projections;
+using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Automation;
 using System;
 using System.Collections.Generic;

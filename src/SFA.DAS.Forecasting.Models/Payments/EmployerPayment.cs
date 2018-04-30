@@ -12,6 +12,8 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public string CollectionPeriodId;
         public int CollectionPeriodMonth;
         public int CollectionPeriodYear;
+        public int DeliveryPeriodMonth;
+        public int DeliveryPeriodYear;
         public decimal Amount;
         public long PaymentMetaDataId;
         public string ProviderName;
