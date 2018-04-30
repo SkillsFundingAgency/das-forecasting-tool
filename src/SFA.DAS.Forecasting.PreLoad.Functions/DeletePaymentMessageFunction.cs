@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -18,14 +19,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             await FunctionRunner.Run<DeletePaymentMessageFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Info($"{nameof(DeletePaymentMessageFunction)} started");
-
+                    logger.Info($"{nameof(DeletePaymentMessageFunction)} started for account: {message.EmployerAccountId}");
+                    var accountId = container.GetInstance<IHashingService>().DecodeValue(message.EmployerAccountId);
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
+                    
+                    await dataService.DeletePayment(accountId);
+                    await dataService.DeleteEarningDetails(accountId);
 
-                    await dataService.DeletePayment(message.EmployerAccountId);
-                    await dataService.DeleteEarningDetails(message.EmployerAccountId);
-
-                    logger.Info($"{nameof(DeletePaymentMessageFunction)} finished.");
+                    logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.EmployerAccountId}.");
                 });
         }
     }

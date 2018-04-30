@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
@@ -28,8 +29,9 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
 
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
-                    var payments = dataService.GetPayments(message.EmployerAccountId);
-                    var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId);
+                    var accountId = container.GetInstance<IHashingService>().DecodeValue(message.EmployerAccountId);
+                    var payments = dataService.GetPayments(accountId);
+                    var earningDetails = dataService.GetEarningDetails(accountId);
                     logger.Info($"Got {payments.Count()} payments to match against {earningDetails.Count()} earning details for employer '{message.EmployerAccountId}'");
                     List<PaymentCreatedMessage> paymentCreatedMessage;
                     if (message.SubstitutionId != null)
