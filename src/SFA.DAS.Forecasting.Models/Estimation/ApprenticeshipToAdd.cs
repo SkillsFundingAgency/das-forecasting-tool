@@ -10,9 +10,9 @@
 
             public string CourseId { get; set; }
             public ApprenticeshipCourse AppenticeshipCourse { get;set; }
-
-        public decimal? CalculatedTotalCap => AppenticeshipCourse?.FundingCap != null && ApprenticesCount.HasValue
-            ? AppenticeshipCourse.FundingCap * ApprenticesCount
-            : null;
+        
+            public decimal? CalculatedTotalCap => AppenticeshipCourse?.FundingCap != null && ApprenticesCount.HasValue
+                    ? AppenticeshipCourse.FundingCap * ApprenticesCount
+                    : null;
     }
 }

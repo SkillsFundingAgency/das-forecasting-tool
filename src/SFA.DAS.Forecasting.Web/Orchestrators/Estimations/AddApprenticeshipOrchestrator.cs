@@ -46,25 +46,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             var apprenticeshipToAdd = vm.ApprenticeshipToAdd;
             var course = vm.ApprenticeshipToAdd.AppenticeshipCourse;
-
-            var courseId = course.Id;
-            var courseTitle = course.Title;
-            var level = course.Level;
-
+         
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
-            accountEstimation.AddVirtualApprenticeship(courseId,courseTitle,level,apprenticeshipToAdd.StartMonth.GetValueOrDefault(),
-                apprenticeshipToAdd.StartYear.GetValueOrDefault(),apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(),
-                apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),apprenticeshipToAdd.TotalCost.GetValueOrDefault());
+            accountEstimation.AddVirtualApprenticeship(course.Id, course.Title, course.Level, 
+                apprenticeshipToAdd.StartMonth.GetValueOrDefault(),apprenticeshipToAdd.StartYear.GetValueOrDefault(),
+                apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(), apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
+                apprenticeshipToAdd.TotalCost.GetValueOrDefault());
          
             await _accountEstimationRepository.Store(accountEstimation);
         }
       
         public async Task<AddApprenticeshipViewModel> ValidateAddApprenticeship(AddApprenticeshipViewModel vm)
         {
-            var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
-
-            var viewModel = GetApprenticeshipAddSetup();
-            viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
+            
+            var viewModel = ResetViewModelDetails(vm);
 
             if (viewModel.ApprenticeshipToAdd.CourseId is null)
             {
@@ -76,11 +71,37 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                    await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.ApprenticeshipToAdd.CourseId);
             }
 
+            viewModel = AdjustNumberOfMonthsApprenticeship(viewModel);
+
             viewModel.ValidationResults = _validator.ValidateApprenticeship(viewModel.ApprenticeshipToAdd);
 
             viewModel = AdjustTotalCostApprenticeship(viewModel);
 
             return viewModel;
+        }
+
+        private AddApprenticeshipViewModel ResetViewModelDetails(AddApprenticeshipViewModel vm)
+        {
+            var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
+            var previousCourseId = vm.PreviousCourseId;
+     
+            var viewModel = GetApprenticeshipAddSetup();
+            viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
+            viewModel.PreviousCourseId = previousCourseId;
+            return viewModel;
+        }
+
+        private AddApprenticeshipViewModel AdjustNumberOfMonthsApprenticeship(AddApprenticeshipViewModel viewModel)
+        {
+            var apprenticeToAdd = viewModel.ApprenticeshipToAdd;
+
+            if (apprenticeToAdd.AppenticeshipCourse != null && viewModel.PreviousCourseId != apprenticeToAdd.CourseId)
+            {
+                viewModel.ApprenticeshipToAdd.NumberOfMonths = apprenticeToAdd.AppenticeshipCourse.Duration;
+            }
+
+            return viewModel;
+
         }
 
         public AddApprenticeshipViewModel AdjustTotalCostApprenticeship(AddApprenticeshipViewModel viewModel)

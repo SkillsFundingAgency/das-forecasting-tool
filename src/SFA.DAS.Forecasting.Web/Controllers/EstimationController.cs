@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -69,14 +68,15 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
             if (viewModel.ValidationResults.Count > 0)
             {
+                viewModel.PreviousCourseId = viewModel.ApprenticeshipToAdd?.CourseId;
                 ModelState.Clear();
+              
                 return View("AddApprenticeships", viewModel);
             }
 
             await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
-
         }
 
             
