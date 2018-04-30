@@ -133,17 +133,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FundingProjectionPage _Accountprojection.feature</DependentUpon>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="Features\FundingProjectionPage _PendingCompletion.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>FundingProjectionPage _PendingCompletion.feature</DependentUpon>
-=======
+    </Compile>
     <Compile Include="Features\RemoveModelledApprenticeship.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RemoveModelledApprenticeship.feature</DependentUpon>
->>>>>>> master
     </Compile>
     <Compile Include="FileManager.cs" />
     <Compile Include="Forecasting Dashboard.feature.cs">
@@ -192,15 +190,13 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>FundingProjectionPage _Accountprojection.feature.cs</LastGenOutput>
     </None>
-<<<<<<< HEAD
     <None Include="Features\FundingProjectionPage _PendingCompletion.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>FundingProjectionPage _PendingCompletion.feature.cs</LastGenOutput>
-=======
+    </None>
     <None Include="Features\RemoveModelledApprenticeship.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>RemoveModelledApprenticeship.feature.cs</LastGenOutput>
->>>>>>> master
     </None>
     <None Include="Forecasting Dashboard.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -216,17 +212,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
-<<<<<<< HEAD
       <Project>{97049CCE-774A-4377-B682-1C01B95C2CF3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
       <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
       <Name>SFA.DAS.Forecasting.ReadModel</Name>
-=======
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
->>>>>>> master
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Web.Automation\SFA.DAS.Forecasting.Web.Automation.csproj">
       <Project>{5ea585e1-4da6-40be-8611-b8f2535f7085}</Project>
@@ -246,11 +239,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
     <Error Condition="!Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets'))" />
-<<<<<<< HEAD
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
-=======
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
->>>>>>> master
   </Target>
   <Import Project="..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" />

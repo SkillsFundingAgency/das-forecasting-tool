@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Given(@"I have generated the following commitments")]
         public void GivenIHaveGeneratedTheFollowingCommitments(Table table)
         {
-            var commitments = table.CreateSet<Commitment>().ToList();
+            var commitments = table.CreateSet<CommitmentModel>().ToList();
 
             DeletePendingCompletions();
             Store(commitments);
@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
         }
 
-        public void Store(IEnumerable<Commitment> commitments)
+        public void Store(IEnumerable<CommitmentModel> commitments)
         {
             var employerAccountId = long.Parse(Config.EmployerAccountID);
             using (var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
