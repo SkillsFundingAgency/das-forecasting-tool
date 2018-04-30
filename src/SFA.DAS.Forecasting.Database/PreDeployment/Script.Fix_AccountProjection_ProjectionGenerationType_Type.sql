@@ -9,23 +9,23 @@
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-BEGIN TRANSACTION
-	BEGIN TRY
+--BEGIN TRANSACTION
+--	BEGIN TRY
 
 	if Exists (select * from sys.columns where object_id = OBJECT_ID('dbo.AccountProjection') and name = 'ProjectionGenerationType' and system_type_id = 52)
 	begin 
 
-		alter table AccountProjection add ProjectionGenerationType_tmp tinyint null
-		Exec ('update AccountProjection set ProjectionGenerationType_tmp = ProjectionGenerationType')
-		alter table AccountProjection drop column ProjectionGenerationType
-		EXEC sp_rename 'dbo.AccountProjection.ProjectionGenerationType_tmp', 'ProjectionGenerationType', 'COLUMN'
-		alter table AccountProjection alter column ProjectionGenerationType tinyint not null
+		alter table AccountProjection add ProjectionGenerationType_tmp tinyint null;
+		Exec ('update AccountProjection set ProjectionGenerationType_tmp = ProjectionGenerationType');
+		alter table AccountProjection drop column ProjectionGenerationType;
+		EXEC sp_rename 'dbo.AccountProjection.ProjectionGenerationType_tmp', 'ProjectionGenerationType', 'COLUMN';
+		alter table AccountProjection alter column ProjectionGenerationType tinyint not null;
 
 	end
 
-    COMMIT
-    END TRY
-    BEGIN CATCH
-        ROLLBACK
-        --THROW; -- Only if you want reraise an exception (to determine the reason of the exception)
-    END CATCH
+ --   COMMIT
+ --   END TRY
+ --   BEGIN CATCH
+ --       ROLLBACK
+ --       --THROW; -- Only if you want reraise an exception (to determine the reason of the exception)
+ --   END CATCH
