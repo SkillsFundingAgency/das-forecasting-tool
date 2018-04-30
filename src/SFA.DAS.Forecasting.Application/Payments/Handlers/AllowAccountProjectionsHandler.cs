@@ -10,12 +10,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 {
     public class AllowAccountProjectionsHandler
     {
-        public IEmployerPaymentRepository Repository { get; }
+        public IEmployerPaymentsRepository Repository { get; }
         public ILog Logger { get; }
         public IApplicationConfiguration ApplicationConfiguration { get; }
 
         public AllowAccountProjectionsHandler(
-			IEmployerPaymentRepository repository, 
+            IEmployerPaymentsRepository repository, 
 			ILog logger, 
 			IApplicationConfiguration applicationConfiguration)
         {
@@ -26,24 +26,19 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
         public async Task<bool> Allow(PaymentCreatedMessage paymentCreatedMessage)
         {
-			var employerPayment = new EmployerPaymentService(Repository);
-            Logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.ToDebugJson()}");
-
+            Logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.EmployerAccountId}, {paymentCreatedMessage.Id}");
             if (!ApplicationConfiguration.AllowTriggerProjections)
             {
                 Logger.Warn("Triggering of projections is disabled.");
                 return false;
             }
-	        var payments = await Repository.GetPayments(paymentCreatedMessage.EmployerAccountId,
-		        paymentCreatedMessage.CollectionPeriod.Month, paymentCreatedMessage.CollectionPeriod.Year);
-	        var lastReceivedTime = employerPayment.GetLastTimeReceivedPayment(payments);
-
+            var payments = Repository.Get(paymentCreatedMessage.EmployerAccountId);
+	        var lastReceivedTime = await payments.GetLastTimeReceivedPayment();
 			if (lastReceivedTime == null)
-                throw new InvalidOperationException($"Invalid last time received");
+                throw new InvalidOperationException($"No last time recorded for employer account: {paymentCreatedMessage.EmployerAccountId}");
 
 			var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.Now;
             Logger.Info($"Allow projections '{allowProjections}' for employer '{paymentCreatedMessage.EmployerAccountId}' in response to payment event.");
-
 			return allowProjections;
         }
     }

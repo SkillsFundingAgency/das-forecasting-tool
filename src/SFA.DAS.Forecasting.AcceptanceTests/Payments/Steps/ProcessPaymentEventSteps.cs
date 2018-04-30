@@ -129,7 +129,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var payments = Connection.Query<Payment>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                var payments = Connection.Query<PaymentModel>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
 
                 foreach (var payment in Payments)
                 {

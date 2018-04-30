@@ -8,30 +8,33 @@ namespace SFA.DAS.Forecasting.Domain.Payments
 {
     public interface IEmployerPaymentRepository
     {
-        Task StorePayment(Payment payment);
-
-        Task<List<Payment>> GetPayments(long employerAccountId, int month, int year);
+        Task<EmployerPayment> Get(long employerAccountId, string paymentId);
+        Task StorePayment(EmployerPayment payment);
     }
 
     public class EmployerPaymentRepository : IEmployerPaymentRepository
 	{
-		public IEmployerPaymentDataService EmployerPaymentDataService { get; set; }
+	    private readonly IEmployerPaymentDataSession _dataSession;
 
+	    public EmployerPaymentRepository(IEmployerPaymentDataSession dataSession)
+	    {
+	        _dataSession = dataSession ?? throw new ArgumentNullException(nameof(dataSession));
+	    }
 
-		public EmployerPaymentRepository(IEmployerPaymentDataService employerPaymentDataService)
-		{
-			EmployerPaymentDataService = employerPaymentDataService ?? throw new ArgumentNullException(nameof(employerPaymentDataService));
-		}
+	    public async Task<EmployerPayment> Get(long employerAccountId, string paymentId)
+	    {
+	        var payment = await _dataSession.Get(employerAccountId,paymentId) ?? new PaymentModel
+	        {
+	            EmployerAccountId = employerAccountId,
+                ExternalPaymentId = paymentId
+	        };
+            return new EmployerPayment(payment);
+	    }
 
-
-		public async Task StorePayment(Payment payment)
-		{
-			await EmployerPaymentDataService.StoreEmployerPayment(payment);
-		}
-
-		public async Task<List<Payment>> GetPayments(long employerAccountId, int month, int year)
-		{
-			return await EmployerPaymentDataService.GetEmployerPayments(employerAccountId, month, year);
-		}
+	    public async Task StorePayment(EmployerPayment payment)
+	    {
+	        _dataSession.Store(payment.Model);
+	        await _dataSession.SaveChanges();
+	    }
 	}
 }

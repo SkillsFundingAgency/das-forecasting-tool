@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public class Mapper
     {
-        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjectionReadModel> data)
+        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
                 new BalanceItemViewModel

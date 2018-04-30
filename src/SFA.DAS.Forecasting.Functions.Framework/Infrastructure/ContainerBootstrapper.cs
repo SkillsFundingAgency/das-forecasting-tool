@@ -1,12 +1,9 @@
 ﻿using StructureMap;
 using System.IO;
-using System.Reflection;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Domain.Balance;
-using SFA.DAS.Forecasting.Application.Balance.Services;
 using Microsoft.Azure.WebJobs;
-using System.Linq;
 using System.Collections.Generic;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 
@@ -42,6 +39,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                         }
                         assScanner.RegisterConcreteTypesAgainstTheFirstInterface();
                         assScanner.WithDefaultConventions();
+                        
                     });
                 }));
             }

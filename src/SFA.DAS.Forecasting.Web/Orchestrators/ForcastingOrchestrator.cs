@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Web.Extensions;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -14,7 +15,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     public class ForecastingOrchestrator
     {
         private readonly IHashingService _hashingService;
-        private readonly IAccountProjectionReadModelDataService _accountProjection;
+        private readonly IAccountProjectionDataSession _accountProjection;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly Mapper _mapper;
 
@@ -22,7 +23,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
-            IAccountProjectionReadModelDataService accountProjection,
+            IAccountProjectionDataSession accountProjection,
             IApplicationConfiguration applicationConfiguration,
             Mapper mapper)
         {
