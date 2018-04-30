@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
                 DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd"))),
-                PendingCompletionPayments = await _commitmentsDataService.GetPendingCompletionPayments(accountId)
+                PendingCompletionPayments = 0 // Get value from Balnace table
             };
         }
 
