@@ -68,5 +68,10 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         {
             return date.ToString("MMMM yyyy");
         }
+
+        public static bool IsAfterOrSameMonth(this DateTime date, DateTime today)
+        {
+            return new DateTime(date.Year, date.Month, 1) >= new DateTime(today.Year, today.Month, 1);
+        }
     }
 }
