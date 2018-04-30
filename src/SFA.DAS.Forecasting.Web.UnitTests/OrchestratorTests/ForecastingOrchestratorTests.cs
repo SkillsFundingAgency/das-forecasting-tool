@@ -3,7 +3,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Projections.Services;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
     public class ForecastingOrchestratorTests
     {
         private ForecastingOrchestrator _sut;
-        private Mock<IAccountProjectionReadModelDataService> _accountProjection;
+        private Mock<IAccountProjectionDataSession> _accountProjection;
         private Mock<IApplicationConfiguration> _applicationConfiguration;
         private Fixture _fixture;
 
@@ -28,8 +28,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         {
             _fixture = new Fixture();
 
+            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => _fixture.Behaviors.Remove(b));
+            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
             var hashingService = new Mock<IHashingService>();
-            _accountProjection = new Mock<IAccountProjectionReadModelDataService>();
+            _accountProjection = new Mock<IAccountProjectionDataSession>();
             _applicationConfiguration = new Mock<IApplicationConfiguration>();
 
             hashingService.Setup(m => m.DecodeValue("ABBA12"))
@@ -102,7 +105,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         /// <param name="count">Amount months to create starting from last month.</param>
         private void SetUpProjections(int count)
         {
-            var projections = new List<AccountProjectionReadModel>();
+            var projections = new List<AccountProjectionModel>();
             _fixture.AddManyTo(projections, count);
 
             var currentMonthDate = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)).AddMonths(-1);
@@ -116,7 +119,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             });
 
             _accountProjection.Setup(m => m.Get(It.IsAny<long>()))
-                .Returns(Task.FromResult(projections.AsEnumerable()));
+                .Returns(Task.FromResult(projections));
         }
     }
 }
