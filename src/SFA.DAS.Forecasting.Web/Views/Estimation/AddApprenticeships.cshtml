@@ -219,8 +219,6 @@
             var courseId = $('#chosse-apprenticeship').val();
             var previousCourseId = $('#PreviousCourseId').val();
             if (courseId !== previousCourseId) {
-                // reset previous course id when javascript intervenes
-
                 var requestObject = {
                     courseId: courseId
                 };
@@ -234,11 +232,7 @@
                         $('#PreviousCourseId').val(courseId);
                     }
                 });
-                //$('#levy-length').val(25);
-                //$('#PreviousCourseId').val(courseId);
-                //$('#PreviousNumberOfMonths').val(xxx);
             }
-
         }
 
         function calculateTotalCost() {
@@ -273,8 +267,6 @@
                 $('#details-about-funding').removeClass("HideFundingCapMessage");
                 $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
             }
-
-
         }
     </script>
 

@@ -131,7 +131,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         }
 
 
-        public async Task<dynamic> GetDefaultNumberOfMonths(string courseId)
+        public async Task<object> GetDefaultNumberOfMonths(string courseId)
         {
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId); 
 

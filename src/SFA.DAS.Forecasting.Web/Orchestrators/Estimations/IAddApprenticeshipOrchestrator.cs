@@ -18,6 +18,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         Task<decimal?> GetFundingCapForCourse(string courseId);
 
-        Task<dynamic> GetDefaultNumberOfMonths(string courseId);
+        Task<object> GetDefaultNumberOfMonths(string courseId);
     }
 }
