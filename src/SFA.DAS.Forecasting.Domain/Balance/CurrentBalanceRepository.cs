@@ -35,7 +35,8 @@ namespace SFA.DAS.Forecasting.Domain.Balance
                 ReceivedDate = currentBalance.ReceivedDate,
                 Amount = currentBalance.Amount,
                 TransferAllowance = currentBalance.TransferAllowance,
-                RemainingTransferBalance = currentBalance.RemainingTransferBalance
+                RemainingTransferBalance = currentBalance.RemainingTransferBalance,
+                UnallocatedCompletionPayments = currentBalance.UnallocatedCompletionPayments
             });
         }
     }

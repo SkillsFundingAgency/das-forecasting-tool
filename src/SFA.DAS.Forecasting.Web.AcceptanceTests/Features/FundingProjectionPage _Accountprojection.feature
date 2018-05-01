@@ -88,6 +88,11 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
 
 
 
+Scenario: FundingProjection completion payments overdue
+	Given I have completion payments of £ 2401 on commitments without stop date
+	And I'm on the Funding projection page
+	Then I see Pending completion payments with the amount of £ 2401
+
 #  Scenario: FundingProjectionPageAC4: Forecast data when negative balance
 #  Given I have generated the following projections
 #  

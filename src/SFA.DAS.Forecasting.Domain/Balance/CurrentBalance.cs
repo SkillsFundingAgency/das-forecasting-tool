@@ -14,6 +14,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
         public decimal RemainingTransferBalance => _balance.RemainingTransferBalance;
         public DateTime Period => _balance.BalancePeriod;
         public DateTime ReceivedDate => _balance.ReceivedDate;
+        public decimal UnallocatedCompletionPayments => _balance.UnallocatedCompletionPayments;
 
         protected CurrentBalance() { }
 
@@ -37,6 +38,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             _balance.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
             _balance.BalancePeriod = DateTime.UtcNow;
             _balance.ReceivedDate = DateTime.UtcNow;
+            _balance.UnallocatedCompletionPayments = 1.4M; // ToDo: calculate UnallocatedCompletionPayments
             return true;
         }
     }

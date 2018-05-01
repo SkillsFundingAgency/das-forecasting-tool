@@ -6,4 +6,5 @@
 	RemainingTransferBalance DECIMAL (18,2) NOT NULL CONSTRAINT DF_Dalance__RemainingTransferBalance DEFAULT(0),
 	BalancePeriod DATETIME NOT NULL,
 	ReceivedDate DATETIME NOT NULL CONSTRAINT DF_Balance__ReceivedDate DEFAULT (GETDATE()),
+	UnallocatedCompletionPayments DECIMAL (18,2) NOT NULL DEFAULT(0),
 )

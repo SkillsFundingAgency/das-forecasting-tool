@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Projections.Services;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -15,6 +16,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataSession _accountProjection;
+        private readonly IBalanceDataService _balanceDataService;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly Mapper _mapper;
 
@@ -23,34 +25,46 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public ForecastingOrchestrator(
             IHashingService hashingService,
             IAccountProjectionDataSession accountProjection,
+            IBalanceDataService balanceDataService,
             IApplicationConfiguration applicationConfiguration,
             Mapper mapper)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;
+            _balanceDataService = balanceDataService;
             _applicationConfiguration = applicationConfiguration;
             _mapper = mapper;
         }
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            var balance = await GetBalance(hashedAccountId);
+            var accountProjection = await GetAccountProjection(hashedAccountId);
+            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId);
+
             return new BalanceViewModel {
-                BalanceItemViewModels = balance,
+                BalanceItemViewModels = accountProjection,
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
-                BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd")))
+                BalanceStringArray = string.Join(",", accountProjection.Select(m => m.Balance.ToString())),
+                DatesStringArray = string.Join(",", accountProjection.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                OverdueCompletionPayments = overdueCompletionPayments
             };
+        }
+
+        private async Task<decimal> GetOverdueCompletionPayments(string hashedAccountId)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var balance = await _balanceDataService.Get(accountId);
+            return balance.UnallocatedCompletionPayments;
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
         {
-            return (await GetBalance(hashedAccountId))
+            return (await GetAccountProjection(hashedAccountId))
                 .Select(m => _mapper.ToCsvBalance(m));
         }
 
-        private async Task<List<BalanceItemViewModel>> GetBalance(string hashedAccountId)
+        private async Task<List<BalanceItemViewModel>> GetAccountProjection(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var result = await _accountProjection.Get(accountId);

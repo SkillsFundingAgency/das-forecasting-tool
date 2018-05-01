@@ -500,6 +500,25 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("FundingProjection completion payments overdue")]
+        public virtual void FundingProjectionCompletionPaymentsOverdue()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjection completion payments overdue", ((string[])(null)));
+#line 91
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 92
+ testRunner.Given("I have completion payments of £ 2401 on commitments without stop date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 93
+ testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 94
+ testRunner.Then("I see Pending completion payments with the amount of £ 2401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
