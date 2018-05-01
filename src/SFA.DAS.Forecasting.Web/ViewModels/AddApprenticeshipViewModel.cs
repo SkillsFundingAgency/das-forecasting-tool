@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
 
         public string PreviousCourseId { get; set; }
-       
+      
         public List<ValidationResult> ValidationResults { get; set; }
 
         public IEnumerable<SelectListItem> ApprenticeshipList()

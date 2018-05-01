@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Estimations.Validation;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -83,8 +84,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private AddApprenticeshipViewModel ResetViewModelDetails(AddApprenticeshipViewModel vm)
         {
             var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
-            var previousCourseId = vm.PreviousCourseId;
-     
+            var previousCourseId = vm.PreviousCourseId;    
             var viewModel = GetApprenticeshipAddSetup();
             viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
             viewModel.PreviousCourseId = previousCourseId;
@@ -95,7 +95,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             var apprenticeToAdd = viewModel.ApprenticeshipToAdd;
 
-            if (apprenticeToAdd.AppenticeshipCourse != null && viewModel.PreviousCourseId != apprenticeToAdd.CourseId)
+            if (apprenticeToAdd.AppenticeshipCourse != null 
+                && viewModel.PreviousCourseId != apprenticeToAdd.CourseId)
             {
                 viewModel.ApprenticeshipToAdd.NumberOfMonths = apprenticeToAdd.AppenticeshipCourse.Duration;
             }
@@ -127,6 +128,17 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             return res;
 
+        }
+
+
+        public async Task<dynamic> GetDefaultNumberOfMonths(string courseId)
+        {
+            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId); 
+
+            return new
+            {
+                NumberOfMonths = course.Duration
+            };
         }
 
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)

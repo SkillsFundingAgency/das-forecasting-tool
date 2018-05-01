@@ -17,5 +17,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         AddApprenticeshipViewModel AdjustTotalCostApprenticeship(AddApprenticeshipViewModel vm);
 
         Task<decimal?> GetFundingCapForCourse(string courseId);
+
+        Task<dynamic> GetDefaultNumberOfMonths(string courseId);
     }
 }

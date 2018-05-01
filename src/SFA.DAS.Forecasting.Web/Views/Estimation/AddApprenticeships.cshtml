@@ -20,6 +20,7 @@
             @*<a href="#" class="link-back">Back</a>*@
             @Html.HiddenFor(model => model.Name)
             @Html.HiddenFor(model => model.PreviousCourseId)
+
             <div class="error-summary @HideShowValidation("")  validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
                 <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
                     Errors to fix
@@ -219,8 +220,23 @@
             var previousCourseId = $('#PreviousCourseId').val();
             if (courseId !== previousCourseId) {
                 // reset previous course id when javascript intervenes
+
+                var requestObject = {
+                    courseId: courseId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.RouteUrl("GetDefaultNumberOfMonths", null)',
+                    data: JSON.stringify(requestObject),
+                    contentType: "application/json; charset=utf-8",
+                    success: function(result) {
+                        $('#levy-length').val(result.NumberOfMonths);
+                        $('#PreviousCourseId').val(courseId);
+                    }
+                });
                 //$('#levy-length').val(25);
                 //$('#PreviousCourseId').val(courseId);
+                //$('#PreviousNumberOfMonths').val(xxx);
             }
 
         }
