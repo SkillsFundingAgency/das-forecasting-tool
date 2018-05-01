@@ -57,9 +57,9 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="TestData" />
     <Folder Include="Tables" />
     <Folder Include="PostDeployment" />
+    <Folder Include="PreDeployment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Balance.sql" />
@@ -67,16 +67,12 @@
     <Build Include="Tables\AccountProjection.sql" />
     <Build Include="Tables\Payment.sql" />
     <Build Include="Tables\Commitment.sql" />
-    <Build Include="TestData\AccountProjection.sql" />
     <Build Include="Tables\AccountProjectionCommitment.sql" />
     <Build Include="Tables\FundingSource.sql" />
     <PostDeploy Include="PostDeployment\Script.PostDeployment1.sql" />
+    <PreDeploy Include="PreDeployment\Script.Fix_AccountProjection_ProjectionGenerationType_Type.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\ResetBalanceData.sql" />
-    <None Include="TestData\ResetCurrentAndBalanceData.sql" />
-    <None Include="TestData\ResetApprenticeshipData.sql" />
-    <None Include="TestData\RebuildTestData.sql" />
     <None Include="Database.publish.xml" />
   </ItemGroup>
 </Project>

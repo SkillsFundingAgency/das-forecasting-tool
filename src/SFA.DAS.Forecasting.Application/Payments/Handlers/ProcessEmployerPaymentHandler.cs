@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using NLog;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
-using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Payments;
 using SFA.DAS.NLog.Logger;
 
@@ -33,12 +30,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         public async Task Handle(PaymentCreatedMessage paymentCreatedMessage, string allowProjectionsEndpoint)
         {
 	        var employerPayment = _mapper.MapToPayment(paymentCreatedMessage);
-			_logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, year: {employerPayment.CollectionPeriod.Year}, month: {employerPayment.CollectionPeriod.Month}, Payment: {employerPayment.ToJson()}");
-			await _repository.StorePayment(employerPayment);
-            _logger.Info($"Finished adding the employer payment. Employer payment: {JsonConvert.SerializeObject(employerPayment)}");
-            
+			_logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
+            var payment = await _repository.Get(paymentCreatedMessage.EmployerAccountId, paymentCreatedMessage.Id);
+            payment.RegisterPayment(employerPayment);
+			await _repository.StorePayment(payment);
+            _logger.Info($"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
             _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint, TimeSpan.FromSeconds(_configuration.SecondsToWaitToAllowProjections));
-
         }
     }
 }

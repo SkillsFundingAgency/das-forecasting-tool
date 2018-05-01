@@ -9,14 +9,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
         {
             RuleFor(m => m.StartDate).NotEmpty();
             RuleFor(m => m.PlannedEndDate).NotEmpty();
-
             RuleFor(m => m.CompletionAmount).GreaterThan(0);
-            RuleFor(m => m.CompletionAmount).GreaterThan(0);
-            RuleFor(m => m.CompletionStatus).GreaterThan(0);
             RuleFor(m => m.MonthlyInstallment).GreaterThan(0);
             RuleFor(m => m.TotalInstallments).GreaterThan(0);
-
-            RuleFor(m => m.EndpointAssessorId).NotNull().NotEmpty();
         }
     }
 }

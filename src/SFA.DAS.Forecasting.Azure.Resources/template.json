@@ -74,12 +74,6 @@
     "certificateName": {
       "type": "string"
     },
-    "certificatePfxBase64": {
-      "type": "securestring"
-    },
-    "vstsObjectId": {
-      "type": "securestring"
-    },
     "MAWObjectId": {
       "type": "securestring"
     },
@@ -92,57 +86,36 @@
     "keyvaultCertificateName": {
       "type": "string"
     },
-    "sharedKeyVaultName": {
-      "type": "string"
-    },
-    "sharedManagementResourceGroup": {
-      "type": "string"
-    },
     "customHostname": {
       "type": "string"
     },
     "certResourceGroup": {
       "type": "string"
+    },
+    "myaBaseUrl": {
+      "type": "string"
+    },
+    "cosmosDbName": {
+      "type": "string"
+    },
+    "cosmosDbDatabaseName": {
+      "type": "string"
+    },
+    "cosmosDbCollectionName": {
+      "type": "string"
+    },
+    "cosmosDbThroughput": {
+      "type": "string"
     }
   },
   "variables": {
-    "keyvaultInitialiseResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/initialise-keyvault-resources.json')]",
     "storageResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/storage-resources.json')]",
     "webappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/web-app-resources.json')]",
     "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]",
-    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]"
+    "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]",
+    "cosmosDbResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/cosmos-db-resources.json')]"
   },
   "resources": [
-    {
-      "apiVersion": "2017-08-01",
-      "name": "initialise-keyvault-resources-deployment",
-      "dependsOn": [],
-      "type": "Microsoft.Resources/deployments",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('keyvaultInitialiseResourcesTemplateUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "name": {
-            "value": "[parameters('keyVaultName')]"
-          },
-          "vstsObjectId": {
-            "value": "[parameters('vstsObjectId')]"
-          },
-          "certificateName": {
-            "value": "[parameters('certificateName')]"
-          },
-          "certificatePfxBase64": {
-            "value": "[parameters('certificatePfxBase64')]"
-          },
-          "MAWObjectId": {
-            "value": "[parameters('MAWObjectId')]"
-          }
-        }
-      }
-    },
     {
       "apiVersion": "2017-08-01",
       "name": "storage-resources-deployment",
@@ -164,9 +137,6 @@
     {
       "apiVersion": "2017-08-01",
       "name": "web-app-resources-deployment",
-      "dependsOn": [
-        "initialise-keyvault-resources-deployment"
-      ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
@@ -211,17 +181,14 @@
           "keyvaultCertificateName": {
             "value": "[parameters('keyvaultCertificateName')]"
           },
-          "sharedKeyVaultName": {
-            "value": "[parameters('sharedKeyVaultName')]"
-          },
-          "sharedManagementResourceGroup": {
-            "value": "[parameters('sharedManagementResourceGroup')]"
-          },
           "customHostname": {
             "value": "[parameters('customHostname')]"
           },
           "certResourceGroup": {
             "value": "[parameters('certResourceGroup')]"
+          },
+          "myaBaseUrl": {
+            "value": "[parameters('myaBaseUrl')]"
           }
         }
       }
@@ -286,7 +253,8 @@
       "dependsOn": [
         "function-app-copy",
         "storage-resources-deployment",
-        "web-app-resources-deployment"
+        "web-app-resources-deployment",
+        "cosmos-db-resources-deployment"
       ],
       "type": "Microsoft.Resources/deployments",
       "properties": {
@@ -339,20 +307,41 @@
           "clientSecret": {
             "value": "[parameters('clientSecret')]"
           },
-          "certificateName": {
-            "value": "[parameters('certificateName')]"
-          },
-          "certificatePfxBase64": {
-            "value": "[parameters('certificatePfxBase64')]"
-          },
-          "vstsObjectId": {
-            "value": "[parameters('vstsObjectId')]"
-          },
           "MAWObjectId": {
             "value": "[parameters('MAWObjectId')]"
           },
           "employerConnectionString": {
             "value": "[parameters('employerConnectionString')]"
+          },
+          "cosmosDbConnectionString": {
+            "value": "[reference('cosmos-db-resources-deployment').outputs.CustomConnectionString.value]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-08-01",
+      "name": "cosmos-db-resources-deployment",
+      "dependsOn": [],
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('cosmosDbResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "cosmosDbName": {
+            "value": "[parameters('cosmosDbName')]"
+          },
+          "databaseName": {
+            "value": "[parameters('cosmosDbDatabaseName')]"
+          },
+          "collectionName": {
+            "value": "[parameters('cosmosDbCollectionName')]"
+          },
+          "throughput": {
+            "value": "[parameters('cosmosDbThroughput')]"
           }
         }
       }

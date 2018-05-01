@@ -21,11 +21,18 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         public async Task Handle(GenerateAccountProjectionCommand message)
         {
             var projections = await _accountProjectionRepository.Get(message.EmployerAccountId);
-            if (message.ProjectionSource==ProjectionSource.LevyDeclaration)
-                projections.BuildLevyTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
+            var startDate = new DateTime(GetValue(message.StartPeriod?.Year, DateTime.Today.Year),
+                GetValue(message.StartPeriod?.Month, DateTime.Today.Month), 1);
+            if (message.ProjectionSource == ProjectionSource.LevyDeclaration)
+                projections.BuildLevyTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
             else
-                projections.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, _config.NumberOfMonthsToProject);
+                projections.BuildPayrollPeriodEndTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
             await _accountProjectionRepository.Store(projections);
+        }
+
+        private int GetValue(int? value, int defaultValue)
+        {
+            return value.HasValue && value.Value > 0 ? value.Value : defaultValue;
         }
     }
 }

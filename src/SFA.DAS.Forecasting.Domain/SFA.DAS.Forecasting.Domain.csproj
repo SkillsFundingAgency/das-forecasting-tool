@@ -58,12 +58,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -74,21 +68,38 @@
   <ItemGroup>
     <Compile Include="Balance\CurrentBalance.cs" />
     <Compile Include="Balance\CurrentBalanceRepository.cs" />
+    <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Balance\Services\IBalanceDataService.cs" />
+    <Compile Include="Commitments\EmployerCommitment.cs" />
+    <Compile Include="Commitments\EmployerCommitmentRepository.cs" />
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
     <Compile Include="Commitments\Validation\CommitmentValidator.cs" />
+    <Compile Include="Estimations\AccountEstimation.cs" />
+    <Compile Include="Estimations\AccountEstimationProjection.cs" />
+    <Compile Include="Estimations\AccountEstimationProjectionRepository.cs" />
+    <Compile Include="Estimations\AccountEstimationRepository.cs" />
+    <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\BaseVirtualApprenticeshipValidator.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipCourseDetailsValidator.cs" />
+    <Compile Include="Levy\LevyDeclaration.cs" />
+    <Compile Include="Levy\LevyDeclarationRepository.cs" />
+    <Compile Include="Payments\EmployerPayments.cs" />
+    <Compile Include="Payments\EmployerPaymentsRepository.cs" />
+    <Compile Include="Shared\Validation\AddApprenticeshipValidationDetail.cs" />
+    <Compile Include="Shared\Validation\ValidationResult.cs" />
+    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipValidator.cs" />
     <Compile Include="Events\IEventPublisher.cs" />
     <Compile Include="Payments\EmployerPaymentRepository.cs" />
-    <Compile Include="Payments\EmployerPaymentService.cs" />
-    <Compile Include="Payments\Services\IEmployerPaymentDataService.cs" />
+    <Compile Include="Payments\EmployerPayment.cs" />
+    <Compile Include="Payments\Services\IEmployerPaymentDataSession.cs" />
     <Compile Include="Projections\AccountProjection.cs" />
-    <Compile Include="Projections\Services\IAccountProjectionDataService.cs" />
+    <Compile Include="Projections\Services\IAccountProjectionDataSession.cs" />
     <Compile Include="Projections\AccountProjectionRepository.cs" />
     <Compile Include="Levy\LevyPeriod.cs" />
     <Compile Include="Levy\LevyPeriodRepository.cs" />
-    <Compile Include="Levy\Services\ILevyDataService.cs" />
+    <Compile Include="Levy\Services\ILevyDataSession.cs" />
     <Compile Include="Levy\Validation\LevyDeclarationTransactionDateValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\IPayrollDateService.cs" />
@@ -105,10 +116,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
-      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
-      <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

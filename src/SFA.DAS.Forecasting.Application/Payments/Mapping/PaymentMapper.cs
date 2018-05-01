@@ -7,36 +7,41 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 {
     public interface IPaymentMapper
     {
-        Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
-        Commitment MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
+        PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
+        CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
     }
 
     public class PaymentMapper: IPaymentMapper
     {
-		public Payment MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
+		public PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
 		{
-			return new Payment
+			return new PaymentModel
 			{
 				ExternalPaymentId = paymentCreatedMessage.Id,
 				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
 				ProviderId = paymentCreatedMessage.Ukprn,
 				LearnerId = paymentCreatedMessage.Uln,
 				Amount = paymentCreatedMessage.Amount,
-				CollectionPeriod = new Models.Payments.CollectionPeriod
+				CollectionPeriod = new Models.Payments.NamedCalendarPeriod
                 {
 					Id = paymentCreatedMessage.CollectionPeriod.Id,
 					Month = paymentCreatedMessage.CollectionPeriod.Month,
 					Year = paymentCreatedMessage.CollectionPeriod.Year
 				},
+                DeliveryPeriod = new Models.Payments.CalendarPeriod
+                {
+                    Month = paymentCreatedMessage.DeliveryPeriod.Month,
+                    Year = paymentCreatedMessage.DeliveryPeriod.Year
+                },
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
 				ReceivedTime = DateTime.Now,
                 FundingSource = paymentCreatedMessage.FundingSource
 			};
 		}
 
-		public Commitment MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
+		public CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
 		{
-			return new Commitment
+			return new CommitmentModel
 			{
 				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,

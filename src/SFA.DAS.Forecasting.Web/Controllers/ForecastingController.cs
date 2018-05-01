@@ -4,24 +4,28 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
 using SFA.DAS.Forecasting.Web.Attributes;
+using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
+    [ValidateMembership]
     [AuthorizeForecasting]
-    [ForecastingRoutePrefix("accounts/{hashedaccountId}/forecasting")]
+    [RoutePrefixAttribute("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
         private readonly ForecastingOrchestrator _orchestrator;
+        private readonly IMembershipService _membershipService;
 
-        public ForecastingController(ForecastingOrchestrator orchestrator)
+        public ForecastingController(ForecastingOrchestrator orchestrator, IMembershipService membershipService)
         {
             _orchestrator = orchestrator;
+            _membershipService = membershipService;
         }
 
         [HttpGet]
-        [Route("", Name = "ForecastingBalance")]
+        [Route("projections", Name = "Balance")]
         public async Task<ActionResult> Balance(string hashedAccountId)
         {
             var viewModel = await _orchestrator.Balance(hashedAccountId);

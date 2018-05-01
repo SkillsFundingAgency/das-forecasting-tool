@@ -10,5 +10,7 @@
 	[LearnerId] BIGINT NOT NULL, 
 	[CollectionPeriodMonth] INT NOT NULL,
 	[CollectionPeriodYear] INT NOT NULL,
+	[DeliveryPeriodMonth] INT NOT NULL,
+	[DeliveryPeriodYear] INT NOT NULL,
 	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Payment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id)
 )

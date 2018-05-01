@@ -9,12 +9,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
     [TestFixture]
     public class CollectionPeriodValidatorTests
 	{
-        protected CollectionPeriod CollectionPeriod { get; set; }
+        protected NamedCalendarPeriod NamedCalendarPeriod { get; set; }
 
         [SetUp]
         public void SetUp()
         {
-	        CollectionPeriod = new CollectionPeriod()
+	        NamedCalendarPeriod = new NamedCalendarPeriod()
             {
 				Id = Guid.NewGuid().ToString("N"),
                 Month = DateTime.Today.Month,
@@ -26,8 +26,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		public void Fails_If_Id_Is_Invalid()
 		{
 			var validator = new CollectionPeriodSuperficialValidator();
-			CollectionPeriod.Id = null;
-			var result = validator.Validate(CollectionPeriod);
+			NamedCalendarPeriod.Id = null;
+			var result = validator.Validate(NamedCalendarPeriod);
             result.IsValid.Should().BeFalse();
         }
 
@@ -37,16 +37,16 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		public void Fails_If_Month_Is_Invalid(string month)
 		{
 			var validator = new CollectionPeriodSuperficialValidator();
-			CollectionPeriod.Month = int.Parse(month);
-			var result = validator.Validate(CollectionPeriod);
+			NamedCalendarPeriod.Month = int.Parse(month);
+			var result = validator.Validate(NamedCalendarPeriod);
             result.IsValid.Should().BeFalse();
 		}
 
 		public void Fails_If_Year_Is_Invalid()
 		{
 			var validator = new CollectionPeriodSuperficialValidator();
-			CollectionPeriod.Month = -1;
-			var result = validator.Validate(CollectionPeriod);
+			NamedCalendarPeriod.Month = -1;
+			var result = validator.Validate(NamedCalendarPeriod);
             result.IsValid.Should().BeFalse();
         }
 	}

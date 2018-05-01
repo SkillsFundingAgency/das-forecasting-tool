@@ -14,13 +14,14 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
     public static class GetAccountDetailFunction
     {
         [FunctionName("GetAccountDetailFunction")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "accounts/{accountId}")]HttpRequestMessage req, long accountId,
+        public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "accounts/{accountId}")]HttpRequestMessage req, long accountId,
             TraceWriter log)
         {
             var vm = new AccountDetailViewModel
             {
                 AccountId = accountId,
                 Balance = StubDataStore.Balance,
+                TransferAllowance = StubDataStore.Balance > 0 ? (StubDataStore.Balance / 100) * 10 : 0,
                 DasAccountName = "Test Employer",
                 DateRegistered = DateTime.Today,
                 HashedAccountId = "MDDP87",

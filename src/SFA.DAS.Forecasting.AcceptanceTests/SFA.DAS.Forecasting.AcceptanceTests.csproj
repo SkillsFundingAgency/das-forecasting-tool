@@ -47,6 +47,12 @@
     <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions, Version=4.19.4.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentAssertions.4.19.4\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
@@ -91,6 +97,7 @@
       <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -137,6 +144,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Build Projections From Payment Run.feature</DependentUpon>
     </Compile>
+    <Compile Include="Payments\Steps\Pre_LoadPaymentsSteps.cs" />
     <Compile Include="Payments\Steps\BuildProjectionsFromPaymentRun.cs" />
     <Compile Include="Payments\TestPayment.cs" />
     <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
@@ -144,7 +152,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>PreLoadPayments.feature</DependentUpon>
     </Compile>
-    <Compile Include="Payments\Steps\PreLoadPaymentsSteps.cs" />
     <Compile Include="Projections\Feature\Calculate co-investment amounts.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -260,6 +267,10 @@
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj">
+      <Project>{97d35da3-c286-40bc-82fc-408084233b46}</Project>
+      <Name>SFA.DAS.Forecasting.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
@@ -267,10 +278,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
-      <Project>{ee4a8e63-f4e7-49af-9488-6932b4ac7d16}</Project>
-      <Name>SFA.DAS.Forecasting.ReadModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

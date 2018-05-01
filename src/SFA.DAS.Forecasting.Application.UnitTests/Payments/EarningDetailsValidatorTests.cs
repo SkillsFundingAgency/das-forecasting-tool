@@ -42,29 +42,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             result.IsValid.Should().BeFalse();
         }
 
-	    [Test]
-	    public void Fails_If_Actual_End_Date_Is_Invalid()
-	    {
-		    var validator = new EarningDetailsSuperficialValidator();
-		    EarningDetails.ActualEndDate = new DateTime(0001, 01, 01);
-		    var result = validator.Validate(EarningDetails);
-            result.IsValid.Should().BeFalse();
-        }
-
 		[Test]
 	    public void Fails_If_Completion_Amount_Is_Negative()
 	    {
 		    var validator = new EarningDetailsSuperficialValidator();
 		    EarningDetails.CompletionAmount = -1;
-		    var result = validator.Validate(EarningDetails);
-            result.IsValid.Should().BeFalse();
-        }
-
-	    [Test]
-	    public void Fails_If_Completion_Status_Is_Negative()
-	    {
-		    var validator = new EarningDetailsSuperficialValidator();
-		    EarningDetails.CompletionStatus = -1;
 		    var result = validator.Validate(EarningDetails);
             result.IsValid.Should().BeFalse();
         }
@@ -83,15 +65,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 	    {
 		    var validator = new EarningDetailsSuperficialValidator();
 		    EarningDetails.TotalInstallments = -1;
-		    var result = validator.Validate(EarningDetails);
-            result.IsValid.Should().BeFalse();
-        }
-
-	    [Test]
-	    public void Fails_If_Endpoint_Assesor_Id_Is_Invalid()
-	    {
-		    var validator = new EarningDetailsSuperficialValidator();
-		    EarningDetails.EndpointAssessorId = null;
 		    var result = validator.Validate(EarningDetails);
             result.IsValid.Should().BeFalse();
         }

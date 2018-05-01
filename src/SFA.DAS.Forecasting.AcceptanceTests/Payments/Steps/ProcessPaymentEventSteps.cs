@@ -13,7 +13,7 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Payments;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
-using CollectionPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.CollectionPeriod;
+using NamedCalendarPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.NamedCalendarPeriod;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
@@ -29,20 +29,22 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
         [Given(@"I have no existing payments")]
+        [Given(@"I have no existing payments recorded in the forecasting service")]
         public void GivenIHaveNoExistingPayments()
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Payment where employerAccountId = @employerAccountId",
+            Connection.Execute("Delete from Payment where employerAccountId = @employerAccountId or employerAccountId = '112233'",
                 parameters, commandType: CommandType.Text);
         }
 
         [Given(@"I have no existing commitments")]
+        [Given(@"I have no existing commitments recorded in the forecasting service")]
         public void GivenIHaveNoExistingCommitments()
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId",
+            Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId or employerAccountId = '112233'",
                 parameters, commandType: CommandType.Text);
         }
 
@@ -75,9 +77,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 Id = payment.PaymentId,
                 EmployerAccountId = Config.EmployerAccountId,
                 Amount = payment.PaymentAmount,
-                CollectionPeriod = new CollectionPeriod
+                CollectionPeriod = new NamedCalendarPeriod
                 {
                     Id = "1718-R01",
+                    Month = DateTime.Now.Month,
+                    Year = DateTime.Now.Year
+                },
+                DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod
+                {
                     Month = DateTime.Now.Month,
                     Year = DateTime.Now.Year
                 },
@@ -122,7 +129,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var payments = Connection.Query<Payment>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                var payments = Connection.Query<PaymentModel>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
 
                 foreach (var payment in Payments)
                 {

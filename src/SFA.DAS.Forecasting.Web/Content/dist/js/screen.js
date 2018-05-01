@@ -54,12 +54,25 @@ var chart = (function () {
 
 });
 
+var tabs = (function () {
+    $(".tabs-menu a").click(function (e) {
+        e.preventDefault();
+        $(this).parent().addClass("current");
+        $(this).parent().siblings().removeClass("current");
+        var tab = $(this).attr("href");
+        $(".tab-content").not(tab).css("display", "none");
+        $(tab).fadeIn();
+    });
+});
+
 window.onload = function () {
 
     if (document.getElementsByClassName('chart-container').length !== 0)
     {
         chart();
     }
+
+   tabs();
 };
 
 //OR use Object http://jsfiddle.net/etuwo8mz/57/
@@ -148,7 +161,6 @@ $(window).scroll(function () {
         $('.js-float').removeClass('width-adjust');
     }
 });
-
 
 sfa.navigation.init();
 

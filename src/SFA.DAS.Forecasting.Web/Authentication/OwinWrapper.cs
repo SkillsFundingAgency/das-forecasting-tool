@@ -18,11 +18,12 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 	{
 		private readonly IOwinContext _owinContext;
 		private readonly IApplicationConfiguration _configuration;
-
+	    private readonly HttpContext _httpContext;
 		public OwinWrapper(IApplicationConfiguration configuration)
 		{
 			_configuration = configuration;
 			_owinContext = HttpContext.Current.GetOwinContext();
+		    _httpContext = HttpContext.Current;
 		}
 
 		public void SignInUser(string id, string displayName, string email)
@@ -51,7 +52,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
 		public string GetClaimValue(string claimKey)
 		{
-			var claimIdentity = ((ClaimsIdentity)HttpContext.Current.User.Identity).Claims.FirstOrDefault(claim => claim.Type == claimKey);
+			var claimIdentity = ((ClaimsIdentity)_httpContext.User.Identity).Claims.FirstOrDefault(claim => claim.Type == claimKey);
 
 			return claimIdentity == null ? "" : claimIdentity.Value;
 
@@ -59,7 +60,7 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
 		public async Task UpdateClaims()
 		{
-			var constants = new Constants(_configuration.Identity);
+            var constants = new Constants(_configuration.Identity);
 			var userInfoEndpoint = constants.UserInfoEndpoint();
 			var accessToken = GetClaimValue("access_token");
 
@@ -86,22 +87,20 @@ namespace SFA.DAS.Forecasting.Web.Authentication
 
 		}
 
-		public SignInMessage GetSignInMessage(string id)
-		{
-			return _owinContext.Environment.GetSignInMessage(id);
-		}
-		public void IssueLoginCookie(string id, string displayName)
-		{
-			//var env = _owinContext.Environment;
-			//env.IssueLoginCookie(new AuthenticatedLogin
-			//{
-			//    Subject = id,
-			//    Name = displayName
-			//});
-		}
-		public void RemovePartialLoginCookie()
-		{
-			//_owinContext.Environment.RemovePartialLoginCookie();
-		}
-	}
+
+        public bool IsUserAuthenticated()
+        {
+            return _owinContext.Authentication.User.Identity.IsAuthenticated;
+        }
+
+        public bool TryGetClaimValue(string key, out string value)
+        {
+            var identity = _owinContext.Authentication.User.Identity as ClaimsIdentity;
+            var claim = identity?.Claims.FirstOrDefault(c => c.Type == key);
+
+            value = claim?.Value;
+
+            return value != null;
+        }
+    }
 }

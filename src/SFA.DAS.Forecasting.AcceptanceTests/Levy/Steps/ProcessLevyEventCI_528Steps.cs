@@ -14,6 +14,7 @@ using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using System.Threading;
 using System.IO;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 {
@@ -41,6 +42,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             Assert.IsNotNull(PayrollPeriod);
             Assert.IsFalse(string.IsNullOrWhiteSpace(PayrollPeriod.PayrollYear));
             Assert.AreNotEqual(0, PayrollPeriod.PayrollMonth);
+            
         }
 
         [Given(@"I have no existing levy declarations for the payroll period")]

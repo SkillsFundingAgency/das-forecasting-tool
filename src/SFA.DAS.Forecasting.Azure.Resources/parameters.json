@@ -71,12 +71,6 @@
     "certificateName": {
       "value": ""
     },
-    "certificatePfxBase64": {
-      "value": ""
-    },
-    "vstsObjectId": {
-      "value": ""
-    },
     "MAWObjectId": {
       "value": ""
     },
@@ -89,16 +83,16 @@
     "keyvaultCertificateName": {
       "value": ""
     },
-    "sharedKeyVaultName": {
-      "value": ""
-    },
-    "sharedManagementResourceGroup": {
-      "value": ""
-    },
     "customHostname": {
       "value": ""
     },
     "certResourceGroup": {
+      "value": ""
+    },
+    "myaBaseUrl": {
+      "value": ""
+    },
+    "cosmosDbName": {
       "value": ""
     }
   }

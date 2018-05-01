@@ -56,26 +56,14 @@
         "description": "The connection string for the configuration storage account"
       }
     },
-    "certificateName": {
-      "type": "string",
-      "metadata": {
-        "description": "The connection string for the configuration storage account"
-      }
-    },
-    "certificatePfxBase64": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The PKCS 12 Base64 value of the cert."
-      }
-    },
-    "vstsObjectId": {
-      "type": "securestring"
-    },
     "MAWObjectId": {
       "type": "securestring"
     },
     "employerConnectionString": {
       "type": "securestring"
+    },
+    "cosmosDbConnectionString" : {
+      "type": "string"
     }
   },
   "variables": {
@@ -109,15 +97,6 @@
           "secrets": [ "Get" ]
         }
       }
-    ],
-    "VSTSServicePrincipal": [
-      {
-        "objectId": "[parameters('vstsObjectId')]",
-        "tenantId": "[subscription().tenantId]",
-        "permissions": {
-          "certificates": [ "Import" ]
-        }
-      }
     ]
   },
   "resources": [
@@ -130,7 +109,7 @@
         "enabledForDeployment": false,
         "enabledForTemplateDeployment": true,
         "enabledForDiskEncryption": false,
-        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'),variables('Microsoft.Azure.WebSites'),variables('VSTSServicePrincipal'))]",
+        "accessPolicies": "[concat(variables('keyVaultAccessPolicies'), variables('webAppAccessPolicy'),variables('Microsoft.Azure.WebSites'))]",
         "tenantId": "[subscription().tenantId]",
         "sku": {
           "name": "standard",
@@ -217,11 +196,10 @@
         },
         {
           "type": "secrets",
-          "name": "[parameters('certificateName')]",
+          "name": "EmployerConnectionString",
           "apiVersion": "2015-06-01",
           "properties": {
-            "contentType": "application/x-pkcs12",
-            "value": "[parameters('certificatePfxBase64')]"
+            "value": "[parameters('employerConnectionString')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
@@ -229,10 +207,10 @@
         },
         {
           "type": "secrets",
-          "name": "EmployerConnectionString",
+          "name": "CosmosDbConnectionString",
           "apiVersion": "2015-06-01",
           "properties": {
-            "value": "[parameters('employerConnectionString')]"
+            "value": "[parameters('cosmosDbConnectionString')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
