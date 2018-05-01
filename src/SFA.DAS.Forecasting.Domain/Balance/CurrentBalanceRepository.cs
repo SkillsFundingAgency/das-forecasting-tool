@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Domain.Commitments.Services;
 
 namespace SFA.DAS.Forecasting.Domain.Balance
 {
@@ -14,16 +15,21 @@ namespace SFA.DAS.Forecasting.Domain.Balance
     {
         private readonly IBalanceDataService _dataService;
         private readonly IAccountBalanceService _accountBalanceService;
+        private readonly ICommitmentsDataService _commitmentsDataService;
 
-        public CurrentBalanceRepository(IBalanceDataService dataService, IAccountBalanceService accountBalanceService)
+        public CurrentBalanceRepository(
+            IBalanceDataService dataService, 
+            IAccountBalanceService accountBalanceService,
+            ICommitmentsDataService commitmentsDataService)
         {
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
             _accountBalanceService = accountBalanceService ?? throw new ArgumentNullException(nameof(accountBalanceService));
+            _commitmentsDataService = commitmentsDataService;
         }
         public async Task<CurrentBalance> Get(long employerAccountId)
         {
             var employerAccount = await _dataService.Get(employerAccountId) ?? new Models.Balance.BalanceModel { EmployerAccountId = employerAccountId, BalancePeriod = DateTime.MinValue };
-            return new CurrentBalance(employerAccount, _accountBalanceService);
+            return new CurrentBalance(employerAccount, _accountBalanceService, _commitmentsDataService);
         }
 
         public async Task Store(CurrentBalance currentBalance)

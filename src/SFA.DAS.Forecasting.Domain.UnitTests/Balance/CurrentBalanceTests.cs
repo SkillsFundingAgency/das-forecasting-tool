@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMoq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
 {
@@ -38,6 +41,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
             _moqer.GetMock<IAccountBalanceService>()
                 .Setup(svc => svc.GetAccountBalance(It.IsAny<long>()))
                 .Returns(Task.FromResult<BalanceModel>(_currentAccountBalance));
+
+            _moqer.GetMock<ICommitmentsDataService>()
+                .Setup(m => m.GetCurrentCommitments(It.IsAny<long>()))
+                .Returns(Task.FromResult(new List<CommitmentModel>() ));
         }
 
         [Test]
@@ -80,6 +87,29 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
             Assert.AreEqual(_currentAccountBalance.RemainingTransferBalance, balance.RemainingTransferBalance);
         }
 
+        [Test]
+        public async Task Refresh_Balance_Refreshes_unallocated_completion_payments()
+        {
+            var commitments = new List<CommitmentModel>
+            {
+                new CommitmentModel { ActualEndDate = null, PlannedEndDate = DateTime.Today.AddMonths(-1), CompletionAmount = 5000 },
+                new CommitmentModel { ActualEndDate = null, PlannedEndDate = DateTime.Today.AddMonths(1), CompletionAmount = 10000 },
+                new CommitmentModel { ActualEndDate = null, PlannedEndDate = DateTime.Today, CompletionAmount = 10000 },
+                new CommitmentModel { ActualEndDate = null, PlannedEndDate = DateTime.Today.AddMonths(-5), CompletionAmount = 3000 },
+            };
+
+            _moqer.GetMock<ICommitmentsDataService>()
+                .Setup(m => m.GetCurrentCommitments(It.IsAny<long>()))
+                .Returns(Task.FromResult(commitments));
+
+            var balance = _moqer.Resolve<CurrentBalance>();
+
+            Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
+            _moqer.GetMock<ICommitmentsDataService>()
+                .Verify(svc => svc.GetCurrentCommitments(It.Is<long>(id => id == _previousAccountBalance.EmployerAccountId)));
+
+            Assert.AreEqual(8000, balance.UnallocatedCompletionPayments);
+        }
 
         [Test]
         public async Task Does_Not_Refresh_If_Last_Refresh_Less_Than_30_Days_Ago()
