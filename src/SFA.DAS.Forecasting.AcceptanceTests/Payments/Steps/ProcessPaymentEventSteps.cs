@@ -76,6 +76,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 Id = payment.PaymentId,
                 EmployerAccountId = Config.EmployerAccountId,
+                SendingEmployerAccountId = payment.SendingEmployerAccountId,
                 Amount = payment.PaymentAmount,
                 CollectionPeriod = new NamedCalendarPeriod
                 {
@@ -108,7 +109,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 CourseName = payment.CourseName,
                 Uln = idx,
                 CourseStartDate = payment.StartDateValue,
-                FundingSource = FundingSource.Levy
+                FundingSource = payment.SendingEmployerAccountId == null ? FundingSource.Levy : FundingSource.Transfer
             })
             .ToList()
             .ForEach(paymentEvent =>

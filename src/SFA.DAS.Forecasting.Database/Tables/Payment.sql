@@ -3,6 +3,7 @@
 	[Id] BIGINT NOT NULL PRIMARY KEY Identity(1,1),
 	[ExternalPaymentId] NVARCHAR (100) NOT NULL,
 	[EmployerAccountId] BIGINT NOT NULL,
+	[SendingEmployerAccountId] BIGINT NULL,
 	[ProviderId] BIGINT NOT NULL,
 	[ApprenticeshipId] BIGINT NOT NULL,
 	[Amount] DECIMAL(18,2) NOT NULL,

@@ -9,6 +9,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments
         public long Id => Model.Id;
         public string ExternalPaymentId => Model.ExternalPaymentId;
         public long EmployerAccountId => Model.EmployerAccountId;
+        public long? SendingEmployerAccountId => Model.SendingEmployerAccountId;
         public long ProviderId => Model.ProviderId;
         public long ApprenticeshipId => Model.ApprenticeshipId;
         public decimal Amount => Model.Amount;
@@ -35,6 +36,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments
             Model.ReceivedTime = payment.ReceivedTime;
             Model.ApprenticeshipId = payment.ApprenticeshipId;
             Model.ProviderId = payment.ProviderId;
+            Model.SendingEmployerAccountId = payment.SendingEmployerAccountId;
         }
 	}
 }

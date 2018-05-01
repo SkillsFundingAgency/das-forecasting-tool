@@ -36,3 +36,14 @@ Scenario: AC2: Do not store invalid data
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
 	Then the Forecasting Payment service should not store the payments	
 	And the Forecasting Payment service should not store commitments
+
+Scenario: Ensure sending employer transfer payments are processed
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date       | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id |
+	| 133.33         | Test Apprentice   | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     | 100021                      |
+	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     | 100022                      |
+	| 133.33         | Test Apprentice 3 | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     | 100021                      |
+	| 133.33         | Test Apprentice 4 | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |                             |
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	Then the Forecasting Payment service should store the payment declarations
+	And the Forecasting Payment service should store the commitment declarations

@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public long Id => Commitment.Id;
         public long EmployerAccountId => Commitment.EmployerAccountId;
+        public long? SendingEmployerAccountId => Commitment.SendingEmployerAccountId;
         public long ApprenticeshipId => Commitment.ApprenticeshipId;
         public long LearnerId => Commitment.LearnerId;
         public DateTime StartDate => Commitment.StartDate;
@@ -34,7 +35,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public bool RegisterCommitment(long learnerId, string apprenticeName, string courseName, int? courseLevel,
             long providerId, string providerName, DateTime startDate, DateTime plannedEndDate,
-            DateTime? actualEndDate, decimal monthlyInstallment, decimal completionAmount, short numberOfInstallments)
+            DateTime? actualEndDate, decimal monthlyInstallment, decimal completionAmount, short numberOfInstallments, long? sendingEmployerAccountId)
         {
             //TODO: move into validation class
             if (Commitment.EmployerAccountId <= 0)
@@ -54,6 +55,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.MonthlyInstallment = monthlyInstallment;
             Commitment.CompletionAmount = completionAmount;
             Commitment.NumberOfInstallments = numberOfInstallments;
+            Commitment.SendingEmployerAccountId = sendingEmployerAccountId;
 
             return Commitment.Id > 0 || _commitmentValidator.IsValid(Commitment);
         }

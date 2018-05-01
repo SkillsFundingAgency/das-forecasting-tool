@@ -41,13 +41,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         {
             var commitment = _moqer.Resolve<EmployerCommitment>();
             Assert.IsTrue( commitment.RegisterCommitment(3, "test apprentice", "test course", 1, 4, "test provider", DateTime.Today,
-                DateTime.Today.AddDays(1), null, 87.27m, 240, 12));
+                DateTime.Today.AddDays(1), null, 87.27m, 240, 12, 55501));
+
             Assert.AreEqual(commitment.ApprenticeName, "test apprentice");
             Assert.AreEqual(commitment.ProviderName, "test provider");
             Assert.AreEqual(commitment.CourseName, "test course");
             Assert.AreEqual(commitment.ProviderId, 4);
             Assert.AreEqual(commitment.LearnerId, 3);
             Assert.AreEqual(commitment.CourseLevel, 1);
+            Assert.AreEqual(commitment.SendingEmployerAccountId, 55501);
         }
     }
 }

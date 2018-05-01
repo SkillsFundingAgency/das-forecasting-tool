@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
                 message.CourseName, message.CourseLevel, message.Ukprn, message.ProviderName,
                 message.EarningDetails.StartDate, message.EarningDetails.PlannedEndDate,
                 message.EarningDetails.ActualEndDate, message.EarningDetails.MonthlyInstallment,
-                message.EarningDetails.CompletionAmount, (short)message.EarningDetails.TotalInstallments);
+                message.EarningDetails.CompletionAmount, (short)message.EarningDetails.TotalInstallments, message.SendingEmployerAccountId);
             _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
             await _repository.Store(employerCommitment);
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");

@@ -299,6 +299,84 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Ensure sending employer transfer payments are processed")]
+        public virtual void EnsureSendingEmployerTransferPaymentsAreProcessed()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure sending employer transfer payments are processed", ((string[])(null)));
+#line 40
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "Sending Employer Account Id"});
+            table3.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        "100021"});
+            table3.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        "100022"});
+            table3.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 3",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        "100021"});
+            table3.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 4",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        ""});
+#line 41
+ testRunner.Given("I have made the following payments", ((string)(null)), table3, "Given ");
+#line 47
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 48
+ testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 49
+ testRunner.And("the Forecasting Payment service should store the commitment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

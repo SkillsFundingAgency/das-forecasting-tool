@@ -19,6 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 			{
 				ExternalPaymentId = paymentCreatedMessage.Id,
 				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
+                SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
 				ProviderId = paymentCreatedMessage.Ukprn,
 				LearnerId = paymentCreatedMessage.Uln,
 				Amount = paymentCreatedMessage.Amount,

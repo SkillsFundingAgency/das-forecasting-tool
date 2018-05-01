@@ -6,6 +6,7 @@ namespace SFA.DAS.Forecasting.Models.Commitments
     {
         public long Id { get; set; }
         public long EmployerAccountId { get; set; }
+        public long? SendingEmployerAccountId { get; set; }
         public long ApprenticeshipId { get; set; }
         public long LearnerId { get; set; }
         public DateTime StartDate { get; set; }
