@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
@@ -6,6 +7,7 @@ using SFA.DAS.Forecasting.Application.Estimations.Validation;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -63,6 +65,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
 
+            apprenticeshipDetailsToPersist = SetTotalCostWithCommas(apprenticeshipDetailsToPersist);
+
+
             var viewModel = GetApprenticeshipAddSetup();
             viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
 
@@ -81,6 +86,22 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             viewModel = AdjustTotalCostApprenticeship(viewModel);
 
             return viewModel;
+        }
+
+        private static ApprenticeshipToAdd SetTotalCostWithCommas(ApprenticeshipToAdd apprenticeshipDetailsToPersist)
+        {
+            if (decimal.TryParse(apprenticeshipDetailsToPersist.TotalCostAsString, out decimal result))
+            {
+                apprenticeshipDetailsToPersist.TotalCost = result;
+                apprenticeshipDetailsToPersist.TotalCostAsString = result.FormatValue();
+            }
+            else
+            {
+                apprenticeshipDetailsToPersist.TotalCost = null;
+                apprenticeshipDetailsToPersist.TotalCostAsString = string.Empty;
+            }
+
+            return apprenticeshipDetailsToPersist;
         }
 
         public AddApprenticeshipViewModel AdjustTotalCostApprenticeship(AddApprenticeshipViewModel viewModel)
@@ -105,7 +126,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var res = course.FundingCap;
 
             return res;
-
         }
 
         public async Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName)

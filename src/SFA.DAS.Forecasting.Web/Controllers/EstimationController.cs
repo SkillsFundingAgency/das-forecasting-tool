@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -86,13 +85,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             //TODO: this should be in the orchestrator
             var fundingCap = await _addApprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
-            var totalValue = (fundingCap * numberOfApprentices);
+            var totalValue = fundingCap * numberOfApprentices;
+            var totalValueAsString = totalValue.FormatValue();
             var result = new
             {
                 FundingCap = fundingCap.FormatCost(),
                 TotalFundingCap = totalValue.FormatCost(),
                 NumberOfApprentices = numberOfApprentices,
-                TotalFundingCapValue = totalValue
+                TotalFundingCapValue = totalValueAsString
             };
 
             return Json(result);
