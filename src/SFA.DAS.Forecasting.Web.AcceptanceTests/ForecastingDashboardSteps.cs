@@ -15,6 +15,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
             EmployerHash = "M6PKPG";
             EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
             EmployeePassword = "Dell1507";
+            WebSite.SetEmployeeHash(EmployerHash);
             Console.WriteLine("Employer hash: M6PKPG");
         }
 

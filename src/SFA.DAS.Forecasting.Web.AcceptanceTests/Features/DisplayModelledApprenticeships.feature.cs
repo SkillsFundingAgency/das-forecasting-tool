@@ -64,6 +64,18 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 7
+#line 8
+ testRunner.Given("that I am an employer with predefined projections", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 9
+ testRunner.And("I have logged into my Apprenticeship Account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 10
+ testRunner.And("that I\'m on the estimator start page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC2: Check costs of modelled apprenticeships")]
         [NUnit.Framework.CategoryAttribute("mytag")]
@@ -71,24 +83,53 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Check costs of modelled apprenticeships", new string[] {
                         "mytag"});
-#line 7
-this.ScenarioSetup(scenarioInfo);
-#line 8
-testRunner.Given("that I have added apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 9
-testRunner.When("the modelled apprenticeships page is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 10
-testRunner.Then("the column headings are displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 11
-testRunner.And("each added apprenticeship is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 12
-testRunner.And("each one is in a separate row", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 13
-testRunner.And("the apprenticeship with the earliest start date is shown first", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+this.ScenarioSetup(scenarioInfo);
+#line 7
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprenticeship",
+                        "Number Of Apprentices",
+                        "Number Of Months",
+                        "Start Date Month",
+                        "Start Date Year",
+                        "Total Cost"});
+            table1.AddRow(new string[] {
+                        "Advanced butcher",
+                        "1",
+                        "12",
+                        "3",
+                        "2019",
+                        "12000"});
+            table1.AddRow(new string[] {
+                        "Baker",
+                        "3",
+                        "15",
+                        "7",
+                        "2018",
+                        "27000"});
+            table1.AddRow(new string[] {
+                        "Network engineer",
+                        "2",
+                        "24",
+                        "12",
+                        "2020",
+                        "36000"});
 #line 14
-testRunner.And("the other apprenticeships are in order of start date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 15
-testRunner.And("the details against each apprenticeship match what was entered", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Given("that I have added the following apprenticeships", ((string)(null)), table1, "Given ");
+#line 19
+ testRunner.When("the modelled apprenticeships page is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 20
+ testRunner.Then("the column headings are displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 21
+ testRunner.And("each added apprenticeship is displayed in a separate row", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 22
+ testRunner.And("the apprenticeship with the earliest start date is shown first", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 23
+ testRunner.And("the other apprenticeships are in order of start date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 24
+ testRunner.And("the details against each apprenticeship match what was entered", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
