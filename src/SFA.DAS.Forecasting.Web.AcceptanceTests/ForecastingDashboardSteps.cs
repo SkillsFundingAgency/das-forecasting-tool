@@ -21,9 +21,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 
 		[Given(@"I have logged into my Apprenticeship Account")]
 		public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
-		{
-            //ScenarioContext.Current.Pending();
-            //WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
+		{            
             var loginPage = WebSite.NavigateToLoginPage();
             loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 		}
