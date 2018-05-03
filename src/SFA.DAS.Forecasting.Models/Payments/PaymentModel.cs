@@ -7,7 +7,7 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public long Id { get; set; } // Id (Primary key)
         public string ExternalPaymentId { get; set; } // ExternalPaymentId (length: 100)
         public long EmployerAccountId { get; set; } // EmployerAccountId
-        public long? SendingEmployerAccountId { get; set; }
+        public long SendingEmployerAccountId { get; set; }
         public long ProviderId { get; set; } // ProviderId
         public long ApprenticeshipId { get; set; } // ApprenticeshipId
         public decimal Amount { get; set; } // Amount

@@ -365,14 +365,25 @@ this.FeatureBackground();
                         "400.00",
                         "12",
                         ""});
+            table3.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 5",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2017 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        "12345"});
 #line 41
  testRunner.Given("I have made the following payments", ((string)(null)), table3, "Given ");
-#line 47
+#line 48
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 48
- testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 49
+ testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 50
  testRunner.And("the Forecasting Payment service should store the commitment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

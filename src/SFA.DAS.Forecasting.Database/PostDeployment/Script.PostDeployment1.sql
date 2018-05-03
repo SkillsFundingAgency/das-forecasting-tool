@@ -29,3 +29,10 @@ WHEN NOT MATCHED BY TARGET THEN
 WHEN NOT MATCHED BY SOURCE THEN 
 	DELETE;
 
+update Payment
+set SendingEmployerAccountId = EmployerAccountId
+where SendingEmployerAccountId = 0
+
+update Commitment
+set SendingEmployerAccountId = EmployerAccountId
+where SendingEmployerAccountId = 0

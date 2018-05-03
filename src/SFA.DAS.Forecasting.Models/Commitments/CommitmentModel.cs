@@ -1,4 +1,5 @@
 ﻿using System;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Models.Commitments
 {
@@ -6,7 +7,7 @@ namespace SFA.DAS.Forecasting.Models.Commitments
     {
         public long Id { get; set; }
         public long EmployerAccountId { get; set; }
-        public long? SendingEmployerAccountId { get; set; }
+        public long SendingEmployerAccountId { get; set; }
         public long ApprenticeshipId { get; set; }
         public long LearnerId { get; set; }
         public DateTime StartDate { get; set; }
@@ -20,5 +21,6 @@ namespace SFA.DAS.Forecasting.Models.Commitments
         public string ApprenticeName { get; set; }
         public string CourseName { get; set; }
         public int? CourseLevel { get; set; }
+        public FundingSource FundingSource { get; set; }
     }
 }

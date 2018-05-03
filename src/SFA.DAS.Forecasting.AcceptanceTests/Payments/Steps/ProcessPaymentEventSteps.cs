@@ -109,7 +109,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 CourseName = payment.CourseName,
                 Uln = idx,
                 CourseStartDate = payment.StartDateValue,
-                FundingSource = payment.SendingEmployerAccountId == null ? FundingSource.Levy : FundingSource.Transfer
+                FundingSource = payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSource.Levy : FundingSource.Transfer
             })
             .ToList()
             .ForEach(paymentEvent =>

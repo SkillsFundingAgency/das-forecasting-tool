@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Messages
     {
         public string Id { get; set; }
 		public long EmployerAccountId { get; set; }
-        public long? SendingEmployerAccountId { get; set; }
+        public long SendingEmployerAccountId { get; set; }
         public long Ukprn { get; set; }
         public long ApprenticeshipId { get; set; }
 	    public decimal Amount { get; set; }
