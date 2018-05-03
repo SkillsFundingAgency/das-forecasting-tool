@@ -19,6 +19,8 @@
         <div id="estimate-add-apprenticeship">
             @*<a href="#" class="link-back">Back</a>*@
             @Html.HiddenFor(model => model.Name)
+            @Html.HiddenFor(model => model.PreviousCourseId)
+
             <div class="error-summary @HideShowValidation("")  validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
                 <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
                     Errors to fix
@@ -29,15 +31,15 @@
                 <ul class="error-summary-list list list-links">
                     <li class="@HideShowValidation("NoApprenticeshipSelected")" id="noStandardSelected"><a href="#select2-chosse-apprenticeship-container">You must choose 1 apprenticeship</a></li>
                     <li class="@HideShowValidation("NoNumberOfApprentices")" id="noNumberOfApprentices"><a href="#no-of-app">Make sure you have at least 1 or more apprentices</a></li>
-                        <li class="@HideShowValidation("NoNumberOfMonths")" id="noLength"><a href="#levy-length">The number of months was not entered</a></li>
-                        <li class="@HideShowValidation("ShortNumberOfMonths")" id="shortLength"><a href="#levy-length">The number of months must be 12 months or more</a></li>
-                        <li class="@HideShowValidation("NoStartMonth")" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
-                        <li class="@HideShowValidation("NoStartYear")" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
-                        <li class="@HideShowValidation("LateDate")" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
-                        <li class="@HideShowValidation("StartDateInPast")" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
-                        <li class="@HideShowValidation("StartDateBeforeMay2018")" id="startDateBeforeMay2018"><a href="#startDateMonth">The start date must be on or after May 2018</a></li>
-                        <li class="@HideShowValidation("OverCap")" id="overCap"><a href="#levy-value">The total cost can't be higher than the total government funding band maximum for this apprenticeship</a></li>
-                        <li class="@HideShowValidation("NoCost")" id="noCost"><a href="#levy-value">The total training cost was not entered</a></li>
+                    <li class="@HideShowValidation("NoNumberOfMonths")" id="noLength"><a href="#levy-length">The number of months was not entered</a></li>
+                    <li class="@HideShowValidation("ShortNumberOfMonths")" id="shortLength"><a href="#levy-length">The number of months must be 12 months or more</a></li>
+                    <li class="@HideShowValidation("NoStartMonth")" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
+                    <li class="@HideShowValidation("NoStartYear")" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
+                    <li class="@HideShowValidation("LateDate")" id="wrongDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
+                    <li class="@HideShowValidation("StartDateInPast")" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
+                    <li class="@HideShowValidation("StartDateBeforeMay2018")" id="startDateBeforeMay2018"><a href="#startDateMonth">The start date must be on or after May 2018</a></li>
+                    <li class="@HideShowValidation("OverCap")" id="overCap"><a href="#levy-value">The total cost can't be higher than the total government funding band maximum for this apprenticeship</a></li>
+                    <li class="@HideShowValidation("NoCost")" id="noCost"><a href="#levy-value">The total training cost was not entered</a></li>
                 </ul>
             </div>
 
@@ -135,13 +137,13 @@
                                 }
 
                                 <span id="details-about-funding-calculated" class="form-hint @CalculatedFundingCapMessageClass">
-                                        Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                        Total government funding band maximum for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
+                                    Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                                    Total government funding band maximum for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
                                 </span>
 
                                 <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
                                     Choose an apprenticeship and number of apprentices to see this figure <br>
-                                        <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
+                                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
                                 </span>
 
 
@@ -193,7 +195,7 @@
         {
             return Model.ValidationResults.Count > 0 ? string.Empty : "hidden";
         }
-        
+
         return Model.ValidationResults.Count(x => x.FailureReason == validatorToCheck) > 0 ? string.Empty : "hidden";
     }
 }
@@ -205,6 +207,7 @@
         $(document).ready(function() {
             $("#chosse-apprenticeship").change(function() {
                 calculateTotalCost();
+                resetNumberOfMonths();
             });
 
             $("#no-of-app").change(function() {
@@ -218,13 +221,35 @@
             });
         });
 
-        function numberWithCommas(number) {
-            var parts = number.toString().split('.');
-            var partToProcess = parts[0];
-            partToProcess = partToProcess.replace(/,/g, '');
-            partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            parts[0] = partToProcess;
-            return parts.join('.');
+                function numberWithCommas(number) {
+                        var parts = number.toString().split('.');
+                        var partToProcess = parts[0];
+                        partToProcess = partToProcess.replace(/,/g, '');
+                        partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                        parts[0] = partToProcess;
+                        return parts.join('.');
+                    }
+
+        function resetNumberOfMonths() {
+            var courseId = $('#chosse-apprenticeship').val();
+            var previousCourseId = $('#PreviousCourseId').val();
+            console.log(`Course id: ${courseId}, previous course id: ${previousCourseId}`);
+            if (courseId !== previousCourseId) {
+                var requestObject = {
+                    courseId: courseId
+                };
+                console.log(JSON.stringify(requestObject));
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.RouteUrl("GetDefaultNumberOfMonths", null)',
+                    data: JSON.stringify(requestObject),
+                    contentType: "application/json; charset=utf-8",
+                    success: function(result) {
+                        $('#levy-length').val(result.NumberOfMonths);
+                        $('#PreviousCourseId').val(courseId);
+                    }
+                });
+            }
         }
 
         function calculateTotalCost() {
@@ -259,6 +284,6 @@
                 $('#details-about-funding').removeClass("HideFundingCapMessage");
                 $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
             }
-        }          
+        }
     </script>
 }
