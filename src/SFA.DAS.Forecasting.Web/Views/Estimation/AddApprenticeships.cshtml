@@ -210,8 +210,22 @@
             $("#no-of-app").change(function() {
                 calculateTotalCost();
             });
+
+            $("#levy-value").keyup(function() {
+                var num = $('#levy-value').val();
+                var commaNum = numberWithCommas(num);
+                $('#levy-value').val(commaNum);
+            });
         });
 
+        function numberWithCommas(number) {
+            var parts = number.toString().split('.');
+            var partToProcess = parts[0];
+            partToProcess = partToProcess.replace(/,/g, '');
+            partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            parts[0] = partToProcess;
+            return parts.join('.');
+        }
 
         function calculateTotalCost() {
             var courseId = $('#chosse-apprenticeship').val();
@@ -245,9 +259,6 @@
                 $('#details-about-funding').removeClass("HideFundingCapMessage");
                 $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
             }
-
-
-        }
+        }          
     </script>
-
 }
