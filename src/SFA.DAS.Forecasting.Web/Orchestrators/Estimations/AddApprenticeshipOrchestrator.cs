@@ -66,8 +66,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
 
             apprenticeshipDetailsToPersist = SetTotalCostWithCommas(apprenticeshipDetailsToPersist);
-
-
+            
             var viewModel = GetApprenticeshipAddSetup();
             viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
 
@@ -92,7 +91,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             if (decimal.TryParse(apprenticeshipDetailsToPersist.TotalCostAsString, out decimal result))
             {
-                apprenticeshipDetailsToPersist.TotalCost = result;
+                apprenticeshipDetailsToPersist.TotalCost = Math.Round(result,0,MidpointRounding.AwayFromZero);
                 apprenticeshipDetailsToPersist.TotalCostAsString = result.FormatValue();
             }
             else
