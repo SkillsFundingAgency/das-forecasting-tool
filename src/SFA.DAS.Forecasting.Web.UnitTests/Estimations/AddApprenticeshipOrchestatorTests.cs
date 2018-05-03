@@ -3,14 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using FluentAssertions;
+using FluentValidation.Results;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
-using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
-namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations
+namespace SFA.DAS.Forecasting.Web.UnitTests.Estimations
 {
     [TestFixture]
     public class AddApprenticeshipOrchestatorTests
@@ -78,8 +78,8 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations
             var vm = new AddApprenticeshipViewModel {ApprenticeshipToAdd = new ApprenticeshipToAdd {TotalCostAsString = totalCostAsStringInput } };
             var res = await orchestrator.ValidateAddApprenticeship(vm);
 
-            res.ApprenticeshipToAdd.TotalCost.Should().Be(totalCost);
-            res.ApprenticeshipToAdd.TotalCostAsString.Should().Be(totalCostAsStringOutput);      
+            AssertionExtensions.Should((decimal?) res.ApprenticeshipToAdd.TotalCost).Be(totalCost);
+            AssertionExtensions.Should((string) res.ApprenticeshipToAdd.TotalCostAsString).Be(totalCostAsStringOutput);      
         }
 
         [Test]
@@ -87,10 +87,10 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup();
-            res.Name.Should().Be("Add Apprenticeships");
+            AssertionExtensions.Should((string) res.Name).Be("Add Apprenticeships");
             res.ApprenticeshipToAdd.ShouldBeEquivalentTo(new ApprenticeshipToAdd());
             res.ValidationResults.ShouldBeEquivalentTo(new List<ValidationResult>());
-            res.AvailableApprenticeships.Count().Should().Be(2);
+            AssertionExtensions.Should((int) res.AvailableApprenticeships.Count()).Be(2);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup();
             res.ValidationResults.ShouldBeEquivalentTo(new List<ValidationResult>());
-            res.AvailableApprenticeships.Count().Should().Be(2);
+            AssertionExtensions.Should((int) res.AvailableApprenticeships.Count()).Be(2);
             res.AvailableApprenticeships.First().ShouldBeEquivalentTo(_courseCarpentry);
             res.AvailableApprenticeships.ElementAt(1).ShouldBeEquivalentTo(_courseElectrician);
         }
