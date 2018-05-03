@@ -34,6 +34,14 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                     commitment.ApprenticeshipId == apprenticeshipId);
         }
 
+        public async Task<List<CommitmentModel>> GetCurrentCommitmentsForSendingEmployer(long employerAccountId)
+        {
+            return await _dataContext.Commitments
+                .Where(commitment => commitment.SendingEmployerAccountId == employerAccountId &&
+                                     commitment.ActualEndDate == null)
+                .ToListAsync();
+        }
+
         public async Task Store(CommitmentModel commitment)
         {
             if (commitment.Id <= 0)

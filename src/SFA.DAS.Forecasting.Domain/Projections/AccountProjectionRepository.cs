@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var levy = await _levyDataSession.GetLatestLevyAmount(employerAccountId);
             var balance = await _currentBalanceRepository.Get(employerAccountId);
             var commitments = await _commitmentsRepository.Get(employerAccountId);
-            
+
             return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), commitments);
         }
 

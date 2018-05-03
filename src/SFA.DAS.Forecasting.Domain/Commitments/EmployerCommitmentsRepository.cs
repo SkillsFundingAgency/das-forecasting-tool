@@ -26,7 +26,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         public async Task<EmployerCommitments> Get(long employerAccountId)
         {
             var commitments = await _dataService.GetCurrentCommitments(employerAccountId);
-            return new EmployerCommitments(employerAccountId, commitments);
+            var commitmentsAsSender = await _dataService.GetCurrentCommitmentsForSendingEmployer(employerAccountId);
+
+            return new EmployerCommitments(employerAccountId, commitments, commitmentsAsSender);
         }
     }
 }

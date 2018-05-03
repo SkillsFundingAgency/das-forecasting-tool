@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 CompletionAmount = 3000
             };
             _commitments = new List<CommitmentModel> { _commitment };
-            var employerCommitments = new EmployerCommitments(1, _commitments);
+            var employerCommitments = new EmployerCommitments(1, _commitments, null);
             Moqer.SetInstance(employerCommitments);
         }
 

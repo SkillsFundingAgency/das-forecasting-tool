@@ -56,7 +56,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                                            
                     });
             }
-            var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);
+            var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments, null);
             return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), employerCommitments);
         }
     }

@@ -7,29 +7,36 @@ using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
-    public class EmployerCommitments
+    public partial class EmployerCommitments
     {
         private readonly long _employerAccountId;
         private readonly List<CommitmentModel> _commitments;
+        private readonly List<CommitmentModel> _commitmentsAsSender;
+
         public ReadOnlyCollection<CommitmentModel> Commitments => _commitments.AsReadOnly();
 
 
         public EmployerCommitments(
             long employerAccountId,
-            List<CommitmentModel> commitments)
+            List<CommitmentModel> commitments,
+            List<CommitmentModel> commitmentsAsSender)
         {
             _employerAccountId = employerAccountId;
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
+            _commitmentsAsSender = commitmentsAsSender ?? new List<CommitmentModel>();
         }
 
-        public virtual Tuple<decimal, List<long>> GetTotalCostOfTraining(DateTime date)
+        public virtual TotalCostOfTraining GetTotalCostOfTraining(DateTime date)
         {
-            var startOfMonth = date.GetStartOfMonth();
-            var commitments = _commitments.Where(commitment =>
-                    commitment.StartDate.GetStartOfMonth() < startOfMonth &&
-                    commitment.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= startOfMonth)
-                .ToList();
-            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.MonthlyInstallment), commitments.Select(c => c.Id).ToList());
+            var commitments = _commitments.Where(FilterCommitments(date));
+            var commitmentsAsSender = _commitmentsAsSender.Where(FilterCommitments(date));
+
+            return new TotalCostOfTraining
+            {
+                Value = commitments.Sum(c => c.MonthlyInstallment),
+                CommitmentIds = commitments.Select(c => c.Id),
+                TotalCostAsSender = commitmentsAsSender.Sum(m => m.MonthlyInstallment)
+            };
         }
 
         public virtual Tuple<decimal, List<long>> GetTotalCompletionPayments(DateTime date)
@@ -52,6 +59,14 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             return _commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
                 .Select(commitment => commitment.PlannedEndDate)
                 .FirstOrDefault();
+        }
+
+        private static Func<CommitmentModel, bool> FilterCommitments(DateTime date)
+        {
+            var startOfMonth = date.GetStartOfMonth();
+            return commitment =>
+                                commitment.StartDate.GetStartOfMonth() < startOfMonth &&
+                                commitment.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= startOfMonth;
         }
     }
 }
