@@ -154,7 +154,7 @@
                             <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                             <label for="levy-value-2" class="form-label-bold">
                                 £
-                                @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCost, new { @class = "form-control levy-value", id = "levy-value", name = "levy-value", type = "text" })
+                                @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCostAsString, new { @class = "form-control levy-value", id = "levy-value", name = "levy-value", type = "text" })
 
                             </label>
                         </div>
@@ -210,8 +210,22 @@
             $("#no-of-app").change(function() {
                 calculateTotalCost();
             });
+
+            $("#levy-value").keyup(function() {
+                var num = $('#levy-value').val();
+                var commaNum = numberWithCommas(num);
+                $('#levy-value').val(commaNum);
+            });
         });
 
+        function numberWithCommas(number) {
+            var parts = number.toString().split('.');
+            var partToProcess = parts[0];
+            partToProcess = partToProcess.replace(/,/g, '');
+            partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            parts[0] = partToProcess;
+            return parts.join('.');
+        }
 
         function calculateTotalCost() {
             var courseId = $('#chosse-apprenticeship').val();
@@ -245,9 +259,6 @@
                 $('#details-about-funding').removeClass("HideFundingCapMessage");
                 $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
             }
-
-
-        }
+        }          
     </script>
-
 }
