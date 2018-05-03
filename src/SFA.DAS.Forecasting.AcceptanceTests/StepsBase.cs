@@ -245,7 +245,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     ActualEndDate = null,
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
-                    NumberOfInstallments = (short)commitment.NumberOfInstallments
+                    NumberOfInstallments = (short)commitment.NumberOfInstallments,
+                    FundingSource = FundingSource.Levy
                 });
             }
 
