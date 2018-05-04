@@ -62,7 +62,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
 
             var viewModel = ResetViewModelDetails(vm);
-            
 
             if (viewModel.ApprenticeshipToAdd.CourseId is null)
             {
