@@ -45,7 +45,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public void GivenTheFollowingCommitmentsHaveBeenRecorded(Table table)
         {
             Commitments = table.CreateSet<TestCommitment>().ToList();
-            DeleteCommitments();
+            var commitmentIds = Commitments
+                .Where(m => m.EmployerAccountId.HasValue)
+                .Select(m => m.EmployerAccountId.Value)
+                .ToList();
+
+            commitmentIds.Add(Config.EmployerAccountId);
+
+            foreach(var id in commitmentIds)
+                DeleteCommitments(id);
+
             InsertCommitments(Commitments);
         }
 
@@ -73,7 +82,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 ? ProjectionsStartPeriod.ToJson()
                 : string.Empty;
 
-            DeleteAccountProjections();
+            DeleteAccountProjections(Config.EmployerAccountId);
             var projectionUrl =
                 Config.ProjectionLevyFunctionUrl.Replace("{employerAccountId}", Config.EmployerAccountId.ToString());
             Console.WriteLine($"Sending levy event to levy function: {projectionUrl}");

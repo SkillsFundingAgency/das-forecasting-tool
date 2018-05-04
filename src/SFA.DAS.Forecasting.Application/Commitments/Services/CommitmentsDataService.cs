@@ -21,8 +21,10 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         public async Task<List<CommitmentModel>> GetCurrentCommitments(long employerAccountId)
         {
             return await _dataContext.Commitments
-                .Where(commitment => commitment.EmployerAccountId == employerAccountId && 
-                                     commitment.ActualEndDate == null)
+                
+                .Where(commitment => commitment.EmployerAccountId == employerAccountId 
+                                  || commitment.SendingEmployerAccountId == employerAccountId)
+                                     .Where(c => c.ActualEndDate == null)
                 .ToListAsync();
         }
 
@@ -32,14 +34,6 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 .FirstOrDefaultAsync(commitment =>
                     commitment.EmployerAccountId == employerAccountId &&
                     commitment.ApprenticeshipId == apprenticeshipId);
-        }
-
-        public async Task<List<CommitmentModel>> GetCurrentCommitmentsForSendingEmployer(long employerAccountId)
-        {
-            return await _dataContext.Commitments
-                .Where(commitment => commitment.SendingEmployerAccountId == employerAccountId &&
-                                     commitment.ActualEndDate == null)
-                .ToListAsync();
         }
 
         public async Task Store(CommitmentModel commitment)

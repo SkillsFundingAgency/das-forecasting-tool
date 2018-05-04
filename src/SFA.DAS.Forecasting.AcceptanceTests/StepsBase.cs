@@ -164,13 +164,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             DataContext.SaveChanges();
         }
 
-        protected void DeleteCommitments()
+        protected void DeleteCommitments(long employerId)
         {
             DataContext.AccountProjectionCommitments
                 .RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId).ToList());
+                .Where(apc => apc.Commitment.EmployerAccountId == employerId).ToList());
             var commitments = DataContext.Commitments
-                .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId)
+                .Where(commitment => commitment.EmployerAccountId == employerId)
                 .ToList();
             DataContext.Commitments.RemoveRange(commitments);
             DataContext.SaveChanges();
@@ -185,14 +185,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             DataContext.SaveChanges();
         }
 
-        protected void DeleteAccountProjections()
+        protected void DeleteAccountProjections(long employerId)
         {
             var projectionCommitments = DataContext.AccountProjectionCommitments
-                .Where(ap => ap.AccountProjection.EmployerAccountId == Config.EmployerAccountId)
+                .Where(ap => ap.AccountProjection.EmployerAccountId == employerId)
                 .ToList();
             DataContext.AccountProjectionCommitments.RemoveRange(projectionCommitments);
             var projections = DataContext.AccountProjections
-                .Where(projection => projection.EmployerAccountId == Config.EmployerAccountId)
+                .Where(projection => projection.EmployerAccountId == employerId)
                 .ToList();
             DataContext.AccountProjections.RemoveRange(projections);
             DataContext.SaveChanges();
@@ -232,10 +232,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
                 DataContext.Commitments.Add(new CommitmentModel
                 {
-                    EmployerAccountId = Config.EmployerAccountId,
+                    EmployerAccountId = commitment.EmployerAccountId ?? Config.EmployerAccountId,
                     LearnerId = i + 1,
                     ApprenticeshipId = i + 2,
                     ApprenticeName = commitment.ApprenticeName,
+                    SendingEmployerAccountId = commitment.SendingEmployerAccountId,
                     ProviderId = i + 3,
                     ProviderName = commitment.ProviderName,
                     CourseName = commitment.CourseName,
@@ -246,7 +247,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
-                    FundingSource = FundingSource.Levy
+                    FundingSource = commitment.FundingSource ?? FundingSource.Levy
                 });
             }
 

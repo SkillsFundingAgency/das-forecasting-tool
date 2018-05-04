@@ -174,6 +174,104 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC1 Transfer training cost when some commitments duration exceeds forecast period" +
+            "")]
+        public virtual void AC1TransferTrainingCostWhenSomeCommitmentsDurationExceedsForecastPeriod()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1 Transfer training cost when some commitments duration exceeds forecast period" +
+                    "", ((string[])(null)));
+#line 33
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "EmployerAccountId",
+                        "SendingEmployerAccountId",
+                        "FundingSource"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider 1",
+                        "Yesterday",
+                        "2000",
+                        "1200",
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course",
+                        "1",
+                        "Test Provider 2",
+                        "Yesterday",
+                        "2000",
+                        "1200",
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course 2",
+                        "1",
+                        "Test Provider 3",
+                        "Yesterday",
+                        "2000",
+                        "1200",
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 3",
+                        "Test Course",
+                        "1",
+                        "Test Provider 4",
+                        "Yesterday",
+                        "2000",
+                        "1200",
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 4",
+                        "Test Course 2",
+                        "1",
+                        "Test Provider 5",
+                        "Next Year",
+                        "2000",
+                        "1200",
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
+#line 34
+ testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
+#line 41
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 42
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 43
+ testRunner.And("transfer out should have 8000 month 1 to 6", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 44
+ testRunner.And("transfer out should have 2000 month 13 to 19", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

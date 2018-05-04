@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     NumberOfInstallments = 5
                 }
             };
-            var employerCommitments = new EmployerCommitments(12345, _commitments, null);
+            var employerCommitments = new EmployerCommitments(12345, _commitments);
             _moqer.SetInstance(employerCommitments);
             _account = new Account(12345, 10000, 0, 15000, 10000);
             _moqer.SetInstance(_account);

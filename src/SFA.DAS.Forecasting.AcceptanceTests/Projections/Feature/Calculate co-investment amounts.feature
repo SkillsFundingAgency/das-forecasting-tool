@@ -26,3 +26,19 @@ Scenario: Calculate Co-investment
 	And the balance should be 0
 	And the employer co-investment amount is 10% of the negative balance
 	And the government co-investment amount is 90% of the negative value
+
+
+# Move to separate file
+
+Scenario: AC1 Transfer training cost when some commitments duration exceeds forecast period
+	Given the following commitments have been recorded
+	| Apprentice Name   | Course Name   | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | EmployerAccountId | SendingEmployerAccountId | FundingSource |
+	| Test Apprentice   | Test Course   | 1            | Test Provider 1 | Yesterday  | 2000               | 1200              | 6                      | 999                      | 12345                    | 2             |
+	| Test Apprentice 1 | Test Course   | 1            | Test Provider 2 | Yesterday  | 2000               | 1200              | 6                      | 999                      | 12345                    | 2             |
+	| Test Apprentice 2 | Test Course 2 | 1            | Test Provider 3 | Yesterday  | 2000               | 1200              | 6                      | 999                      | 12345                    | 2             |
+	| Test Apprentice 3 | Test Course   | 1            | Test Provider 4 | Yesterday  | 2000               | 1200              | 6                      | 999                      | 12345                    | 2             |
+	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider 5 | Next Year  | 2000               | 1200              | 6                      | 999                      | 12345                    | 2             |
+	When the account projection is triggered after a payment run
+	Then the account projection should be generated
+	And transfer out should have 8000 month 1 to 6
+	And transfer out should have 2000 month 13 to 19

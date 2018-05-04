@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 Month = (short)period.Month,
                 Year = (short)period.Year,
                 TotalCostOfTraining = totalCostOfTraning.Value,
-                TotalCostOfTrainingAsSender = totalCostOfTraning.TotalCostAsSender,
+                TransferOutTotalCostOfTraining = totalCostOfTraning.TransferCost,
                 CompletionPayments = completionPayments.Item1,
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,

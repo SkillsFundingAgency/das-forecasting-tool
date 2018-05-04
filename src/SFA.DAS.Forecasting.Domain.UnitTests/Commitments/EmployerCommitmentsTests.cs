@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMoq;
-using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Validation;
-using SFA.DAS.Forecasting.Domain.Events;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
@@ -16,7 +13,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
     public class EmployerCommitmentsTests
     {
         protected List<CommitmentModel> Commitments;
-        protected List<CommitmentModel> CommitmentsAsSender;
         protected AutoMoqer Moqer;
         private DateTime startDate;
         private DateTime endDate;
@@ -28,11 +24,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddYears(1);
             startDate = endDate.AddYears(-1);
             Commitments = new List<CommitmentModel>();
-            CommitmentsAsSender = new List<CommitmentModel>();
         }
 
         private EmployerCommitments GetEmployerCommitments(long employerAccountId = 1) =>
-            new EmployerCommitments(employerAccountId, Commitments, CommitmentsAsSender);
+            new EmployerCommitments(employerAccountId, Commitments);
 
         [Test]
         public void Includes_Installment_For_Each_Month_Including_Planned_End_Date()

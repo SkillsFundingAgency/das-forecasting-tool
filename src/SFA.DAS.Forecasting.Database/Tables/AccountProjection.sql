@@ -8,7 +8,7 @@
     [Year] INT NOT NULL,
     [FundsIn] DECIMAL(18,2) NOT NULL,
     [TotalCostOfTraining] DECIMAL(18,2) NOT NULL,
-	[TotalCostOfTrainingAsSender] DECIMAL(18,2) NOT NULL default(0),
+	[TransferOutTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0),
     [CompletionPayments] DECIMAL(18,2) NOT NULL,
     [FutureFunds] DECIMAL(18,2) NOT NULL,
 	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0),
