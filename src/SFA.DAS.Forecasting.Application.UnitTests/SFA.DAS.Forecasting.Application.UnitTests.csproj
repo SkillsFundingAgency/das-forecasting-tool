@@ -151,6 +151,7 @@
     <Compile Include="ApprenticeshipCourses\StandardSummaryMapperTest.cs" />
     <Compile Include="ApprenticeshipCourses\StoreCourseHandlerTests.cs" />
     <Compile Include="Balance\BalanceHandlerTests.cs" />
+    <Compile Include="Estimations\AddApprenticeshipOrchestatorTests.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidatorTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />

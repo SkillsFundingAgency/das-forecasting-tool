@@ -68,14 +68,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
             if (viewModel.ValidationResults.Count > 0)
             {
-                ModelState.Clear();
+                viewModel.PreviousCourseId = viewModel.ApprenticeshipToAdd?.CourseId;
+                ModelState.Clear();        
                 return View("AddApprenticeships", viewModel);
             }
 
             await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
-
         }
 
             
@@ -95,6 +95,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 TotalFundingCapValue = totalValueAsString
             };
 
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Route("GetDefaultNumberOfMonths", Name = "GetDefaultNumberOfMonths")]
+        public async Task<ActionResult> GetDefaultNumberOfMonths(string courseId)
+        {
+            var result = await _addApprenticeshipOrchestrator.GetDefaultNumberOfMonths(courseId);
             return Json(result);
         }
 
