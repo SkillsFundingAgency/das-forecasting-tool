@@ -10,6 +10,7 @@
     [TotalCostOfTraining] DECIMAL(18,2) NOT NULL,
 	[TransferOutTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0),
     [CompletionPayments] DECIMAL(18,2) NOT NULL,
+	[TransferOutCompletionPayments] DECIMAL(18,2) NOT NULL default(0),
     [FutureFunds] DECIMAL(18,2) NOT NULL,
 	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0),
 	[CoInvestmentGovernment] DECIMAL(18,2) NOT NULL default(0)

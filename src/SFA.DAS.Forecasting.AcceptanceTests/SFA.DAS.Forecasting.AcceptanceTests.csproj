@@ -158,6 +158,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
     </Compile>
+    <Compile Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CalculateActualTransferCompletionPayments.feature</DependentUpon>
+    </Compile>
     <Compile Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -251,6 +256,10 @@
     <None Include="Projections\Feature\Calculate co-investment amounts.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CalculateActualTransferCompletionPayments.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

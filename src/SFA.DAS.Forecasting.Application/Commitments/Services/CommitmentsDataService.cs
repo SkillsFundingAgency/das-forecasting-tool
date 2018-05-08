@@ -21,10 +21,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         public async Task<List<CommitmentModel>> GetCurrentCommitments(long employerAccountId)
         {
             return await _dataContext.Commitments
-                
                 .Where(commitment => commitment.EmployerAccountId == employerAccountId 
                                   || commitment.SendingEmployerAccountId == employerAccountId)
-                                     .Where(c => c.ActualEndDate == null)
+                .Where(c => c.ActualEndDate == null)
                 .ToListAsync();
         }
 

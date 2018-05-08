@@ -58,7 +58,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
             var commitments =
                 totalCostOfTraning.CommitmentIds
-                .Concat(completionPayments.Item2)
+                .Concat(completionPayments.CommitmentIds)
                 .Distinct();
 
             var balance = lastBalance;
@@ -69,7 +69,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 Month = (short)period.Month,
                 Year = (short)period.Year,
                 TotalCostOfTraining = totalCostOfTraning.Value,
-                CompletionPayments = completionPayments.Item1,
+                CompletionPayments = completionPayments.Value,
+                TransferOutCompletionPayments = completionPayments.TransferOut,
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,

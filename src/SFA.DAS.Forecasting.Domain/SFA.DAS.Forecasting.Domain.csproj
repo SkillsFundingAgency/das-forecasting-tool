@@ -51,6 +51,7 @@
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
+    <Compile Include="Commitments\TotalCompletionPayments.cs" />
     <Compile Include="Commitments\TotalCostOfTraining.cs" />
     <Compile Include="Commitments\Validation\CommitmentValidator.cs" />
     <Compile Include="Estimations\AccountEstimation.cs" />

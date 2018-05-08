@@ -210,9 +210,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 CompletionAmount = 50
             });
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).Item1);
-            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).Item1);
-            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).Item1);
+            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).Value);
+            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).Value);
+            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).Value);
         }
 
         [Test]
@@ -244,9 +244,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
             var employerCommitments = GetEmployerCommitments();
 
-            Assert.IsFalse(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).Item2.Any());
-            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).Item2.All(id => id == 1));
-            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).Item2.All(id => id == 2));
+            Assert.IsFalse(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).CommitmentIds.Any());
+            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).CommitmentIds.All(id => id == 1));
+            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).CommitmentIds.All(id => id == 2));
         }
     }
 }

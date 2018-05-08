@@ -25,8 +25,12 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public virtual TotalCostOfTraining GetTotalCostOfTraining(DateTime date)
         {
-            var commitments = Commitments.Where(FilterCommitments(date));
-            var commitmentsAsSender = CommitmentsTransfers.Where(FilterCommitments(date));
+            Func<CommitmentModel, bool> filterCurrent = c =>
+                      c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
+                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
+
+            var commitments = Commitments.Where(filterCurrent);
+            var commitmentsAsSender = CommitmentsTransfers.Where(filterCurrent);
 
             return new TotalCostOfTraining
             {
@@ -36,13 +40,20 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             };
         }
 
-        public virtual Tuple<decimal, List<long>> GetTotalCompletionPayments(DateTime date)
+        public virtual TotalCompletionPayments GetTotalCompletionPayments(DateTime date)
         {
-            var startOfMonth = date.GetStartOfMonth();
-            var commitments = Commitments.Where(commitment =>
-                   commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) == startOfMonth)
-                .ToList();
-            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.CompletionAmount), commitments.Select(c => c.Id).ToList());
+            Func<CommitmentModel, bool> filterCurrent = c => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
+
+            var commitments = Commitments.Where(filterCurrent);
+            var commitmentsAsSender = CommitmentsTransfers.Where(filterCurrent);
+
+            return new TotalCompletionPayments
+            {
+                Value = commitments.Sum(c => c.CompletionAmount),
+                CommitmentIds = commitments.Select(c => c.Id).ToList(),
+                TransferOut = commitmentsAsSender.Sum(m => m.CompletionAmount)
+            };
+
         }
 
         public DateTime GetEarliestCommitmentStartDate()
@@ -56,14 +67,6 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             return Commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
                 .Select(commitment => commitment.PlannedEndDate)
                 .FirstOrDefault();
-        }
-
-        private static Func<CommitmentModel, bool> FilterCommitments(DateTime date)
-        {
-            var startOfMonth = date.GetStartOfMonth();
-            return commitment =>
-                                commitment.StartDate.GetStartOfMonth() < startOfMonth &&
-                                commitment.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= startOfMonth;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -145,6 +146,46 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
             var employerCommitments = GetEmployerCommitments();
             Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).TransferCost);
+        }
+
+        // Completion Payments
+
+        [Test]
+        public void Completion_Payments_Are_Aggregated_In_Month_After_Planed_End_Date()
+        {
+            Commitments.Add(new CommitmentModel
+            {
+                EmployerAccountId = 999,
+                SendingEmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(2),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                CompletionAmount = 30
+            });
+            Commitments.Add(new CommitmentModel
+            {
+                EmployerAccountId = 999,
+                SendingEmployerAccountId = 1,
+                ApprenticeshipId = 3,
+                LearnerId = 4,
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 5,
+                CompletionAmount = 50
+            });
+            var employerCommitments = GetEmployerCommitments();
+            employerCommitments.GetTotalCompletionPayments(DateTime.Today).TransferOut
+                .Should().Be(0);
+
+            employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).TransferOut
+                .Should().Be(30);
+
+            employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).TransferOut
+                .Should().Be(50);
         }
     }
 }
