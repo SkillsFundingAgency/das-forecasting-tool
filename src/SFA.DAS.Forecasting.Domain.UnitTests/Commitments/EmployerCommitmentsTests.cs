@@ -5,8 +5,6 @@ using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Validation;
-using SFA.DAS.Forecasting.Domain.Events;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
@@ -26,7 +24,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddYears(1);
             startDate = endDate.AddYears(-1);
             Commitments = new List<CommitmentModel>();
-            
         }
 
         private EmployerCommitments GetEmployerCommitments(long employerAccountId = 1) =>
@@ -51,12 +48,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             while (date <= endDate)
             {
                 var costOfTraining = employerCommitments.GetTotalCostOfTraining(date);
-                Assert.AreEqual(1000, costOfTraining.Item1, $"Invalid total cost of training for: {date:dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
+                Assert.AreEqual(1000, costOfTraining.Value, $"Invalid total cost of training for: {date:dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
                 date = date.AddMonths(1);
             }
 
             var costOfTrainingCompletionMonth = employerCommitments.GetTotalCostOfTraining(startDate);
-            Assert.AreEqual(0, costOfTrainingCompletionMonth.Item1, $"Invalid total cost of training for: {startDate:dd/MM/yyyy}, expected £0 but was £{costOfTrainingCompletionMonth}");
+            Assert.AreEqual(0, costOfTrainingCompletionMonth.Value, $"Invalid total cost of training for: {startDate:dd/MM/yyyy}, expected £0 but was £{costOfTrainingCompletionMonth}");
         }
 
         [Test]
@@ -73,11 +70,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 12,
                 CompletionAmount = 6000
             });
+            
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
             startDate = endDate.AddYears(-1);
             var employerCommitments = GetEmployerCommitments();
             var costOfTraining = employerCommitments.GetTotalCostOfTraining(endDate.AddMonths(1));
-            Assert.AreEqual(1000, costOfTraining.Item1, $"Invalid total cost of training for: {endDate.AddMonths(1):dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
+            Assert.AreEqual(1000, costOfTraining.Value, $"Invalid total cost of training for: {endDate.AddMonths(1):dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
         }
 
         [Test]
@@ -116,12 +114,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 
             var employerCommitments = GetEmployerCommitments();
 
-            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).Item1);
-            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).Item1);
-            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).Item1);
-            Assert.AreEqual(15, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).Item1);
-            Assert.AreEqual(35, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(4)).Item1);
-            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).Item1);
+            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).Value);
+            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).Value);
+            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).Value);
+            Assert.AreEqual(15, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).Value);
+            Assert.AreEqual(35, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(4)).Value);
+            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).Value);
         }
 
         [Test]
@@ -161,12 +159,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 10
             });
             var employerCommitments = GetEmployerCommitments();
-            Assert.IsFalse(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).Item2.Any());
-            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).Item2.All(id => id == 1 || id == 2));
-            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).Item2.All(id => id == 1 || id == 2));
-            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).Item2.All(id => id == 2 || id == 3));
-            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(5)).Item2.All(id => id == 2 || id == 3));
-            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).Item2.All(id => id == 3));
+            Assert.IsFalse(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).CommitmentIds.Any());
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).CommitmentIds.All(id => id == 1 || id == 2));
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).CommitmentIds.All(id => id == 1 || id == 2));
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).CommitmentIds.All(id => id == 2 || id == 3));
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(5)).CommitmentIds.All(id => id == 2 || id == 3));
+            Assert.IsTrue(employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).CommitmentIds.All(id => id == 3));
         }
 
         [Test]
@@ -183,7 +181,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 2
             });
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).Item1);
+            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).Value);
         }
 
         [Test]
@@ -212,10 +210,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 CompletionAmount = 50
             });
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).Item1);
-            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).Item1);
-            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).Item1);
+            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).Value);
+            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).Value);
+            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).Value);
         }
+
         [Test]
         public void Completion_Payments_Are_Included_In_Month_After_Planned_End_Date()
         {
@@ -245,9 +244,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
             var employerCommitments = GetEmployerCommitments();
 
-            Assert.IsFalse(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).Item2.Any());
-            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).Item2.All(id => id == 1));
-            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).Item2.All(id => id == 2));
+            Assert.IsFalse(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(2)).CommitmentIds.Any());
+            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).CommitmentIds.All(id => id == 1));
+            Assert.IsTrue(employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).CommitmentIds.All(id => id == 2));
         }
     }
 }

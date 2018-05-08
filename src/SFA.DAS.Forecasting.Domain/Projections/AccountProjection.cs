@@ -51,18 +51,23 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
-            var commitments = totalCostOfTraning.Item2;
-            commitments.AddRange(completionPayments.Item2);
-            commitments = commitments.Distinct().ToList();
-            var balance = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1;
+
+            var commitments =
+                totalCostOfTraning.CommitmentIds
+                .Concat(completionPayments.CommitmentIds)
+                .Distinct();
+
+            var balance = lastBalance + fundsIn - totalCostOfTraning.Value - completionPayments.Value;
             var projection = new AccountProjectionModel
             {
                 FundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = totalCostOfTraning.Item1,
-                CompletionPayments = completionPayments.Item1,
+                TotalCostOfTraining = totalCostOfTraning.Value,
+                TransferOutTotalCostOfTraining = totalCostOfTraning.TransferCost,
+                CompletionPayments = completionPayments.Value,
+                TransferOutCompletionPayments = completionPayments.TransferOut,
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,

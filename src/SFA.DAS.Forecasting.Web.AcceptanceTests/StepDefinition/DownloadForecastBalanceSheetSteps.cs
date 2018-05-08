@@ -162,16 +162,17 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             DeleteAccountProjections();
             Store(Projections);
         }
+    }
 
-        public class TestAccountProjection
-        {
-            public string Date { get; set; }
-            public string FundsIn { get; set; }
-            public decimal CostOfTraining { get; set; }
-            public decimal CompletionPayments { get; set; }
-            public decimal YourContribution { get; set; }
-            public decimal GovernmentContribution { get; set; }
-            public decimal FutureFunds { get; set; }
-        }
+    public class TestAccountProjection
+    {
+        public string Date { get; set; }
+        public string FundsIn { get; set; }
+        public decimal CostOfTraining { get; set; }
+        public decimal CompletionPayments { get; set; }
+        public decimal YourContribution { get; set; }
+        public decimal GovernmentContribution { get; set; }
+        public decimal FutureFunds { get; set; }
+        public decimal TransferOutTotalCostOfTraining { get; set; }
     }
 }

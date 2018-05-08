@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
-    public class EmployerCommitments
+    public partial class EmployerCommitments
     {
         private readonly long _employerAccountId;
-        private readonly List<CommitmentModel> _commitments;
-        public ReadOnlyCollection<CommitmentModel> Commitments => _commitments.AsReadOnly();
+        private readonly IEnumerable<CommitmentModel> _commitments;
+
+        private IEnumerable<CommitmentModel> Commitments => _commitments.Where(m => m.EmployerAccountId == _employerAccountId);
+        private IEnumerable<CommitmentModel> CommitmentsTransfers => _commitments.Where(m => m.SendingEmployerAccountId == _employerAccountId);
 
 
         public EmployerCommitments(
@@ -22,34 +23,48 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
         }
 
-        public virtual Tuple<decimal, List<long>> GetTotalCostOfTraining(DateTime date)
+        public virtual TotalCostOfTraining GetTotalCostOfTraining(DateTime date)
         {
-            var startOfMonth = date.GetStartOfMonth();
-            var commitments = _commitments.Where(commitment =>
-                    commitment.StartDate.GetStartOfMonth() < startOfMonth &&
-                    commitment.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= startOfMonth)
-                .ToList();
-            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.MonthlyInstallment), commitments.Select(c => c.Id).ToList());
+            Func<CommitmentModel, bool> filterCurrent = c =>
+                      c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
+                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
+
+            var commitments = Commitments.Where(filterCurrent);
+            var commitmentsAsSender = CommitmentsTransfers.Where(filterCurrent);
+
+            return new TotalCostOfTraining
+            {
+                Value = commitments.Sum(c => c.MonthlyInstallment),
+                CommitmentIds = commitments.Select(c => c.Id),
+                TransferCost = commitmentsAsSender.Sum(m => m.MonthlyInstallment)
+            };
         }
 
-        public virtual Tuple<decimal, List<long>> GetTotalCompletionPayments(DateTime date)
+        public virtual TotalCompletionPayments GetTotalCompletionPayments(DateTime date)
         {
-            var startOfMonth = date.GetStartOfMonth();
-            var commitments = _commitments.Where(commitment =>
-                   commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) == startOfMonth)
-                .ToList();
-            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.CompletionAmount), commitments.Select(c => c.Id).ToList());
+            Func<CommitmentModel, bool> filterCurrent = c => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
+
+            var commitments = Commitments.Where(filterCurrent);
+            var commitmentsAsSender = CommitmentsTransfers.Where(filterCurrent);
+
+            return new TotalCompletionPayments
+            {
+                Value = commitments.Sum(c => c.CompletionAmount),
+                CommitmentIds = commitments.Select(c => c.Id).ToList(),
+                TransferOut = commitmentsAsSender.Sum(m => m.CompletionAmount)
+            };
+
         }
 
         public DateTime GetEarliestCommitmentStartDate()
         {
-            return _commitments.OrderBy(commitment => commitment.StartDate)
+            return Commitments.OrderBy(commitment => commitment.StartDate)
                 .Select(commitment => commitment.StartDate)
                 .FirstOrDefault();
         }
         public DateTime GetLastCommitmentPlannedEndDate()
         {
-            return _commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
+            return Commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
                 .Select(commitment => commitment.PlannedEndDate)
                 .FirstOrDefault();
         }

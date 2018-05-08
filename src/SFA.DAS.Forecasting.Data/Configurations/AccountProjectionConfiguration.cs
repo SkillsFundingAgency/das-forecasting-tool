@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.Year).HasColumnName(@"Year").HasColumnType("int").IsRequired();
             Property(x => x.FundsIn).HasColumnName(@"FundsIn").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.TotalCostOfTraining).HasColumnName(@"TotalCostOfTraining").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Property(x => x.TransferOutTotalCostOfTraining).HasColumnName(@"TransferOutTotalCostOfTraining").HasColumnType("decimal").IsRequired().HasPrecision(18, 2);
             Property(x => x.CompletionPayments).HasColumnName(@"CompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.FutureFunds).HasColumnName(@"FutureFunds").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.CoInvestmentEmployer).HasColumnName(@"CoInvestmentEmployer").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
