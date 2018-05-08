@@ -3,44 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Projections.Services;
+using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
     public class ForecastingOrchestrator
     {
         private readonly IHashingService _hashingService;
+        private readonly ICommitmentsDataService _commitmentsDataService;
         private readonly IAccountProjectionDataSession _accountProjection;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly Mapper _mapper;
-
+        private readonly ILog _logger;
         private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
+            ICommitmentsDataService commitmentsDataService,
             IAccountProjectionDataSession accountProjection,
             IApplicationConfiguration applicationConfiguration,
-            Mapper mapper)
+            Mapper mapper,
+            ILog logger)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;
+            _commitmentsDataService = commitmentsDataService;
             _applicationConfiguration = applicationConfiguration;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+
             var balance = await GetBalance(hashedAccountId);
+
             return new BalanceViewModel {
                 BalanceItemViewModels = balance,
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", balance.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd")))
+                DatesStringArray = string.Join(",", balance.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                PendingCompletionPayments = 0 // Get value from Balnace table
             };
         }
 

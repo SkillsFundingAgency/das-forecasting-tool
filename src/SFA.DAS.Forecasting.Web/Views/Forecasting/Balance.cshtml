@@ -52,8 +52,10 @@
             </details>
         </div>
     </div>
+</div>
 
-    <!-- CHART -->
+<!-- CHART -->
+<div class="grid-row">
     <div class="column-full">
         <div class="chart-container">
             <div class="chart-data"
@@ -61,56 +63,69 @@
                  data-values="@Model.BalanceStringArray">
 
             </div>
-            <h4 class="heading-large">Funding Projection Chart</h4>
+            <h2 class="heading-large">Funding Projection Chart</h2>
             <p>Account funds over time</p>
             <div id="chart"></div>
         </div>
+    </div>
+</div>
 
-        <!-- Projection -->
-        <h4 class="heading-large">Your account projection</h4>
-        <div class="grid-row" style="margin-bottom: 30px;">
-            <div class="column-two-thirds">
-                <p>A month by month projection of your account balance.</p>
+<!-- Projection -->
+<h2 class="heading-large">Your account projection</h2>
+<div class="grid-row" id="account-projection">
+    <div class="column-two-thirds">
+        <p>A month by month projection of your account balance.</p>
 
-                <details>
-                    <summary>How the 'cost of training' is calculated</summary>
-                    <div class="panel panel-width-thin">
+        <details>
+            <summary>How the 'cost of training' is calculated</summary>
+            <div class="panel panel-width-thin">
 
-                        <p>The 'cost of training' column shows the total monthly training costs that have been calculated for future months.</p>
-                        <p>The 'completion payments' column shows the total of completion payments that happen in that month.</p>
-                        <p>Payments are usually made on the 5th working day of each month and are updated in the forecast.</p>
+                <p>The 'cost of training' column shows the total monthly training costs that have been calculated for future months.</p>
+                <p>The 'completion payments' column shows the total of completion payments that happen in that month.</p>
+                <p>Payments are usually made on the 5th working day of each month and are updated in the forecast.</p>
+                <p>
+                    The funding projection does not include any overdue completion
+                    payments where the apprenticeships have overrun the planned
+                    completion date.
+                </p>
+            </div>
+        </details>
 
-                    </div>
-                </details>
 
 
+        <details>
+            <summary>How are the 'funds in' figures worked out?</summary>
+            <div class="panel panel-width-thin">
 
-                <details>
-                    <summary>How are the 'funds in' figures worked out?</summary>
-                    <div class="panel panel-width-thin">
-
-                        <p>The 'funds in' column show the total of the last received levy credits from your PAYE schemes. The figure will be updated on the 23rd of each month.</p>
-                        <p>The same figures are used throughout the forecast.</p>
-
-                    </div>
-                </details>
-
-                <details>
-                    <summary>Where is the end-point assessment cost?</summary>
-                    <div class="panel panel-width-thin">
-
-                        <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
-                        <p>
-                            This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
-
-                        </p>
-
-                    </div>
-                </details>
+                <p>The 'funds in' column show the total of the last received levy credits from your PAYE schemes. The figure will be updated on the 23rd of each month.</p>
+                <p>The same figures are used throughout the forecast.</p>
 
             </div>
-        </div>
+        </details>
 
+        <details>
+            <summary>Where is the end-point assessment cost?</summary>
+            <div class="panel panel-width-thin">
+
+                <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
+                <p>
+                    This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
+
+                </p>
+
+            </div>
+        </details>
+    </div>
+    <div class="column-one-third pending-completion-payments">
+        <div class="panel panel-width-thin">
+            <p>Pending completion payments</p>
+            <span class="heading-medium">@Model.PendingCompletionPayments.FormatCost()</span>
+        </div>
+    </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
         <table class="small" id="balancesheet">
             <thead>
                 <tr>
@@ -118,7 +133,7 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
+                    <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>
                     <th></th>
                 </tr>
                 <tr>
@@ -134,49 +149,48 @@
             <tbody>
                 @foreach (var item in Model.BalanceItemViewModels)
                 {
-                <tr>
-                    <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="financial">@item.LevyCredit.FormatCost()</td>
-                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                    <td class="financial grey-bg">
-                        @if (item.CoInvestmentEmployer == 0)
-                        {
-                            <span>–</span>
-                        }
-                        else
-                        {
-                            <span>@item.CoInvestmentEmployer.FormatCost()</span>
-                        }
-                    </td>
-                    <td class="financial grey-bg">
-                        @if (item.CoInvestmentGovernment == 0)
-                        {
-                            <span>–</span>
-                        }
-                        else
-                        {
-                            <span>@item.CoInvestmentGovernment.FormatCost()</span>
-                        }
-                    </td>
-                    <td class="financial">@item.Balance.FormatCost()</td>
+                    <tr>
+                        <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                        <td class="financial">@item.LevyCredit.FormatCost()</td>
+                        <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                        <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                        <td class="financial grey-bg">
+                            @if (item.CoInvestmentEmployer == 0)
+                            {
+                                <span>–</span>
+                            }
+                            else
+                            {
+                                <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                            }
+                        </td>
+                        <td class="financial grey-bg">
+                            @if (item.CoInvestmentGovernment == 0)
+                            {
+                                <span>–</span>
+                            }
+                            else
+                            {
+                                <span>@item.CoInvestmentGovernment.FormatCost()</span>
+                            }
+                        </td>
+                        <td class="financial">@item.Balance.FormatCost()</td>
 
-                </tr>
+                    </tr>
                 }
             </tbody>
-        </table>
+    </table>
+  </div>
+</div>
+
+<div class="grid-row">
+    <div class="column-full">
+        <div class="info-summary">
+            <h3 class="heading-medium">Disclaimer</h3>
+            <p>This tool is designed to illustrate what your funds will look like if there are no changes made to your apprenticeships.</p>
+            <p>The Department for Education is not responsible for the consequences of any decisions or actions taken, based on the information provided by this tool.</p>
+        </div>
     </div>
-
-    <div name="balance" id="balance" class="grid-row">
-
-    </div>
-
-    <div class="info-summary">
-        <h3 class="heading-medium">Disclaimer</h3>
-        <p>This tool is designed to illustrate what your funds will look like if there are no changes made to your apprenticeships.</p>
-        <p>The Department for Education is not responsible for the consequences of any decisions or actions taken, based on the information provided by this tool.</p>
-    </div>
-
 </div>
 
 @section breadcrumb {

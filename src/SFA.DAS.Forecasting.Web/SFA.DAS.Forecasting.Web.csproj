@@ -741,6 +741,10 @@
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.ReadModel\SFA.DAS.Forecasting.ReadModel.csproj">
+      <Project>{EE4A8E63-F4E7-49AF-9488-6932B4AC7D16}</Project>
+      <Name>SFA.DAS.Forecasting.ReadModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049CCE-774A-4377-B682-1C01B95C2CF3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>

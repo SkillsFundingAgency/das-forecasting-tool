@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                      commitment.ActualEndDate == null)
                 .ToListAsync();
         }
-
+        
         public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
             return await _dataContext.Commitments
