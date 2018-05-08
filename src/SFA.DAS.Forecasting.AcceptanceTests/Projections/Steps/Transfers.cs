@@ -1,29 +1,33 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
+using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 {
     [Binding]
     public class Transfers : StepsBase
     {
-        [Given(@"I say hej")]
-        public void GivenISayHej()
+        [Scope(Feature = "Calculate monthly cost of actual transfer commitments (Sending Employer - CI-619)")]
+        [BeforeFeature(Order = 1)]
+        public static void StartLevyFunction()
         {
-            var x = 0;
+            StartFunction("SFA.DAS.Forecasting.Projections.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
-        [Then(@"transfer out should have (.*) month (.*) to (.*)")]
-        public void ThenTransferOutShouldHaveFromMonth_(int expectedAmount, int firstMonth, int lastMonth)
+        [Then(@"should have following projections")]
+        public void ThenShouldHaveFollowingProjections(Table table)
         {
-            AccountProjections
-                .GetRange(firstMonth - 1, lastMonth - (firstMonth - 1))
-                .All(m => m.TransferOutTotalCostOfTraining == expectedAmount)
-                .Should().BeTrue();
+            var s = table.CreateSet<TestAccountProjection>().ToList();
+
+            foreach (var item in s)
+            {
+                var projections = AccountProjections.Single(m => m.Month == item.Date.Month && m.Year == item.Date.Year);
+                projections.TransferOutTotalCostOfTraining.Should().Be(item.TransferOutTotalCostOfTraining);
+            }
         }
+
     }
 }

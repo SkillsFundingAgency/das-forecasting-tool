@@ -18,22 +18,24 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "2.3.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Calculate co-investment amounts [CI-570]")]
-    public partial class CalculateCo_InvestmentAmountsCI_570Feature
+    [NUnit.Framework.DescriptionAttribute("Calculate monthly cost of actual transfer commitments (Sending Employer - CI-619)" +
+        "")]
+    public partial class CalculateMonthlyCostOfActualTransferCommitmentsSendingEmployer_CI_619Feature
     {
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Calculate co-investment amounts.feature"
+#line 1 "CalculateMonthlyCostOfActualTransferCommitments.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Calculate co-investment amounts [CI-570]", "\tAs an employer with a pay bill over £3 million each year and therefore must now " +
-                    "pay the apprenticeship levy\r\n\tI want my completion costs to be forecast for the " +
-                    "next 4 years\r\n\tSo that I can effectively forecast my account balance", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Calculate monthly cost of actual transfer commitments (Sending Employer - CI-619)" +
+                    "", "\tAs an employer\r\n\tI want to see my actual training costs for transfers that I\'m f" +
+                    "unding\r\n\tSo that they can be taken into account while forecasting against my tra" +
+                    "nsfer allowance", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -96,11 +98,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Calculate Co-investment")]
-        public virtual void CalculateCo_Investment()
+        [NUnit.Framework.DescriptionAttribute("AC1 Transfer training cost when some commitments duration exceeds forecast period" +
+            "")]
+        public virtual void AC1TransferTrainingCostWhenSomeCommitmentsDurationExceedsForecastPeriod()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate Co-investment", ((string[])(null)));
-#line 16
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1 Transfer training cost when some commitments duration exceeds forecast period" +
+                    "", ((string[])(null)));
+#line 17
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -113,64 +117,127 @@ this.FeatureBackground();
                         "Start Date",
                         "Installment Amount",
                         "Completion Amount",
-                        "Number Of Installments"});
+                        "Number Of Installments",
+                        "EmployerAccountId",
+                        "SendingEmployerAccountId",
+                        "FundingSource"});
             table3.AddRow(new string[] {
                         "Test Apprentice",
                         "Test Course",
                         "1",
-                        "Test Provider",
+                        "Test Provider 1",
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
             table3.AddRow(new string[] {
                         "Test Apprentice 1",
                         "Test Course",
                         "1",
-                        "Test Provider",
+                        "Test Provider 2",
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
             table3.AddRow(new string[] {
                         "Test Apprentice 2",
                         "Test Course 2",
                         "1",
-                        "Test Provider",
+                        "Test Provider 3",
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
             table3.AddRow(new string[] {
                         "Test Apprentice 3",
                         "Test Course",
                         "1",
-                        "Test Provider",
+                        "Test Provider 4",
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
             table3.AddRow(new string[] {
                         "Test Apprentice 4",
                         "Test Course 2",
                         "1",
-                        "Test Provider",
-                        "Yesterday",
+                        "Test Provider 5",
+                        "Next Year",
                         "2000",
                         "1200",
-                        "6"});
-#line 17
+                        "6",
+                        "999",
+                        "12345",
+                        "2"});
+#line 18
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 24
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 25
- testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 26
- testRunner.And("the balance should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Date",
+                        "TransferOutTotalCostOfTraining"});
+            table4.AddRow(new string[] {
+                        "2018-06-01",
+                        "8000"});
+            table4.AddRow(new string[] {
+                        "2018-07-01",
+                        "8000"});
+            table4.AddRow(new string[] {
+                        "2018-08-01",
+                        "8000"});
+            table4.AddRow(new string[] {
+                        "2018-09-01",
+                        "8000"});
+            table4.AddRow(new string[] {
+                        "2018-10-01",
+                        "8000"});
+            table4.AddRow(new string[] {
+                        "2018-11-01",
+                        "8000"});
+            table4.AddRow(new string[] {
+                        "2018-12-01",
+                        "0"});
+            table4.AddRow(new string[] {
+                        "2019-05-01",
+                        "0"});
+            table4.AddRow(new string[] {
+                        "2019-06-01",
+                        "2000"});
+            table4.AddRow(new string[] {
+                        "2019-07-01",
+                        "2000"});
+            table4.AddRow(new string[] {
+                        "2019-08-01",
+                        "2000"});
+            table4.AddRow(new string[] {
+                        "2019-09-01",
+                        "2000"});
+            table4.AddRow(new string[] {
+                        "2019-10-01",
+                        "2000"});
+            table4.AddRow(new string[] {
+                        "2019-11-01",
+                        "2000"});
+            table4.AddRow(new string[] {
+                        "2019-12-01",
+                        "0"});
 #line 27
- testRunner.And("the employer co-investment amount is 10% of the negative balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 28
- testRunner.And("the government co-investment amount is 90% of the negative value", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("should have following projections", ((string)(null)), table4, "And ");
 #line hidden
             this.ScenarioCleanup();
         }
