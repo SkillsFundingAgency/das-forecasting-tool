@@ -218,7 +218,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: Multiple transfer commitments and some with end dates after end of forecast " +
                     "period", ((string[])(null)));
-#line 50
+#line 35
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -259,13 +259,13 @@ this.FeatureBackground();
                         "999",
                         "12345",
                         "2"});
-#line 51
+#line 36
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table5, "Given ");
-#line 55
+#line 40
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 56
+#line 41
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 57
+#line 42
  testRunner.And("should have no payments with TransferOutCompletionPayments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

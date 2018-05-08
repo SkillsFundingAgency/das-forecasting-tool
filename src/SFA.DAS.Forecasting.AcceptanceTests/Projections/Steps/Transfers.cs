@@ -31,12 +31,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Then(@"should have following projections")]
         public void ThenShouldHaveFollowingProjections(Table table)
         {
-            var s = table.CreateSet<TestAccountProjection>().ToList();
+            var expectedProjections = table.CreateSet<TestAccountProjection>().ToList();
 
-            foreach (var item in s)
+            foreach (var p in expectedProjections)
             {
-                var projections = AccountProjections.Single(m => m.Month == item.Date.Month && m.Year == item.Date.Year);
-                projections.TransferOutTotalCostOfTraining.Should().Be(item.TransferOutTotalCostOfTraining);
+                var date = DateTime.Today.AddMonths(p.MonthsFromNow);
+                var projections = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
+                projections.TransferOutTotalCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
             }
         }
 

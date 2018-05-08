@@ -189,52 +189,52 @@ this.FeatureBackground();
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Date",
+                        "MonthsFromNow",
                         "TransferOutTotalCostOfTraining"});
             table4.AddRow(new string[] {
-                        "2018-06-01",
+                        "1",
                         "8000"});
             table4.AddRow(new string[] {
-                        "2018-07-01",
+                        "2",
                         "8000"});
             table4.AddRow(new string[] {
-                        "2018-08-01",
+                        "3",
                         "8000"});
             table4.AddRow(new string[] {
-                        "2018-09-01",
+                        "4",
                         "8000"});
             table4.AddRow(new string[] {
-                        "2018-10-01",
+                        "5",
                         "8000"});
             table4.AddRow(new string[] {
-                        "2018-11-01",
+                        "6",
                         "8000"});
             table4.AddRow(new string[] {
-                        "2018-12-01",
+                        "7",
                         "0"});
             table4.AddRow(new string[] {
-                        "2019-05-01",
+                        "12",
                         "0"});
             table4.AddRow(new string[] {
-                        "2019-06-01",
+                        "13",
                         "2000"});
             table4.AddRow(new string[] {
-                        "2019-07-01",
+                        "14",
                         "2000"});
             table4.AddRow(new string[] {
-                        "2019-08-01",
+                        "15",
                         "2000"});
             table4.AddRow(new string[] {
-                        "2019-09-01",
+                        "16",
                         "2000"});
             table4.AddRow(new string[] {
-                        "2019-10-01",
+                        "17",
                         "2000"});
             table4.AddRow(new string[] {
-                        "2019-11-01",
+                        "18",
                         "2000"});
             table4.AddRow(new string[] {
-                        "2019-12-01",
+                        "19",
                         "0"});
 #line 27
  testRunner.And("should have following projections", ((string)(null)), table4, "And ");

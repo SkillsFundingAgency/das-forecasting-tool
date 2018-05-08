@@ -25,19 +25,19 @@ Scenario: AC1 Transfer training cost when some commitments duration exceeds fore
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And should have following projections
-	| Date       | TransferOutTotalCostOfTraining |
-	| 2018-06-01 | 8000                           |
-	| 2018-07-01 | 8000                           |
-	| 2018-08-01 | 8000                           |
-	| 2018-09-01 | 8000                           |
-	| 2018-10-01 | 8000                           |
-	| 2018-11-01 | 8000                           |
-	| 2018-12-01 | 0                              |
-	| 2019-05-01 | 0                              |
-	| 2019-06-01 | 2000                           |
-	| 2019-07-01 | 2000                           |
-	| 2019-08-01 | 2000                           |
-	| 2019-09-01 | 2000                           |
-	| 2019-10-01 | 2000                           |
-	| 2019-11-01 | 2000                           |
-	| 2019-12-01 | 0                              |
+	| MonthsFromNow | TransferOutTotalCostOfTraining |
+	| 1             | 8000                           |
+	| 2             | 8000                           |
+	| 3             | 8000                           |
+	| 4             | 8000                           |
+	| 5             | 8000                           |
+	| 6             | 8000                           |
+	| 7             | 0                              |
+	| 12            | 0                              |
+	| 13            | 2000                           |
+	| 14            | 2000                           |
+	| 15            | 2000                           |
+	| 16            | 2000                           |
+	| 17            | 2000                           |
+	| 18            | 2000                           |
+	| 19            | 0                              |
