@@ -212,7 +212,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
         }
 
         [Test]
-        public void WhenCallingValidateDetailWithOvercapShouldReturnExpectedDetails()
+        public void WhenCallingValidateDetailWithOvercapShouldReturnOverCap()
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.TotalCost = 5000;

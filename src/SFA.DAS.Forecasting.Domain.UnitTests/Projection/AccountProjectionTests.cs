@@ -33,7 +33,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = DateTime.Today,
+                StartDate = DateTime.Today.AddMonths(-1),
                 PlannedEndDate = DateTime.Today.AddMonths(25),
                 MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
@@ -46,11 +46,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         }
 
         [Test]
-        public void Starts_From_Next_Month()
+        public void Starts_From_This_Month()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 1);
-            Assert.AreEqual(DateTime.Today.Month + 1, accountProjection.Projections.FirstOrDefault()?.Month);
+
+            accountProjection.Projections.First().Month.Should().Be((short)DateTime.Today.Month);
         }
 
         [Test]
@@ -58,7 +59,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
-            Assert.AreEqual(accountProjection.Projections.Count, 48);
+
+            accountProjection.Projections.Count.Should().Be(49);
         }
 
         [Test]
@@ -66,15 +68,17 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
-            Assert.AreEqual(accountProjection.Projections.Count(projection => projection.FundsIn == 300), 48);
+
+            accountProjection.Projections.Count(projection => projection.FundsIn == 300).Should().Be(49);
         }
 
         [Test]
         public void Does_Not_Include_Levy_In_First_Month_For_Levy_Triggered_Projection()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 1);
-            Assert.AreEqual(accountProjection.Projections.FirstOrDefault()?.FutureFunds, _account.Balance - _commitment.MonthlyInstallment);
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+
+            accountProjection.Projections.First().FutureFunds.Should().Be(_account.Balance);
         }
 
         [Test]
@@ -82,15 +86,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
-            Assert.AreEqual(accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds, accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment);
-        }
 
-        [Test]
-        public void Includes_Levy_In_First_Months_For_Payroll_Period_End_Triggered_Projection()
-        {
-            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
-            Assert.AreEqual(_account.Balance + _account.LevyDeclared - _commitment.MonthlyInstallment, accountProjection.Projections.FirstOrDefault()?.FutureFunds);
+            var expected = accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment;
+            var funds2ndMonth = accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds;
+            funds2ndMonth.Should().Be(expected);
         }
 
         [Test]
@@ -98,10 +97,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             _commitment.StartDate = DateTime.Today.AddMonths(-1);
             _commitment.PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(1);
+
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
-            Console.WriteLine(accountProjection.Projections.ToJson());
-            Assert.AreEqual(accountProjection.Projections.Skip(1).FirstOrDefault()?.CompletionPayments, _commitment.CompletionAmount);
+
+            accountProjection.Projections.Skip(2).First().CompletionPayments
+                .Should().Be(_commitment.CompletionAmount);
         }
 
         [Test]
@@ -109,23 +110,53 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
-            Console.WriteLine(accountProjection.Projections.ToJson());
-            Assert.AreEqual(_account.Balance - _commitment.MonthlyInstallment, accountProjection.Projections.FirstOrDefault()?.FutureFunds);
-            Assert.AreEqual(accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment, accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds);
+
+            accountProjection.Projections.First().FutureFunds
+                .ShouldBeEquivalentTo(_account.Balance, because: "First month should be the same as current balance");
+
+            accountProjection.Projections.Skip(1).First().FutureFunds
+                .ShouldBeEquivalentTo(accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment);
         }
 
         [Test]
         public void Includes_Co_Investment()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 7);
-            accountProjection.Projections[5].CoInvestmentEmployer.Should().Be(0);
-            accountProjection.Projections[5].CoInvestmentGovernment.Should().Be(0);
-            accountProjection.Projections[5].FutureFunds.Should().Be(900);
 
-            accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(90);
-            accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(810);
-            accountProjection.Projections[6].FutureFunds.Should().Be(0);
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 7);
+            accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(0);
+            accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
+            accountProjection.Projections[6].FutureFunds.Should().Be(1200);
+
+            accountProjection.Projections[7].CoInvestmentEmployer.Should().Be(60);
+            accountProjection.Projections[7].CoInvestmentGovernment.Should().Be(540);
+            accountProjection.Projections[7].FutureFunds.Should().Be(0);
+        }
+
+        // ------------------------------
+        // Payrole Period End Triggered -
+        // ------------------------------
+
+        [Test]
+        public void Includes_Levy_In_First_Months_For_Payroll_Period_End_Triggered_Projection()
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+
+            accountProjection.Projections.First().FutureFunds
+                .Should().Be(_account.Balance + _account.LevyDeclared);
+        }
+
+        [Test]
+        public void Includes_Levy_In_First_Months_and_costa_has_been_removed_For_Payroll_Period_End_Triggered_Projection()
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+
+            var expected = accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment;
+
+            accountProjection.Projections.Skip(1).First().FutureFunds
+                .Should().Be(expected);
         }
     }
 }

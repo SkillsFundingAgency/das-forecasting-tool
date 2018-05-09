@@ -71,7 +71,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             await client.PostAsync(Config.ApiInsertBalanceUrl, new StringContent(balance.ToString()));
         }
 
-        [Given(@"the start month should be this month rather than next month")]
+        [Given(@"the start month should be last month rather than this month")]
         public void GivenTheStartMonthShouldBeThisMonthRatherThanNextMonth()
         {
             ProjectionsStartPeriod = new CalendarPeriod { Month = DateTime.Today.Month - 1, Year = DateTime.Today.Year };
@@ -87,7 +87,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             DeleteAccountProjections(Config.EmployerAccountId);
             var projectionUrl =
                 Config.ProjectionLevyFunctionUrl.Replace("{employerAccountId}", Config.EmployerAccountId.ToString());
-            Console.WriteLine($"Sending levy event to levy function: {projectionUrl}");
+            Console.WriteLine($"Sending levy event to levy function: {projectionUrl}, payload: {startPeriodJson}");
             var response = HttpClient.PostAsync(projectionUrl, new StringContent(startPeriodJson, Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -100,14 +100,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 var projections = new List<AccountProjectionModel>();
                 ExecuteSql(() =>
                 {
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-
-                    projections = Connection.Query<AccountProjectionModel>(
-                        "Select * from AccountProjection where EmployerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                    projections = DataContext.AccountProjections.Where(projection =>
+                            projection.EmployerAccountId == Config.EmployerAccountId)
+                        .ToList();
                 });
                 if (!projections.Any())
                     return false;
+                projections = projections
+                    .OrderBy(projection => $"{projection.Year:0000}-{projection.Month:00}")
+                    .ToList();
                 projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}, Co-Investment: {p.CoInvestmentEmployer} / {p.CoInvestmentGovernment}"));
                 AccountProjections = projections;
                 return true;
@@ -134,10 +135,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Assert.IsTrue(AccountProjections.All(projection => projection.FundsIn == fundsIn));
         }
 
-        [Then(@"the first month should be this month rather than next month")]
+        [Then(@"the first month should be last month rather than this month")]
         public void ThenTheFirstMonthShouldBeThisMonthRatherThanNextMonth()
         {
-            Assert.AreEqual(AccountProjections.First().Month, DateTime.Today.Month, $"Expected the first month to be {DateTime.Today.Month} but was {AccountProjections.First().Month}");
+            Assert.AreEqual(AccountProjections.First().Month, ProjectionsStartPeriod.Month, $"Expected the first month to be {ProjectionsStartPeriod.Month} but was {AccountProjections.First().Month}");
         }
     }
 }

@@ -34,24 +34,32 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
         private void BuildProjections(DateTime periodStart, int numberOfMonths, ProjectionGenerationType projectionGenerationType)
         {
+            var startMonth = 0;
+
             _projections.Clear();
             var lastBalance = _account.Balance;
-            for (var i = 1; i <= numberOfMonths; i++)
+            for (var month = startMonth; month <= numberOfMonths; month++)
             {
-                var projection = CreateProjection(periodStart.AddMonths(i),
-                    projectionGenerationType == ProjectionGenerationType.LevyDeclaration && i == 1
-                        ? 0
-                        : _account.LevyDeclared, lastBalance, ProjectionGenerationType.LevyDeclaration);
+                var fundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
+                        ? 0 : _account.LevyDeclared;
+                var ignoreCostOfTraining = month == startMonth;
+
+                var projection = CreateProjection(
+                    periodStart.AddMonths(month),
+                    fundsIn,
+                    lastBalance, 
+                    ProjectionGenerationType.LevyDeclaration,
+                    ignoreCostOfTraining);
+
                 _projections.Add(projection);
                 lastBalance = projection.FutureFunds;
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
-
             var commitments =
                 totalCostOfTraning.CommitmentIds
                 .Concat(completionPayments.CommitmentIds)
@@ -60,7 +68,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var costOfTraining = totalCostOfTraning.LevyReceived + totalCostOfTraning.TransferReceived;
             var complPayment = completionPayments.LevyCompletionPayment + completionPayments.TransferCompletionPayment;
 
-            var balance = lastBalance + fundsIn - costOfTraining - complPayment;
+            var cost = ignoreCostOfTraining ? 0 : costOfTraining + complPayment;
+            var balance = lastBalance + fundsIn - cost;
+
             var projection = new AccountProjectionModel
             {
                 FundsIn = _account.LevyDeclared,

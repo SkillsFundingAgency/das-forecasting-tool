@@ -67,7 +67,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        return $"HashedDubstitutionId: {hashedSubstitutionId}";
                    }
 
-                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} levy declarations to {QueueNames.PreLoadPayment} queue.");
+                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} get payment messages to {QueueNames.PreLoadPayment} queue.");
                    return $"Message added: {preLoadRequest.EmployerAccountIds.Count()}";
                });
         }

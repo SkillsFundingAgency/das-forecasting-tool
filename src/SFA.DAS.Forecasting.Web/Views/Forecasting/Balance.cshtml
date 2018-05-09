@@ -32,7 +32,7 @@
                 <ul class="list list-links">
 
                     <li>
-                        <a href="@Url.Action("Csv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                        <a id="lnk_csvdownload" href="@Url.Action("Csv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
                             Download as a CSV file
                         </a>
                     </li>
@@ -173,8 +173,9 @@
 
     <div class="info-summary">
         <h3 class="heading-medium">Disclaimer</h3>
-        <p>This tool is designed to illustrate what your funds will look like if there are no changes made to your apprenticeships.</p>
-        <p>The Department for Education is not responsible for the consequences of any decisions or actions taken, based on the information provided by this tool.</p>
+        <p>This tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account.</p>
+        <p>The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employed, or the cost and duration of their training.</p>
+        <p>You should therefore not rely solely on the information provided by this tool when making decisions about how to spend future levy funds.</p>
     </div>
 
 </div>

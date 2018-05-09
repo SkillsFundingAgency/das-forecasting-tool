@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
@@ -14,8 +15,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         Task<RemoveApprenticeshipViewModel> GetVirtualApprenticeshipsForRemoval(string hashedAccountId, string apprenticeshipsId, string estimationName);
         Task<AddApprenticeshipViewModel> ValidateAddApprenticeship(AddApprenticeshipViewModel vm);
 
-        AddApprenticeshipViewModel AdjustTotalCostApprenticeship(AddApprenticeshipViewModel vm);
+        void AdjustTotalCostApprenticeship(AddApprenticeshipViewModel vm);
 
         Task<decimal?> GetFundingCapForCourse(string courseId);
+
+        Task<object> GetDefaultNumberOfMonths(string courseId);
     }
 }

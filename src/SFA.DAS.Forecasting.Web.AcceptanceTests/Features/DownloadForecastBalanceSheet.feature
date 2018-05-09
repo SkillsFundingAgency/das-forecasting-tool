@@ -10,8 +10,6 @@ Background:
 Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23rd of month
      Given I have generated the following projections
 	 | Date   | Funds in | Cost of training | Completion payments | Your contribution | Government contribution | Future funds |
-	 | Mar 18 | 1000     | 1590             | 49900               | 1000              | 1339                    | 12000        |
-	 | Apr 18 | 1000     | 880              | 32200               | 1000              | 1339                    | 12000        |
 	 | Jun 18 | 1000     | 1800             | 10000               | 1000              | 1339                    | 12000        |
 	 | Jul 18 | 1000     | 2350             | 50000               | 1000              | 1339                    | 12000        |
 	 | Aug 18 | 1000     | 850              | 45000               | 1000              | 1339                    | 12000        |
@@ -37,8 +35,6 @@ Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23r
   Given I have generated the following projections
   
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-  | Mar 18 | 1000     | 1590             | 49900               | 1000         |
-  | Apr 18 | 1000     | 880              | 32200               | 1000         |
   | Jun 18 | 1000     | 1800             | 10000               | 1000         |
   | Jul 18 | 1000     | 2350             | 50000               | 1000         |
   | Aug 18 | 1000     | 850              | 45000               | 1000         |
@@ -61,8 +57,6 @@ Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23r
 
   Given I have generated the following projections
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-  | Mar 18 | 1000     | 1590             | 49900               | 1000         |
-  | Apr 18 | 1000     | 880              | 32200               | 1000         |
   | Jun 18 | 1000     | 1800             | 10000               | 1000         |
   | Jul 18 | 1000     | 2350             | 50000               | 1000         |
   | Aug 18 | 1000     | 850              | 45000               | 1000         |
@@ -85,8 +79,6 @@ Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23r
 
   Given I have generated the following projections
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-  | Mar 18 | 1000     | 1590             | 49900               | 1000         |
-  | Apr 18 | 1000     | 880              | 32200               | 1000         |
   | Jun 18 | 1000     | 1800             | 10000               | 1000         |
   | Jul 18 | 1000     | 2350             | 50000               | 1000         |
   | Aug 18 | 1000     | 850              | 45000               | 1000         |

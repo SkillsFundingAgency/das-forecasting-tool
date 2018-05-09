@@ -22,6 +22,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public string ProjectionPaymentFunctionUrl => GetAppSetting("ProjectionPaymentFunctionUrl");
         public string ProjectionLevyFunctionUrl => GetAppSetting("ProjectionLevyFunctionUrl");
         public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));
+        public string HashedEmployerAccountId => GetAppSetting("HashedEmployerAccountId");
         public string AzureStorageConnectionString => GetConnectionString("StorageConnectionString");
         public string ApiInsertBalanceUrl => GetAppSetting("ApiInsertBalanceUrl");
         public string ApiInsertPaymentUrl => GetAppSetting("ApiInsertPaymentUrl");

@@ -23,9 +23,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				ProviderId = paymentCreatedMessage.Ukprn,
 				LearnerId = paymentCreatedMessage.Uln,
 				Amount = paymentCreatedMessage.Amount,
-				CollectionPeriod = new Models.Payments.NamedCalendarPeriod
+				CollectionPeriod = new Models.Payments.CalendarPeriod
                 {
-					Id = paymentCreatedMessage.CollectionPeriod.Id,
+//					Id = paymentCreatedMessage.CollectionPeriod.Id,
 					Month = paymentCreatedMessage.CollectionPeriod.Month,
 					Year = paymentCreatedMessage.CollectionPeriod.Year
 				},
