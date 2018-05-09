@@ -2,7 +2,7 @@
   "profiles": {
     "SFA.DAS.Forecasting.Projections.Functions": {
       "commandName": "Project",
-      "commandLineArgs": "host start"
+      "commandLineArgs": "host start --pause-on-error --nodeDebugPort 5859"
     }
   }
 }
