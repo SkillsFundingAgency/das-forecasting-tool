@@ -35,6 +35,9 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
 
         public async Task DeleteAll(long employerAccountId)
         {
+            _dataContext.AccountProjectionCommitments.RemoveRange(
+                _dataContext.AccountProjectionCommitments
+                    .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId).ToList());
             var projections = await Get(employerAccountId);
             _dataContext.AccountProjections.RemoveRange(projections);
         }
