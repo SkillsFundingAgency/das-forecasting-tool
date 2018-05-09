@@ -11,8 +11,15 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly long _employerAccountId;
         private readonly IEnumerable<CommitmentModel> _commitments;
 
-        private IEnumerable<CommitmentModel> Commitments => _commitments.Where(m => m.EmployerAccountId == _employerAccountId);
-        private IEnumerable<CommitmentModel> CommitmentsTransfers => _commitments.Where(m => m.SendingEmployerAccountId == _employerAccountId);
+        private IEnumerable<CommitmentModel> Commitments => _commitments
+                                        .Where(m => m.EmployerAccountId == _employerAccountId)
+                                        .Where(m => m.FundingSource == Models.Payments.FundingSource.Levy);
+
+        private IEnumerable<CommitmentModel> CommitmentsTransferReceived => _commitments
+                                        .Where(m => m.EmployerAccountId == _employerAccountId)
+                                        .Where(m => m.FundingSource == Models.Payments.FundingSource.Transfer);
+
+        private IEnumerable<CommitmentModel> CommitmentsTransferSent => _commitments.Where(m => m.SendingEmployerAccountId == _employerAccountId);
 
 
         public EmployerCommitments(
@@ -30,11 +37,13 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                       c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
 
             var commitments = Commitments.Where(filterCurrent);
-            var commitmentsAsSender = CommitmentsTransfers.Where(filterCurrent);
+            var commitmentsTransferReceived = CommitmentsTransferReceived.Where(filterCurrent);
+            var commitmentsAsSender = CommitmentsTransferSent.Where(filterCurrent);
 
             return new TotalCostOfTraining
             {
-                Value = commitments.Sum(c => c.MonthlyInstallment),
+                LevyReceived = commitments.Sum(c => c.MonthlyInstallment),
+                TransferReceived = commitmentsTransferReceived.Sum(m => m.MonthlyInstallment),
                 CommitmentIds = commitments.Select(c => c.Id),
                 TransferCost = commitmentsAsSender.Sum(m => m.MonthlyInstallment)
             };
@@ -45,15 +54,16 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Func<CommitmentModel, bool> filterCurrent = c => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
 
             var commitments = Commitments.Where(filterCurrent);
-            var commitmentsAsSender = CommitmentsTransfers.Where(filterCurrent);
+            var commitmentsTransferReceived = CommitmentsTransferReceived.Where(filterCurrent);
+            var commitmentsAsSender = CommitmentsTransferSent.Where(filterCurrent);
 
             return new TotalCompletionPayments
             {
-                Value = commitments.Sum(c => c.CompletionAmount),
+                LevyCompletionPayment = commitments.Sum(c => c.CompletionAmount),
+                TransferCompletionPayment = commitmentsTransferReceived.Sum(m => m.CompletionAmount),
                 CommitmentIds = commitments.Select(c => c.Id).ToList(),
                 TransferOut = commitmentsAsSender.Sum(m => m.CompletionAmount)
             };
-
         }
 
         public DateTime GetEarliestCommitmentStartDate()

@@ -27,6 +27,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
+        [Scope(Feature = "Calculate funds in for receiving employer (CI-644)")]
+        [BeforeFeature(Order = 1)]
+        public static void StartLevyFunctionFundsInReceiving()
+        {
+            StartFunction("SFA.DAS.Forecasting.Projections.Functions");
+            StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+        }
+
 
         [Then(@"should have following projections")]
         public void ThenShouldHaveFollowingProjections(Table table)
@@ -50,7 +58,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             {
                 var date = DateTime.Today.AddMonths(p.MonthsFromNow);
                 var projections = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
+
+                projections.TotalCostOfTraining.Should().Be(p.TotalCostOfTraining);
+
+                projections.TransferInTotalCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining);
+                projections.TransferOutTotalCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
+
+                projections.TransferInCompletionPayments.Should().Be(p.TransferInCompletionPayments);
                 projections.TransferOutCompletionPayments.Should().Be(p.TransferOutCompletionPayments);
+                projections.CompletionPayments.Should().Be(p.CompletionPayments);
             }
         }
 

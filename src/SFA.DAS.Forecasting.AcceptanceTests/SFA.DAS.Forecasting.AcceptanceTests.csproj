@@ -163,6 +163,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CalculateActualTransferCompletionPayments.feature</DependentUpon>
     </Compile>
+    <Compile Include="Projections\Feature\CalculateFundsInForReceivingEmployer.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CalculateFundsInForReceivingEmployer.feature</DependentUpon>
+    </Compile>
     <Compile Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -260,6 +265,10 @@
     <None Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>CalculateActualTransferCompletionPayments.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\CalculateFundsInForReceivingEmployer.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CalculateFundsInForReceivingEmployer.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

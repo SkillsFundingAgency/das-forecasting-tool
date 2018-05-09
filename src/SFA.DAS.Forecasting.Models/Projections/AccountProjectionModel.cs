@@ -30,8 +30,10 @@ namespace SFA.DAS.Forecasting.Models.Projections
         public int Year { get; set; } // Year
         public decimal FundsIn { get; set; } // FundsIn
         public decimal TotalCostOfTraining { get; set; } // TotalCostOfTraining
+        public decimal TransferInTotalCostOfTraining { get; set; }
         public decimal TransferOutTotalCostOfTraining { get; set; }
         public decimal CompletionPayments { get; set; } // CompletionPayments
+        public decimal TransferInCompletionPayments { get; set; }
         public decimal TransferOutCompletionPayments { get; set; }
         public decimal FutureFunds { get; set; } // FutureFunds
         public decimal CoInvestmentEmployer { get; set; } // CoInvestmentEmployer

@@ -36,7 +36,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     MonthlyInstallment = 50,
                     PlannedEndDate = new DateTime(2018, 5, 1),
                     StartDate = new DateTime(2018, 1, 1),
-                    NumberOfInstallments = 5
+                    NumberOfInstallments = 5,
+                    FundingSource = Models.Payments.FundingSource.Levy
                 },
                 new CommitmentModel
                 {
@@ -45,7 +46,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     MonthlyInstallment = 50,
                     PlannedEndDate = new DateTime(2019, 7, 1),
                     StartDate = new DateTime(2019, 3, 1),
-                    NumberOfInstallments = 5
+                    NumberOfInstallments = 5,
+                    FundingSource = Models.Payments.FundingSource.Levy
                 }
             };
             var employerCommitments = new EmployerCommitments(12345, _commitments);

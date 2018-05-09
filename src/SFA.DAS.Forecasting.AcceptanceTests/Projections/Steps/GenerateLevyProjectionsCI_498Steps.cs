@@ -50,9 +50,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 .Select(m => m.EmployerAccountId.Value)
                 .ToList();
 
+            commitmentIds.AddRange(Commitments.Select(m => m.SendingEmployerAccountId));
+
             commitmentIds.Add(Config.EmployerAccountId);
 
-            foreach(var id in commitmentIds)
+            foreach(var id in commitmentIds.Distinct())
                 DeleteCommitments(id);
 
             InsertCommitments(Commitments);

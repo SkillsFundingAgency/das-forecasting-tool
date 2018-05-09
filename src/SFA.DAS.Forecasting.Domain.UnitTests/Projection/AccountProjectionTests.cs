@@ -37,7 +37,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 PlannedEndDate = DateTime.Today.AddMonths(25),
                 MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
-                CompletionAmount = 3000
+                CompletionAmount = 3000,
+                FundingSource = Models.Payments.FundingSource.Levy
             };
             _commitments = new List<CommitmentModel> { _commitment };
             var employerCommitments = new EmployerCommitments(1, _commitments);

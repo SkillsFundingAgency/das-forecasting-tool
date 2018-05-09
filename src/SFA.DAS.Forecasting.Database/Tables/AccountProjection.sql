@@ -9,6 +9,8 @@
     [FundsIn] DECIMAL(18,2) NOT NULL,
     [TotalCostOfTraining] DECIMAL(18,2) NOT NULL,
 	[TransferOutTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0),
+	[TransferInTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0),
+	[TransferInCompletionPayments] DECIMAL(18,2) NOT NULL default(0),
     [CompletionPayments] DECIMAL(18,2) NOT NULL,
 	[TransferOutCompletionPayments] DECIMAL(18,2) NOT NULL default(0),
     [FutureFunds] DECIMAL(18,2) NOT NULL,
