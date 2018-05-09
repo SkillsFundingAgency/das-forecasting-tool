@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
 
         public virtual async Task<bool> RefreshBalance()
         {
-            if (Period > DateTime.UtcNow.AddDays(-1))
+            if (Period < DateTime.UtcNow.AddDays(-1))
                 return false;
 
             var currentBalance = await _accountBalanceService.GetAccountBalance(EmployerAccountId);
