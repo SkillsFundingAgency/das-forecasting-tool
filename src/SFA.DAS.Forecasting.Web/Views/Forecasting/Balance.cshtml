@@ -117,8 +117,14 @@
     </div>
     <div class="column-one-third pending-completion-payments">
         <div class="panel panel-width-thin">
-            <p>Pending completion payments</p>
+            <p>Overdue completion payments</p>
             <span class="heading-medium">@Model.OverdueCompletionPayments.FormatCost()</span>
+            <details>
+                <summary>What does this figure mean?</summary>
+                <div class="">
+                    <p>This is the value of your overdue completion payments where the apprenticeships have overrun the planned completion date.</p>
+                </div>
+            </details>
         </div>
     </div>
 </div>
