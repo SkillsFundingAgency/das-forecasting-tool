@@ -39,7 +39,7 @@ Scenario: AC3: Use specified start month when generating levy triggered projecti
 	Given the following levy declarations have been recorded
 	| Scheme   | Amount | Created Date |
 	| ABC-1234 | 3000   | Today        |
-	And the start month should be this month rather than next month
+	And the start month should be last month rather than this month
 	When the account projection is triggered after levy has been declared
 	Then the account projection should be generated
-	And the first month should be this month rather than next month	
+	And the first month should be last month rather than this month	

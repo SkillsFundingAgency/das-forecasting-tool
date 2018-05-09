@@ -36,7 +36,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             if (string.IsNullOrEmpty(setting))
                 throw new InvalidOperationException($"DocumentSessionConnectionString is missing the '{name}' setting.");
-
         }
     }
 }
