@@ -84,7 +84,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
         [Test]
         public async Task Does_Not_Refresh_If_Last_Refresh_Less_Than_1_Day_Ago()
         {
-            _previousAccountBalance.BalancePeriod = DateTime.Today.AddHours(-23);
+            _previousAccountBalance.BalancePeriod = DateTime.UtcNow.AddHours(-23);
             var balance = _moqer.Resolve<CurrentBalance>();
             Assert.IsFalse(await balance.RefreshBalance(), "Updated the current employer balance.");
             _moqer.GetMock<IAccountBalanceService>()
