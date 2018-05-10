@@ -30,6 +30,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         private EmployerCommitments GetEmployerCommitments(long employerAccountId = 1) =>
             new EmployerCommitments(employerAccountId, Commitments);
 
+        Func<EmployerCommitments, int, CostOfTraining> TotalCostOfTraining = (cmts, m) =>
+                cmts.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(m));
+
+        Func<EmployerCommitments, int, CompletionPayments> TotalCompletionPayments = (cmts, m) =>
+                cmts.GetTotalCompletionPayments(DateTime.Today.GetStartOfMonth().AddMonths(m));
+
         [Test]
         public void Includes_Installments_for_each_month()
         {
@@ -43,7 +49,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 PlannedEndDate = endDate,
                 MonthlyInstallment = 800,
                 NumberOfInstallments = 12,
-                CompletionAmount = 6000
+                CompletionAmount = 6000,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
 
             var employerCommitments = GetEmployerCommitments();
@@ -51,7 +58,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             while (date <= endDate)
             {
                 var costOfTraining = employerCommitments.GetTotalCostOfTraining(date);
-                costOfTraining.TransferCost.Should().Be(800);
+                costOfTraining.TransferOut.Should().Be(800);
                 date = date.AddMonths(1);
             }
         }
@@ -72,15 +79,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 PlannedEndDate = endDate,
                 MonthlyInstallment = 1000,
                 NumberOfInstallments = 12,
-                CompletionAmount = 6000
+                CompletionAmount = 6000,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
 
             var employerCommitments = GetEmployerCommitments();
-            var costOfTraining = employerCommitments.GetTotalCostOfTraining(endDate.AddMonths(1));
-            costOfTraining.TransferCost.Should().Be(1000, "Should calculate for next month");
-
-            var costOfTraining2 = employerCommitments.GetTotalCostOfTraining(endDate.AddMonths(2));
-            costOfTraining2.TransferCost.Should().Be(0, "No cost after commitment finished");
+            
+            TotalCostOfTraining(employerCommitments, 1).TransferOut.Should().Be(1000, "Should calculate for next month");
+            TotalCostOfTraining(employerCommitments, 2).TransferOut.Should().Be(0, "No cost after commitment finished");
         }
 
         [Test]
@@ -95,7 +101,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 StartDate = DateTime.Today,
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(2),
                 MonthlyInstallment = 10,
-                NumberOfInstallments = 2
+                NumberOfInstallments = 2,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
             Commitments.Add(new CommitmentModel
             {
@@ -106,7 +113,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 StartDate = DateTime.Today,
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
                 MonthlyInstallment = 15,
-                NumberOfInstallments = 5
+                NumberOfInstallments = 5,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
             Commitments.Add(new CommitmentModel
             {
@@ -117,17 +125,19 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 StartDate = DateTime.Today.AddMonths(3),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(12),
                 MonthlyInstallment = 20,
-                NumberOfInstallments = 10
+                NumberOfInstallments = 10,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
 
             var employerCommitments = GetEmployerCommitments();
+            
 
-            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).TransferCost);
-            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).TransferCost);
-            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).TransferCost);
-            Assert.AreEqual(15, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).TransferCost);
-            Assert.AreEqual(35, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(4)).TransferCost);
-            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).TransferCost);
+            TotalCostOfTraining(employerCommitments, 0).TransferOut.Should().Be(0);
+            TotalCostOfTraining(employerCommitments, 1).TransferOut.Should().Be(25);
+            TotalCostOfTraining(employerCommitments, 2).TransferOut.Should().Be(25);
+            TotalCostOfTraining(employerCommitments, 3).TransferOut.Should().Be(15);
+            TotalCostOfTraining(employerCommitments, 4).TransferOut.Should().Be(35);
+            TotalCostOfTraining(employerCommitments, 6).TransferOut.Should().Be(20);
         }
 
         [Test]
@@ -145,7 +155,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 2
             });
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).TransferCost);
+
+            TotalCostOfTraining(employerCommitments, 2).TransferOut.Should().Be(10);
         }
 
         // Completion Payments
@@ -163,7 +174,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(2),
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 2,
-                CompletionAmount = 30
+                CompletionAmount = 30,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
             Commitments.Add(new CommitmentModel
             {
@@ -175,17 +187,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 5,
-                CompletionAmount = 50
+                CompletionAmount = 50,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
             var employerCommitments = GetEmployerCommitments();
-            employerCommitments.GetTotalCompletionPayments(DateTime.Today).TransferOut
-                .Should().Be(0);
 
-            employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).TransferOut
-                .Should().Be(30);
-
-            employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).TransferOut
-                .Should().Be(50);
+            TotalCompletionPayments(employerCommitments, 0).TransferCompletionPaymentOut.Should().Be(0);
+            TotalCompletionPayments(employerCommitments, 3).TransferCompletionPaymentOut.Should().Be(30);
+            TotalCompletionPayments(employerCommitments, 6).TransferCompletionPaymentOut.Should().Be(50);
         }
     }
 }

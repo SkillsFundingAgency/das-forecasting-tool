@@ -194,7 +194,7 @@ this.FeatureBackground();
                         "CompletionPayments"});
             table4.AddRow(new string[] {
                         "6",
-                        "0",
+                        "8000",
                         "0",
                         "8000",
                         "0",
@@ -218,7 +218,7 @@ this.FeatureBackground();
                         "0"});
             table4.AddRow(new string[] {
                         "18",
-                        "0",
+                        "2000",
                         "0",
                         "2000",
                         "0",

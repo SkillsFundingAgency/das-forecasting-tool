@@ -2,11 +2,11 @@
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
-    public class TotalCostOfTraining
+    public class CostOfTraining
     {
-        public decimal LevyReceived { get; set; }
+        public decimal LevyOut { get; set; }
+        public decimal TransferOut { get; internal set; }
         public IEnumerable<long> CommitmentIds { get; set; }
-        public decimal TransferCost { get; set; }
-        public decimal TransferReceived { get; internal set; }
+        public decimal TransferIn { get; set; }
     }
 }

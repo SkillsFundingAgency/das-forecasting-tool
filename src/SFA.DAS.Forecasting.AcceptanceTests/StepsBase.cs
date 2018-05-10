@@ -168,9 +168,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         {
             DataContext.AccountProjectionCommitments
                 .RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == employerId).ToList());
+                .Where(apc => apc.Commitment.EmployerAccountId == employerId || apc.Commitment.SendingEmployerAccountId== employerId) .ToList());
             var commitments = DataContext.Commitments
-                .Where(commitment => commitment.EmployerAccountId == employerId)
+                .Where(c => c.EmployerAccountId == employerId || c.SendingEmployerAccountId == employerId)
                 .ToList();
             DataContext.Commitments.RemoveRange(commitments);
             DataContext.SaveChanges();

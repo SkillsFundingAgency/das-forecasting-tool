@@ -65,10 +65,13 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 .Concat(completionPayments.CommitmentIds)
                 .Distinct();
 
-            var costOfTraining = totalCostOfTraning.LevyReceived + totalCostOfTraning.TransferReceived;
-            var complPayment = completionPayments.LevyCompletionPaymentReceived + completionPayments.TransferCompletionPayment;
+            var costOfTraining = totalCostOfTraning.LevyOut + totalCostOfTraning.TransferOut;
+            
+            var complPayment = completionPayments.LevyCompletionPaymentOut + completionPayments.TransferCompletionPaymentOut;
 
             var cost = ignoreCostOfTraining ? 0 : costOfTraining + complPayment;
+            fundsIn += totalCostOfTraning.TransferIn;
+
             var balance = lastBalance + fundsIn - cost;
 
             var projection = new AccountProjectionModel
@@ -78,11 +81,11 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 Month = (short)period.Month,
                 Year = (short)period.Year,
                 TotalCostOfTraining = costOfTraining,
-                TransferInTotalCostOfTraining = totalCostOfTraning.TransferReceived,
-                TransferOutTotalCostOfTraining = totalCostOfTraning.TransferCost,
-                CompletionPayments = completionPayments.LevyCompletionPaymentReceived,
-                TransferInCompletionPayments = completionPayments.TransferCompletionPayment,
-                TransferOutCompletionPayments = completionPayments.TransferOut,
+                TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
+                TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
+                CompletionPayments = completionPayments.LevyCompletionPaymentOut,
+                TransferInCompletionPayments = completionPayments.TransferCompletionPaymentIn,
+                TransferOutCompletionPayments = completionPayments.TransferCompletionPaymentOut,
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,

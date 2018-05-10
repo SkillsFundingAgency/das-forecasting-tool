@@ -30,39 +30,39 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
         }
 
-        public virtual TotalCostOfTraining GetTotalCostOfTraining(DateTime date)
+        public virtual CostOfTraining GetTotalCostOfTraining(DateTime date)
         {
             Func<CommitmentModel, bool> filterCurrent = c =>
                       c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
                       c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
 
-            var commitments = CommitmentsReceived.Where(filterCurrent);
+            var commitmentsReceived = CommitmentsReceived.Where(filterCurrent);
 
-            return new TotalCostOfTraining
+            return new CostOfTraining
             {
-                LevyReceived = commitments.Sum(c => c.MonthlyInstallment),
-                TransferReceived = CommitmentsTransferReceived.Where(filterCurrent)
-                                                              .Sum(m => m.MonthlyInstallment),
-                CommitmentIds = commitments.Select(c => c.Id),
-                TransferCost = CommitmentsTransferSent.Where(filterCurrent)
-                                                      .Sum(m => m.MonthlyInstallment)
+                LevyOut = commitmentsReceived.Sum(c => c.MonthlyInstallment),
+                TransferOut = CommitmentsTransferSent.Where(filterCurrent)
+                                                     .Sum(m => m.MonthlyInstallment),
+                CommitmentIds = commitmentsReceived.Select(c => c.Id),
+                TransferIn = CommitmentsTransferReceived.Where(filterCurrent)
+                                                        .Sum(m => m.MonthlyInstallment)
             };
         }
 
-        public virtual TotalCompletionPayments GetTotalCompletionPayments(DateTime date)
+        public virtual CompletionPayments GetTotalCompletionPayments(DateTime date)
         {
             Func<CommitmentModel, bool> filterCurrent = c => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
 
-            var commitments = CommitmentsReceived.Where(filterCurrent);
+            var commitmentsReceived = CommitmentsReceived.Where(filterCurrent);
 
-            return new TotalCompletionPayments
+            return new CompletionPayments
             {
-                LevyCompletionPaymentReceived = commitments.Sum(c => c.CompletionAmount),
-                TransferCompletionPayment = CommitmentsTransferReceived.Where(filterCurrent)
-                                                                       .Sum(m => m.CompletionAmount),
-                CommitmentIds = commitments.Select(c => c.Id).ToList(),
-                TransferOut = CommitmentsTransferSent.Where(filterCurrent)
-                                                     .Sum(m => m.CompletionAmount)
+                LevyCompletionPaymentOut = commitmentsReceived.Sum(c => c.CompletionAmount),
+                TransferCompletionPaymentOut = CommitmentsTransferSent.Where(filterCurrent)
+                                                                      .Sum(m => m.CompletionAmount),
+                CommitmentIds = commitmentsReceived.Select(c => c.Id).ToList(),
+                TransferCompletionPaymentIn = CommitmentsTransferReceived.Where(filterCurrent)
+                                                                         .Sum(m => m.CompletionAmount)
             };
         }
 

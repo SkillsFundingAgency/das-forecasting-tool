@@ -26,10 +26,10 @@ Scenario: AC1: Multiple transfer commitments
 	Then the account projection should be generated
 	And should have following projections from completion
 	| MonthsFromNow | TotalCostOfTraining | TransferInTotalCostOfTraining | TransferOutTotalCostOfTraining | TransferOutCompletionPayments | TransferInCompletionPayments | CompletionPayments |
-	| 6             | 0                   | 0                             | 8000                           | 0                             | 0                            | 0                  |
+	| 6             | 8000                | 0                             | 8000                           | 0                             | 0                            | 0                  |
 	| 7             | 0                   | 0                             | 0                              | 4800                          | 0                            | 0                  |
 	| 8             | 0                   | 0                             | 0                              | 0                             | 0                            | 0                  |
-	| 18            | 0                   | 0                             | 2000                           | 0                             | 0                            | 0                  |
+	| 18            | 2000                | 0                             | 2000                           | 0                             | 0                            | 0                  |
 	| 19            | 0                   | 0                             | 0                              | 1200                          | 0                            | 0                  |
 	| 20            | 0                   | 0                             | 0                              | 0                             | 0                            | 0                  |
 	
