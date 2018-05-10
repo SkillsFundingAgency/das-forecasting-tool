@@ -5265,3 +5265,7 @@ input[type=number] {
   font-weight: bold;
   text-decoration: underline;
 }
+
+.HideFundingCapMessage {
+    display: none !important;
+}
