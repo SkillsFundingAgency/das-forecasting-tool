@@ -18,22 +18,22 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Then(@"the balance should be (.*)")]
         public void ThenTheBalanceShouldBe(int p0)
         {
-            var projection = AccountProjections.First();
+            var projection = AccountProjections.Skip(1).First();
             projection.FutureFunds.Should().Be(0);
         }
 
         [Then(@"the employer co-investment amount is 10% of the negative balance")]
         public void ThenTheEmployerCo_InvestmentAmountIsOfTheNegativeBalance()
         {
-            var projection = AccountProjections.First();
-            projection.CoInvestmentEmployer.Should().Be(200);
+            var projection = AccountProjections.Skip(1).First();
+            projection.CoInvestmentEmployer.Should().Be(100);
         }
         
         [Then(@"the government co-investment amount is 90% of the negative value")]
         public void ThenTheGovernmentCo_InvestmentAmountIsOfTheNegativeValue()
         {
-            var projection = AccountProjections.First();
-            projection.CoInvestmentGovernment.Should().Be(1800);
+            var projection = AccountProjections.Skip(1).First();
+            projection.CoInvestmentGovernment.Should().Be(900);
         }
     }
 }

@@ -162,6 +162,7 @@
       <DependentUpon>RedirectToLoginPage.feature</DependentUpon>
     </Compile>
     <Compile Include="Security\Steps\RedirectToLoginPageSteps.cs" />
+    <Compile Include="StepDefinition\DisplayModelledApprenticeshipsSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />
     <Compile Include="StepDefinition\EstimatorStartPageSteps.cs" />
     <Compile Include="StepDefinition\FundingProjectionPage_AccountprojectionSteps.cs" />

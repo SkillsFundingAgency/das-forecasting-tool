@@ -5,7 +5,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
-using SFA.DAS.EmployerAccounts.Events.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
@@ -44,12 +43,16 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        return msg;
                    }
 
-                   foreach (var employerId in preLoadRequest.EmployerAccountIds)
+                   var hashingService = container.GetInstance<IHashingService>();
+
+                   foreach (var hashedAccountId in preLoadRequest.EmployerAccountIds)
                    {
+                       var accountId = hashingService.DecodeValue(hashedAccountId);
                         outputQueueMessage.Add(
                             new PreLoadPaymentMessage
                             {
-                                EmployerAccountId = employerId,
+                                EmployerAccountId = accountId,
+                                HashedEmployerAccountId = hashedAccountId,
                                 PeriodYear = preLoadRequest.PeriodYear,
                                 PeriodMonth = preLoadRequest.PeriodMonth,
                                 PeriodId = preLoadRequest.PeriodId,
@@ -60,12 +63,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
                    if (preLoadRequest.SubstitutionId.HasValue)
                    {
-                       var hashingService = container.GetInstance<IHashingService>();
-                       var hashedDubstitutionId = hashingService.HashValue(preLoadRequest.SubstitutionId.Value);
-                       return $"HashedDubstitutionId: {hashedDubstitutionId}";
+                       var hashedSubstitutionId = hashingService.HashValue(preLoadRequest.SubstitutionId.Value);
+                       return $"HashedDubstitutionId: {hashedSubstitutionId}";
                    }
 
-                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} levy declarations to {QueueNames.PreLoadPayment} queue.");
+                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} get payment messages to {QueueNames.PreLoadPayment} queue.");
                    return $"Message added: {preLoadRequest.EmployerAccountIds.Count()}";
                });
         }

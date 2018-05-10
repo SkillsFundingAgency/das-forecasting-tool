@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Projections.Services;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
@@ -39,8 +40,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
             var accountProjection = await GetAccountProjection(hashedAccountId);
-            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId);
 
+            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId);
             return new BalanceViewModel {
                 BalanceItemViewModels = accountProjection,
                 BackLink = _applicationConfiguration.BackLink,
@@ -70,6 +71,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var result = await _accountProjection.Get(accountId);
             return _mapper.MapBalance(result)
                 .Where(m => !_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate)
+                .Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today))
+                .Take(48)
                 .ToList();
         }
     }

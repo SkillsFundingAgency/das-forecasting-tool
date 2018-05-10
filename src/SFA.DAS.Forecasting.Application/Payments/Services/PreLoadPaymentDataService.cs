@@ -12,22 +12,22 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
     public class PreLoadPaymentDataService
     {
-        private readonly CloudTable _pTable;
-        private readonly CloudTable _eTable;
+        private readonly CloudTable _paymentTable;
+        private readonly CloudTable _earningTable;
 
         public PreLoadPaymentDataService(IApplicationConfiguration settings)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
+            var storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
-            _pTable = tableClient.GetTableReference("PaymentTable");
-            _eTable = tableClient.GetTableReference("EarningsTable");
+            _paymentTable = tableClient.GetTableReference("PaymentTable");
+            _earningTable = tableClient.GetTableReference("EarningsTable");
         }
 
         public IEnumerable<EmployerPayment> GetPayments(long employerId)
         {
-            EnsureExists(_pTable);
+            EnsureExists(_paymentTable);
 
-            var entities = _pTable
+            var entities = _paymentTable
                 .ExecuteQuery(new TableQuery<TableEntry>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
 
@@ -38,9 +38,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public IEnumerable<EarningDetails> GetEarningDetails(long employerId)
         {
-            EnsureExists(_eTable);
+            EnsureExists(_earningTable);
 
-            var entities = _eTable.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+            var entities = _earningTable.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
 
             return entities
                 .Select(tableEntry => JsonConvert.DeserializeObject<EarningDetails>(tableEntry.Data))
@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task StoreEarningDetails(long employerAccountId, EarningDetails earningDetails)
         {
-            EnsureExists(_eTable);
+            EnsureExists(_earningTable);
 
             var tableModel = new TableEntry
             {
@@ -60,12 +60,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
             var op = TableOperation.InsertOrReplace(tableModel);
 
-            await _eTable.ExecuteAsync(op);
+            await _earningTable.ExecuteAsync(op);
         }
 
         public async Task StorePayment(EmployerPayment payment)
         {
-            EnsureExists(_pTable);
+            EnsureExists(_paymentTable);
 
             var tableModel = new TableEntry
             {
@@ -76,45 +76,38 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
             var op = TableOperation.InsertOrReplace(tableModel);
 
-            await _pTable.ExecuteAsync(op);
+            await _paymentTable.ExecuteAsync(op);
         }
 
         public async Task DeleteEarningDetails(long employerAccountId)
         {
-            EnsureExists(_eTable);
-
-            var opb = new TableBatchOperation();
-
-            var entities = _eTable
-                .ExecuteQuery(new TableQuery<TableEntry>()
-                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())));
-
-            foreach (var item in entities)
-            {
-                opb.Delete(item);
-            }
-
-            if(opb.Any())
-                await _eTable.ExecuteBatchAsync(opb);
+            await DeleteEmployerData(_earningTable, employerAccountId);
         }
 
         public async Task DeletePayment(long employerAccountId)
         {
-            EnsureExists(_pTable);
+            await DeleteEmployerData(_paymentTable, employerAccountId);
+        }
 
-            var opb = new TableBatchOperation();
+        private static async Task DeleteEmployerData(CloudTable cloudTable, long employerAccountId)
+        {
+            if (!await cloudTable.ExistsAsync())
+                return;
 
-            var entities = _pTable
+            var entities = cloudTable
                 .ExecuteQuery(new TableQuery<TableEntry>()
-                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())));
+                    .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())))
+                .ToList();
 
-            foreach (var item in entities)
+            while (entities.Any())
             {
-                opb.Delete(item);
+                var batch = entities.Take(99).ToList();
+                var batchOperation = new TableBatchOperation();
+                foreach (var item in batch)
+                    batchOperation.Delete(item);
+                await cloudTable.ExecuteBatchAsync(batchOperation);
+                entities = entities.Skip(99).ToList();
             }
-
-            if (opb.Any())
-                await _pTable.ExecuteBatchAsync(opb);
         }
 
         private void EnsureExists(CloudTable table)

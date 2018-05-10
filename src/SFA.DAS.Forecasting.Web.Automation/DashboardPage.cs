@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
         {
         }
 
-        public override string UrlFragment => "forecasting/balance";
+        public override string UrlFragment => "forecasting/projections";
         public override bool IsCurrentPage => Heading?.Displayed ?? false;
     }
 }

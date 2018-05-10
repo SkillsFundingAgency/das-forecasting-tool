@@ -13,7 +13,7 @@ Background:
 	| ABC-1234 | 3000   | Today        |
 	And the current balance is 5000
 
-Scenario: Calculate Co-investment 
+Scenario: Calculate co-investment after payment run
 	Given the following commitments have been recorded
 	| Apprentice Name   | Course Name   | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
 	| Test Apprentice   | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
@@ -21,6 +21,7 @@ Scenario: Calculate Co-investment
 	| Test Apprentice 2 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
 	| Test Apprentice 3 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
 	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
+	| Test Apprentice 5 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And the balance should be 0
