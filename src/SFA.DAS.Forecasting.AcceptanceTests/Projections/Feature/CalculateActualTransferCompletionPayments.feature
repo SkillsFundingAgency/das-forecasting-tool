@@ -21,22 +21,25 @@ Scenario: AC1: Multiple transfer commitments
 	| Test Apprentice 2 | Test Course 2 | 1            | Test Provider 3 | Yesterday  | 2000               | 1200              | 6                      | 999               | 12345                    | 2             |
 	| Test Apprentice 3 | Test Course   | 1            | Test Provider 4 | Yesterday  | 2000               | 1200              | 6                      | 999               | 12345                    | 2             |
 	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider 5 | Next Year  | 2000               | 1200              | 6                      | 999               | 12345                    | 2             |
+
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And should have following projections from completion
-	| MonthsFromNow | TransferOutCompletionPayments |
-	| 6             | 0                             |
-	| 7             | 4800                          |
-	| 8             | 0                             |
-	| 18            | 0                             |
-	| 19            | 1200                          |
-	| 20            | 0                             |
+	| MonthsFromNow | TotalCostOfTraining | TransferInTotalCostOfTraining | TransferOutTotalCostOfTraining | TransferOutCompletionPayments | TransferInCompletionPayments | CompletionPayments |
+	| 6             | 0                   | 0                             | 8000                           | 0                             | 0                            | 0                  |
+	| 7             | 0                   | 0                             | 0                              | 4800                          | 0                            | 0                  |
+	| 8             | 0                   | 0                             | 0                              | 0                             | 0                            | 0                  |
+	| 18            | 0                   | 0                             | 2000                           | 0                             | 0                            | 0                  |
+	| 19            | 0                   | 0                             | 0                              | 1200                          | 0                            | 0                  |
+	| 20            | 0                   | 0                             | 0                              | 0                             | 0                            | 0                  |
+	
 
 Scenario: AC3: Multiple transfer commitments and some with end dates after end of forecast period
 	Given the following commitments have been recorded
 	| Apprentice Name   | Course Name   | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | EmployerAccountId | SendingEmployerAccountId | FundingSource |
 	| Test Apprentice   | Test Course   | 1            | Test Provider 1 | Today      | 2000               | 1200              | 48                     | 999               | 12345                    | 2             |
 	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider 5 | Today      | 2000               | 1200              | 48                     | 999               | 12345                    | 2             |
+
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And should have no payments with TransferOutCompletionPayments

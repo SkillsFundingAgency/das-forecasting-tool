@@ -299,9 +299,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
 
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).LevyCompletionPayment);
-            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).LevyCompletionPayment);
-            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).LevyCompletionPayment);
+            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).LevyCompletionPaymentReceived);
+            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).LevyCompletionPaymentReceived);
+            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).LevyCompletionPaymentReceived);
         }
 
         [Test]

@@ -73,7 +73,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 TotalCostOfTraining = costOfTraining,
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferReceived,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferCost,
-                CompletionPayments = completionPayments.LevyCompletionPayment,
+                CompletionPayments = completionPayments.LevyCompletionPaymentReceived,
                 TransferInCompletionPayments = completionPayments.TransferCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOut,
                 

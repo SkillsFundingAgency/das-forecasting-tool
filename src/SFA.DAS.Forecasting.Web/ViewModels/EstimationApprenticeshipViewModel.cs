@@ -1,5 +1,6 @@
 ﻿
 using System;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
@@ -14,5 +15,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public decimal MonthlyPayment { get; set; }
         public int MonthlyPaymentCount { get; set; }
         public decimal CompletionPayment { get; set; }
+        public FundingSource FundingSource { get; internal set; }
     }
 }

@@ -5,6 +5,7 @@ using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -52,7 +53,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             MonthlyPayment = o.TotalInstallmentAmount,
                             MonthlyPaymentCount = o.TotalInstallments,
                             StartDate = o.StartDate,
-                            TotalCost = o.TotalCost
+                            TotalCost = o.TotalCost,
+                            FundingSource = o.FundingSource
                         }),
                 },
                 TransferAllowances = estimationProjector?.Projections?.Select(o => new EstimationTransferAllowanceVewModel

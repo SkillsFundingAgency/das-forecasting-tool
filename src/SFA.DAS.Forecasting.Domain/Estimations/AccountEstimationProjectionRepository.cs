@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Validation;
-using SFA.DAS.Forecasting.Domain.Events;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
-using SFA.DAS.Forecasting.Models.Projections;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
@@ -42,7 +39,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             var commitments = new List<CommitmentModel>();
             foreach (var virtualApprenticeships in accountEstimation.VirtualApprenticeships)
             {
-                for(var i = 0; i < virtualApprenticeships.ApprenticesCount; i++) 
+                for (var i = 0; i < virtualApprenticeships.ApprenticesCount; i++)
                     commitments.Add(new CommitmentModel
                     {
                         CompletionAmount = virtualApprenticeships.TotalCompletionAmount / virtualApprenticeships.ApprenticesCount,
@@ -52,8 +49,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                         NumberOfInstallments = virtualApprenticeships.TotalInstallments,
                         PlannedEndDate = virtualApprenticeships.StartDate.AddMonths(virtualApprenticeships.TotalInstallments),
                         StartDate = virtualApprenticeships.StartDate,
-                        
-                                           
+                        FundingSource = virtualApprenticeships.FundingSource != 0 ? virtualApprenticeships.FundingSource : FundingSource.Transfer
                     });
             }
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);

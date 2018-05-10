@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly long _employerAccountId;
         private readonly IEnumerable<CommitmentModel> _commitments;
 
-        private IEnumerable<CommitmentModel> Commitments => _commitments
+        private IEnumerable<CommitmentModel> CommitmentsReceived => _commitments
                                         .Where(m => m.EmployerAccountId == _employerAccountId)
                                         .Where(m => m.FundingSource == Models.Payments.FundingSource.Levy);
 
@@ -36,16 +36,16 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                       c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
                       c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
 
-            var commitments = Commitments.Where(filterCurrent);
-            var commitmentsTransferReceived = CommitmentsTransferReceived.Where(filterCurrent);
-            var commitmentsAsSender = CommitmentsTransferSent.Where(filterCurrent);
+            var commitments = CommitmentsReceived.Where(filterCurrent);
 
             return new TotalCostOfTraining
             {
                 LevyReceived = commitments.Sum(c => c.MonthlyInstallment),
-                TransferReceived = commitmentsTransferReceived.Sum(m => m.MonthlyInstallment),
+                TransferReceived = CommitmentsTransferReceived.Where(filterCurrent)
+                                                              .Sum(m => m.MonthlyInstallment),
                 CommitmentIds = commitments.Select(c => c.Id),
-                TransferCost = commitmentsAsSender.Sum(m => m.MonthlyInstallment)
+                TransferCost = CommitmentsTransferSent.Where(filterCurrent)
+                                                      .Sum(m => m.MonthlyInstallment)
             };
         }
 
@@ -53,28 +53,28 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         {
             Func<CommitmentModel, bool> filterCurrent = c => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
 
-            var commitments = Commitments.Where(filterCurrent);
-            var commitmentsTransferReceived = CommitmentsTransferReceived.Where(filterCurrent);
-            var commitmentsAsSender = CommitmentsTransferSent.Where(filterCurrent);
+            var commitments = CommitmentsReceived.Where(filterCurrent);
 
             return new TotalCompletionPayments
             {
-                LevyCompletionPayment = commitments.Sum(c => c.CompletionAmount),
-                TransferCompletionPayment = commitmentsTransferReceived.Sum(m => m.CompletionAmount),
+                LevyCompletionPaymentReceived = commitments.Sum(c => c.CompletionAmount),
+                TransferCompletionPayment = CommitmentsTransferReceived.Where(filterCurrent)
+                                                                       .Sum(m => m.CompletionAmount),
                 CommitmentIds = commitments.Select(c => c.Id).ToList(),
-                TransferOut = commitmentsAsSender.Sum(m => m.CompletionAmount)
+                TransferOut = CommitmentsTransferSent.Where(filterCurrent)
+                                                     .Sum(m => m.CompletionAmount)
             };
         }
 
         public DateTime GetEarliestCommitmentStartDate()
         {
-            return Commitments.OrderBy(commitment => commitment.StartDate)
+            return _commitments.OrderBy(commitment => commitment.StartDate)
                 .Select(commitment => commitment.StartDate)
                 .FirstOrDefault();
         }
         public DateTime GetLastCommitmentPlannedEndDate()
         {
-            return Commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
+            return _commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
                 .Select(commitment => commitment.PlannedEndDate)
                 .FirstOrDefault();
         }

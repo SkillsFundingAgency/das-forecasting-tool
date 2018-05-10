@@ -179,33 +179,68 @@ this.FeatureBackground();
                         "2"});
 #line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 24
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 25
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 26
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "MonthsFromNow",
-                        "TransferOutCompletionPayments"});
+                        "TotalCostOfTraining",
+                        "TransferInTotalCostOfTraining",
+                        "TransferOutTotalCostOfTraining",
+                        "TransferOutCompletionPayments",
+                        "TransferInCompletionPayments",
+                        "CompletionPayments"});
             table4.AddRow(new string[] {
                         "6",
+                        "0",
+                        "0",
+                        "8000",
+                        "0",
+                        "0",
                         "0"});
             table4.AddRow(new string[] {
                         "7",
-                        "4800"});
+                        "0",
+                        "0",
+                        "0",
+                        "4800",
+                        "0",
+                        "0"});
             table4.AddRow(new string[] {
                         "8",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
                         "0"});
             table4.AddRow(new string[] {
                         "18",
+                        "0",
+                        "0",
+                        "2000",
+                        "0",
+                        "0",
                         "0"});
             table4.AddRow(new string[] {
                         "19",
-                        "1200"});
+                        "0",
+                        "0",
+                        "0",
+                        "1200",
+                        "0",
+                        "0"});
             table4.AddRow(new string[] {
                         "20",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
+                        "0",
                         "0"});
-#line 26
+#line 27
  testRunner.And("should have following projections from completion", ((string)(null)), table4, "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -218,7 +253,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: Multiple transfer commitments and some with end dates after end of forecast " +
                     "period", ((string[])(null)));
-#line 35
+#line 37
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -259,13 +294,13 @@ this.FeatureBackground();
                         "999",
                         "12345",
                         "2"});
-#line 36
+#line 38
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table5, "Given ");
-#line 40
+#line 43
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 41
+#line 44
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 42
+#line 45
  testRunner.And("should have no payments with TransferOutCompletionPayments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

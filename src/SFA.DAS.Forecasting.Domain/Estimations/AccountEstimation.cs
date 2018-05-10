@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
@@ -22,7 +23,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
-        public VirtualApprenticeship AddVirtualApprenticeship(string courseId, string courseTitle, int level, int startMonth, int startYear, int numberOfApprentices, int numberOfMonths, decimal totalCost)
+        public VirtualApprenticeship AddVirtualApprenticeship(string courseId, string courseTitle, int level, int startMonth, int startYear, int numberOfApprentices, int numberOfMonths, decimal totalCost, FundingSource fundingSource)
         {
             var virtualApprenticeship = new VirtualApprenticeship
             {
@@ -33,6 +34,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 StartDate = new DateTime(startYear, startMonth, 1),
                 TotalCost = totalCost,
                 TotalInstallments = (short)numberOfMonths,
+                FundingSource = fundingSource
             };
             var validationResults = _validator.Validate(virtualApprenticeship);
             if (!validationResults.All(result => result.IsValid))
