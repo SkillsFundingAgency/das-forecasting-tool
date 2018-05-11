@@ -11,26 +11,16 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 {
     public interface IAccountEstimationProjectionRepository
     {
-        Task<IAccountEstimationProjection> Get(long accountId);
         Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation);
     }
 
     public class AccountEstimationProjectionRepository: IAccountEstimationProjectionRepository
     {
-        private readonly IAccountEstimationRepository _accountEstimationRepository;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
 
-        public AccountEstimationProjectionRepository(IAccountEstimationRepository accountEstimationRepository,
-            ICurrentBalanceRepository currentBalanceRepository)
+        public AccountEstimationProjectionRepository(ICurrentBalanceRepository currentBalanceRepository)
         {
-            _accountEstimationRepository = accountEstimationRepository ?? throw new ArgumentNullException(nameof(accountEstimationRepository));
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
-        }
-
-        public async Task<IAccountEstimationProjection> Get(long accountId)
-        {
-            var accountEstimation = await _accountEstimationRepository.Get(accountId);
-            return await Get(accountEstimation);
         }
 
         public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation)
@@ -40,10 +30,11 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             foreach (var virtualApprenticeships in accountEstimation.VirtualApprenticeships)
             {
                 for (var i = 0; i < virtualApprenticeships.ApprenticesCount; i++)
+                {
                     commitments.Add(new CommitmentModel
                     {
                         CompletionAmount = virtualApprenticeships.TotalCompletionAmount / virtualApprenticeships.ApprenticesCount,
-                        EmployerAccountId = accountEstimation.EmployerAccountId,
+                        SendingEmployerAccountId = accountEstimation.EmployerAccountId,
                         ActualEndDate = null,
                         MonthlyInstallment = virtualApprenticeships.TotalInstallmentAmount / virtualApprenticeships.ApprenticesCount,
                         NumberOfInstallments = virtualApprenticeships.TotalInstallments,
@@ -51,6 +42,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                         StartDate = virtualApprenticeships.StartDate,
                         FundingSource = virtualApprenticeships.FundingSource != 0 ? virtualApprenticeships.FundingSource : FundingSource.Transfer
                     });
+                }
             }
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);
             return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), employerCommitments);
