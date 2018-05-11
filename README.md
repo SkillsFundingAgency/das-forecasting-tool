@@ -19,17 +19,6 @@ The following needs to be installed on your local machine:
 
 * Build solution
 * Publish database -> this will create a database called SFA.DAS.Forecasting.Database on your local instance
-* Add settings to Cloud Storage
- A Table called Configuration will need to be created with the following values set
-	
-**ParitionKey**: LOCAL
-
-**RowKey**: SFA.DAS.Forecasting
-
-**Data**: ``` {   "DatabaseConnectionString": "Data Source=.;Initial Catalog=SFA.DAS.Forecasting.Database;Integrated Security=True;Pooling=False;Connect Timeout=30",   "Hashstring": "My Hash String",   "AllowedHashstringCharacters": "46789BCDFGHJKLMNPRSTVWXY" } ```
-
-
-_Please note that throughout the solution your DB connection string may need updating to the path set in step 2_
 
 ### Data Population
 
