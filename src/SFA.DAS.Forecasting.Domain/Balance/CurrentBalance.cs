@@ -3,34 +3,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 
 namespace SFA.DAS.Forecasting.Domain.Balance
 {
     public class CurrentBalance
     {
-        private readonly Models.Balance.BalanceModel _balance;
+        internal Models.Balance.BalanceModel Model { get; private set; }
         private readonly IAccountBalanceService _accountBalanceService;
-        private readonly ICommitmentsDataService _commitmentsDataService;
+        private readonly EmployerCommitments _employerCommitments;
 
-        public virtual long EmployerAccountId => _balance.EmployerAccountId;
-        public virtual decimal Amount => _balance.Amount;
-        public decimal TransferAllowance => _balance.TransferAllowance;
-        public decimal RemainingTransferBalance => _balance.RemainingTransferBalance;
-        public DateTime Period => _balance.BalancePeriod;
-        public DateTime ReceivedDate => _balance.ReceivedDate;
-        public decimal UnallocatedCompletionPayments => _balance.UnallocatedCompletionPayments;
+        public virtual long EmployerAccountId => Model.EmployerAccountId;
+        public virtual decimal Amount => Model.Amount;
+        public decimal TransferAllowance => Model.TransferAllowance;
+        public decimal RemainingTransferBalance => Model.RemainingTransferBalance;
+        public DateTime Period => Model.BalancePeriod;
+        public DateTime ReceivedDate => Model.ReceivedDate;
+        public decimal UnallocatedCompletionPayments => Model.UnallocatedCompletionPayments;
 
         protected CurrentBalance() { }
 
         public CurrentBalance(
             Models.Balance.BalanceModel balance, 
             IAccountBalanceService accountBalanceService,
-            ICommitmentsDataService commitmentsDataService)
+            EmployerCommitments employerCommitments)
         {
-            _balance = balance ?? throw new ArgumentNullException(nameof(balance));
+            Model = balance ?? throw new ArgumentNullException(nameof(balance));
             _accountBalanceService = accountBalanceService ?? throw new ArgumentNullException(nameof(accountBalanceService));
-            _commitmentsDataService = commitmentsDataService ?? throw new ArgumentNullException(nameof(commitmentsDataService));
+            _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
         }
 
         public virtual async Task<bool> RefreshBalance()
@@ -42,18 +43,14 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             if (currentBalance == null)
                 throw new InvalidOperationException($"Failed to get the account balances for account: {EmployerAccountId}");
 
-            var commitments = await _commitmentsDataService.GetCurrentCommitments(EmployerAccountId);
-            var unallocatedCompletionPayments = 
-                commitments
-                .Where(m => m.PlannedEndDate < DateTime.Now.GetStartOfMonth())
-                .Sum(m => m.CompletionAmount);
+            var unallocatedCompletionPayments = _employerCommitments.GetUnallocatedCompletionAmount();
 
-            _balance.Amount = currentBalance.Amount;
-            _balance.TransferAllowance = currentBalance.TransferAllowance;
-            _balance.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
-            _balance.BalancePeriod = DateTime.UtcNow;
-            _balance.ReceivedDate = DateTime.UtcNow;
-            _balance.UnallocatedCompletionPayments = unallocatedCompletionPayments;
+            Model.Amount = currentBalance.Amount;
+            Model.TransferAllowance = currentBalance.TransferAllowance;
+            Model.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
+            Model.BalancePeriod = DateTime.UtcNow;
+            Model.ReceivedDate = DateTime.UtcNow;
+            Model.UnallocatedCompletionPayments = unallocatedCompletionPayments;
             return true;
         }
     }

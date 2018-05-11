@@ -53,5 +53,12 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 .Select(commitment => commitment.PlannedEndDate)
                 .FirstOrDefault();
         }
+
+        public virtual decimal GetUnallocatedCompletionAmount()
+        {
+            return _commitments
+                .Where(commitment => commitment.PlannedEndDate < DateTime.Today)
+                .Sum(commitment => commitment.CompletionAmount);
+        }
     }
 }
