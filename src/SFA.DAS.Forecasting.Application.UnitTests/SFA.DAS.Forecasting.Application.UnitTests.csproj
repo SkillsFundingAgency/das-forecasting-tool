@@ -151,7 +151,8 @@
     <Compile Include="ApprenticeshipCourses\StandardSummaryMapperTest.cs" />
     <Compile Include="ApprenticeshipCourses\StoreCourseHandlerTests.cs" />
     <Compile Include="Balance\BalanceHandlerTests.cs" />
-    <Compile Include="Estimations\ApprenticeshipCourseServiceTests.cs" />
+    <Compile Include="Estimations\AddApprenticeshipOrchestatorTests.cs" />
+    <Compile Include="Estimations\Validation\AddApprenticeshipValidatorTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
     <Compile Include="Payments\CollectionPeriodValidatorTests.cs" />
@@ -184,6 +185,10 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Web\SFA.DAS.Forecasting.Web.csproj">
+      <Project>{DEC16FDF-5394-4137-8C67-21414ED636EB}</Project>
+      <Name>SFA.DAS.Forecasting.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

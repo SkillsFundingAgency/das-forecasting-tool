@@ -11,10 +11,11 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string Name { get; set; }
         public IEnumerable<ApprenticeshipCourse> AvailableApprenticeships { get; set; }
 
-          public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
+        public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
 
-
-        public AddApprenticeshipValidationDetail AddApprenticeshipValidationDetail { get; set; }
+        public string PreviousCourseId { get; set; }
+      
+        public List<ValidationResult> ValidationResults { get; set; }
 
         public IEnumerable<SelectListItem> ApprenticeshipList()
         {

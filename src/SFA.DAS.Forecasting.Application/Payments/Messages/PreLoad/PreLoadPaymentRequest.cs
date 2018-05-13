@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.EmployerAccounts.Events.Messages.PreLoad
+namespace SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad
 {
     public class PreLoadPaymentRequest
     {
-        public IEnumerable<long> EmployerAccountIds { get; set; }
+        public IEnumerable<string> EmployerAccountIds { get; set; }
 
         public int PeriodYear { get; set; }
 

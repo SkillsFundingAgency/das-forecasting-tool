@@ -8,6 +8,7 @@ using System.Net.Http;
 using Dapper;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Provider.Events.Api.Types;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -15,7 +16,7 @@ using CalendarPeriod = SFA.DAS.Forecasting.Models.Payments.CalendarPeriod;
 using FundingSource = SFA.DAS.Provider.Events.Api.Types.FundingSource;
 using NamedCalendarPeriod = SFA.DAS.Forecasting.Models.Payments.NamedCalendarPeriod;
 
-namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
+namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 {
     [Binding]
     public class Pre_LoadPaymentsSteps : StepsBase
@@ -267,7 +268,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         {
             var request = new
             {
-                EmployerAccountIds = new[] { Config.EmployerAccountId },
+                EmployerAccountIds = new[] { Config.HashedEmployerAccountId },
                 PeriodYear = CollectionPeriod.Year.ToString(),
                 PeriodMonth = CollectionPeriod.Month.ToString(),
                 PeriodId = CollectionPeriod.Id
@@ -281,7 +282,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         {
             var request = new
             {
-                EmployerAccountIds = new[] { Config.EmployerAccountId },
+                EmployerAccountIds = new[] { Config.HashedEmployerAccountId },
                 PeriodYear = CollectionPeriod.Year.ToString(),
                 PeriodMonth = CollectionPeriod.Month.ToString(),
                 PeriodId = CollectionPeriod.Id,
@@ -294,29 +295,34 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         [Then(@"the Payment Id should be anonymised")]
         public void ThenThePaymentIdShouldBeAnonymised()
         {
-            Assert.IsTrue(Payments.All(payment => RecordedPayments.Any(recordedPayment => Math.Round(payment.PaymentAmount, 2) == Math.Round(recordedPayment.Amount, 2) && payment.PaymentId != recordedPayment.ExternalPaymentId)),
-                "Not all payments were anonymised.");
+            Payments.ForEach(payment =>
+            {
+                Assert.IsFalse(RecordedPayments.Any(recordedPayment =>
+                    Math.Round(payment.PaymentAmount, 2) == Math.Round(recordedPayment.Amount, 2) &&
+                    payment.PaymentId == recordedPayment.ExternalPaymentId),$"Payment Id for payment {payment.ToJson()} was not anonymised.");
+            });
         }
 
         [Then(@"the Apprenticeship Id should be anonymised")]
         public void ThenThePaymentApprenticeshipIdShouldBeAnonymised()
         {
-            Assert.IsTrue(Payments.All(payment => RecordedPayments.Any(recordedPayment => Math.Round(payment.PaymentAmount, 2) == Math.Round(recordedPayment.Amount, 2) &&
-                                                                                          payment.ApprenticeshipId != recordedPayment.ApprenticeshipId)),
-                "Not all payments were anonymised.");
+            Payments.ForEach(payment =>
+            {
+                Assert.IsFalse(RecordedPayments.Any(recordedPayment =>
+                    Math.Round(payment.PaymentAmount, 2) == Math.Round(recordedPayment.Amount, 2) &&
+                    payment.ApprenticeshipId == recordedPayment.ApprenticeshipId), 
+                    $"Apprenticeship Id for payment {payment.ToJson()} was not anonymised.");
+            });
         }
-
-
 
         [Then(@"the funding projections payments service should record the payments")]
         public void ThenTheFundingProjectionsPaymentsServiceShouldRecordThePayments()
         {
             WaitForIt(() =>
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var payments = Connection.Query<Models.Payments.Payment>("Select * from Payment where EmployerAccountId = @employerAccountId"
-                    , parameters, commandType: CommandType.Text).ToList();
+                var payments = DataContext.Payments
+                    .Where(payment => payment.EmployerAccountId == Config.EmployerAccountId)
+                    .ToList();
                 Console.WriteLine($"Got {payments.Count} payments from projections payments table.");
                 if (payments.Count != Payments.Count)
                     return false;
@@ -330,10 +336,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         {
             WaitForIt(() =>
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", "112233", DbType.Int64);
-                var payments = Connection.Query<Models.Payments.Payment>("Select * from Payment where EmployerAccountId = @employerAccountId"
-                    , parameters, commandType: CommandType.Text).ToList();
+                var payments =  DataContext.Payments
+                    .Where(payment => payment.EmployerAccountId == 112233)
+                    .ToList();
                 Console.WriteLine($"Got {payments.Count} payments from projections payments table.");
                 if (payments.Count != Payments.Count)
                     return false;
@@ -347,10 +352,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         {
             WaitForIt(() =>
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
-                    , parameters, commandType: CommandType.Text).ToList();
+                var commitments = DataContext.Commitments
+                    .Where(c => c.EmployerAccountId == Config.EmployerAccountId)
+                    .ToList();
                 Console.WriteLine($"Got {commitments.Count} commitments from projections commitments table.");
                 if (commitments.Count != Payments.Count)
                     return false;
@@ -360,15 +364,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
         }
 
 
+        [Then(@"the funding projections commitments service should record the anonymised commitment")]
         [Then(@"the funding projections commitments service should record the anonymised commitments")]
         public void ThenTheFundingProjectionsCommitmentsServiceShouldRecordTheAnonymisedCommitments()
         {
             WaitForIt(() =>
             {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", "112233", DbType.Int64);
-                var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
-                    , parameters, commandType: CommandType.Text).ToList();
+                var commitments = DataContext.Commitments
+                    .Where(c => c.EmployerAccountId == 112233)
+                    .ToList();
                 Console.WriteLine($"Got {commitments.Count} commitments from projections commitments table.");
                 if (commitments.Count != Payments.Count)
                     return false;
@@ -376,23 +380,5 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Feature
                 return true;
             }, "Failed to find the commitments");
         }
-
-        [Then(@"the funding projections commitments service should record the anonymised commitment")]
-        public void ThenTheFundingProjectionsCommitmentsServiceShouldRecordTheAnonymisedCommitment()
-        {
-            WaitForIt(() =>
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", "112233", DbType.Int64);
-                var commitments = Connection.Query<Models.Commitments.Commitment>("Select * from Commitment where EmployerAccountId = @employerAccountId"
-                    , parameters, commandType: CommandType.Text).ToList();
-                Console.WriteLine($"Got {commitments.Count} commitments from projections commitments table.");
-                if (commitments.Count != 1)
-                    return false;
-                RecordedCommitments = commitments;
-                return true;
-            }, "Failed to find the commitment");
-        }
-
     }
 }

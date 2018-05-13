@@ -28,9 +28,9 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
 
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
-                    var payments = dataService.GetPayments(message.EmployerAccountId);
-                    var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId);
-                    logger.Info($"Got {payments.Count()} payments to match against {earningDetails.Count()} earning details for employer '{message.EmployerAccountId}'");
+                    var payments = dataService.GetPayments(message.EmployerAccountId).ToList();
+                    var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId).ToList();
+                    logger.Info($"Got {payments.Count()} payments to match against {earningDetails.Count} earning details for employer '{message.EmployerAccountId}'");
                     List<PaymentCreatedMessage> paymentCreatedMessage;
                     if (message.SubstitutionId != null)
                     {
@@ -73,8 +73,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 while (Apprenticeships.ContainsValue(id) && cnt++ < 1000)
                     id = random.Next(1, 9999999);
                 Apprenticeships[originalApprenticeshipId] = id;
+                return Apprenticeships[originalApprenticeshipId];
             }
-            return Apprenticeships[originalApprenticeshipId];
         }
         private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {

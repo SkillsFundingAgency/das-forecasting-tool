@@ -322,9 +322,9 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
-    <Compile Include="Orchestrators\Estimations\ApprenticeshipOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\AddApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\EstimationOrchestrator.cs" />
-    <Compile Include="Orchestrators\Estimations\IApprenticeshipOrchestrator.cs" />
+    <Compile Include="Orchestrators\Estimations\IAddApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\IEstimationOrchestrator.cs" />
     <Compile Include="Authentication\IMembershipService.cs" />
     <Compile Include="Authentication\MembershipService.cs" />
@@ -732,6 +732,10 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
       <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
       <Name>SFA.DAS.Forecasting.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
+      <Project>{426ce92a-1acb-4ffe-adb2-5b49484f33ca}</Project>
+      <Name>SFA.DAS.Forecasting.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>

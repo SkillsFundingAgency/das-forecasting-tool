@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -16,14 +15,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _estimationOrchestrator;
-        private readonly IApprenticeshipOrchestrator _apprenticeshipOrchestrator;
+        private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
 
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IApprenticeshipOrchestrator apprenticeshipOrchestrator, IMembershipService membershipService)
+        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, IMembershipService membershipService)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
-            _apprenticeshipOrchestrator = apprenticeshipOrchestrator;
+            _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
         }
 
         [HttpGet]
@@ -55,7 +54,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
         public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            var vm = _apprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup();
 
             return View(vm);
         }
@@ -65,18 +64,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
         public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            var viewModel = await _apprenticeshipOrchestrator.ValidateAddApprenticeship(vm);
+            var viewModel = await _addApprenticeshipOrchestrator.ValidateAddApprenticeship(vm);
 
-            if (!viewModel.AddApprenticeshipValidationDetail.IsValid)
+            if (viewModel.ValidationResults.Count > 0)
             {
-                ModelState.Clear();
+                viewModel.PreviousCourseId = viewModel.ApprenticeshipToAdd?.CourseId;
+                ModelState.Clear();        
                 return View("AddApprenticeships", viewModel);
             }
 
-            await _apprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
+            await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
-
         }
 
             
@@ -85,16 +84,25 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue)
         {
             //TODO: this should be in the orchestrator
-            var fundingCap = await _apprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
-            var totalValue = (fundingCap * numberOfApprentices);
+            var fundingCap = await _addApprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
+            var totalValue = fundingCap * numberOfApprentices;
+            var totalValueAsString = totalValue.FormatValue();
             var result = new
             {
                 FundingCap = fundingCap.FormatCost(),
                 TotalFundingCap = totalValue.FormatCost(),
                 NumberOfApprentices = numberOfApprentices,
-                TotalFundingCapValue = totalValue
+                TotalFundingCapValue = totalValueAsString
             };
 
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Route("GetDefaultNumberOfMonths", Name = "GetDefaultNumberOfMonths")]
+        public async Task<ActionResult> GetDefaultNumberOfMonths(string courseId)
+        {
+            var result = await _addApprenticeshipOrchestrator.GetDefaultNumberOfMonths(courseId);
             return Json(result);
         }
 
@@ -104,7 +112,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             try
             {
-                var vm = await _apprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(hashedAccountId, id, estimationName);
+                var vm = await _addApprenticeshipOrchestrator.GetVirtualApprenticeshipsForRemoval(hashedAccountId, id, estimationName);
                 return View(vm);
             }
             catch (ApprenticeshipAlreadyRemovedException)
@@ -119,7 +127,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)
             {
-                await _apprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
+                await _addApprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
                 return RedirectToAction(nameof(CostEstimation),
                     new
                     {

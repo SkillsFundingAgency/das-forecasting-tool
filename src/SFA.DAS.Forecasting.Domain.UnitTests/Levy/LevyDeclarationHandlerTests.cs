@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
     {
         protected AutoMoqer Moqer;
         protected LevySchemeDeclarationUpdatedMessage LevySchemeDeclaration;
-
+        
         [SetUp]
         public void SetUp()
         {
@@ -28,13 +28,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
                 EmpRef = "abcdef",
                 CreatedDate = DateTime.Now
             };
-            var repo = Moqer.GetMock<ILevyPeriodRepository>();
+            var repo = Moqer.GetMock<ILevyDeclarationRepository>();
             repo.Setup(x => x.Get(It.IsAny<long>(),
                     It.IsAny<string>(),
-                    It.IsAny<short>()))
-                .Returns(Task.FromResult(Moqer.Resolve<LevyPeriod>()));
-            repo.Setup(x => x.StoreLevyPeriod(It.IsAny<LevyPeriod>()))
+                    It.IsAny<string>(),
+                    It.IsAny<byte>()))
+                .Returns(Task.FromResult(Moqer.Resolve<LevyDeclaration>()));
+            repo.Setup(x => x.Store(It.IsAny<LevyDeclaration>()))
                 .Returns(Task.CompletedTask);
+            
         }
 
         [Test]
@@ -42,33 +44,21 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
         {
             var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
             await handler.Handle(LevySchemeDeclaration);
-            Moqer.GetMock<ILevyPeriodRepository>().Verify(x => x.Get(
+            Moqer.GetMock<ILevyDeclarationRepository>()
+                .Verify(x => x.Get(
                 It.Is<long>(id => id == LevySchemeDeclaration.AccountId),
+                It.Is<string>(scheme => scheme == LevySchemeDeclaration.EmpRef),
                 It.Is<string>(year => year == LevySchemeDeclaration.PayrollYear),
-                It.Is<short>(month => month == LevySchemeDeclaration.PayrollMonth)), Times.Once());
+                It.Is<byte>(month => month == LevySchemeDeclaration.PayrollMonth)), Times.Once());
         }
-
-        //[Test]
-        //public async Task Adds_Levy_Declaration_To_Levy_Period()
-        //{
-        //    var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
-        //    await handler.Handle(LevySchemeDeclaration);
-        //    Moqer.GetMock<LevyPeriod>().Verify(x => x.AddDeclaration(
-        //        It.Is<long>(id => id == LevySchemeDeclaration.AccountId),
-        //        It.Is<string>(year => year == LevySchemeDeclaration.PayrollYear),
-        //        It.Is<byte>(month => month == LevySchemeDeclaration.PayrollMonth),
-        //        It.Is<decimal>(amount => amount == LevySchemeDeclaration.LevyDeclaredInMonth),
-        //        It.Is<string>(scheme => scheme == LevySchemeDeclaration.EmpRef),
-        //        It.Is<DateTime>(transactionDate => transactionDate == LevySchemeDeclaration.CreatedDate)), Times.Once());
-        //}
 
         [Test]
         public async Task Stores_Levy_Period()
         {
             var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
             await handler.Handle(LevySchemeDeclaration);
-            Moqer.GetMock<ILevyPeriodRepository>()
-                .Verify(x => x.StoreLevyPeriod(It.IsAny<LevyPeriod>()), Times.Once());
+            Moqer.GetMock<ILevyDeclarationRepository>()
+                .Verify(x => x.Store(It.IsAny<LevyDeclaration>()), Times.Once());
         }
     }
 }

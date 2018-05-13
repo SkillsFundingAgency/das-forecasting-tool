@@ -8,32 +8,25 @@ namespace SFA.DAS.Forecasting.Domain.Levy
     public interface ILevyPeriodRepository
     {
         Task<LevyPeriod> Get(long employerAccountId, string payrollYear, short payrollMonth);
-        Task StoreLevyPeriod(LevyPeriod levyPeriod);
     }
 
-    public class LevyPeriodRepository: ILevyPeriodRepository
+    public class LevyPeriodRepository : ILevyPeriodRepository
     {
-        public ILevyDataService LevyDataService { get; }
+        public ILevyDataSession LevyDataSession { get; }
         public IPayrollDateService PayrollDateService { get; }
 
-        public LevyPeriodRepository(ILevyDataService levyDataService, IPayrollDateService payrollDateService)
+        public LevyPeriodRepository(ILevyDataSession levyDataSession, IPayrollDateService payrollDateService)
         {
-            LevyDataService = levyDataService ?? throw new ArgumentNullException(nameof(levyDataService));
+            LevyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
             PayrollDateService = payrollDateService ?? throw new ArgumentNullException(nameof(payrollDateService));
         }
 
         public async Task<LevyPeriod> Get(long employerAccountId, string payrollYear, short payrollMonth)
         {
             var levyDeclarations =
-                await LevyDataService.GetLevyDeclarationsForPeriod(employerAccountId, payrollYear, (byte)payrollMonth);
-            var levyPeriod = new LevyPeriod(PayrollDateService);
-            levyPeriod.LevyDeclarations.AddRange(levyDeclarations);
+                await LevyDataSession.GetLevyDeclarationsForPeriod(employerAccountId, payrollYear, (byte)payrollMonth);
+            var levyPeriod = new LevyPeriod(levyDeclarations);
             return levyPeriod;
-        }
-
-        public async Task StoreLevyPeriod(LevyPeriod levyPeriod)
-        {
-            await LevyDataService.StoreLevyDeclarations(levyPeriod.LevyDeclarations);
         }
     }
 }

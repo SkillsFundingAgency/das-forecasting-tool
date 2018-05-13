@@ -13,5 +13,17 @@
                 $"£{value:n0}" : 
                 null;
         }
+
+        public static string FormatValue(this decimal? value)
+        {
+            return value.HasValue ?
+                FormatValue(value.Value):
+                null;
+        }
+
+        public static string FormatValue(this decimal value)
+        {
+            return $"{value:n0}";
+        }
     }
 }

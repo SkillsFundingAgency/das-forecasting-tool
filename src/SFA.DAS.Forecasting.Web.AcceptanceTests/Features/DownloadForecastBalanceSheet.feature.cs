@@ -94,22 +94,6 @@ this.FeatureBackground();
                         "Government contribution",
                         "Future funds"});
             table1.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
-                        "1000",
-                        "1339",
-                        "12000"});
-            table1.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
-                        "880",
-                        "32200",
-                        "1000",
-                        "1339",
-                        "12000"});
-            table1.AddRow(new string[] {
                         "Jun 18",
                         "1000",
                         "1800",
@@ -191,17 +175,17 @@ this.FeatureBackground();
                         "12000"});
 #line 11
      testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
-#line 26
+#line 24
   testRunner.Given("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 27
+#line 25
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 28
+#line 26
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 29
+#line 27
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 30
+#line 28
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
+#line 29
      testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -214,7 +198,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC2_Forecast data is displayed correctly when forecas" +
                     "t between payments made and 23rd of month", ((string[])(null)));
-#line 35
+#line 33
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -225,18 +209,6 @@ this.FeatureBackground();
                         "Cost Of Training",
                         "Completion Payments",
                         "Future Funds"});
-            table2.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
-                        "1000"});
-            table2.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
-                        "880",
-                        "32200",
-                        "1000"});
             table2.AddRow(new string[] {
                         "Jun 18",
                         "1000",
@@ -297,19 +269,19 @@ this.FeatureBackground();
                         "2100",
                         "10000",
                         "1000"});
-#line 37
+#line 35
   testRunner.Given("I have generated the following projections", ((string)(null)), table2, "Given ");
-#line 53
+#line 49
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 54
+#line 50
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 55
+#line 51
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 56
+#line 52
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 57
+#line 53
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 58
+#line 54
   testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -322,7 +294,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC3_Forecast data is displayed correctly when forecas" +
                     "t between 23rd of month until next payments made", ((string[])(null)));
-#line 60
+#line 56
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -334,18 +306,6 @@ this.FeatureBackground();
                         "Completion Payments",
                         "Future Funds"});
             table3.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
-                        "1000"});
-            table3.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
-                        "880",
-                        "32200",
-                        "1000"});
-            table3.AddRow(new string[] {
                         "Jun 18",
                         "1000",
                         "1800",
@@ -405,19 +365,19 @@ this.FeatureBackground();
                         "2100",
                         "10000",
                         "1000"});
-#line 62
+#line 58
   testRunner.Given("I have generated the following projections", ((string)(null)), table3, "Given ");
-#line 77
+#line 71
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 78
+#line 72
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 79
+#line 73
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 80
+#line 74
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 81
+#line 75
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 82
+#line 76
   testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -428,7 +388,7 @@ this.FeatureBackground();
         public virtual void DownloadForecastBalanceSheetAC4_ForecastDataWhenNegativeBalance()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("DownloadForecastBalanceSheetAC4_Forecast data when negative balance", ((string[])(null)));
-#line 84
+#line 78
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -440,18 +400,6 @@ this.FeatureBackground();
                         "Completion Payments",
                         "Future Funds"});
             table4.AddRow(new string[] {
-                        "Mar 18",
-                        "1000",
-                        "1590",
-                        "49900",
-                        "1000"});
-            table4.AddRow(new string[] {
-                        "Apr 18",
-                        "1000",
-                        "880",
-                        "32200",
-                        "1000"});
-            table4.AddRow(new string[] {
                         "Jun 18",
                         "1000",
                         "1800",
@@ -511,19 +459,19 @@ this.FeatureBackground();
                         "2100",
                         "10000",
                         "1000"});
-#line 86
+#line 80
   testRunner.Given("I have generated the following projections", ((string)(null)), table4, "Given ");
-#line 101
+#line 93
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 102
+#line 94
   testRunner.When("I select download as csv", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 103
+#line 95
   testRunner.Then("the csv should be downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 104
+#line 96
   testRunner.And("the downloaded filename is in the format esfaforecast_yyyymmddhhmmss", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 105
+#line 97
   testRunner.And("column headers are downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 106
+#line 98
   testRunner.And("all of the rows have been downloaded", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

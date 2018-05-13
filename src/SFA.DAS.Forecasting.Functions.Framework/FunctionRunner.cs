@@ -82,11 +82,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
+                ConfigureContainer(executionContext, writer, container);
+                logger = container.GetInstance<ILog>();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
-                    logger = container.GetInstance<ILog>();
-                    return await runAction(nestedContainer, container.GetInstance<ILog>());
+                    return await runAction(nestedContainer, logger);
                 }
             }
             catch (Exception ex)

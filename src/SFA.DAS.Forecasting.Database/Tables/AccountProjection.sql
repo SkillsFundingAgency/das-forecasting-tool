@@ -3,7 +3,7 @@
 	[Id] BIGINT NOT NULL PRIMARY KEY IDENTITY(1,1),
 	[EmployerAccountId] BIGINT NOT NULL,
     [ProjectionCreationDate] DATETIME NOT NULL,
-    [ProjectionGenerationType] SMALLINT NOT NULL,
+    [ProjectionGenerationType] TINYINT NOT NULL,
     [Month] SMALLINT NOT NULL,
     [Year] INT NOT NULL,
     [FundsIn] DECIMAL(18,2) NOT NULL,

@@ -42,10 +42,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I have no existing commitments recorded in the forecasting service")]
         public void GivenIHaveNoExistingCommitments()
         {
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            Connection.Execute("Delete from Commitment where employerAccountId = @employerAccountId or employerAccountId = '112233'",
-                parameters, commandType: CommandType.Text);
+            DataContext.AccountProjectionCommitments.RemoveRange(DataContext.AccountProjectionCommitments
+                .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId || apc.Commitment.EmployerAccountId == 112233).ToList());
+            DataContext.Commitments.RemoveRange(DataContext.Commitments
+                .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId || commitment.EmployerAccountId == 112233).ToList());
+            DataContext.SaveChanges();
         }
 
         [Given(@"I have made the following payments")]
@@ -129,7 +130,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
                 var parameters = new DynamicParameters();
                 parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var payments = Connection.Query<Payment>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                var payments = Connection.Query<PaymentModel>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
 
                 foreach (var payment in Payments)
                 {

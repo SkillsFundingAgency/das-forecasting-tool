@@ -41,22 +41,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Balance\BalanceModel.cs" />
-    <Compile Include="Commitments\Commitment.cs" />
+    <Compile Include="Commitments\CommitmentModel.cs" />
     <Compile Include="Estimation\AccountEstimationModel.cs" />
     <Compile Include="Estimation\ApprenticeshipCourseType.cs" />
     <Compile Include="Estimation\ApprenticeshipToAdd.cs" />
     <Compile Include="Estimation\ApprenticeshipCourse.cs" />
     <Compile Include="Estimation\VirtualApprenticeship.cs" />
     <Compile Include="IDocument.cs" />
-    <Compile Include="Levy\LevyDeclaration.cs" />
+    <Compile Include="Levy\LevyDeclarationModel.cs" />
     <Compile Include="Payments\CalendarPeriod.cs" />
     <Compile Include="Payments\NamedCalendarPeriod.cs" />
     <Compile Include="Payments\EmployerPayment.cs" />
     <Compile Include="Payments\EmployerTotalCostOfTraining.cs" />
     <Compile Include="Payments\FundingSource.cs" />
-    <Compile Include="Payments\Payment.cs" />
-    <Compile Include="Projections\Account.cs" />
-    <Compile Include="Projections\AccountProjection.cs" />
+    <Compile Include="Payments\PaymentModel.cs" />
+    <Compile Include="Balance\Account.cs" />
+    <Compile Include="Projections\AccountProjectionCommitment.cs" />
+    <Compile Include="Projections\AccountProjectionModel.cs" />
     <Compile Include="Projections\ProjectionGenerationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -31,8 +31,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         public void GivenIMOnTheFundingProjectionPage()
         {
             this.downloadedFilesBefore = FileManager.getCurrentDownloadFiles();
-            var page = WebSite.NavigateToFundingProjectionPage();
-            Set(page);            
+            var accountHomepage = WebSite.NavigateToAccountHomePage();
+            var financePage = accountHomepage.OpenFinance();
+            var page = financePage.OpenFundingProjection();
+            Set(page);
         }
 
         [When(@"I select download as csv")]

@@ -96,10 +96,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Calculate Co-investment")]
-        public virtual void CalculateCo_Investment()
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after payment run")]
+        public virtual void CalculateCo_InvestmentAfterPaymentRun()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate Co-investment", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after payment run", ((string[])(null)));
 #line 16
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -159,17 +159,26 @@ this.FeatureBackground();
                         "2000",
                         "1200",
                         "6"});
+            table3.AddRow(new string[] {
+                        "Test Apprentice 5",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Yesterday",
+                        "2000",
+                        "1200",
+                        "6"});
 #line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 24
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 25
- testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 26
- testRunner.And("the balance should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 27
- testRunner.And("the employer co-investment amount is 10% of the negative balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the balance should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 28
+ testRunner.And("the employer co-investment amount is 10% of the negative balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 29
  testRunner.And("the government co-investment amount is 90% of the negative value", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

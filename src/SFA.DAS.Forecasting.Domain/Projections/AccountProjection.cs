@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
 {
     public class AccountProjection
     {
+        public long EmployerAccountId => _account.EmployerAccountId;
         private readonly Account _account;
         private readonly EmployerCommitments _employerCommitments;
-        private readonly List<AccountProjectionReadModel> _projections;
-        public ReadOnlyCollection<AccountProjectionReadModel> Projections => _projections.AsReadOnly();
+        private readonly List<AccountProjectionModel> _projections;
+        public ReadOnlyCollection<AccountProjectionModel> Projections => _projections.AsReadOnly();
         public AccountProjection(Account account, EmployerCommitments employerCommitments)
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
-            _projections = new List<AccountProjectionReadModel>();
+            _projections = new List<AccountProjectionModel>();
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
@@ -32,28 +34,40 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
         private void BuildProjections(DateTime periodStart, int numberOfMonths, ProjectionGenerationType projectionGenerationType)
         {
+            var startMonth = 0;
+
             _projections.Clear();
             var lastBalance = _account.Balance;
-            for (var i = 1; i <= numberOfMonths; i++)
+            for (var month = startMonth; month <= numberOfMonths; month++)
             {
-                var projection = CreateProjection(periodStart.AddMonths(i),
-                    projectionGenerationType == ProjectionGenerationType.LevyDeclaration && i == 1
-                        ? 0
-                        : _account.LevyDeclared, lastBalance, ProjectionGenerationType.LevyDeclaration);
+                var fundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
+                        ? 0 : _account.LevyDeclared;
+                var ignoreCostOfTraining = month == startMonth;
+
+                var projection = CreateProjection(
+                    periodStart.AddMonths(month),
+                    fundsIn,
+                    lastBalance, 
+                    ProjectionGenerationType.LevyDeclaration,
+                    ignoreCostOfTraining);
+
                 _projections.Add(projection);
                 lastBalance = projection.FutureFunds;
             }
         }
 
-        private AccountProjectionReadModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
             var commitments = totalCostOfTraning.Item2;
             commitments.AddRange(completionPayments.Item2);
             commitments = commitments.Distinct().ToList();
-            var balance = lastBalance + fundsIn - totalCostOfTraning.Item1 - completionPayments.Item1;
-            var projection = new AccountProjectionReadModel
+  
+            var cost = ignoreCostOfTraining ? 0 : totalCostOfTraning.Item1 + completionPayments.Item1;
+            var balance = lastBalance + fundsIn - cost;
+
+            var projection = new AccountProjectionModel
             {
                 FundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,
@@ -66,7 +80,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 FutureFunds = balance < 0 ? 0m : balance,
                 ProjectionCreationDate = DateTime.UtcNow,
                 ProjectionGenerationType = projectionGenerationType,
-                Commitments = commitments
+                Commitments = commitments.Select(commitmentId => new AccountProjectionCommitment { CommitmentId = commitmentId }).ToList()
             };
             return projection;
         }

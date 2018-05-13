@@ -7,12 +7,12 @@
             public int? StartMonth { get; set; }
             public int? StartYear { get; set; }
             public decimal? TotalCost { get; set; }
-
+            public string TotalCostAsString { get; set; }
             public string CourseId { get; set; }
             public ApprenticeshipCourse AppenticeshipCourse { get;set; }
-
+        
         public decimal? CalculatedTotalCap => AppenticeshipCourse?.FundingCap != null && ApprenticesCount.HasValue
-            ? AppenticeshipCourse.FundingCap * ApprenticesCount
-            : null;
+                ? AppenticeshipCourse.FundingCap * ApprenticesCount
+                : null;
     }
 }
