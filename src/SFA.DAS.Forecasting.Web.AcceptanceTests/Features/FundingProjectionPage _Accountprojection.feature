@@ -11,8 +11,6 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
   | Date   | Funds in | Cost Of Training	   | Completion Payments | Your Contribution | Government Contribution | Future Funds |
-  | Apr 18 | 14000    | 880                    | 32200               | 31000			 | 31000				   | 31000        |
-  | May 18 | 15000    | 880                    | 32200               | 17000			 | 17000				   | 17000        |
   | Jun 18 | 91000    | 1800                   | 10000               | 23000			 | 23000				   | 23000        |
   | Jul 18 | 21000    | 2350                   | 50000               | 23000			 | 23000				   | 23000        |
   | Aug 18 | 45200    | 850                    | 45000               | 1000				 | 1000					   | 1000         |
@@ -38,8 +36,6 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
  | Date   | Funds in | Cost Of Training | Completion Payments | Your Contribution | Government Contribution | Future Funds |
- | Apr 18 | 14000    | 880              | 32200               | 31000             | 31000                   | 31000        |
- | May 18 | 15000    | 880              | 32200               | 17000             | 17000                   | 17000        |
  | Jun 18 | 91000    | 1800             | 10000               | 23000             | 23000                   | 23000        |
  | Jul 18 | 21000    | 2350             | 50000               | 23000             | 23000                   | 23000        |
  | Aug 18 | 45200    | 850              | 45000               | 1000              | 1000                    | 1000         |
@@ -65,8 +61,6 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
   | Date   | Funds in | Cost Of Training	   | Completion Payments | Your Contribution | Government Contribution | Future Funds |
-  | Apr 18 | 14000    | 880                    | 32200               | 31000			 | 31000				   | 31000        |
-  | May 18 | 15000    | 880                    | 32200               | 17000			 | 17000				   | 17000        |
   | Jun 18 | 91000    | 1800                   | 10000               | 23000			 | 23000				   | 23000        |
   | Jul 18 | 21000    | 2350                   | 50000               | 23000			 | 23000				   | 23000        |
   | Aug 18 | 45200    | 850                    | 45000               | 1000				 | 1000					   | 1000         |

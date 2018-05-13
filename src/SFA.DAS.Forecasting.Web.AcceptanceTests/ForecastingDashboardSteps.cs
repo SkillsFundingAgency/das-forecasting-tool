@@ -15,14 +15,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
             EmployerHash = "M6PKPG";
             EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
             EmployeePassword = "Dell1507";
+            WebSite.SetEmployeeHash(EmployerHash);
             Console.WriteLine("Employer hash: M6PKPG");
         }
 
 		[Given(@"I have logged into my Apprenticeship Account")]
 		public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
-		{
-            //ScenarioContext.Current.Pending();
-            //WebSite.Authenticate(EmployerHash);  //TODO: add employer details here
+		{            
             var loginPage = WebSite.NavigateToLoginPage();
             loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 		}
@@ -36,15 +35,19 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 		[When(@"I navigate to the Landing page of the Forecasting dashboard")]
         public void WhenINavigateToTheLandingPageOfTheForecastingPortal()
         {
-            var dashboard = WebSite.NavigateToDashboard();
-            Set(dashboard);
+            var accountHomepage = WebSite.NavigateToAccountHomePage();
+            var financePage = accountHomepage.OpenFinance();
+            var page = financePage.OpenFundingProjection();
+            Set(page);            
         }
 
         [Then(@"the dashboard should be displayed")]
         public void ThenTheDashboardShouldBeDisplayed()
         {
-            var dashboard = Get<DashboardPage>();
-            Assert.IsTrue(dashboard.IsCurrentPage);
+            var page = Get<FundingProjectionPage>();            
+            Assert.IsTrue(page.AccountProjectionHeader.Displayed, "ERROR:The account projection header is not visible");
+            Assert.IsTrue(page.AccountProjectionTable.Displayed, "ERROR:The account projection table is not visible");
+
         }
     }
 }
