@@ -6,11 +6,13 @@ using NLog.Targets;
 using SFA.DAS.NLog.Logger;
 using System;
 using System.Configuration;
+using System.IO;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
     public class LoggerSetup
-    { 
+    {
         internal static NLogLogger Create(string functionPath, TraceWriter writer, Type type)
         {
             var appName = GetSetting("AppName");
@@ -19,7 +21,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             LogManager.Configuration = new LoggingConfiguration();
             LogManager.ThrowConfigExceptions = true;
 
-            if (IsDevEnvironment)
+            if (ConfigurationHelper.IsDevEnvironment)
                 AddLocalTarget(localLogPath, appName);
             else
                 AddRedisTarget(appName);
@@ -48,8 +50,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 
         private static void AddLocalTarget(string localLogPath, string appName)
         {
-            var logFilePath = GetSetting("NLog-InternalLogFile");
-            var layout = GetSetting("NLog-SimpleLayout");
+            var logFilePath = Path.Combine(localLogPath, "nlog-internal.{APPNAME}.log");
+            var layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}";
 
             InternalLogger.LogFile = logFilePath.Replace("{APPNAME}", appName);
 
@@ -78,14 +80,9 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             LogManager.Configuration = config;
         }
 
-        private static string GetSetting(string key)
+        private static string GetSetting(string key, bool isSensitive = false)
         {
-            return ConfigurationManager.AppSettings[key];
+            return ConfigurationHelper.GetAppSetting(key, isSensitive);
         }
-
-        private static bool IsDevEnvironment =>
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
     }
 }
