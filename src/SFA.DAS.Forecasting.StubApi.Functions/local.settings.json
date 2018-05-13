@@ -1,8 +1,11 @@
 {
   "IsEncrypted": false,
   "Values": {
+    "AppName": "das-forecasting-stubapi-f",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "AzureWebJobsDashboard": "UseDevelopmentStorage=true"
+    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
+    "LogDir": "C:\\Logs\\SFA\\Forecasting",
+    "MinLogLevel": "Trace"
   },
   "Host": {
     "LocalHttpPort": 7090,

@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
         internal static NLogLogger Create(string functionPath, TraceWriter writer, Type type)
         {
             var appName = GetSetting("AppName");
-            var localLogPath = GetSetting("NLog-Localdir");
+            var localLogPath = GetSetting("LogDir");
 
             LogManager.Configuration = new LoggingConfiguration();
             LogManager.ThrowConfigExceptions = true;
@@ -41,28 +41,23 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
                 IncludeAllProperties = true,
                 KeySettingsKey = "LoggingRedisKey",
                 Layout = "${message}"
-
             };
 
             LogManager.Configuration.AddTarget(target);
-            LogManager.Configuration.AddRule(LogLevel.Info, LogLevel.Fatal, "RedisLog");
+            LogManager.Configuration.AddRule(GetMinLogLevel(), LogLevel.Fatal, "RedisLog");
         }
 
         private static void AddLocalTarget(string localLogPath, string appName)
         {
-            var logFilePath = Path.Combine(localLogPath, "nlog-internal.{APPNAME}.log");
-            var layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}";
-
-            InternalLogger.LogFile = logFilePath.Replace("{APPNAME}", appName);
-
+            InternalLogger.LogFile = Path.Combine(localLogPath, $"{appName}\\nlog-internal.{appName}.log");
             var fileTarget = new FileTarget("Disk")
             {
-                FileName = localLogPath + "/logs/${shortdate}/" + appName + ".${shortdate}.log",
-                Layout = layout
+                FileName = Path.Combine(localLogPath, $"{appName}\\{appName}.${{shortdate}}.log"),
+                Layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}"
             };
 
             LogManager.Configuration.AddTarget(fileTarget);
-            LogManager.Configuration.AddRule(LogLevel.Trace, LogLevel.Fatal, "Disk");
+            LogManager.Configuration.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
         }
 
         private static void AddAzureTarget(TraceWriter writer)
@@ -74,9 +69,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 
             azureTarget.Layout = @"${level:uppercase=true}|${threadid:padCharacter=0:padding=3}|${message}";
 
-            var rule1 = new LoggingRule("*", LogLevel.Trace, azureTarget);
+            var rule1 = new LoggingRule("*", GetMinLogLevel(), azureTarget);
             config.LoggingRules.Add(rule1);
-
             LogManager.Configuration = config;
         }
 
@@ -84,5 +78,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
         {
             return ConfigurationHelper.GetAppSetting(key, isSensitive);
         }
+
+        private static LogLevel GetMinLogLevel() => LogLevel.FromString(GetSetting("MinLogLevel") ?? "Info");
     }
 }
