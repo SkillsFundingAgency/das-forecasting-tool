@@ -11,26 +11,40 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 {
-    [TestFixture]
     public class AccountEstimationProjectionRepositoryTests
     {
+        private Mock<ICurrentBalanceRepository> _balanceRepository;
+        private Mock<IAccountBalanceService> _balanceService;
+        private Mock<IAccountProjectionDataSession> _accountProjectionRepository;
+        private Mock<IVirtualApprenticeshipValidator> _virtualApprenticeshipValidator;
+
+        private AccountEstimationProjectionRepository _sut;
+
+        [SetUp]
+        public void Arrange()
+        {
+            _balanceRepository = new Mock<ICurrentBalanceRepository>();
+            _balanceService = new Mock<IAccountBalanceService>();
+            _accountProjectionRepository = new Mock<IAccountProjectionDataSession>();
+            _virtualApprenticeshipValidator = new Mock<IVirtualApprenticeshipValidator>();
+
+            var balance = new CurrentBalance(new BalanceModel{RemainingTransferBalance = 1000, TransferAllowance = 15000}, _balanceService.Object);
+            _balanceRepository.Setup(m => m.Get(It.IsAny<long>())).ReturnsAsync(balance);
+
+            _accountProjectionRepository.Setup(x => x.Get(It.IsAny<long>())).ReturnsAsync(new List<AccountProjectionModel>());
+
+            _sut = new AccountEstimationProjectionRepository(_balanceRepository.Object, _accountProjectionRepository.Object);
+        }
 
         [Test]
         public async Task Apprenticeships_from_estimation_should_be_transfer_from_sender()
         {
             // Arrange
-            var balanceRepository = new Mock<ICurrentBalanceRepository>();
-            var balanceService = new Mock<IAccountBalanceService>();
-
-            var balance = new CurrentBalance(new BalanceModel(), balanceService.Object);
-
-            balanceRepository.Setup(m => m.Get(It.IsAny<long>()))
-                .Returns(Task.FromResult(balance));
-            var sut = new AccountEstimationProjectionRepository(balanceRepository.Object);
-
             var accountEstimationModel = new AccountEstimationModel
             {
                 EmployerAccountId = 12345,
@@ -66,20 +80,66 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     }
                 }
             };
-            var virtualApprenticeshipValidator = new Mock<IVirtualApprenticeshipValidator>();
 
             // Act
-            var accountEstimation = new AccountEstimation(accountEstimationModel, virtualApprenticeshipValidator.Object);
-            var result = await sut.Get(accountEstimation);
-
+            var accountEstimation =
+                new AccountEstimation(accountEstimationModel, _virtualApprenticeshipValidator.Object);
+            var result = await _sut.Get(accountEstimation);
             result.BuildProjections();
 
             // Assert
             result.Projections.Count().Should().Be(26);
-            result.Projections.All(m => m.TransferOutCompletionPayments > 0 || m.TransferOutTotalCostOfTraining > 0).Should().BeTrue();
+            result.Projections.All(m => m.TransferOutCompletionPayments > 0 || m.TransferOutTotalCostOfTraining > 0)
+                .Should().BeTrue();
+            result.Projections.Any(m => m.TransferInTotalCostOfTraining > 0 || m.TransferInTotalCostOfTraining > 0)
+                .Should().BeFalse();
+            result.Projections.Any(m => m.CompletionPayments > 0).Should().BeFalse();
+        }
 
-            result.Projections.Any(m => m.TransferInTotalCostOfTraining > 0 || m.TransferInTotalCostOfTraining > 0).Should().BeFalse();
-            result.Projections.Any(m => m.CompletionPayments > 0 ).Should().BeFalse();
+        [Test]
+        public async Task Then_The_Actual_Projections_Are_Taken_From_The_Repository()
+        {
+            //Arrange
+            var expectedEmployerAccountId = 4332255;
+            var accountProjetionModel =
+                new List<AccountProjectionModel>
+                {
+                    new AccountProjectionModel
+                    {
+                        Month = (short)(DateTime.Today.Month + 1),
+                        Year = DateTime.Today.Year,
+                        TransferOutTotalCostOfTraining = 10m,
+                        TransferOutCompletionPayments = 0m
+                    }
+                };
+            _accountProjectionRepository.Setup(x => x.Get(It.IsAny<long>())).ReturnsAsync(accountProjetionModel);
+            var accountEstimationModel = new AccountEstimationModel {EmployerAccountId = expectedEmployerAccountId, Apprenticeships = new List<VirtualApprenticeship>
+            {
+                new VirtualApprenticeship
+                {
+                    ApprenticesCount = 1,
+                    CourseId = "7",
+                    CourseTitle = "Test Tester",
+                    Id = "1",
+                    Level = 10,
+                    StartDate = DateTime.Today,
+                    TotalCompletionAmount = 2000,
+                    TotalCost = 10000,
+                    TotalInstallmentAmount = 120,
+                    TotalInstallments = 1,
+                    FundingSource = Models.Payments.FundingSource.Levy
+                }
+            }
+            };
+
+            //Act
+            var actual = await _sut.Get(new AccountEstimation(accountEstimationModel, _virtualApprenticeshipValidator.Object));
+            actual.BuildProjections();
+
+            //Assert
+            _accountProjectionRepository.Verify(x => x.Get(expectedEmployerAccountId), Times.Once());
+            Assert.AreEqual(2, actual.Projections.Count);
+            Assert.AreEqual(870, actual.Projections.Last().FutureFunds);
         }
     }
 }
