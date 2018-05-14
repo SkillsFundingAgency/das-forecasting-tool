@@ -17,7 +17,7 @@
 
     <main id="content" role="main" tabindex="-1">
         <div id="estimate-add-apprenticeship">
-            @*<a href="#" class="link-back">Back</a>*@
+            <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
             @Html.HiddenFor(model => model.Name)
             @Html.HiddenFor(model => model.PreviousCourseId)
 
@@ -170,7 +170,7 @@
 
                     <div class="column-full">
                         <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
-                        @*<a class="button text-link pull-right" href="#" style="float: right;">Cancel</a>*@
+                        <a class="button text-link pull-right" href="cancel" style="float: right;">Cancel</a>
 
                     </div>
                 </div>
