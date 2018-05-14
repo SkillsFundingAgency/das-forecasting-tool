@@ -149,10 +149,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 SendingEmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = DateTime.Today,
+                StartDate = DateTime.Today.AddMonths(-1),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(2),
                 MonthlyInstallment = 10,
-                NumberOfInstallments = 2
+                NumberOfInstallments = 2,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
             var employerCommitments = GetEmployerCommitments();
 
