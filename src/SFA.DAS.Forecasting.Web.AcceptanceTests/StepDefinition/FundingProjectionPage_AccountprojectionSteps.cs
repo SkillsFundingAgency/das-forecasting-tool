@@ -15,13 +15,21 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
     [Binding]
     public class FundingProjectionPage_AccountprojectionSteps : StepsBase
     {
-        private string[] headers = {
+        private string[] expectedHeaders = {
             "Date",
             "Funds in",
             "Cost of training",
             "Completion payments",
-            "Your contribution",
-            "Government contribution",
+            "Your contribution (10%)",
+            "Government contribution (90%)",
+            "Future funds"
+        };
+
+        private string[] expectedHeadersWithoutCoInvestment = {
+            "Date",
+            "Funds in",
+            "Cost of training",
+            "Completion payments",
             "Future funds"
         };
 
@@ -59,10 +67,23 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var page = Get<FundingProjectionPage>();
             var table = Get<List<TestAccountProjection>>();
             var pageHeaders = page.GetAccountProjectionHeaders();
-            Assert.AreEqual(pageHeaders.Length, headers.Length);
+            Assert.AreEqual(expectedHeaders.Length, pageHeaders.Length);
             foreach (var header in pageHeaders)
             {
-                Assert.Contains(header, headers, "ERROR:The account projection does not have the correct cloumns");
+                Assert.Contains(header, expectedHeaders, "ERROR:The account projection does not have the correct cloumns");
+            }
+        }
+
+        [Then(@"the Account projection has the correct columns without Co-Investment")]
+        public void ThenTheAccountProjectionHasTheCorrectColumnsWithoutCoInvestment()
+        {
+            var page = Get<FundingProjectionPage>();
+            var table = Get<List<TestAccountProjection>>();
+            var pageHeaders = page.GetAccountProjectionHeaders();
+            Assert.AreEqual(expectedHeadersWithoutCoInvestment.Length, pageHeaders.Length);
+            foreach (var header in pageHeaders)
+            {
+                Assert.Contains(header, expectedHeadersWithoutCoInvestment, "ERROR:The account projection does not have the correct cloumns");
             }
         }
 
@@ -100,7 +121,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var table = Get<List<TestAccountProjection>>();
             var page = Get<FundingProjectionPage>();
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            foreach (var headerName in headers)
+            foreach (var headerName in expectedHeaders)
             {
                 var datePageValues = page.GetHeaderValues(headerName);
                 Assert.AreEqual(datePageValues.Length, table.Count);

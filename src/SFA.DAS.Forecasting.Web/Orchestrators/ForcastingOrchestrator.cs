@@ -49,6 +49,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 BalanceStringArray = string.Join(",", accountProjection.Select(m => m.Balance.ToString())),
                 DatesStringArray = string.Join(",", accountProjection.Select(m => m.Date.ToString("yyyy-MM-dd"))),
                 OverdueCompletionPayments = overdueCompletionPayments
+                DisplayCoInvestment = balance.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0)
             };
         }
 
