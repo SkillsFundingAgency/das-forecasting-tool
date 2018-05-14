@@ -454,29 +454,11 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("FundingProjection completion payments overdue")]
-        public virtual void FundingProjectionCompletionPaymentsOverdue()
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjection completion payments overdue", ((string[])(null)));
-        {
-#line 91
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
-#line 92
- testRunner.Given("I have completion payments of £ 2401 on commitments without stop date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 93
-#line 94
- testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
- testRunner.Then("I see Pending completion payments with the amount of £ 2401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-            this.ScenarioCleanup();
-        }
-        [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Hide Co-investment columns")]
         public virtual void HideCo_InvestmentColumns()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Hide Co-investment columns", ((string[])(null)));
-#line 89
+#line 83
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -593,16 +575,35 @@ this.FeatureBackground();
                         "0",
                         "0",
                         "1000"});
-#line 90
+#line 84
   testRunner.Given("I have generated the following projections", ((string)(null)), table4, "Given ");
-#line 106
+#line 100
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 107
+#line 101
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 108
+#line 102
   testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 109
+#line 103
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("FundingProjection completion payments overdue")]
+        public virtual void FundingProjectionCompletionPaymentsOverdue()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjection completion payments overdue", ((string[])(null)));
+#line 105
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 106
+ testRunner.Given("I have completion payments of £ 2401 on commitments without stop date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 107
+ testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 108
+ testRunner.Then("I see Pending completion payments with the amount of £ 2401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

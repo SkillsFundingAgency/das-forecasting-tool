@@ -22,7 +22,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   | Feb 19 | 10000    | 1800                   | 10000               | 1000				 | 1000					   | 1000         |
   | Mar 19 | 15000    | 1800                   | 45000               | 31000			 | 31000				   | 31000        |
   | Apr 19 | 42500    | 2100                   | 10000               | 1000				 | 1000					   | 1000         |  
-
+   
   And I'm on the Funding projection page
   When the Account projection is displayed
   Then the Account projection has the correct columns	
