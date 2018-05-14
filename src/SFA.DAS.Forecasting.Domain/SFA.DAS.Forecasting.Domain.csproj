@@ -56,6 +56,7 @@
     <Compile Include="Commitments\Validation\CommitmentValidator.cs" />
     <Compile Include="Estimations\AccountEstimation.cs" />
     <Compile Include="Estimations\AccountEstimationProjection.cs" />
+    <Compile Include="Estimations\AccountEstimationProjectionCommitments.cs" />
     <Compile Include="Estimations\AccountEstimationProjectionRepository.cs" />
     <Compile Include="Estimations\AccountEstimationRepository.cs" />
     <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
