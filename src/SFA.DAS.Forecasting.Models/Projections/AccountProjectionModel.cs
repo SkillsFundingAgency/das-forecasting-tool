@@ -35,6 +35,8 @@ namespace SFA.DAS.Forecasting.Models.Projections
         public decimal CompletionPayments { get; set; } // CompletionPayments
         public decimal TransferInCompletionPayments { get; set; }
         public decimal TransferOutCompletionPayments { get; set; }
+        public decimal CommittedTransferCost { get; set; }
+        public decimal CommittedTransferCompletionCost { get; set; }
         public decimal FutureFunds { get; set; } // FutureFunds
         public decimal CoInvestmentEmployer { get; set; } // CoInvestmentEmployer
         public decimal CoInvestmentGovernment { get; set; } // CoInvestmentGovernment
