@@ -6,6 +6,7 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
@@ -45,7 +46,10 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 }
             }
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);
-            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), employerCommitments);
+            var actualAccountProjections = new List<AccountProjectionModel>();
+            var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualAccountProjections);
+
+            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments);
         }
     }
 }
