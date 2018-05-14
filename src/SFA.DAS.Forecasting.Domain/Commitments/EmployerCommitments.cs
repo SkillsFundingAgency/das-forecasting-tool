@@ -1,67 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
     public partial class EmployerCommitments
     {
-        private readonly long _employerAccountId;
-        private readonly IEnumerable<CommitmentModel> _commitments;
+        public long EmployerAccountId { get; private set; }
+        private readonly List<CommitmentModel> _commitments;
 
-        private IEnumerable<CommitmentModel> CommitmentsReceived => _commitments
-                                        .Where(m => m.EmployerAccountId == _employerAccountId)
-                                        .Where(m => m.FundingSource == Models.Payments.FundingSource.Levy);
+        private readonly ReadOnlyCollection<CommitmentModel> _levyFundedCommitments;
+        private readonly ReadOnlyCollection<CommitmentModel> _receivingEmployerTransferCommitments;
+        private readonly ReadOnlyCollection<CommitmentModel> _sendingEmployerTransferCommitments;
 
-        private IEnumerable<CommitmentModel> CommitmentsTransferReceived => _commitments
-                                        .Where(m => m.EmployerAccountId == _employerAccountId)
-                                        .Where(m => m.FundingSource == Models.Payments.FundingSource.Transfer);
-
-        private IEnumerable<CommitmentModel> CommitmentsTransferSent => _commitments.Where(m => m.SendingEmployerAccountId == _employerAccountId);
-
-
-        public EmployerCommitments(
-            long employerAccountId,
-            List<CommitmentModel> commitments)
+        public EmployerCommitments(long employerAccountId, List<CommitmentModel> commitments)
         {
-            _employerAccountId = employerAccountId;
+            EmployerAccountId = employerAccountId;
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
+            _levyFundedCommitments = _commitments.Where(commitment =>
+                    commitment.EmployerAccountId == EmployerAccountId &&
+                    commitment.FundingSource == FundingSource.Levy)
+                .ToList()
+                .AsReadOnly();
+            _receivingEmployerTransferCommitments = _commitments.Where(commitment => 
+                    commitment.EmployerAccountId == EmployerAccountId &&
+                    commitment.FundingSource == FundingSource.Transfer)
+                .ToList()
+                .AsReadOnly();
+            _sendingEmployerTransferCommitments = _commitments.Where(commitment => 
+                    commitment.SendingEmployerAccountId == EmployerAccountId &&
+                    commitment.FundingSource == FundingSource.Transfer)
+                .ToList()
+                .AsReadOnly();
         }
 
         public virtual CostOfTraining GetTotalCostOfTraining(DateTime date)
         {
-            Func<CommitmentModel, bool> filterCurrent = c =>
+            bool FilterCurrent(CommitmentModel c) =>
                       c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
                       c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
 
-            var commitmentsReceived = CommitmentsReceived.Where(filterCurrent);
+            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+
+            var includedCommitments = new List<CommitmentModel>();
+            includedCommitments.AddRange(levyFundedCommitments);
+            includedCommitments.AddRange(sendingEmployerCommitments);
+            includedCommitments.AddRange(receivingEmployerCommitments);
 
             return new CostOfTraining
             {
-                LevyOut = commitmentsReceived.Sum(c => c.MonthlyInstallment),
-                TransferOut = CommitmentsTransferSent.Where(filterCurrent)
-                                                     .Sum(m => m.MonthlyInstallment),
-                CommitmentIds = commitmentsReceived.Select(c => c.Id),
-                TransferIn = CommitmentsTransferReceived.Where(filterCurrent)
-                                                        .Sum(m => m.MonthlyInstallment)
+                LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment),
+                TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
+                TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) +
+                              receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
+                CommitmentIds = includedCommitments.Select(commitment => commitment.Id).Distinct().ToList(),
             };
         }
 
         public virtual CompletionPayments GetTotalCompletionPayments(DateTime date)
         {
-            Func<CommitmentModel, bool> filterCurrent = c => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
+            Func<CommitmentModel, bool> filterCurrent = c =>
+                c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
 
-            var commitmentsReceived = CommitmentsReceived.Where(filterCurrent);
+            var commitmentsReceived = _levyFundedCommitments.Where(filterCurrent);
 
             return new CompletionPayments
             {
                 LevyCompletionPaymentOut = commitmentsReceived.Sum(c => c.CompletionAmount),
-                TransferCompletionPaymentOut = CommitmentsTransferSent.Where(filterCurrent)
+                TransferCompletionPaymentOut = _sendingEmployerTransferCommitments.Where(filterCurrent)
                                                                       .Sum(m => m.CompletionAmount),
                 CommitmentIds = commitmentsReceived.Select(c => c.Id).ToList(),
-                TransferCompletionPaymentIn = CommitmentsTransferReceived.Where(filterCurrent)
+                TransferCompletionPaymentIn = _receivingEmployerTransferCommitments.Where(filterCurrent)
                                                                          .Sum(m => m.CompletionAmount)
             };
         }

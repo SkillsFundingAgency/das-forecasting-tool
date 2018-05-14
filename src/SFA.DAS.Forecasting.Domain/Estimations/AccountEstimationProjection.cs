@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 .Concat(completionPayments.CommitmentIds)
                 .Distinct();
 
-            var costOfTraining = totalCostOfTraning.LevyOut + totalCostOfTraning.TransferOut;
+            var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;
 
             var balance = lastBalance;
             var projection = new AccountProjectionModel
