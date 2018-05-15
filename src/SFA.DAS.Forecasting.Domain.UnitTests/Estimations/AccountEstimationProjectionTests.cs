@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMoq;
 using NUnit.Framework;
@@ -7,6 +8,7 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
@@ -110,6 +112,16 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         }
 
         [Test]
+        public void Then_The_Projections_Are_Assigned_To_The_AccountEstimationProjectionModel()
+        {
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            estimationProjection.BuildProjections();
+
+            Assert.IsNotNull(estimationProjection);
+            Assert.IsAssignableFrom<ReadOnlyCollection<AccountEstimationProjectionModel>>(estimationProjection.Projections);
+        }
+
+        [Test]
         public void First_Month_Should_Be_Earliest_Payment_Date()
         {
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
@@ -171,7 +183,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             estimationProjection.BuildProjections();
             var projectionCommittedTransferCost =
-                estimationProjection.Projections.Take(2).Sum(c => c.CommittedTransferCost); //TODO: Review this test
+                estimationProjection.Projections.Take(2).Sum(c => c.ActualCommittedTransferCost);
 
             Assert.IsNotNull(projectionCommittedTransferCost);
             Assert.AreEqual(20m, projectionCommittedTransferCost);

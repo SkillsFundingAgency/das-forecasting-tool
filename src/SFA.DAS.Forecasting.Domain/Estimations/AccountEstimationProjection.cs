@@ -5,13 +5,14 @@ using System.Linq;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
     public interface IAccountEstimationProjection
     {
-        ReadOnlyCollection<AccountProjectionModel> Projections { get; }
+        ReadOnlyCollection<AccountEstimationProjectionModel> Projections { get; }
 
         void BuildProjections();
     }
@@ -20,9 +21,9 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     {
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;
-        private readonly List<AccountProjectionModel> _projections;
+        private readonly IList<AccountEstimationProjectionModel> _projections;
         private readonly IList<AccountProjectionModel> _actualAccountProjections;
-        public ReadOnlyCollection<AccountProjectionModel> Projections => _projections.AsReadOnly();
+        public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _projections.ToList().AsReadOnly();
         public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments)
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
@@ -32,7 +33,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             }
             _virtualEmployerCommitments = accountEstimationProjectionCommitments.VirtualEmployerCommitments ?? throw new ArgumentNullException(nameof(accountEstimationProjectionCommitments.VirtualEmployerCommitments));
             _actualAccountProjections = accountEstimationProjectionCommitments.ActualAccountProjections ?? throw new ArgumentNullException(nameof(accountEstimationProjectionCommitments.ActualAccountProjections));
-            _projections = new List<AccountProjectionModel>();
+            _projections = new List<AccountEstimationProjectionModel>();
         }
 
         public void BuildProjections()
@@ -40,7 +41,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             _projections.Clear();
             var lastBalance = _account.RemainingTransferBalance;
             var startDate = _virtualEmployerCommitments.GetEarliestCommitmentStartDate().GetStartOfMonth();
-            var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(1).GetStartOfMonth();
+            var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(2).GetStartOfMonth();
             if (endDate < startDate)
                 throw new InvalidOperationException($"The start date for the earliest commitment is after the last planned end date. Account: {_account.EmployerAccountId}, Start date: {startDate}, End date: {endDate}");
 
@@ -51,29 +52,32 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                     lastBalance = _account.TransferAllowance;
                 var projection = CreateProjection(projectionDate, lastBalance);
                 _projections.Add(projection);
-                lastBalance = projection.FutureFunds - projection.TotalCostOfTraining - projection.CompletionPayments - projection.CommittedTransferCost - projection.CommittedTransferCompletionCost;
+                lastBalance = CalculateLastBalance(projection);
                 projectionDate = projectionDate.AddMonths(1);
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal lastBalance)
+        private static decimal CalculateLastBalance(AccountEstimationProjectionModel projection)
+        {
+            return projection.FutureFunds - 
+                projection.TotalCostOfTraining  - 
+                projection.CompletionPayments - 
+                projection.ActualCommittedTransferCost - 
+                projection.TransferOutCompletionPayments - 
+                projection.ActualCommittedTransferCompletionCost;
+        }
+
+        private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal lastBalance)
         {
             var totalCostOfTraning = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
             var actualAccountProjection = _actualAccountProjections.FirstOrDefault(c=>c.Month == period.Month && c.Year == period.Year);
             
-            var commitments =
-                totalCostOfTraning.CommitmentIds
-                .Concat(completionPayments.CommitmentIds)
-                .Distinct();
-
             var costOfTraining = totalCostOfTraning.LevyOut + totalCostOfTraning.TransferOut;
 
             var balance = lastBalance;
-            var projection = new AccountProjectionModel
+            var projection = new AccountEstimationProjectionModel
             {
-                FundsIn = _account.LevyDeclared,
-                EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
                 TotalCostOfTraining = costOfTraining,
@@ -81,18 +85,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
                 CompletionPayments = completionPayments.LevyCompletionPaymentOut,
-                TransferInCompletionPayments = completionPayments.TransferCompletionPaymentIn,
                 TransferOutCompletionPayments = completionPayments.TransferCompletionPaymentOut,
 
-                CommittedTransferCost = actualAccountProjection?.TransferOutTotalCostOfTraining ?? 0m,
-                CommittedTransferCompletionCost = actualAccountProjection?.TransferOutCompletionPayments ?? 0m,
+                ActualCommittedTransferCost = actualAccountProjection?.TransferOutTotalCostOfTraining ?? 0m,
+                ActualCommittedTransferCompletionCost = actualAccountProjection?.TransferOutCompletionPayments ?? 0m,
 
-                CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
-                CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,
-                ProjectionCreationDate = DateTime.UtcNow,
-                ProjectionGenerationType = (short)ProjectionGenerationType.PayrollPeriodEnd,
-                Commitments = commitments.Select(id => new AccountProjectionCommitment { CommitmentId = id }).ToList()
+                
             };
             return projection;
         }
