@@ -5,7 +5,6 @@ using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -60,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 TransferAllowances = estimationProjector?.Projections?.Select(o => new EstimationTransferAllowanceVewModel
                 {
                     Date = new DateTime(o.Year, o.Month, 1),
-                    Cost = o.TotalCostOfTraining+o.CompletionPayments,
+                    Cost = o.TotalCostOfTraining+o.CompletionPayments + o.TransferOutCompletionPayments,
                     RemainingAllowance = o.FutureFunds
                 })
             };

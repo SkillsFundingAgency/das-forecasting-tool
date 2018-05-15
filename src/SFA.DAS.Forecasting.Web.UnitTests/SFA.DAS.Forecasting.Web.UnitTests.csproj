@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DateTimeExtensionsTests.cs" />
+    <Compile Include="OrchestratorTests\EstimationOrchestratorTests.cs" />
     <Compile Include="OrchestratorTests\ForecastingOrchestratorTests.cs" />
     <Compile Include="OrchestratorTests\AddApprenticeshipOrchestatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
