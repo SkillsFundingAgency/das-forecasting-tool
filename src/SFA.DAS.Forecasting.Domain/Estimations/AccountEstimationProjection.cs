@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 .Concat(completionPayments.CommitmentIds)
                 .Distinct();
 
-            var costOfTraining = totalCostOfTraning.LevyOut + totalCostOfTraning.TransferOut;
+            var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;
 
             var balance = lastBalance;
             var projection = new AccountProjectionModel
@@ -74,9 +74,9 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                CompletionPayments = completionPayments.LevyCompletionPaymentOut,
-                TransferInCompletionPayments = completionPayments.TransferCompletionPaymentIn,
-                TransferOutCompletionPayments = completionPayments.TransferCompletionPaymentOut,
+                CompletionPayments = completionPayments.LevyFundedCompletionPayment,
+                TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
+                TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
