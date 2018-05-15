@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using SFA.DAS.Forecasting.Models.Projections;
-
-namespace SFA.DAS.Forecasting.Models.Estimation
+﻿namespace SFA.DAS.Forecasting.Models.Estimation
 {
     public class AccountEstimationProjectionModel
     {
