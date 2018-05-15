@@ -143,6 +143,34 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             }, "Failed to find all the payments.");
         }
 
+        [Then(@"the Forecasting Payment service should store the payment declarations receiving employer (.*) from sending employer (.*)")]
+        public void ThenTheForecastingPaymentServiceShouldStoreThePaymentDeclarationsReceivingEmployerFromSendingEmployer(int receivningEmployerId, int sendingEmployerId)
+        {
+            WaitForIt(() =>
+            {
+                Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
+                var parameters = new DynamicParameters();
+                parameters.Add("@employerAccountId", receivningEmployerId, DbType.Int64);
+                parameters.Add("@sendingEmployerAccountId", sendingEmployerId, DbType.Int64);
+                var sql = @"
+                        Select* from Payment 
+                        where employerAccountId = @employerAccountId 
+                        and SendingEmployerAccountId = @sendingEmployerAccountId 
+                        and FundingSource = 2
+                        ";
+                var payments = Connection.Query<PaymentModel>(sql, parameters, commandType: CommandType.Text).ToList();
+
+                foreach (var payment in Payments)
+                {
+                    if (payments.Any(p => payment.PaymentId == p.ExternalPaymentId)) continue;
+                    Console.WriteLine($"Payment not found. Payment: {payment.ToJson()}");
+                    return false;
+                }
+                return true;
+            }, "Failed to find all the payments.");
+        }
+
+
         [Then(@"the Forecasting Payment service should store the commitment declarations")]
         public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarations()
         {
@@ -162,6 +190,36 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 return false;
             }, "Failed to find all the commitments.");
         }
+
+        [Then(@"the Forecasting Payment service should store the commitment declarations for receiving employer (.*) from sending employer (.*)")]
+        public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarationsForReceivingEmployerFromSendingEmployer(int receivningEmployerId, int sendingEmployerId)
+        {
+            WaitForIt(() =>
+            {
+                foreach (var payment in Payments)
+                {
+                    Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
+                    parameters.Add("@apprenticeshipId", payment.ApprenticeshipId, DbType.Int64);
+                    parameters.Add("@employerAccountId", receivningEmployerId, DbType.Int64);
+                    parameters.Add("@sendingEmployerAccountId", sendingEmployerId, DbType.Int64);
+                    var sql = @"
+                        Select Count(*) from Commitment 
+                        where employerAccountId = @employerAccountId 
+                        and ApprenticeshipId = @apprenticeshipId 
+                        and SendingEmployerAccountId = @sendingEmployerAccountId 
+                        and FundingSource = 2
+                        and ProviderId = @providerId
+                    ";
+                    var count = Connection.ExecuteScalar<int>(sql,
+                        parameters, commandType: CommandType.Text);
+                    return count == 1;
+                }
+                return false;
+            }, "Failed to find all the commitments.");
+        }
+
 
         [Then(@"the Forecasting Payment service should not store the payments")]
         public void ThenTheForecastingPaymentServiceShouldNotStoreThePaymentDeclarations()

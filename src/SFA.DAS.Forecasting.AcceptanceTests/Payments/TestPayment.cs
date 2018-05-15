@@ -9,6 +9,5 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
         public int ProviderId { get; set; }
         public decimal PaymentAmount { get; set; }
         public CalendarPeriod DeliveryPeriod { get; set; }
-        public long SendingEmployerAccountId { get; set; }
     }
 }
