@@ -25,7 +25,7 @@ Scenario: AC1: receiving employer account has transfers in
 	Then the account projection should be generated
 	And should have following projections from completion
 	| MonthsFromNow | TotalCostOfTraining | TransferInTotalCostOfTraining | TransferOutTotalCostOfTraining | TransferOutCompletionPayments | TransferInCompletionPayments | CompletionPayments |
-	| 5             | 6000                | 2000                          | 2000                           | 0                             | 0                            | 0                  |
-	| 6             | 6000                | 2000                          | 2000                           | 0                             | 0                            | 0                  |
-	| 7             | 0                   | 0                             | 0                              | 1200                          | 1200                         | 2400               |
+	| 5             | 8000                | 2000                          | 4000                           | 0                             | 0                            | 0                  |
+	| 6             | 8000                | 2000                          | 4000                           | 0                             | 0                            | 0                  |
+	| 7             | 0                   | 0                             | 0                              | 2400                          | 1200                         | 4800               |
 	| 8             | 0                   | 0                             | 0                              | 0                             | 0                            | 0                  |

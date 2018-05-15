@@ -69,8 +69,6 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var complPayment = completionPayments.LevyFundedCompletionPayment + completionPayments.TransferOutCompletionPayment;
 
             var moneyOut = ignoreCostOfTraining ? 0 : costOfTraining + complPayment;
-
-
             var moneyIn = lastBalance + fundsIn + totalCostOfTraning.TransferIn;
 
             var balance = moneyIn - moneyOut;
@@ -84,7 +82,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 TotalCostOfTraining = costOfTraining,
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                CompletionPayments = completionPayments.LevyFundedCompletionPayment,
+                CompletionPayments = complPayment,
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,

@@ -207,7 +207,7 @@ this.FeatureBackground();
                         "0",
                         "4800",
                         "0",
-                        "0"});
+                        "4800"});
             table4.AddRow(new string[] {
                         "8",
                         "0",
@@ -231,7 +231,7 @@ this.FeatureBackground();
                         "0",
                         "1200",
                         "0",
-                        "0"});
+                        "1200"});
             table4.AddRow(new string[] {
                         "20",
                         "0",

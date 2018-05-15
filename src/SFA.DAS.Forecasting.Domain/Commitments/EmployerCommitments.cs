@@ -84,7 +84,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             {
                 LevyFundedCompletionPayment = levyFundedCommitments.Sum(c => c.CompletionAmount),
                 TransferInCompletionPayment = receivingEmployerCommitments.Sum(m => m.CompletionAmount),
-                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount),
+                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount) + receivingEmployerCommitments.Sum(m => m.CompletionAmount),
                 CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }
