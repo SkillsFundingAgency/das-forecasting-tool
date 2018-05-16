@@ -132,7 +132,7 @@ this.FeatureBackground();
                         "6",
                         "999",
                         "12345",
-                        "2"});
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "Test Apprentice 1",
                         "Test Course",
@@ -144,7 +144,7 @@ this.FeatureBackground();
                         "6",
                         "999",
                         "12345",
-                        "2"});
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "Test Apprentice 2",
                         "Test Course 2",
@@ -156,7 +156,7 @@ this.FeatureBackground();
                         "6",
                         "999",
                         "12345",
-                        "2"});
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "Test Apprentice 3",
                         "Test Course",
@@ -168,7 +168,7 @@ this.FeatureBackground();
                         "6",
                         "999",
                         "12345",
-                        "2"});
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "Test Apprentice 4",
                         "Test Course 2",
@@ -180,7 +180,7 @@ this.FeatureBackground();
                         "6",
                         "999",
                         "12345",
-                        "2"});
+                        "Transfer"});
 #line 18
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
 #line 25

@@ -72,20 +72,20 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             var totalCostOfTraning = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
             var actualAccountProjection = _actualAccountProjections.FirstOrDefault(c=>c.Month == period.Month && c.Year == period.Year);
-            
-            var costOfTraining = totalCostOfTraning.LevyOut + totalCostOfTraning.TransferOut;
-
+			
+			            
             var balance = lastBalance;
             var projection = new AccountEstimationProjectionModel
             {
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = costOfTraining,
+                TotalCostOfTraining = totalCostOfTraning.LevyFunded,
 
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                CompletionPayments = completionPayments.LevyCompletionPaymentOut,
-                TransferOutCompletionPayments = completionPayments.TransferCompletionPaymentOut,
+                CompletionPayments = completionPayments.LevyFundedCompletionPayment,
+                TransferInCompletionPayments = completionPayments.TransferCompletionPaymentIn,
+                TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
                 ActualCommittedTransferCost = actualAccountProjection?.TransferOutTotalCostOfTraining ?? 0m,
                 ActualCommittedTransferCompletionCost = actualAccountProjection?.TransferOutCompletionPayments ?? 0m,

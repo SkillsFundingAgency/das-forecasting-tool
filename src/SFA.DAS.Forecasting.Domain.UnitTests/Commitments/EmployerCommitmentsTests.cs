@@ -50,12 +50,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             while (date <= endDate)
             {
                 var costOfTraining = employerCommitments.GetTotalCostOfTraining(date);
-                Assert.AreEqual(1000, costOfTraining.LevyOut, $"Invalid total cost of training for: {date:dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
+                Assert.AreEqual(1000, costOfTraining.LevyFunded, $"Invalid total cost of training for: {date:dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
                 date = date.AddMonths(1);
             }
 
             var costOfTrainingCompletionMonth = employerCommitments.GetTotalCostOfTraining(startDate);
-            Assert.AreEqual(0, costOfTrainingCompletionMonth.LevyOut, $"Invalid total cost of training for: {startDate:dd/MM/yyyy}, expected £0 but was £{costOfTrainingCompletionMonth}");
+            Assert.AreEqual(0, costOfTrainingCompletionMonth.LevyFunded, $"Invalid total cost of training for: {startDate:dd/MM/yyyy}, expected £0 but was £{costOfTrainingCompletionMonth}");
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             startDate = endDate.AddYears(-1);
             var employerCommitments = GetEmployerCommitments();
             var costOfTraining = employerCommitments.GetTotalCostOfTraining(endDate.AddMonths(1));
-            Assert.AreEqual(1000, costOfTraining.LevyOut, $"Invalid total cost of training for: {endDate.AddMonths(1):dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
+            Assert.AreEqual(1000, costOfTraining.LevyFunded, $"Invalid total cost of training for: {endDate.AddMonths(1):dd/MM/yyyy}, expected £1000 but was £{costOfTraining}");
         }
 
         [Test]
@@ -131,12 +131,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 
             var employerCommitments = GetEmployerCommitments();
 
-            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).LevyOut);
-            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).LevyOut);
-            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).LevyOut);
-            Assert.AreEqual(15, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).LevyOut);
-            Assert.AreEqual(35, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(4)).LevyOut);
-            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).LevyOut);
+            Assert.AreEqual(0, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth()).LevyFunded);
+            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(1)).LevyFunded);
+            Assert.AreEqual(25, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(2)).LevyFunded);
+            Assert.AreEqual(15, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(3)).LevyFunded);
+            Assert.AreEqual(35, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(4)).LevyFunded);
+            Assert.AreEqual(20, employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(6)).LevyFunded);
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 .TransferIn.Should().Be(0);
 
             employerCommitments.GetTotalCostOfTraining(DateTime.Today.GetStartOfMonth().AddMonths(12))
-                .LevyOut.Should().Be(20);
+                .LevyFunded.Should().Be(20);
         }
 
         [Test]
@@ -266,7 +266,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
 
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).LevyOut);
+            Assert.AreEqual(10, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).LevyFunded);
             Assert.AreEqual(15, employerCommitments.GetTotalCostOfTraining(DateTime.Today.AddMonths(2)).TransferIn);
         }
 
@@ -299,9 +299,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
 
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).LevyCompletionPaymentOut);
-            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).LevyCompletionPaymentOut);
-            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).LevyCompletionPaymentOut);
+            Assert.AreEqual(0, employerCommitments.GetTotalCompletionPayments(DateTime.Today).LevyFundedCompletionPayment);
+            Assert.AreEqual(30, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(3)).LevyFundedCompletionPayment);
+            Assert.AreEqual(50, employerCommitments.GetTotalCompletionPayments(DateTime.Today.AddMonths(6)).LevyFundedCompletionPayment);
         }
 
         [Test]

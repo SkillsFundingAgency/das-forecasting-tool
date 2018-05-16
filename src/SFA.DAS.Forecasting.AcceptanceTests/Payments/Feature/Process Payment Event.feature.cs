@@ -388,6 +388,67 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Ensure receiving employer transfer payments are processed (CI-762)")]
+        public virtual void EnsureReceivingEmployerTransferPaymentsAreProcessedCI_762()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure receiving employer transfer payments are processed (CI-762)", ((string[])(null)));
+#line 52
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "Sending Employer Account Id",
+                        "FundingSource"});
+            table4.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2015 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        "1",
+                        "Transfer"});
+            table4.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "16/04/2015 00:00",
+                        "133.33",
+                        "400.00",
+                        "12",
+                        "1",
+                        "Transfer"});
+#line 53
+ testRunner.And("I have made the following payments", ((string)(null)), table4, "And ");
+#line 58
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 59
+ testRunner.Then("the Forecasting Payment service should store the payment declarations receiving e" +
+                    "mployer 12345 from sending employer 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 60
+ testRunner.And("the Forecasting Payment service should store the commitment declarations for rece" +
+                    "iving employer 12345 from sending employer 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

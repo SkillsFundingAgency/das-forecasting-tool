@@ -149,10 +149,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 SendingEmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = DateTime.Today,
+                StartDate = DateTime.Today.AddMonths(-1),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(2),
                 MonthlyInstallment = 10,
-                NumberOfInstallments = 2
+                NumberOfInstallments = 2,
+                FundingSource = Models.Payments.FundingSource.Transfer
             });
             var employerCommitments = GetEmployerCommitments();
 
@@ -192,9 +193,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
             var employerCommitments = GetEmployerCommitments();
 
-            TotalCompletionPayments(employerCommitments, 0).TransferCompletionPaymentOut.Should().Be(0);
-            TotalCompletionPayments(employerCommitments, 3).TransferCompletionPaymentOut.Should().Be(30);
-            TotalCompletionPayments(employerCommitments, 6).TransferCompletionPaymentOut.Should().Be(50);
+            TotalCompletionPayments(employerCommitments, 0).TransferOutCompletionPayment.Should().Be(0);
+            TotalCompletionPayments(employerCommitments, 3).TransferOutCompletionPayment.Should().Be(30);
+            TotalCompletionPayments(employerCommitments, 6).TransferOutCompletionPayment.Should().Be(50);
         }
     }
 }

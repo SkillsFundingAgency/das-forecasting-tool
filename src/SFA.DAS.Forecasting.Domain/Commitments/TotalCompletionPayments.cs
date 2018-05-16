@@ -4,9 +4,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 {
     public class CompletionPayments
     {
-        public decimal LevyCompletionPaymentOut { get; set; }
-        public decimal TransferCompletionPaymentOut { get; internal set; }
-        public IEnumerable<long> CommitmentIds { get; set; }
-        public decimal TransferCompletionPaymentIn { get; set; }
+        public decimal LevyFundedCompletionPayment { get; set; }
+        public decimal TransferInCompletionPayment { get; set; }
+        public decimal TransferOutCompletionPayment { get; set; }
+        public IList<long> CommitmentIds { get; set; }
     }
 }
