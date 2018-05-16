@@ -18,8 +18,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             "Funds in",
             "Cost of training",
             "Completion payments",
-            "Your contribution",
-            "Government contribution",
+            "Your contribution (10%)",
+            "Government contribution (90%)",
             "Future funds"
         };
 
@@ -42,6 +42,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             //Thread.Sleep(10000);
             Assert.IsTrue(page.AccountProjectionHeader.Displayed, "ERROR:The account projection header is not visible");
             Assert.IsTrue(page.AccountProjectionTable.Displayed, "ERROR:The account projection table is not visible");
+
         }
 
         [When(@"I have a negative balance in a forecast month")]
@@ -66,6 +67,9 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the first month displayed is the next calendar month")]
         public void ThenTheFirstMonthDisplayedIsTheNextCalendarMonth()
         {
+
+            // this step became invalid. the website shown may instead of jun as a first row date
+
             var nextMonth = DateHelper.GetMonthString(DateTime.Now.Month + 1);
             var table = Get<List<TestAccountProjection>>();
             var firstRow = table[0];
