@@ -2,7 +2,7 @@
 (
 	[Id] BIGINT NOT NULL PRIMARY KEY Identity(1,1),
 	[EmployerAccountId] BIGINT NOT NULL,
-	[SendingEmployerAccountId] BIGINT NOT NULL default(0),
+	[SendingEmployerAccountId] BIGINT NOT NULL,
 	[LearnerId] BIGINT NOT NULL,
 	[ProviderId] BIGINT NOT NULL,
 	[ProviderName] NVARCHAR(200) NOT NULL,	

@@ -271,7 +271,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         }
 
         [Test]
-        public void Completion_Payments_Are_Aggregated_In_Month_After_Planed_End_Date()
+        public void Completion_Payments_Are_Aggregated_In_Month_After_Planned_End_Date()
         {
             Commitments.Add(new CommitmentModel
             {

@@ -148,26 +148,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             WaitForIt(() =>
             {
-                Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", receivningEmployerId, DbType.Int64);
-                parameters.Add("@sendingEmployerAccountId", sendingEmployerId, DbType.Int64);
-                var sql = @"
-                        Select* from Payment 
-                        where employerAccountId = @employerAccountId 
-                        and SendingEmployerAccountId = @sendingEmployerAccountId 
-                        and FundingSource = 2
-                        ";
-                var payments = Connection.Query<PaymentModel>(sql, parameters, commandType: CommandType.Text).ToList();
+                var payments = DataContext.Payments
+                    .Where(m => m.EmployerAccountId == receivningEmployerId
+                             && m.SendingEmployerAccountId == sendingEmployerId
+                             && m.FundingSource == FundingSource.Transfer);
 
-                foreach (var payment in Payments)
-                {
-                    if (payments.Any(p => payment.PaymentId == p.ExternalPaymentId)) continue;
-                    Console.WriteLine($"Payment not found. Payment: {payment.ToJson()}");
-                    return false;
-                }
-                return true;
-            }, "Failed to find all the payments.");
+                var paymentsSaved = Payments.Count(p => payments.Any(expected => expected.ExternalPaymentId == p.PaymentId));
+                // ToDo: Move to failed text
+                Console.WriteLine($"{paymentsSaved} of expected {Payments.Count()} Payment found.");
+
+                return Payments.All(p => payments.Any(expected => expected.ExternalPaymentId == p.PaymentId));
+
+            }, $"Failed to find all the payments.");
         }
 
 
@@ -198,23 +190,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 foreach (var payment in Payments)
                 {
-                    Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
-                    parameters.Add("@apprenticeshipId", payment.ApprenticeshipId, DbType.Int64);
-                    parameters.Add("@employerAccountId", receivningEmployerId, DbType.Int64);
-                    parameters.Add("@sendingEmployerAccountId", sendingEmployerId, DbType.Int64);
-                    var sql = @"
-                        Select Count(*) from Commitment 
-                        where employerAccountId = @employerAccountId 
-                        and ApprenticeshipId = @apprenticeshipId 
-                        and SendingEmployerAccountId = @sendingEmployerAccountId 
-                        and FundingSource = 2
-                        and ProviderId = @providerId
-                    ";
-                    var count = Connection.ExecuteScalar<int>(sql,
-                        parameters, commandType: CommandType.Text);
-                    return count == 1;
+                    var commitmentsCount = DataContext.Commitments
+                        .Where(m => m.EmployerAccountId == receivningEmployerId
+                                 && m.SendingEmployerAccountId == sendingEmployerId
+                                 && m.ApprenticeshipId == payment.ApprenticeshipId
+                                 && m.FundingSource == FundingSource.Transfer
+                                 && m.ProviderId == payment.ProviderId)
+                        .Count();
+
+                    return commitmentsCount == 1;
                 }
                 return false;
             }, "Failed to find all the commitments.");
