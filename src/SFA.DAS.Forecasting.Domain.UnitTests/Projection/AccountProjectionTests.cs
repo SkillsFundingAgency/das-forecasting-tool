@@ -200,7 +200,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             var projections = accountProjection.Projections.ToArray();
 
-            projections[6].TotalCostOfTraining.Should().Be(8000);
+            projections[6].TotalCostOfTraining.Should().Be(4000);
             projections[6].TransferInTotalCostOfTraining.Should().Be(2000);
             projections[6].TransferOutTotalCostOfTraining.Should().Be(4000);
             projections[7].TotalCostOfTraining.Should().Be(0);

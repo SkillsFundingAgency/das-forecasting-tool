@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
     public partial class EmployerCommitments
     {
         public long EmployerAccountId { get; private set; }
-        private readonly IEnumerable<CommitmentModel> _commitments;
+        private readonly IList<CommitmentModel> _commitments;
 
         private readonly ReadOnlyCollection<CommitmentModel> _levyFundedCommitments;
         private readonly ReadOnlyCollection<CommitmentModel> _receivingEmployerTransferCommitments;
@@ -49,9 +49,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                       c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
                       c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
 
-            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent);
-            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent);
-            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent);
+            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
 
             var includedCommitments = new List<CommitmentModel>();
             includedCommitments.AddRange(levyFundedCommitments);
@@ -63,7 +63,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment),
                 TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
                 TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
-                CommitmentIds = includedCommitments.Select(c => c.Id)
+                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }
 
@@ -71,9 +71,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         {
             bool FilterCurrent(CommitmentModel c) => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
 
-            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent);
-            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent);
-            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent);
+            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
 
             var includedCommitments = new List<CommitmentModel>();
             includedCommitments.AddRange(levyFundedCommitments);

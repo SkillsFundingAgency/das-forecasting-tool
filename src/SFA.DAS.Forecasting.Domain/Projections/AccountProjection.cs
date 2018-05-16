@@ -79,7 +79,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = costOfTraining,
+                TotalCostOfTraining = totalCostOfTraning.LevyFunded,
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
                 CompletionPayments = complPayment,

@@ -422,7 +422,7 @@ this.FeatureBackground();
                         "400.00",
                         "12",
                         "1",
-                        "2"});
+                        "Transfer"});
             table4.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 2",
@@ -434,7 +434,7 @@ this.FeatureBackground();
                         "400.00",
                         "12",
                         "1",
-                        "2"});
+                        "Transfer"});
 #line 53
  testRunner.And("I have made the following payments", ((string)(null)), table4, "And ");
 #line 58

@@ -67,6 +67,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 projections.TransferInCompletionPayments.Should().Be(p.TransferInCompletionPayments);
                 projections.TransferOutCompletionPayments.Should().Be(p.TransferOutCompletionPayments);
                 projections.CompletionPayments.Should().Be(p.CompletionPayments);
+                projections.FutureFunds.Should().Be(p.FutureFunds);
             }
         }
 

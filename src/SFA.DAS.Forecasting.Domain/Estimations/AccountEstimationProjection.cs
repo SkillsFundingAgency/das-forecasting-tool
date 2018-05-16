@@ -61,8 +61,6 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 .Concat(completionPayments.CommitmentIds)
                 .Distinct();
 
-            var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;
-
             var balance = lastBalance;
             var projection = new AccountProjectionModel
             {
@@ -70,7 +68,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = costOfTraining,
+                TotalCostOfTraining = totalCostOfTraning.LevyFunded,
 
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
