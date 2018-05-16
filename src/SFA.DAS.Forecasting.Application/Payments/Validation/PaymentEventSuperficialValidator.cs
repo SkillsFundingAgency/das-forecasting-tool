@@ -32,6 +32,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                 .NotEqual(m => m.EmployerAccountId)
                 .When(m => m.FundingSource == FundingSource.Transfer)
                 .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.SendingEmployerAccountId)} must not be equal if FundingSource is {FundingSource.Transfer}");
-		}
+
+            RuleFor(m => m.SendingEmployerAccountId)
+                .Equal(m => m.EmployerAccountId)
+                .When(m => m.FundingSource == FundingSource.Levy)
+                .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.SendingEmployerAccountId)} must be equal if FundingSource is {FundingSource.Levy}");
+        }
 	}
 }
