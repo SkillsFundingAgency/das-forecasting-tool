@@ -127,10 +127,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
             res.ShouldBeEquivalentTo(new List<ValidationResult> { validationResult });
         }
 
-        [TestCase(null)]
         [TestCase(0)]
         [TestCase(13)]
-        public void WhenCallingValidateDetailWithInvalidStartMonthShouldReturnNoStartMonth(int? startMonth)
+        public void WhenCallingValidateDetailWithInvalidStartMonthShouldReturnInvalidStartMonth(int? startMonth)
         {
             var deets = GetCleanApprenticeshipToAdd();
             deets.StartMonth = startMonth;
@@ -138,10 +137,21 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Estimations.Validation
 
             var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
 
-            var validationResult = ValidationResult.Failed("NoStartMonth");
+            var validationResult = ValidationResult.Failed("InvalidStartMonth");
             res.ShouldBeEquivalentTo(new List<ValidationResult> { validationResult });
         }
 
+        public void WhenCallingValidateDetailWithInvalidStartMonthShouldReturnNoStartMonth()
+        {
+            var deets = GetCleanApprenticeshipToAdd();
+            deets.StartMonth = null;
+
+
+            var res = new AddApprenticeshipValidator().ValidateApprenticeship(deets);
+
+            var validationResult = ValidationResult.Failed("NoStartMonth");
+            res.ShouldBeEquivalentTo(new List<ValidationResult> { validationResult });
+        }
 
         [Test]
         public void WhenCallingValidateDetailWithInvalidStartYearShouldReturnNoStartYear()
