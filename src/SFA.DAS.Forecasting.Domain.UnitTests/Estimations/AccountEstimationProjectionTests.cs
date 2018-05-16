@@ -138,7 +138,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             estimationProjection.BuildProjections();
             var projection = estimationProjection.Projections.LastOrDefault();
             Assert.IsNotNull(projection);
-            Assert.AreEqual(8, projection.Month, $"Expected to end in month 8 but last month was {projection.Month}");
+            Assert.AreEqual(9, projection.Month, $"Expected to end in month 9 but last month was {projection.Month}");
         }
 
         [Test]

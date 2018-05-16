@@ -88,12 +88,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             result.BuildProjections();
 
             // Assert
-            result.Projections.Count().Should().Be(26);
-            result.Projections.All(m => m.TransferOutCompletionPayments > 0 || m.TransferOutTotalCostOfTraining > 0)
+            result.Projections.Count().Should().Be(27);
+            result.Projections.Take(result.Projections.Count-1).All(m => m.TransferOutCompletionPayments > 0 || m.TransferOutTotalCostOfTraining > 0)
                 .Should().BeTrue();
-            result.Projections.Any(m => m.TransferInTotalCostOfTraining > 0 || m.TransferInTotalCostOfTraining > 0)
+            result.Projections.Take(result.Projections.Count - 1).Any(m => m.TransferInTotalCostOfTraining > 0 || m.TransferInTotalCostOfTraining > 0)
                 .Should().BeFalse();
-            result.Projections.Any(m => m.CompletionPayments > 0).Should().BeFalse();
+            result.Projections.Take(result.Projections.Count - 1).Any(m => m.CompletionPayments > 0).Should().BeFalse();
         }
 
         [Test]
@@ -126,8 +126,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TotalCompletionAmount = 2000,
                     TotalCost = 10000,
                     TotalInstallmentAmount = 120,
-                    TotalInstallments = 1,
-                    FundingSource = Models.Payments.FundingSource.Levy
+                    TotalInstallments = 3,
+                    FundingSource = Models.Payments.FundingSource.Transfer
                 }
             }
             };
@@ -138,8 +138,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             //Assert
             _accountProjectionRepository.Verify(x => x.Get(expectedEmployerAccountId), Times.Once());
-            Assert.AreEqual(2, actual.Projections.Count);
-            Assert.AreEqual(870, actual.Projections.Last().FutureFunds);
+            Assert.AreEqual(5, actual.Projections.Count);
+            Assert.AreEqual(870, actual.Projections[1].FutureFunds);
         }
     }
 }

@@ -12,5 +12,6 @@
         public decimal ActualCommittedTransferCost { get; set; }
         public decimal ActualCommittedTransferCompletionCost { get; set; }
         public decimal FutureFunds { get; set; }
+        public decimal TransferInCompletionPayments { get; set; }
     }
 }

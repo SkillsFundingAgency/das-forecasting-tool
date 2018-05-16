@@ -62,8 +62,9 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             return projection.FutureFunds - 
                 projection.TotalCostOfTraining  - 
                 projection.CompletionPayments - 
-                projection.ActualCommittedTransferCost - 
-                projection.TransferOutCompletionPayments - 
+                projection.TransferOutTotalCostOfTraining -
+                projection.TransferOutCompletionPayments -
+                projection.ActualCommittedTransferCost -
                 projection.ActualCommittedTransferCompletionCost;
         }
 
@@ -84,7 +85,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
                 CompletionPayments = completionPayments.LevyFundedCompletionPayment,
-                TransferInCompletionPayments = completionPayments.TransferCompletionPaymentIn,
+                TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
                 ActualCommittedTransferCost = actualAccountProjection?.TransferOutTotalCostOfTraining ?? 0m,
