@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 TransferAllowances = estimationProjector?.Projections?.Select(o => new EstimationTransferAllowanceVewModel
                 {
                     Date = new DateTime(o.Year, o.Month, 1),
-                    Cost = o.TotalCostOfTraining+o.CompletionPayments + o.TransferOutCompletionPayments,
+                    Cost = o.TotalCostOfTraining + o.CompletionPayments  + o.TransferOutTotalCostOfTraining + o.TransferOutCompletionPayments,
                     RemainingAllowance = o.FutureFunds
                 })
             };

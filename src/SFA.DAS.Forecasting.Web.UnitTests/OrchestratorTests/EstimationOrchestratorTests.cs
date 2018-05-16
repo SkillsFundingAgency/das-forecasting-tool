@@ -54,14 +54,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 _currentBalanceRepository.Object);
         }
 
-        [TestCase(100,100,100,300)]
-        [TestCase(150, 100, 100, 350)]
-        [TestCase(100, 160, 100, 360)]
-        [TestCase(100, 100, 105.55, 305.55)]
-        public async Task Then_The_Cost_Takes_Into_Account_The_CompletionPayments_And_TransferOutCompletionPayments_And_CostOfTraining(
-            decimal totalCostOfTraining, decimal completionPayments, decimal transferOutPayment, decimal expectedTotalCost)
+        [TestCase(100, 100, 100, 100, 400)]
+        [TestCase(150, 100, 100, 100, 450)]
+        [TestCase(100, 160, 100, 100, 460)]
+        [TestCase(100, 100, 105.55, 100, 405.55)]
+        [TestCase(100, 100, 105.55, 200, 505.55)]
+        public async Task Then_The_Cost_Takes_Into_Account_The_Actual_And_Estimated_Payments(
+            decimal totalCostOfTraining, decimal completionPayments, decimal transferOutPayment,
+            decimal transferOutCompletionPayment, decimal expectedTotalCost)
         {
-            
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
             {
                 new AccountEstimationProjectionModel
@@ -70,7 +71,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) DateTime.Now.Month,
                     TotalCostOfTraining = totalCostOfTraining,
                     CompletionPayments = completionPayments,
-                    TransferOutCompletionPayments = transferOutPayment
+                    TransferOutTotalCostOfTraining = transferOutPayment,
+                    TransferOutCompletionPayments = transferOutCompletionPayment
                 }
             };
             _accountEstimationProjection.Setup(x => x.Projections)
