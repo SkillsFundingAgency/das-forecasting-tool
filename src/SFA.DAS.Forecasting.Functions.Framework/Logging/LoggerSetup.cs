@@ -7,15 +7,16 @@ using SFA.DAS.NLog.Logger;
 using System;
 using System.Configuration;
 using System.IO;
+using Microsoft.Azure.WebJobs;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
     public class LoggerSetup
     {
-        internal static NLogLogger Create(string functionPath, TraceWriter writer, Type type)
+        internal static NLogLogger Create(ExecutionContext executionContext, TraceWriter writer, Type type)
         {
-            var appName = GetSetting("AppName");
+            var appName = executionContext.FunctionName;
             var localLogPath = GetSetting("LogDir");
 
             LogManager.Configuration = new LoggingConfiguration();
