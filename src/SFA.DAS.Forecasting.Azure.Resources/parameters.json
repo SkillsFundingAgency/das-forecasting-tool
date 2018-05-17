@@ -36,7 +36,7 @@
       "value": ""
     },
     "appSettingSecondsToWaitToAllowProjections": {
-      "value": ""
+      "value": "300"
     },
     "storageName": {
       "value": ""
