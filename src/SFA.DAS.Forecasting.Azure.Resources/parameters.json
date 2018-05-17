@@ -20,6 +20,9 @@
     "sharedServerFarmResourceGroup": {
       "value": ""
     },
+    "appSettingAppName": {
+      "value": ""
+    },
     "appSettingLimitForecast": {
       "value": false
     },
