@@ -17,9 +17,6 @@
     "appHostingEnvironment": {
       "type": "string"
     },
-    "appSettingAppName": {
-      "type": "string"
-    },
     "appSettingNumberOfMonthsToProject": {
       "type": "string"
     },
