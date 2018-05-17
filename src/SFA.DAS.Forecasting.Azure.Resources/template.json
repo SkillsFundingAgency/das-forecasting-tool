@@ -17,6 +17,9 @@
     "appHostingEnvironment": {
       "type": "string"
     },
+    "appSettingAppName": {
+      "type": "string"
+    },
     "appSettingNumberOfMonthsToProject": {
       "type": "string"
     },
@@ -225,6 +228,9 @@
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
+          },
+          "AppName": {
+            "value": "[parameters('appSettingAppName')]"
           },
           "SecondsToWaitToAllowProjections": {
             "value": "[parameters('appSettingSecondsToWaitToAllowProjections')]"
