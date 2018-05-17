@@ -47,6 +47,10 @@
         "siteConfig": {
           "appSettings": [
             {
+              "name": "AppName",
+              "value": "[parameters('funAppName')]"
+            },
+            {
               "name": "AzureWebJobsDashboard",
               "value": "[parameters('storageConnectionString')]"
             },
