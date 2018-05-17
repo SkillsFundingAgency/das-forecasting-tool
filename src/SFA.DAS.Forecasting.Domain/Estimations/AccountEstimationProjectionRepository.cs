@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Projections;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -16,10 +18,12 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
     public class AccountEstimationProjectionRepository: IAccountEstimationProjectionRepository
     {
+        private readonly IAccountProjectionDataSession _accountProjectionRepository;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
 
-        public AccountEstimationProjectionRepository(ICurrentBalanceRepository currentBalanceRepository)
+        public AccountEstimationProjectionRepository(ICurrentBalanceRepository currentBalanceRepository, IAccountProjectionDataSession accountProjectionRepository)
         {
+            _accountProjectionRepository = accountProjectionRepository;
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
         }
 
@@ -44,8 +48,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                     });
                 }
             }
+
+            var actualProjections = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
+            
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);
-            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), employerCommitments);
+            var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);
+
+            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments);
         }
     }
 }

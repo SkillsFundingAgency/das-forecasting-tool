@@ -28,6 +28,8 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.FutureFunds).HasColumnName(@"FutureFunds").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.CoInvestmentEmployer).HasColumnName(@"CoInvestmentEmployer").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.CoInvestmentGovernment).HasColumnName(@"CoInvestmentGovernment").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Ignore(x => x.CommittedTransferCost);
+            Ignore(x => x.CommittedTransferCompletionCost);
             InitializePartial();
         }
         partial void InitializePartial();
