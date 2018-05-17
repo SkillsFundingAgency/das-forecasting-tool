@@ -28,7 +28,7 @@ WHEN NOT MATCHED BY TARGET THEN
 --delete rows that are in the target but not the source 
 WHEN NOT MATCHED BY SOURCE THEN 
 	DELETE;
-GO;
+GO
 
 if not exists( select * from sys.indexes where name = N'IX_Commitment__EmployerAccountId_AppreticeshipId_ActualEndDate' ) 
 begin
