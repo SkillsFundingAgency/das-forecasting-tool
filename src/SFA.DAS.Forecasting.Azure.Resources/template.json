@@ -230,7 +230,7 @@
             "value": "[parameters('environmentName')]"
           },
           "AppName": {
-            "value": "[parameters('appSettingAppName')]"
+            "value": "[parameters(parameters('funAppNames')[copyIndex()])]"
           },
           "SecondsToWaitToAllowProjections": {
             "value": "[parameters('appSettingSecondsToWaitToAllowProjections')]"
