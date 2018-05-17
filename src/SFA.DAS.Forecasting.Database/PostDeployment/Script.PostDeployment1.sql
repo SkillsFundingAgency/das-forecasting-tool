@@ -28,4 +28,35 @@ WHEN NOT MATCHED BY TARGET THEN
 --delete rows that are in the target but not the source 
 WHEN NOT MATCHED BY SOURCE THEN 
 	DELETE;
+GO;
+
+if not exists( select * from sys.indexes where name = N'IX_Commitment__EmployerAccountId_AppreticeshipId_ActualEndDate' ) 
+begin
+	CREATE NONCLUSTERED INDEX [IX_Commitment__EmployerAccountId_AppreticeshipId_ActualEndDate] ON [dbo].[Commitment] ([EmployerAccountId], [ApprenticeshipId], [ActualEndDate]) WITH (ONLINE = ON)
+end
+Go
+
+if not exists( select * from sys.indexes where name = N'IX_Payment__EmployerAccountId_AppreticeshipId' ) 
+begin
+	CREATE NONCLUSTERED INDEX [IX_Payment__EmployerAccountId_AppreticeshipId] ON [dbo].[Payment] ([EmployerAccountId], [ApprenticeshipId]) WITH (ONLINE = ON)
+end
+Go
+
+if not exists( select * from sys.indexes where name = N'IX_AccountProjection__EmployerAccountId' ) 
+begin
+	CREATE NONCLUSTERED INDEX [IX_AccountProjection__EmployerAccountId] ON [dbo].[AccountProjection] ([EmployerAccountId]) WITH (ONLINE = ON)
+end
+Go
+
+if not exists( select * from sys.indexes where name = N'IX_AccountProjectionCommitment__AccountProjectionId' ) 
+begin
+	CREATE NONCLUSTERED INDEX [IX_AccountProjectionCommitment__AccountProjectionId] ON [dbo].[AccountProjectionCommitment] ([AccountProjectionId]) WITH (ONLINE = ON)
+end
+Go
+
+if not exists( select * from sys.indexes where name = N'IX_LevyDeclaration__EmployerAccountId_PayrollYear_PayrollMonth_PayrollDate' ) 
+begin
+	CREATE NONCLUSTERED INDEX [IX_LevyDeclaration__EmployerAccountId_PayrollYear_PayrollMonth_PayrollDate] ON [dbo].[LevyDeclaration] ([EmployerAccountId],[PayrollYear],[PayrollMonth],[PayrollDate]) WITH (ONLINE = ON)
+end
+Go
 
