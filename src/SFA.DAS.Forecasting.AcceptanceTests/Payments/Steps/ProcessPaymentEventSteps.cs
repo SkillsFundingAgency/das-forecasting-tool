@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 Id = payment.PaymentId,
                 EmployerAccountId = Config.EmployerAccountId,
-                SendingEmployerAccountId = payment.SendingEmployerAccountId,
+                SendingEmployerAccountId = payment.SendingEmployerAccountId == 0 ? Config.EmployerAccountId : payment.SendingEmployerAccountId,
                 Amount = payment.PaymentAmount,
                 CollectionPeriod = new NamedCalendarPeriod
                 {
