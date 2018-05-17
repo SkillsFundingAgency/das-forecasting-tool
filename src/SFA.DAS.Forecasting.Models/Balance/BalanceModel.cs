@@ -10,5 +10,6 @@ namespace SFA.DAS.Forecasting.Models.Balance
         public decimal RemainingTransferBalance { get; set; }
         public DateTime BalancePeriod { get; set; }
         public DateTime ReceivedDate { get; set; }
+        public decimal UnallocatedCompletionPayments { get; set; }
     }
 }

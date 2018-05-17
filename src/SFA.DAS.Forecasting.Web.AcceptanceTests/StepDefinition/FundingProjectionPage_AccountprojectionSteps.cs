@@ -6,20 +6,30 @@ using TechTalk.SpecFlow;
 using static SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.DownloadForecastBalanceSheetSteps;
 using SFA.DAS.Forecasting.Web.AcceptanceTests.Helpers;
 using System.Globalization;
+using System.Transactions;
+using SFA.DAS.Forecasting.Data;
+using System.Linq;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
     [Binding]
-
     public class FundingProjectionPage_AccountprojectionSteps : StepsBase
     {
-        private string[] headers = {
+        private string[] expectedHeaders = {
             "Date",
             "Funds in",
             "Cost of training",
             "Completion payments",
             "Your contribution (10%)",
             "Government contribution (90%)",
+            "Future funds"
+        };
+
+        private string[] expectedHeadersWithoutCoInvestment = {
+            "Date",
+            "Funds in",
+            "Cost of training",
+            "Completion payments",
             "Future funds"
         };
 
@@ -34,6 +44,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             { "GovernmentContribution",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) }
         };
 
+        protected IForecastingDataContext ForecastingDataContext => NestedContainer.GetInstance<IForecastingDataContext>();
 
         [When(@"the Account projection is displayed")]
         public void WhenTheAccountProjectionIsDisplayed()
@@ -57,10 +68,23 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var page = Get<FundingProjectionPage>();
             var table = Get<List<TestAccountProjection>>();
             var pageHeaders = page.GetAccountProjectionHeaders();
-            Assert.AreEqual(pageHeaders.Length, headers.Length);
+            Assert.AreEqual(expectedHeaders.Length, pageHeaders.Length);
             foreach (var header in pageHeaders)
             {
-                Assert.Contains(header, headers, "ERROR:The account projection does not have the correct cloumns");
+                Assert.Contains(header, expectedHeaders, "ERROR:The account projection does not have the correct cloumns");
+            }
+        }
+
+        [Then(@"the Account projection has the correct columns without Co-Investment")]
+        public void ThenTheAccountProjectionHasTheCorrectColumnsWithoutCoInvestment()
+        {
+            var page = Get<FundingProjectionPage>();
+            var table = Get<List<TestAccountProjection>>();
+            var pageHeaders = page.GetAccountProjectionHeaders();
+            Assert.AreEqual(expectedHeadersWithoutCoInvestment.Length, pageHeaders.Length);
+            foreach (var header in pageHeaders)
+            {
+                Assert.Contains(header, expectedHeadersWithoutCoInvestment, "ERROR:The account projection does not have the correct cloumns");
             }
         }
 
@@ -101,7 +125,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var table = Get<List<TestAccountProjection>>();
             var page = Get<FundingProjectionPage>();
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            foreach (var headerName in headers)
+            foreach (var headerName in expectedHeaders)
             {
                 var datePageValues = page.GetHeaderValues(headerName);
                 Assert.AreEqual(datePageValues.Length, table.Count);
@@ -147,6 +171,46 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         public void ThenTheBalanceForThatMonthIsDisplayedCorrectlyAs(int p0)
         {
             ScenarioContext.Current.Pending();
+        }
+
+        [Given(@"I have completion payments of £ (.*) on commitments without stop date")]
+        public void GivenIHaveCompletionPaymentsOfOnCommitmentsWithoutStopDate(int overdueCompletionPayments)
+        {
+            StoreUnallocatedCompletionPayments(overdueCompletionPayments);
+        }
+
+        [Then(@"I see Pending completion payments with the amount of £ (.*)")]
+        public void ThenISeePendingCompletionPaymentsWithTheAmountOf(int overdueCompletionPayments)
+        {
+            var page = Get<FundingProjectionPage>();
+            Assert.AreEqual($"£{overdueCompletionPayments}", page.PendingCompletionPayments.Text);
+        }
+
+        private void StoreUnallocatedCompletionPayments(int v)
+        {
+            var employerAccountId = long.Parse(Config.EmployerAccountID);
+            var balance = ForecastingDataContext.Balances.FirstOrDefault(m => m.EmployerAccountId == employerAccountId);
+
+            if (balance == null)
+            {
+                balance = new Models.Balance.BalanceModel
+                {
+                    EmployerAccountId = employerAccountId,
+                    Amount = 5001,
+                    TransferAllowance = 501,
+                    RemainingTransferBalance = 501,
+                    BalancePeriod = DateTime.UtcNow,
+                    ReceivedDate = DateTime.UtcNow,
+                    UnallocatedCompletionPayments = 2401
+                };
+                ForecastingDataContext.Balances.Add(balance);
+            }
+            else
+            {
+                balance.UnallocatedCompletionPayments = 2401;
+            }
+            
+            ForecastingDataContext.SaveChanges();
         }
     }
 }

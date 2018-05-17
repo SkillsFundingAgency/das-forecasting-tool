@@ -93,6 +93,10 @@
             {
               "name": "StorageConnectionString",
               "value": "[parameters('storageConnectionString')]"
+            },
+            {
+              "name": "AppName",
+              "value": "[parameters('funAppName')]"
             }
           ],
           "alwaysOn": true
