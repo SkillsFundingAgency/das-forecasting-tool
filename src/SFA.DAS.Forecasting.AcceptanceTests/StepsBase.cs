@@ -84,6 +84,21 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             Assert.Fail(failText);
         }
 
+        protected void WaitForIt(Func<Tuple<bool, string>> lookForIt, string failText)
+        {
+            var endTime = DateTime.Now.Add(Config.TimeToWait);
+            var reason = "";
+            var pass = false;
+            while (DateTime.Now < endTime)
+            {
+                (pass, reason) = lookForIt();
+                if (pass)
+                    return;
+                Thread.Sleep(Config.TimeToPause);
+            }
+            Assert.Fail(failText + " - " + reason);
+        }
+
         protected bool WaitForIt(Func<bool> lookForIt)
         {
             var endTime = DateTime.Now.Add(Config.TimeToWait);
