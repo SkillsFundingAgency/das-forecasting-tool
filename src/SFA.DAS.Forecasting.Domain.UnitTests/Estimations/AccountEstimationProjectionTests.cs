@@ -122,13 +122,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         }
 
         [Test]
-        public void First_Month_Should_Be_Earliest_Payment_Date()
+        public void First_Month_Is_Current_Month()
         {
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
             estimationProjection.BuildProjections();
             var projection = estimationProjection.Projections.FirstOrDefault();
             Assert.IsNotNull(projection);
-            Assert.IsTrue(projection.Month == 2 && projection.Year == 2018);
+            Assert.IsTrue(projection.Month == DateTime.Now.Month && projection.Year == DateTime.Now.Year);
         }
 
         [Test]
