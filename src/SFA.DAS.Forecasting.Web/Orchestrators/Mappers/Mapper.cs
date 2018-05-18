@@ -16,8 +16,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
                     LevyCredit = x.LevyFundsIn,
-                    CostOfTraining = x.LevyFundedCostOfTraining,
-                    CompletionPayments = x.LevyFundedCompletionPayments,
+                    CostOfTraining = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining,
+                    CompletionPayments = x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments,
                     ExpiredFunds = 0,
                     Balance = x.FutureFunds,
                     CoInvestmentEmployer = x.CoInvestmentEmployer,
