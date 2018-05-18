@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 hashingService.Object,
                 _accountProjection.Object,
                 _applicationConfiguration.Object,
-                new Mapper());
+                new ForecastingMapper());
         }
 
         [Test]

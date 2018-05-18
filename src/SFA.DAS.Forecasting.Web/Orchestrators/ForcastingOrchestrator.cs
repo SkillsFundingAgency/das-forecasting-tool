@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataSession _accountProjection;
         private readonly IApplicationConfiguration _applicationConfiguration;
-        private readonly Mapper _mapper;
+        private readonly ForecastingMapper _mapper;
 
         private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             IHashingService hashingService,
             IAccountProjectionDataSession accountProjection,
             IApplicationConfiguration applicationConfiguration,
-            Mapper mapper)
+            ForecastingMapper mapper)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;
@@ -56,7 +56,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var result = await _accountProjection.Get(accountId);
-            return _mapper.MapBalance(result)
+            return _mapper.MapProjections(result)
                 .Where(m => !_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate)
                 .Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today))
                 .Take(48)
