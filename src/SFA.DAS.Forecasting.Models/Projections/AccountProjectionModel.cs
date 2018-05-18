@@ -53,7 +53,9 @@ namespace SFA.DAS.Forecasting.Models.Projections
         /// </summary>
         public virtual System.Collections.Generic.ICollection<AccountProjectionCommitment> Commitments { get; set; } // AccountProjectionCommitment.FK_AccountProjectionCommitment__AccountProjection
 
-        public AccountProjectionModel()
+	    public decimal FundsIn { get; set; }
+
+	    public AccountProjectionModel()
         {
             CoInvestmentEmployer = 0m;
             CoInvestmentGovernment = 0m;
