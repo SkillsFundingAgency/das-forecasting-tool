@@ -57,7 +57,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 1,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 10,
+                    TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0
                 },
                 new AccountProjectionModel
@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 2,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 10,
+                    TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0
                 },
                 new AccountProjectionModel
@@ -73,7 +73,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 3,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 10,
+                    TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0
                 },
                 new AccountProjectionModel
@@ -81,7 +81,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 4,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 10,
+                    TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0
                 },
                 new AccountProjectionModel
@@ -89,7 +89,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 5,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 10,
+                    TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0
                 },
                 new AccountProjectionModel
@@ -97,7 +97,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 6,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 0,
+                    TransferOutCostOfTraining = 0,
                     TransferOutCompletionPayments = 20
                 }
             };
@@ -148,7 +148,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             estimationProjection.BuildProjections();
             estimationProjection.Projections.Where(p => p.Month == 5).ToList()
                 .ForEach(p => Assert.AreEqual((decimal) (_account.TransferAllowance), p.FutureFunds,
-                    $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance - p.TotalCostOfTraining - p.CompletionPayments}, actual: {p.FutureFunds}"));
+                    $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance - p.LevyFundedCostOfTraining - p.LevyFundedCompletionPayment}, actual: {p.FutureFunds}"));
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 1,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 10,
+                    TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0
                 },
                 new AccountProjectionModel
@@ -222,7 +222,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 2,
                     Year = 2018,
-                    TransferOutTotalCostOfTraining = 0,
+                    TransferOutCostOfTraining = 0,
                     TransferOutCompletionPayments = 20
                 }
             };

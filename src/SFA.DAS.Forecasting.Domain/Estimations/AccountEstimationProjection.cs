@@ -60,8 +60,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         private static decimal CalculateLastBalance(AccountEstimationProjectionModel projection)
         {
             return projection.FutureFunds - 
-                projection.TotalCostOfTraining  - 
-                projection.CompletionPayments - 
+                projection.LevyFundedCostOfTraining  - 
+                projection.LevyFundedCompletionPayment - 
                 projection.TransferOutTotalCostOfTraining -
                 projection.TransferOutCompletionPayments -
                 projection.ActualCommittedTransferCost -
@@ -80,15 +80,15 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             {
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = totalCostOfTraning.LevyFunded,
+                LevyFundedCostOfTraining = totalCostOfTraning.LevyFunded,
 
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                CompletionPayments = completionPayments.LevyFundedCompletionPayment,
+                LevyFundedCompletionPayment = completionPayments.LevyFundedCompletionPayment,
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
-                ActualCommittedTransferCost = actualAccountProjection?.TransferOutTotalCostOfTraining ?? 0m,
+                ActualCommittedTransferCost = actualAccountProjection?.TransferOutCostOfTraining ?? 0m,
                 ActualCommittedTransferCompletionCost = actualAccountProjection?.TransferOutCompletionPayments ?? 0m,
 
                 FutureFunds = balance < 0 ? 0m : balance,

@@ -75,16 +75,19 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
             var projection = new AccountProjectionModel
             {
-                FundsIn = _account.LevyDeclared,
+                LevyFundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = totalCostOfTraning.LevyFunded,
-                TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
-                TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                CompletionPayments = complPayment,
+
+                LevyFundedCostOfTraining = totalCostOfTraning.LevyFunded,
+                TransferInCostOfTraining = totalCostOfTraning.TransferIn,
+                TransferOutCostOfTraining = totalCostOfTraning.TransferOut,
+
+                LevyFundedCompletionPayments = completionPayments.LevyFundedCompletionPayment,
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
+
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,

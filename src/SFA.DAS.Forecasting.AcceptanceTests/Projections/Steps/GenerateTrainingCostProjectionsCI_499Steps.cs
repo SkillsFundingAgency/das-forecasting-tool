@@ -26,8 +26,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                     var expectedCost = Commitments
                         .Where(c => IsIncluded(c, projection.Month, projection.Year))
                         .Sum(c => c.InstallmentAmount);
-                    Assert.AreEqual(expectedCost, projection.TotalCostOfTraining,
-                        $"Total cost of training mismatch. Month: {projection.Month}, Year: {projection.Year}, Expected amount: {expectedCost} but was: {projection.TotalCostOfTraining}");
+                    Assert.AreEqual(expectedCost, projection.LevyFundedCostOfTraining,
+                        $"Total cost of training mismatch. Month: {projection.Month}, Year: {projection.Year}, Expected amount: {expectedCost} but was: {projection.LevyFundedCostOfTraining}");
                 });
         }
 

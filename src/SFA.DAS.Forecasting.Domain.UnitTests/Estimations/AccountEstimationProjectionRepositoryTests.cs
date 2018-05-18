@@ -93,7 +93,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 .Should().BeTrue();
             result.Projections.Take(result.Projections.Count - 1).Any(m => m.TransferInTotalCostOfTraining > 0 || m.TransferInTotalCostOfTraining > 0)
                 .Should().BeFalse();
-            result.Projections.Take(result.Projections.Count - 1).Any(m => m.CompletionPayments > 0).Should().BeFalse();
+            result.Projections.Take(result.Projections.Count - 1).Any(m => m.LevyFundedCompletionPayment > 0).Should().BeFalse();
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     {
                         Month = (short)(DateTime.Today.Month + 1),
                         Year = DateTime.Today.Year,
-                        TransferOutTotalCostOfTraining = 10m,
+                        TransferOutCostOfTraining = 10m,
                         TransferOutCompletionPayments = 0m
                     }
                 };

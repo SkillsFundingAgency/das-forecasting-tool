@@ -69,8 +69,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    TotalCostOfTraining = totalCostOfTraining,
-                    CompletionPayments = completionPayments,
+                    LevyFundedCostOfTraining = totalCostOfTraining,
+                    LevyFundedCompletionPayment = completionPayments,
                     TransferOutTotalCostOfTraining = transferOutPayment,
                     TransferOutCompletionPayments = transferOutCompletionPayment
                 }
