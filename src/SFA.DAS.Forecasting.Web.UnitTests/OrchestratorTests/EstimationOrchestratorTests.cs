@@ -60,7 +60,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         [TestCase(100, 100, 105.55, 100)]
         [TestCase(100, 100, 105.55, 200)]
         public async Task Then_The_Cost_Takes_Into_Account_The_Actual_And_Estimated_Payments(
-            decimal totalCostOfTraining, decimal completionPayments, decimal transferOutPayment,
+            decimal actualTotalCostOfTraining, decimal actualCommittedCompletionPayments, decimal transferOutTotalCostOfTraining,
             decimal transferOutCompletionPayment)
         {
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
@@ -69,9 +69,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    TotalCostOfTraining = totalCostOfTraining,
-                    CompletionPayments = completionPayments,
-                    TransferOutTotalCostOfTraining = transferOutPayment,
+                    ActualCommittedTransferCost = actualTotalCostOfTraining,
+                    ActualCommittedTransferCompletionCost = actualCommittedCompletionPayments,
+                    TransferOutTotalCostOfTraining = transferOutTotalCostOfTraining,
                     TransferOutCompletionPayments = transferOutCompletionPayment
                 }
             };
@@ -80,8 +80,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(totalCostOfTraining + completionPayments, actual.TransferAllowances.First().EstimatedCost);
-            Assert.AreEqual(transferOutPayment + transferOutCompletionPayment, actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.First().EstimatedCost);
         }
 
         [Test]
@@ -93,8 +93,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    TotalCostOfTraining = 60,
-                    TransferOutTotalCostOfTraining = 50,
+                    TransferOutTotalCostOfTraining = 60,
+                    ActualCommittedTransferCost = 50,
                     FutureFunds = 100
                 }
             };
