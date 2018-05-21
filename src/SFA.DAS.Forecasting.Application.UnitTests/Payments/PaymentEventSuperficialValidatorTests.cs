@@ -129,7 +129,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         }
 
         [Test]
-        public void Failes_If_Ids_are_equal_and_FundingSource_Transfer()
+        public void Fails_If_Ids_are_equal_and_FundingSource_Transfer()
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
@@ -139,7 +139,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         }
 
         [Test]
-        public void Failes_If_Ids_are_not_equal_and_FundingSource_Levy()
+        public void Fails_If_Ids_are_not_equal_and_FundingSource_Levy()
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
