@@ -75,7 +75,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
             var projection = new AccountProjectionModel
             {
-                LevyFundsIn = _account.LevyDeclared,
+	            FundsIn = _account.LevyDeclared + totalCostOfTraning.TransferIn + completionPayments.TransferInCompletionPayment,
+				LevyFundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
