@@ -83,7 +83,6 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/CalculateTotalCost", Name = "CalculateTotalCost")]
         public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue, string estimationName)
         {
-            //TODO: this should be in the orchestrator
             var fundingCap = await _addApprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
             var totalValue = fundingCap * numberOfApprentices;
             var totalValueAsString = totalValue.FormatValue();
