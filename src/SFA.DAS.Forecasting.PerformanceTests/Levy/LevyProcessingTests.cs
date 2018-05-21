@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Levy
             dataContext.SaveChanges();
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var levyDeclaration = levyFaker.Generate();
                 var payload = JsonConvert.SerializeObject(levyDeclaration);
