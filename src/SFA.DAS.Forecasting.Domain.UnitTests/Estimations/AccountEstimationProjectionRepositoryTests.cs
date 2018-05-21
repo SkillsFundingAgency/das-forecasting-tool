@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
@@ -24,6 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         private Mock<IVirtualApprenticeshipValidator> _virtualApprenticeshipValidator;
 
         private AccountEstimationProjectionRepository _sut;
+        private Mock<IDateTimeService> _dateTimeService;
 
         [SetUp]
         public void Arrange()
@@ -32,13 +34,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _balanceService = new Mock<IAccountBalanceService>();
             _accountProjectionRepository = new Mock<IAccountProjectionDataSession>();
             _virtualApprenticeshipValidator = new Mock<IVirtualApprenticeshipValidator>();
+            _dateTimeService = new Mock<IDateTimeService>();
+            _dateTimeService.Setup(x => x.GetCurrentDateTime()).Returns(DateTime.Today.AddMonths(1));
 
             var balance = new CurrentBalance(new BalanceModel{RemainingTransferBalance = 1000, TransferAllowance = 15000}, _balanceService.Object);
             _balanceRepository.Setup(m => m.Get(It.IsAny<long>())).ReturnsAsync(balance);
 
             _accountProjectionRepository.Setup(x => x.Get(It.IsAny<long>())).ReturnsAsync(new List<AccountProjectionModel>());
 
-            _sut = new AccountEstimationProjectionRepository(_balanceRepository.Object, _accountProjectionRepository.Object);
+            _sut = new AccountEstimationProjectionRepository(_balanceRepository.Object, _accountProjectionRepository.Object, _dateTimeService.Object);
         }
 
         [Test]
