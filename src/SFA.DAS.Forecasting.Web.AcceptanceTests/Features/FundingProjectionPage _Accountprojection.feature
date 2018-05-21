@@ -22,7 +22,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   | Feb 19 | 10000    | 1800                   | 10000               | 1000				 | 1000					   | 1000         |
   | Mar 19 | 15000    | 1800                   | 45000               | 31000			 | 31000				   | 31000        |
   | Apr 19 | 42500    | 2100                   | 10000               | 1000				 | 1000					   | 1000         |  
-
+   
   And I'm on the Funding projection page
   When the Account projection is displayed
   Then the Account projection has the correct columns	
@@ -80,7 +80,32 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   And there are months up to 'Apr 19' displayed in the forecast
   And the data is displayed correctly in each column
 
+  Scenario: Hide Co-investment columns 
+  Given I have generated the following projections
 
+  | Date   | Funds in | Cost Of Training | Completion Payments | Your Contribution | Government Contribution | Future Funds |
+  | Apr 18 | 14000    | 880              | 3220                | 0                 | 0                       | 32000        |
+  | May 18 | 15000    | 880              | 3220                | 0                 | 0                       | 18000        |
+  | Jun 18 | 91000    | 1800             | 1000                | 0                 | 0                       | 23000        |
+  | Jul 18 | 21000    | 2350             | 5000                | 0                 | 0                       | 23000        |
+  | Aug 18 | 45200    | 850              | 4500                | 0                 | 0                       | 1000         |
+  | Sep 18 | 55000    | 700              | 3788                | 0                 | 0                       | 12000        |
+  | Oct 18 | 42000    | 700              | 3788                | 0                 | 0                       | 1000         |
+  | Nov 18 | 22000    | 1800             | 4500                | 0                 | 0                       | 5000         |
+  | Dec 18 | 42000    | 1400             | 1000                | 0                 | 0                       | 4000         |
+  | Jan 19 | 41000    | 2000             | 1000                | 0                 | 0                       | 1000         |
+  | Feb 19 | 10000    | 1800             | 1000                | 0                 | 0                       | 1000         |
+  | Mar 19 | 15000    | 1800             | 4500                | 0                 | 0                       | 31000        |
+  | Apr 19 | 42500    | 2100             | 1000                | 0                 | 0                       | 1000         |
+  And I'm on the Funding projection page
+  When the Account projection is displayed
+  Then the Account projection has the correct columns without Co-Investment
+  And there are months up to 'Apr 19' displayed in the forecast
+
+Scenario: FundingProjection completion payments overdue
+	Given I have completion payments of £ 2401 on commitments without stop date
+	And I'm on the Funding projection page
+	Then I see Pending completion payments with the amount of £ 2401
 
 #  Scenario: FundingProjectionPageAC4: Forecast data when negative balance
 #  Given I have generated the following projections

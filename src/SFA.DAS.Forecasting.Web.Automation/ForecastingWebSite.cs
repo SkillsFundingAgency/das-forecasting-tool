@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public FundingProjectionPage NavigateToFundingProjectionPage()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
+            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/projections"));
             return new FundingProjectionPage(WebBrowserDriver);
         }
 

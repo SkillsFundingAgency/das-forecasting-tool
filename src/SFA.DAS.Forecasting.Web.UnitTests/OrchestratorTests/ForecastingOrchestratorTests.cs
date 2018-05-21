@@ -12,37 +12,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMoq;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Models.Balance;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 {
     [TestFixture]
     public class ForecastingOrchestratorTests
     {
+        private AutoMoqer _moqer;
         private ForecastingOrchestrator _sut;
         private Mock<IAccountProjectionDataSession> _accountProjection;
         private Mock<IApplicationConfiguration> _applicationConfiguration;
         private Fixture _fixture;
+        private BalanceModel _balance;
 
         [SetUp]
         public void SetUp()
         {
+            _moqer = new AutoMoqer();
             _fixture = new Fixture();
 
             _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => _fixture.Behaviors.Remove(b));
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-            var hashingService = new Mock<IHashingService>();
-            _accountProjection = new Mock<IAccountProjectionDataSession>();
-            _applicationConfiguration = new Mock<IApplicationConfiguration>();
-
-            hashingService.Setup(m => m.DecodeValue("ABBA12"))
+            _moqer.GetMock<IHashingService>()
+                .Setup(m => m.DecodeValue("ABBA12"))
                 .Returns(12345);
 
-            _sut = new ForecastingOrchestrator(
-                hashingService.Object,
-                _accountProjection.Object,
-                _applicationConfiguration.Object,
-                new ForecastingMapper());
+            _balance = new BalanceModel {EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
+            _moqer.GetMock<IBalanceDataService>()
+                .Setup(x => x.Get(It.IsAny<long>()))
+                .Returns(Task.FromResult(_balance));
+            _accountProjection = _moqer.GetMock<IAccountProjectionDataSession>();
+            _applicationConfiguration = _moqer.GetMock<IApplicationConfiguration>();
+            _moqer.SetInstance(new ForecastingMapper());
+            _sut = _moqer.Resolve<ForecastingOrchestrator>();
         }
 
         [Test]
