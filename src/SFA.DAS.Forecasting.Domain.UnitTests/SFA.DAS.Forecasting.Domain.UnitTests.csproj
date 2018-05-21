@@ -112,6 +112,10 @@
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Messages\SFA.DAS.Forecasting.Messages.csproj">
+      <Project>{ECF5F114-FF6F-4D2C-AB19-B430D02EFBE7}</Project>
+      <Name>SFA.DAS.Forecasting.Messages</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>

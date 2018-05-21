@@ -22,6 +22,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Infrastructure.Registries
 
             ForSingletonOf<Config>().Use(new Config());
             
+            
 
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()

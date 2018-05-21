@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.WebJobs.Host;
+﻿using System;
+using Microsoft.Azure.WebJobs.Host;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -13,8 +14,13 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             AzureLogTraceWriter = azureLogTraceWriter;
         }
 
-        [RequiredParameter]
-        public TraceWriter AzureLogTraceWriter { get; set; }
+        [ThreadStatic] private TraceWriter _traceWriter;
+
+        [RequiredParameter] public TraceWriter AzureLogTraceWriter
+        {
+            get => _traceWriter;
+            set => _traceWriter = value;
+        }
 
         protected override void Write(LogEventInfo logEvent)
         {

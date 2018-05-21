@@ -41,6 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApprenticeshipCourses\RefreshCourses.cs" />
+    <Compile Include="Levy\LevyDeclarationUpdatedMessage.cs" />
+    <Compile Include="Levy\LevySchemeDeclarationUpdatedMessage.cs" />
+    <Compile Include="Payments\CalendarPeriod.cs" />
+    <Compile Include="Payments\EarningDetails.cs" />
+    <Compile Include="Payments\NamedCalendarPeriod.cs" />
+    <Compile Include="Payments\PaymentCreatedMessage.cs" />
+    <Compile Include="Payments\PreLoad\PreLoadPaymentMessage.cs" />
+    <Compile Include="Payments\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Projections\GenerateAccountProjectionCommand.cs" />
     <Compile Include="Projections\ProjectionSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

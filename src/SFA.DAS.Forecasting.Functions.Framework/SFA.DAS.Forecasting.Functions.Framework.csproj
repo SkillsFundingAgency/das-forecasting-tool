@@ -216,6 +216,7 @@
     <Compile Include="IFunction.cs" />
     <Compile Include="Infrastructure\ContainerBootstrapper.cs" />
     <Compile Include="Infrastructure\FunctionInitialisationService.cs" />
+    <Compile Include="Infrastructure\LoggingRegistry.cs" />
     <Compile Include="Logging\AzureFunctionLogTarget.cs" />
     <Compile Include="Logging\LoggerSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -19,8 +19,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
-                    logger = container.GetInstance<ILog>();
+                    ConfigureContainer<TFunction>(executionContext, writer, nestedContainer);
+                    logger = nestedContainer.GetInstance<ILog>();
                     await runAction(nestedContainer, logger);
                 }
             }
@@ -43,8 +43,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
-                    logger = container.GetInstance<ILog>();
+                    ConfigureContainer<TFunction>(executionContext, writer, nestedContainer);
+                    logger = nestedContainer.GetInstance<ILog>();
                     runAction(nestedContainer, logger);
                 }
             }
@@ -65,8 +65,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
-                    return runAction(nestedContainer, container.GetInstance<ILog>());
+                    ConfigureContainer<TFunction>(executionContext, writer, nestedContainer);
+                    return runAction(nestedContainer, nestedContainer.GetInstance<ILog>());
                 }
             }
             catch (Exception ex)
@@ -82,7 +82,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
-                ConfigureContainer(executionContext, writer, container);
+                ConfigureContainer < TFunction>(executionContext, writer, container);
                 logger = container.GetInstance<ILog>();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
@@ -99,11 +99,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
         }
 
-        private static void ConfigureContainer(ExecutionContext executionContext, TraceWriter writer, IContainer container)
+        private static void ConfigureContainer<TFunction>(ExecutionContext executionContext, TraceWriter writer, IContainer container)
         {
             container.Configure(c =>
             {
-                c.For<ILog>().Use(x => LoggerSetup.Create(executionContext, writer, x.ParentType));
+                c.For<ILog>().Use(LoggerSetup.Create(executionContext, writer, typeof(TFunction)));
             });
         }
     }

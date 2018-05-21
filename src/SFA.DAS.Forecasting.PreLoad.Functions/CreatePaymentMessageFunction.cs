@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Messages.Payments.PreLoad;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
 

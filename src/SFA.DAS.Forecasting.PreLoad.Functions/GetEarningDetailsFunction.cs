@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Messages.Payments.PreLoad;
 using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
