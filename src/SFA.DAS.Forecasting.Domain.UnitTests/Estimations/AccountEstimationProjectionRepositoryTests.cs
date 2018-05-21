@@ -33,7 +33,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _accountProjectionRepository = new Mock<IAccountProjectionDataSession>();
             _virtualApprenticeshipValidator = new Mock<IVirtualApprenticeshipValidator>();
 
-            var balance = new CurrentBalance(new BalanceModel{RemainingTransferBalance = 1000, TransferAllowance = 15000}, _balanceService.Object);
+            var employerCommitments = new Domain.Commitments.EmployerCommitments(1, new List<Models.Commitments.CommitmentModel>());
+            var balance = new CurrentBalance(new BalanceModel{RemainingTransferBalance = 1000, TransferAllowance = 15000}, _balanceService.Object, employerCommitments);
             _balanceRepository.Setup(m => m.Get(It.IsAny<long>())).ReturnsAsync(balance);
 
             _accountProjectionRepository.Setup(x => x.Get(It.IsAny<long>())).ReturnsAsync(new List<AccountProjectionModel>());
