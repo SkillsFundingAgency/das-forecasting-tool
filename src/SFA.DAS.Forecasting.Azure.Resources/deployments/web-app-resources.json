@@ -54,8 +54,19 @@
       "apiVersion": "2016-03-01",
       "properties": {
         "keyVaultId": "[resourceId(parameters('KeyVaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('KeyVaultName'))]",
+        "keyVaultSecretName": "[parameters('certificateName')]",
+        "serverFarmId": "[parameters('appServicePlanId')]"
+      }
+    },
+    {
+      "type": "Microsoft.Web/certificates",
+      "name": "[parameters('keyvaultCertificateName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-01",
+      "properties": {
+        "keyVaultId": "[resourceId(parameters('KeyVaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('KeyVaultName'))]",
         "keyVaultSecretName": "[parameters('keyvaultCertificateName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanId'))]"
+        "serverFarmId": "[parameters('appServicePlanId')]"
       }
     },
     {
@@ -69,14 +80,15 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', parameters('name'))]",
-        "[parameters('certificateName')]"
+        "[parameters('keyvaultCertificateName')]"
       ]
     },
     {
       "name": "[parameters('name')]",
       "type": "Microsoft.Web/sites",
       "dependsOn": [
-        "[resourceId('microsoft.insights/components/', parameters('name'))]"
+        "[resourceId('microsoft.insights/components/', parameters('name'))]",
+        "[parameters('certificateName')]"
       ],
       "properties": {
         "siteConfig": {
