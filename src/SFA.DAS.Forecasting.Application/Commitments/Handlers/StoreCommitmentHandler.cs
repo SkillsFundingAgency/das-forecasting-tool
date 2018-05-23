@@ -24,8 +24,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
                 throw new InvalidOperationException($"Invalid payment created message. Earning details is null so cannot create commitment data. Employer account: {message.EmployerAccountId}, payment id: {message.Id}");
 
             var employerCommitment = await _repository.Get(message.EmployerAccountId, message.ApprenticeshipId);
-            
-            employerCommitment.RegisterCommitment(Map(message));
+
+            var commitmentRegistered = employerCommitment.RegisterCommitment(Map(message));
+            if (!commitmentRegistered)
+            {
+                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
+                return;
+            }
 
             _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
             await _repository.Store(employerCommitment);

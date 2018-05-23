@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Forecasting.Application.Payments.Messages;
 using FluentValidation;
 using SFA.DAS.Forecasting.Models.Payments;
+using System;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
@@ -15,11 +16,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
 	        RuleFor(m => m.ProviderName).NotNull().NotEmpty();
 	        RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
 	        RuleFor(m => m.ApprenticeName).NotNull().NotEmpty();
-			RuleFor(m => m.Amount).GreaterThan(0);
 
-	        RuleFor(m => m.CourseName).NotNull().NotEmpty();
-			
-			RuleFor(m => m.EarningDetails)
+            RuleFor(m => m.Amount).GreaterThan(0);
+
+            RuleFor(m => m.CourseName).NotNull().NotEmpty();
+
+            RuleFor(m => m.EarningDetails)
                 .NotNull()
                 .SetValidator(new EarningDetailsSuperficialValidator());
 

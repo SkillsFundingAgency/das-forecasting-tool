@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Core;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
@@ -25,7 +26,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     var body = await req.Content.ReadAsStringAsync();
                     var paymentEvent = JsonConvert.DeserializeObject<PaymentCreatedMessage>(body);
 
-                    logger.Info($"Added one payment to {QueueNames.PaymentProcessor} queue.");
+                    logger.Info($"Added one payment to {QueueNames.PaymentProcessor} queue. {paymentEvent.ToJson()}");
                     return await Task.FromResult(paymentEvent);
                 });
         }

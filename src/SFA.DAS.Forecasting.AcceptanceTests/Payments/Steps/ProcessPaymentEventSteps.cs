@@ -70,7 +70,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 var id = idx + 1;
                 var payment = Payments[idx];
                 payment.PaymentId = id.ToString();
-                payment.ApprenticeshipId = id;
+                payment.ApprenticeshipId = payment.ApprenticeshipId > 0 ? payment.ApprenticeshipId : id;
                 payment.ProviderId = id;
             }
             Payments.Select((payment, idx) => new PaymentCreatedMessage
@@ -92,7 +92,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 },
                 EarningDetails = new EarningDetails
                 {
-                    ActualEndDate = DateTime.MinValue,
+                    ActualEndDate = payment.ActualEndDateValue ?? DateTime.MinValue,
                     StartDate = payment.StartDateValue,
                     PlannedEndDate = payment.PlannedEndDate,
                     TotalInstallments = payment.NumberOfInstallments,
@@ -229,5 +229,70 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 
             Assert.AreEqual(0, count, message: msg);
         }
+
+        [Then(@"there will be (.*) commitment for employer (.*)")]
+        public void ThenThereWillBeCommitmentForEmployer(int expectedCount, int employerId)
+        {
+            WaitForIt(() =>
+            {
+                var count = DataContext.Commitments
+                    .Where(m => m.EmployerAccountId == employerId)
+                    .Count();
+
+                var msg = $"Looking for Commitments. Found {count} of {expectedCount}. Employer Account Id: {employerId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
+
+                return Tuple.Create(count == expectedCount, msg);
+
+            }, $"Failed to find all commitments. Expected: {expectedCount}");
+        }
+
+        [Then(@"apprenticeship with id (.*) should have an end date")]
+        public void ThenApprenticeshipWithIdShouldHaveAnEndDate(int apprenticeshipId)
+        {
+            WaitForIt(() =>
+            {
+                var commitment = DataContext.Commitments
+                .AsNoTracking()
+                    .Single(m => m.ApprenticeshipId == apprenticeshipId);
+
+                var msg = $"Looking for Commitment {apprenticeshipId}. ActualEndDate: {commitment.ActualEndDate}.";
+
+                return Tuple.Create(commitment.ActualEndDate != null && commitment.ActualEndDate > DateTime.MinValue, msg);
+
+            }, $"Failed finding commitment ({apprenticeshipId}) with actual end date");
+        }
+
+        [Then(@"apprenticeship with id (.*) should not have an actual end date")]
+        public void ThenApprenticeshipWithIdShouldNotHaveAnActualEndDate(int apprenticeshipId)
+        {
+            WaitForIt(() =>
+            {
+                var commitment = DataContext.Commitments
+                    .AsNoTracking()
+                    .Single(m => m.ApprenticeshipId == apprenticeshipId);
+
+                var msg = $"Looking for Commitment {apprenticeshipId}. ";
+
+                return Tuple.Create(commitment.ActualEndDate == null || commitment.ActualEndDate == DateTime.MinValue, msg);
+
+            }, $"Failed finding commitment ({apprenticeshipId}) with actual end date");
+        }
+
+        [Then(@"apprenticeship with id (.*) should have completion amount of (.*) and montly installment of (.*)")]
+        public void ThenApprenticeshipWithIdShouldHaveCompletionAmountOfAndMontlyInstallnebtOf(int apprenticeshipId, int completionAmount, Decimal installmentAmount)
+        {
+            WaitForIt(() =>
+            {
+                var commitment = DataContext.Commitments
+                    .AsNoTracking()
+                    .Single(m => m.ApprenticeshipId == apprenticeshipId);
+
+                var msg = $"Looking for Commitment {apprenticeshipId}. CompletionAmount: {commitment.CompletionAmount} and InstallemntAmount: {commitment.MonthlyInstallment}";
+
+                return Tuple.Create(commitment.CompletionAmount == completionAmount && commitment.MonthlyInstallment == installmentAmount, msg);
+
+            }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletoinAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
+        }
+
     }
 }

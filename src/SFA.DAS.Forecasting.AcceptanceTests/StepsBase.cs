@@ -249,7 +249,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 {
                     EmployerAccountId = commitment.EmployerAccountId ?? Config.EmployerAccountId,
                     LearnerId = i + 1,
-                    ApprenticeshipId = i + 2,
+                    ApprenticeshipId = commitment.ApprenticeshipId > 0 ? commitment.ApprenticeshipId : i + 2,
                     ApprenticeName = commitment.ApprenticeName,
                     SendingEmployerAccountId = commitment.SendingEmployerAccountId,
                     ProviderId = i + 3,
