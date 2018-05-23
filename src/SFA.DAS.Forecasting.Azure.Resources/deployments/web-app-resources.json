@@ -52,7 +52,7 @@
   "resources": [
     {
       "type": "Microsoft.Web/certificates",
-      "name": "[parameters('certificateName')]",
+      "name": "[concat(parameters('certificateName'), uniqueString(resourceGroup().id))]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-01",
       "properties": {
@@ -63,7 +63,7 @@
     },
     {
       "type": "Microsoft.Web/certificates",
-      "name": "[parameters('keyvaultCertificateName')]",
+      "name": "[concat(parameters('keyvaultCertificateName'), uniqueString(resourceGroup().id))]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-01",
       "properties": {
