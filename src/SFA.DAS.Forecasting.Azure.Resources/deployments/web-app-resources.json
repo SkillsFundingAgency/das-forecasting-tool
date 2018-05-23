@@ -5,13 +5,7 @@
     "name": {
       "type": "string"
     },
-    "hostingPlanName": {
-      "type": "string"
-    },
     "hostingEnvironment": {
-      "type": "string"
-    },
-    "serverFarmResourceGroup": {
       "type": "string"
     },
     "EnvironmentName": {
@@ -22,6 +16,9 @@
       "defaultValue": true
     },
     "KeyVaultName": {
+      "type": "string"
+    },
+    "KeyVaultResourceGroup": {
       "type": "string"
     },
     "LoggingRedisConnectionString": {
@@ -42,14 +39,25 @@
     "customHostname": {
       "type": "string"
     },
-    "certResourceGroup": {
+    "myaBaseUrl": {
       "type": "string"
     },
-    "myaBaseUrl": {
+    "appServicePlanId": {
       "type": "string"
     }
   },
   "resources": [
+    {
+      "type": "Microsoft.Web/certificates",
+      "name": "[parameters('certificateName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2016-03-01",
+      "properties": {
+        "keyVaultId": "[resourceId(parameters('KeyVaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('KeyVaultName'))]",
+        "keyVaultSecretName": "[parameters('keyvaultCertificateName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanId'))]"
+      }
+    },
     {
       "type": "Microsoft.Web/sites/hostnameBindings",
       "name": "[concat(parameters('name'), '/', parameters('customHostname'))]",
@@ -57,10 +65,11 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "sslState": "SniEnabled",
-        "thumbprint": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('keyvaultCertificateName')), '2016-03-01').Thumbprint]"
+        "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('keyvaultCertificateName')), '2016-03-01').Thumbprint]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('name'))]"
+        "[resourceId('Microsoft.Web/sites', parameters('name'))]",
+        "[parameters('certificateName')]"
       ]
     },
     {
@@ -102,7 +111,7 @@
             },
             {
               "name": "WEBSITE_LOAD_CERTIFICATES",
-              "value": "[reference(resourceId(parameters('certResourceGroup'), 'Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
+              "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
             },
             {
               "name": "BaseAddress",
@@ -118,7 +127,7 @@
           "httpsOnly": true
         },
         "name": "[parameters('name')]",
-        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "serverFarmId": "[parameters('appServicePlanId')]",
         "hostingEnvironment": "[parameters('hostingEnvironment')]"
       },
       "apiVersion": "2016-03-01",
