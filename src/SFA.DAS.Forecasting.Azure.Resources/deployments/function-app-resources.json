@@ -118,6 +118,9 @@
       "name": "[parameters('funAppName')]",
       "type": "microsoft.insights/components",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/sites', parameters('funAppName')))]": "Resource"
+      },
       "properties": {
         "ApplicationId": "[parameters('funAppName')]",
         "Request_Source": "IbizaWebAppExtensionCreate"
