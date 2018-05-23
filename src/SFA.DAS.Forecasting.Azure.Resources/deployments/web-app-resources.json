@@ -83,7 +83,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', parameters('name'))]",
-        "[parameters('keyvaultCertificateName')]"
+        "[concat(parameters('keyvaultCertificateName'), uniqueString(resourceGroup().id))]"
       ]
     },
     {
@@ -91,7 +91,7 @@
       "type": "Microsoft.Web/sites",
       "dependsOn": [
         "[resourceId('microsoft.insights/components/', parameters('name'))]",
-        "[parameters('certificateName')]"
+        "[concat(parameters('certificateName'), uniqueString(resourceGroup().id))]"
       ],
       "properties": {
         "siteConfig": {
