@@ -47,7 +47,10 @@
     "keyVaultName": {
       "type": "string"
     },
-    "keyVaultResourceGroup": {
+    "certKeyVaultName": {
+      "type": "string"
+    },
+    "certKeyVaultResourceGroup": {
       "type": "string"
     },
     "kvSecretsPermissionsList": {
@@ -184,8 +187,11 @@
           "KeyVaultName": {
             "value": "[parameters('keyVaultName')]"
           },
-          "KeyVaultResourceGroup": {
-            "value": "[parameters('keyVaultResourceGroup')]"
+          "certKeyVaultName": {
+            "value": "[parameters('certKeyVaultName')]"
+          },
+          "certKeyVaultResourceGroup": {
+            "value": "[parameters('certKeyVaultResourceGroup')]"
           },
           "LoggingRedisConnectionString": {
             "value": "[parameters('appSettingLoggingRedisConnectionString')]"
