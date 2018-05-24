@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
@@ -12,6 +13,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public long Id => Commitment.Id;
         public long EmployerAccountId => Commitment.EmployerAccountId;
+        public long SendingEmployerAccountId => Commitment.SendingEmployerAccountId;
         public long ApprenticeshipId => Commitment.ApprenticeshipId;
         public long LearnerId => Commitment.LearnerId;
         public DateTime StartDate => Commitment.StartDate;
@@ -26,34 +28,36 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         public string CourseName => Commitment.CourseName;
         public int? CourseLevel => Commitment.CourseLevel;
 
+        public FundingSource FundingSource => Commitment.FundingSource;
+
         public EmployerCommitment(CommitmentModel commitment, ICommitmentValidator commitmentValidator)
         {
             Commitment = commitment ?? throw new ArgumentNullException(nameof(commitment));
             _commitmentValidator = commitmentValidator ?? throw new ArgumentNullException(nameof(commitmentValidator));
         }
 
-        public bool RegisterCommitment(long learnerId, string apprenticeName, string courseName, int? courseLevel,
-            long providerId, string providerName, DateTime startDate, DateTime plannedEndDate,
-            DateTime? actualEndDate, decimal monthlyInstallment, decimal completionAmount, short numberOfInstallments)
+        public bool RegisterCommitment(CommitmentModel model)
         {
             //TODO: move into validation class
             if (Commitment.EmployerAccountId <= 0)
                 return false;
 
-            if (actualEndDate.HasValue && actualEndDate == DateTime.MinValue)
-                actualEndDate = null;
-            Commitment.ApprenticeName = apprenticeName;
-            Commitment.LearnerId = learnerId;
-            Commitment.CourseLevel = courseLevel;
-            Commitment.CourseName = courseName;
-            Commitment.ProviderId = providerId;
-            Commitment.ProviderName = providerName;
-            Commitment.StartDate = startDate;
-            Commitment.PlannedEndDate = plannedEndDate;
-            Commitment.ActualEndDate = actualEndDate;
-            Commitment.MonthlyInstallment = monthlyInstallment;
-            Commitment.CompletionAmount = completionAmount;
-            Commitment.NumberOfInstallments = numberOfInstallments;
+            if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
+                model.ActualEndDate = null;
+            Commitment.ApprenticeName = model.ApprenticeName;
+            Commitment.LearnerId = model.LearnerId;
+            Commitment.CourseLevel = model.CourseLevel;
+            Commitment.CourseName = model.CourseName;
+            Commitment.ProviderId = model.ProviderId;
+            Commitment.ProviderName = model.ProviderName;
+            Commitment.StartDate = model.StartDate;
+            Commitment.PlannedEndDate = model.PlannedEndDate;
+            Commitment.ActualEndDate = model.ActualEndDate;
+            Commitment.MonthlyInstallment = model.MonthlyInstallment;
+            Commitment.CompletionAmount = model.CompletionAmount;
+            Commitment.NumberOfInstallments = model.NumberOfInstallments;
+            Commitment.SendingEmployerAccountId = model.SendingEmployerAccountId;
+            Commitment.FundingSource = model.FundingSource;
 
             return Commitment.Id > 0 || _commitmentValidator.IsValid(Commitment);
         }

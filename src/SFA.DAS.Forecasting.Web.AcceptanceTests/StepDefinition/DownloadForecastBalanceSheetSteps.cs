@@ -85,6 +85,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", long.Parse(Config.EmployerAccountID), DbType.Int64);
+            Connection.Execute("Delete from AccountProjectionCommitment where AccountProjectionId in (Select id from AccountProjection where employerAccountId = @employerAccountId)", parameters, commandType: CommandType.Text);
             Connection.Execute("Delete from AccountProjection where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
         }
 
@@ -93,7 +94,19 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var employerAccountId = long.Parse(Config.EmployerAccountID);
             using (var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var sql = @"Insert Into [dbo].[AccountProjection] Values 
+                var sql = @"Insert Into [dbo].[AccountProjection]
+                           (EmployerAccountId,
+                            ProjectionCreationDate,
+                            ProjectionGenerationType,
+                            Month,
+                            Year,
+                            FundsIn,
+                            TotalCostOfTraining,
+                            CompletionPayments,
+                            CoInvestmentEmployer,
+                            CoInvestmentGovernment,
+                            FutureFunds)
+                        Values 
                            (@employerAccountId,
                            @projectionCreationDate,
                            @projectionGenerationType,
@@ -165,16 +178,17 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             DeleteAccountProjections();
             Store(Projections);
         }
+    }
 
-        public class TestAccountProjection
-        {
-            public string Date { get; set; }
-            public string FundsIn { get; set; }
-            public decimal CostOfTraining { get; set; }
-            public decimal CompletionPayments { get; set; }
-            public decimal YourContribution { get; set; }
-            public decimal GovernmentContribution { get; set; }
-            public decimal FutureFunds { get; set; }
-        }
+    public class TestAccountProjection
+    {
+        public string Date { get; set; }
+        public string FundsIn { get; set; }
+        public decimal CostOfTraining { get; set; }
+        public decimal CompletionPayments { get; set; }
+        public decimal YourContribution { get; set; }
+        public decimal GovernmentContribution { get; set; }
+        public decimal FutureFunds { get; set; }
+        public decimal TransferOutTotalCostOfTraining { get; set; }
     }
 }

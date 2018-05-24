@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage = new PaymentCreatedMessage
             {
                 EmployerAccountId = 1,
+                SendingEmployerAccountId = 2,
                 Amount = 100,
                 ApprenticeshipId = 1,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod
@@ -114,6 +115,25 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.EarningDetails = null;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Pass_If_Ids_are_equal_and_FundingSource_Levy()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Failes_If_Ids_are_equal_and_FundingSource_Transefer()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
+            PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }

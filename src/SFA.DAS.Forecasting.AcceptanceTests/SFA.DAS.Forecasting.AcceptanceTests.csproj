@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Payments\Steps\Pre_LoadPaymentsSteps.cs" />
     <Compile Include="Payments\Steps\BuildProjectionsFromPaymentRun.cs" />
+    <Compile Include="Payments\TestAccountProjection.cs" />
     <Compile Include="Payments\TestPayment.cs" />
     <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
       <AutoGen>True</AutoGen>
@@ -156,6 +157,21 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CalculateActualTransferCompletionPayments.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\CalculateFundsInForReceivingEmployer.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CalculateFundsInForReceivingEmployer.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CalculateMonthlyCostOfActualTransferCommitments.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Feature\Generate Training Cost Projections.feature.cs">
       <AutoGen>True</AutoGen>
@@ -199,6 +215,7 @@
     <Compile Include="Payments\TestCommitment.cs" />
     <Compile Include="Projections\Steps\GenerateTrainingCostProjectionsCI_499Steps.cs" />
     <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
+    <Compile Include="Projections\Steps\Transfers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StepsBase.cs" />
     <Compile Include="TableStorageService.cs" />
@@ -244,6 +261,18 @@
     <None Include="Projections\Feature\Calculate co-investment amounts.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CalculateActualTransferCompletionPayments.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\CalculateFundsInForReceivingEmployer.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CalculateFundsInForReceivingEmployer.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>CalculateMonthlyCostOfActualTransferCommitments.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
