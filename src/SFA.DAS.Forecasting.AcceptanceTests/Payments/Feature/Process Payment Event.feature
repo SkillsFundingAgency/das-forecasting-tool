@@ -45,30 +45,60 @@ Scenario: Ensure sending employer transfer payments are processed
 	| 133.33         | Test Apprentice 3 | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     | 100021                      |
 	| 133.33         | Test Apprentice 4 | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |                             |
 	| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     | 12345                       |
-	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payments
 	Then the Forecasting Payment service should store the payment declarations
 	And the Forecasting Payment service should store the commitment declarations
 
 Scenario: Ensure receiving employer transfer payments are processed (CI-762)
-	And I have made the following payments
+	Given I have made the following payments
 	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date       | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id | FundingSource |
 	| 133.33         | Test Apprentice   | Test Course | 1            | Test Provider | 16/04/2015 00:00 | 133.33             | 400.00            | 12                     | 1                           | Transfer      |
-	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | 16/04/2015 00:00 | 133.33             | 400.00            | 12                     | 1                           | Transfer      |
-	
-	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | 16/04/2015 00:00 | 133.33             | 400.00            | 12                     | 1                           | Transfer      |	
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payments
 	Then the Forecasting Payment service should store the payment declarations receiving employer 12345 from sending employer 1
 	And the Forecasting Payment service should store the commitment declarations for receiving employer 12345 from sending employer 1
 
-Scenario: Projection processing on actual end date and invalid earning values (CI-797)
-	And I have made the following payments
-		| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id | FundingSource | ActualEndDate | Expected |
-		| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | MinValue       | Ignore   |
-		| 133.33         | Test Apprentice 6 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | 12345                       | Levy          | MinValue       | Store    |
-		| 133.33         | Test Apprentice 7 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | Next Year      | Ignore   |
-		| 133.33         | Test Apprentice 8 | Test Course | 1            | Test Provider | Yesterday  | 133.44             | 404.44            | 12                     | 12345                       | Levy          | Next Year      | Ignore   |
+Scenario: Ensure payments for new commitments with an invalid installment amount are ignored (CI-797)
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 400.00            | 12                     |
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
-	Then there will be 1 commitment for employer 12345
+	Then the Forecasting Payment service should not store the payments	
+	And the Forecasting Payment service should not store commitments
 
+Scenario: Ensure payments for new commitments with an invalid completion amount are ignored (CI-797)
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 1.00              | 12                     |
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	Then the Forecasting Payment service should not store the payments
+	And the Forecasting Payment service should not store commitments
+
+Scenario: Ensure payments for new commitments with an invalid payment amount are not ignored (CI-797)
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| 0              | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     |
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	Then the Forecasting Payment service should store the payment declarations
+	And the Forecasting Payment service should store the commitment declarations
+
+Scenario: Ensure payments for new commitments with an actual end date are ignored (CI-797)
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
+	| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	Then the Forecasting Payment service should not store the payments
+	And the Forecasting Payment service should not store commitments
+
+#Scenario: Projection processing on actual end date and invalid earning values (CI-797)
+#	And I have made the following payments
+#		| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id | FundingSource | ActualEndDate | Expected |
+#		| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | MinValue       | Ignore   |
+#		| 133.33         | Test Apprentice 6 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | 12345                       | Levy          | MinValue       | Store    |
+#		| 133.33         | Test Apprentice 7 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | Next Year      | Ignore   |
+#		| 133.33         | Test Apprentice 8 | Test Course | 1            | Test Provider | Yesterday  | 133.44             | 404.44            | 12                     | 12345                       | Levy          | Next Year      | Ignore   |
+#	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payments
+#	Then there will be 1 commitment for employer 12345
 
 Scenario: Projection processing on actual end date and invalid earning values for stored commitments(CI-797)
 	Given the following commitments have been recorded

@@ -63,6 +63,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
         [When(@"the SFA Employer HMRC Payment service notifies the Forecasting service of the payment")]
+        [When(@"the SFA Employer HMRC Payment service notifies the Forecasting service of the payments")]
         public void WhenTheSFAEmployerHMRCPaymentServiceNotifiesTheForecastingServiceOfThePayment()
         {
             for (var idx = 0; idx < Payments.Count; idx++)
