@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 {
                     Date = new DateTime(o.Year, o.Month, 1),
                     ActualCost = o.ActualCommittedTransferCost + o.ActualCommittedTransferCompletionCost,
-                    EstimatedCost = o.TransferOutTotalCostOfTraining + o.TransferOutCompletionPayments,
+                    EstimatedCost = o.LevyFundedCostOfTraining + o.LevyFundedCompletionPayment  + o.TransferOutTotalCostOfTraining + o.TransferOutCompletionPayments,
                     RemainingAllowance = o.FutureFunds
                 }).ToList()
             };

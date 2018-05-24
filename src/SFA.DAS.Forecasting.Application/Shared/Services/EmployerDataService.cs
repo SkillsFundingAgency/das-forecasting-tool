@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.HashingService;

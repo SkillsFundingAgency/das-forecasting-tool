@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
 
-            accountProjection.Projections.Count(projection => projection.FundsIn == 300).Should().Be(49);
+            accountProjection.Projections.Count(projection => projection.LevyFundsIn == 300).Should().Be(49);
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
 
-            accountProjection.Projections.Skip(2).First().CompletionPayments
+            accountProjection.Projections.Skip(2).First().LevyFundedCompletionPayments
                 .Should().Be(_commitment.CompletionAmount);
         }
 
@@ -200,15 +200,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             var projections = accountProjection.Projections.ToArray();
 
-            projections[6].TotalCostOfTraining.Should().Be(4000);
-            projections[6].TransferInTotalCostOfTraining.Should().Be(2000);
-            projections[6].TransferOutTotalCostOfTraining.Should().Be(4000);
-            projections[7].TotalCostOfTraining.Should().Be(0);
-            projections[7].CompletionPayments.Should().Be(4800);
+            projections[6].LevyFundedCostOfTraining.Should().Be(4000);
+            projections[6].TransferInCostOfTraining.Should().Be(2000);
+            projections[6].TransferOutCostOfTraining.Should().Be(4000);
+            projections[7].LevyFundedCostOfTraining.Should().Be(0);
+            projections[7].LevyFundedCompletionPayments.Should().Be(2400);
             projections[7].TransferInCompletionPayments.Should().Be(1200);
             projections[7].TransferOutCompletionPayments.Should().Be(2400);
-            projections[8].TotalCostOfTraining.Should().Be(0);
-            projections[8].CompletionPayments.Should().Be(0);
+            projections[8].LevyFundedCostOfTraining.Should().Be(0);
+            projections[8].LevyFundedCompletionPayments.Should().Be(0);
         }
 
 

@@ -37,7 +37,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _dateTimeService = new Mock<IDateTimeService>();
             _dateTimeService.Setup(x => x.GetCurrentDateTime()).Returns(DateTime.Today.AddMonths(1));
 
-            var balance = new CurrentBalance(new BalanceModel{RemainingTransferBalance = 1000, TransferAllowance = 15000}, _balanceService.Object);
+            var employerCommitments = new Domain.Commitments.EmployerCommitments(1, new List<Models.Commitments.CommitmentModel>());
+            var balance = new CurrentBalance(new BalanceModel{RemainingTransferBalance = 1000, TransferAllowance = 15000}, _balanceService.Object, employerCommitments);
             _balanceRepository.Setup(m => m.Get(It.IsAny<long>())).ReturnsAsync(balance);
 
             _accountProjectionRepository.Setup(x => x.Get(It.IsAny<long>())).ReturnsAsync(new List<AccountProjectionModel>());
@@ -97,7 +98,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 .Should().BeTrue();
             result.Projections.Take(result.Projections.Count - 1).Any(m => m.TransferInTotalCostOfTraining > 0 || m.TransferInTotalCostOfTraining > 0)
                 .Should().BeFalse();
-            result.Projections.Take(result.Projections.Count - 1).Any(m => m.CompletionPayments > 0).Should().BeFalse();
+            result.Projections.Take(result.Projections.Count - 1).Any(m => m.LevyFundedCompletionPayment > 0).Should().BeFalse();
         }
 
         [Test]
@@ -112,7 +113,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     {
                         Month = (short)(DateTime.Today.Month + 1),
                         Year = DateTime.Today.Year,
-                        TransferOutTotalCostOfTraining = 10m,
+                        TransferOutCostOfTraining = 10m,
                         TransferOutCompletionPayments = 0m
                     }
                 };

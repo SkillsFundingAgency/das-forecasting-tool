@@ -15,10 +15,10 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         [Name("Completion payments")]
         public decimal CompletionPayments { get; set; }
 
-        [Name("Your contribution")]
+        [Name("Your contribution (10%)")]
         public decimal CoInvestmentEmployer { get; set; }
 
-        [Name("Government contribution")]
+        [Name("Government contribution (90%)")]
         public decimal CoInvestmentGovernment { get; set; }
 
         [Name("Future funds")]

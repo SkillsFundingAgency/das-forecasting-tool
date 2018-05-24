@@ -69,10 +69,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    ActualCommittedTransferCost = actualTotalCostOfTraining,
-                    ActualCommittedTransferCompletionCost = actualCommittedCompletionPayments,
                     TransferOutTotalCostOfTraining = transferOutTotalCostOfTraining,
-                    TransferOutCompletionPayments = transferOutCompletionPayment
+                    TransferOutCompletionPayments = transferOutCompletionPayment,
+                    ActualCommittedTransferCost = actualTotalCostOfTraining,
+                    ActualCommittedTransferCompletionCost = actualCommittedCompletionPayments
                 }
             };
             _accountEstimationProjection.Setup(x => x.Projections)

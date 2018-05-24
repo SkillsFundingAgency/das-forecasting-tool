@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMoq;
+﻿using AutoMoq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -32,7 +31,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 CompletionAmount = 50,
                 CourseLevel = 3,
             };
-            _moqer.SetInstance<CommitmentModel>(_existingCommitment);
+            _moqer.SetInstance(_existingCommitment);
             _moqer.GetMock<ICommitmentValidator>()
                 .Setup(validator => validator.IsValid(It.IsAny<CommitmentModel>()))
                 .Returns(true);
@@ -43,22 +42,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         {
             var commitment = _moqer.Resolve<EmployerCommitment>();
 
-            var newCommitment = new CommitmentModel
-            {
-                EmployerAccountId = 1,
-                ApprenticeshipId = 2,
-                LearnerId = 3,
-                ApprenticeName = "test apprentice",
-                ProviderName = "test provider",
-                CourseName = "test course",
-                ProviderId = 4,
-                MonthlyInstallment = 10,
-                NumberOfInstallments = 1,
-                CompletionAmount = 50,
-                CourseLevel = 1,
-                FundingSource = FundingSource.Levy,
-                SendingEmployerAccountId = 55501
-            };
+            var newCommitment = BuildCommitmentModel();
 
             commitment.RegisterCommitment(newCommitment).Should().BeTrue();
 
@@ -80,7 +64,16 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 
             _existingCommitment.EmployerAccountId = 0;
 
-            var newCommitment = new CommitmentModel
+            var newCommitment = BuildCommitmentModel();
+
+            commitment.RegisterCommitment(newCommitment).Should().BeFalse();
+
+            commitment.ApprenticeName.Should().Be("Test apprentice 12");
+        }
+
+        private static CommitmentModel BuildCommitmentModel()
+        {
+            return new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -96,10 +89,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 FundingSource = FundingSource.Levy,
                 SendingEmployerAccountId = 55501
             };
-
-            commitment.RegisterCommitment(newCommitment).Should().BeFalse();
-
-            commitment.ApprenticeName.Should().Be("Test apprentice 12");
         }
     }
 }

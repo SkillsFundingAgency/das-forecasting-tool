@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.10", "func.exe");
+        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.12", "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
@@ -82,6 +82,21 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 Thread.Sleep(Config.TimeToPause);
             }
             Assert.Fail(failText);
+        }
+
+        protected void WaitForIt(Func<Tuple<bool, string>> lookForIt, string failText)
+        {
+            var endTime = DateTime.Now.Add(Config.TimeToWait);
+            var reason = "";
+            var pass = false;
+            while (DateTime.Now < endTime)
+            {
+                (pass, reason) = lookForIt();
+                if (pass)
+                    return;
+                Thread.Sleep(Config.TimeToPause);
+            }
+            Assert.Fail(failText + " - " + reason);
         }
 
         protected bool WaitForIt(Func<bool> lookForIt)
