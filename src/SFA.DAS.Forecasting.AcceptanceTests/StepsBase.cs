@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", "1.0.12", "func.exe");
+        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", GetAzureFunctionVersion(), "func.exe");
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
@@ -55,6 +55,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         {
             get => (decimal)Get<object>("current_balance");
             set => Set(value, "current_balance");
+        }
+
+        protected static string GetAzureFunctionVersion()
+        {
+            return Directory.GetDirectories(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli"))
+                .Select(directoryI => new DirectoryInfo(directoryI))
+                .Select(directoryInfo => directoryInfo.Name)
+                .ToList()
+                .OrderByDescending(c=>Convert.ToInt32(c.Split('.')[0]))
+                .ThenByDescending(c => Convert.ToInt32(c.Split('.')[1]))
+                .ThenByDescending(c => Convert.ToInt32(c.Split('.')[2]))
+                .First();
         }
 
         protected static HttpClient HttpClient = new HttpClient();
