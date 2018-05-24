@@ -78,7 +78,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
         }
 
-            
+        [HttpGet]
+        [Route("{estimationName}/apprenticeship/cancel", Name = "CancelAddApprenticeship")]
+        public ActionResult Cancel(string hashedAccountId, string estimationName)
+        { 
+            return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
+        }
+
+
         [HttpPost]
         [Route("CalculateTotalCost", Name = "CalculateTotalCost")]
         public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue)

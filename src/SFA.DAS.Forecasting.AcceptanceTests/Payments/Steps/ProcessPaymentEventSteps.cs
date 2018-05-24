@@ -171,10 +171,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 foreach (var payment in Payments)
                 {
                     var commitmentsCount = DataContext.Commitments
-                        .Where(m => m.EmployerAccountId == Config.EmployerAccountId
+                        .Count(m => m.EmployerAccountId == Config.EmployerAccountId
                                  && m.ApprenticeshipId == payment.ApprenticeshipId
-                                 && m.ProviderId == payment.ProviderId)
-                        .Count();
+                                 && m.ProviderId == payment.ProviderId);
 
                     return Tuple.Create(commitmentsCount == 1, $"{payment.ToJson()}");
                 }
@@ -183,19 +182,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
         [Then(@"the Forecasting Payment service should store the commitment declarations for receiving employer (.*) from sending employer (.*)")]
-        public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarationsForReceivingEmployerFromSendingEmployer(int receivningEmployerId, int sendingEmployerId)
+        public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarationsForReceivingEmployerFromSendingEmployer(int receivingEmployerId, int sendingEmployerId)
         {
             WaitForIt(() =>
             {
                 foreach (var payment in Payments)
                 {
                     var commitmentsCount = DataContext.Commitments
-                        .Where(m => m.EmployerAccountId == receivningEmployerId
+                        .Count(m => m.EmployerAccountId == receivingEmployerId
                                  && m.SendingEmployerAccountId == sendingEmployerId
                                  && m.ApprenticeshipId == payment.ApprenticeshipId
                                  && m.FundingSource == FundingSource.Transfer
-                                 && m.ProviderId == payment.ProviderId)
-                        .Count();
+                                 && m.ProviderId == payment.ProviderId);
 
                     return Tuple.Create(commitmentsCount == 1, $"{payment.ToJson()}");
                 }
@@ -210,10 +208,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             Thread.Sleep(Config.TimeToWait);
 
             var count = DataContext.Payments
-                .Where(m => m.EmployerAccountId == Config.EmployerAccountId
+                    .Count(m => m.EmployerAccountId == Config.EmployerAccountId
                     && m.CollectionPeriod.Year == DateTime.Now.Year
-                    && m.CollectionPeriod.Month == DateTime.Now.Month)
-                    .Count();
+                    && m.CollectionPeriod.Month == DateTime.Now.Month);
             var msg = $"Looking for Payments.Employer Account Id: { Config.EmployerAccountId}, Collection Period Year: { DateTime.Now.Year}, Collection Period Month: { DateTime.Now.Month}";
 
             Assert.AreEqual(0, count, message: msg);
@@ -224,8 +221,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             Thread.Sleep(Config.TimeToWait);
             var count = DataContext.Commitments
-                .Where(m => m.EmployerAccountId == Config.EmployerAccountId)
-                .Count();
+                .Count(m => m.EmployerAccountId == Config.EmployerAccountId);
             var msg = $"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
 
             Assert.AreEqual(0, count, message: msg);

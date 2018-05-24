@@ -54,14 +54,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 _currentBalanceRepository.Object);
         }
 
-        [TestCase(100, 100, 100, 100, 400)]
-        [TestCase(150, 100, 100, 100, 450)]
-        [TestCase(100, 160, 100, 100, 460)]
-        [TestCase(100, 100, 105.55, 100, 405.55)]
-        [TestCase(100, 100, 105.55, 200, 505.55)]
+        [TestCase(100, 100, 100, 100)]
+        [TestCase(150, 100, 100, 100)]
+        [TestCase(100, 160, 100, 100)]
+        [TestCase(100, 100, 105.55, 100)]
+        [TestCase(100, 100, 105.55, 200)]
         public async Task Then_The_Cost_Takes_Into_Account_The_Actual_And_Estimated_Payments(
-            decimal totalCostOfTraining, decimal completionPayments, decimal transferOutPayment,
-            decimal transferOutCompletionPayment, decimal expectedTotalCost)
+            decimal actualTotalCostOfTraining, decimal actualCommittedCompletionPayments, decimal transferOutTotalCostOfTraining,
+            decimal transferOutCompletionPayment)
         {
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
             {
@@ -69,10 +69,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    LevyFundedCostOfTraining = totalCostOfTraining,
-                    LevyFundedCompletionPayment = completionPayments,
-                    TransferOutTotalCostOfTraining = transferOutPayment,
-                    TransferOutCompletionPayments = transferOutCompletionPayment
+                    TransferOutTotalCostOfTraining = transferOutTotalCostOfTraining,
+                    TransferOutCompletionPayments = transferOutCompletionPayment,
+                    ActualCommittedTransferCost = actualTotalCostOfTraining,
+                    ActualCommittedTransferCompletionCost = actualCommittedCompletionPayments
                 }
             };
             _accountEstimationProjection.Setup(x => x.Projections)
@@ -80,7 +80,30 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(expectedTotalCost, actual.TransferAllowances.First().Cost);
+            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.First().EstimatedCost);
+        }
+
+        [Test]
+        public async Task Then_The_IsLessThanCost_Flag_Uses_Actual_And_Estimated_Values()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) DateTime.Now.AddYears(1).Year,
+                    Month = (short) DateTime.Now.Month,
+                    TransferOutTotalCostOfTraining = 60,
+                    ActualCommittedTransferCost = 50,
+                    FutureFunds = 100
+                }
+            };
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            Assert.IsTrue(actual.TransferAllowances.First().IsLessThanCost);
         }
     }
 }

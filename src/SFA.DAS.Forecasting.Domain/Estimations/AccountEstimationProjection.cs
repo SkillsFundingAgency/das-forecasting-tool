@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -19,13 +20,15 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
     public class AccountEstimationProjection : IAccountEstimationProjection
     {
+        private readonly IDateTimeService _dateTimeService;
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;
         private readonly IList<AccountEstimationProjectionModel> _projections;
         private readonly IList<AccountProjectionModel> _actualAccountProjections;
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _projections.ToList().AsReadOnly();
-        public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments)
+        public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService)
         {
+            _dateTimeService = dateTimeService;
             _account = account ?? throw new ArgumentNullException(nameof(account));
             if (accountEstimationProjectionCommitments == null)
             {
@@ -40,12 +43,12 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         {
             _projections.Clear();
             var lastBalance = _account.RemainingTransferBalance;
-            var startDate = _virtualEmployerCommitments.GetEarliestCommitmentStartDate().GetStartOfMonth();
+            var startDate = _dateTimeService.GetCurrentDateTime().GetStartOfMonth();
             var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(2).GetStartOfMonth();
             if (endDate < startDate)
                 throw new InvalidOperationException($"The start date for the earliest commitment is after the last planned end date. Account: {_account.EmployerAccountId}, Start date: {startDate}, End date: {endDate}");
 
-            var projectionDate = startDate.AddMonths(1).GetStartOfMonth();
+            var projectionDate = startDate;
             while (projectionDate <= endDate)
             {
                 if (projectionDate.Month == 5)
@@ -80,11 +83,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             {
                 Month = (short)period.Month,
                 Year = (short)period.Year,
+
                 LevyFundedCostOfTraining = totalCostOfTraning.LevyFunded,
+                LevyFundedCompletionPayment = completionPayments.LevyFundedCompletionPayment,
 
                 TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
                 TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                LevyFundedCompletionPayment = completionPayments.LevyFundedCompletionPayment,
+                
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
