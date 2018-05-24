@@ -3,15 +3,6 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="NLog.Config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NLog.Config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TransformOnBuild>true</TransformOnBuild>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.1.0-beta4" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.16.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />

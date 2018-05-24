@@ -14,7 +14,13 @@
     "environmentName": {
       "type": "string"
     },
+    "appServicePlanName": {
+      "type": "string"
+    },
     "appHostingEnvironment": {
+      "type": "string"
+    },
+    "appHostingEnvironmentResourceGroup": {
       "type": "string"
     },
     "appSettingNumberOfMonthsToProject": {
@@ -41,20 +47,17 @@
     "keyVaultName": {
       "type": "string"
     },
+    "certKeyVaultName": {
+      "type": "string"
+    },
+    "certKeyVaultResourceGroup": {
+      "type": "string"
+    },
     "kvSecretsPermissionsList": {
       "type": "array"
     },
     "funAppNames": {
       "type": "array"
-    },
-    "sharedHostingPlanName": {
-      "type": "string"
-    },
-    "funAppHostingEnvironment": {
-      "type": "string"
-    },
-    "sharedServerFarmResourceGroup": {
-      "type": "string"
     },
     "secretDatabaseConnectionString": {
       "type": "string"
@@ -89,9 +92,6 @@
     "customHostname": {
       "type": "string"
     },
-    "certResourceGroup": {
-      "type": "string"
-    },
     "myaBaseUrl": {
       "type": "string"
     },
@@ -113,7 +113,8 @@
     "webappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/web-app-resources.json')]",
     "functionappResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/function-app-resources.json')]",
     "keyvaultResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/keyvault-resources.json')]",
-    "cosmosDbResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/cosmos-db-resources.json')]"
+    "cosmosDbResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/cosmos-db-resources.json')]",
+    "aspResourcesTemplateUri": "[concat(parameters('templateBaseUrl'), '/deployments/app-service-plan-resources.json')]"
   },
   "resources": [
     {
@@ -136,8 +137,34 @@
     },
     {
       "apiVersion": "2017-08-01",
+      "name": "app-service-plan-resources-deployment",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('aspResourcesTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "AppServicePlanName": {
+            "value": "[parameters('appServicePlanName')]"
+          },
+          "ASEHostingEnvironmentName": {
+            "value": "[parameters('appHostingEnvironment')]"
+          },
+          "ASEResourceGroup": {
+            "value": "[parameters('appHostingEnvironmentResourceGroup')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2017-08-01",
       "name": "web-app-resources-deployment",
       "type": "Microsoft.Resources/deployments",
+      "dependsOn": [
+        "app-service-plan-resources-deployment"
+      ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -148,14 +175,8 @@
           "name": {
             "value": "[parameters('appName')]"
           },
-          "hostingPlanName": {
-            "value": "[parameters('sharedHostingPlanName')]"
-          },
           "hostingEnvironment": {
             "value": "[parameters('appHostingEnvironment')]"
-          },
-          "serverFarmResourceGroup": {
-            "value": "[parameters('sharedServerFarmResourceGroup')]"
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
@@ -165,6 +186,12 @@
           },
           "KeyVaultName": {
             "value": "[parameters('keyVaultName')]"
+          },
+          "certKeyVaultName": {
+            "value": "[parameters('certKeyVaultName')]"
+          },
+          "certKeyVaultResourceGroup": {
+            "value": "[parameters('certKeyVaultResourceGroup')]"
           },
           "LoggingRedisConnectionString": {
             "value": "[parameters('appSettingLoggingRedisConnectionString')]"
@@ -184,11 +211,11 @@
           "customHostname": {
             "value": "[parameters('customHostname')]"
           },
-          "certResourceGroup": {
-            "value": "[parameters('certResourceGroup')]"
-          },
           "myaBaseUrl": {
             "value": "[parameters('myaBaseUrl')]"
+          },
+          "appServicePlanId": {
+            "value": "[reference('app-service-plan-resources-deployment').outputs.ASPResourceId.value]"
           }
         }
       }
@@ -197,7 +224,8 @@
       "apiVersion": "2017-08-01",
       "name": "[concat(parameters('funAppNames')[copyIndex()], '-function-app-resources-deployment')]",
       "dependsOn": [
-        "storage-resources-deployment"
+        "storage-resources-deployment",
+        "app-service-plan-resources-deployment"
       ],
       "copy": {
         "name": "function-app-copy",
@@ -214,14 +242,8 @@
           "funAppName": {
             "value": "[parameters('funAppNames')[copyIndex()]]"
           },
-          "hostingPlanName": {
-            "value": "[parameters('sharedHostingPlanName')]"
-          },
           "hostingEnvironment": {
-            "value": "[parameters('funAppHostingEnvironment')]"
-          },
-          "serverFarmResourceGroup": {
-            "value": "[parameters('sharedServerFarmResourceGroup')]"
+            "value": "[parameters('appHostingEnvironment')]"
           },
           "EnvironmentName": {
             "value": "[parameters('environmentName')]"
@@ -243,6 +265,9 @@
           },
           "storageConnectionString": {
             "value": "[reference('storage-resources-deployment').outputs.StorageConnectionString.value]"
+          },
+          "appServicePlanId": {
+            "value": "[reference('app-service-plan-resources-deployment').outputs.ASPResourceId.value]"
           }
         }
       }

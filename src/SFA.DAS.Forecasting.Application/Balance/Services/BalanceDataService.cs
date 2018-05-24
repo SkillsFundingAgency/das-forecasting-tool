@@ -33,6 +33,7 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 persistedBalance.ReceivedDate = balance.ReceivedDate;
                 persistedBalance.RemainingTransferBalance = balance.RemainingTransferBalance;
                 persistedBalance.TransferAllowance = balance.TransferAllowance;
+                persistedBalance.UnallocatedCompletionPayments = balance.UnallocatedCompletionPayments;
             }
             else
                 _forecastingDataContext.Balances.Add(balance);
