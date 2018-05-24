@@ -4256,6 +4256,15 @@ h2 .float-right {
   margin-top: 40px;
 }
 
+/*Funding projection page*/
+#account-projection {
+  margin-bottom: 60px;
+}
+
+.pending-completion-payments p {
+  margin-bottom: 5px;
+}
+
 #estimate-add-apprenticeship .no-of-apprentice input,
 #estimate-add-apprenticeship .no-of-months input {
   width: 50px;

@@ -67,7 +67,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Future funds"), "ERROR: File header titles is {0}", readCsv.First());
+            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Your contribution (10%),Government contribution (90%),Future funds"), "ERROR: File header titles is {0}", readCsv.First());
                         
         }
 
@@ -102,9 +102,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                            @fundsIn,
                            @totalCostOfTraining,
                            @completionPayments,
+                           @futureFunds,
                            @Yourcontribution,
-                           @Governmentcontribution,
-                           @futureFunds)";
+                           @Governmentcontribution
+                           )";
 
                 foreach (var accountProjectionReadModel in accountProjections)
                 {
@@ -117,8 +118,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                     parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
                     parameters.Add("@totalCostOfTraining", accountProjectionReadModel.CostOfTraining, DbType.Decimal);
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
-                    parameters.Add("@Yourcontribution", accountProjectionReadModel.FutureFunds, DbType.Decimal);
-                    parameters.Add("@Governmentcontribution", accountProjectionReadModel.FutureFunds, DbType.Decimal);
+                    parameters.Add("@Yourcontribution", accountProjectionReadModel.YourContribution, DbType.Decimal);
+                    parameters.Add("@Governmentcontribution", accountProjectionReadModel.GovernmentContribution, DbType.Decimal);
                     parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
                     Connection.Execute(sql, parameters, commandType: CommandType.Text);
                 }
