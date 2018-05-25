@@ -2,8 +2,6 @@
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using System.Net;
-using System.Net.Http;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
@@ -20,8 +18,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 
         protected override void Write(LogEventInfo logEvent)
         {
-            string logMessage = this.Layout.Render(logEvent);
-
+            var logMessage = this.Layout.Render(logEvent);
             AzureLogTraceWriter.Info(logMessage);
         }
     }

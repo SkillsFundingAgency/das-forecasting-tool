@@ -6,6 +6,7 @@ using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Estimations;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -105,6 +106,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var accountEstimationProjectionCommitments =
                 new AccountEstimationProjectionCommitments(employerCommitments, _actualTransferCommitments);
 
+            _moqer.GetMock<IDateTimeService>()
+                .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 2, 1));
+
             _moqer.SetInstance(accountEstimationProjectionCommitments);
 
             _account = new Account(EmployerAccountId, 10000, 0, 15000, 10000);
@@ -122,13 +126,16 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         }
 
         [Test]
-        public void First_Month_Should_Be_Earliest_Payment_Date()
+        public void First_Month_Is_Current_Month()
         {
+            _moqer.SetInstance<IDateTimeService>(new DateTimeService());
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
             estimationProjection.BuildProjections();
             var projection = estimationProjection.Projections.FirstOrDefault();
+
             Assert.IsNotNull(projection);
-            Assert.IsTrue(projection.Month == 2 && projection.Year == 2018);
+            Assert.IsTrue(projection.Month == DateTime.Now.Month && projection.Year == DateTime.Now.Year);
         }
 
         [Test]

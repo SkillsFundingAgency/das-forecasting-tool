@@ -10,11 +10,14 @@ namespace SFA.DAS.Forecasting.Web.Automation
         [FindsBy(How = How.CssSelector, Using= ".related .form-group a")]
         public IWebElement DownloadCSVButton { get; set; }
 
-        [FindsBy(How = How.CssSelector, Using = "h4.heading-large")]
+        [FindsBy(How = How.XPath, Using = "//h1[contains(text(), 'Funding projection')]")]
         public IWebElement AccountProjectionHeader { get; set; }
 
         [FindsBy(How = How.CssSelector, Using = "#balancesheet")]
         public IWebElement AccountProjectionTable { get; set; }
+
+        [FindsBy(How = How.CssSelector, Using = ".pending-completion-payments span")]
+        public IWebElement PendingCompletionPayments { get; set; }
 
         public FundingProjectionPage(IWebDriver webDriver) : base(webDriver)
         {

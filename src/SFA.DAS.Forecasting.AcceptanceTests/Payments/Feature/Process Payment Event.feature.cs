@@ -380,7 +380,7 @@ this.FeatureBackground();
  testRunner.Given("I have made the following payments", ((string)(null)), table3, "Given ");
 #line 48
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
-                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+                    "ments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 49
  testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 50
@@ -436,14 +436,14 @@ this.FeatureBackground();
                         "1",
                         "Transfer"});
 #line 53
- testRunner.And("I have made the following payments", ((string)(null)), table4, "And ");
-#line 58
+ testRunner.Given("I have made the following payments", ((string)(null)), table4, "Given ");
+#line 57
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
-                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 59
+                    "ments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 58
  testRunner.Then("the Forecasting Payment service should store the payment declarations receiving e" +
                     "mployer 12345 from sending employer 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 60
+#line 59
  testRunner.And("the Forecasting Payment service should store the commitment declarations for rece" +
                     "iving employer 12345 from sending employer 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -451,11 +451,13 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Projection processing on actual end date and invalid earning values (CI-797)")]
-        public virtual void ProjectionProcessingOnActualEndDateAndInvalidEarningValuesCI_797()
+        [NUnit.Framework.DescriptionAttribute("Ensure payments for new commitments with an invalid installment amount are ignore" +
+            "d (CI-797)")]
+        public virtual void EnsurePaymentsForNewCommitmentsWithAnInvalidInstallmentAmountAreIgnoredCI_797()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Projection processing on actual end date and invalid earning values (CI-797)", ((string[])(null)));
-#line 62
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure payments for new commitments with an invalid installment amount are ignore" +
+                    "d (CI-797)", ((string[])(null)));
+#line 61
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -469,11 +471,7 @@ this.FeatureBackground();
                         "Start Date",
                         "Installment Amount",
                         "Completion Amount",
-                        "Number Of Installments",
-                        "Sending Employer Account Id",
-                        "FundingSource",
-                        "ActualEndDate",
-                        "Expected"});
+                        "Number Of Installments"});
             table5.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 5",
@@ -482,15 +480,135 @@ this.FeatureBackground();
                         "Test Provider",
                         "Yesterday",
                         "1",
-                        "1",
-                        "12",
-                        "12345",
-                        "Levy",
-                        "MinValue",
-                        "Ignore"});
-            table5.AddRow(new string[] {
+                        "400.00",
+                        "12"});
+#line 62
+ testRunner.Given("I have made the following payments", ((string)(null)), table5, "Given ");
+#line 65
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 66
+ testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 67
+ testRunner.And("the Forecasting Payment service should not store commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Ensure payments for new commitments with an invalid completion amount are ignored" +
+            " (CI-797)")]
+        public virtual void EnsurePaymentsForNewCommitmentsWithAnInvalidCompletionAmountAreIgnoredCI_797()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure payments for new commitments with an invalid completion amount are ignored" +
+                    " (CI-797)", ((string[])(null)));
+#line 69
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table6.AddRow(new string[] {
                         "133.33",
-                        "Test Apprentice 6",
+                        "Test Apprentice 5",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Yesterday",
+                        "133.33",
+                        "1.00",
+                        "12"});
+#line 70
+ testRunner.Given("I have made the following payments", ((string)(null)), table6, "Given ");
+#line 73
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 74
+ testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 75
+ testRunner.And("the Forecasting Payment service should not store commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Ensure payments for new commitments with an invalid payment amount are not ignore" +
+            "d (CI-797)")]
+        public virtual void EnsurePaymentsForNewCommitmentsWithAnInvalidPaymentAmountAreNotIgnoredCI_797()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure payments for new commitments with an invalid payment amount are not ignore" +
+                    "d (CI-797)", ((string[])(null)));
+#line 77
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table7.AddRow(new string[] {
+                        "0",
+                        "Test Apprentice 5",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Yesterday",
+                        "133.33",
+                        "400.00",
+                        "12"});
+#line 78
+ testRunner.Given("I have made the following payments", ((string)(null)), table7, "Given ");
+#line 81
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 82
+ testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 83
+ testRunner.And("the Forecasting Payment service should store the commitment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Ensure payments for new commitments with an actual end date are ignored (CI-797)")]
+        public virtual void EnsurePaymentsForNewCommitmentsWithAnActualEndDateAreIgnoredCI_797()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure payments for new commitments with an actual end date are ignored (CI-797)", ((string[])(null)));
+#line 85
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "Actual End Date"});
+            table8.AddRow(new string[] {
+                        "133.33",
+                        "Test Apprentice 5",
                         "Test Course",
                         "1",
                         "Test Provider",
@@ -498,45 +616,16 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "12345",
-                        "Levy",
-                        "MinValue",
-                        "Store"});
-            table5.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 7",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "1",
-                        "1",
-                        "12",
-                        "12345",
-                        "Levy",
-                        "Next Year",
-                        "Ignore"});
-            table5.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 8",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "133.44",
-                        "404.44",
-                        "12",
-                        "12345",
-                        "Levy",
-                        "Next Year",
-                        "Ignore"});
-#line 63
- testRunner.And("I have made the following payments", ((string)(null)), table5, "And ");
-#line 69
+                        "Today"});
+#line 86
+ testRunner.Given("I have made the following payments", ((string)(null)), table8, "Given ");
+#line 89
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 70
- testRunner.Then("there will be 1 commitment for employer 12345", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 90
+ testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 91
+ testRunner.And("the Forecasting Payment service should not store commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -548,12 +637,12 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Projection processing on actual end date and invalid earning values for stored co" +
                     "mmitments(CI-797)", ((string[])(null)));
-#line 73
+#line 103
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
-            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
                         "Apprentice Name",
                         "ApprenticeshipId",
                         "Course Name",
@@ -566,7 +655,7 @@ this.FeatureBackground();
                         "EmployerAccountId",
                         "SendingEmployerAccountId",
                         "FundingSource"});
-            table6.AddRow(new string[] {
+            table9.AddRow(new string[] {
                         "Test Apprentice 1",
                         "5",
                         "Test Course",
@@ -579,7 +668,7 @@ this.FeatureBackground();
                         "12345",
                         "12345",
                         "Levy"});
-            table6.AddRow(new string[] {
+            table9.AddRow(new string[] {
                         "Test Apprentice 2",
                         "6",
                         "Test Course",
@@ -592,7 +681,7 @@ this.FeatureBackground();
                         "12345",
                         "12345",
                         "Levy"});
-            table6.AddRow(new string[] {
+            table9.AddRow(new string[] {
                         "Test Apprentice 3",
                         "7",
                         "Test Course",
@@ -605,7 +694,7 @@ this.FeatureBackground();
                         "12345",
                         "12345",
                         "Levy"});
-            table6.AddRow(new string[] {
+            table9.AddRow(new string[] {
                         "Test Apprentice 4",
                         "8",
                         "Test Course",
@@ -618,10 +707,10 @@ this.FeatureBackground();
                         "12345",
                         "12345",
                         "Levy"});
-#line 74
- testRunner.Given("the following commitments have been recorded", ((string)(null)), table6, "Given ");
+#line 104
+ testRunner.Given("the following commitments have been recorded", ((string)(null)), table9, "Given ");
 #line hidden
-            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
                         "Payment Amount",
                         "Apprentice Name",
                         "ApprenticeshipId",
@@ -636,7 +725,7 @@ this.FeatureBackground();
                         "FundingSource",
                         "ActualEndDate",
                         "Expected"});
-            table7.AddRow(new string[] {
+            table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 1",
                         "5",
@@ -651,7 +740,7 @@ this.FeatureBackground();
                         "Levy",
                         "Next Year",
                         "Remove"});
-            table7.AddRow(new string[] {
+            table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 2",
                         "6",
@@ -666,7 +755,7 @@ this.FeatureBackground();
                         "Levy",
                         "MinValue",
                         "Ignore"});
-            table7.AddRow(new string[] {
+            table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 3",
                         "7",
@@ -681,7 +770,7 @@ this.FeatureBackground();
                         "Levy",
                         "MinValue",
                         "Update"});
-            table7.AddRow(new string[] {
+            table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 4",
                         "8",
@@ -696,19 +785,19 @@ this.FeatureBackground();
                         "Levy",
                         "Next Year",
                         "Remove"});
-#line 81
- testRunner.And("I have made the following payments", ((string)(null)), table7, "And ");
-#line 87
+#line 111
+ testRunner.And("I have made the following payments", ((string)(null)), table10, "And ");
+#line 117
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 88
+#line 118
  testRunner.Then("apprenticeship with id 5 should have an end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 89
+#line 119
  testRunner.And("apprenticeship with id 6 should not have an actual end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 90
+#line 120
  testRunner.And("apprenticeship with id 7 should have completion amount of 200 and montly installm" +
                     "ent of 233.33", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 91
+#line 121
  testRunner.And("apprenticeship with id 8 should have an end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
