@@ -17,9 +17,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string TransferToEmployerName { get; set; }
         [Name("Uln")]
         public string Uln { get; set; }
-        [Name("Apprentice name")]
+        [Name("Apprentice Name")]
         public string ApprenticeName { get; set; }
-        [Name("UkPrn")]
+        [Name("UKPRN")]
         public long UkPrn { get; set; }
         [Name("Provider Name")]
         public string ProviderName { get; set; }

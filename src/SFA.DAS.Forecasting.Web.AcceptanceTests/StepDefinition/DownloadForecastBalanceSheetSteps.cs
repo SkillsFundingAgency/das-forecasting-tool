@@ -67,7 +67,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Future funds"), "ERROR: File header titles is {0}", readCsv.First());
+            Assert.True(readCsvHeader.Contains("Start Date,End Date,Apprenticeship,Apprenticeship Level,Transfer to Employer Name,Uln,Apprentice Name,UKPRN,Provider Name,Total Cost,Monthly Training Cost,Completion Amount"), "ERROR: File header titles is {0}", readCsv.First());
                         
         }
 
