@@ -59,6 +59,16 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return View(vm);
         }
 
+        [HttpGet]
+        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "EditApprenticeships")]
+        public async Task<ActionResult> EditApprenticeships(string hashedAccountId, string estimationName, string apprenticeshipsId)
+        {
+
+            var model = await _estimationOrchestrator.EditApprenticeshipModel(hashedAccountId, apprenticeshipsId);
+            
+            return View(model);
+        }
+
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]

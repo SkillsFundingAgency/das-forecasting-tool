@@ -4265,11 +4265,14 @@ h2 .float-right {
   margin-bottom: 5px;
 }
 
+#estimate-edit-apprenticeship .no-of-apprentice input,
+#estimate-edit-apprenticeship .no-of-months input,
 #estimate-add-apprenticeship .no-of-apprentice input,
 #estimate-add-apprenticeship .no-of-months input {
   width: 50px;
 }
 
+#estimate-edit-apprenticeship .levy-value,
 #estimate-add-apprenticeship .levy-value {
   width: 200px;
 }
