@@ -88,4 +88,4 @@ Scenario: Projection processing on actual end date and invalid earning values fo
 	Then apprenticeship with id 5 should have an end date
 	And apprenticeship with id 6 should not have an actual end date
 	And apprenticeship with id 7 should have completion amount of 200 and montly installment of 233.33
-	Then apprenticeship with id 8 should have an end date
+	And apprenticeship with id 8 should have an end date

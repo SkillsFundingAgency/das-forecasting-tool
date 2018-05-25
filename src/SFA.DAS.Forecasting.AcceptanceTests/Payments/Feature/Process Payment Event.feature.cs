@@ -709,7 +709,7 @@ this.FeatureBackground();
  testRunner.And("apprenticeship with id 7 should have completion amount of 200 and montly installm" +
                     "ent of 233.33", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 91
- testRunner.Then("apprenticeship with id 8 should have an end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.And("apprenticeship with id 8 should have an end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
