@@ -56,6 +56,31 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             Assert.IsTrue(Payments.Any());
         }
 
+        [Given(@"there is a corresponding commitment stored for each of the payments")]
+        public void GivenThereIsACorrespondingCommitmentStoredForEachOfThePayments()
+        {
+            var commitments = Payments.Select(payment => new TestCommitment
+            {
+                ActualEndDate = payment.ActualEndDate,
+                ApprenticeName = payment.ApprenticeName,
+                ApprenticeshipId = payment.ApprenticeshipId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
+                CompletionAmount = payment.CompletionAmount,
+                CourseLevel = payment.CourseLevel,
+                CourseName = payment.CourseName,
+                EmployerAccountId = Config.EmployerAccountId,
+                FundingSource = payment.FundingSource ?? FundingSource.Levy,
+                InstallmentAmount = payment.InstallmentAmount,
+                LearnerId = payment.LearnerId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
+                NumberOfInstallments = payment.NumberOfInstallments,
+                ProviderName = payment.ProviderName,
+                SendingEmployerAccountId = Config.EmployerAccountId,
+                StartDate = payment.StartDate
+            }).ToList();
+
+            InsertCommitments(commitments);
+        }
+
+
         [Given(@"I made some invalid payments")]
         public void GivenIHaveMadeSomeInvalidPayments(Table table)
         {
@@ -70,7 +95,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 var id = idx + 1;
                 var payment = Payments[idx];
-                payment.PaymentId = id.ToString();
+                payment.PaymentId =   id.ToString();
                 payment.ApprenticeshipId = payment.ApprenticeshipId > 0 ? payment.ApprenticeshipId : id;
                 payment.ProviderId = id;
             }
@@ -170,6 +195,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 foreach (var payment in Payments)
                 {
+
                     var commitmentsCount = DataContext.Commitments
                         .Count(m => m.EmployerAccountId == Config.EmployerAccountId
                                  && m.ApprenticeshipId == payment.ApprenticeshipId
@@ -290,6 +316,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 
             }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletoinAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
         }
+
+        [Then(@"the Forecasting Payment service should record that the commitment has ended")]
+        public void ThenTheForecastingPaymentServiceShouldStoreTheStoppedCommitment()
+        {
+            WaitForIt(() =>
+                {
+                    return Payments.All(payment => DataContext.Commitments.Any(c =>
+                        c.EmployerAccountId == Config.EmployerAccountId &&
+                        c.ApprenticeshipId == payment.ApprenticeshipId && c.ActualEndDate != null));
+                },"Failed to find the ended commitment");
+        }
+
 
     }
 }

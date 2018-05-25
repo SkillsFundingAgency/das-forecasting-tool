@@ -45,16 +45,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public void GivenTheFollowingCommitmentsHaveBeenRecorded(Table table)
         {
             Commitments = table.CreateSet<TestCommitment>().ToList();
-            var commitmentIds = Commitments
+            var employerIds = Commitments
                 .Where(m => m.EmployerAccountId.HasValue)
                 .Select(m => m.EmployerAccountId.Value)
                 .ToList();
 
-            commitmentIds.AddRange(Commitments.Select(m => m.SendingEmployerAccountId));
+            employerIds.AddRange(Commitments.Select(m => m.SendingEmployerAccountId));
 
-            commitmentIds.Add(Config.EmployerAccountId);
+            employerIds.Add(Config.EmployerAccountId);
 
-            foreach(var id in commitmentIds.Distinct())
+            foreach(var id in employerIds.Distinct())
                 DeleteCommitments(id);
 
             InsertCommitments(Commitments);

@@ -631,89 +631,20 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Projection processing on actual end date and invalid earning values for stored co" +
-            "mmitments(CI-797)")]
-        public virtual void ProjectionProcessingOnActualEndDateAndInvalidEarningValuesForStoredCommitmentsCI_797()
+        [NUnit.Framework.DescriptionAttribute("Payment with an invalid payment amount but also has an actual end date for an exi" +
+            "sting commitment (CI-797)")]
+        public virtual void PaymentWithAnInvalidPaymentAmountButAlsoHasAnActualEndDateForAnExistingCommitmentCI_797()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Projection processing on actual end date and invalid earning values for stored co" +
-                    "mmitments(CI-797)", ((string[])(null)));
-#line 103
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Payment with an invalid payment amount but also has an actual end date for an exi" +
+                    "sting commitment (CI-797)", ((string[])(null)));
+#line 93
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line hidden
             TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
-                        "Apprentice Name",
-                        "ApprenticeshipId",
-                        "Course Name",
-                        "Course Level",
-                        "Provider Name",
-                        "Start Date",
-                        "Installment Amount",
-                        "Completion Amount",
-                        "Number Of Installments",
-                        "EmployerAccountId",
-                        "SendingEmployerAccountId",
-                        "FundingSource"});
-            table9.AddRow(new string[] {
-                        "Test Apprentice 1",
-                        "5",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "500",
-                        "3000",
-                        "24",
-                        "12345",
-                        "12345",
-                        "Levy"});
-            table9.AddRow(new string[] {
-                        "Test Apprentice 2",
-                        "6",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "500",
-                        "3000",
-                        "24",
-                        "12345",
-                        "12345",
-                        "Levy"});
-            table9.AddRow(new string[] {
-                        "Test Apprentice 3",
-                        "7",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "500",
-                        "3000",
-                        "24",
-                        "12345",
-                        "12345",
-                        "Levy"});
-            table9.AddRow(new string[] {
-                        "Test Apprentice 4",
-                        "8",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "500",
-                        "3000",
-                        "24",
-                        "12345",
-                        "12345",
-                        "Levy"});
-#line 104
- testRunner.Given("the following commitments have been recorded", ((string)(null)), table9, "Given ");
-#line hidden
-            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
                         "Payment Amount",
                         "Apprentice Name",
-                        "ApprenticeshipId",
                         "Course Name",
                         "Course Level",
                         "Provider Name",
@@ -721,14 +652,10 @@ this.FeatureBackground();
                         "Installment Amount",
                         "Completion Amount",
                         "Number Of Installments",
-                        "Sending Employer Account Id",
-                        "FundingSource",
-                        "ActualEndDate",
-                        "Expected"});
-            table10.AddRow(new string[] {
-                        "133.33",
+                        "Actual End Date"});
+            table9.AddRow(new string[] {
+                        "0",
                         "Test Apprentice 1",
-                        "5",
                         "Test Course",
                         "1",
                         "Test Provider",
@@ -736,69 +663,74 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "12345",
-                        "Levy",
-                        "Next Year",
-                        "Remove"});
+                        "Today"});
+#line 94
+ testRunner.Given("I have made the following payments", ((string)(null)), table9, "Given ");
+#line 97
+ testRunner.And("there is a corresponding commitment stored for each of the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 98
+ testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
+                    "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 99
+ testRunner.Then("the Forecasting Payment service should record that the commitment has ended", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Payments with invalid earning details but also has an actual end date for an exis" +
+            "ting commitment (CI-797)")]
+        public virtual void PaymentsWithInvalidEarningDetailsButAlsoHasAnActualEndDateForAnExistingCommitmentCI_797()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Payments with invalid earning details but also has an actual end date for an exis" +
+                    "ting commitment (CI-797)", ((string[])(null)));
+#line 101
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "Actual End Date"});
             table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 2",
-                        "6",
                         "Test Course",
                         "1",
                         "Test Provider",
                         "Yesterday",
-                        "1",
-                        "1",
+                        "1.00",
+                        "400.00",
                         "12",
-                        "12345",
-                        "Levy",
-                        "MinValue",
-                        "Ignore"});
+                        "Today"});
             table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 3",
-                        "7",
                         "Test Course",
                         "1",
                         "Test Provider",
                         "Yesterday",
-                        "233.33",
-                        "200.00",
-                        "12",
-                        "12345",
-                        "Levy",
-                        "MinValue",
-                        "Update"});
-            table10.AddRow(new string[] {
                         "133.33",
-                        "Test Apprentice 4",
-                        "8",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "1",
-                        "1",
+                        "1.00",
                         "12",
-                        "12345",
-                        "Levy",
-                        "Next Year",
-                        "Remove"});
-#line 111
- testRunner.And("I have made the following payments", ((string)(null)), table10, "And ");
-#line 117
+                        "Today"});
+#line 102
+ testRunner.Given("I have made the following payments", ((string)(null)), table10, "Given ");
+#line 106
+ testRunner.And("there is a corresponding commitment stored for each of the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 107
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 118
- testRunner.Then("apprenticeship with id 5 should have an end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 119
- testRunner.And("apprenticeship with id 6 should not have an actual end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 120
- testRunner.And("apprenticeship with id 7 should have completion amount of 200 and montly installm" +
-                    "ent of 233.33", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 121
- testRunner.Then("apprenticeship with id 8 should have an end date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 108
+ testRunner.Then("the Forecasting Payment service should record that the commitment has ended", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

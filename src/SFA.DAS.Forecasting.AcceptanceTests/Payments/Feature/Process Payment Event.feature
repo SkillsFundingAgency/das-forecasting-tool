@@ -90,32 +90,19 @@ Scenario: Ensure payments for new commitments with an actual end date are ignore
 	Then the Forecasting Payment service should not store the payments
 	And the Forecasting Payment service should not store commitments
 
-#Scenario: Projection processing on actual end date and invalid earning values (CI-797)
-#	And I have made the following payments
-#		| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id | FundingSource | ActualEndDate | Expected |
-#		| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | MinValue       | Ignore   |
-#		| 133.33         | Test Apprentice 6 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | 12345                       | Levy          | MinValue       | Store    |
-#		| 133.33         | Test Apprentice 7 | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | Next Year      | Ignore   |
-#		| 133.33         | Test Apprentice 8 | Test Course | 1            | Test Provider | Yesterday  | 133.44             | 404.44            | 12                     | 12345                       | Levy          | Next Year      | Ignore   |
-#	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payments
-#	Then there will be 1 commitment for employer 12345
-
-Scenario: Projection processing on actual end date and invalid earning values for stored commitments(CI-797)
-	Given the following commitments have been recorded
-         | Apprentice Name   | ApprenticeshipId | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | EmployerAccountId | SendingEmployerAccountId | FundingSource |
-         | Test Apprentice 1 | 5                | Test Course | 1            | Test Provider | Yesterday  | 500                | 3000              | 24                     | 12345             | 12345                    | Levy          |
-         | Test Apprentice 2 | 6                | Test Course | 1            | Test Provider | Yesterday  | 500                | 3000              | 24                     | 12345             | 12345                    | Levy          |
-         | Test Apprentice 3 | 7                | Test Course | 1            | Test Provider | Yesterday  | 500                | 3000              | 24                     | 12345             | 12345                    | Levy          |
-         | Test Apprentice 4 | 8                | Test Course | 1            | Test Provider | Yesterday  | 500                | 3000              | 24                     | 12345             | 12345                    | Levy          |
-
-	And I have made the following payments
-		| Payment Amount | Apprentice Name   | ApprenticeshipId | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id | FundingSource | ActualEndDate | Expected |
-		| 133.33         | Test Apprentice 1 | 5                | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | 12345                       | Levy          | Next Year     | Remove   |
-		| 133.33         | Test Apprentice 2 | 6                | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | MinValue      | Ignore   |
-		| 133.33         | Test Apprentice 3 | 7                | Test Course | 1            | Test Provider | Yesterday  | 233.33             | 200.00            | 12                     | 12345                       | Levy          | MinValue      | Update   |
-		| 133.33         | Test Apprentice 4 | 8                | Test Course | 1            | Test Provider | Yesterday  | 1                  | 1                 | 12                     | 12345                       | Levy          | Next Year     | Remove   |
+Scenario: Payment with an invalid payment amount but also has an actual end date for an existing commitment (CI-797)
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
+	| 0              | Test Apprentice 1 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
+	And there is a corresponding commitment stored for each of the payments
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
-	Then apprenticeship with id 5 should have an end date
-	And apprenticeship with id 6 should not have an actual end date
-	And apprenticeship with id 7 should have completion amount of 200 and montly installment of 233.33
-	Then apprenticeship with id 8 should have an end date
+	Then the Forecasting Payment service should record that the commitment has ended
+
+Scenario: Payments with invalid earning details but also has an actual end date for an existing commitment (CI-797)
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
+	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | Yesterday  | 1.00               | 400.00            | 12                     | Today           |
+	| 133.33         | Test Apprentice 3 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 1.00              | 12                     | Today           |
+	And there is a corresponding commitment stored for each of the payments
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	Then the Forecasting Payment service should record that the commitment has ended
