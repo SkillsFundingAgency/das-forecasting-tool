@@ -38,7 +38,6 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public bool RegisterCommitment(CommitmentModel model)
         {
-            //TODO: move into validation class
             if (Commitment.EmployerAccountId <= 0)
                 return false;
 

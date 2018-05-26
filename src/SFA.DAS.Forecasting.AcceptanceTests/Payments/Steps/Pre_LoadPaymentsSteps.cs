@@ -13,7 +13,6 @@ using SFA.DAS.Provider.Events.Api.Types;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using CalendarPeriod = SFA.DAS.Forecasting.Models.Payments.CalendarPeriod;
-using FundingSource = SFA.DAS.Provider.Events.Api.Types.FundingSource;
 using NamedCalendarPeriod = SFA.DAS.Forecasting.Models.Payments.NamedCalendarPeriod;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
@@ -212,6 +211,76 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
 
+        public DataTable ToPaymentsDataTable(IList<TestPayment> payments)
+        {
+            var paymentsDataTable = new DataTable();
+
+            paymentsDataTable.Columns.Add("PaymentId", typeof(Guid));
+            paymentsDataTable.Columns.Add("Ukprn", typeof(long));
+            paymentsDataTable.Columns.Add("ProviderName", typeof(string));
+            paymentsDataTable.Columns.Add("Uln", typeof(long));
+            paymentsDataTable.Columns.Add("AccountId", typeof(long));
+            paymentsDataTable.Columns.Add("ApprenticeshipId", typeof(long));
+            paymentsDataTable.Columns.Add("DeliveryPeriodMonth", typeof(int));
+            paymentsDataTable.Columns.Add("DeliveryPeriodYear", typeof(int));
+            paymentsDataTable.Columns.Add("CollectionPeriodId", typeof(string));
+            paymentsDataTable.Columns.Add("CollectionPeriodMonth", typeof(int));
+            paymentsDataTable.Columns.Add("CollectionPeriodYear", typeof(int));
+            paymentsDataTable.Columns.Add("EvidenceSubmittedOn", typeof(DateTime));
+            paymentsDataTable.Columns.Add("EmployerAccountVersion", typeof(string));
+            paymentsDataTable.Columns.Add("ApprenticeshipVersion", typeof(string));
+            paymentsDataTable.Columns.Add("FundingSource", typeof(string));
+            paymentsDataTable.Columns.Add("TransactionType", typeof(string));
+            paymentsDataTable.Columns.Add("Amount", typeof(decimal));
+            paymentsDataTable.Columns.Add("PeriodEnd", typeof(string));
+            paymentsDataTable.Columns.Add("StandardCode", typeof(long));
+            paymentsDataTable.Columns.Add("FrameworkCode", typeof(int));
+            paymentsDataTable.Columns.Add("ProgrammeType", typeof(int));
+            paymentsDataTable.Columns.Add("PathwayCode", typeof(int));
+            paymentsDataTable.Columns.Add("PathwayName", typeof(string));
+            paymentsDataTable.Columns.Add("ApprenticeshipCourseName", typeof(string));
+            paymentsDataTable.Columns.Add("ApprenticeName", typeof(string));
+            paymentsDataTable.Columns.Add("ApprenticeNINumber", typeof(string));
+            paymentsDataTable.Columns.Add("ApprenticeshipCourseLevel", typeof(int));
+            paymentsDataTable.Columns.Add("ApprenticeshipCourseStartDate", typeof(DateTime));
+
+            foreach (var payment in payments)
+            {
+                paymentsDataTable.Rows.Add(
+                    payment.PaymentId,
+                    payment.ProviderId,
+                    payment.ProviderName,
+                    payment.LearnerId,
+                    Config.EmployerAccountId,
+                    payment.ApprenticeshipId,
+                    payment.DeliveryPeriod.Month,
+                    payment.DeliveryPeriod.Year,
+                    CollectionPeriod.Id,
+                    CollectionPeriod.Month,
+                    CollectionPeriod.Year,
+                    DateTime.Today,
+                    string.Empty,
+                    string.Empty,
+                    (payment.FundingSource ?? Models.Payments.FundingSource.Levy).ToString("D"),
+                    string.Empty,
+                    payment.PaymentAmount,
+                    CollectionPeriod.Id,
+                    123,
+                    1,
+                    25,
+                    1,
+                    string.Empty,
+                    payment.CourseName,
+                    payment.ApprenticeName,
+                    string.Empty,
+                    payment.CourseLevel,
+                    payment.StartDateValue);
+            }
+
+            return paymentsDataTable;
+        }
+
+
         [Given(@"the payments have also been recorded in the Employer Accounts Service")]
         public void GivenThePaymentsHaveAlsoBeenRecordedInTheEmployerAccountsService()
         {
@@ -222,42 +291,50 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     .ConnectionString))
                 {
                     var parameters = new DynamicParameters();
-                    parameters.Add("@accountId", Config.EmployerAccountId, DbType.String);
-                    connection.Execute("Delete from [employer_financial].[Payment] where AccountId = @accountId", parameters, commandType: CommandType.Text);
 
-                    foreach (var details in Payments)
-                    {
-                        parameters = new DynamicParameters();
-                        parameters.Add("@PaymentId", Guid.Parse(details.PaymentId), DbType.Guid);
-                        parameters.Add("@Ukprn", details.ProviderId, DbType.Int64);
-                        parameters.Add("@ProviderName", details.ProviderName, DbType.String);
-                        parameters.Add("@Uln", details.LearnerId, DbType.Int64);
-                        parameters.Add("@AccountId", Config.EmployerAccountId, DbType.Int64);
-                        parameters.Add("@ApprenticeshipId", details.ApprenticeshipId, DbType.Int64);
-                        parameters.Add("@DeliveryPeriodMonth", details.DeliveryPeriod.Month, DbType.Int32);
-                        parameters.Add("@DeliveryPeriodYear", details.DeliveryPeriod.Year, DbType.Int32);
-                        parameters.Add("@CollectionPeriodId", CollectionPeriod.Id, DbType.String);
-                        parameters.Add("@CollectionPeriodMonth", CollectionPeriod.Month, DbType.Int32);
-                        parameters.Add("@CollectionPeriodYear", CollectionPeriod.Year, DbType.Int32);
-                        parameters.Add("@EvidenceSubmittedOn", DateTime.Today, DbType.DateTime);
-                        parameters.Add("@EmployerAccountVersion", "11111111", DbType.String);
-                        parameters.Add("@ApprenticeshipVersion", "123456-001", DbType.String);
-                        parameters.Add("@FundingSource", FundingSource.ToString("G"), DbType.String);
-                        parameters.Add("@TransactionType", TransactionType.Learning.ToString("G"), DbType.String);
-                        parameters.Add("@Amount", details.PaymentAmount, DbType.Decimal);
-                        parameters.Add("@PeriodEnd", CollectionPeriod.Id, DbType.String);
-                        parameters.Add("@StandardCode", 123, DbType.Int64);
-                        parameters.Add("@FrameworkCode", 1, DbType.Int32);
-                        parameters.Add("@ProgrammeType", 25, DbType.Int32);
-                        parameters.Add("@PathwayCode", 1, DbType.Int32);
-                        parameters.Add("@PathwayName", "", DbType.String);
-                        parameters.Add("@CourseName", details.CourseName, DbType.String);
-                        parameters.Add("@ApprenticeName", details.ApprenticeName, DbType.String);
-                        parameters.Add("@ApprenticeNINumber", "AB111111A", DbType.String);
-                        parameters.Add("@ApprenticeshipCourseLevel", details.CourseLevel, DbType.Int32);
-                        parameters.Add("@ApprenticeshipCourseStartDate", details.StartDateValue, DbType.DateTime);
-                        connection.Execute("[employer_financial].[CreatePayment]", parameters, commandType: CommandType.StoredProcedure);
-                    }
+                    parameters.Add("@payments", ToPaymentsDataTable(Payments).AsTableValuedParameter("[employer_financial].[PaymentsTable]"));
+
+                    connection.Execute("[employer_financial].[CreatePayments]", parameters, commandType: CommandType.StoredProcedure);
+
+
+
+                    //var parameters = new DynamicParameters();
+                    //parameters.Add("@accountId", Config.EmployerAccountId, DbType.String);
+                    //connection.Execute("Delete from [employer_financial].[Payment] where AccountId = @accountId", parameters, commandType: CommandType.Text);
+
+                    //foreach (var details in Payments)
+                    //{
+                    //    parameters = new DynamicParameters();
+                    //    parameters.Add("@PaymentId", Guid.Parse(details.PaymentId), DbType.Guid);
+                    //    parameters.Add("@Ukprn", details.ProviderId, DbType.Int64);
+                    //    parameters.Add("@ProviderName", details.ProviderName, DbType.String);
+                    //    parameters.Add("@Uln", details.LearnerId, DbType.Int64);
+                    //    parameters.Add("@AccountId", Config.EmployerAccountId, DbType.Int64);
+                    //    parameters.Add("@ApprenticeshipId", details.ApprenticeshipId, DbType.Int64);
+                    //    parameters.Add("@DeliveryPeriodMonth", details.DeliveryPeriod.Month, DbType.Int32);
+                    //    parameters.Add("@DeliveryPeriodYear", details.DeliveryPeriod.Year, DbType.Int32);
+                    //    parameters.Add("@CollectionPeriodId", CollectionPeriod.Id, DbType.String);
+                    //    parameters.Add("@CollectionPeriodMonth", CollectionPeriod.Month, DbType.Int32);
+                    //    parameters.Add("@CollectionPeriodYear", CollectionPeriod.Year, DbType.Int32);
+                    //    parameters.Add("@EvidenceSubmittedOn", DateTime.Today, DbType.DateTime);
+                    //    parameters.Add("@EmployerAccountVersion", "11111111", DbType.String);
+                    //    parameters.Add("@ApprenticeshipVersion", "123456-001", DbType.String);
+                    //    parameters.Add("@FundingSource", FundingSource.ToString("G"), DbType.String);
+                    //    parameters.Add("@TransactionType", TransactionType.Learning.ToString("G"), DbType.String);
+                    //    parameters.Add("@Amount", details.PaymentAmount, DbType.Decimal);
+                    //    parameters.Add("@PeriodEnd", CollectionPeriod.Id, DbType.String);
+                    //    parameters.Add("@StandardCode", 123, DbType.Int64);
+                    //    parameters.Add("@FrameworkCode", 1, DbType.Int32);
+                    //    parameters.Add("@ProgrammeType", 25, DbType.Int32);
+                    //    parameters.Add("@PathwayCode", 1, DbType.Int32);
+                    //    parameters.Add("@PathwayName", "", DbType.String);
+                    //    parameters.Add("@CourseName", details.CourseName, DbType.String);
+                    //    parameters.Add("@ApprenticeName", details.ApprenticeName, DbType.String);
+                    //    parameters.Add("@ApprenticeNINumber", "AB111111A", DbType.String);
+                    //    parameters.Add("@ApprenticeshipCourseLevel", details.CourseLevel, DbType.Int32);
+                    //    parameters.Add("@ApprenticeshipCourseStartDate", details.StartDateValue, DbType.DateTime);
+                    //    connection.Execute("[employer_financial].[CreatePayment]", parameters, commandType: CommandType.StoredProcedure);
+                    //}
 
                 }
             });

@@ -59,6 +59,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"there is a corresponding commitment stored for each of the payments")]
         public void GivenThereIsACorrespondingCommitmentStoredForEachOfThePayments()
         {
+            Payments.ForEach(payment =>
+            {
+                payment.ApprenticeshipId = payment.ApprenticeshipId == 0
+                    ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999)
+                    : payment.ApprenticeshipId;
+                payment.LearnerId = payment.LearnerId == 0
+                    ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999)
+                    : payment.ApprenticeshipId;
+                });
+
             var commitments = Payments.Select(payment => new TestCommitment
             {
                 ActualEndDate = payment.ActualEndDate,
@@ -74,7 +84,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 NumberOfInstallments = payment.NumberOfInstallments,
                 ProviderName = payment.ProviderName,
                 SendingEmployerAccountId = Config.EmployerAccountId,
-                StartDate = payment.StartDate
+                StartDate = payment.StartDate,
             }).ToList();
 
             InsertCommitments(commitments);
@@ -247,10 +257,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             Thread.Sleep(Config.TimeToWait);
             var count = DataContext.Commitments
-                .Count(m => m.EmployerAccountId == Config.EmployerAccountId);
+                .Count(m => m.EmployerAccountId == Config.EmployerAccountId );
             var msg = $"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
 
-            Assert.AreEqual(0, count, message: msg);
+            Assert.AreEqual(0, count, msg);
         }
 
         [Then(@"there will be (.*) commitment for employer (.*)")]
