@@ -54,7 +54,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
 
-            return (await _commitmentsDataService.GetCurrentCommitments(accountId))
+            var commitmentModels = await _commitmentsDataService.GetCurrentCommitments(accountId);
+
+            return commitmentModels
+                .Where(c => c.StartDate <= BalanceMaxDate && c.PlannedEndDate.IsAfterOrSameMonth(DateTime.Today))
                 .Select(m => _mapper.ToCsvBalance(m, accountId));
         }
 

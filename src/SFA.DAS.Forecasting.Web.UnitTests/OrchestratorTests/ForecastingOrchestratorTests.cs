@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 {
@@ -178,6 +179,56 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             Assert.IsNotEmpty(actualFirstCommitment.Uln);
         }
 
+        [Test]
+        public async Task Then_Commitments_Outside_Of_The_Projection_Date_Are_Not_Used()
+        {
+            //Arrange
+            _commitmentDataService.Setup(x => x.GetCurrentCommitments(ExpectedAccountId)).ReturnsAsync(
+                new List<CommitmentModel>
+                {
+                    new CommitmentModel
+                    {
+                        StartDate = DateTime.Now.AddMonths(-12),
+                        PlannedEndDate = DateTime.Now.AddMonths(-1),
+                        ApprenticeName = "Alan Wake",
+                        EmployerAccountId = ExpectedAccountId,
+                        SendingEmployerAccountId = ExpectedAccountId,
+                        MonthlyInstallment = 10.6m,
+                        NumberOfInstallments = 10,
+                        CompletionAmount = 100.8m,
+                        CourseName = "My Course",
+                        CourseLevel = 1,
+                        LearnerId = 90,
+                        ProviderName = "Test Provider",
+                        ProviderId = 99876,
+                        FundingSource = FundingSource.Levy
+                    },
+                    new CommitmentModel
+                    {
+                        StartDate = DateTime.Now.AddMonths(50),
+                        PlannedEndDate = DateTime.Now.AddMonths(62),
+                        ApprenticeName = "Jane Doe",
+                        EmployerAccountId = ExpectedAccountId,
+                        SendingEmployerAccountId = SendingEmployerAccountId,
+                        MonthlyInstallment = 10,
+                        NumberOfInstallments = 10,
+                        CompletionAmount = 100,
+                        CourseName = "My Course",
+                        CourseLevel = 1,
+                        LearnerId = 90,
+                        ProviderName = "Test Provider",
+                        ProviderId = 99876,
+                        FundingSource = FundingSource.Transfer
+                    }
+                });
+
+            //Act
+            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+
+            //Assert
+            Assert.IsNotNull(balanceCsv);
+            Assert.IsEmpty(balanceCsv);
+        }
 
         [Test]
         public async Task Then_The_Transfer_Employer_Is_Populated_If_You_Are_The_Sender()
