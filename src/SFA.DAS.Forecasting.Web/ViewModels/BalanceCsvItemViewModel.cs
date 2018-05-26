@@ -13,8 +13,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string Apprenticeship { get; set; }
         [Name("Apprenticeship Level")]
         public int? ApprenticeshipLevel { get; set; }
-        [Name("Transfer to Employer Name")]
-        public string TransferToEmployerName { get; set; }
+        [Name("Transfer to Employer")]
+        public string TransferToEmployer { get; set; }
         [Name("Uln")]
         public string Uln { get; set; }
         [Name("Apprentice Name")]

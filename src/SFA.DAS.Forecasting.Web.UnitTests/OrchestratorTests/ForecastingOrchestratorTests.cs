@@ -59,7 +59,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         CourseLevel = 1,
                         LearnerId = 90,
                         ProviderName = "Test Provider",
-                        ProviderId = 99876
+                        ProviderId = 99876,
+                        FundingSource = FundingSource.Levy
                     },
                     new CommitmentModel
                     {
@@ -75,7 +76,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         CourseLevel = 1,
                         LearnerId = 90,
                         ProviderName = "Test Provider",
-                        ProviderId = 99876
+                        ProviderId = 99876,
+                        FundingSource = FundingSource.Transfer
                     }
                 });
 
@@ -96,7 +98,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         CourseLevel = 1,
                         LearnerId = 90,
                         ProviderName = "Test Provider",
-                        ProviderId = 99876
+                        ProviderId = 99876,
+                        FundingSource = FundingSource.Transfer
                     }
                 }
             );
@@ -175,6 +178,18 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             Assert.IsNotEmpty(actualFirstCommitment.Uln);
         }
 
+
+        [Test]
+        public async Task Then_The_Transfer_Employer_Is_Populated_If_You_Are_The_Sender()
+        {
+            //Act
+            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+
+            //Assert
+            Assert.AreEqual("N", balanceCsv[0].TransferToEmployer);
+            Assert.AreEqual("Y", balanceCsv[1].TransferToEmployer);
+        }
+
         [Test]
         public async Task Then_The_Csv_Dates_Are_Formatted_As_Month_And_Year()
         {
@@ -198,7 +213,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             //Assert
             var actualFirstCommitment = balanceCsv.First();
             Assert.IsNotNull(actualFirstCommitment);
-            Assert.IsEmpty(actualFirstCommitment.TransferToEmployerName);
+            Assert.AreEqual("N",actualFirstCommitment.TransferToEmployer);
         }
 
         [Test]
