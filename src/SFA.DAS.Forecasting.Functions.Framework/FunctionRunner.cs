@@ -103,7 +103,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             container.Configure(c =>
             {
-                c.For<ILog>().Use(x => LoggerSetup.Create(executionContext.FunctionAppDirectory, writer, x.ParentType));
+                c.For<ILog>().Use(x => LoggerSetup.Create(executionContext, writer, x.ParentType));
             });
         }
     }

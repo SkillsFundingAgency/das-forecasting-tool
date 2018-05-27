@@ -18,9 +18,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 new BalanceItemViewModel
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
-                    LevyCredit = x.FundsIn,
-                    CostOfTraining = x.TotalCostOfTraining,
-                    CompletionPayments = x.CompletionPayments,
+                    LevyCredit = x.LevyFundsIn,
+                    CostOfTraining = x.LevyFundedCostOfTraining,
+                    CompletionPayments = x.LevyFundedCompletionPayments,
                     ExpiredFunds = 0,
                     Balance = x.FutureFunds,
                     CoInvestmentEmployer = x.CoInvestmentEmployer,

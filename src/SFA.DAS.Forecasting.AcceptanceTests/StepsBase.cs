@@ -32,7 +32,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static IContainer ParentContainer { get; set; }
 
         protected static Config Config => ParentContainer.GetInstance<Config>();
-        protected static readonly string FunctionsCliPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli", GetAzureFunctionVersion(), "func.exe");
+        protected static readonly string FunctionsToolsRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AzureFunctionsTools", "Releases");
+        protected static string FunctionsToolsPath => Path.Combine(FunctionsToolsRootPath, GetAzureFunctionsToolsVersion(), "cli", "func.exe");
+        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli" );
+        protected static string FunctionsCliPath => Path.Combine(FunctionsCliRootPath, GetAzureFunctionsCliVersion(), "func.exe");
+        protected static string FunctionsPath => Directory.Exists(FunctionsToolsRootPath) ? FunctionsToolsPath : FunctionsCliPath;
+
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
@@ -57,9 +62,21 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             set => Set(value, "current_balance");
         }
 
-        protected static string GetAzureFunctionVersion()
+        protected static string GetAzureFunctionsToolsVersion()
         {
-            return Directory.GetDirectories(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli"))
+            return Directory.GetDirectories(FunctionsToolsRootPath)
+                .Select(directoryI => new DirectoryInfo(directoryI))
+                .Select(directoryInfo => directoryInfo.Name)
+                .ToList()
+                .OrderByDescending(c => Convert.ToInt32(c.Split('.')[0]))
+                .ThenByDescending(c => Convert.ToInt32(c.Split('.')[1]))
+                .ThenByDescending(c => Convert.ToInt32(c.Split('.')[2]))
+                .First();
+        }
+
+        protected static string GetAzureFunctionsCliVersion()
+        {
+            return Directory.GetDirectories(FunctionsCliRootPath)
                 .Select(directoryI => new DirectoryInfo(directoryI))
                 .Select(directoryInfo => directoryInfo.Name)
                 .ToList()
@@ -94,6 +111,21 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 Thread.Sleep(Config.TimeToPause);
             }
             Assert.Fail(failText);
+        }
+
+        protected void WaitForIt(Func<Tuple<bool, string>> lookForIt, string failText)
+        {
+            var endTime = DateTime.Now.Add(Config.TimeToWait);
+            var reason = "";
+            var pass = false;
+            while (DateTime.Now < endTime)
+            {
+                (pass, reason) = lookForIt();
+                if (pass)
+                    return;
+                Thread.Sleep(Config.TimeToPause);
+            }
+            Assert.Fail(failText + " - " + reason);
         }
 
         protected bool WaitForIt(Func<bool> lookForIt)
@@ -136,7 +168,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 return;
             }
 
-            Console.WriteLine($"Starting the function cli. Path: {FunctionsCliPath}");
+            Console.WriteLine($"Starting the function cli. Path: {FunctionsPath}");
             var appPath = GetAppPath(functionName);
             Console.WriteLine($"Function path: {appPath}");
             if (!Directory.Exists(appPath))
@@ -148,7 +180,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             {
                 StartInfo =
                 {
-                    FileName = FunctionsCliPath,
+                    FileName = FunctionsPath,
                     Arguments = $"host start",
                     WorkingDirectory = appPath,
                     //UseShellExecute = true,
@@ -180,7 +212,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         {
             DataContext.AccountProjectionCommitments
                 .RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == employerId || apc.Commitment.SendingEmployerAccountId== employerId) .ToList());
+                .Where(apc => apc.Commitment.EmployerAccountId == employerId || apc.Commitment.SendingEmployerAccountId == employerId).ToList());
             var commitments = DataContext.Commitments
                 .Where(c => c.EmployerAccountId == employerId || c.SendingEmployerAccountId == employerId)
                 .ToList();
@@ -246,7 +278,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 {
                     EmployerAccountId = commitment.EmployerAccountId ?? Config.EmployerAccountId,
                     LearnerId = i + 1,
-                    ApprenticeshipId = i + 2,
+                    ApprenticeshipId = commitment.ApprenticeshipId > 0 ? commitment.ApprenticeshipId : i + 2,
                     ApprenticeName = commitment.ApprenticeName,
                     SendingEmployerAccountId = commitment.SendingEmployerAccountId,
                     ProviderId = i + 3,

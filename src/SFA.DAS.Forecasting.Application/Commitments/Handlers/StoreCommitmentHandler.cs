@@ -28,8 +28,14 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
 
             var employerCommitment = await _repository.Get(message.EmployerAccountId, message.ApprenticeshipId);
 
-            var commitmentModel = _paymentMapper.MapToCommitment(message);
-            employerCommitment.RegisterCommitment(commitmentModel);
+			var commitmentModel = _paymentMapper.MapToCommitment(message);
+            
+            var commitmentRegistered = employerCommitment.RegisterCommitment(commitmentModel);
+            if (!commitmentRegistered)
+            {
+                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
+                return;
+            }
 
             _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
             await _repository.Store(employerCommitment);

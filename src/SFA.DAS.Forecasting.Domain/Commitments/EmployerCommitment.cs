@@ -38,12 +38,15 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public bool RegisterCommitment(CommitmentModel model)
         {
-            //TODO: move into validation class
             if (Commitment.EmployerAccountId <= 0)
                 return false;
 
             if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
                 model.ActualEndDate = null;
+
+            if (Commitment.Id == 0 && model.ActualEndDate != null)
+                return false;
+
             Commitment.ApprenticeName = model.ApprenticeName;
             Commitment.LearnerId = model.LearnerId;
             Commitment.CourseLevel = model.CourseLevel;
@@ -59,6 +62,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.SendingEmployerAccountId = model.SendingEmployerAccountId;
             Commitment.FundingSource = model.FundingSource;
 
+            // Always returns true. Do we need IsValid?
             return Commitment.Id > 0 || _commitmentValidator.IsValid(Commitment);
         }
     }

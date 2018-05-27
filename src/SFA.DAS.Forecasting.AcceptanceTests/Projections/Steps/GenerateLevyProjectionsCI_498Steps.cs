@@ -45,16 +45,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public void GivenTheFollowingCommitmentsHaveBeenRecorded(Table table)
         {
             Commitments = table.CreateSet<TestCommitment>().ToList();
-            var commitmentIds = Commitments
+            var employerIds = Commitments
                 .Where(m => m.EmployerAccountId.HasValue)
                 .Select(m => m.EmployerAccountId.Value)
                 .ToList();
 
-            commitmentIds.AddRange(Commitments.Select(m => m.SendingEmployerAccountId));
+            employerIds.AddRange(Commitments.Select(m => m.SendingEmployerAccountId));
 
-            commitmentIds.Add(Config.EmployerAccountId);
+            employerIds.Add(Config.EmployerAccountId);
 
-            foreach(var id in commitmentIds.Distinct())
+            foreach(var id in employerIds.Distinct())
                 DeleteCommitments(id);
 
             InsertCommitments(Commitments);
@@ -109,7 +109,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 projections = projections
                     .OrderBy(projection => $"{projection.Year:0000}-{projection.Month:00}")
                     .ToList();
-                projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.FundsIn}, Cost of training: {p.TotalCostOfTraining}, Completion Payments: {p.CompletionPayments}, Future funds: {p.FutureFunds}, Co-Investment: {p.CoInvestmentEmployer} / {p.CoInvestmentGovernment}"));
+                projections.ForEach(p => Console.WriteLine($"Month: {p.Month}, Year: {p.Year}, Funds In: {p.LevyFundsIn}, Cost of training: {p.LevyFundedCostOfTraining}, Completion Payments: {p.LevyFundedCompletionPayments}, Future funds: {p.FutureFunds}, Co-Investment: {p.CoInvestmentEmployer} / {p.CoInvestmentGovernment}"));
                 AccountProjections = projections;
                 return true;
             }, "Account projection failed.");
@@ -118,13 +118,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Then(@"calculated levy credit value should be the amount declared for the single linked PAYE scheme")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSingleLinkedPAYEScheme()
         {
-            AccountProjections.ForEach(projection => Assert.AreEqual(projection.FundsIn, LevySubmissions.FirstOrDefault()?.Amount, $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.FundsIn}"));
+            AccountProjections.ForEach(projection => Assert.AreEqual(projection.LevyFundsIn, LevySubmissions.FirstOrDefault()?.Amount, $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.LevyFundsIn}"));
         }
 
         [Then(@"calculated levy credit value should be the amount declared for the sum of the linked PAYE schemes")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSumOfTheLinkedPAYESchemes()
         {
-            AccountProjections.ForEach(projection => Assert.AreEqual(projection.FundsIn, LevySubmissions.Sum(levy => levy.Amount), $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.FundsIn}"));
+            AccountProjections.ForEach(projection => Assert.AreEqual(projection.LevyFundsIn, LevySubmissions.Sum(levy => levy.Amount), $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.LevyFundsIn}"));
         }
 
 
@@ -132,7 +132,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public void ThenEachFutureMonthSForecastLevyCreditShouldBeTheSame()
         {
             var fundsIn = LevySubmissions.Sum(levy => levy.Amount);
-            Assert.IsTrue(AccountProjections.All(projection => projection.FundsIn == fundsIn));
+            Assert.IsTrue(AccountProjections.All(projection => projection.LevyFundsIn == fundsIn));
         }
 
         [Then(@"the first month should be last month rather than this month")]

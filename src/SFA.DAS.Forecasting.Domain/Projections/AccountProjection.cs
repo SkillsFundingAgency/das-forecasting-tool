@@ -40,13 +40,13 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var lastBalance = _account.Balance;
             for (var month = startMonth; month <= numberOfMonths; month++)
             {
-                var fundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
+                var levyFundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
                         ? 0 : _account.LevyDeclared;
                 var ignoreCostOfTraining = month == startMonth;
 
                 var projection = CreateProjection(
                     periodStart.AddMonths(month),
-                    fundsIn,
+                    levyFundsIn,
                     lastBalance, 
                     ProjectionGenerationType.LevyDeclaration,
                     ignoreCostOfTraining);
@@ -56,7 +56,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal fundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
@@ -69,22 +69,25 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var complPayment = completionPayments.LevyFundedCompletionPayment + completionPayments.TransferOutCompletionPayment;
 
             var moneyOut = ignoreCostOfTraining ? 0 : costOfTraining + complPayment;
-            var moneyIn = lastBalance + fundsIn + totalCostOfTraning.TransferIn;
+            var moneyIn = lastBalance + levyFundsIn + totalCostOfTraning.TransferIn;
 
             var balance = moneyIn - moneyOut;
 
             var projection = new AccountProjectionModel
             {
-                FundsIn = _account.LevyDeclared,
+                LevyFundsIn = _account.LevyDeclared,
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-                TotalCostOfTraining = totalCostOfTraning.LevyFunded,
-                TransferInTotalCostOfTraining = totalCostOfTraning.TransferIn,
-                TransferOutTotalCostOfTraining = totalCostOfTraning.TransferOut,
-                CompletionPayments = complPayment,
+
+                LevyFundedCostOfTraining = totalCostOfTraning.LevyFunded,
+                TransferInCostOfTraining = totalCostOfTraning.TransferIn,
+                TransferOutCostOfTraining = totalCostOfTraning.TransferOut,
+
+                LevyFundedCompletionPayments = completionPayments.LevyFundedCompletionPayment,
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
+
                 CoInvestmentEmployer = balance < 0 ? (balance * 0.1m) * -1m : 0m,
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,

@@ -42,5 +42,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
             var courses = await handler.Handle(new RefreshCourses { RequestTime = DateTime.Now.AddMinutes(-4) });
             Assert.AreEqual(1, courses.Count);
         }
+
     }
 }

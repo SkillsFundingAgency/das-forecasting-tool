@@ -12,7 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMoq;
+using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
+using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
 
@@ -21,28 +24,28 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
     [TestFixture]
     public class ForecastingOrchestratorTests
     {
+        private AutoMoqer _moqer;
         private ForecastingOrchestrator _sut;
         private Mock<IAccountProjectionDataSession> _accountProjection;
         private Mock<IApplicationConfiguration> _applicationConfiguration;
         private Fixture _fixture;
         private Mock<ICommitmentsDataService> _commitmentDataService;
-
+        private BalanceModel _balance;
+        private Mock<IBalanceDataService> _balanceDataService;
         private const long ExpectedAccountId = 12345;
         private const long SendingEmployerAccountId = 554400;
 
         [SetUp]
         public void SetUp()
         {
+            _moqer = new AutoMoqer();
             _fixture = new Fixture();
 
             _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => _fixture.Behaviors.Remove(b));
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
             var hashingService = new Mock<IHashingService>();
-            _accountProjection = new Mock<IAccountProjectionDataSession>();
-            _applicationConfiguration = new Mock<IApplicationConfiguration>();
             _commitmentDataService = new Mock<ICommitmentsDataService>();
-
             _commitmentDataService.Setup(x => x.GetCurrentCommitments(ExpectedAccountId)).ReturnsAsync(
                 new List<CommitmentModel>
                 {
@@ -105,14 +108,28 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 }
             );
 
-            hashingService.Setup(m => m.DecodeValue("ABBA12"))
+            hashingService
+                .Setup(m => m.DecodeValue("ABBA12"))
                 .Returns(ExpectedAccountId);
-            hashingService.Setup(m => m.DecodeValue("CDDC12"))
+            hashingService
+                .Setup(m => m.DecodeValue("CDDC12"))
                 .Returns(SendingEmployerAccountId);
+            _balance = new BalanceModel {EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
 
+            _balanceDataService = new Mock<IBalanceDataService>();
+            _balanceDataService
+                .Setup(x => x.Get(ExpectedAccountId))
+                .ReturnsAsync(_balance);
+            _accountProjection = _moqer.GetMock<IAccountProjectionDataSession>();
+            _applicationConfiguration = _moqer.GetMock<IApplicationConfiguration>();
+
+
+            _moqer.SetInstance(new Mapper());
+            _moqer.SetInstance(_commitmentDataService);
             _sut = new ForecastingOrchestrator(
                 hashingService.Object,
                 _accountProjection.Object,
+                _balanceDataService.Object,
                 _applicationConfiguration.Object,
                 new Mapper(),
                 _commitmentDataService.Object);

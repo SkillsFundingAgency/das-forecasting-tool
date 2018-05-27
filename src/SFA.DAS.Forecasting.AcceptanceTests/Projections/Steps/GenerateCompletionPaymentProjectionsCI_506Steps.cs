@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
                 .Select( g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount)})
                 .ToList()
-                .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.CompletionPayments == completionAmount.CompletionAmount),$"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}") );
+                .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount),$"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}") );
         }
 
         [Then(@"the completion payments should not be included in the projection")]
@@ -56,7 +56,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
                 .Select(g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount) })
                 .ToList()
-                .ForEach(completionAmount => Assert.IsFalse(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.CompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));
+                .ForEach(completionAmount => Assert.IsFalse(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));
         }
 
     }

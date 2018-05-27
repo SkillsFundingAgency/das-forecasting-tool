@@ -45,7 +45,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             {
                 var date = DateTime.Today.AddMonths(p.MonthsFromNow);
                 var projections = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
-                projections.TransferOutTotalCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
+                projections.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
             }
         }
 
@@ -59,14 +59,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 var date = DateTime.Today.AddMonths(p.MonthsFromNow);
                 var projections = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
 
-                projections.TotalCostOfTraining.Should().Be(p.TotalCostOfTraining);
+                projections.LevyFundedCostOfTraining.Should().Be(p.TotalCostOfTraining);
 
-                projections.TransferInTotalCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining);
-                projections.TransferOutTotalCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
+                projections.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining);
+                projections.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
 
                 projections.TransferInCompletionPayments.Should().Be(p.TransferInCompletionPayments);
                 projections.TransferOutCompletionPayments.Should().Be(p.TransferOutCompletionPayments);
-                projections.CompletionPayments.Should().Be(p.CompletionPayments);
+                projections.LevyFundedCompletionPayments.Should().Be(p.CompletionPayments);
                 projections.FutureFunds.Should().Be(p.FutureFunds);
             }
         }

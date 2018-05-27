@@ -56,6 +56,41 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             Assert.IsTrue(Payments.Any());
         }
 
+        [Given(@"there is a corresponding commitment stored for each of the payments")]
+        public void GivenThereIsACorrespondingCommitmentStoredForEachOfThePayments()
+        {
+            Payments.ForEach(payment =>
+            {
+                payment.ApprenticeshipId = payment.ApprenticeshipId == 0
+                    ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999)
+                    : payment.ApprenticeshipId;
+                payment.LearnerId = payment.LearnerId == 0
+                    ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999)
+                    : payment.ApprenticeshipId;
+                });
+
+            var commitments = Payments.Select(payment => new TestCommitment
+            {
+                ActualEndDate = payment.ActualEndDate,
+                ApprenticeName = payment.ApprenticeName,
+                ApprenticeshipId = payment.ApprenticeshipId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
+                CompletionAmount = payment.CompletionAmount,
+                CourseLevel = payment.CourseLevel,
+                CourseName = payment.CourseName,
+                EmployerAccountId = Config.EmployerAccountId,
+                FundingSource = payment.FundingSource ?? FundingSource.Levy,
+                InstallmentAmount = payment.InstallmentAmount,
+                LearnerId = payment.LearnerId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
+                NumberOfInstallments = payment.NumberOfInstallments,
+                ProviderName = payment.ProviderName,
+                SendingEmployerAccountId = Config.EmployerAccountId,
+                StartDate = payment.StartDate,
+            }).ToList();
+
+            InsertCommitments(commitments);
+        }
+
+
         [Given(@"I made some invalid payments")]
         public void GivenIHaveMadeSomeInvalidPayments(Table table)
         {
@@ -63,14 +98,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
         [When(@"the SFA Employer HMRC Payment service notifies the Forecasting service of the payment")]
+        [When(@"the SFA Employer HMRC Payment service notifies the Forecasting service of the payments")]
         public void WhenTheSFAEmployerHMRCPaymentServiceNotifiesTheForecastingServiceOfThePayment()
         {
             for (var idx = 0; idx < Payments.Count; idx++)
             {
                 var id = idx + 1;
                 var payment = Payments[idx];
-                payment.PaymentId = id.ToString();
-                payment.ApprenticeshipId = id;
+                payment.PaymentId =   id.ToString();
+                payment.ApprenticeshipId = payment.ApprenticeshipId > 0 ? payment.ApprenticeshipId : id;
                 payment.ProviderId = id;
             }
             Payments.Select((payment, idx) => new PaymentCreatedMessage
@@ -92,7 +128,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 },
                 EarningDetails = new EarningDetails
                 {
-                    ActualEndDate = DateTime.MinValue,
+                    ActualEndDate = payment.ActualEndDateValue ?? DateTime.MinValue,
                     StartDate = payment.StartDateValue,
                     PlannedEndDate = payment.PlannedEndDate,
                     TotalInstallments = payment.NumberOfInstallments,
@@ -128,18 +164,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             WaitForIt(() =>
             {
-                Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                var payments = Connection.Query<PaymentModel>("Select * from Payment where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text).ToList();
+                var payments = DataContext.Payments.Where(m => m.EmployerAccountId == Config.EmployerAccountId).ToList();
 
                 foreach (var payment in Payments)
                 {
                     if (payments.Any(p => payment.PaymentId == p.ExternalPaymentId)) continue;
-                    Console.WriteLine($"Payment not found. Payment: {payment.ToJson()}");
-                    return false;
+                    var msg = $"Payment not found. Payment: {payment.ToJson()}";
+                    return Tuple.Create(false, msg);
                 }
-                return true;
+                return Tuple.Create(true, string.Empty);
+
             }, "Failed to find all the payments.");
         }
 
@@ -148,26 +182,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             WaitForIt(() =>
             {
-                Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}");
-                var parameters = new DynamicParameters();
-                parameters.Add("@employerAccountId", receivningEmployerId, DbType.Int64);
-                parameters.Add("@sendingEmployerAccountId", sendingEmployerId, DbType.Int64);
-                var sql = @"
-                        Select* from Payment 
-                        where employerAccountId = @employerAccountId 
-                        and SendingEmployerAccountId = @sendingEmployerAccountId 
-                        and FundingSource = 2
-                        ";
-                var payments = Connection.Query<PaymentModel>(sql, parameters, commandType: CommandType.Text).ToList();
+                var payments = DataContext.Payments
+                    .Where(m => m.EmployerAccountId == receivningEmployerId
+                             && m.SendingEmployerAccountId == sendingEmployerId
+                             && m.FundingSource == FundingSource.Transfer)
+                    .ToList();
 
-                foreach (var payment in Payments)
-                {
-                    if (payments.Any(p => payment.PaymentId == p.ExternalPaymentId)) continue;
-                    Console.WriteLine($"Payment not found. Payment: {payment.ToJson()}");
-                    return false;
-                }
-                return true;
-            }, "Failed to find all the payments.");
+                var paymentsSaved = Payments.Count(p => payments.Any(expected => expected.ExternalPaymentId == p.PaymentId));
+                var msg = $"{paymentsSaved} of expected {Payments.Count()} Payment found.";
+
+                var pass = Payments.All(p => payments.Any(expected => expected.ExternalPaymentId == p.PaymentId));
+                return Tuple.Create(pass, msg);
+
+            }, $"Failed to find all the payments.");
         }
 
 
@@ -178,45 +205,35 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 foreach (var payment in Payments)
                 {
-                    Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-                    parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
-                    parameters.Add("@apprenticeshipId", payment.ApprenticeshipId, DbType.Int64);
-                    var count = Connection.ExecuteScalar<int>("Select Count(*) from Commitment where employerAccountId = @employerAccountId and ApprenticeshipId = @apprenticeshipId and ProviderId = @providerId",
-                        parameters, commandType: CommandType.Text);
-                    return count == 1;
+
+                    var commitmentsCount = DataContext.Commitments
+                        .Count(m => m.EmployerAccountId == Config.EmployerAccountId
+                                 && m.ApprenticeshipId == payment.ApprenticeshipId
+                                 && m.ProviderId == payment.ProviderId);
+
+                    return Tuple.Create(commitmentsCount == 1, $"{payment.ToJson()}");
                 }
-                return false;
+                return Tuple.Create(false, $"");
             }, "Failed to find all the commitments.");
         }
 
         [Then(@"the Forecasting Payment service should store the commitment declarations for receiving employer (.*) from sending employer (.*)")]
-        public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarationsForReceivingEmployerFromSendingEmployer(int receivningEmployerId, int sendingEmployerId)
+        public void ThenTheForecastingPaymentServiceShouldStoreTheCommitmentDeclarationsForReceivingEmployerFromSendingEmployer(int receivingEmployerId, int sendingEmployerId)
         {
             WaitForIt(() =>
             {
                 foreach (var payment in Payments)
                 {
-                    Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Month: {DateTime.Now.Month}, Year: {DateTime.Now.Year}");
-                    var parameters = new DynamicParameters();
-                    parameters.Add("@providerId", payment.ProviderId, DbType.Int64);
-                    parameters.Add("@apprenticeshipId", payment.ApprenticeshipId, DbType.Int64);
-                    parameters.Add("@employerAccountId", receivningEmployerId, DbType.Int64);
-                    parameters.Add("@sendingEmployerAccountId", sendingEmployerId, DbType.Int64);
-                    var sql = @"
-                        Select Count(*) from Commitment 
-                        where employerAccountId = @employerAccountId 
-                        and ApprenticeshipId = @apprenticeshipId 
-                        and SendingEmployerAccountId = @sendingEmployerAccountId 
-                        and FundingSource = 2
-                        and ProviderId = @providerId
-                    ";
-                    var count = Connection.ExecuteScalar<int>(sql,
-                        parameters, commandType: CommandType.Text);
-                    return count == 1;
+                    var commitmentsCount = DataContext.Commitments
+                        .Count(m => m.EmployerAccountId == receivingEmployerId
+                                 && m.SendingEmployerAccountId == sendingEmployerId
+                                 && m.ApprenticeshipId == payment.ApprenticeshipId
+                                 && m.FundingSource == FundingSource.Transfer
+                                 && m.ProviderId == payment.ProviderId);
+
+                    return Tuple.Create(commitmentsCount == 1, $"{payment.ToJson()}");
                 }
-                return false;
+                return Tuple.Create(false, $"");
             }, "Failed to find all the commitments.");
         }
 
@@ -225,26 +242,102 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         public void ThenTheForecastingPaymentServiceShouldNotStoreThePaymentDeclarations()
         {
             Thread.Sleep(Config.TimeToWait);
-            Console.WriteLine($"Looking for Payments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}");
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            parameters.Add("@collectionPeriodYear", DateTime.Now.Year, DbType.Int32);
-            parameters.Add("@collectionPeriodMonth", DateTime.Now.Month, DbType.Int32);
-            var count = Connection.ExecuteScalar<int>("Select Count(*) from Payment where employerAccountId = @employerAccountId and CollectionPeriodYear = @collectionPeriodYear and CollectionPeriodMonth = @collectionPeriodMonth",
-                parameters, commandType: CommandType.Text);
-            Assert.AreEqual(0, count);
+
+            var count = DataContext.Payments
+                    .Count(m => m.EmployerAccountId == Config.EmployerAccountId
+                    && m.CollectionPeriod.Year == DateTime.Now.Year
+                    && m.CollectionPeriod.Month == DateTime.Now.Month);
+            var msg = $"Looking for Payments.Employer Account Id: { Config.EmployerAccountId}, Collection Period Year: { DateTime.Now.Year}, Collection Period Month: { DateTime.Now.Month}";
+
+            Assert.AreEqual(0, count, message: msg);
         }
 
         [Then(@"the Forecasting Payment service should not store commitments")]
         public void ThenTheForecastingPaymentServiceShouldNotStoreTheCommitments()
         {
             Thread.Sleep(Config.TimeToWait);
-            Console.WriteLine($"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}");
-            var parameters = new DynamicParameters();
-            parameters.Add("@employerAccountId", Config.EmployerAccountId, DbType.Int64);
-            var count = Connection.ExecuteScalar<int>("Select Count(*) from Commitment where employerAccountId = @employerAccountId",
-                parameters, commandType: CommandType.Text);
-            Assert.AreEqual(0, count);
+            var count = DataContext.Commitments
+                .Count(m => m.EmployerAccountId == Config.EmployerAccountId );
+            var msg = $"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
+
+            Assert.AreEqual(0, count, msg);
         }
+
+        [Then(@"there will be (.*) commitment for employer (.*)")]
+        public void ThenThereWillBeCommitmentForEmployer(int expectedCount, int employerId)
+        {
+            WaitForIt(() =>
+            {
+                var count = DataContext.Commitments
+                    .Where(m => m.EmployerAccountId == employerId)
+                    .Count();
+
+                var msg = $"Looking for Commitments. Found {count} of {expectedCount}. Employer Account Id: {employerId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
+
+                return Tuple.Create(count == expectedCount, msg);
+
+            }, $"Failed to find all commitments. Expected: {expectedCount}");
+        }
+
+        [Then(@"apprenticeship with id (.*) should have an end date")]
+        public void ThenApprenticeshipWithIdShouldHaveAnEndDate(int apprenticeshipId)
+        {
+            WaitForIt(() =>
+            {
+                var commitment = DataContext.Commitments
+                .AsNoTracking()
+                    .Single(m => m.ApprenticeshipId == apprenticeshipId);
+
+                var msg = $"Looking for Commitment {apprenticeshipId}. ActualEndDate: {commitment.ActualEndDate}.";
+
+                return Tuple.Create(commitment.ActualEndDate != null && commitment.ActualEndDate > DateTime.MinValue, msg);
+
+            }, $"Failed finding commitment ({apprenticeshipId}) with actual end date");
+        }
+
+        [Then(@"apprenticeship with id (.*) should not have an actual end date")]
+        public void ThenApprenticeshipWithIdShouldNotHaveAnActualEndDate(int apprenticeshipId)
+        {
+            WaitForIt(() =>
+            {
+                var commitment = DataContext.Commitments
+                    .AsNoTracking()
+                    .Single(m => m.ApprenticeshipId == apprenticeshipId);
+
+                var msg = $"Looking for Commitment {apprenticeshipId}. ";
+
+                return Tuple.Create(commitment.ActualEndDate == null || commitment.ActualEndDate == DateTime.MinValue, msg);
+
+            }, $"Failed finding commitment ({apprenticeshipId}) with actual end date");
+        }
+
+        [Then(@"apprenticeship with id (.*) should have completion amount of (.*) and montly installment of (.*)")]
+        public void ThenApprenticeshipWithIdShouldHaveCompletionAmountOfAndMontlyInstallnebtOf(int apprenticeshipId, int completionAmount, Decimal installmentAmount)
+        {
+            WaitForIt(() =>
+            {
+                var commitment = DataContext.Commitments
+                    .AsNoTracking()
+                    .Single(m => m.ApprenticeshipId == apprenticeshipId);
+
+                var msg = $"Looking for Commitment {apprenticeshipId}. CompletionAmount: {commitment.CompletionAmount} and InstallemntAmount: {commitment.MonthlyInstallment}";
+
+                return Tuple.Create(commitment.CompletionAmount == completionAmount && commitment.MonthlyInstallment == installmentAmount, msg);
+
+            }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletoinAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
+        }
+
+        [Then(@"the Forecasting Payment service should record that the commitment has ended")]
+        public void ThenTheForecastingPaymentServiceShouldStoreTheStoppedCommitment()
+        {
+            WaitForIt(() =>
+                {
+                    return Payments.All(payment => DataContext.Commitments.Any(c =>
+                        c.EmployerAccountId == Config.EmployerAccountId &&
+                        c.ApprenticeshipId == payment.ApprenticeshipId && c.ActualEndDate != null));
+                },"Failed to find the ended commitment");
+        }
+
+
     }
 }
