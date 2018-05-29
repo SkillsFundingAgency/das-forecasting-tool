@@ -114,84 +114,14 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 3",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 4",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 5",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 6",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 7",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 8",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table1.AddRow(new string[] {
-                        "133.33",
-                        "Test Apprentice 9",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
 #line 11
  testRunner.Given("I have made the following payments", ((string)(null)), table1, "Given ");
-#line 22
+#line 15
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 23
+#line 16
  testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 24
+#line 17
  testRunner.And("the Forecasting Payment service should store the commitment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -202,7 +132,7 @@ this.FeatureBackground();
         public virtual void AC2DoNotStoreInvalidData()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Do not store invalid data", ((string[])(null)));
-#line 26
+#line 19
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -287,14 +217,14 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "0"});
-#line 27
+#line 20
  testRunner.Given("I made some invalid payments", ((string)(null)), table2, "Given ");
-#line 36
+#line 29
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 37
+#line 30
  testRunner.Then("the Forecasting Payment service should not store the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 38
+#line 31
  testRunner.And("the Forecasting Payment service should not store commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -305,7 +235,7 @@ this.FeatureBackground();
         public virtual void EnsureSendingEmployerTransferPaymentsAreProcessed()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure sending employer transfer payments are processed", ((string[])(null)));
-#line 40
+#line 33
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -376,14 +306,14 @@ this.FeatureBackground();
                         "400.00",
                         "12",
                         "12345"});
-#line 41
+#line 34
  testRunner.Given("I have made the following payments", ((string)(null)), table3, "Given ");
-#line 48
+#line 41
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 49
+#line 42
  testRunner.Then("the Forecasting Payment service should store the payment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 50
+#line 43
  testRunner.And("the Forecasting Payment service should store the commitment declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -394,7 +324,7 @@ this.FeatureBackground();
         public virtual void EnsureReceivingEmployerTransferPaymentsAreProcessedCI_762()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Ensure receiving employer transfer payments are processed (CI-762)", ((string[])(null)));
-#line 52
+#line 45
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -435,15 +365,15 @@ this.FeatureBackground();
                         "12",
                         "1",
                         "Transfer"});
-#line 53
+#line 46
  testRunner.And("I have made the following payments", ((string)(null)), table4, "And ");
-#line 58
+#line 51
  testRunner.When("the SFA Employer HMRC Payment service notifies the Forecasting service of the pay" +
                     "ment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 59
+#line 52
  testRunner.Then("the Forecasting Payment service should store the payment declarations receiving e" +
                     "mployer 12345 from sending employer 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 60
+#line 53
  testRunner.And("the Forecasting Payment service should store the commitment declarations for rece" +
                     "iving employer 12345 from sending employer 1", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
