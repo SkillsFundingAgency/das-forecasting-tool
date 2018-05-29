@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         public void SetupNestedContainer()
         {
             NestedContainer = ParentContainer.GetNestedContainer();
+            CommitmentType = CommitmentType.LevyFunded;
         }
 
         [AfterScenario(Order = 99)]

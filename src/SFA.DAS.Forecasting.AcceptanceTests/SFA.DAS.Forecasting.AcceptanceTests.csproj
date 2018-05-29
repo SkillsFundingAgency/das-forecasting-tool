@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
+    <Compile Include="CommitmentType.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Levy\Feature\Build Projections From Levy Declarations.feature.cs">
       <AutoGen>True</AutoGen>
@@ -158,20 +159,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
     </Compile>
-    <Compile Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature.cs">
+    <Compile Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CalculateActualTransferCompletionPayments.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\CalculateFundsInForReceivingEmployer.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CalculateFundsInForReceivingEmployer.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CalculateMonthlyCostOfActualTransferCommitments.feature</DependentUpon>
+      <DependentUpon>Projections For Employers With Levy Funded And Transfer Funded Commitments.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Feature\Generate Training Cost Projections.feature.cs">
       <AutoGen>True</AutoGen>
@@ -262,17 +253,9 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
     </None>
-    <None Include="Projections\Feature\CalculateActualTransferCompletionPayments.feature">
+    <None Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CalculateActualTransferCompletionPayments.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\CalculateFundsInForReceivingEmployer.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CalculateFundsInForReceivingEmployer.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\CalculateMonthlyCostOfActualTransferCommitments.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CalculateMonthlyCostOfActualTransferCommitments.feature.cs</LastGenOutput>
+      <LastGenOutput>Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

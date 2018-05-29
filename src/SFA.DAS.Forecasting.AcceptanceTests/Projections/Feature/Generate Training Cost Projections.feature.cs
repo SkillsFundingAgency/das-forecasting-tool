@@ -132,146 +132,29 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 3",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 4",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 5",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 6",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/04/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 7",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 8",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 9",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 10",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 11",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 12",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 13",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "12/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 14",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "12/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 15",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "12/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
 #line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 34
+#line 21
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 35
+#line 22
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 36
+#line 23
  testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("AC2: Training cost multiple apprenticeships with different numbers of instalments" +
-            "")]
-        public virtual void AC2TrainingCostMultipleApprenticeshipsWithDifferentNumbersOfInstalments()
+        [NUnit.Framework.DescriptionAttribute("Sending employer transfer training costs")]
+        public virtual void SendingEmployerTransferTrainingCosts()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Training cost multiple apprenticeships with different numbers of instalments" +
-                    "", ((string[])(null)));
-#line 38
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Sending employer transfer training costs", ((string[])(null)));
+#line 25
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
+#line 26
+ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                         "Apprentice Name",
@@ -281,1311 +164,259 @@ this.FeatureBackground();
                         "Start Date",
                         "Installment Amount",
                         "Completion Amount",
-                        "Number Of Installments"});
+                        "Number Of Installments",
+                        "FundingSource"});
             table4.AddRow(new string[] {
-                        "Test Apprentice",
+                        "Test Apprentice 1",
                         "Test Course",
                         "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "5"});
+                        "Test Provider 1",
+                        "Last Year",
+                        "333.33",
+                        "2000",
+                        "24",
+                        "Transfer"});
             table4.AddRow(new string[] {
-                        "Test Apprentice",
+                        "Test Apprentice 2",
                         "Test Course",
                         "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "5"});
+                        "Test Provider 2",
+                        "Yesterday",
+                        "444.44",
+                        "2000",
+                        "18",
+                        "Transfer"});
             table4.AddRow(new string[] {
-                        "Test Apprentice",
+                        "Test Apprentice 3",
                         "Test Course",
                         "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "5"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "5"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "5"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "5"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/10/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "6"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "16/05/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "29/06/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "12/07/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "12/07/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "12/07/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "09/08/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "09/08/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "09/08/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "09/08/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "09/08/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "09/08/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "05/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "100.00",
-                        "300.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "100.00",
-                        "300.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "100.00",
-                        "300.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/11/2017 00:00",
-                        "1.00",
-                        "0.00",
-                        "11"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "100.00",
-                        "300.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "100.00",
-                        "300.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "100.00",
-                        "300.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "07/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "07/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "07/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "07/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "07/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "07/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "133.33",
-                        "400.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "14/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "15/11/2017 00:00",
-                        "166.67",
-                        "500.00",
-                        "12"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "26/10/2017 00:00",
-                        "400.00",
-                        "1800.00",
-                        "18"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "84.21",
-                        "400.00",
-                        "19"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "84.21",
-                        "400.00",
-                        "19"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "31/10/2017 00:00",
-                        "84.21",
-                        "400.00",
-                        "19"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "30/09/2017 00:00",
-                        "240.00",
-                        "1800.00",
-                        "30"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "30/09/2017 00:00",
-                        "240.00",
-                        "1800.00",
-                        "30"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "30/09/2017 00:00",
-                        "240.00",
-                        "1800.00",
-                        "30"});
-            table4.AddRow(new string[] {
-                        "Test Apprentice",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "30/09/2017 00:00",
-                        "240.00",
-                        "1800.00",
-                        "30"});
-#line 39
- testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
-#line 185
+                        "Test Provider 3",
+                        "Next Year",
+                        "666.66",
+                        "2000",
+                        "12",
+                        "Transfer"});
+#line 27
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table4, "And ");
+#line 32
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 186
+#line 33
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 187
- testRunner.And("the training costs should be included in the correct months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Months From Now",
+                        "Transfer Out Total Cost Of Training"});
+            table5.AddRow(new string[] {
+                        "0",
+                        "333.33"});
+            table5.AddRow(new string[] {
+                        "1",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "2",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "3",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "4",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "5",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "6",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "7",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "8",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "9",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "10",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "11",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "12",
+                        "777.77"});
+            table5.AddRow(new string[] {
+                        "13",
+                        "1111.10"});
+            table5.AddRow(new string[] {
+                        "14",
+                        "1111.10"});
+            table5.AddRow(new string[] {
+                        "15",
+                        "1111.10"});
+            table5.AddRow(new string[] {
+                        "16",
+                        "1111.10"});
+            table5.AddRow(new string[] {
+                        "17",
+                        "1111.10"});
+            table5.AddRow(new string[] {
+                        "18",
+                        "1111.10"});
+            table5.AddRow(new string[] {
+                        "19",
+                        "666.66"});
+#line 34
+ testRunner.And("should have following projections", ((string)(null)), table5, "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Receiving employer transfer training costs")]
+        public virtual void ReceivingEmployerTransferTrainingCosts()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Receiving employer transfer training costs", ((string[])(null)));
+#line 57
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 58
+ testRunner.Given("I am a receiving employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table6.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course",
+                        "1",
+                        "Test Provider 1",
+                        "Last Year",
+                        "333.33",
+                        "2000",
+                        "24",
+                        "Transfer"});
+            table6.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider 2",
+                        "Yesterday",
+                        "444.44",
+                        "2000",
+                        "18",
+                        "Transfer"});
+            table6.AddRow(new string[] {
+                        "Test Apprentice 3",
+                        "Test Course",
+                        "1",
+                        "Test Provider 3",
+                        "Next Year",
+                        "666.66",
+                        "2000",
+                        "12",
+                        "Transfer"});
+#line 59
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table6, "And ");
+#line 64
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 65
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Months From Now",
+                        "Transfer In Total Cost Of Training",
+                        "Transfer Out Total Cost Of Training"});
+            table7.AddRow(new string[] {
+                        "0",
+                        "333.33",
+                        "333.33"});
+            table7.AddRow(new string[] {
+                        "1",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "2",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "3",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "4",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "5",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "6",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "7",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "8",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "9",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "10",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "11",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "12",
+                        "777.77",
+                        "777.77"});
+            table7.AddRow(new string[] {
+                        "13",
+                        "1111.10",
+                        "1111.10"});
+            table7.AddRow(new string[] {
+                        "14",
+                        "1111.10",
+                        "1111.10"});
+            table7.AddRow(new string[] {
+                        "15",
+                        "1111.10",
+                        "1111.10"});
+            table7.AddRow(new string[] {
+                        "16",
+                        "1111.10",
+                        "1111.10"});
+            table7.AddRow(new string[] {
+                        "17",
+                        "1111.10",
+                        "1111.10"});
+            table7.AddRow(new string[] {
+                        "18",
+                        "1111.10",
+                        "1111.10"});
+            table7.AddRow(new string[] {
+                        "19",
+                        "666.66",
+                        "666.66"});
+#line 66
+ testRunner.And("should have following projections", ((string)(null)), table7, "And ");
 #line hidden
             this.ScenarioCleanup();
         }

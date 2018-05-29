@@ -57,17 +57,23 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             foreach (var p in expectedProjections)
             {
                 var date = DateTime.Today.AddMonths(p.MonthsFromNow);
-                var projections = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
+                var projection = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
 
-                projections.LevyFundedCostOfTraining.Should().Be(p.TotalCostOfTraining);
+                projection.LevyFundedCostOfTraining.Should().Be(p.TotalCostOfTraining,
+                    $"Date: {date.Month}-{date.Year},  Expected levy funded cost of training to be {p.TotalCostOfTraining} but was {projection.LevyFundedCostOfTraining}.");
+                projection.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining,
+                    $"Date: {date.Month}-{date.Year},  Expected transfer in cost of training to be {p.TransferInTotalCostOfTraining} but was {projection.TransferInCostOfTraining}.");
+                projection.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining,
+                    $"Date: {date.Month}-{date.Year},  Expected transfer out cost of training to be {p.TransferOutTotalCostOfTraining} but was {projection.TransferOutCostOfTraining}.");
 
-                projections.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining);
-                projections.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
-
-                projections.TransferInCompletionPayments.Should().Be(p.TransferInCompletionPayments);
-                projections.TransferOutCompletionPayments.Should().Be(p.TransferOutCompletionPayments);
-                projections.LevyFundedCompletionPayments.Should().Be(p.CompletionPayments);
-                projections.FutureFunds.Should().Be(p.FutureFunds);
+                projection.LevyFundedCompletionPayments.Should().Be(p.CompletionPayments,
+                    $"Date: {date.Month}-{date.Year}, expected levy funded completion payments to be {p.CompletionPayments} but was {projection.LevyFundedCompletionPayments}.");
+                projection.TransferInCompletionPayments.Should().Be(p.TransferInCompletionPayments,
+                    $"Date: {date.Month}-{date.Year}, expected transfer in completion payments to be {p.TransferInCompletionPayments} but was {projection.TransferInCompletionPayments}.");
+                projection.TransferOutCompletionPayments.Should().Be(p.TransferOutCompletionPayments,
+                    $"Date: {date.Month}-{date.Year}, expected transfer out completion payments to be {p.TransferOutCompletionPayments} but was {projection.TransferOutCompletionPayments}.");
+                projection.FutureFunds.Should().Be(p.FutureFunds,
+                    $"Date: {date.Month}-{date.Year}, expected future funds to be {p.FutureFunds} but was {projection.FutureFunds}.");
             }
         }
 

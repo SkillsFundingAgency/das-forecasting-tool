@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static Config Config => ParentContainer.GetInstance<Config>();
         protected static readonly string FunctionsToolsRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AzureFunctionsTools", "Releases");
         protected static string FunctionsToolsPath => Path.Combine(FunctionsToolsRootPath, GetAzureFunctionsToolsVersion(), "cli", "func.exe");
-        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli" );
+        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli");
         protected static string FunctionsCliPath => Path.Combine(FunctionsCliRootPath, GetAzureFunctionsCliVersion(), "func.exe");
         protected static string FunctionsPath => Directory.Exists(FunctionsToolsRootPath) ? FunctionsToolsPath : FunctionsCliPath;
 
@@ -61,6 +61,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             get => (decimal)Get<object>("current_balance");
             set => Set(value, "current_balance");
         }
+
+        protected bool IsTransfer { get => Get<bool>("is_transfer"); set => Set(value, "is_transfer"); }
+        protected CommitmentType CommitmentType { get => Get<CommitmentType>(); set => Set(value); }
 
         protected static string GetAzureFunctionsToolsVersion()
         {
@@ -270,17 +273,20 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void InsertCommitments(List<TestCommitment> commitments)
         {
+            var senderId = CommitmentType == CommitmentType.TransferReceiver ? 54321 : EmployerAccountId;
+            var receiverId = CommitmentType == CommitmentType.TransferSender ? 54321 : EmployerAccountId;
+
             for (var i = 0; i < commitments.Count; i++)
             {
                 var commitment = commitments[i];
 
                 DataContext.Commitments.Add(new CommitmentModel
                 {
-                    EmployerAccountId = commitment.EmployerAccountId ?? Config.EmployerAccountId,
+                    EmployerAccountId = CommitmentType == CommitmentType.TransferSender && commitment.FundingSource.HasValue && commitment.FundingSource == FundingSource.Levy ? EmployerAccountId : receiverId,
                     LearnerId = i + 1,
                     ApprenticeshipId = commitment.ApprenticeshipId > 0 ? commitment.ApprenticeshipId : i + 2,
                     ApprenticeName = commitment.ApprenticeName,
-                    SendingEmployerAccountId = commitment.SendingEmployerAccountId,
+                    SendingEmployerAccountId = senderId,
                     ProviderId = i + 3,
                     ProviderName = commitment.ProviderName,
                     CourseName = commitment.CourseName,
@@ -291,7 +297,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
-                    FundingSource = commitment.FundingSource ?? FundingSource.Levy
+                    FundingSource = CommitmentType == CommitmentType.LevyFunded ? FundingSource.Levy :
+                        CommitmentType == CommitmentType.TransferReceiver ? FundingSource.Transfer :
+                        commitment.FundingSource ?? FundingSource.Levy
                 });
             }
 
