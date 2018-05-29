@@ -11,6 +11,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
 using TechTalk.SpecFlow;
@@ -82,6 +83,29 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             var response = HttpClient.PostAsync(projectionUrl, new StringContent(startPeriodJson, Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
+
+        [Then(@"there should be (.*) commitments")]
+        public void ThenThereShouldBeCommitments(int commitmetnCount)
+        {
+            WaitForIt(() =>
+            {
+                var commitments = new List<CommitmentModel>();
+                ExecuteSql(() =>
+                {
+                    commitments = DataContext.Commitments
+                        .Where(c => c.EmployerAccountId == Config.EmployerAccountId || c.SendingEmployerAccountId == Config.EmployerAccountId)
+                        .ToList();
+                });
+
+                if (commitments.Count() != commitmetnCount)
+                {
+                    Tuple.Create(false, $"Expected {commitments} but found ${commitments.Count()} commitments");
+                }
+
+                return Tuple.Create(true, "");
+            }, "Failed getting commitments.");
+        }
+
 
         [Then(@"the account projection should be generated")]
         public void ThenTheAccountProjectionShouldBeGenerated()

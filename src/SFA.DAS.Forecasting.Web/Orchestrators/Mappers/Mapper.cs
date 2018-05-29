@@ -7,17 +7,17 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
-    public class Mapper
+    public class ForecastingMapper
     {
-        public IEnumerable<BalanceItemViewModel> MapBalance(IEnumerable<AccountProjectionModel> data)
+        public IEnumerable<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
                 new BalanceItemViewModel
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
                     LevyCredit = x.LevyFundsIn,
-                    CostOfTraining = x.LevyFundedCostOfTraining,
-                    CompletionPayments = x.LevyFundedCompletionPayments,
+                    CostOfTraining = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining,
+                    CompletionPayments = x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments,
                     ExpiredFunds = 0,
                     Balance = x.FutureFunds,
                     CoInvestmentEmployer = x.CoInvestmentEmployer,

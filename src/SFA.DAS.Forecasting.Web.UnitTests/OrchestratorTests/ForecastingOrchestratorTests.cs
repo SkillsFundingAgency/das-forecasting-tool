@@ -40,13 +40,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _moqer.GetMock<IHashingService>()
                 .Setup(m => m.DecodeValue("ABBA12"))
                 .Returns(12345);
+
             _balance = new BalanceModel {EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
             _moqer.GetMock<IBalanceDataService>()
                 .Setup(x => x.Get(It.IsAny<long>()))
                 .Returns(Task.FromResult(_balance));
             _accountProjection = _moqer.GetMock<IAccountProjectionDataSession>();
             _applicationConfiguration = _moqer.GetMock<IApplicationConfiguration>();
-            _moqer.SetInstance(new Mapper());
+            _moqer.SetInstance(new ForecastingMapper());
             _sut = _moqer.Resolve<ForecastingOrchestrator>();
         }
 
