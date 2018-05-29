@@ -3042,11 +3042,11 @@ a#link-settings:focus {
   }
 }
 
-.error-summary:not(.validation-summary-max-funding) h1 {
+.error-summary:not(.validation-summary-details) h1 {
   display: none;
 }
 
-.error-summary:not(.validation-summary-max-funding) h1 + p {
+.error-summary:not(.validation-summary-details) h1 + p {
   display: none;
 }
 
@@ -4941,7 +4941,7 @@ h2 .float-right {
   width: 50px;
 }
 
-#estimate-add-apprenticeship .levy-value {
+#estimate-add-apprenticeship .total-funding-cost {
   width: 200px;
 }
 
@@ -5273,4 +5273,8 @@ input[type=number] {
   color: #b10e1e;
   font-weight: bold;
   text-decoration: underline;
+}
+
+.HideFundingCapMessage {
+    display: none !important;
 }

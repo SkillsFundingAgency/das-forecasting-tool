@@ -87,10 +87,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-        [Route("CalculateTotalCost", Name = "CalculateTotalCost")]
-        public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue)
+        [Route("{estimationName}/apprenticeship/CalculateTotalCost", Name = "CalculateTotalCost")]
+        public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue, string estimationName)
         {
-            //TODO: this should be in the orchestrator
             var fundingCap = await _addApprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
             var totalValue = fundingCap * numberOfApprentices;
             var totalValueAsString = totalValue.FormatValue();
@@ -106,8 +105,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpPost]
-        [Route("GetDefaultNumberOfMonths", Name = "GetDefaultNumberOfMonths")]
-        public async Task<ActionResult> GetDefaultNumberOfMonths(string courseId)
+        [Route("{estimationName}/apprenticeship/GetDefaultNumberOfMonths", Name = "GetDefaultNumberOfMonths")]
+        public async Task<ActionResult> GetDefaultNumberOfMonths(string courseId, string estimationName)
         {
             var result = await _addApprenticeshipOrchestrator.GetDefaultNumberOfMonths(courseId);
             return Json(result);
