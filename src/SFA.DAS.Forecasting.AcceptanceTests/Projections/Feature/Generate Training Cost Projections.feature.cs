@@ -267,7 +267,7 @@ this.FeatureBackground();
                         "19",
                         "666.66"});
 #line 34
- testRunner.And("should have following projections", ((string)(null)), table5, "And ");
+ testRunner.And("should have the following transfers costs of training", ((string)(null)), table5, "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -416,7 +416,7 @@ this.FeatureBackground();
                         "666.66",
                         "666.66"});
 #line 66
- testRunner.And("should have following projections", ((string)(null)), table7, "And ");
+ testRunner.And("should have the following transfers costs of training", ((string)(null)), table7, "And ");
 #line hidden
             this.ScenarioCleanup();
         }

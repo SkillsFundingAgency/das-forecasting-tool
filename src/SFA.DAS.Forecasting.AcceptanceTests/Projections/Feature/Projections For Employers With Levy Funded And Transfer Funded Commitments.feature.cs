@@ -342,7 +342,7 @@ this.FeatureBackground();
                         "0.00",
                         "48000.16"});
 #line 24
- testRunner.And("should have following projections from completion", ((string)(null)), table4, "And ");
+ testRunner.And("should have the following projected values", ((string)(null)), table4, "And ");
 #line hidden
             this.ScenarioCleanup();
         }

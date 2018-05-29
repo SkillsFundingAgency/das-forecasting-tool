@@ -31,7 +31,7 @@ Scenario: Sending employer transfer training costs
 	| Test Apprentice 3 | Test Course | 1            | Test Provider 3 | Next Year  | 666.66             | 2000              | 12                     | Transfer      |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
-	And should have following projections
+	And should have the following transfers costs of training
 	| Months From Now | Transfer Out Total Cost Of Training |
 	| 0               | 333.33                              |
 	| 1               | 777.77                              |
@@ -63,7 +63,7 @@ Scenario: Receiving employer transfer training costs
 	| Test Apprentice 3 | Test Course | 1            | Test Provider 3 | Next Year  | 666.66             | 2000              | 12                     | Transfer      |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
-	And should have following projections
+	And should have the following transfers costs of training
 	| Months From Now | Transfer In Total Cost Of Training | Transfer Out Total Cost Of Training |
 	| 0               | 333.33                             | 333.33                              |
 	| 1               | 777.77                             | 777.77                              |

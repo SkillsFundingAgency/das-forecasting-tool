@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Core;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 {
@@ -42,6 +44,24 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                     : commitment.PlannedEndDate;
 
             return lastPaymentDate.GetStartOfMonth() >= projectionDate;
+        }
+
+        [Then(@"should have the following transfers costs of training")]
+        public void ThenShouldHaveFollowingProjections(Table table)
+        {
+            var expectedProjections = table.CreateSet<TestAccountProjection>().ToList();
+
+            foreach (var p in expectedProjections)
+            {
+                var date = DateTime.Today.AddMonths(p.MonthsFromNow);
+                var projection = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
+                if (table.ContainsColumn("Transfer In Total Cost Of Training"))
+                    projection.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining,
+                        $"Date: {date.Month}-{date.Year},  Expected transfer in cost of training to be {p.TransferInTotalCostOfTraining} but was {projection.TransferInCostOfTraining}.");
+                if (table.ContainsColumn("Transfer Out Total Cost Of Training"))
+                    projection.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining,
+                        $"Date: {date.Month}-{date.Year},  Expected transfer out cost of training to be {p.TransferOutTotalCostOfTraining} but was {projection.TransferOutCostOfTraining}.");
+            }
         }
     }
 }

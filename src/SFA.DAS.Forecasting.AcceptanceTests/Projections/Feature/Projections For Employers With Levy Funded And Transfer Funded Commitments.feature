@@ -21,7 +21,7 @@ Scenario: Receiving employer account has transfers in
 	| Test Apprentice 2 | Test Course 2 | 1            | Test Provider 2 | Yesterday  | 444.44             | 2000              | 18                     | Transfer      |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
-	And should have following projections from completion
+	And should have the following projected values
 	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds |
 	| 0             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 8000.00     |
 	| 1             | 666.66              | 444.44                         | 0.00                          | 0.00                         | 0.00               | 0.00                          | 9888.90     |
