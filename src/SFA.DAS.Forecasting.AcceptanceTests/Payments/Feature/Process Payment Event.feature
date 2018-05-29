@@ -1,4 +1,4 @@
-﻿Feature: Process Payment Event
+Feature: Process Payment Event
 	As an employer
 	I want my payments to be forecast for the next 4 years
 	So that I can effectively forecast my account balance
