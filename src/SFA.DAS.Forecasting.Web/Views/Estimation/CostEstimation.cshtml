@@ -84,44 +84,72 @@
             </ul>
 
             <div id="tab-1" class="tab-content" style="display: none;">
-
-                @{
+                @if (Model.TransferAllowances != null)
+                {
                     var tableBodyClass = Model.CanFund ? "" : "errorTable";
-                    var tableRowClass = "";
-                    var tableCellClass = "";
-                }
+                    var newFinancialYear = true;
+                    var startDateOfEstimationYear = Model.TransferAllowances.First().Date;
 
-                <table class="small responsive">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Remaining transfer allowance</th>
-                            <th>Estimated costs</th>
-                        </tr>
-                    </thead>
-                    <tbody class="@tableBodyClass">
+                    foreach (var costEstimate in Model.TransferAllowances)
+                    {
+                        var tableRowClass = costEstimate.IsLessThanCost ? "error-row" : "";
+                        var tableCellClass = costEstimate.IsLessThanCost ? "error-messsage" : "";
 
-                        @if (Model.TransferAllowances != null)
+                        if (newFinancialYear)
                         {
-                            foreach (var costEstimate in Model.TransferAllowances)
-                            {
-                                tableRowClass = costEstimate.IsLessThanCost ? "error-row" : "";
-                                tableCellClass = costEstimate.IsLessThanCost ? "error-messsage" : "";
+                            newFinancialYear = false;
+                            var endYear = startDateOfEstimationYear.Month < 4 ? costEstimate.Date.ToString("yyyy") : costEstimate.Date.AddYears(1).ToString("yyyy");
 
-                                <tr class="@tableRowClass">
-                                    <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
-                                    <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
-                                    <td>@costEstimate.Cost.FormatCost()</td>
-                                </tr>
-                            }
+                            <h3 class="heading-medium">@costEstimate.Date.ToGdsFormatWithoutDay() to April @endYear</h3>
+                            @:<table class="small responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Actual transfer costs</th>
+                                        <th>Estimated costs</th>
+                                        <th>Remaining transfer allowance</th>
+                                    </tr>
+                                </thead>
+                                @:<tbody class="@tableBodyClass">
+
                         }
-                    </tbody>
 
-                </table>
+                                    <tr class="@tableRowClass">
+                                        <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                        <td>@costEstimate.ActualCost.FormatCost()</td>
+                                        <td>@costEstimate.EstimatedCost.FormatCost()</td>
+                                        <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+                                    </tr>
+
+                        if (costEstimate.Date.Month == 4 || Model.TransferAllowances.Last().Equals(costEstimate))
+                        {
+                            newFinancialYear = true;
+                            startDateOfEstimationYear = costEstimate.Date;
+                                @:</tbody>
+                            @:</table>
+                        }
+                    }
+                }
+                <div class="grid-row">
+
+                    <div class="column-full">
+
+                        <details role="group">
+                            <summary role="button" aria-controls="details-content-0" aria-expanded="false">What does this table show</summary>
+                            <div class="panel panel-width-thin" id="details-content-0" aria-hidden="true">
+                                <p class="text">
+                                    The ‘remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
+                                </p>
+                                <p class="text">
+                                    The ‘actual cost of training’ column shows the cost of the apprenticeships that you’ve already agreed to fund with your transfer funds.
+                                </p>
+                            </div>
+                        </details>
+
+                    </div>
+                </div>
             </div>
-
-
-
+            
             <div id="tab-2" class="tab-content">
                 <table class="small responsive">
                     <thead>
@@ -189,18 +217,4 @@ else
     </div>
 }
 
-<div class="grid-row">
 
-    <div class="column-full">
-
-        <details role="group">
-            <summary role="button" aria-controls="details-content-0" aria-expanded="false">What does this table show</summary>
-            <div class="panel panel-width-thin" id="details-content-0" aria-hidden="true">
-                <p>
-                    The ‘remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
-                </p>
-            </div>
-        </details>
-
-    </div>
-</div>

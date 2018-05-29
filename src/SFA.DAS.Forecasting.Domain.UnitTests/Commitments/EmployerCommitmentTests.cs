@@ -6,6 +6,7 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
+using System;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 {
@@ -58,7 +59,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         }
 
         [Test]
-        public void Should_not_update_if_id_0()
+        public void Should_not_update_if_employer_account_id_0()
         {
             var commitment = _moqer.Resolve<EmployerCommitment>();
 
@@ -69,6 +70,39 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             commitment.RegisterCommitment(newCommitment).Should().BeFalse();
 
             commitment.ApprenticeName.Should().Be("Test apprentice 12");
+        }
+
+        [Test]
+        public void Should_not_update_if_new_commitment_with_end_date()
+        {
+            var commitment = _moqer.Resolve<EmployerCommitment>();
+
+            _existingCommitment.Id = 0;
+            _existingCommitment.ActualEndDate = null;
+
+            var newCommitment = BuildCommitmentModel();
+            newCommitment.ActualEndDate = DateTime.MinValue.AddDays(1);
+
+            commitment.RegisterCommitment(newCommitment).Should().BeFalse();
+
+            commitment.ApprenticeName.Should().Be("Test apprentice 12");
+        }
+
+
+        [Test]
+        public void Should_update_commitment_with_end_date()
+        {
+            var commitment = _moqer.Resolve<EmployerCommitment>();
+
+            _existingCommitment.Id = 12345;
+            _existingCommitment.ActualEndDate = null;
+
+            var newCommitment = BuildCommitmentModel();
+            newCommitment.ActualEndDate = DateTime.Today.AddDays(1);
+
+            commitment.RegisterCommitment(newCommitment).Should().BeTrue();
+
+            commitment.ApprenticeName.Should().Be("test apprentice");
         }
 
         private static CommitmentModel BuildCommitmentModel()

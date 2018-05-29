@@ -5,13 +5,7 @@
     "funAppName": {
       "type": "string"
     },
-    "hostingPlanName": {
-      "type": "string"
-    },
     "hostingEnvironment": {
-      "type": "string"
-    },
-    "serverFarmResourceGroup": {
       "type": "string"
     },
     "EnvironmentName": {
@@ -33,6 +27,9 @@
       "type": "string"
     },
     "storageConnectionString": {
+      "type": "string"
+    },
+    "appServicePlanId" : {
       "type": "string"
     }
   },
@@ -103,7 +100,7 @@
         },
         "name": "[parameters('funAppName')]",
         "clientAffinityEnabled": false,
-        "serverFarmId": "[resourceId(parameters('serverFarmResourceGroup'), 'Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "serverFarmId": "[parameters('appServicePlanId')]",
         "hostingEnvironment": "[parameters('hostingEnvironment')]"
       },
       "apiVersion": "2016-03-01",
@@ -118,6 +115,9 @@
       "name": "[parameters('funAppName')]",
       "type": "microsoft.insights/components",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "[concat('hidden-link:', resourceId('Microsoft.Web/sites', parameters('funAppName')))]": "Resource"
+      },
       "properties": {
         "ApplicationId": "[parameters('funAppName')]",
         "Request_Source": "IbizaWebAppExtensionCreate"
