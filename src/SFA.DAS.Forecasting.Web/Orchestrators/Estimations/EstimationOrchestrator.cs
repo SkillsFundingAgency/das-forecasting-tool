@@ -88,7 +88,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
-        public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId)
+        public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var estimations = await _estimationRepository.Get(accountId);
@@ -101,6 +101,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             {
                 CourseTitle = model.CourseTitle,
                 ApprenticeshipsId = apprenticeshipsId,
+                EstimationName = estimationName,
                 Level = model.Level,
                 NumberOfApprentices = model.ApprenticesCount,
                 TotalInstallments = model.TotalInstallments,

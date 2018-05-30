@@ -147,6 +147,12 @@
                     <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
                     @*<a class="button text-link pull-right" href="#" style="float: right;">Cancel</a>*@
 
+                    <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" 
+                       aria-label="Cancel" 
+                       class="button text-link">
+                        Cancel
+                    </a>
+
                 </div>
             </div>
         }
@@ -155,92 +161,8 @@
     </div>
 </main>
 
-
-
-@*@section script {
-
-    <script type="text/javascript">
-
-        $(document).ready(function() {
-            $("#chosse-apprenticeship").change(function() {
-                calculateTotalCost();
-                resetNumberOfMonths();
-            });
-
-            $("#no-of-app").change(function() {
-                calculateTotalCost();
-            });
-
-            $("#levy-value").keyup(function() {
-                var num = $('#levy-value').val();
-                var commaNum = numberWithCommas(num);
-                $('#levy-value').val(commaNum);
-            });
-        });
-
-                function numberWithCommas(number) {
-                        var parts = number.toString().split('.');
-                        var partToProcess = parts[0];
-                        partToProcess = partToProcess.replace(/,/g, '');
-                        partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                        parts[0] = partToProcess;
-                        return parts.join('.');
-                    }
-
-        function resetNumberOfMonths() {
-            var courseId = $('#chosse-apprenticeship').val();
-            var previousCourseId = $('#PreviousCourseId').val();
-            console.log(`Course id: ${courseId}, previous course id: ${previousCourseId}`);
-            if (courseId !== previousCourseId) {
-                var requestObject = {
-                    courseId: courseId
-                };
-                console.log(JSON.stringify(requestObject));
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.RouteUrl("GetDefaultNumberOfMonths", null)',
-                    data: JSON.stringify(requestObject),
-                    contentType: "application/json; charset=utf-8",
-                    success: function(result) {
-                        $('#levy-length').val(result.NumberOfMonths);
-                        $('#PreviousCourseId').val(courseId);
-                    }
-                });
-            }
-        }
-
-        function calculateTotalCost() {
-            var courseId = $('#chosse-apprenticeship').val();
-            var noOfApprentices = parseInt($('#no-of-app').val());
-            var levyValue = parseFloat($('#levy-value').val());
-
-            var requestObject = {
-                courseId: courseId,
-                numberOfApprentices: noOfApprentices,
-                levyValue: levyValue
-            };
-
-            if (courseId !== "" && noOfApprentices > 0) {
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.RouteUrl("CalculateTotalCost", null)',
-                    data: JSON.stringify(requestObject),
-                    contentType: "application/json; charset=utf-8",
-                    success: function(result) {
-
-                        $('#funding-cap-details').html(result.FundingCap);
-                        $('#apprentice-count-details').html(result.NumberOfApprentices);
-                        $('#total-cap-details').html(result.TotalFundingCap);
-                        $('#details-about-funding').addClass("HideFundingCapMessage");
-                        $('#details-about-funding-calculated').removeClass("HideFundingCapMessage");
-                        $('#levy-value').val(result.TotalFundingCapValue);
-                    }
-                });
-
-            } else {
-                $('#details-about-funding').removeClass("HideFundingCapMessage");
-                $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
-            }
-        }
-    </script>
-}*@
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" aria-label="Back" class="back-link">Back</a>
+    </div>
+}
