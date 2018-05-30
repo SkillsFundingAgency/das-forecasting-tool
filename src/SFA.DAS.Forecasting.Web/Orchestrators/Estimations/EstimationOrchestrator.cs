@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -104,11 +105,21 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 NumberOfApprentices = model.ApprenticesCount,
                 TotalInstallments = model.TotalInstallments,
                 TotalCost = model.TotalCost,
-                StartDate = model.StartDate,
+                StartDateMonth = model.StartDate.Month,
+                StartDateYear = model.StartDate.Year,
                 HashedAccountId = hashedAccountId,
                 FundingCap = course.FundingCap,
                 CalculatedTotalCap = course.FundingCap * model.ApprenticesCount
             };
+        }
+
+        public async Task UpdateApprenticeshipModel(EditApprenticeshipsViewModel model)
+        {
+            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
+            var estimations = await _estimationRepository.Get(accountId);
+
+            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCost);
+            await _estimationRepository.Store(estimations);
         }
     }
 }

@@ -3,7 +3,7 @@
 (function () {
 
     var init = function () {
-        if (document.getElementById("#estimate-edit-apprenticeship")) {
+        if (document.getElementById("estimate-edit-apprenticeship")) {
             calculateTotalCost();
         }
     };
@@ -16,7 +16,7 @@
 
     function calculateTotalCost () {
 
-        var noOfApprentices = parseInt($('#no-of-app').val());
+        var noOfApprentices = parseInt($('#no-of-app').val()) || 0;
 
         var course = document.getElementById('course');
         var fundingCap = course.dataset.fundingCap

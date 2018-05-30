@@ -1,4 +1,5 @@
-﻿using Microsoft.ApplicationInsights.Extensibility;
+﻿using FluentValidation.Mvc;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure;
 using NLog;
 using System;
@@ -19,6 +20,9 @@ namespace SFA.DAS.Forecasting.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            FluentValidationModelValidatorProvider.Configure(m => m.AddImplicitRequiredValidator = false);
+            DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
         }
 
         protected void Application_Error(object sender, EventArgs e)

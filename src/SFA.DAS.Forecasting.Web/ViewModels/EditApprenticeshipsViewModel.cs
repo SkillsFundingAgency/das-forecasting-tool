@@ -1,8 +1,10 @@
-﻿
-using System;
+﻿using System;
+using FluentValidation.Attributes;
+using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
+    [Validator(typeof(EditApprenticeshipsViewModelValidator))]
     public class EditApprenticeshipsViewModel
     {
         public string ApprenticeshipsId { get; set; }
@@ -12,11 +14,22 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int Level { get; set; }
         public int NumberOfApprentices { get; set; }
 
-        public short TotalInstallments { get; internal set; }
-        public decimal TotalCost { get; internal set; }
-        public DateTime StartDate { get; internal set; }
+        public short TotalInstallments { get; set; }
+        public decimal TotalCost { get; set; }
+
+        public DateTime StartDate
+        {
+            get
+            {
+                DateTime.TryParse($"{StartDateYear}-{StartDateMonth}-1", out var startDate);
+                return startDate;
+            }
+        }
+
+        public int StartDateMonth { get; set; }
+        public int StartDateYear { get; set; }
 
         public decimal? CalculatedTotalCap { get; set; }
-        public decimal FundingCap { get; internal set; }
+        public decimal FundingCap { get; set; }
     }
 }
