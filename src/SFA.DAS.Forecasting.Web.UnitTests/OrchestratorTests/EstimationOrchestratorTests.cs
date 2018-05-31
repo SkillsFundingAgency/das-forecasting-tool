@@ -60,7 +60,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         [TestCase(100, 100, 105.55, 100)]
         [TestCase(100, 100, 105.55, 200)]
         public async Task Then_The_Cost_Takes_Into_Account_The_Actual_And_Estimated_Payments(
-            decimal actualTotalCostOfTraining, decimal actualCommittedCompletionPayments, decimal transferOutTotalCostOfTraining,
+            decimal actualTotalCostOfTraining,
+            decimal actualCommittedCompletionPayments,
+            decimal transferOutTotalCostOfTraining,
             decimal transferOutCompletionPayment)
         {
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
@@ -69,10 +71,17 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    TransferOutTotalCostOfTraining = transferOutTotalCostOfTraining,
-                    TransferOutCompletionPayments = transferOutCompletionPayment,
-                    ActualCommittedTransferCost = actualTotalCostOfTraining,
-                    ActualCommittedTransferCompletionCost = actualCommittedCompletionPayments
+                    ActualCosts = new AccountEstimationProjectionModel.Cost
+                    {
+                        TransferOutCostOfTraining =  actualTotalCostOfTraining,
+                        TransferOutCompletionPayments = actualCommittedCompletionPayments,
+                    },
+                    ModelledCosts = new AccountEstimationProjectionModel.Cost
+                    {
+                        TransferOutCostOfTraining =  transferOutTotalCostOfTraining,
+                        TransferOutCompletionPayments = transferOutCompletionPayment,
+                    }
+
                 }
             };
             _accountEstimationProjection.Setup(x => x.Projections)
@@ -93,8 +102,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 {
                     Year = (short) DateTime.Now.AddYears(1).Year,
                     Month = (short) DateTime.Now.Month,
-                    TransferOutTotalCostOfTraining = 60,
-                    ActualCommittedTransferCost = 50,
+                    ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
                     FutureFunds = 100
                 }
             };

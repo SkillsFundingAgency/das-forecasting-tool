@@ -98,9 +98,9 @@
                         if (newFinancialYear)
                         {
                             newFinancialYear = false;
-                            var endYear = startDateOfEstimationYear.Month < 4 ? costEstimate.Date.ToString("yyyy") : costEstimate.Date.AddYears(1).ToString("yyyy");
+                            var endYear = startDateOfEstimationYear.Month < 3 ? costEstimate.Date.ToString("yyyy") : costEstimate.Date.AddYears(1).ToString("yyyy");
 
-                            <h3 class="heading-medium">@costEstimate.Date.ToGdsFormatWithoutDay() to April @endYear</h3>
+                            <h3 class="heading-medium">@costEstimate.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
                             @:<table class="small responsive">
                                 <thead>
                                     <tr>
@@ -121,7 +121,7 @@
                                         <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
                                     </tr>
 
-                        if (costEstimate.Date.Month == 4 || Model.TransferAllowances.Last().Equals(costEstimate))
+                        if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Last().Equals(costEstimate))
                         {
                             newFinancialYear = true;
                             startDateOfEstimationYear = costEstimate.Date;
