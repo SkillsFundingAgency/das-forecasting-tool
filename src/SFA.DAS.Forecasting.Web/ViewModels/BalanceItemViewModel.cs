@@ -2,7 +2,7 @@ using System;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class BalanceItemViewModel
+    public class ProjectiontemViewModel
     {
         public DateTime Date { get; set; }
 

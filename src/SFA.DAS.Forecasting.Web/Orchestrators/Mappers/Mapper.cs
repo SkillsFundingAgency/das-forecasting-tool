@@ -12,10 +12,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public class ForecastingMapper
     {
-        public IEnumerable<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
+        public IEnumerable<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
-                new BalanceItemViewModel
+                new ProjectiontemViewModel
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
                     LevyCredit = x.LevyFundsIn,
@@ -28,15 +28,29 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 });
         }
 
-        public BalanceCsvItemViewModel ToCsvBalance(CommitmentModel x, long accountId)
+        public BalanceCsvItemViewModel ToCsvBalance(ProjectiontemViewModel vm)
         {
             return new BalanceCsvItemViewModel
+            {
+                Date = vm.Date.ToGdsFormatShortMonthWithoutDay(),
+                LevyCredit = vm.LevyCredit,
+                CostOfTraining = vm.CostOfTraining,
+                CompletionPayments = vm.CompletionPayments,
+                CoInvestmentEmployer = vm.CoInvestmentEmployer,
+                CoInvestmentGovernment = vm.CoInvestmentGovernment,
+                Balance = vm.Balance
+            };
+        }
+
+        public ApprenticeshipCsvItemViewModel ToCsvApprenticeship(CommitmentModel x, long accountId)
+        {
+            return new ApprenticeshipCsvItemViewModel
             {
                 StartDate = x.StartDate.ToString("MMM-yy"),
                 PlannedEndDate = x.PlannedEndDate.ToString("MMM-yy"),
                 Apprenticeship = x.CourseName,
                 ApprenticeshipLevel = x.CourseLevel,
-                TransferToEmployer = x.FundingSource.Equals(FundingSource.Transfer) ? "Y" : "N" ,
+                TransferToEmployer = x.FundingSource.Equals(FundingSource.Transfer) ? "Y" : "N",
                 Uln = IsTransferCommitment(x, accountId) ? "" : x.LearnerId.ToString(),
                 ApprenticeName = IsTransferCommitment(x, accountId) ? "" : x.ApprenticeName,
                 UkPrn = x.ProviderId,
@@ -45,7 +59,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 MonthlyTrainingCost = Convert.ToInt32(x.MonthlyInstallment),
                 CompletionAmount = Convert.ToInt32(x.CompletionAmount)
             };
-
         }
 
         private static bool IsTransferCommitment(CommitmentModel commitmentModel, long accountId)

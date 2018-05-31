@@ -147,9 +147,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         [Test]
         public async Task Should_Take_Commitments_Used_For_projection_To_Build_Csv_File_At_The_Active_Commitment_Level()
         {
-            var balanceCsv = await _sut.BalanceCsv("ABBA12");
+            var apprenticeshipCsv = await _sut.ApprenticeshipsCsv("ABBA12");
 
-            balanceCsv.Count().Should().Be(2);
+            apprenticeshipCsv.Count().Should().Be(2);
             _commitmentDataService.Verify(x => x.GetCurrentCommitments(ExpectedAccountId), Times.Once);
         }
 
@@ -157,42 +157,42 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public async Task Then_The_Model_Is_Returned_With_The_Costs_Are_Calculated_And_Rounded_Correctly()
         {
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            Assert.IsNotNull(balanceCsv);
-            Assert.IsNotEmpty(balanceCsv);
-            var actualFirstCommitment = balanceCsv.First();
-            Assert.IsNotNull(actualFirstCommitment);
-            Assert.AreEqual(207, actualFirstCommitment.TotalCost);
-            Assert.AreEqual(11, actualFirstCommitment.MonthlyTrainingCost);
-            Assert.AreEqual(101, actualFirstCommitment.CompletionAmount);
+            Assert.IsNotNull(apprenticeshipCsv);
+            Assert.IsNotEmpty(apprenticeshipCsv);
+            var firstApprenticeship = apprenticeshipCsv.First();
+            Assert.IsNotNull(firstApprenticeship);
+            Assert.AreEqual(207, firstApprenticeship.TotalCost);
+            Assert.AreEqual(11, firstApprenticeship.MonthlyTrainingCost);
+            Assert.AreEqual(101, firstApprenticeship.CompletionAmount);
         }
 
         [Test]
         public async Task Then_The_Model_Is_Returned_With_The_ApprenticeshipName_And_Uln_Are_Blank_If_Your_The_Sending_Employer()
         {
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            var actualFirstCommitment = balanceCsv.Last();
-            Assert.IsNotNull(actualFirstCommitment);
-            Assert.IsEmpty(actualFirstCommitment.ApprenticeName);
-            Assert.IsEmpty(actualFirstCommitment.Uln);
+            var lastApprenticeship = apprenticeshipCsv.Last();
+            Assert.IsNotNull(lastApprenticeship);
+            Assert.IsEmpty(lastApprenticeship.ApprenticeName);
+            Assert.IsEmpty(lastApprenticeship.Uln);
         }
 
         [Test]
         public async Task Then_If_I_Am_The_Receiving_Employer_Of_A_Transfer_The_Apprentice_Data_Is_Visible()
         {
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("CDDC12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("CDDC12")).ToList();
 
             //Assert
-            var actualFirstCommitment = balanceCsv.Last();
-            Assert.IsNotNull(actualFirstCommitment);
-            Assert.IsNotEmpty(actualFirstCommitment.ApprenticeName);
-            Assert.IsNotEmpty(actualFirstCommitment.Uln);
+            var firstApprenticeship = apprenticeshipCsv.Last();
+            Assert.IsNotNull(firstApprenticeship);
+            Assert.IsNotEmpty(firstApprenticeship.ApprenticeName);
+            Assert.IsNotEmpty(firstApprenticeship.Uln);
         }
 
         [Test]
@@ -239,32 +239,32 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 });
 
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            Assert.IsNotNull(balanceCsv);
-            Assert.IsEmpty(balanceCsv);
+            Assert.IsNotNull(apprenticeshipCsv);
+            Assert.IsEmpty(apprenticeshipCsv);
         }
 
         [Test]
         public async Task Then_The_Transfer_Employer_Is_Populated_If_You_Are_The_Sender()
         {
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            Assert.AreEqual("N", balanceCsv[0].TransferToEmployer);
-            Assert.AreEqual("Y", balanceCsv[1].TransferToEmployer);
+            Assert.AreEqual("N", apprenticeshipCsv[0].TransferToEmployer);
+            Assert.AreEqual("Y", apprenticeshipCsv[1].TransferToEmployer);
         }
 
         [Test]
         public async Task Then_The_Csv_Dates_Are_Formatted_As_Month_And_Year()
         {
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            var actualFirstCommitment = balanceCsv.First();
+            var actualFirstCommitment = apprenticeshipCsv.First();
             Assert.IsNotNull(actualFirstCommitment);
             Assert.AreEqual(DateTime.Now.AddMonths(-1).ToString("MMM-yy"), actualFirstCommitment.StartDate);
             Assert.AreEqual(DateTime.Now.AddMonths(12).ToString("MMM-yy"), actualFirstCommitment.PlannedEndDate);
@@ -275,10 +275,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public async Task Then_If_It_Is_Not_A_Transfer_Then_The_Transfer_To_Employer_Field_Is_Empty()
         {
             //Act
-            var balanceCsv = (await _sut.BalanceCsv("ABBA12")).ToList();
+            var apprenticeshipCsv = (await _sut.ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            var actualFirstCommitment = balanceCsv.First();
+            var actualFirstCommitment = apprenticeshipCsv.First();
             Assert.IsNotNull(actualFirstCommitment);
             Assert.AreEqual("N",actualFirstCommitment.TransferToEmployer);
         }
@@ -311,13 +311,24 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var balanceCsv = await _sut.BalanceCsv("ABBA12");
 
-            balanceCsv.All(m => (DateTime.Parse(m.StartDate)) < balanceMaxDate).Should().BeTrue();
+            balanceCsv.All(m => (DateTime.Parse(m.Date)) < balanceMaxDate).Should().BeTrue();
             balanceCsv.Count().Should().BeGreaterOrEqualTo(1);
             if (DateTime.Today >= balanceMaxDate)
                 Assert.IsTrue(false,
                     $"balanceMaxDate is out of date ({balanceMaxDate.ToString()}) and test can be removed");
         }
 
+        [TestCase]
+        public async Task ShouldTake_48_months_csv_file()
+        {
+            var expectedProjections = 48;
+            SetUpProjections(48 + 10);
+            var projections = await _sut.BalanceCsv("ABBA12");
+
+            projections.Count().Should().Be(expectedProjections);
+            _commitmentDataService.Verify(x => x.GetCurrentCommitments(ExpectedAccountId), Times.Never);
+            _accountProjection.Verify(m => m.Get(ExpectedAccountId), Times.Once);
+        }
 
         /// <summary>
         /// Setting up projections starting from last month. 
