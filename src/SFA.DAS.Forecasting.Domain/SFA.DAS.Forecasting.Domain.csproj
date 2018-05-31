@@ -83,6 +83,7 @@
     <Compile Include="Estimations\AccountEstimationProjectionCommitments.cs" />
     <Compile Include="Estimations\AccountEstimationProjectionRepository.cs" />
     <Compile Include="Estimations\AccountEstimationRepository.cs" />
+    <Compile Include="Estimations\CommitmentModelListBuilder.cs" />
     <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\BaseVirtualApprenticeshipValidator.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipCourseDetailsValidator.cs" />

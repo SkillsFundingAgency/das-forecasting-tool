@@ -95,9 +95,9 @@
     <Compile Include="Commitments\EmployerCommitmentsAsSenderTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentsTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentTests.cs" />
-    <Compile Include="Estimations\AccountEstimationProjectionRepositoryTests.cs" />
     <Compile Include="Estimations\AccountEstimationProjectionTests.cs" />
     <Compile Include="Estimations\AccountEstimationTests.cs" />
+    <Compile Include="Estimations\CommitmentModelListBuilderTests.cs" />
     <Compile Include="Levy\LevyDeclarationTests.cs" />
     <Compile Include="Payments\EmployerPaymentsTests.cs" />
     <Compile Include="Projection\AccountProjectionTests.cs" />
