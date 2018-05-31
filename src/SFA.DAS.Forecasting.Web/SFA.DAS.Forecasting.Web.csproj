@@ -381,7 +381,7 @@
     <Content Include="Content\dist\govuk-template-ie8.css" />
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
-    <Content Include="Content\dist\js\custom.js" />
+    <Content Include="Content\dist\js\add-apprenticeship-custom.js" />
     <Content Include="Content\dist\js\jquery-1.10.2.min.js" />
     <Content Include="Content\dist\js\screen.js" />
     <Content Include="Content\dist\js\select2.min.js" />

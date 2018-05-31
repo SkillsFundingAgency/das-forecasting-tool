@@ -18,170 +18,70 @@ Scenario: AC1: Training cost for commitments included in the projection
 	| Apprentice Name    | Course Name | Course Level | Provider Name | Start Date       | Installment Amount | Completion Amount | Number Of Installments |
 	| Test Apprentice    | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |
 	| Test Apprentice 2  | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 3  | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 4  | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 5  | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 6  | Test Course | 1            | Test Provider | 16/04/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 7  | Test Course | 1            | Test Provider | 29/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 8  | Test Course | 1            | Test Provider | 29/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 9  | Test Course | 1            | Test Provider | 29/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 10 | Test Course | 1            | Test Provider | 29/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 11 | Test Course | 1            | Test Provider | 29/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 12 | Test Course | 1            | Test Provider | 29/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 13 | Test Course | 1            | Test Provider | 12/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 14 | Test Course | 1            | Test Provider | 12/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice 15 | Test Course | 1            | Test Provider | 12/06/2017 00:00 | 133.33             | 400.00            | 12                     |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And the training costs should be included in the correct months
 
-Scenario: AC2: Training cost multiple apprenticeships with different numbers of instalments
-	Given the following commitments have been recorded
-	| Apprentice Name | Course Name | Course Level | Provider Name | Start Date       | Installment Amount | Completion Amount | Number Of Installments |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 1.00               | 0.00              | 5                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 1.00               | 0.00              | 5                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 1.00               | 0.00              | 5                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 1.00               | 0.00              | 5                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 1.00               | 0.00              | 5                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 1.00               | 0.00              | 5                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/10/2017 00:00 | 1.00               | 0.00              | 6                      |
-	| Test Apprentice | Test Course | 1            | Test Provider | 16/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 16/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 16/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 16/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 16/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 16/05/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 29/06/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 12/07/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 12/07/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 12/07/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 09/08/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 09/08/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 09/08/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 09/08/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 09/08/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 09/08/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 05/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 100.00             | 300.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 100.00             | 300.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 100.00             | 300.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/11/2017 00:00 | 1.00               | 0.00              | 11                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 100.00             | 300.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 100.00             | 300.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 100.00             | 300.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 07/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 07/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 07/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 07/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 07/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 07/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 133.33             | 400.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 14/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 15/11/2017 00:00 | 166.67             | 500.00            | 12                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 26/10/2017 00:00 | 400.00             | 1800.00           | 18                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 84.21              | 400.00            | 19                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 84.21              | 400.00            | 19                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 31/10/2017 00:00 | 84.21              | 400.00            | 19                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 30/09/2017 00:00 | 240.00             | 1800.00           | 30                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 30/09/2017 00:00 | 240.00             | 1800.00           | 30                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 30/09/2017 00:00 | 240.00             | 1800.00           | 30                     |
-	| Test Apprentice | Test Course | 1            | Test Provider | 30/09/2017 00:00 | 240.00             | 1800.00           | 30                     |
+Scenario: Sending employer transfer training costs
+	Given I am a sending employer
+	And the following commitments have been recorded
+	| Apprentice Name   | Course Name | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | FundingSource |
+	| Test Apprentice 1 | Test Course | 1            | Test Provider 1 | Last Year  | 333.33             | 2000              | 24                     | Transfer      |
+	| Test Apprentice 2 | Test Course | 1            | Test Provider 2 | Yesterday  | 444.44             | 2000              | 18                     | Transfer      |
+	| Test Apprentice 3 | Test Course | 1            | Test Provider 3 | Next Year  | 666.66             | 2000              | 12                     | Transfer      |
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
-	And the training costs should be included in the correct months
+	And should have the following transfers costs of training
+	| Months From Now | Transfer Out Total Cost Of Training |
+	| 0               | 333.33                              |
+	| 1               | 777.77                              |
+	| 2               | 777.77                              |
+	| 3               | 777.77                              |
+	| 4               | 777.77                              |
+	| 5               | 777.77                              |
+	| 6               | 777.77                              |
+	| 7               | 777.77                              |
+	| 8               | 777.77                              |
+	| 9               | 777.77                              |
+	| 10              | 777.77                              |
+	| 11              | 777.77                              |
+	| 12              | 777.77                              |
+	| 13              | 1111.10                             |
+	| 14              | 1111.10                             |
+	| 15              | 1111.10                             |
+	| 16              | 1111.10                             |
+	| 17              | 1111.10                             |
+	| 18              | 1111.10                             |
+	| 19              | 666.66                              |
+
+Scenario: Receiving employer transfer training costs
+	Given I am a receiving employer
+	And the following commitments have been recorded
+	| Apprentice Name   | Course Name | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | FundingSource |
+	| Test Apprentice 1 | Test Course | 1            | Test Provider 1 | Last Year  | 333.33             | 2000              | 24                     | Transfer      |
+	| Test Apprentice 2 | Test Course | 1            | Test Provider 2 | Yesterday  | 444.44             | 2000              | 18                     | Transfer      |
+	| Test Apprentice 3 | Test Course | 1            | Test Provider 3 | Next Year  | 666.66             | 2000              | 12                     | Transfer      |
+	When the account projection is triggered after a payment run
+	Then the account projection should be generated
+	And should have the following transfers costs of training
+	| Months From Now | Transfer In Total Cost Of Training | Transfer Out Total Cost Of Training |
+	| 0               | 333.33                             | 333.33                              |
+	| 1               | 777.77                             | 777.77                              |
+	| 2               | 777.77                             | 777.77                              |
+	| 3               | 777.77                             | 777.77                              |
+	| 4               | 777.77                             | 777.77                              |
+	| 5               | 777.77                             | 777.77                              |
+	| 6               | 777.77                             | 777.77                              |
+	| 7               | 777.77                             | 777.77                              |
+	| 8               | 777.77                             | 777.77                              |
+	| 9               | 777.77                             | 777.77                              |
+	| 10              | 777.77                             | 777.77                              |
+	| 11              | 777.77                             | 777.77                              |
+	| 12              | 777.77                             | 777.77                              |
+	| 13              | 1111.10                            | 1111.10                             |
+	| 14              | 1111.10                            | 1111.10                             |
+	| 15              | 1111.10                            | 1111.10                             |
+	| 16              | 1111.10                            | 1111.10                             |
+	| 17              | 1111.10                            | 1111.10                             |
+	| 18              | 1111.10                            | 1111.10                             |
+	| 19              | 666.66                             | 666.66                              |

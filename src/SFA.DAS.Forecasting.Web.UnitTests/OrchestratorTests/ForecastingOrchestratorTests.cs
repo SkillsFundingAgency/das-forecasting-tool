@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -122,8 +122,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .ReturnsAsync(_balance);
             _accountProjection = _moqer.GetMock<IAccountProjectionDataSession>();
             _applicationConfiguration = _moqer.GetMock<IApplicationConfiguration>();
-
-
+          
             _moqer.SetInstance(new Mapper());
             _moqer.SetInstance(_commitmentDataService);
             _sut = new ForecastingOrchestrator(
@@ -133,6 +132,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 _applicationConfiguration.Object,
                 new Mapper(),
                 _commitmentDataService.Object);
+          // Check
+            //_moqer.SetInstance(new ForecastingMapper());
+            //_sut = _moqer.Resolve<ForecastingOrchestrator>();
         }
 
         [Test]

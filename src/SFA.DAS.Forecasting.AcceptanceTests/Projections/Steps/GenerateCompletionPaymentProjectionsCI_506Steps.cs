@@ -4,7 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 {
@@ -18,6 +20,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             StartFunction("SFA.DAS.Forecasting.Projections.Functions");
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
+
+        [Given(@"I am a sending employer")]
+        public void GivenIAmASendingEmployer()
+        {
+            CommitmentType = CommitmentType.TransferSender;
+        }
+
+        [Given(@"I am a receiving employer")]
+        public void GivenIAmAReceivingEmployer()
+        {
+            CommitmentType = CommitmentType.TransferReceiver;
+        }
+
 
         [When(@"the account projection is triggered after a payment run")]
         public void WhenTheAccountProjectionIsGeneratedAfterAPaymentRun()
@@ -58,6 +73,17 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 .ToList()
                 .ForEach(completionAmount => Assert.IsFalse(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));
         }
-
+        [Then(@"the transfer completion payments should be recorded as follows")]
+        public void ThenTheTransferCompletionPaymentsShouldBeRecordedAsFollows(Table table)
+        {
+            var expectedProjections = table.CreateSet<TestAccountProjection>().ToList();
+            expectedProjections.ForEach(expected =>
+            {
+                var projectionMonth = AccountProjections.Skip(expected.MonthsFromNow).FirstOrDefault();
+                Assert.IsNotNull(projectionMonth,$"Month {expected.MonthsFromNow} not found.");
+                Assert.AreEqual(expected.TransferInCompletionPayments,projectionMonth.TransferInCompletionPayments,$"Transfer in completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferInCompletionPayments}' but generated amount was '{projectionMonth.TransferInCompletionPayments}'");
+                Assert.AreEqual(expected.TransferOutCompletionPayments, projectionMonth.TransferOutCompletionPayments, $"Transfer out completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferOutCompletionPayments}' but generated amount was '{projectionMonth.TransferOutCompletionPayments}'");
+            });
+        }
     }
 }
