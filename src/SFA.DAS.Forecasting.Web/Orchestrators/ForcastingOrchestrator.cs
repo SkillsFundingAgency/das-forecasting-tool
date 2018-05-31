@@ -7,7 +7,6 @@ using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
-using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -32,7 +31,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             IApplicationConfiguration applicationConfiguration,
             ForecastingMapper mapper,
             ICommitmentsDataService commitmentsDataService)
-            ForecastingMapper mapper)
         {
             _hashingService = hashingService;
             _accountProjection = accountProjection;

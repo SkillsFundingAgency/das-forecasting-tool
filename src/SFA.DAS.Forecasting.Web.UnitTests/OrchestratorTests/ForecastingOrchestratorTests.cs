@@ -123,18 +123,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _accountProjection = _moqer.GetMock<IAccountProjectionDataSession>();
             _applicationConfiguration = _moqer.GetMock<IApplicationConfiguration>();
           
-            _moqer.SetInstance(new Mapper());
+            _moqer.SetInstance(new ForecastingMapper());
             _moqer.SetInstance(_commitmentDataService);
             _sut = new ForecastingOrchestrator(
                 hashingService.Object,
                 _accountProjection.Object,
                 _balanceDataService.Object,
                 _applicationConfiguration.Object,
-                new Mapper(),
+                new ForecastingMapper(),
                 _commitmentDataService.Object);
-          // Check
-            //_moqer.SetInstance(new ForecastingMapper());
-            //_sut = _moqer.Resolve<ForecastingOrchestrator>();
         }
 
         [Test]
