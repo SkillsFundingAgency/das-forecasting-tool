@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -12,16 +11,17 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public interface IForecastingMapper
     {
-        List<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data);
-        BalanceCsvItemViewModel ToCsvBalance(CommitmentModel x, long accountId);
+        List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data);
+        BalanceCsvItemViewModel ToCsvBalance(ProjectiontemViewModel projectionItem);
+        ApprenticeshipCsvItemViewModel ToCsvApprenticeship(CommitmentModel commitment, long accountId);
     }
 
     public class ForecastingMapper : IForecastingMapper
     {
-        public List<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
+        public List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
-                new BalanceItemViewModel
+                new ProjectiontemViewModel
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
                     LevyCredit = x.LevyFundsIn,
@@ -35,24 +35,37 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 .ToList();
         }
 
-        public BalanceCsvItemViewModel ToCsvBalance(CommitmentModel x, long accountId)
+        public BalanceCsvItemViewModel ToCsvBalance(ProjectiontemViewModel projectionItem)
         {
             return new BalanceCsvItemViewModel
             {
-                StartDate = x.StartDate.ToString("MMM-yy"),
-                PlannedEndDate = x.PlannedEndDate.ToString("MMM-yy"),
-                Apprenticeship = x.CourseName,
-                ApprenticeshipLevel = x.CourseLevel,
-                TransferToEmployer = x.FundingSource.Equals(FundingSource.Transfer) ? "Y" : "N",
-                Uln = IsTransferCommitment(x, accountId) ? "" : x.LearnerId.ToString(),
-                ApprenticeName = IsTransferCommitment(x, accountId) ? "" : x.ApprenticeName,
-                UkPrn = x.ProviderId,
-                ProviderName = x.ProviderName,
-                TotalCost = Convert.ToInt32((x.MonthlyInstallment * x.NumberOfInstallments) + x.CompletionAmount),
-                MonthlyTrainingCost = Convert.ToInt32(x.MonthlyInstallment),
-                CompletionAmount = Convert.ToInt32(x.CompletionAmount)
+                Date = projectionItem.Date.ToGdsFormatShortMonthWithoutDay(),
+                LevyCredit = projectionItem.LevyCredit,
+                CostOfTraining = projectionItem.CostOfTraining,
+                CompletionPayments = projectionItem.CompletionPayments,
+                CoInvestmentEmployer = projectionItem.CoInvestmentEmployer,
+                CoInvestmentGovernment = projectionItem.CoInvestmentGovernment,
+                Balance = projectionItem.Balance
             };
+        }
 
+        public ApprenticeshipCsvItemViewModel ToCsvApprenticeship(CommitmentModel commitment, long accountId)
+        {
+            return new ApprenticeshipCsvItemViewModel
+            {
+                StartDate = commitment.StartDate.ToString("MMM-yy"),
+                PlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy"),
+                Apprenticeship = commitment.CourseName,
+                ApprenticeshipLevel = commitment.CourseLevel,
+                TransferToEmployer = commitment.FundingSource == FundingSource.Transfer ? "Y" : "N",
+                Uln = IsTransferCommitment(commitment, accountId) ? "" : commitment.LearnerId.ToString(),
+                ApprenticeName = IsTransferCommitment(commitment, accountId) ? "" : commitment.ApprenticeName,
+                UkPrn = commitment.ProviderId,
+                ProviderName = commitment.ProviderName,
+                TotalCost = Convert.ToInt32((commitment.MonthlyInstallment * commitment.NumberOfInstallments) + commitment.CompletionAmount),
+                MonthlyTrainingCost = Convert.ToInt32(commitment.MonthlyInstallment),
+                CompletionAmount = Convert.ToInt32(commitment.CompletionAmount)
+            };
         }
 
         private static bool IsTransferCommitment(CommitmentModel commitmentModel, long accountId)

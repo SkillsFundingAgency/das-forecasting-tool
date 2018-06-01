@@ -280,10 +280,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             {
                 var commitment = commitments[i];
 
+                var isTransferSender = CommitmentType == CommitmentType.TransferSender;
+                var isFundingSourceLevy = commitment.FundingSource.HasValue && commitment.FundingSource == FundingSource.Levy;
+
                 DataContext.Commitments.Add(new CommitmentModel
                 {
-                    // Refactor
-                    EmployerAccountId = CommitmentType == CommitmentType.TransferSender && commitment.FundingSource.HasValue && commitment.FundingSource == FundingSource.Levy ? EmployerAccountId : receiverId,
+                    EmployerAccountId = isTransferSender && isFundingSourceLevy ? EmployerAccountId : receiverId,
                     LearnerId = i + 1,
                     ApprenticeshipId = commitment.ApprenticeshipId > 0 ? commitment.ApprenticeshipId : i + 2,
                     ApprenticeName = commitment.ApprenticeName,
@@ -298,11 +300,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
-                    //Refactor
-                    //FundingSource = commitment.FundingSource ?? FundingSource.Levy
-                    FundingSource = CommitmentType == CommitmentType.LevyFunded ? FundingSource.Levy :
-                        CommitmentType == CommitmentType.TransferReceiver ? FundingSource.Transfer :
-                        commitment.FundingSource ?? FundingSource.Levy
+                    FundingSource = CommitmentType == CommitmentType.LevyFunded 
+                        ? FundingSource.Levy 
+                        : CommitmentType == CommitmentType.TransferReceiver 
+                            ? FundingSource.Transfer 
+                            : commitment.FundingSource ?? FundingSource.Levy
                 });
             }
 

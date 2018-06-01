@@ -67,13 +67,19 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
         {
+            return (await GetAccountProjection(hashedAccountId))
+                .Select(m => _mapper.ToCsvBalance(m));
+        }
+
+        public async Task<IEnumerable<ApprenticeshipCsvItemViewModel>> ApprenticeshipsCsv(string hashedAccountId)
+        {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var commitments = await _accountProjectionDataSession.GetCommitments(accountId, _applicationConfiguration.LimitForecast ? BalanceMaxDate : (DateTime?)null);
             return commitments
-                .Select(m => _mapper.ToCsvBalance(m, accountId));
+                .Select(m => _mapper.ToCsvApprenticeship(m, accountId));
         }
 
-        private async Task<List<BalanceItemViewModel>> GetAccountProjection(string hashedAccountId)
+        private async Task<List<ProjectiontemViewModel>> GetAccountProjection(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var result = await _accountProjection.Get(accountId);

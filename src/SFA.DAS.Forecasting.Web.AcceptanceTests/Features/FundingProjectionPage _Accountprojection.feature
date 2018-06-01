@@ -25,7 +25,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
    
   And I'm on the Funding projection page
   When the Account projection is displayed
-  Then the Account projection has the correct columns	
+  Then the Account projection has the correct columns without Co-Investment
   And the first month displayed is the next calendar month
   And there are months up to 'Apr 19' displayed in the forecast
   And the data is displayed correctly in each column
@@ -50,7 +50,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
 
   And I'm on the Funding projection page
   When the Account projection is displayed
-  Then the Account projection has the correct columns
+  Then the Account projection has the correct columns without Co-Investment
   And the first month displayed is the next calendar month
   And there are months up to 'Apr 19' displayed in the forecast
   And the data is displayed correctly in each column
@@ -75,7 +75,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
 
   And I'm on the Funding projection page
   When the Account projection is displayed
-  Then the Account projection has the correct columns
+  Then the Account projection has the correct columns without Co-Investment
   And the first month displayed is the next calendar month
   And there are months up to 'Apr 19' displayed in the forecast
   And the data is displayed correctly in each column
@@ -105,7 +105,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
 Scenario: FundingProjection completion payments overdue
 	Given I have completion payments of £ 2401 on commitments without stop date
 	And I'm on the Funding projection page
-	Then I see Pending completion payments with the amount of £ 2401
+	Then I see Pending completion payments with the amount of £ 2,401
 
 #  Scenario: FundingProjectionPageAC4: Forecast data when negative balance
 #  Given I have generated the following projections

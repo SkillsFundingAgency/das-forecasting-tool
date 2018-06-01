@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
             Current = this;
         }
 
+        public bool IsLocalhost => BaseUrl.Host.Contains("localhost");
 
         public void SetEmployeeHash(string hash)
         {
@@ -26,21 +27,16 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public LoginPage NavigateToLoginPage()
         {
-            // WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting"));
             WebBrowserDriver.Navigate().GoToUrl(BaseUrl);
             var homepage = new HomePage(WebBrowserDriver);
             return homepage.MoveToLoginPage();
         }
 
-        public DashboardPage NavigateToDashboard()
-        {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/projections"));
-            return new DashboardPage(WebBrowserDriver);
-        }
-
         public FundingProjectionPage NavigateToFundingProjectionPage()
         {
-            WebBrowserDriver.Navigate().GoToUrl(BaseUrl.Combine("forecasting/projections"));
+            var currentUrl = new Uri(WebBrowserDriver.Url);
+            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
+            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/forecasting/projections");
             return new FundingProjectionPage(WebBrowserDriver);
         }
 
