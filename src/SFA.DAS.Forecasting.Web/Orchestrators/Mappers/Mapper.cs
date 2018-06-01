@@ -10,9 +10,15 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
-    public class ForecastingMapper
+    public interface IForecastingMapper
     {
-        public IEnumerable<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
+        List<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data);
+        BalanceCsvItemViewModel ToCsvBalance(CommitmentModel x, long accountId);
+    }
+
+    public class ForecastingMapper : IForecastingMapper
+    {
+        public List<BalanceItemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
                 new BalanceItemViewModel
@@ -25,7 +31,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                     Balance = x.FutureFunds,
                     CoInvestmentEmployer = x.CoInvestmentEmployer,
                     CoInvestmentGovernment = x.CoInvestmentGovernment
-                });
+                })
+                .ToList();
         }
 
         public BalanceCsvItemViewModel ToCsvBalance(CommitmentModel x, long accountId)
@@ -36,7 +43,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 PlannedEndDate = x.PlannedEndDate.ToString("MMM-yy"),
                 Apprenticeship = x.CourseName,
                 ApprenticeshipLevel = x.CourseLevel,
-                TransferToEmployer = x.FundingSource.Equals(FundingSource.Transfer) ? "Y" : "N" ,
+                TransferToEmployer = x.FundingSource.Equals(FundingSource.Transfer) ? "Y" : "N",
                 Uln = IsTransferCommitment(x, accountId) ? "" : x.LearnerId.ToString(),
                 ApprenticeName = IsTransferCommitment(x, accountId) ? "" : x.ApprenticeName,
                 UkPrn = x.ProviderId,
