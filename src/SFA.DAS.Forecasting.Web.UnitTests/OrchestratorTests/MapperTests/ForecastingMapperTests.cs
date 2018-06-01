@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
             
             var result = _mapper.MapProjections(_models);
 
-            result.First().FundsIn.Should().Be(_projectionModel.LevyFundsIn);
+            result.First().FundsIn.Should().Be(_projectionModel.LevyFundsIn+_projectionModel.TransferInCompletionPayments+_projectionModel.TransferInCostOfTraining);
             result.First().Balance.Should().Be(_projectionModel.FutureFunds);
             result.First().CoInvestmentEmployer.Should().Be(_projectionModel.CoInvestmentEmployer);
             result.First().CoInvestmentGovernment.Should().Be(_projectionModel.CoInvestmentGovernment);
