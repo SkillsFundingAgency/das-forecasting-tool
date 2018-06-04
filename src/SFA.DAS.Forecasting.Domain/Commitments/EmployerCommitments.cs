@@ -108,5 +108,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 .Where(commitment => commitment.PlannedEndDate < DateTime.Today)
                 .Sum(commitment => commitment.CompletionAmount);
         }
+        public bool Any()
+        {
+            return _commitments.Any();
+        }
     }
 }
