@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 new ProjectiontemViewModel
                 {
                     Date = (new DateTime(x.Year, x.Month, 1)),
-                    LevyCredit = x.LevyFundsIn,
+                    FundsIn = x.LevyFundsIn + x.TransferInCostOfTraining + x.TransferInCompletionPayments,
                     CostOfTraining = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining,
                     CompletionPayments = x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments,
                     ExpiredFunds = 0,
@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
             return new BalanceCsvItemViewModel
             {
                 Date = projectionItem.Date.ToGdsFormatShortMonthWithoutDay(),
-                LevyCredit = projectionItem.LevyCredit,
+                LevyCredit = projectionItem.FundsIn,
                 CostOfTraining = projectionItem.CostOfTraining,
                 CompletionPayments = projectionItem.CompletionPayments,
                 CoInvestmentEmployer = projectionItem.CoInvestmentEmployer,

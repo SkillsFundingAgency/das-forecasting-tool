@@ -6,7 +6,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
     {
         public DateTime Date { get; set; }
 
-        public decimal LevyCredit { get; set; }
+        public decimal FundsIn { get; set; }
 
         public decimal CostOfTraining { get; set; }
 
