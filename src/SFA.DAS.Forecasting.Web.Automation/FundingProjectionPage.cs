@@ -7,8 +7,11 @@ namespace SFA.DAS.Forecasting.Web.Automation
 {
     public class FundingProjectionPage: ForecastingPage
     {
-        [FindsBy(How = How.CssSelector, Using= ".related .form-group a")]
-        public IWebElement DownloadCSVButton { get; set; }
+        [FindsBy(How = How.Id, Using= "projections_csvdownload")]
+        public IWebElement DownloadProjectionsCSVButton { get; set; }
+
+        [FindsBy(How = How.Id, Using = "apprenticeship_csvdownload")]
+        public IWebElement DownloadApprenticeshipCSVButton { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//h1[contains(text(), 'Funding projection')]")]
         public IWebElement AccountProjectionHeader { get; set; }
@@ -24,7 +27,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
         }
 
         public override string UrlFragment => "forecasting";
-        public override bool IsCurrentPage => DownloadCSVButton?.Displayed ?? false;
+        public override bool IsCurrentPage => DownloadProjectionsCSVButton?.Displayed ?? false;
 
         public string[] GetAccountProjectionHeaders()
         {

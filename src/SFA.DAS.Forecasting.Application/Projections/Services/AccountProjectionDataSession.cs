@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
+using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Services
@@ -45,6 +46,19 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         public async Task SaveChanges()
         {
             await _dataContext.SaveChangesAsync();
+        }
+
+        public async Task<List<CommitmentModel>> GetCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
+        {
+            var query = _dataContext.AccountProjectionCommitments
+                .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId);
+
+            if (forecastLimitDate!=null)
+                query = query.Where(apc => apc.AccountProjection.Year >= forecastLimitDate.Value.Year && (apc.AccountProjection.Year > forecastLimitDate.Value.Year || apc.AccountProjection.Month >= forecastLimitDate.Value.Month));
+
+             return await query.Select(apc => apc.Commitment)
+                .Distinct()
+                .ToListAsync();
         }
     }
 }

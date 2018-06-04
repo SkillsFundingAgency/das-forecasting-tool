@@ -11,6 +11,7 @@ using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -19,14 +20,17 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
         private readonly IAddApprenticeshipValidator _validator;
+        private readonly ILog _logger;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
-        public AddApprenticeshipOrchestrator(IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IAddApprenticeshipValidator validator)
+        public AddApprenticeshipOrchestrator(
+            IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IAddApprenticeshipValidator validator, ILog logger)
         {
             _hashingService = hashingService;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
             _validator = validator;
+            _logger = logger;
         }
 
         public AddApprenticeshipViewModel GetApprenticeshipAddSetup()
@@ -53,8 +57,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             accountEstimation.AddVirtualApprenticeship(course.Id, course.Title, course.Level,
                 apprenticeshipToAdd.StartMonth.GetValueOrDefault(), apprenticeshipToAdd.StartYear.GetValueOrDefault(),
                 apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(), apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
-                apprenticeshipToAdd.TotalCost.GetValueOrDefault());
+                apprenticeshipToAdd.TotalCost.GetValueOrDefault(), Models.Payments.FundingSource.Transfer);
 
+            _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {course}");
             await _accountEstimationRepository.Store(accountEstimation);
         }
 

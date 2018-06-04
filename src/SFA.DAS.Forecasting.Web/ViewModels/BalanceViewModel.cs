@@ -4,7 +4,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class BalanceViewModel
     {
-        public IEnumerable<BalanceItemViewModel> BalanceItemViewModels { get; set; }
+        public IEnumerable<ProjectiontemViewModel> BalanceItemViewModels { get; set; }
 
         public string BackLink { get; set; }
 
