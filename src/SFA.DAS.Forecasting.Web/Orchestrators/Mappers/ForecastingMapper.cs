@@ -70,7 +70,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 
         private static bool IsTransferCommitment(CommitmentModel commitmentModel, long accountId)
         {
-            return commitmentModel.FundingSource.Equals(FundingSource.Transfer) && commitmentModel.SendingEmployerAccountId != accountId;
+            return commitmentModel.FundingSource.Equals(FundingSource.Transfer) && commitmentModel.SendingEmployerAccountId == accountId;
         }
     }
 }

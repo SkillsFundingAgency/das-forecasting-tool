@@ -27,15 +27,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         private AutoMoqer _moqer;
 
         private List<CommitmentModel> _commitments;
-        //private ForecastingOrchestrator _sut;
-        //private Mock<IAccountProjectionDataSession> _accountProjection;
-        //private Mock<IApplicationConfiguration> _applicationConfiguration;
         private Fixture _fixture;
-        //        private Mock<ICommitmentsDataService> _commitmentDataService;
         private BalanceModel _balance;
-        //       private Mock<IBalanceDataService> _balanceDataService;
         private const long ExpectedAccountId = 12345;
-        private const long SendingEmployerAccountId = 554400;
+        private const long ReceivingEmployerAccountId = 554400;
 
         [SetUp]
         public void SetUp()
@@ -69,8 +64,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     StartDate = DateTime.Now.AddMonths(2),
                     PlannedEndDate = DateTime.Now.AddMonths(12),
                     ApprenticeName = "Jane Doe",
-                    EmployerAccountId = ExpectedAccountId,
-                    SendingEmployerAccountId = SendingEmployerAccountId,
+                    EmployerAccountId = ReceivingEmployerAccountId,
+                    SendingEmployerAccountId = ExpectedAccountId,
                     MonthlyInstallment = 10,
                     NumberOfInstallments = 10,
                     CompletionAmount = 100,
@@ -92,7 +87,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .Returns(ExpectedAccountId);
             hashingService
                 .Setup(m => m.DecodeValue("CDDC12"))
-                .Returns(SendingEmployerAccountId);
+                .Returns(ReceivingEmployerAccountId);
             _balance = new BalanceModel { EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
 
             _moqer.GetMock<IBalanceDataService>()
@@ -137,7 +132,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         }
 
         [Test]
-        public async Task Then_The_Model_Is_Returned_With_The_ApprenticeshipName_And_Uln_Are_Blank_If_Your_The_Sending_Employer()
+        public async Task Then_The_Model_Is_Returned_With_The_ApprenticeshipName_And_Uln_Are_Blank_If_You_Are_The_Sending_Employer()
         {
             //Act
             var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
@@ -190,7 +185,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 PlannedEndDate = DateTime.Now.AddMonths(62),
                 ApprenticeName = "Jane Doe",
                 EmployerAccountId = ExpectedAccountId,
-                SendingEmployerAccountId = SendingEmployerAccountId,
+                SendingEmployerAccountId = ReceivingEmployerAccountId,
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 10,
                 CompletionAmount = 100,
