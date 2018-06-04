@@ -60,7 +60,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 .Select(o => new EstimationTransferAllowanceVewModel
                 {
                     Date = new DateTime(o.Year, o.Month, 1),
-                    ActualCost = o.ActualCosts.FundsOut,
+                    ActualCost = o.ActualCosts.TransferFundsOut,
                     EstimatedCost = o.ModelledCosts.FundsOut,
                     RemainingAllowance = o.FutureFunds
                 }).ToList()
