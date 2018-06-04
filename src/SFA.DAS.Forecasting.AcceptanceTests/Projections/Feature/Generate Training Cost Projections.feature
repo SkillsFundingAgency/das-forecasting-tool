@@ -56,6 +56,8 @@ Scenario: Sending employer transfer training costs
 
 Scenario: Receiving employer transfer training costs
 	Given I am a receiving employer
+	And the following levy declarations have been recorded
+	| Scheme   | Amount   | Created Date |
 	And the following commitments have been recorded
 	| Apprentice Name   | Course Name | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | FundingSource |
 	| Test Apprentice 1 | Test Course | 1            | Test Provider 1 | Last Year  | 333.33             | 2000              | 24                     | Transfer      |

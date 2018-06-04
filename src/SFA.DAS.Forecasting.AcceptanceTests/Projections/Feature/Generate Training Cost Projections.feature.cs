@@ -285,6 +285,13 @@ this.FeatureBackground();
  testRunner.Given("I am a receiving employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+#line 59
+ testRunner.And("the following levy declarations have been recorded", ((string)(null)), table6, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
                         "Apprentice Name",
                         "Course Name",
                         "Course Level",
@@ -294,7 +301,7 @@ this.FeatureBackground();
                         "Completion Amount",
                         "Number Of Installments",
                         "FundingSource"});
-            table6.AddRow(new string[] {
+            table7.AddRow(new string[] {
                         "Test Apprentice 1",
                         "Test Course",
                         "1",
@@ -304,7 +311,7 @@ this.FeatureBackground();
                         "2000",
                         "24",
                         "Transfer"});
-            table6.AddRow(new string[] {
+            table7.AddRow(new string[] {
                         "Test Apprentice 2",
                         "Test Course",
                         "1",
@@ -314,7 +321,7 @@ this.FeatureBackground();
                         "2000",
                         "18",
                         "Transfer"});
-            table6.AddRow(new string[] {
+            table7.AddRow(new string[] {
                         "Test Apprentice 3",
                         "Test Course",
                         "1",
@@ -324,99 +331,99 @@ this.FeatureBackground();
                         "2000",
                         "12",
                         "Transfer"});
-#line 59
- testRunner.And("the following commitments have been recorded", ((string)(null)), table6, "And ");
-#line 64
+#line 61
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table7, "And ");
+#line 66
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 65
+#line 67
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
                         "Months From Now",
                         "Transfer In Total Cost Of Training",
                         "Transfer Out Total Cost Of Training"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "0",
                         "333.33",
                         "333.33"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "1",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "2",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "3",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "4",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "5",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "6",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "7",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "8",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "9",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "10",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "11",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "12",
                         "777.77",
                         "777.77"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "13",
                         "1111.10",
                         "1111.10"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "14",
                         "1111.10",
                         "1111.10"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "15",
                         "1111.10",
                         "1111.10"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "16",
                         "1111.10",
                         "1111.10"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "17",
                         "1111.10",
                         "1111.10"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "18",
                         "1111.10",
                         "1111.10"});
-            table7.AddRow(new string[] {
+            table8.AddRow(new string[] {
                         "19",
                         "666.66",
                         "666.66"});
-#line 66
- testRunner.And("should have the following transfers costs of training", ((string)(null)), table7, "And ");
+#line 68
+ testRunner.And("should have the following transfers costs of training", ((string)(null)), table8, "And ");
 #line hidden
             this.ScenarioCleanup();
         }

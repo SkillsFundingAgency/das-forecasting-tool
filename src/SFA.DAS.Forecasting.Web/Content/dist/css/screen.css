@@ -4744,7 +4744,7 @@ table .float-right, h2 .float-right {
   position: relative;
   background-color: #fff;
   border-bottom: 1px solid #fff;
-  z-index: 5;
+  z-index: 0;
   line-height: 50px;
   margin-bottom: -1px;
   margin-top: -7px;
@@ -5273,8 +5273,4 @@ input[type=number] {
   color: #b10e1e;
   font-weight: bold;
   text-decoration: underline;
-}
-
-.HideFundingCapMessage {
-    display: none !important;
 }
