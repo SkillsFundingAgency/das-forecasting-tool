@@ -12,9 +12,8 @@ namespace SFA.DAS.Forecasting.Models.Estimation
             public decimal TransferInCompletionPayments { get; set; }
             public decimal TransferOutCostOfTraining { get; set; }
             public decimal TransferOutCompletionPayments { get; set; }
-
             public decimal TransferFundsIn => TransferInCostOfTraining + TransferInCompletionPayments;
-
+            public decimal TransferFundsOut => TransferOutCostOfTraining + TransferOutCompletionPayments;
             public decimal FundsOut => LevyCostOfTraining + LevyCompletionPayments + TransferOutCostOfTraining +
                                        TransferOutCompletionPayments;
         }
@@ -26,7 +25,7 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public Cost ActualCosts { get; set; }
         public decimal FutureFunds { get; set; }
         public decimal TransferFundsIn => ActualCosts.TransferFundsIn + ModelledCosts.TransferFundsIn;
-        public decimal FundsOut => ActualCosts.FundsOut + ModelledCosts.FundsOut;
+        public decimal FundsOut => ActualCosts.TransferFundsOut + ModelledCosts.FundsOut;
         public AccountEstimationProjectionModel()
         {
             ModelledCosts = new Cost();

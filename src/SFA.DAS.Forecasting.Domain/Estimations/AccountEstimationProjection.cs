@@ -96,7 +96,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             };
 
             var balance = lastBalance + projection.ModelledCosts.TransferFundsIn + projection.ActualCosts.TransferFundsIn -
-                      projection.ModelledCosts.FundsOut - projection.ActualCosts.FundsOut;
+                      projection.ModelledCosts.FundsOut - projection.ActualCosts.TransferFundsOut;
             projection.FutureFunds = balance;
             return projection;
         }
