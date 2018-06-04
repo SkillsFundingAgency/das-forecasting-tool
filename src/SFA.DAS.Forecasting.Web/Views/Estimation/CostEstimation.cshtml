@@ -86,7 +86,7 @@
             <div id="tab-1" class="tab-content" style="display: none;">
                 @if (Model.TransferAllowances != null)
                 {
-                    var tableBodyClass = Model.CanFund ? "" : "errorTable";
+                    var tableBodyClass =Model.CanFund ? "" : "errorTable";
                     var newFinancialYear = true;
                     var startDateOfEstimationYear = Model.TransferAllowances.First().Date;
 
@@ -112,19 +112,20 @@
                                 </thead>
                                 @:<tbody class="@tableBodyClass">
 
-                        }
 
-                                    <tr class="@tableRowClass">
-                                        <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
-                                        <td>@costEstimate.ActualCost.FormatCost()</td>
-                                        <td>@costEstimate.EstimatedCost.FormatCost()</td>
-                                        <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
-                                    </tr>
+                                }
 
-                        if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Last().Equals(costEstimate))
-                        {
-                            newFinancialYear = true;
-                            startDateOfEstimationYear = costEstimate.Date;
+                                <tr class="@tableRowClass">
+                                    <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                    <td>@costEstimate.ActualCost.FormatCost()</td>
+                                    <td>@costEstimate.EstimatedCost.FormatCost()</td>
+                                    <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+                                </tr>
+
+                                if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Last().Equals(costEstimate))
+                                {
+                                    newFinancialYear = true;
+                                    startDateOfEstimationYear = costEstimate.Date;
                                 @:</tbody>
                             @:</table>
                         }
@@ -149,7 +150,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div id="tab-2" class="tab-content">
                 <table class="small responsive">
                     <thead>

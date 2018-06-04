@@ -27,29 +27,29 @@
 
     <div class="column-one-third">
         <div class="related">
-            <h3 class="heading-small">Download this data</h3>
+            <h3 class="heading-small">Download data as a CSV file</h3>
             <div class="form-group">
                 <ul class="list list-links">
 
                     <li>
-                        <a id="lnk_csvdownload" href="@Url.Action("Csv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
-                            Download as a CSV file
+                        <a id="apprenticeship_csvdownload" href="@Url.Action("DownloadApprenticeshipDetailsCsv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                            Apprenticeship details in the account projection
                         </a>
+                        <p>
+                            The download includes the details of apprenticeships used to create this projection
+                        </p>
+                    </li>
+
+                    <li>
+                        <a id="projections_csvdownload" href="@Url.Action("Csv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                            Account projection table
+                        </a>
+                        <p>
+                            The download includes the details of the data in the table shown on this page
+                        </p>
                     </li>
                 </ul>
             </div>
-            <details>
-                <summary>What does the download include?</summary>
-                <p>The download includes the following data:</p>
-                <ul class="list list-bullet">
-                    <li>Funds in</li>
-                    <li>Cost of training</li>
-                    <li>Completion payments</li>
-                    <li>Your contribution</li>
-                    <li>Government contribution</li>
-                    <li>Future funds</li>
-                </ul>
-            </details>
         </div>
     </div>
 </div>
@@ -163,7 +163,7 @@
                 {
                 <tr>
                     <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="financial">@item.LevyCredit.FormatCost()</td>
+                    <td class="financial">@item.FundsIn.FormatCost()</td>
                     <td class="financial">@item.CostOfTraining.FormatCost()</td>
                     <td class="financial">@item.CompletionPayments.FormatCost()</td>
                     @if (Model.DisplayCoInvestment)

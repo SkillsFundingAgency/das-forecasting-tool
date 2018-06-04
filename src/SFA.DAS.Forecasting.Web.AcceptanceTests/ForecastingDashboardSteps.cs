@@ -21,9 +21,12 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 
 		[Given(@"I have logged into my Apprenticeship Account")]
 		public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
-		{            
-            var loginPage = WebSite.NavigateToLoginPage();
-            loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
+		{
+            if (!WebSite.BaseUrl.Host.Contains("localhost"))
+            {
+                var loginPage = WebSite.NavigateToLoginPage();
+                loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
+            }
 		}
 
 	    [Given(@"I am not logged into my Apprenticeship Account")]
@@ -35,10 +38,18 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 		[When(@"I navigate to the Landing page of the Forecasting dashboard")]
         public void WhenINavigateToTheLandingPageOfTheForecastingPortal()
         {
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
-            var financePage = accountHomepage.OpenFinance();
-            var page = financePage.OpenFundingProjection();
-            Set(page);            
+            if (!WebSite.IsLocalhost)
+            {
+                var accountHomepage = WebSite.NavigateToAccountHomePage();
+                var financePage = accountHomepage.OpenFinance();
+                var page = financePage.OpenFundingProjection();
+                Set(page);
+            }
+            else
+            {
+                var page = WebSite.NavigateToFundingProjectionPage();
+                Set(page);
+            }
         }
 
         [Then(@"the dashboard should be displayed")]

@@ -57,7 +57,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				ProviderName = paymentCreatedMessage.ProviderName,
 				ApprenticeName = paymentCreatedMessage.ApprenticeName,
 				CourseName = paymentCreatedMessage.CourseName,
-				CourseLevel = paymentCreatedMessage.CourseLevel
+				CourseLevel = paymentCreatedMessage.CourseLevel,
+                SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
+                FundingSource = paymentCreatedMessage.FundingSource
 			};
 		}
 	}
