@@ -59,7 +59,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     Month = 1,
                     Year = 2018,
                     TransferOutCostOfTraining = 10,
-                    TransferOutCompletionPayments = 0
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 50,
+                    LevyFundedCostOfTraining = 50
                 },
                 new AccountProjectionModel
                 {
@@ -67,7 +69,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     Month = 2,
                     Year = 2018,
                     TransferOutCostOfTraining = 10,
-                    TransferOutCompletionPayments = 0
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 0,
+                    LevyFundedCostOfTraining = 50
                 },
                 new AccountProjectionModel
                 {
@@ -75,7 +79,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     Month = 3,
                     Year = 2018,
                     TransferOutCostOfTraining = 10,
-                    TransferOutCompletionPayments = 0
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 0,
+                    LevyFundedCostOfTraining = 50
                 },
                 new AccountProjectionModel
                 {
@@ -83,7 +89,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     Month = 4,
                     Year = 2018,
                     TransferOutCostOfTraining = 10,
-                    TransferOutCompletionPayments = 0
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 0,
+                    LevyFundedCostOfTraining = 50
                 },
                 new AccountProjectionModel
                 {
@@ -91,7 +99,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     Month = 5,
                     Year = 2018,
                     TransferOutCostOfTraining = 10,
-                    TransferOutCompletionPayments = 0
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 0,
+                    LevyFundedCostOfTraining = 50
                 },
                 new AccountProjectionModel
                 {
@@ -99,7 +109,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     Month = 6,
                     Year = 2018,
                     TransferOutCostOfTraining = 0,
-                    TransferOutCompletionPayments = 20
+                    TransferOutCompletionPayments = 20,
+                    LevyFundedCompletionPayments = 0,
+                    LevyFundedCostOfTraining = 50
                 }
             };
 

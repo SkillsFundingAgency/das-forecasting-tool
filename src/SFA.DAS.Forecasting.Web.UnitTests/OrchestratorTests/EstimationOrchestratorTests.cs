@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Balance;
-using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
-using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.HashingService;
@@ -91,6 +88,33 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.First().ActualCost);
             Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.First().EstimatedCost);
+        }
+
+        [Test]
+        public async Task Then_The_Levy_Out_Costs_Are_Not_factored_Into_The_Acutal_Costs()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) DateTime.Now.AddYears(1).Year,
+                    Month = (short) DateTime.Now.Month,
+                    ActualCosts = new AccountEstimationProjectionModel.Cost
+                    {
+                        LevyCostOfTraining = 100m,
+                        LevyCompletionPayments = 100m,
+                        TransferOutCostOfTraining =  50m,
+                        TransferOutCompletionPayments = 50m
+                    }
+                }
+            };
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            Assert.AreEqual(100m,actual.TransferAllowances.First().ActualCost);
+
         }
 
         [Test]
