@@ -1,4 +1,3 @@
-using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -14,7 +13,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
-using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -27,7 +25,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         private AutoMoqer _moqer;
 
         private List<CommitmentModel> _commitments;
-        private Fixture _fixture;
         private BalanceModel _balance;
         private const long ExpectedAccountId = 12345;
         private const long ReceivingEmployerAccountId = 554400;
@@ -36,10 +33,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public void SetUp()
         {
             _moqer = new AutoMoqer();
-            //TODO: Is fixture really needed? it seems to only be used to add items to a list. Enumerable.Range or Repeat can be used for this purpose.
-            _fixture = new Fixture();
-            _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => _fixture.Behaviors.Remove(b));
-            _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _commitments = new List<CommitmentModel>
             {
                 new CommitmentModel
@@ -283,7 +276,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     $"balanceMaxDate is out of date ({balanceMaxDate.ToString()}) and test can be removed");
         }
 
-        [TestCase]
+        [Test]
         public async Task ShouldTake_48_months_csv_file()
         {
             var expectedProjections = 48;
@@ -301,18 +294,18 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         /// <param name="count">Amount months to create starting from last month.</param>
         private void SetUpProjections(int count)
         {
+            var currentMonthDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
             var projections = new List<AccountProjectionModel>();
-            _fixture.AddManyTo(projections, count);
-
-            var currentMonthDate = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)).AddMonths(-1);
-            projections.ForEach(m =>
+            for (var i = 0; i < count; i++)
             {
-                var date = DateTime.Parse(currentMonthDate.ToString());
-                m.Month = (short)date.Month;
-                m.Year = date.Year;
-
+                projections.Add(new AccountProjectionModel
+                {
+                    Month = (short) currentMonthDate.Month,
+                    Year = currentMonthDate.Year,
+                    EmployerAccountId = ExpectedAccountId
+                });
                 currentMonthDate = currentMonthDate.AddMonths(1);
-            });
+            }
 
             _moqer.GetMock<IAccountProjectionDataSession>().Setup(m => m.Get(ExpectedAccountId)).ReturnsAsync(projections);
         }
