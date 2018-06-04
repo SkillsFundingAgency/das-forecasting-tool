@@ -302,9 +302,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
                     FundingSource = CommitmentType == CommitmentType.LevyFunded 
                         ? FundingSource.Levy 
-                        : CommitmentType == CommitmentType.TransferReceiver 
-                            ? FundingSource.Transfer 
-                            : commitment.FundingSource ?? FundingSource.Levy
+                        : commitment.FundingSource ?? FundingSource.Transfer
                 });
             }
 
