@@ -68,5 +68,57 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
 		    var result = validator.Validate(EarningDetails);
             result.IsValid.Should().BeFalse();
         }
+
+        [Test]
+        public void Failes_when_invalid_amount_and_no_end_date()
+        {
+            var validator = new EarningDetailsSuperficialValidator();
+
+            EarningDetails.ActualEndDate = DateTime.MinValue;
+            EarningDetails.MonthlyInstallment = 1;
+            EarningDetails.CompletionAmount = 1;
+
+            var result = validator.Validate(EarningDetails);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Passes_when_valid_amount_and_valid_end_date()
+        {
+            var validator = new EarningDetailsSuperficialValidator();
+
+            EarningDetails.ActualEndDate = DateTime.MinValue.AddDays(1);
+            EarningDetails.MonthlyInstallment = 2;
+            EarningDetails.CompletionAmount = 2;
+
+            var result = validator.Validate(EarningDetails);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Passes_when_invalid_amount_and_valid_end_date()
+        {
+            var validator = new EarningDetailsSuperficialValidator();
+
+            EarningDetails.ActualEndDate = DateTime.MinValue.AddDays(1);
+            EarningDetails.MonthlyInstallment = 1;
+            EarningDetails.CompletionAmount = 1;
+
+            var result = validator.Validate(EarningDetails);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Passes_when_valid_amount_and_invalid_end_date()
+        {
+            var validator = new EarningDetailsSuperficialValidator();
+
+            EarningDetails.ActualEndDate = DateTime.MinValue;
+            EarningDetails.MonthlyInstallment = 2;
+            EarningDetails.CompletionAmount = 2;
+
+            var result = validator.Validate(EarningDetails);
+            result.IsValid.Should().BeTrue();
+        }
     }
 }

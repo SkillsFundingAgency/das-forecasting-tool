@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Given(@"no account projections have been generated")]
         public void GivenNoAccountProjectionsHaveBeenGenerated()
         {
-            DeleteAccountProjections();
+            DeleteAccountProjections(Config.EmployerAccountId);
         }
     }
 }

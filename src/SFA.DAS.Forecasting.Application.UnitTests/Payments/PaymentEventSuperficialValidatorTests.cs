@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage = new PaymentCreatedMessage
             {
                 EmployerAccountId = 1,
+                SendingEmployerAccountId = 2,
                 Amount = 100,
                 ApprenticeshipId = 1,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod
@@ -32,7 +33,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
                     PlannedEndDate = DateTime.Today.AddMonths(14),
                     CompletionAmount = 240,
                     CompletionStatus = 1,
-                    MonthlyInstallment =  87.27m,
+                    MonthlyInstallment = 87.27m,
                     TotalInstallments = 12,
                     EndpointAssessorId = "EA-Id1",
                     ActualEndDate = DateTime.MinValue
@@ -56,38 +57,38 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         }
 
         [Test]
-		public void Fails_If_Employer_Account_Id_Is_Not_Populated()
-		{
-			var validator = new PaymentEventSuperficialValidator();
-			PaymentCreatedMessage.EmployerAccountId = 0;
-			var result = validator.Validate(PaymentCreatedMessage);
+        public void Fails_If_Employer_Account_Id_Is_Not_Populated()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.EmployerAccountId = 0;
+            var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
 
-	    [Test]
-	    public void Fails_If_Ukprn_Is_Negative()
-	    {
-		    var validator = new PaymentEventSuperficialValidator();
-		    PaymentCreatedMessage.Ukprn = -1;
-		    var result = validator.Validate(PaymentCreatedMessage);
+        [Test]
+        public void Fails_If_Ukprn_Is_Negative()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.Ukprn = -1;
+            var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
 
-		[Test]
-		public void Fails_If_Apprenticeship_Id_Is_Negative()
-		{
-			var validator = new PaymentEventSuperficialValidator();
-			PaymentCreatedMessage.ApprenticeshipId = -1;
-			var result = validator.Validate(PaymentCreatedMessage);
+        [Test]
+        public void Fails_If_Apprenticeship_Id_Is_Negative()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.ApprenticeshipId = -1;
+            var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
 
-	    [Test]
-	    public void Fails_If_Amount_Is_Negative()
-	    {
-		    var validator = new PaymentEventSuperficialValidator();
-		    PaymentCreatedMessage.Amount = -1;
-		    var result = validator.Validate(PaymentCreatedMessage);
+        [Test, Ignore("Until the Expired Funds story is ready there is no point in validating the payment amount.")]
+        public void Fails_If_Amount_Is_Negative()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.Amount = -1;
+            var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
 
@@ -114,6 +115,25 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.EarningDetails = null;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Pass_If_Ids_are_equal_and_FundingSource_Levy()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Failes_If_Ids_are_equal_and_FundingSource_Transefer()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
+            PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }

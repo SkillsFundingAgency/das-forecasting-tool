@@ -2,11 +2,11 @@ using System;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class BalanceItemViewModel
+    public class ProjectiontemViewModel
     {
         public DateTime Date { get; set; }
 
-        public decimal LevyCredit { get; set; }
+        public decimal FundsIn { get; set; }
 
         public decimal CostOfTraining { get; set; }
 

@@ -120,7 +120,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DisplayModelledApprenticeships.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\DownloadForecastBalanceSheet.feature.cs">
+    <Compile Include="Projections\Features\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DownloadForecastBalanceSheet.feature</DependentUpon>
@@ -176,7 +176,7 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DisplayModelledApprenticeships.feature.cs</LastGenOutput>
     </None>
-    <None Include="Features\DownloadForecastBalanceSheet.feature">
+    <None Include="Projections\Features\DownloadForecastBalanceSheet.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DownloadForecastBalanceSheet.feature.cs</LastGenOutput>
     </None>

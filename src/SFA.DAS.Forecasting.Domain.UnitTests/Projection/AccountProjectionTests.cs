@@ -37,7 +37,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 PlannedEndDate = DateTime.Today.AddMonths(25),
                 MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
-                CompletionAmount = 3000
+                CompletionAmount = 3000,
+                FundingSource = Models.Payments.FundingSource.Levy
             };
             _commitments = new List<CommitmentModel> { _commitment };
             var employerCommitments = new EmployerCommitments(1, _commitments);
@@ -68,7 +69,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
 
-            accountProjection.Projections.Count(projection => projection.FundsIn == 300).Should().Be(49);
+            accountProjection.Projections.Count(projection => projection.LevyFundsIn == 300).Should().Be(49);
         }
 
         [Test]
@@ -100,7 +101,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
 
-            accountProjection.Projections.Skip(2).First().CompletionPayments
+            accountProjection.Projections.Skip(2).First().LevyFundedCompletionPayments
                 .Should().Be(_commitment.CompletionAmount);
         }
 
@@ -131,6 +132,85 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.Projections[7].CoInvestmentGovernment.Should().Be(540);
             accountProjection.Projections[7].FutureFunds.Should().Be(0);
         }
+
+        [Test]
+        public void Receiving_employer_account_has_transfers_in()
+        {
+            var commitments = new List<CommitmentModel> {
+                new CommitmentModel
+                {
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 1,
+                    ApprenticeshipId = 21,
+                    LearnerId = 31,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    MonthlyInstallment = 2000,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 1200,
+                    FundingSource = Models.Payments.FundingSource.Levy
+                },
+                new CommitmentModel
+                {
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 1,
+                    ApprenticeshipId = 22,
+                    LearnerId = 32,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    MonthlyInstallment = 2000,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 1200,
+                    FundingSource = Models.Payments.FundingSource.Levy
+                },
+                new CommitmentModel
+                {
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 999,
+                    ApprenticeshipId = 23,
+                    LearnerId = 33,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    MonthlyInstallment = 2000,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 1200,
+                    FundingSource = Models.Payments.FundingSource.Transfer
+                },
+                new CommitmentModel
+                {
+                    EmployerAccountId = 999,
+                    SendingEmployerAccountId = 1,
+                    ApprenticeshipId = 34,
+                    LearnerId = 34,
+                    StartDate = DateTime.Today,
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    MonthlyInstallment = 2000,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 1200,
+                    FundingSource = Models.Payments.FundingSource.Transfer
+                }
+            };
+
+            var employerCommitments = new EmployerCommitments(1, commitments);
+            Moqer.SetInstance(employerCommitments);
+
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
+
+            var projections = accountProjection.Projections.ToArray();
+
+            projections[6].LevyFundedCostOfTraining.Should().Be(4000);
+            projections[6].TransferInCostOfTraining.Should().Be(2000);
+            projections[6].TransferOutCostOfTraining.Should().Be(4000);
+            projections[7].LevyFundedCostOfTraining.Should().Be(0);
+            projections[7].LevyFundedCompletionPayments.Should().Be(2400);
+            projections[7].TransferInCompletionPayments.Should().Be(1200);
+            projections[7].TransferOutCompletionPayments.Should().Be(2400);
+            projections[8].LevyFundedCostOfTraining.Should().Be(0);
+            projections[8].LevyFundedCompletionPayments.Should().Be(0);
+        }
+
 
         // ------------------------------
         // Payrole Period End Triggered -

@@ -2514,11 +2514,11 @@ a#link-settings:focus {
   margin-top: 30px;
 }
 
-.error-summary:not(.validation-summary-max-funding) h1 {
+.error-summary:not(.validation-summary-details) h1 {
   display: none;
 }
 
-.error-summary:not(.validation-summary-max-funding) h1 + p {
+.error-summary:not(.validation-summary-details) h1 + p {
   display: none;
 }
 
@@ -4270,7 +4270,7 @@ h2 .float-right {
   width: 50px;
 }
 
-#estimate-add-apprenticeship .levy-value {
+#estimate-add-apprenticeship .total-funding-cost {
   width: 200px;
 }
 

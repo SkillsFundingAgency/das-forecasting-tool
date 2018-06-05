@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SFA.DAS.Forecasting.Models.Payments;
+using System;
 
 namespace SFA.DAS.Forecasting.Models.Estimation
 {
@@ -18,6 +15,6 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public decimal TotalCost { get; set; }
         public decimal TotalCompletionAmount { get; set; }
         public decimal TotalInstallmentAmount { get; set; }
-        
+        public FundingSource FundingSource { get; set; }
     }
 }

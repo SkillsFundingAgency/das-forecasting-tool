@@ -4,7 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using TechTalk.SpecFlow;
+using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 {
@@ -19,24 +21,48 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
+        [Given(@"I am a sending employer")]
+        public void GivenIAmASendingEmployer()
+        {
+            CommitmentType = CommitmentType.TransferSender;
+        }
+
+        [Given(@"I am a receiving employer")]
+        public void GivenIAmAReceivingEmployer()
+        {
+            CommitmentType = CommitmentType.TransferReceiver;
+        }
+
+
         [When(@"the account projection is triggered after a payment run")]
         public void WhenTheAccountProjectionIsGeneratedAfterAPaymentRun()
         {
-            DeleteAccountProjections();
+            GenerateProjections(Config.EmployerAccountId);
+        }
+
+        [When(@"the account projection is triggered for (.*) after a payment run")]
+        public void WhenTheAccountProjectionIsGeneratedForIdAfterAPaymentRun(long employerId)
+        {
+            GenerateProjections(employerId);
+        }
+
+        private void GenerateProjections(long id)
+        {
+            DeleteAccountProjections(id);
             var projectionUrl =
-                Config.ProjectionPaymentFunctionUrl.Replace("{employerAccountId}", Config.EmployerAccountId.ToString());
+                Config.ProjectionPaymentFunctionUrl.Replace("{employerAccountId}", id.ToString());
             Console.WriteLine($"Sending payment event to payment projection function: {projectionUrl}");
             var response = HttpClient.PostAsync(projectionUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
-        
+
         [Then(@"the completion payments should be included in the correct month")]
         public void ThenTheCompletionPaymentsShouldBeIncludedInTheCorrectMonth()
         {
             Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
                 .Select( g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount)})
                 .ToList()
-                .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.CompletionPayments == completionAmount.CompletionAmount),$"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}") );
+                .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount),$"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}") );
         }
 
         [Then(@"the completion payments should not be included in the projection")]
@@ -45,8 +71,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
                 .Select(g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount) })
                 .ToList()
-                .ForEach(completionAmount => Assert.IsFalse(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.CompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));
+                .ForEach(completionAmount => Assert.IsFalse(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));
         }
-
+        [Then(@"the transfer completion payments should be recorded as follows")]
+        public void ThenTheTransferCompletionPaymentsShouldBeRecordedAsFollows(Table table)
+        {
+            var expectedProjections = table.CreateSet<TestAccountProjection>().ToList();
+            expectedProjections.ForEach(expected =>
+            {
+                var projectionMonth = AccountProjections.Skip(expected.MonthsFromNow).FirstOrDefault();
+                Assert.IsNotNull(projectionMonth,$"Month {expected.MonthsFromNow} not found.");
+                Assert.AreEqual(expected.TransferInCompletionPayments,projectionMonth.TransferInCompletionPayments,$"Transfer in completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferInCompletionPayments}' but generated amount was '{projectionMonth.TransferInCompletionPayments}'");
+                Assert.AreEqual(expected.TransferOutCompletionPayments, projectionMonth.TransferOutCompletionPayments, $"Transfer out completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferOutCompletionPayments}' but generated amount was '{projectionMonth.TransferOutCompletionPayments}'");
+            });
+        }
     }
 }
