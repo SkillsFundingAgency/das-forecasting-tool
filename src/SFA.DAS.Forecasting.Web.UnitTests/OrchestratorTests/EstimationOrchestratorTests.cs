@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Balance;
@@ -9,6 +11,7 @@ using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.HashingService;
+using static SFA.DAS.Forecasting.Models.Estimation.AccountEstimationProjectionModel;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 {
@@ -46,9 +49,12 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _accountEstimationProjectionRepository.Setup(x => x.Get(It.IsAny<AccountEstimation>()))
                 .ReturnsAsync(_accountEstimationProjection.Object);
 
-            _orchestrator = new EstimationOrchestrator(_accountEstimationProjectionRepository.Object,
-                _accountEstimationRepository.Object, _hashingService.Object,
-                _currentBalanceRepository.Object);
+            _orchestrator = new EstimationOrchestrator(
+                _accountEstimationProjectionRepository.Object,
+                _accountEstimationRepository.Object, 
+                _hashingService.Object,
+                _currentBalanceRepository.Object
+                );
         }
 
         [TestCase(100, 100, 100, 100)]
@@ -137,6 +143,122 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
             Assert.IsTrue(actual.TransferAllowances.First().IsLessThanCost);
+        }
+
+        [Test]
+        public async Task AccountFunds_balance_should_inclue_projection_future_funds()
+        {
+            var fixture = new Fixture();
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var estimationProjectionList = fixture.CreateMany<AccountEstimationProjectionModel>(48).ToList();
+            var date = DateTime.Today;
+            decimal futureFunds = 0;
+            foreach (var el in estimationProjectionList)
+            {
+                futureFunds += 500;
+                el.FutureFunds = futureFunds;
+                el.ActualCosts =
+                    new Cost
+                    {
+                        TransferOutCostOfTraining =  0,
+                        TransferOutCompletionPayments = 0,
+                        TransferInCostOfTraining = 0,
+                        TransferInCompletionPayments = 0,
+                        
+                    };
+                el.ModelledCosts =
+                    new Cost
+                    {
+                        LevyCostOfTraining = 0,
+                        LevyCompletionPayments = 0,
+                        TransferOutCostOfTraining = 0,
+                        TransferOutCompletionPayments = 0
+                    };
+
+                el.Month = (short)date.Month;
+                el.Year = (short)date.Year;
+                date = date.AddMonths(1);
+            }
+
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(estimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            actual.AccountFunds.OpeningBalance.Should().Be(500);
+
+            var first = actual.AccountFunds.Records.First();
+            var second = actual.AccountFunds.Records.Skip(1).First();
+
+            first.ActualCost.Should().Be(0);
+            first.EstimatedCost.Should().Be(0);
+            first.Balance.Should().Be(500);
+
+            second.ActualCost.Should().Be(0);
+            second.EstimatedCost.Should().Be(0);
+            second.Balance.Should().Be(1000);
+        }
+
+        [Test]
+        public async Task AccountFunds_should_not_have_any_costs_first_Month()
+        {
+            var fixture = new Fixture();
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var estimationProjectionList = fixture.CreateMany<AccountEstimationProjectionModel>(48).ToList();
+            var date = DateTime.Today;
+            decimal futureFunds = 0;
+            foreach (var el in estimationProjectionList)
+            {
+                futureFunds += 500;
+                el.FutureFunds = futureFunds;
+                el.ActualCosts =
+                    new Cost
+                    {
+                        LevyCostOfTraining = 100,
+                        LevyCompletionPayments = 0,
+                        TransferOutCostOfTraining = 0, //3.33M,
+                        TransferOutCompletionPayments = 0, //3.33M,
+                        TransferInCostOfTraining = 0, // 3.33M,
+                        TransferInCompletionPayments = 0,  //3.33M,
+
+                    };
+                el.ModelledCosts =
+                    new Cost
+                    {
+                        LevyCostOfTraining = 200,
+                        LevyCompletionPayments = 0,
+                        TransferOutCostOfTraining = 0,
+                        TransferOutCompletionPayments = 0
+                    };
+
+                el.Month = (short)date.Month;
+                el.Year = (short)date.Year;
+                date = date.AddMonths(1);
+            }
+
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(estimationProjectionList.AsReadOnly);
+
+            // Act
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            // Assert
+            actual.AccountFunds.OpeningBalance.Should().Be(500);
+
+            var first = actual.AccountFunds.Records.First();
+            var second = actual.AccountFunds.Records.Skip(1).First();
+
+            first.ActualCost.Should().Be(0);
+            first.EstimatedCost.Should().Be(200);
+            first.Balance.Should().Be(300);
+
+            second.ActualCost.Should().Be(100);
+            second.EstimatedCost.Should().Be(200);
+            second.Balance.Should().Be(600);
         }
     }
 }
