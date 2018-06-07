@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
+using AutoMoq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -18,43 +19,36 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
     public class EstimationOrchestratorTests
     {
         private EstimationOrchestrator _orchestrator;
-        private Mock<IHashingService> _hashingService;
-        private Mock<ICurrentBalanceRepository> _currentBalanceRepository;
-        private Mock<IAccountEstimationRepository> _accountEstimationRepository;
-        private Mock<IAccountEstimationProjectionRepository> _accountEstimationProjectionRepository;
-        private Mock<IAccountEstimationProjection> _accountEstimationProjection;
+        private AutoMoqer _mocker;
+        private IAccountEstimationProjection _accountEstimationProjection;
         private const long ExpectedAccountId = 654311;
 
         [SetUp]
         public void Arrange()
         {
-            _hashingService = new Mock<IHashingService>();
-            _hashingService.Setup(x => x.DecodeValue(It.IsAny<string>())).Returns(ExpectedAccountId);
+            _mocker = new AutoMoqer();
 
+            _mocker.GetMock<IHashingService>()
+                .Setup(x => x.DecodeValue(It.IsAny<string>()))
+                .Returns(ExpectedAccountId);
 
-            var currentBalance = new Mock<CurrentBalance>();
-            currentBalance.Setup(x => x.RefreshBalance()).ReturnsAsync(true);
+            _mocker.GetMock<CurrentBalance>()
+                .Setup(x => x.RefreshBalance()).ReturnsAsync(true);
 
-            _currentBalanceRepository = new Mock<ICurrentBalanceRepository>();
-            _currentBalanceRepository.Setup(x => x.Get(ExpectedAccountId))
-                .ReturnsAsync(currentBalance.Object);
+            _mocker.GetMock<ICurrentBalanceRepository>()
+                .Setup(x => x.Get(ExpectedAccountId))
+                .ReturnsAsync(_mocker.Resolve<CurrentBalance>());
 
-            _accountEstimationRepository = new Mock<IAccountEstimationRepository>();
-
-            _accountEstimationProjection = new Mock<IAccountEstimationProjection>();
-            _accountEstimationProjection.Setup(x => x.Projections)
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
                 .Returns((new List<AccountEstimationProjectionModel>()).AsReadOnly);
+            _accountEstimationProjection = _mocker.Resolve<IAccountEstimationProjection>();
 
-            _accountEstimationProjectionRepository = new Mock<IAccountEstimationProjectionRepository>();
-            _accountEstimationProjectionRepository.Setup(x => x.Get(It.IsAny<AccountEstimation>()))
-                .ReturnsAsync(_accountEstimationProjection.Object);
+            _mocker.GetMock<IAccountEstimationProjectionRepository>()
+                .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+                .ReturnsAsync(_accountEstimationProjection);
 
-            _orchestrator = new EstimationOrchestrator(
-                _accountEstimationProjectionRepository.Object,
-                _accountEstimationRepository.Object, 
-                _hashingService.Object,
-                _currentBalanceRepository.Object
-                );
+            _orchestrator = _mocker.Resolve<EstimationOrchestrator>();
         }
 
         [TestCase(100, 100, 100, 100)]
@@ -84,10 +78,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         TransferOutCostOfTraining =  transferOutTotalCostOfTraining,
                         TransferOutCompletionPayments = transferOutCompletionPayment,
                     }
-
                 }
             };
-            _accountEstimationProjection.Setup(x => x.Projections)
+
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
                 .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
@@ -114,7 +109,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     }
                 }
             };
-            _accountEstimationProjection.Setup(x => x.Projections)
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
                 .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
@@ -137,7 +133,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     FutureFunds = 100
                 }
             };
-            _accountEstimationProjection.Setup(x => x.Projections)
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
                 .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
@@ -146,7 +143,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         }
 
         [Test]
-        public async Task AccountFunds_balance_should_inclue_projection_future_funds()
+        public async Task AccountFunds_balance_should_include_projection_future_funds()
         {
             var fixture = new Fixture();
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
@@ -155,11 +152,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var estimationProjectionList = fixture.CreateMany<AccountEstimationProjectionModel>(48).ToList();
             var date = DateTime.Today;
             decimal futureFunds = 0;
-            foreach (var el in estimationProjectionList)
+            foreach (var estimationProjection in estimationProjectionList)
             {
                 futureFunds += 500;
-                el.FutureFunds = futureFunds;
-                el.ActualCosts =
+                estimationProjection.FutureFunds = futureFunds;
+                estimationProjection.ActualCosts =
                     new Cost
                     {
                         TransferOutCostOfTraining =  0,
@@ -168,7 +165,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         TransferInCompletionPayments = 0,
                         
                     };
-                el.ModelledCosts =
+                estimationProjection.ModelledCosts =
                     new Cost
                     {
                         LevyCostOfTraining = 0,
@@ -177,12 +174,13 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         TransferOutCompletionPayments = 0
                     };
 
-                el.Month = (short)date.Month;
-                el.Year = (short)date.Year;
+                estimationProjection.Month = (short)date.Month;
+                estimationProjection.Year = (short)date.Year;
                 date = date.AddMonths(1);
             }
 
-            _accountEstimationProjection.Setup(x => x.Projections)
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
                 .Returns(estimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
@@ -211,11 +209,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var estimationProjectionList = fixture.CreateMany<AccountEstimationProjectionModel>(48).ToList();
             var date = DateTime.Today;
             decimal futureFunds = 0;
-            foreach (var el in estimationProjectionList)
+            foreach (var estimationProjection in estimationProjectionList)
             {
                 futureFunds += 500;
-                el.FutureFunds = futureFunds;
-                el.ActualCosts =
+                estimationProjection.FutureFunds = futureFunds;
+                estimationProjection.ActualCosts =
                     new Cost
                     {
                         LevyCostOfTraining = 100,
@@ -226,7 +224,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         TransferInCompletionPayments = 0,  //3.33M,
 
                     };
-                el.ModelledCosts =
+                estimationProjection.ModelledCosts =
                     new Cost
                     {
                         LevyCostOfTraining = 200,
@@ -235,12 +233,13 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                         TransferOutCompletionPayments = 0
                     };
 
-                el.Month = (short)date.Month;
-                el.Year = (short)date.Year;
+                estimationProjection.Month = (short)date.Month;
+                estimationProjection.Year = (short)date.Year;
                 date = date.AddMonths(1);
             }
 
-            _accountEstimationProjection.Setup(x => x.Projections)
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
                 .Returns(estimationProjectionList.AsReadOnly);
 
             // Act

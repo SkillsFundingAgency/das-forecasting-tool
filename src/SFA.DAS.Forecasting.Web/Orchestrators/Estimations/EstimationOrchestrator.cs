@@ -18,7 +18,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
 
-        public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
+        public EstimationOrchestrator(
+            IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService, 
             ICurrentBalanceRepository currentBalanceRepository
@@ -105,7 +106,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         }
         private long GetAccountId(string hashedAccountId) => _hashingService.DecodeValue(hashedAccountId);
 
-        private IReadOnlyList<AccountFunds> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
+        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
         {
             decimal estimatedFundsOut = 0;
             var accountFumds = estimations.Select(projection =>
@@ -114,7 +115,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 estimatedFundsOut += projection.ModelledCosts.FundsOut;
                 var balance = projection.FutureFunds - estimatedFundsOut;
 
-                return new AccountFunds
+                return new AccountFundsItem
                 {
                     Date = new DateTime(projection.Year, projection.Month, 1),
                     ActualCost = currentMonth ? 0 : projection.ActualCosts.FundsOut,
@@ -125,13 +126,5 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             return accountFumds.ToList();
         }
-    }
-
-    public class AccountFunds
-    {
-        public DateTime Date { get; set; }
-        public decimal ActualCost { get; set; }
-        public decimal EstimatedCost { get; set; }
-        public decimal Balance { get; set; }
     }
 }
