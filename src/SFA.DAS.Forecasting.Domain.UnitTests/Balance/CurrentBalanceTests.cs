@@ -7,9 +7,9 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
 {
@@ -42,11 +42,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                 new CommitmentModel
                 {
                     EmployerAccountId = 12345,
-                    PlannedEndDate = DateTime.Today.AddMonths(-1),
-                    StartDate = DateTime.Today.AddMonths(-2),
+                    PlannedEndDate = DateTime.Today.AddMonths(-2),
+                    StartDate = DateTime.Today.AddMonths(-3),
                     NumberOfInstallments = 1,
                     CompletionAmount = 1000,
                     MonthlyInstallment = 80,
+                    FundingSource = FundingSource.Levy
                 }
             }));
             _moqer.SetInstance(_previousAccountBalance);
