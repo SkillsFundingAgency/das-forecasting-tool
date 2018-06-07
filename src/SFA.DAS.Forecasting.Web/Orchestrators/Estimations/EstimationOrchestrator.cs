@@ -113,6 +113,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             {
                 var currentMonth = projection.Month == DateTime.Today.Month && projection.Year == DateTime.Today.Year;
                 estimatedFundsOut += projection.ModelledCosts.FundsOut;
+
                 var balance = projection.FutureFunds - estimatedFundsOut;
 
                 return new AccountFundsItem
