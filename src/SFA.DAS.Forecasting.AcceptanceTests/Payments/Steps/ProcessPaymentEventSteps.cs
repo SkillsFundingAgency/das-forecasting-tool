@@ -310,8 +310,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             }, $"Failed finding commitment ({apprenticeshipId}) with actual end date");
         }
 
-        [Then(@"apprenticeship with id (.*) should have completion amount of (.*) and montly installment of (.*)")]
-        public void ThenApprenticeshipWithIdShouldHaveCompletionAmountOfAndMontlyInstallnebtOf(int apprenticeshipId, int completionAmount, Decimal installmentAmount)
+        [Then(@"apprenticeship with id (.*) should have completion amount of (.*) and monthly installment of (.*)")]
+        public void ThenApprenticeshipWithIdShouldHaveCompletionAmountOfAndMonthlyInstallnebtOf(int apprenticeshipId, int completionAmount, Decimal installmentAmount)
         {
             WaitForIt(() =>
             {
@@ -319,11 +319,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     .AsNoTracking()
                     .Single(m => m.ApprenticeshipId == apprenticeshipId);
 
-                var msg = $"Looking for Commitment {apprenticeshipId}. CompletionAmount: {commitment.CompletionAmount} and InstallemntAmount: {commitment.MonthlyInstallment}";
+                var msg = $"Looking for Commitment {apprenticeshipId}. CompletionAmount: {commitment.CompletionAmount} and InstallmentAmount: {commitment.MonthlyInstallment}";
 
                 return Tuple.Create(commitment.CompletionAmount == completionAmount && commitment.MonthlyInstallment == installmentAmount, msg);
 
-            }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletoinAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
+            }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletionAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
         }
 
         [Then(@"the Forecasting Payment service should record that the commitment has ended")]
