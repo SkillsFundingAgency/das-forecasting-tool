@@ -87,7 +87,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             if (first == null)
                 return 0;
 
-            return first.FutureFunds;
+            return first.ProjectedFutureFunds;
         }
 
         public async Task<bool> HasValidApprenticeships(string hashedAccountId)
