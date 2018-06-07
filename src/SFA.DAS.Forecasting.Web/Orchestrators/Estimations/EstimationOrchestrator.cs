@@ -56,14 +56,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             FundingSource = o.FundingSource
                         }),
                 },
-                TransferAllowances = estimationProjector?.Projections?.Select(o => new EstimationTransferAllowanceVewModel
+                TransferAllowances = estimationProjector?.Projections?
+                .Select(o => new EstimationTransferAllowanceVewModel
                 {
                     Date = new DateTime(o.Year, o.Month, 1),
-                    Cost = o.LevyFundedCostOfTraining + o.LevyFundedCompletionPayment  + o.TransferOutTotalCostOfTraining + o.TransferOutCompletionPayments,
+                    ActualCost = o.ActualCosts.TransferFundsOut,
+                    EstimatedCost = o.ModelledCosts.FundsOut,
                     RemainingAllowance = o.FutureFunds
-                })
+                }).ToList()
             };
-
             return viewModel;
         }
 

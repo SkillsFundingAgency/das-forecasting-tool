@@ -156,7 +156,31 @@ h2{
     .button-start{
         margin-top:40px;
     }
+}
 
+/*Funding projection page*/
+#account-projection{
+    margin-bottom:60px;
+}
+
+.pending-completion-payments{
+    p{
+        margin-bottom:5px;
+    }
+}
+
+
+
+
+
+
+
+
+//all mobile media query breakpoints
+//==================================
+@media only screen and (max-device-width: 640px),
+only screen and (max-device-width: 667px),
+only screen and (max-width: 480px) {
 }
 
 
@@ -169,7 +193,7 @@ h2{
             width: 50px;
         }
     }
-    .levy-value {
+    .total-funding-cost {
         width: 200px;
     }
 }

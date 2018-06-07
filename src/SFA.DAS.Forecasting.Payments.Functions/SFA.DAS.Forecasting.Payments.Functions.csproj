@@ -5,14 +5,6 @@
   <ItemGroup>
     <Compile Remove="PaymentEventServiceBusFunction.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="NLog.Config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NLog.Config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <ItemGroup>    
     <PackageReference Include="FluentValidation" Version="7.4.0" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.1.0-beta4" />    
@@ -51,6 +43,9 @@
     <None Update="local.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="NLog.Config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

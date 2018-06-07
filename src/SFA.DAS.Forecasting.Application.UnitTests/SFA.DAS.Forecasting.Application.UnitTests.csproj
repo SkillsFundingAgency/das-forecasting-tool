@@ -81,7 +81,7 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.7\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.4.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
@@ -161,6 +161,7 @@
     <Compile Include="ApprenticeshipCourses\StandardSummaryMapperTest.cs" />
     <Compile Include="ApprenticeshipCourses\StoreCourseHandlerTests.cs" />
     <Compile Include="Balance\BalanceHandlerTests.cs" />
+    <Compile Include="Commitments\StoreCommitmentHandler\WhenIStoreCommitments.cs" />
     <Compile Include="Estimations\AddApprenticeshipOrchestatorTests.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidatorTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />

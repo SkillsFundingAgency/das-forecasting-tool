@@ -1,3 +1,5 @@
+using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Data;
 using StructureMap;
 using System.Configuration;
 using System.Data;
@@ -19,6 +21,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Infrastructure.Registries
                 scan.RegisterConcreteTypesAgainstTheFirstInterface();
             });
             ForSingletonOf<Config>();
+
+            For<IForecastingDataContext>()
+                .Use<ForecastingDataContext>()
+                .Ctor<IApplicationConnectionStrings>("config")
+                .Is(ctx => ctx.GetInstance<Config>())
+                .ContainerScoped();
+
             For<IDbConnection>()
                 .Use<SqlConnection>()
                 .SelectConstructor(() =>

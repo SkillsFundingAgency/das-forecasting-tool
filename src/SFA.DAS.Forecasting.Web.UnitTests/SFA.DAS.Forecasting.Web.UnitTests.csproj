@@ -108,6 +108,7 @@
     <Compile Include="OrchestratorTests\EstimationOrchestratorTests.cs" />
     <Compile Include="OrchestratorTests\ForecastingOrchestratorTests.cs" />
     <Compile Include="OrchestratorTests\AddApprenticeshipOrchestatorTests.cs" />
+    <Compile Include="OrchestratorTests\MapperTests\ForecastingMapperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

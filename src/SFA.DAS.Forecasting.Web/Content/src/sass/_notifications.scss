@@ -71,7 +71,7 @@ $warning-colour:    $orange;
     }
 }
 
-.error-summary:not(.validation-summary-max-funding) {
+.error-summary:not(.validation-summary-details) {
     h1 {
         display: none;
         & + p {

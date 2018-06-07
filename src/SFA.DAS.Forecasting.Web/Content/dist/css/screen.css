@@ -3042,11 +3042,11 @@ a#link-settings:focus {
   }
 }
 
-.error-summary:not(.validation-summary-max-funding) h1 {
+.error-summary:not(.validation-summary-details) h1 {
   display: none;
 }
 
-.error-summary:not(.validation-summary-max-funding) h1 + p {
+.error-summary:not(.validation-summary-details) h1 + p {
   display: none;
 }
 
@@ -4744,7 +4744,7 @@ table .float-right, h2 .float-right {
   position: relative;
   background-color: #fff;
   border-bottom: 1px solid #fff;
-  z-index: 5;
+  z-index: 0;
   line-height: 50px;
   margin-bottom: -1px;
   margin-top: -7px;
@@ -4927,12 +4927,21 @@ h2 .float-right {
   margin-top: 40px;
 }
 
+/*Funding projection page*/
+#account-projection {
+  margin-bottom: 60px;
+}
+
+.pending-completion-payments p {
+  margin-bottom: 5px;
+}
+
 #estimate-add-apprenticeship .no-of-apprentice input,
 #estimate-add-apprenticeship .no-of-months input {
   width: 50px;
 }
 
-#estimate-add-apprenticeship .levy-value {
+#estimate-add-apprenticeship .total-funding-cost {
   width: 200px;
 }
 

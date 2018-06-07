@@ -6,7 +6,6 @@ using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
