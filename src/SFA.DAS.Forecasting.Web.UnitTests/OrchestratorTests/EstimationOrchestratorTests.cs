@@ -128,7 +128,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) DateTime.Now.Month,
                     ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
                     ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
-                    FutureFunds = 100
+                    FutureFunds = -100
                 }
             };
             _accountEstimationProjection.Setup(x => x.Projections)
@@ -137,6 +137,50 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
             Assert.IsTrue(actual.TransferAllowances.First().IsLessThanCost);
+        }
+
+        [Test]
+        public async Task Then_The_IsLessThanCost_Flag_Should_Be_False_If_You_Still_Have_Funds()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) DateTime.Now.AddYears(1).Year,
+                    Month = (short) DateTime.Now.Month,
+                    ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    FutureFunds = 100
+                }
+            };
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
+        }
+
+        [Test]
+        public async Task Then_The_IsLessThanCost_Flag_Should_Be_False_If_You_Have_Zero_Funds()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) DateTime.Now.AddYears(1).Year,
+                    Month = (short) DateTime.Now.Month,
+                    ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    FutureFunds = 0
+                }
+            };
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
         }
     }
 }
