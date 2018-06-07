@@ -81,21 +81,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return viewModel;
         }
 
-        private decimal GetOpeningBalance(ReadOnlyCollection<AccountEstimationProjectionModel> projections)
-        {
-            var first = projections.FirstOrDefault();
-            if (first == null)
-                return 0;
-
-            return first.ProjectedFutureFunds;
-        }
-
         public async Task<bool> HasValidApprenticeships(string hashedAccountId)
         {
             var accountEstimation = await _estimationRepository.Get(GetAccountId(hashedAccountId));
             return accountEstimation.HasValidApprenticeships;
         }
-
 
         public async Task RefreshCurrentBalance(long accountId)
         {
@@ -111,15 +101,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             decimal estimatedFundsOut = 0;
             var accountFumds = estimations.Select(projection =>
             {
-                //var currentMonth = projection.Month == DateTime.Today.Month && projection.Year == DateTime.Today.Year;
                 estimatedFundsOut += projection.ModelledCosts.FundsOut;
-
                 var balance = projection.ProjectedFutureFunds - estimatedFundsOut;
 
                 return new AccountFundsItem
                 {
                     Date = new DateTime(projection.Year, projection.Month, 1),
-                    //ActualCost = currentMonth ? 0 : projection.ActualCosts.FundsOut,
                     ActualCost = projection.ActualCosts.FundsOut,
                     EstimatedCost = projection.ModelledCosts.FundsOut,
                     Balance = balance
@@ -127,6 +114,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             });
 
             return accountFumds.ToList();
+        }
+
+        private decimal GetOpeningBalance(ReadOnlyCollection<AccountEstimationProjectionModel> projections)
+        {
+            var first = projections.FirstOrDefault();
+            if (first == null)
+                return 0;
+
+            return first.ProjectedFutureFunds;
         }
     }
 }

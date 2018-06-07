@@ -326,6 +326,31 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     because: "estimated balance = £8,900 (prev balance) + £2,000 (funds in) - £3,100 (actual out) - £1,100 (estimate out) = £6,700");
         }
 
+        [Test]
+        public async Task AccountFunds_Should_be_48_records()
+        {
+            var fixture = new Fixture();
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            fixture.Customize<AccountEstimationProjectionModel>(m =>
+                m.With(p => p.Month, 6)
+                 .With(p => p.Year, (short)DateTime.Today.Year));
+
+            var estimationProjectionList =
+                fixture.CreateMany<AccountEstimationProjectionModel>(48)
+                .ToList();
+
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(estimationProjectionList.AsReadOnly);
+
+            // Act
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            actual.AccountFunds.Records.Count().Should().Be(48);
+        }
+
         public async Task Then_The_IsLessThanCost_Flag_Should_Be_False_If_You_Still_Have_Funds()
         {
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>

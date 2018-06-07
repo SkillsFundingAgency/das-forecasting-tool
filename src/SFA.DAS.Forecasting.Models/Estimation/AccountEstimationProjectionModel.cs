@@ -1,6 +1,4 @@
-﻿using SFA.DAS.Forecasting.Models.Payments;
-
-namespace SFA.DAS.Forecasting.Models.Estimation
+﻿namespace SFA.DAS.Forecasting.Models.Estimation
 {
     public class AccountEstimationProjectionModel
     {
