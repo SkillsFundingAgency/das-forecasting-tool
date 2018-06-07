@@ -21,12 +21,22 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.ProjectionGenerationType).HasColumnName(@"ProjectionGenerationType").HasColumnType("smallint").IsRequired();
             Property(x => x.Month).HasColumnName(@"Month").HasColumnType("smallint").IsRequired();
             Property(x => x.Year).HasColumnName(@"Year").HasColumnType("int").IsRequired();
-            Property(x => x.FundsIn).HasColumnName(@"FundsIn").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
-            Property(x => x.TotalCostOfTraining).HasColumnName(@"TotalCostOfTraining").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
-            Property(x => x.CompletionPayments).HasColumnName(@"CompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+
+            Property(x => x.LevyFundsIn).HasColumnName(@"FundsIn").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Property(x => x.LevyFundedCostOfTraining).HasColumnName(@"TotalCostOfTraining").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Property(x => x.LevyFundedCompletionPayments).HasColumnName(@"CompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+
+            Property(x => x.TransferInCostOfTraining).HasColumnName(@"TransferInTotalCostOfTraining").HasColumnType("decimal").IsRequired().HasPrecision(18, 2);
+            Property(x => x.TransferOutCostOfTraining).HasColumnName(@"TransferOutTotalCostOfTraining").HasColumnType("decimal").IsRequired().HasPrecision(18, 2);
+
+            Property(x => x.TransferInCompletionPayments).HasColumnName(@"TransferInCompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18, 2);
+            Property(x => x.TransferOutCompletionPayments).HasColumnName(@"TransferOutCompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18, 2);
+
             Property(x => x.FutureFunds).HasColumnName(@"FutureFunds").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.CoInvestmentEmployer).HasColumnName(@"CoInvestmentEmployer").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.CoInvestmentGovernment).HasColumnName(@"CoInvestmentGovernment").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Ignore(x => x.CommittedTransferCost);
+            Ignore(x => x.CommittedTransferCompletionCost);
             InitializePartial();
         }
         partial void InitializePartial();

@@ -22,6 +22,7 @@ Scenario: Calculate co-investment after payment run
 	| Test Apprentice 3 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
 	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
 	| Test Apprentice 5 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
+
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
 	And the balance should be 0

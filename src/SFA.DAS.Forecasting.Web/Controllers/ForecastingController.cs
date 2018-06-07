@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using CsvHelper;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.Forecasting.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
@@ -37,7 +37,21 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public async Task<ActionResult> Csv(string hashedAccountId)
         {
             var results = await _orchestrator.BalanceCsv(hashedAccountId);
-            
+
+            return CreateCsvStream(results, "esfaforecast");
+        }
+
+        [HttpGet]
+        [Route("download-apprenticeships")]
+        public async Task<ActionResult> DownloadApprenticeshipDetailsCsv(string hashedAccountId)
+        {
+            var results = await _orchestrator.ApprenticeshipsCsv(hashedAccountId);
+
+            return CreateCsvStream(results, "esfa_apprenticeships");
+        }
+
+        private ActionResult CreateCsvStream<T>(IEnumerable<T> results, string fileNamePreFix)
+        {
             using (var memoryStream = new MemoryStream())
             {
                 using (var streamWriter = new StreamWriter(memoryStream))
@@ -47,7 +61,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                         csvWriter.WriteRecords(results);
                         streamWriter.Flush();
                         memoryStream.Position = 0;
-                        return File(memoryStream.ToArray(), "text/csv", $"esfaforecast_{DateTime.Now:yyyyMMddhhmmss}.csv");
+                        return File(memoryStream.ToArray(), "text/csv", $"{fileNamePreFix}_{DateTime.Now:yyyyMMddhhmmss}.csv");
                     }
                 }
             }

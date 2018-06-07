@@ -190,7 +190,7 @@ this.FeatureBackground();
 #line 27
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 28
-  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 29
   testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 30
@@ -316,7 +316,7 @@ this.FeatureBackground();
 #line 52
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 53
-  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 54
   testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 55
@@ -442,7 +442,7 @@ this.FeatureBackground();
 #line 77
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 78
-  testRunner.Then("the Account projection has the correct columns", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 79
   testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 80
@@ -603,7 +603,7 @@ this.FeatureBackground();
 #line 107
  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 108
- testRunner.Then("I see Pending completion payments with the amount of £ 2401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+ testRunner.Then("I see Pending completion payments with the amount of £ 2,401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

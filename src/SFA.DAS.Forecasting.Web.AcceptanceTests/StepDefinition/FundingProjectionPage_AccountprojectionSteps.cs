@@ -180,7 +180,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         }
 
         [Then(@"I see Pending completion payments with the amount of £ (.*)")]
-        public void ThenISeePendingCompletionPaymentsWithTheAmountOf(int overdueCompletionPayments)
+        public void ThenISeePendingCompletionPaymentsWithTheAmountOf(string overdueCompletionPayments)
         {
             var page = Get<FundingProjectionPage>();
             Assert.AreEqual($"£{overdueCompletionPayments}", page.PendingCompletionPayments.Text);

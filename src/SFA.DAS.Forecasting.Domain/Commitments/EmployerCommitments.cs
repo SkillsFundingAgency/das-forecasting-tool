@@ -4,41 +4,89 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
-    public class EmployerCommitments
+    public partial class EmployerCommitments
     {
-        private readonly long _employerAccountId;
-        private readonly List<CommitmentModel> _commitments;
-        public ReadOnlyCollection<CommitmentModel> Commitments => _commitments.AsReadOnly();
+        public long EmployerAccountId { get; private set; }
+        private readonly IList<CommitmentModel> _commitments;
 
+        private readonly ReadOnlyCollection<CommitmentModel> _levyFundedCommitments;
+        private readonly ReadOnlyCollection<CommitmentModel> _receivingEmployerTransferCommitments;
+        private readonly ReadOnlyCollection<CommitmentModel> _sendingEmployerTransferCommitments;
 
         public EmployerCommitments(
             long employerAccountId,
             List<CommitmentModel> commitments)
         {
-            _employerAccountId = employerAccountId;
+            EmployerAccountId = employerAccountId;
             _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
+
+            _levyFundedCommitments = _commitments
+                .Where(m => m.EmployerAccountId == EmployerAccountId)
+                .Where(m => m.FundingSource == FundingSource.Levy)
+                .ToList()
+                .AsReadOnly();
+
+            _receivingEmployerTransferCommitments = _commitments
+                .Where(m => m.EmployerAccountId == EmployerAccountId)
+                .Where(m => m.FundingSource == FundingSource.Transfer)
+                .ToList()
+                .AsReadOnly();
+
+            _sendingEmployerTransferCommitments = _commitments
+                .Where(m => m.SendingEmployerAccountId == EmployerAccountId)
+                .Where(m => m.FundingSource == FundingSource.Transfer)
+                .ToList()
+                .AsReadOnly();
         }
 
-        public virtual Tuple<decimal, List<long>> GetTotalCostOfTraining(DateTime date)
+        public virtual CostOfTraining GetTotalCostOfTraining(DateTime date)
         {
-            var startOfMonth = date.GetStartOfMonth();
-            var commitments = _commitments.Where(commitment =>
-                    commitment.StartDate.GetStartOfMonth() < startOfMonth &&
-                    commitment.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= startOfMonth)
-                .ToList();
-            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.MonthlyInstallment), commitments.Select(c => c.Id).ToList());
+            bool FilterCurrent(CommitmentModel c) =>
+                      c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
+                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
+
+            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+
+            var includedCommitments = new List<CommitmentModel>();
+            includedCommitments.AddRange(levyFundedCommitments);
+            includedCommitments.AddRange(sendingEmployerCommitments);
+            includedCommitments.AddRange(receivingEmployerCommitments);
+
+            return new CostOfTraining
+            {
+                LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment),
+                TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
+                TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
+                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
+            };
         }
 
-        public virtual Tuple<decimal, List<long>> GetTotalCompletionPayments(DateTime date)
+        public virtual CompletionPayments GetTotalCompletionPayments(DateTime date)
         {
-            var startOfMonth = date.GetStartOfMonth();
-            var commitments = _commitments.Where(commitment =>
-                   commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) == startOfMonth)
-                .ToList();
-            return new Tuple<decimal, List<long>>(commitments.Sum(c => c.CompletionAmount), commitments.Select(c => c.Id).ToList());
+            bool FilterCurrent(CommitmentModel c) => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
+
+            var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+
+            var includedCommitments = new List<CommitmentModel>();
+            includedCommitments.AddRange(levyFundedCommitments);
+            includedCommitments.AddRange(sendingEmployerCommitments);
+            includedCommitments.AddRange(receivingEmployerCommitments);
+
+            return new CompletionPayments
+            {
+                LevyFundedCompletionPayment = levyFundedCommitments.Sum(c => c.CompletionAmount),
+                TransferInCompletionPayment = receivingEmployerCommitments.Sum(m => m.CompletionAmount),
+                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount) + receivingEmployerCommitments.Sum(m => m.CompletionAmount),
+                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
+            };
         }
 
         public DateTime GetEarliestCommitmentStartDate()
@@ -59,6 +107,10 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             return _commitments
                 .Where(commitment => commitment.PlannedEndDate < DateTime.Today)
                 .Sum(commitment => commitment.CompletionAmount);
+        }
+        public bool Any()
+        {
+            return _commitments.Any();
         }
     }
 }

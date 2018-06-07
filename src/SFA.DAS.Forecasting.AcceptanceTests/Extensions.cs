@@ -7,7 +7,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
     {
         public static DateTime ToDateTime(this string value)
         {
-            switch (value.ToLower())
+            switch (value?.ToLower() ?? "minvalue")
             {
                 case "today":
                     return DateTime.Today;
@@ -29,6 +29,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     return DateTime.Today.AddMonths(1);
                 case "next year":
                     return DateTime.Today.AddYears(1);
+                case "minvalue":
+                    return DateTime.MinValue;
                 default:
                     return DateTime.ParseExact(value, new [] { "dd/MM/yyyy", "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm" }, new CultureInfo("en-GB"), DateTimeStyles.AllowWhiteSpaces);
             }

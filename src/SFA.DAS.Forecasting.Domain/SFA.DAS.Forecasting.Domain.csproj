@@ -75,11 +75,15 @@
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
     <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
+    <Compile Include="Commitments\TotalCompletionPayments.cs" />
+    <Compile Include="Commitments\TotalCostOfTraining.cs" />
     <Compile Include="Commitments\Validation\CommitmentValidator.cs" />
     <Compile Include="Estimations\AccountEstimation.cs" />
     <Compile Include="Estimations\AccountEstimationProjection.cs" />
+    <Compile Include="Estimations\AccountEstimationProjectionCommitments.cs" />
     <Compile Include="Estimations\AccountEstimationProjectionRepository.cs" />
     <Compile Include="Estimations\AccountEstimationRepository.cs" />
+    <Compile Include="Estimations\CommitmentModelListBuilder.cs" />
     <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\BaseVirtualApprenticeshipValidator.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipCourseDetailsValidator.cs" />
@@ -87,6 +91,7 @@
     <Compile Include="Levy\LevyDeclarationRepository.cs" />
     <Compile Include="Payments\EmployerPayments.cs" />
     <Compile Include="Payments\EmployerPaymentsRepository.cs" />
+    <Compile Include="Shared\DateTimeService.cs" />
     <Compile Include="Shared\Validation\AddApprenticeshipValidationDetail.cs" />
     <Compile Include="Shared\Validation\ValidationResult.cs" />
     <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipValidator.cs" />

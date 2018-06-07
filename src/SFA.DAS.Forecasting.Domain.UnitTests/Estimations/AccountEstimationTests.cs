@@ -10,6 +10,7 @@ using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 {
@@ -48,7 +49,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Add_Virtual_Apprenticeship_Assigns_Id_To_Apprenticeship()
         {
             var estimation = ResolveEstimation();
-            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
+            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Transfer);
             Assert.IsNotNull(apprenticeship, "Invalid virtual apprenticeship generated.");
             Assert.IsNotNull(apprenticeship.Id, "Apprentieship id not populated.");
         }
@@ -60,14 +61,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 .Setup(x => x.Validate(It.IsAny<VirtualApprenticeship>()))
                 .Returns(new List<ValidationResult> { ValidationResult.Failed("test fail") });
             var estimation = ResolveEstimation();
-            Assert.Throws<InvalidOperationException>(() => estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000), "Should throw an exception if the apprenticeship fails validation");
+            Assert.Throws<InvalidOperationException>(() => estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Transfer), "Should throw an exception if the apprenticeship fails validation");
         }
 
         [Test]
         public void Valid_Apprenticeships_Are_Added_To_The_Model()
         {
             var estimation = ResolveEstimation();
-            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000);
+            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Transfer);
             Assert.IsTrue(estimation.VirtualApprenticeships.Any(x => x.Id == apprenticeship.Id));
         }
 
@@ -130,7 +131,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             apprenticeship.TotalCompletionAmount.Should().Be(200);
             Decimal.Round(apprenticeship.TotalInstallmentAmount, 1).Should().Be(66.7M);
+        }
 
+        [Test]
+        public void Add_Virtual_Apprenticeship_Assigns_FundingSource_To_Apprenticeship()
+        {
+            var estimation = ResolveEstimation();
+
+            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Transfer);
+            Assert.AreEqual(apprenticeship.FundingSource, FundingSource.Transfer);
+
+            var apprenticeship2 = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Levy);
+            Assert.AreEqual(apprenticeship2.FundingSource, FundingSource.Levy);
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using Dapper;
-using Microsoft.VisualBasic.FileIO;
 using NUnit.Framework;
-using Sfa.Automation.Framework.Selenium;
-using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Automation;
 using System;
 using System.Collections.Generic;
@@ -11,11 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Transactions;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
-
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
@@ -30,18 +25,27 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Given(@"I'm on the Funding projection page")]
         public void GivenIMOnTheFundingProjectionPage()
         {
-            this.downloadedFilesBefore = FileManager.getCurrentDownloadFiles();
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
-            var financePage = accountHomepage.OpenFinance();
-            var page = financePage.OpenFundingProjection();
-            Set(page);
+            downloadedFilesBefore = FileManager.getCurrentDownloadFiles();
+
+            if (!WebSite.IsLocalhost)
+            {
+                var accountHomepage = WebSite.NavigateToAccountHomePage();
+                var financePage = accountHomepage.OpenFinance();
+                var page = financePage.OpenFundingProjection();
+                Set(page);
+            }
+            else
+            {
+                var page = WebSite.NavigateToFundingProjectionPage();
+                Set(page);
+            }
         }
 
         [When(@"I select download as csv")]
         public void WhenISelectDownloadAsCsv()
         {
             var page = Get<FundingProjectionPage>();
-            page.DownloadCSVButton.Click();
+            page.DownloadProjectionsCSVButton.Click();
         }
 
         [Then(@"the csv should be downloaded")]
@@ -62,22 +66,30 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 
 
         }
+
         [Then(@"column headers are downloaded")]
         public void ThenColumnHeadersAreDownloaded()
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.True(readCsvHeader.Contains("Date,Funds in,Cost of training,Completion payments,Your contribution (10%),Government contribution (90%),Future funds"), "ERROR: File header titles is {0}", readCsv.First());
-                        
+            Assert.AreEqual(readCsvHeader, "Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Future funds");
         }
+
+        [Then(@"column headers are downloaded for apprenticeship CSV")]
+        public void ThenColumnHeadersAreDownloadedForApprenticeshipCsv()
+        {
+            var readCsv = File.ReadLines(newFilePath);
+            var readCsvHeader = readCsv.First();
+            Assert.AreEqual(readCsvHeader, "Start Date,End Date,Apprenticeship,Apprenticeship Level,Transfer to Employer,Uln,Apprentice Name,UKPRN,Provider Name,Total Cost,Monthly Training Cost,Completion Amount");
+        }
+
 
         [Then(@"all of the rows have been downloaded")]
         public void ThenAllOfTheRowsHaveBeenDownloaded()
         {
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
-            Assert.AreEqual(lineCount, 13);
-            
+            Assert.AreEqual(7, lineCount);
         }
 
         protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }
@@ -85,6 +97,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var parameters = new DynamicParameters();
             parameters.Add("@employerAccountId", long.Parse(Config.EmployerAccountID), DbType.Int64);
+            Connection.Execute("Delete from AccountProjectionCommitment where AccountProjectionId in (Select id from AccountProjection where employerAccountId = @employerAccountId)", parameters, commandType: CommandType.Text);
             Connection.Execute("Delete from AccountProjection where employerAccountId = @employerAccountId", parameters, commandType: CommandType.Text);
         }
 
@@ -93,7 +106,19 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             var employerAccountId = long.Parse(Config.EmployerAccountID);
             using (var txScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var sql = @"Insert Into [dbo].[AccountProjection] Values 
+                var sql = @"Insert Into [dbo].[AccountProjection]
+                           (EmployerAccountId,
+                            ProjectionCreationDate,
+                            ProjectionGenerationType,
+                            Month,
+                            Year,
+                            FundsIn,
+                            TotalCostOfTraining,
+                            CompletionPayments,
+                            CoInvestmentEmployer,
+                            CoInvestmentGovernment,
+                            FutureFunds)
+                        Values 
                            (@employerAccountId,
                            @projectionCreationDate,
                            @projectionGenerationType,
@@ -109,12 +134,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 
                 foreach (var accountProjectionReadModel in accountProjections)
                 {
+                    var date = DateTime.Parse(accountProjectionReadModel.Date);
+
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
                     parameters.Add("@projectionCreationDate", DateTime.Today, DbType.DateTime);
                     parameters.Add("@projectionGenerationType", 1, DbType.Int16);
-                    parameters.Add("@month", GetMonth(accountProjectionReadModel.Date), DbType.Int16);
-                    parameters.Add("@year", accountProjectionReadModel.Date.Substring(4).Trim(), DbType.Int32);
+                    parameters.Add("@month", date.Month, DbType.Int16);
+                    parameters.Add("@year", date.Year, DbType.Int32);
                     parameters.Add("@fundsIn", accountProjectionReadModel.FundsIn, DbType.Decimal);
                     parameters.Add("@totalCostOfTraining", accountProjectionReadModel.CostOfTraining, DbType.Decimal);
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
@@ -125,36 +152,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 }
                 txScope.Complete();
             }
-        }
-
-        public short GetMonth(string dateString)
-        {
-            if (dateString.StartsWith("Jan"))
-                return 1;
-            else if (dateString.StartsWith("Feb"))
-                return 2;
-            else if (dateString.StartsWith("Mar"))
-                return 3;
-            else if (dateString.StartsWith("Apr"))
-                return 4;
-            else if (dateString.StartsWith("May"))
-                return 5;
-            else if (dateString.StartsWith("Jun"))
-                return 6;
-            else if (dateString.StartsWith("Jul"))
-                return 7;
-            else if (dateString.StartsWith("Aug"))
-                return 8;
-            else if (dateString.StartsWith("Sep"))
-                return 9;
-            else if (dateString.StartsWith("Oct"))
-                return 10;
-            else if (dateString.StartsWith("Nov"))
-                return 11;
-            else  
-                return 12;
-        }
-    
+        }    
 
         [Given(@"I have generated the following projections")]
         public void GivenIHaveGeneratedTheFollowingProjections(Table table)
@@ -165,16 +163,17 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             DeleteAccountProjections();
             Store(Projections);
         }
+    }
 
-        public class TestAccountProjection
-        {
-            public string Date { get; set; }
-            public string FundsIn { get; set; }
-            public decimal CostOfTraining { get; set; }
-            public decimal CompletionPayments { get; set; }
-            public decimal YourContribution { get; set; }
-            public decimal GovernmentContribution { get; set; }
-            public decimal FutureFunds { get; set; }
-        }
+    public class TestAccountProjection
+    {
+        public string Date { get; set; }
+        public string FundsIn { get; set; }
+        public decimal CostOfTraining { get; set; }
+        public decimal CompletionPayments { get; set; }
+        public decimal YourContribution { get; set; }
+        public decimal GovernmentContribution { get; set; }
+        public decimal FutureFunds { get; set; }
+        public decimal TransferOutTotalCostOfTraining { get; set; }
     }
 }
