@@ -16,12 +16,23 @@
                 The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
             </p>
 
-            <p>
-                These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding. The table shows the monthly projection figures until April 2019.
-            </p>
-            <p>
-                They don’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.
-            </p>
+            <details>
+                <summary>More information</summary>
+                <div class="">
+                    <p>
+                        The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
+                    </p>
+                    <p>
+                        These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
+                    <p />
+                    <p>
+                        The projection doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.
+                    </p>
+                    <p>
+                        You can estimate how many apprenticeships you could fund in the future - either by transferring any remaining funds to another employer or by taking on more apprentices yourself.
+                    </p>
+                </div>
+            </details>
         </div>
     </div>
 
@@ -75,46 +86,9 @@
 <div class="grid-row" id="account-projection">
     <div class="column-two-thirds">
         <p>A month by month projection of your account balance.</p>
-
-        <details>
-            <summary>How the 'cost of training' is calculated</summary>
-            <div class="panel panel-width-thin">
-
-                <p>The 'cost of training' column shows the total monthly training costs that have been calculated for future months and includes any transfer of funds.</p>
-                <p>The 'completion payments' column shows the total of completion payments that happen in that month.</p>
-                <p>Payments are calculated on the 5th working day of each month and will show in your account soon after. This payment will be updated in the forecast.</p>
-                <p>
-                    The funding projection does not include any overdue completion
-                    payments where the apprenticeships have overrun the planned
-                    completion date.
-                </p>
-            </div>
-        </details>
-
-        <details>
-            <summary>How are the 'funds in' figures worked out?</summary>
-            <div class="panel panel-width-thin">
-
-                <p>
-                    The ‘funds in’ column shows the total of the last received levy credits from your PAYE schemes and/or the total monthly funds you receive as a transfer of funds. The figure will be updated on the 23rd of each month.
-                </p>
-                <p>The same figures are used throughout the forecast.</p>
-
-            </div>
-        </details>
-
-        <details>
-            <summary>Where is the end-point assessment cost?</summary>
-            <div class="panel panel-width-thin">
-
-                <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
-                <p>
-                    This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
-
-                </p>
-            </div>
-        </details>
-
+        <p>
+            <span class="bold">Current Balance: </span> @Model.CurrentBalance.FormatCost()
+        </p>
     </div>
     <div class="column-one-third pending-completion-payments">
         <div class="panel panel-width-thin">
@@ -139,23 +113,25 @@
                     <th></th>
                     <th></th>
                     <th></th>
+                    <th></th>
                     @if (Model.DisplayCoInvestment)
                     {
-                        <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
+                        <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>
                     }
                     <th></th>
                 </tr>
                 <tr>
                     <th class="nowrap">Date</th>
-                    <th class="financial">Funds in</th>
                     <th class="financial">Cost of training</th>
                     <th class="financial">Completion payments</th>
+                    <th class="financial">Expired funds </th>
+                    <th class="financial">Funds in</th>
                     @if (Model.DisplayCoInvestment)
                     {
                         <th class="financial grey-bg">Your contribution (10%)</th>
                         <th class="financial grey-bg">Government contribution (90%)</th>
                     }
-                    <th class="financial">Future funds</th>
+                    <th class="financial">Balance</th>
                 </tr>
             </thead>
             <tbody>
@@ -163,9 +139,12 @@
                 {
                 <tr>
                     <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="financial">@item.FundsIn.FormatCost()</td>
                     <td class="financial">@item.CostOfTraining.FormatCost()</td>
                     <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                    <td class="financial"> 
+                        <span>–</span> 
+                    </td>
+                    <td class="financial">@item.FundsIn.FormatCost()</td>
                     @if (Model.DisplayCoInvestment)
                     {
                         <td class="financial grey-bg">
@@ -191,12 +170,24 @@
                     }
                     <td class="financial">@item.Balance.FormatCost()</td>
 
-                    </tr>
+                </tr>
                 }
             </tbody>
     </table>
   </div>
 </div>
+
+<details>
+    <summary>Where is the end-point assessment cost?</summary>
+    <div class="panel panel-width-thin">
+
+        <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
+        <p>
+            This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
+
+        </p>
+    </div>
+</details>
 
 <div class="grid-row">
     <div class="column-full">

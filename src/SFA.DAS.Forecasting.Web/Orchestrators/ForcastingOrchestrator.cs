@@ -46,23 +46,28 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountProjection = await GetAccountProjection(hashedAccountId);
 
-            var overdueCompletionPayments = await GetOverdueCompletionPayments(hashedAccountId);
+            var balance = await GetBalance(hashedAccountId);
+            var currentBalance = balance.Item1;
+            var overdueCompletionPayments = balance.Item2;
+
             return new BalanceViewModel {
                 BalanceItemViewModels = accountProjection,
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", accountProjection.Select(m => m.Balance.ToString())),
                 DatesStringArray = string.Join(",", accountProjection.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                CurrentBalance = currentBalance,
                 OverdueCompletionPayments = overdueCompletionPayments,
                 DisplayCoInvestment = accountProjection.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0)
             };
         }
 
-        private async Task<decimal> GetOverdueCompletionPayments(string hashedAccountId)
+        private async Task<Tuple<decimal, decimal>> GetBalance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var balance = await _balanceDataService.Get(accountId);
-            return balance.UnallocatedCompletionPayments;
+
+            return Tuple.Create(balance.Amount, balance.UnallocatedCompletionPayments);
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)

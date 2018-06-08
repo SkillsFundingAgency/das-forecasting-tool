@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 
         public string BalanceStringArray { get; set; }
         public string DatesStringArray { get; set; }
+        public decimal CurrentBalance { get; internal set; }
         public decimal OverdueCompletionPayments { get; set; }
         public bool DisplayCoInvestment { get; set; }
     }
