@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
-            IMembershipService membershipService
+            IMembershipService membershipService,
             EditApprenticeshipsViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
