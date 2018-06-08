@@ -15,6 +15,8 @@ namespace SFA.DAS.Forecasting.Web
 
             bundles.Add(new StyleBundle("~/css/bundles/c3").Include("~/Content/dist/c3/c3.min.css"));
 
+            bundles.Add(new StyleBundle("~/css/bundles/tippy").Include("~/Content/dist/css/tippy.css"));
+
             bundles.Add(new ScriptBundle("~/bundles/libs")
                 .Include("~/Content/dist/js/jquery-1.10.2.min.js")
                 .Include("~/Content/dist/js/stacker.js")
@@ -28,6 +30,8 @@ namespace SFA.DAS.Forecasting.Web
 
             bundles.Add(new ScriptBundle("~/bundles/screen")
                 .Include("~/Content/dist/js/screen.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/tippy").Include("~/Content/dist/js/tippy.all.min.js"));
         }
     }
 }

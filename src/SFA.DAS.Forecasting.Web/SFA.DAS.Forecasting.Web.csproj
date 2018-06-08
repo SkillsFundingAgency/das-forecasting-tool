@@ -375,6 +375,7 @@
     <Content Include="Content\dist\css\screen-ie8.css" />
     <Content Include="Content\dist\css\screen.css" />
     <Content Include="Content\dist\css\select2.min.css" />
+    <Content Include="Content\dist\css\tippy.css" />
     <Content Include="Content\dist\fonts-ie8.css" />
     <Content Include="Content\dist\fonts.css" />
     <Content Include="Content\dist\govuk-template-ie6.css" />
@@ -388,6 +389,7 @@
     <Content Include="Content\dist\js\select2.min.js" />
     <Content Include="Content\dist\js\showhide-content.js" />
     <Content Include="Content\dist\js\stacker.js" />
+    <Content Include="Content\dist\js\tippy.all.min.js" />
     <Content Include="Content\Gruntfile.js" />
     <Content Include="Content\dist\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\dist\images\apple-touch-icon-152x152.png" />
