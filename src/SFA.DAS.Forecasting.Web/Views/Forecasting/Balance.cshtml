@@ -43,7 +43,7 @@
                 <ul class="list list-links">
 
                     <li>
-                        <a id="apprenticeship_csvdownload" href="@Url.Action("DownloadApprenticeshipDetailsCsv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                        <a id="apprenticeship_csvdownload" href="@Url.Action("DownloadApprenticeshipDetailsCsv", "Forecasting", new { hashedAccountId = Model.HashedAccountId }, null)" class="">
                             Apprenticeship details in the account projection
                         </a>
                         <p>
@@ -52,7 +52,7 @@
                     </li>
 
                     <li>
-                        <a id="projections_csvdownload" href="@Url.Action("Csv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                        <a id="projections_csvdownload" href="@Url.Action("Csv", "Forecasting", new { hashedAccountId = Model.HashedAccountId }, null)" class="">
                             Account projection table
                         </a>
                         <p>
@@ -106,89 +106,94 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <table class="small" id="balancesheet">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    @if (Model.DisplayCoInvestment)
+
+        @foreach (var x in Model.ProjectionTables)
+        {
+            <h3 class="heading-medium">@x.Key.FirstStartDate.ToGdsFormatWithoutDay() to @x.Key.LastEndDate.ToGdsFormatWithoutDay()</h3>
+            @:<table class="small balancesheet">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        @if (Model.DisplayCoInvestment)
+                        {
+                            <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>
+                        }
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th class="financial">Cost of training</th>
+                        <th class="financial">Completion payments</th>
+                        <th class="financial">Expired funds </th>
+                        <th class="financial">Funds in</th>
+                        @if (Model.DisplayCoInvestment)
+                        {
+                            <th class="financial grey-bg">Your contribution (10%)</th>
+                            <th class="financial grey-bg">Government contribution (90%)</th>
+                        }
+                        <th class="financial">Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in x.Value)
                     {
-                        <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>
-                    }
-                    <th></th>
-                </tr>
-                <tr>
-                    <th class="nowrap">Date</th>
-                    <th class="financial">Cost of training</th>
-                    <th class="financial">Completion payments</th>
-                    <th class="financial">Expired funds </th>
-                    <th class="financial">Funds in</th>
-                    @if (Model.DisplayCoInvestment)
-                    {
-                        <th class="financial grey-bg">Your contribution (10%)</th>
-                        <th class="financial grey-bg">Government contribution (90%)</th>
-                    }
-                    <th class="financial">Balance</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.BalanceItemViewModels)
-                {
-                <tr>
-                    <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                    <td class="financial"> 
-                        <span>–</span> 
-                    </td>
-                    <td class="financial">@item.FundsIn.FormatCost()</td>
-                    @if (Model.DisplayCoInvestment)
-                    {
-                        <td class="financial grey-bg">
-                            @if (item.CoInvestmentEmployer == 0)
-                            {
+                        <tr>
+                            <td>@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                            <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                            <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                            <td class="financial">
                                 <span>–</span>
-                            }
-                            else
+                            </td>
+                            <td class="financial">@item.FundsIn.FormatCost()</td>
+                            @if (Model.DisplayCoInvestment)
                             {
-                                <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                                <td class="financial grey-bg">
+                                    @if (item.CoInvestmentEmployer == 0)
+                                    {
+                                        <span>–</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                                    }
+                                </td>
+                                <td class="financial grey-bg">
+                                    @if (item.CoInvestmentGovernment == 0)
+                                    {
+                                        <span>–</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.CoInvestmentGovernment.FormatCost()</span>
+                                    }
+                                </td>
                             }
-                        </td>
-                        <td class="financial grey-bg">
-                            @if (item.CoInvestmentGovernment == 0)
-                            {
-                                <span>–</span>
-                            }
-                            else
-                            {
-                                <span>@item.CoInvestmentGovernment.FormatCost()</span>
-                            }
-                        </td>
+                            <td class="financial">@item.Balance.FormatCost()</td>
+                        </tr>
                     }
-                    <td class="financial">@item.Balance.FormatCost()</td>
+                </tbody>
+            @:</table>
+        }
 
-                </tr>
-                }
-            </tbody>
-    </table>
-  </div>
-</div>
+        <details>
+            <summary>Where is the end-point assessment cost?</summary>
+            <div class="panel panel-width-thin">
 
-<details>
-    <summary>Where is the end-point assessment cost?</summary>
-    <div class="panel panel-width-thin">
+                <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
+                <p>
+                    This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
 
-        <p>The end-point assessment cost is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
-        <p>
-            This payment will be made to the end point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
+                </p>
+            </div>
+        </details>
 
-        </p>
     </div>
-</details>
-
+</div>
 <div class="grid-row">
     <div class="column-full">
         <div class="info-summary">

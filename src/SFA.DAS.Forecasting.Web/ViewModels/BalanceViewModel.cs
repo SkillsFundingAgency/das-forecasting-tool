@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class BalanceViewModel
     {
         public IEnumerable<ProjectiontemViewModel> BalanceItemViewModels { get; set; }
+
+        public IDictionary<FinancialYear, ReadOnlyCollection<ProjectiontemViewModel>> ProjectionTables { get; set; }
 
         public string BackLink { get; set; }
 
