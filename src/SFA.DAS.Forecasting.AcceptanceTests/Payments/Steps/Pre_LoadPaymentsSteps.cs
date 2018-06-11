@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             set => Set(value, "collection_period");
         }
 
-        protected FundingSource FundingSource
+        protected  FundingSource FundingSource
         {
             get => Get<FundingSource>();
             set => Set(value);
@@ -74,6 +74,27 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         {
             FundingSource = fundingSource;
         }
+
+        [Given(@"I have no existing payments recorded in the employer accounts service")]
+        public void GivenIHaveNoExistingPaymentsRecordedInTheEmployerAccountsService()
+        {
+            ExecuteSql(() =>
+            {
+                using (var connection = new SqlConnection(ConfigurationManager
+                    .ConnectionStrings["EmployerDatabaseConnectionString"]
+                    .ConnectionString))
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@accountId", Config.EmployerAccountId);
+                    connection.Execute("delete from [employer_financial].[AccountTransfers] where ReceiverAccountId = @accountId; delete from [employer_financial].[Payment] where AccountId = @accountId;", parameters, commandType: CommandType.Text);
+
+                    //parameters = new DynamicParameters();
+                    //parameters.Add("@transfers", ToTransferDataTable(Payments.Where(p => p.FundingSource == Models.Payments.FundingSource.Transfer).ToList()).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
+                    //connection.Execute("[employer_financial].[CreateAccountTransfers]", parameters, commandType: CommandType.StoredProcedure);
+                }
+            });
+        }
+
 
         [Given(@"payments for the following apprenticeships have been recorded in the Payments service")]
         public void GivenPaymentsForTheFollowingApprenticeshipsHaveBeenRecordedInThePaymentsService(Table table)
@@ -211,6 +232,47 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
 
+        private static DataTable ToTransferDataTable(IList<TestPayment> payments)
+        {
+            var table = new DataTable();
+
+            table.Columns.AddRange(new[]
+            {
+                new DataColumn("SenderAccountId", typeof(long)),
+                new DataColumn("SenderAccountName", typeof(string)),
+                new DataColumn("ReceiverAccountId", typeof(long)),
+                new DataColumn("ReceiverAccountName", typeof(string)),
+                new DataColumn("ApprenticeshipId", typeof(long)),
+                new DataColumn("CourseName", typeof(string)),
+                new DataColumn("CourseLevel", typeof(int)),
+                new DataColumn("Amount", typeof(decimal)),
+                new DataColumn("PeriodEnd", typeof(string)),
+                new DataColumn("Type", typeof(string)),
+                new DataColumn("RequiredPaymentId", typeof(Guid)),
+            });
+
+            foreach (var payment in payments)
+            {
+                table.Rows.Add(
+                    "54321",
+                    "Test Sender Account",
+                    Config.EmployerAccountId,
+                    "Test Receiver Account",
+                    payment.ApprenticeshipId,
+                    payment.CourseName,
+                    payment.CourseLevel,
+                    payment.InstallmentAmount,
+                    "1819-R10",
+                    "0",
+                    Guid.NewGuid());
+            }
+
+            table.AcceptChanges();
+
+            return table;
+        }
+
+
         public DataTable ToPaymentsDataTable(IList<TestPayment> payments)
         {
             var paymentsDataTable = new DataTable();
@@ -261,7 +323,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     DateTime.Today,
                     string.Empty,
                     string.Empty,
-                    (payment.FundingSource ?? Models.Payments.FundingSource.Levy).ToString("D"),
+                    FundingSource.ToString("D"),
                     string.Empty,
                     payment.PaymentAmount,
                     CollectionPeriod.Id,
@@ -291,51 +353,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     .ConnectionString))
                 {
                     var parameters = new DynamicParameters();
-
                     parameters.Add("@payments", ToPaymentsDataTable(Payments).AsTableValuedParameter("[employer_financial].[PaymentsTable]"));
-
                     connection.Execute("[employer_financial].[CreatePayments]", parameters, commandType: CommandType.StoredProcedure);
-
-
-
-                    //var parameters = new DynamicParameters();
-                    //parameters.Add("@accountId", Config.EmployerAccountId, DbType.String);
-                    //connection.Execute("Delete from [employer_financial].[Payment] where AccountId = @accountId", parameters, commandType: CommandType.Text);
-
-                    //foreach (var details in Payments)
-                    //{
-                    //    parameters = new DynamicParameters();
-                    //    parameters.Add("@PaymentId", Guid.Parse(details.PaymentId), DbType.Guid);
-                    //    parameters.Add("@Ukprn", details.ProviderId, DbType.Int64);
-                    //    parameters.Add("@ProviderName", details.ProviderName, DbType.String);
-                    //    parameters.Add("@Uln", details.LearnerId, DbType.Int64);
-                    //    parameters.Add("@AccountId", Config.EmployerAccountId, DbType.Int64);
-                    //    parameters.Add("@ApprenticeshipId", details.ApprenticeshipId, DbType.Int64);
-                    //    parameters.Add("@DeliveryPeriodMonth", details.DeliveryPeriod.Month, DbType.Int32);
-                    //    parameters.Add("@DeliveryPeriodYear", details.DeliveryPeriod.Year, DbType.Int32);
-                    //    parameters.Add("@CollectionPeriodId", CollectionPeriod.Id, DbType.String);
-                    //    parameters.Add("@CollectionPeriodMonth", CollectionPeriod.Month, DbType.Int32);
-                    //    parameters.Add("@CollectionPeriodYear", CollectionPeriod.Year, DbType.Int32);
-                    //    parameters.Add("@EvidenceSubmittedOn", DateTime.Today, DbType.DateTime);
-                    //    parameters.Add("@EmployerAccountVersion", "11111111", DbType.String);
-                    //    parameters.Add("@ApprenticeshipVersion", "123456-001", DbType.String);
-                    //    parameters.Add("@FundingSource", FundingSource.ToString("G"), DbType.String);
-                    //    parameters.Add("@TransactionType", TransactionType.Learning.ToString("G"), DbType.String);
-                    //    parameters.Add("@Amount", details.PaymentAmount, DbType.Decimal);
-                    //    parameters.Add("@PeriodEnd", CollectionPeriod.Id, DbType.String);
-                    //    parameters.Add("@StandardCode", 123, DbType.Int64);
-                    //    parameters.Add("@FrameworkCode", 1, DbType.Int32);
-                    //    parameters.Add("@ProgrammeType", 25, DbType.Int32);
-                    //    parameters.Add("@PathwayCode", 1, DbType.Int32);
-                    //    parameters.Add("@PathwayName", "", DbType.String);
-                    //    parameters.Add("@CourseName", details.CourseName, DbType.String);
-                    //    parameters.Add("@ApprenticeName", details.ApprenticeName, DbType.String);
-                    //    parameters.Add("@ApprenticeNINumber", "AB111111A", DbType.String);
-                    //    parameters.Add("@ApprenticeshipCourseLevel", details.CourseLevel, DbType.Int32);
-                    //    parameters.Add("@ApprenticeshipCourseStartDate", details.StartDateValue, DbType.DateTime);
-                    //    connection.Execute("[employer_financial].[CreatePayment]", parameters, commandType: CommandType.StoredProcedure);
-                    //}
-
+                    if (FundingSource==FundingSource.Levy)
+                    parameters = new DynamicParameters();
+                    parameters.Add("@transfers", ToTransferDataTable(Payments).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
+                    connection.Execute("[employer_financial].[CreateAccountTransfers]", parameters, commandType: CommandType.StoredProcedure);
                 }
             });
         }

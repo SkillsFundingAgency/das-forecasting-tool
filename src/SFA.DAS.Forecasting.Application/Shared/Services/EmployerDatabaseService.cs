@@ -67,11 +67,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
             const string sql = "SELECT" +
-                               "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
-                               ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount] " +
+                               "[PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] " +
+                               ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],p.[Amount] " +
                                ",[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
-                               ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource] " +
-                               "FROM [employer_financial].[Payment] p " +
+                               ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] " +
+                               "from [employer_financial].[Payment] p " +
+                               "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
                                "join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
                                "where p.AccountId = @employerAccountId " +
                                "and CollectionPeriodYear = @year " +
