@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
-        Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
+        Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
 
         Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
             short payrollMonth);
@@ -64,7 +64,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return result.ToList();
         }
 
-        public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
+        public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
             const string sql = "SELECT" +
                                "[PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] " +
@@ -87,11 +87,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                     parameters.Add("@year", year, DbType.Int32);
                     parameters.Add("@month", month, DbType.Int32);
 
-                    var payments = await cnn.QueryAsync<EmployerPayment>(
+                    var payments = (await cnn.QueryAsync<EmployerPayment>(
                             sql,
                                 parameters,
-                                commandType: CommandType.Text);
-                    return payments.ToList();
+                                commandType: CommandType.Text)).ToList();
+                    payments.ForEach(payment => payment.FundingSource = (int)payment.FundingSource == (int)SFA.DAS.Provider.Events.Api.Types.FundingSource.LevyTransfer ? FundingSource.Transfer : payment.FundingSource);
+                    return payments;
                 });
             }
             catch (Exception ex)

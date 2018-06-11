@@ -232,7 +232,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         }
 
 
-        private static DataTable ToTransferDataTable(IList<TestPayment> payments)
+        protected DataTable ToTransferDataTable(IList<TestPayment> payments)
         {
             var table = new DataTable();
 
@@ -262,7 +262,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     payment.CourseName,
                     payment.CourseLevel,
                     payment.InstallmentAmount,
-                    "1819-R10",
+                    CollectionPeriod.Id,
                     "0",
                     Guid.NewGuid());
             }
@@ -355,10 +355,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     var parameters = new DynamicParameters();
                     parameters.Add("@payments", ToPaymentsDataTable(Payments).AsTableValuedParameter("[employer_financial].[PaymentsTable]"));
                     connection.Execute("[employer_financial].[CreatePayments]", parameters, commandType: CommandType.StoredProcedure);
-                    if (FundingSource==FundingSource.Levy)
-                    parameters = new DynamicParameters();
-                    parameters.Add("@transfers", ToTransferDataTable(Payments).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
-                    connection.Execute("[employer_financial].[CreateAccountTransfers]", parameters, commandType: CommandType.StoredProcedure);
+                    if (FundingSource == FundingSource.LevyTransfer)
+                    {
+                        parameters = new DynamicParameters();
+                        parameters.Add("@transfers", ToTransferDataTable(Payments).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
+                        connection.Execute("[employer_financial].[CreateAccountTransfers]", parameters, commandType: CommandType.StoredProcedure);
+                    }
                 }
             });
         }

@@ -162,7 +162,7 @@ this.FeatureBackground();
 #line 6
 this.FeatureBackground();
 #line 27
- testRunner.Given("the funding source for the payments is \"Transfer\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("the funding source for the payments is \"Levy Transfer\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Payment Amount",
