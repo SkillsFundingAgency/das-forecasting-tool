@@ -42,9 +42,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
                 .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
 
-            For<IEmployerDatabaseService>()
-                .Use<EmployerDatabaseService>();
-
             For<IStandardApiClient>()
                 .Use<StandardApiClient>()
                 .Ctor<string>("baseUri")
@@ -55,6 +52,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Ctor<IApplicationConnectionStrings>("config")
                 .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>())
                 .ContainerScoped();
+
+            For<IEmployerDatabaseService>()
+                .Use<EmployerDatabaseService>();
         }
     }
 }
