@@ -62,7 +62,21 @@ var tabs = (function () {
         var tab = $(this).attr("href");
         $(".tab-content").not(tab).css("display", "none");
         $(tab).fadeIn();
+        window.location.hash = tab;
+        $('html').scrollTop(0);
     });
+
+    var currentTab = window.location.hash;
+    if (!currentTab) {
+        currentTab = '#account-funds';
+    }
+
+    $('.tabs-menu li').removeClass('current');
+    $('.tabs-menu li' + currentTab.replace('#','#tab-')).addClass('current');
+    $(".tab-content").not(currentTab).css("display", "none");
+    $(currentTab).fadeIn();
+    
+
 });
 
 window.onload = function () {

@@ -79,11 +79,12 @@
     <div class="grid-row">
         <div id="tabs-container">
             <ul class="tabs-menu">
-                <li><a href="#tab-1">Remaining transfer allowance</a></li>
-                <li class="current"><a href="#tab-2">Apprenticeships added</a></li>
+
+                <li id="tab-apprenticeships-added"><a href="#apprenticeships-added">Apprenticeships added</a></li>
+                <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
             </ul>
 
-            <div id="tab-1" class="tab-content" style="display: none;">
+            <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
                 @if (Model.TransferAllowances != null)
                 {
                     var tableBodyClass =Model.CanFund ? "" : "errorTable";
@@ -151,7 +152,7 @@
                 </div>
             </div>
 
-            <div id="tab-2" class="tab-content">
+            <div id="apprenticeships-added" class="tab-content" style="display: none;">
                 <table class="small responsive">
                     <thead>
                         <tr>
