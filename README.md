@@ -35,3 +35,7 @@ from localhost the following screens are available
 ```
 /accounts/MDPP87/forecasting/projections
 ```
+
+### Tests
+
+For some acceptance tests the [MYA](https://github.com/SkillsFundingAgency/das-employerapprenticeshipsservice) database is required. 
