@@ -127,7 +127,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [When(@"data have been processed")]
         public void DataHaveBeenProcessed()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(10 * 1000);
         }
 
         [Then(@"there will be a record in the storage for employer (.*)")]
