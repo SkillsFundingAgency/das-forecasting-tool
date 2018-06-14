@@ -75,6 +75,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     new AccountFundsViewModel
                     {
                         OpeningBalance = GetOpeningBalance(estimationProjector.Projections),
+                        MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
                         Records = GetAccountFunds(estimationProjections)
                     }
             };
