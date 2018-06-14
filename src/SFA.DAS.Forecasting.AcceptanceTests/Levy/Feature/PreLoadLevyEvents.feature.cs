@@ -63,21 +63,33 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
             testRunner.CollectScenarioErrors();
         }
         
+        public virtual void FeatureBackground()
+        {
+#line 4
+#line 5
+ testRunner.Given("I have transactions recorded in the employer accounts service", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 6
+ testRunner.And("I have no levy declarations in the forecasting database already", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+        }
+        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Pre load levy events")]
         public virtual void PreLoadLevyEvents()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre load levy events", ((string[])(null)));
-#line 4
-this.ScenarioSetup(scenarioInfo);
-#line 5
- testRunner.Given("I trigger function for 3 employers to have their data loaded.", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 6
- testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 7
- testRunner.Then("there will be a record in the storage for employer 497", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 8
- testRunner.And("there will be 1 records in the storage for employer 497", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+this.ScenarioSetup(scenarioInfo);
+#line 4
+this.FeatureBackground();
+#line 9
+ testRunner.Given("I trigger function for 3 employers to have their data loaded.", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 10
+ testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 11
+ testRunner.Then("there will be a record in the storage for employer 8509", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 12
+ testRunner.And("there will be 1 records in the storage for employer 8509", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
@@ -87,16 +99,37 @@ this.ScenarioSetup(scenarioInfo);
         public virtual void PreLoadLevyEventsWithSubstitutionId()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre load levy events with substitution id", ((string[])(null)));
-#line 10
-this.ScenarioSetup(scenarioInfo);
-#line 11
- testRunner.Given("I trigger PreLoadEvent function for some employers with a substitution id 12345", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 12
- testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 13
- testRunner.Then("there will be 0 records in the storage for employer 497", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 14
- testRunner.Then("there will be 1 records in the storage for employer 12345", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+this.ScenarioSetup(scenarioInfo);
+#line 4
+this.FeatureBackground();
+#line 15
+ testRunner.Given("I trigger PreLoadEvent function for some employers with a substitution id 12345", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 16
+ testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 17
+ testRunner.Then("there will be 0 records in the storage for employer 8509", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 18
+ testRunner.And("there will be 1 records in the storage for employer 12345", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Pre load levy events for all employers")]
+        public virtual void PreLoadLevyEventsForAllEmployers()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre load levy events for all employers", ((string[])(null)));
+#line 20
+this.ScenarioSetup(scenarioInfo);
+#line 4
+this.FeatureBackground();
+#line 21
+ testRunner.Given("I trigger PreLoadEvet for all employers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 22
+ testRunner.When("data have been processed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 23
+ testRunner.Then("there will be a levy declarations for all employers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
         }

@@ -11,6 +11,7 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 using System.Collections.ObjectModel;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
+using SFA.DAS.Forecasting.Models.Balance;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
@@ -47,8 +48,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var accountProjection = await GetAccountProjection(hashedAccountId);
 
             var balance = await GetBalance(hashedAccountId);
-            var currentBalance = balance.Item1;
-            var overdueCompletionPayments = balance.Item2;
 
             return new BalanceViewModel {
                 BalanceItemViewModels = accountProjection,
@@ -57,8 +56,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 HashedAccountId = hashedAccountId,
                 BalanceStringArray = string.Join(",", accountProjection.Select(m => m.Balance.ToString())),
                 DatesStringArray = string.Join(",", accountProjection.Select(m => m.Date.ToString("yyyy-MM-dd"))),
-                CurrentBalance = currentBalance,
-                OverdueCompletionPayments = overdueCompletionPayments,
+                CurrentBalance = balance.Amount,
+                OverdueCompletionPayments = balance.UnallocatedCompletionPayments,
                 DisplayCoInvestment = accountProjection.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0)
             };
         }
@@ -108,12 +107,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             return dict;
         }
 
-        private async Task<Tuple<decimal, decimal>> GetBalance(string hashedAccountId)
+        private async Task<BalanceModel> GetBalance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var balance = await _balanceDataService.Get(accountId);
 
-            return Tuple.Create(balance.Amount, balance.UnallocatedCompletionPayments);
+            return balance;
         }
     }
 }
