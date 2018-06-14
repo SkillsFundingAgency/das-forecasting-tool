@@ -184,6 +184,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             estimationProjection.BuildProjections();
 
             Assert.AreEqual(150m,estimationProjection.MonthlyInstallmentAmount);
+            Assert.AreNotEqual(estimationProjection.Projections[1],estimationProjection.MonthlyInstallmentAmount);
         }
 
         [Test]
