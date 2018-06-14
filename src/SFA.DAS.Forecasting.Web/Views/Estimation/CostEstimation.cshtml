@@ -45,8 +45,10 @@
             <h1 class="heading-xlarge">Estimated costs</h1>
             <p class="lede">This page shows:</p>
             <ul class="list list-bullet">
-                <li>your available transfer allowance</li>
                 <li>cost of apprenticeships you've estimated</li>
+                <li>your available account funds</li>
+                <li>your available transfer allowance</li>
+                
             </ul>
 
             <p>
@@ -81,8 +83,70 @@
             <ul class="tabs-menu">
 
                 <li id="tab-apprenticeships-added"><a href="#apprenticeships-added">Apprenticeships added</a></li>
+                <li id="tab-account-funds" class="current"><a href="#account-funds">Account funds</a></li>
                 <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
             </ul>
+            
+            <div id="account-funds" class="tab-content" style="">
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h2 class="heading-large">Account Funds</h2>
+                        <p><b>Opening balance: </b>@Model.AccountFunds.OpeningBalance.FormatCost()</p>
+                        <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
+                    </div>
+                </div>
+                
+                <div class="grid-row">
+                    <div class="column-full">
+                        
+                            @{
+                                var newFinancialYearAccountFunds = true;
+                                var startDateOfAccountFundsYear = Model.AccountFunds.Records.First().Date;
+                            }
+
+                            @foreach (var accountFund in Model.AccountFunds.Records)
+                            {
+                                if (newFinancialYearAccountFunds)
+                                {
+                                    newFinancialYearAccountFunds = false;
+                                    var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
+
+                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+                                    @:<table class="small responsive">
+                                    <thead>
+                                    <tr>
+                                        <th class="nowrap">Date</th>
+                                        <th class="financial">Actual Costs</th>
+                                        <th class="financial">Estimated Costs</th>
+                                        <th class="financial">Balance</th>
+                                    </tr>
+                                    </thead>
+                                    @:<tbody>
+
+
+                                }
+
+                                <tr>
+                                    <td class="nowrap">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                                    <td class="financial">@accountFund.ActualCost.FormatCost()</td>
+                                    <td class="financial">@accountFund.EstimatedCost.FormatCost()</td>
+                                    <td class="financial">@accountFund.Balance.FormatCost()</td>
+                                </tr>
+
+                                if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
+                                {
+                                    newFinancialYearAccountFunds = true;
+                                    startDateOfAccountFundsYear = accountFund.Date;
+                                    @:</tbody>
+                                    @:</table>
+                                }
+                               
+                            }
+                            
+                    </div>
+                </div>
+
+            </div>
 
             <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
                 @if (Model.TransferAllowances != null)
