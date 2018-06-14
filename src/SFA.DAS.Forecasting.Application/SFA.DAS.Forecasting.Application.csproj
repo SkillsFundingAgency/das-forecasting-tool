@@ -210,6 +210,7 @@
     <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
+    <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
