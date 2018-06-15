@@ -79,7 +79,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             if (accountIds == null || !accountIds.Any())
             {
-                _logger.Warn($"Not able to find any EmployerAccountIds, Year: {payrollYear}, Month: {payrollMonth}");
+                _logger.Info($"Not able to find any EmployerAccountIds, Year: {payrollYear}, Month: {payrollMonth}");
                 return new List<long>();
             }
 

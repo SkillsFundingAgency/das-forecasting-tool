@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 var sql = @"Select distinct
 	                    ldt.AccountId
                         from [employer_financial].[TransactionLine] tl
-                        join [employer_financial].GetLevyDeclaration ldt on tl.SubmissionId = ldt.SubmissionId
+                        join [employer_financial].[LevyDeclaration] ldt on tl.SubmissionId = ldt.SubmissionId
 	                    where ldt.PayrollMonth = @payrollMonth
 	                    and ldt.PayrollYear = @payrollYear";
 
@@ -74,11 +74,10 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 	                    ldt.PayrollMonth,
 	                    tl.Amount
                         from [employer_financial].[TransactionLine] tl
-                        join [employer_financial].GetLevyDeclarationAndTopUp ldt on tl.SubmissionId = ldt.SubmissionId
+                        join [employer_financial].LevyDeclaration ldt on tl.SubmissionId = ldt.SubmissionId
 	                    where tl.AccountId = @accountId 
 	                    and ldt.PayrollMonth = @payrollMonth
 	                    and ldt.PayrollYear = @payrollYear";
-
                 return await c.QueryAsync<LevyDeclaration>(
                     sql,
                     parameters,
