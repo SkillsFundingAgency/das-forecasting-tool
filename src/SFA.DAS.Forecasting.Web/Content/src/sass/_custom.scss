@@ -275,3 +275,22 @@ table.small th, table.small td, table.small .form-hint {
 }
 
 // END Estimation Style
+
+// Tooltip styles
+
+#balancesheet {
+    .tip-info {
+        font-weight: normal;
+        background: url(/Content/dist/images/icon-important.png) no-repeat 100% 3px;
+        background-size: 15px;
+        display: block;
+        width: 100%;
+
+        .info-title {
+            padding-right: 21px;
+            display: block;
+            color: #005ea5;
+            text-decoration:underline;
+        }
+    }
+}

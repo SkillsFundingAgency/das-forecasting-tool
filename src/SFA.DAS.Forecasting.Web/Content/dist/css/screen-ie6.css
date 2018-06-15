@@ -4391,3 +4391,18 @@ table.small th, table.small td, table.small .form-hint {
   box-shadow: -5px 0px 0px 0px #f7e7e9, -10px 0px 0px 0px #b10e1e;
   background: #f7e7e9;
 }
+
+#balancesheet .tip-info {
+  font-weight: normal;
+  background: url(/Content/dist/images/icon-important.png) no-repeat 100% 3px;
+  background-size: 15px;
+  display: block;
+  width: 100%;
+}
+
+#balancesheet .tip-info .info-title {
+  padding-right: 21px;
+  display: block;
+  color: #005ea5;
+  text-decoration: underline;
+}
