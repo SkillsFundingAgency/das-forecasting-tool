@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure;
 using NLog;
 using System;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -23,6 +24,8 @@ namespace SFA.DAS.Forecasting.Web
 
             FluentValidationModelValidatorProvider.Configure(m => m.AddImplicitRequiredValidator = false);
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+
+            AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
         }
 
         protected void Application_Error(object sender, EventArgs e)
