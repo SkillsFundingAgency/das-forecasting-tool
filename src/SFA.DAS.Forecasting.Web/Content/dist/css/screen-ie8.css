@@ -4337,14 +4337,14 @@ table.small th, table.small td, table.small .form-hint {
 
 #balancesheet .tip-info {
   font-weight: normal;
-  background: url(/Content/dist/images/icon-important.png) no-repeat 100% 3px;
+  background: url(/Content/dist/images/info-blue.png) no-repeat 100% 3px;
   background-size: 15px;
   display: block;
   width: 100%;
 }
 
 #balancesheet .tip-info .info-title {
-  padding-right: 21px;
+  padding-right: 22px;
   display: block;
   color: #005ea5;
   text-decoration: underline;

@@ -150,14 +150,23 @@
                     <th class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">Funds in<br />
                         <span class="tip-info"><span class="info-title">Info</span></span>
                     </th>
-                    <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">Cost of training</th>
-                    <th class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">Completion payments</th>
+                    <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
+                        Cost of training<br />
+                        <span class="tip-info"><span class="info-title">Info</span></span>
+                    </th>
+                    <th class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">
+                        Completion payments<br />
+                        <span class="tip-info"><span class="info-title">Info</span></span>
+                    </th>
                     @if (Model.DisplayCoInvestment)
                     {
                         <th class="financial grey-bg">Your contribution (10%)</th>
                         <th class="financial grey-bg">Government contribution (90%)</th>
                     }
-                    <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">Future funds</th>
+                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                            Future funds<br />
+                            <span class="tip-info"><span class="info-title">Info</span></span>
+                        </th>
                 </tr>
             </thead>
             <tbody>
