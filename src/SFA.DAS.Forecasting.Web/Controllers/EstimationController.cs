@@ -81,14 +81,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [HttpPost]
         [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "PostEditApprenticeships")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditApprenticeships(EditApprenticeshipsViewModel editmodel)
+        public async Task<ActionResult> PostEditApprenticeships(EditApprenticeshipsViewModel editmodel)
         {
             var results = _validator.Validate(editmodel);
             results.AddToModelState(ModelState, null);
 
             if (!ModelState.IsValid)
             {
-                return View(editmodel);
+                return View("EditApprenticeships", editmodel);
             }
 
             await _estimationOrchestrator.UpdateApprenticeshipModel(editmodel);
