@@ -68,15 +68,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "EditApprenticeships")]
+        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/EditApprenticeships", Name = "EditApprenticeships")]
         public async Task<ActionResult> EditApprenticeships(string hashedAccountId, string estimationName, string apprenticeshipsId)
         {
             var model = await _estimationOrchestrator.EditApprenticeshipModel(hashedAccountId, apprenticeshipsId, estimationName);
             
             return View(model);
         }
-
-
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "PostEditApprenticeships")]
