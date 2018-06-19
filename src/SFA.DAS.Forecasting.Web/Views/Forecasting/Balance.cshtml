@@ -160,8 +160,14 @@
                     </th>
                     @if (Model.DisplayCoInvestment)
                     {
-                        <th class="financial grey-bg">Your contribution (10%)</th>
-                        <th class="financial grey-bg">Government contribution (90%)</th>
+                        <th class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment you pay if your funds run out which will be 10% of the outstanding balance for that month">
+                            Your contribution (10%)<br />
+                            <span class="tip-info"><span class="info-title">Info</span></span>
+                        </th>
+                        <th class="financial grey-bg tippy" data-tippy-trigger="click" title="mount of co-investment the government will pay, which is 90% of the outstanding balance for that month, up to the funding band maximum">
+                            Government contribution (90%)<br />
+                            <span class="tip-info"><span class="info-title">Info</span></span>
+                        </th>
                     }
                         <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
                             Future funds<br />
