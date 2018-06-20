@@ -133,20 +133,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             }
         }
 
-        public async Task<decimal?> GetFundingCapForCourse(string courseId)
+        public async Task<CourseViewModel> GetCourse(string courseId)
         {
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
-            var res = course.FundingCap;
-            return res;
-        }
-
-        public async Task<dynamic> GetDefaultNumberOfMonths(string courseId)
-        {
-
-            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
-            return new
+            return new CourseViewModel
             {
-                NumberOfMonths = course.Duration
+                CourseId = courseId,
+                NumberOfMonths = course.Duration,
+                FundingCap = course.FundingCap
             };
         }
 
