@@ -78,6 +78,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "PostEditApprenticeships")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> PostEditApprenticeships(EditApprenticeshipsViewModel editmodel)
         {
             var results = _validator.Validate(editmodel);
@@ -103,6 +104,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var viewModel = await _addApprenticeshipOrchestrator.ValidateAddApprenticeship(vm);
@@ -170,6 +172,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveApprenticeships(RemoveApprenticeshipViewModel viewModel, string hashedAccountId, string estimationName, string id)
         {
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)

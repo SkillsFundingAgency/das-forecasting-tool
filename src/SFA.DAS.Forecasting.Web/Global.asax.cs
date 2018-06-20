@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Web
 
         protected void Application_Start()
         {
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = "sub";
             TelemetryConfiguration.Active.InstrumentationKey = CloudConfigurationManager.GetSetting("APPINSIGHTS_INSTRUMENTATIONKEY");
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
