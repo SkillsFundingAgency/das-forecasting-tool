@@ -281,10 +281,11 @@ table.small th, table.small td, table.small .form-hint {
 #balancesheet {
     .tip-info {
         font-weight: normal;
-        background: url(/Content/dist/images/info-blue.png) no-repeat 100% 3px;
-        background-size: 15px;
+        background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
+        background-size: 18px;
         display: block;
         width: 100%;
+        cursor: pointer;
 
         .info-title {
             padding-right: 22px;
