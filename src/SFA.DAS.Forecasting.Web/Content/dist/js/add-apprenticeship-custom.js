@@ -81,21 +81,22 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 
         var model = GetAddApprenticeshipForm();
         
-        if (model.CourseId !== "" && model.NumberOfApprentices > 0) {
-            $.ajax({
-                type: "POST",
-                url: 'course',
-                data: JSON.stringify(model),
-                contentType: "application/json; charset=utf-8",
-                success: function (result) {
-                    sfa.AddApprenticeship.Result = result;
-                    var update = refreshCalculation(model, result);
-                    showFundingCapMessage(update);
-                }
-            });
-        } else {
-            showFundingCapMessage(false);
-        }
+        $.ajax({
+            type: "POST",
+            url: 'course',
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                sfa.AddApprenticeship.Result = result;
+                var update = refreshCalculation(model, result);
+                showFundingCapMessage(update);
+
+                if (model.NumberOfMonths === 0)
+                    $('#apprenticeship-length').val(result.NumberOfMonths || 0);
+            }
+        });
+
+        showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
 
     }
 
@@ -115,7 +116,8 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             CourseId: $('#choose-apprenticeship').val(),
             NumberOfApprentices: parseInt($('#no-of-app').val()),
             LevyValue: parseFloat($('#total-funding-cost').val()),
-            StartDate: new Date($('#startDateYear').val(), $('#startDateMonth').val() - 1, 1)
+            StartDate: new Date($('#startDateYear').val(), $('#startDateMonth').val() - 1, 1),
+            NumberOfMonths: parseInt($('#apprenticeship-length').val() || 0)
         }
     }
 
