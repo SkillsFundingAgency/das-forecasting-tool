@@ -423,7 +423,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line 75
-testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
                         "Apprentice Name",
@@ -444,7 +444,7 @@ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlo
                         "last year",
                         "",
                         "1333.33",
-                        "2000",
+                        "1000",
                         "6",
                         "Levy"});
             table10.AddRow(new string[] {
@@ -466,7 +466,7 @@ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlo
                         "last year",
                         "",
                         "666.66",
-                        "2000",
+                        "3000",
                         "11",
                         "Levy"});
 #line 76
@@ -476,7 +476,7 @@ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlo
 #line 82
     testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 83
- testRunner.And("the total completion amount is 2000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the unallocated completion amount is 1000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }
