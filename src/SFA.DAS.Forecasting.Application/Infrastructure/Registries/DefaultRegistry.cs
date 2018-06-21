@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
     {
         public DefaultRegistry()
         {
-            if (ConfigurationHelper.IsDevEnvironment)
+            if (ConfigurationHelper.IsDevOrAtEnvironment)
             {
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
