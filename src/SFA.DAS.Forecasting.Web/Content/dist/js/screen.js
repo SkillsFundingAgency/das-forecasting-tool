@@ -82,6 +82,10 @@ window.onload = function () {
             offset: '0,10',
             theme: 'forecasting'
         });
+
+    $('#BalanceSheet-Tables table.balancesheet a').click(function (e) {
+        e.preventDefault();
+    });
 };
 
 //OR use Object http://jsfiddle.net/etuwo8mz/57/
