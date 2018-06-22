@@ -321,6 +321,7 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="App_Start\SystemWebCookieManager.cs" />
     <Compile Include="Orchestrators\Estimations\AddApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\EstimationOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\IAddApprenticeshipOrchestrator.cs" />
