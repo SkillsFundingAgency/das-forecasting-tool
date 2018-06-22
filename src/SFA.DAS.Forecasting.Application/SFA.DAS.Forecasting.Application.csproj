@@ -215,6 +215,7 @@
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentMessage.cs" />
+    <Compile Include="Payments\Services\DevPaymentsEventsApiClient.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataSession.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
     <Compile Include="Projections\Handlers\BuildAccountProjectionHandler.cs" />
