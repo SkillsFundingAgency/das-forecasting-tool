@@ -17,7 +17,6 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Web.App_Start;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.OidcMiddleware;
@@ -45,8 +44,7 @@ namespace SFA.DAS.Forecasting.Web
             {
                 AuthenticationType = "Cookies",
                 ExpireTimeSpan = new TimeSpan(0, 10, 0),
-                SlidingExpiration = true,
-                CookieManager = new SystemWebCookieManager()
+                SlidingExpiration = true
             });
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
