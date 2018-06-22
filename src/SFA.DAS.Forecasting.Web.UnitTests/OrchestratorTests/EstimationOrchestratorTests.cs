@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
 
             var currentBalance = new Mock<CurrentBalance>();
-            currentBalance.Setup(x => x.RefreshBalance()).ReturnsAsync(true);
+            currentBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>())).ReturnsAsync(true);
 
             _currentBalanceRepository = new Mock<ICurrentBalanceRepository>();
             _currentBalanceRepository.Setup(x => x.Get(ExpectedAccountId))
