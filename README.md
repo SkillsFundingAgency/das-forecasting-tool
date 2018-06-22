@@ -23,6 +23,7 @@ The following needs to be installed on your local machine:
 
 Running the acceptance tests will populate the database with a set of data - the connection string in the app.config file for the acceptance tests may need updating.
 
+To load apprnticeship courses into CosmosDB function run **SFA.DAS.Forecasting.ApprenticeshipCourses.Functions**.
 
 ### Routes for test data
 
