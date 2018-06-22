@@ -20,6 +20,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public string LevyPreLoadFunctionAllEmployersUrl => GetAppSetting("LevyPreLoadFunctionAllEmployersUrl");
         public string PaymentFunctionUrl => GetAppSetting("PaymentFunctionUrl");
         public string PaymentPreLoadHttpFunction => GetAppSetting("PaymentPreLoadHttpFunction");
+        public string AllEmployersPaymentPreLoadHttpFunction => GetAppSetting("AllEmployersPaymentPreLoadHttpFunction");
         public string ProjectionPaymentFunctionUrl => GetAppSetting("ProjectionPaymentFunctionUrl");
         public string ProjectionLevyFunctionUrl => GetAppSetting("ProjectionLevyFunctionUrl");
         public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));

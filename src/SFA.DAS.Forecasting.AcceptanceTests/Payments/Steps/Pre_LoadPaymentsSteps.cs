@@ -378,6 +378,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             Send(Config.PaymentPreLoadHttpFunction, json);
         }
 
+        [When(@"I trigger the pre-load of the payment events for all employers")]
+        public void WhenITriggerThePre_LoadOfThePaymentEventsForAllEmployers()
+        {
+            var request = new
+            {
+                PeriodYear = CollectionPeriod.Year.ToString(),
+                PeriodMonth = CollectionPeriod.Month.ToString(),
+                PeriodId = CollectionPeriod.Id
+            };
+            var json = JsonConvert.SerializeObject(request);
+            Send(Config.AllEmployersPaymentPreLoadHttpFunction, json);
+        }
+
         [When(@"I trigger the pre-load of anonymised payment events")]
         public void WhenITriggerThePre_LoadOfAnonymisedPaymentEvents()
         {

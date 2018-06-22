@@ -17,7 +17,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
             short payrollMonth);
+
+
+        Task<List<long>> GetEmployersWithPayments(int year, int month);
+
         Task<IList<long>> GetAccountIds(string payrollYear, short payrollMonth);
+
     }
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
@@ -121,6 +126,38 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             catch (Exception ex)
             {
                 _logger.Error(ex, "Failed to get employer payments");
+                throw;
+            }
+        }
+
+        public async Task<List<long>> GetEmployersWithPayments(int year, int month)
+        {
+            const string sql = "SELECT distinct" +
+                               "[AccountId]" +
+                               "from [employer_financial].[Payment] p " +
+                               "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
+                               "join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
+                               "and CollectionPeriodYear = @year " +
+                               "and CollectionPeriodMonth = @month";
+
+            try
+            {
+                return await WithConnection(async cnn =>
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@year", year, DbType.Int32);
+                    parameters.Add("@month", month, DbType.Int32);
+
+                    var payments = (await cnn.QueryAsync<long>(
+                            sql,
+                                parameters,
+                                commandType: CommandType.Text)).ToList();
+                    return payments;
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"Failed to get employers for year: {year} and month {month}");
                 throw;
             }
         }
