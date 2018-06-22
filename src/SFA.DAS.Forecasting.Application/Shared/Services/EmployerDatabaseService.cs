@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
-        Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
+        Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
 
         Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
             short payrollMonth);
@@ -64,14 +64,15 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return result.ToList();
         }
 
-        public async Task<IEnumerable<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
+        public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
             const string sql = "SELECT" +
-                               "[PaymentId],[Ukprn],[Uln],[AccountId],[ApprenticeshipId] " +
-                               ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],[Amount] " +
+                               "[PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] " +
+                               ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],p.[Amount] " +
                                ",[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
-                               ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName],[FundingSource] " +
-                               "FROM [employer_financial].[Payment] p " +
+                               ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] " +
+                               "from [employer_financial].[Payment] p " +
+                               "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
                                "join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
                                "where p.AccountId = @employerAccountId " +
                                "and CollectionPeriodYear = @year " +
@@ -86,11 +87,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                     parameters.Add("@year", year, DbType.Int32);
                     parameters.Add("@month", month, DbType.Int32);
 
-                    var payments = await cnn.QueryAsync<EmployerPayment>(
+                    var payments = (await cnn.QueryAsync<EmployerPayment>(
                             sql,
                                 parameters,
-                                commandType: CommandType.Text);
-                    return payments.ToList();
+                                commandType: CommandType.Text)).ToList();
+                    payments.ForEach(payment => payment.FundingSource = (int)payment.FundingSource == (int)SFA.DAS.Provider.Events.Api.Types.FundingSource.LevyTransfer ? FundingSource.Transfer : payment.FundingSource);
+                    return payments;
                 });
             }
             catch (Exception ex)

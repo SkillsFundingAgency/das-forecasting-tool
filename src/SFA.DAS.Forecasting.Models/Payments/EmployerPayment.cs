@@ -27,5 +27,6 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public int ApprenticeshipCourseLevel;
         public string ApprenticeName;
         public FundingSource FundingSource;
+        public long? SenderAccountId;
     }
 }

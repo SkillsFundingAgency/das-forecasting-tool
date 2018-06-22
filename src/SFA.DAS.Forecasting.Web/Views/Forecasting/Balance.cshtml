@@ -16,12 +16,23 @@
                 The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
             </p>
 
-            <p>
-                These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding. The table shows the monthly projection figures until April 2019.
-            </p>
-            <p>
-                They don’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.
-            </p>
+            <details>
+                <summary>More information</summary>
+                <div class="">
+                    <p>
+                        The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
+                    </p>
+                    <p>
+                        These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
+                    <p />
+                    <p>
+                        The projection doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider.
+                    </p>
+                    <p>
+                        You can estimate how many apprenticeships you could fund in the future - either by transferring any remaining funds to another employer or by taking on more apprentices yourself.
+                    </p>
+                </div>
+            </details>
         </div>
     </div>
 
@@ -32,7 +43,7 @@
                 <ul class="list list-links">
 
                     <li>
-                        <a id="apprenticeship_csvdownload" href="@Url.Action("DownloadApprenticeshipDetailsCsv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                        <a id="apprenticeship_csvdownload" href="@Url.Action("DownloadApprenticeshipDetailsCsv", "Forecasting", new { hashedAccountId = Model.HashedAccountId }, null)" class="">
                             Apprenticeship details in the account projection
                         </a>
                         <p>
@@ -41,7 +52,7 @@
                     </li>
 
                     <li>
-                        <a id="projections_csvdownload" href="@Url.Action("Csv", "Forecasting", new {hashedAccountId = Model.HashedAccountId}, null)" class="">
+                        <a id="projections_csvdownload" href="@Url.Action("Csv", "Forecasting", new { hashedAccountId = Model.HashedAccountId }, null)" class="">
                             Account projection table
                         </a>
                         <p>
@@ -132,35 +143,41 @@
 
 <div class="grid-row">
     <div class="column-full">
-        <table class="small" id="balancesheet">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    @if (Model.DisplayCoInvestment)
-                    {
-                        <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>       
-                    }
-                    <th></th>
-                </tr>
-                <tr>
-                    <th class="nowrap">Date</th>
-                    <th class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">Funds in<br />
-                        <span class="tip-info"><span class="info-title">Info</span></span>
-                    </th>
-                    <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
+
+        @foreach (var x in Model.ProjectionTables)
+        {
+            <h3 class="heading-medium">@x.Key.FirstStartDate.ToGdsFormatWithoutDay() to @x.Key.LastEndDate.ToGdsFormatWithoutDay()</h3>
+            @:<table class="small balancesheet">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        @if (Model.DisplayCoInvestment)
+                        {
+                            <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>
+                        }
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
                         Cost of training<br />
                         <span class="tip-info"><span class="info-title">Info</span></span>
                     </th>
-                    <th class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">
+                        <th class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">
                         Completion payments<br />
                         <span class="tip-info"><span class="info-title">Info</span></span>
                     </th>
-                    @if (Model.DisplayCoInvestment)
-                    {
-                        <th class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment you pay if your funds run out which will be 10% of the outstanding balance for that month">
+                        <th class="financial">Expired funds </th>
+                        <th class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">Funds in<br />
+                        <span class="tip-info"><span class="info-title">Info</span></span>
+                    </th>
+                        @if (Model.DisplayCoInvestment)
+                        {
+                            <th class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment you pay if your funds run out which will be 10% of the outstanding balance for that month">
                             Your contribution (10%)<br />
                             <span class="tip-info"><span class="info-title">Info</span></span>
                         </th>
@@ -168,53 +185,69 @@
                             Government contribution (90%)<br />
                             <span class="tip-info"><span class="info-title">Info</span></span>
                         </th>
-                    }
+                        }
                         <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
-                            Future funds<br />
+Balance<br />
                             <span class="tip-info"><span class="info-title">Info</span></span>
                         </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.BalanceItemViewModels)
-                {
-                <tr>
-                    <td class="nowrap">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                    <td class="financial">@item.FundsIn.FormatCost()</td>
-                    <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                    <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                    @if (Model.DisplayCoInvestment)
-                    {
-                        <td class="financial grey-bg">
-                            @if (item.CoInvestmentEmployer == 0)
-                            {
-                                <span>–</span>
-                            }
-                            else
-                            {
-                                <span>@item.CoInvestmentEmployer.FormatCost()</span>
-                            }
-                        </td>
-                        <td class="financial grey-bg">
-                            @if (item.CoInvestmentGovernment == 0)
-                            {
-                                <span>–</span>
-                            }
-                            else
-                            {
-                                <span>@item.CoInvestmentGovernment.FormatCost()</span>
-                            }
-                        </td>
-                    }
-                    <td class="financial">@item.Balance.FormatCost()</td>
-
                     </tr>
-                }
-            </tbody>
-    </table>
-  </div>
-</div>
+                </thead>
+                <tbody>
 
+                    @foreach (var item in x.Value)
+                    {
+                        <tr>
+                            <td>@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                            <td class="financial">@item.CostOfTraining.FormatCost()</td>
+                            <td class="financial">@item.CompletionPayments.FormatCost()</td>
+                            <td class="financial">
+                                <span>–</span>
+                            </td>
+                            <td class="financial">@item.FundsIn.FormatCost()</td>
+                            @if (Model.DisplayCoInvestment)
+                            {
+                                <td class="financial grey-bg">
+                                    @if (item.CoInvestmentEmployer == 0)
+                                    {
+                                        <span>–</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.CoInvestmentEmployer.FormatCost()</span>
+                                    }
+                                </td>
+                                <td class="financial grey-bg">
+                                    @if (item.CoInvestmentGovernment == 0)
+                                    {
+                                        <span>–</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.CoInvestmentGovernment.FormatCost()</span>
+                                    }
+                                </td>
+                            }
+                            <td class="financial">@item.Balance.FormatCost()</td>
+                        </tr>
+                    }
+                </tbody>
+            @:</table>
+        }
+
+        <details>
+            <summary>Where is the end-point assessment cost?</summary>
+            <div class="panel panel-width-thin">
+
+                <p>The 'end-point assessment cost' is paid by your training provider at the end of the apprenticeship.  The funds for this payment are included in the training and completion costs.</p>
+                <p>
+                    This payment will be made to the end-point assessment organisation by the training provider at the end of the apprenticeship or soon after the apprenticeship has finished.
+
+                </p>
+            </div>
+        </details>
+
+    </div>
+</div>
 <div class="grid-row">
     <div class="column-full">
         <div class="info-summary">
