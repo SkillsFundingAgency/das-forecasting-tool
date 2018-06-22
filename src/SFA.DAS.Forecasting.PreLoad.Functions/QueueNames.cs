@@ -4,6 +4,7 @@
     {
         // Levy
         public const string ValidateLevyDeclaration = "forecasting-levy-validate-declaration";
+        public const string LevyPreLoadRequest = "forecasting-levy-preload-request";
 
         // Payment
         public const string PreLoadPayment = "forecasting-payment-create-preload";
