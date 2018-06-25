@@ -44,13 +44,15 @@ namespace SFA.DAS.Forecasting.Web
             {
                 AuthenticationType = "Cookies",
                 ExpireTimeSpan = new TimeSpan(0, 10, 0),
-                SlidingExpiration = true
+                SlidingExpiration = true,
+                CookieName = "forecasting"
             });
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = "TempState",
-                AuthenticationMode = AuthenticationMode.Passive
+                AuthenticationMode = AuthenticationMode.Passive,
+                CookieName = "forecasting-temp"
             });
 
             var constants = new Constants(_config.Identity);
