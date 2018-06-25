@@ -371,8 +371,6 @@
     <Compile Include="ViewModels\EqualityComparer\FinancialYearIEqualityComparer.cs" />
     <Compile Include="ViewModels\RemoveApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\AddApprenticeshipViewModel.cs" />
-    <Compile Include="ViewModels\ApprenticeshipPageViewModel.cs" />
-    <Compile Include="ViewModels\ApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
     <Compile Include="ViewModels\ProjectiontemViewModel.cs" />
     <Compile Include="ViewModels\BalanceViewModel.cs" />
