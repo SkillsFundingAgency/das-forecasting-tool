@@ -18,8 +18,9 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
                 Level = course.Level,
                 Duration = course.Duration,
                 Title = course.Title,
-                FundingCap = course.MaxFunding,
-                CourseType = ApprenticeshipCourseType.Standard
+                FundingCap = course.CurrentFundingCap,
+				FundingPeriods = course.FundingPeriods,
+				CourseType = ApprenticeshipCourseType.Standard
             };
         }
     }
