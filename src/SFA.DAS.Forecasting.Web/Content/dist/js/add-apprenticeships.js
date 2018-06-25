@@ -1,8 +1,15 @@
 ﻿var AddApprentiecships = {
 
     calculateFundingCap: function (date, model) {
-        if (date === "Invalid Date" || date === undefined || model === undefined)
+        var today = new Date();
+        var thisMonth = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0)
+
+        if (   date === undefined
+            || date.toString() === "Invalid Date"
+            || date < thisMonth
+            || model === undefined) {
             return undefined;
+        }
 
         var fundingBand = model.FundingBands.find((fb) => {
             return date > this.getDate(fb.FromDate) && date < this.getDate(fb.ToDate)

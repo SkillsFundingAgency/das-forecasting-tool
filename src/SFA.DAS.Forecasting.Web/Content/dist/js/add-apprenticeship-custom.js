@@ -103,8 +103,9 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
     function refreshCalculation(model, result) {
         var calc = AddApprentiecships.calculateFundingCap(model.StartDate, result)
 
-        model.FundingCap = calc.FundingCap;
-        model.TotalFundingCap = calc.FundingCap * model.NumberOfApprentices;
+        var fc = calc ? calc.FundingCap : 0;
+        model.FundingCap = fc;
+        model.TotalFundingCap = fc * model.NumberOfApprentices;
 
         updateView(model);
 
