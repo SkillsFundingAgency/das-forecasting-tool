@@ -229,6 +229,24 @@ only screen and (max-width: 480px) {
         }
     }
 }
+
+details.projection-survey {
+    border: solid #005ea5 10px;
+    background-color: #005ea5;
+    padding-top: 10px;
+
+    summary {
+        width: 100%;
+        background-color: #005ea5;
+        color: white;
+    }
+
+    iframe {
+        width: 99%;
+        height: 40em;
+    }
+}
+
 // END Funding projection
 /*coinvestment table*/
 #balancesheet {
