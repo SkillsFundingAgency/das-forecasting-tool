@@ -102,8 +102,19 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
             var balance = _moqer.Resolve<CurrentBalance>();
 
             Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
+            Assert.AreEqual(0, balance.UnallocatedCompletionPayments);
+        }
+
+
+        [Test]
+        public async Task Refresh_Balance_Refreshes_unallocated_completion_payments_when_rebuilding_projection()
+        {
+            var balance = _moqer.Resolve<CurrentBalance>();
+
+            Assert.IsTrue(await balance.RefreshBalance(true), "Failed to update the current employer balance.");
             Assert.AreEqual(1000, balance.UnallocatedCompletionPayments);
         }
+
 
         [Test]
         public async Task Does_Not_Refresh_If_Last_Refresh_Less_Than_1_Day_Ago()
