@@ -72,7 +72,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.AreEqual(readCsvHeader, "Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Future funds");
+            Assert.AreEqual(readCsvHeader, "Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Balance");
         }
 
         [Then(@"column headers are downloaded for apprenticeship CSV")]
