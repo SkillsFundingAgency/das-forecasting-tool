@@ -5044,6 +5044,10 @@ table.small th, table.small td, table.small .form-hint {
   text-decoration: underline;
 }
 
+.tippy-popper .tippy-content {
+  text-align: center;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
