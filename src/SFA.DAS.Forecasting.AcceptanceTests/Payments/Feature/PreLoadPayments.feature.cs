@@ -158,7 +158,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre-load transfer payments", ((string[])(null)));
 #line 26
- this.ScenarioSetup(scenarioInfo);
+this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
 #line 27
@@ -355,6 +355,67 @@ this.FeatureBackground();
 #line 68
  testRunner.And("the funding projections commitments service should record the anonymised commitme" +
                     "nt", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Pre load payments for all employers")]
+        public virtual void PreLoadPaymentsForAllEmployers()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Pre load payments for all employers", ((string[])(null)));
+#line 70
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payment Amount",
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "Delivery Period Month",
+                        "Delivery Period Year"});
+            table6.AddRow(new string[] {
+                        "166.66667",
+                        "Test Apprentice 1",
+                        "Test Course 1",
+                        "1",
+                        "Test Provider 1",
+                        "01/01/2018",
+                        "166.66667",
+                        "500.00",
+                        "12",
+                        "2",
+                        "2018"});
+            table6.AddRow(new string[] {
+                        "83.33333",
+                        "Test Apprentice 2",
+                        "Test Course 2",
+                        "2",
+                        "Test Provider 2",
+                        "01/01/2018",
+                        "83.33333",
+                        "250.00",
+                        "24",
+                        "2",
+                        "2018"});
+#line 71
+ testRunner.Given("payments for the following apprenticeships have been recorded in the Payments ser" +
+                    "vice", ((string)(null)), table6, "Given ");
+#line 75
+ testRunner.And("the payments have also been recorded in the Employer Accounts Service", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 76
+ testRunner.When("I trigger the pre-load of the payment events for all employers", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 77
+ testRunner.Then("the funding projections payments service should record the payments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 78
+ testRunner.And("the funding projections commitments service should record the commitments", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

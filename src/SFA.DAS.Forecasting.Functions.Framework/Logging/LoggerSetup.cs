@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             LogManager.Configuration = new LoggingConfiguration();
             LogManager.ThrowConfigExceptions = true;
 
-            if (ConfigurationHelper.IsDevEnvironment)
+            if (ConfigurationHelper.IsDevOrAtEnvironment)
                 AddLocalTarget(localLogPath, appName);
             else
                 AddRedisTarget(appName);

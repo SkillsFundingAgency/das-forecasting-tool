@@ -226,7 +226,6 @@
     </None>
     <None Include="Levy\Feature\Build Projections From Levy Declarations.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Build Projections From Levy Declarations.feature.cs</LastGenOutput>
     </None>
     <None Include="Levy\Feature\PreLoadLevyEvents.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

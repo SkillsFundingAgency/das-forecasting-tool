@@ -4357,6 +4357,23 @@ h2 .float-right {
   }
 }
 
+details.projection-survey {
+  border: solid #005ea5 10px;
+  background-color: #005ea5;
+  padding-top: 10px;
+}
+
+details.projection-survey summary {
+  width: 100%;
+  background-color: #005ea5;
+  color: white;
+}
+
+details.projection-survey iframe {
+  width: 99%;
+  height: 40em;
+}
+
 /*coinvestment table*/
 .balancesheet .co-invest-head, #balancesheet .co-invest-head {
   text-align: center;
