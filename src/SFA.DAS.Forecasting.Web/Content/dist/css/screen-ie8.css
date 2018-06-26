@@ -4363,6 +4363,7 @@ table.small th, table.small td, table.small .form-hint {
   display: block;
   width: 100%;
   cursor: pointer;
+  background-position-y: bottom;
 }
 
 #BalanceSheet-Tables .tip-info .info-title {
