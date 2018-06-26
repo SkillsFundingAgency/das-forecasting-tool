@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
             var mockBalance = _moqer.GetMock<CurrentBalance>();
             mockBalance.Setup(x => x.EmployerAccountId).Returns(12345);
             mockBalance.Setup(x => x.Amount).Returns(10000);
-            mockBalance.Setup(x => x.RefreshBalance())
+            mockBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>()))
                 .Returns(Task.FromResult<bool>(true));
             var repo = _moqer.GetMock<ICurrentBalanceRepository>();
             repo.Setup(x => x.Get(It.IsAny<long>()))
@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
         {
             HandleGenerateAccountBalance();
             _moqer.GetMock<CurrentBalance>()
-                .Verify(x => x.RefreshBalance(), Times.Once());
+                .Verify(x => x.RefreshBalance(It.IsAny<bool>()), Times.Once());
         }
 
         [Test]
@@ -74,12 +74,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
         public void Does_Not_Store_Account_Balance_If_Refresh_Failed()
         {
             _moqer.GetMock<CurrentBalance>()
-                .Setup(x => x.RefreshBalance())
+                .Setup(x => x.RefreshBalance(It.IsAny<bool>()))
                 .Returns(Task.FromResult<bool>(false));
             HandleGenerateAccountBalance();
             _moqer.GetMock<ICurrentBalanceRepository>()
                 .Verify(repo => repo.Store(It.Is<CurrentBalance>(bal => bal == _moqer.GetMock<CurrentBalance>(MockBehavior.Loose).Object)), Times.Never());
         }
-
     }
 }
