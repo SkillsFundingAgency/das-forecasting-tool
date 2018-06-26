@@ -70,3 +70,14 @@ Scenario: Transfer completion payments for a receiving employer
 	| 7               | 2000                            | 2000                             |
 	| 13              | 2000                            | 2000                             |
 	| 19              | 2000                            | 2000                             | 
+
+Scenario: Unallocated Completion Payments
+	Given I am a sending employer
+    And the following commitments have been recorded
+    | Apprentice Name   | Course Name   | Course Level | Provider Name   | Start Date | ActualEndDate | Installment Amount | Completion Amount | Number Of Installments | FundingSource |
+    | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | last year  |               | 1333.33            | 1000              | 6                      | Levy          |
+    | Test Apprentice 2 | Test Course 2 | 1            | Test Provider 2 | last year  | last month    | 666.66             | 2000              | 11                     | Levy          |
+    | Test Apprentice 3 | Test Course 3 | 1            | Test Provider 2 | last year  |               | 666.66             | 3000              | 11                     | Levy		    |
+    When the account projection is triggered after a payment run
+    Then the account projection should be generated   
+	And the unallocated completion amount is 1000

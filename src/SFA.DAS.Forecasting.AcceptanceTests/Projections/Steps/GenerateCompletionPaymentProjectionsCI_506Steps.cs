@@ -11,7 +11,7 @@ using TechTalk.SpecFlow.Assist;
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 {
     [Binding]
-    public class GenerateCompletionPaymentProjectionsCI_506Steps: StepsBase
+    public class GenerateCompletionPaymentProjectionsCI_506Steps : StepsBase
     {
         [Scope(Feature = "Generate Completion Payment Projections [CI-506]")]
         [BeforeFeature(Order = 1)]
@@ -60,9 +60,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         public void ThenTheCompletionPaymentsShouldBeIncludedInTheCorrectMonth()
         {
             Commitments.GroupBy(commitment => commitment.PlannedEndDate.AddMonths(1))
-                .Select( g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount)})
+                .Select(g => new { Date = g.Key, CompletionAmount = g.Sum(commitment => commitment.CompletionAmount) })
                 .ToList()
-                .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount),$"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}") );
+                .ForEach(completionAmount => Assert.IsTrue(AccountProjections.Any(ac => ac.Year == completionAmount.Date.Year && ac.Month == completionAmount.Date.Month && ac.LevyFundedCompletionPayments == completionAmount.CompletionAmount), $"Completion amount not found. Date: {completionAmount.Date:MMMM yyyy}, Completion Amount: {completionAmount}"));
         }
 
         [Then(@"the completion payments should not be included in the projection")]
@@ -80,10 +80,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             expectedProjections.ForEach(expected =>
             {
                 var projectionMonth = AccountProjections.Skip(expected.MonthsFromNow).FirstOrDefault();
-                Assert.IsNotNull(projectionMonth,$"Month {expected.MonthsFromNow} not found.");
-                Assert.AreEqual(expected.TransferInCompletionPayments,projectionMonth.TransferInCompletionPayments,$"Transfer in completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferInCompletionPayments}' but generated amount was '{projectionMonth.TransferInCompletionPayments}'");
+                Assert.IsNotNull(projectionMonth, $"Month {expected.MonthsFromNow} not found.");
+                Assert.AreEqual(expected.TransferInCompletionPayments, projectionMonth.TransferInCompletionPayments, $"Transfer in completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferInCompletionPayments}' but generated amount was '{projectionMonth.TransferInCompletionPayments}'");
                 Assert.AreEqual(expected.TransferOutCompletionPayments, projectionMonth.TransferOutCompletionPayments, $"Transfer out completion payments do not match.  Months from now: {expected.MonthsFromNow}, expected '{expected.TransferOutCompletionPayments}' but generated amount was '{projectionMonth.TransferOutCompletionPayments}'");
             });
+        }
+
+        [Then(@"the unallocated completion amount is (.*)")]
+        public void ThenTheUnallocatedCompletionAmountIs(int unallocatedCompletionPayments)
+        {
+            var accountBalance = DataContext.Balances.FirstOrDefault(balance => balance.EmployerAccountId == Config.EmployerAccountId);
+            Assert.IsNotNull(accountBalance);
+            Assert.AreEqual(unallocatedCompletionPayments, accountBalance.UnallocatedCompletionPayments);
         }
     }
 }
