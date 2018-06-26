@@ -4409,3 +4409,7 @@ table.small th, table.small td, table.small .form-hint {
   color: #005ea5;
   text-decoration: underline;
 }
+
+.tippy-popper .tippy-content {
+  text-align: center;
+}
