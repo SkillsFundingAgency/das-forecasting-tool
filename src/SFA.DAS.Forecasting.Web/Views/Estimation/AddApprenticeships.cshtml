@@ -193,3 +193,7 @@
         return Model.ValidationResults.Count(x => x.FailureReason == validatorToCheck) > 0 ? string.Empty : "hidden";
     }
 }
+
+@section scripts{
+    @Scripts.Render("~/bundles/addApprenticeship")
+}
