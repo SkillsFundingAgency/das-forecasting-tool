@@ -51,6 +51,7 @@
     <link href="@Styles.Url("~/css/bundles/select2")" media="all" rel="stylesheet" />
     <!--[if gt IE 8]><!-->
     <link href="@Styles.Url("~/css/bundles/screen")" media="all" rel="stylesheet" />
+    <link href="@Styles.Url("~/css/bundles/tippy")" media="all" rel="stylesheet" />
     <!--<![endif]-->
     @*@Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")*@
@@ -178,9 +179,11 @@
     <div id="global-app-error" class="app-error hidden"></div>
     @Scripts.Render("~/bundles/libs")
     @Scripts.Render("~/bundles/c3")
+    @Scripts.Render("~/bundles/tippy")
     @Scripts.Render("~/bundles/screen")
-    
-    @RenderSection("script",false)
+
+
+    @RenderSection("script", false)
 
 </body>
 </html>

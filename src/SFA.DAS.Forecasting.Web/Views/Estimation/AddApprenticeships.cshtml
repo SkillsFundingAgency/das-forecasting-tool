@@ -8,7 +8,8 @@
 
 @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
 {
-     <main id="content" role="main" tabindex="-1">
+    @Html.AntiForgeryToken()
+    <main id="content" role="main" tabindex="-1">
         <div id="estimate-add-apprenticeship">
             <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
             @Html.HiddenFor(model => model.Name)
@@ -27,7 +28,6 @@
                     <li class="@HideShowValidation("NoNumberOfMonths")" id="noLength"><a href="#apprenticeship-length">The number of months was not entered</a></li>
                     <li class="@HideShowValidation("ShortNumberOfMonths")" id="shortLength"><a href="#apprenticeship-length">The number of months must be 12 months or more</a></li>
                     <li class="@HideShowValidation("NoStartMonth")" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
-                    <li class="@HideShowValidation("InvalidStartMonth")" id="invalidStartMonth"><a href="#startDateMonth">The start month entered needs to be between 1 and 12</a></li>
                     <li class="@HideShowValidation("NoStartYear")" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
                     <li class="@HideShowValidation("LateDate")" id="lateDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
                     <li class="@HideShowValidation("StartDateInPast")" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
@@ -81,7 +81,7 @@
 
                         <div class="form-group no-of-apprentice">
                             <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                            @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app",  type = "text" })
+                            @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text" })
                         </div>
 
 

@@ -86,7 +86,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@accountId", Config.EmployerAccountId);
-                    connection.Execute("delete from [employer_financial].[AccountTransfers] where ReceiverAccountId = @accountId; delete from [employer_financial].[Payment] where AccountId = @accountId;", parameters, commandType: CommandType.Text);
+                    connection.Execute("delete from [employer_financial].[LevyDeclaration] where AccountId = @accountId; delete from [employer_financial].[Payment] where AccountId = @accountId;", parameters, commandType: CommandType.Text);
 
                     //parameters = new DynamicParameters();
                     //parameters.Add("@transfers", ToTransferDataTable(Payments.Where(p => p.FundingSource == Models.Payments.FundingSource.Transfer).ToList()).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
@@ -94,7 +94,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 }
             });
         }
-
 
         [Given(@"payments for the following apprenticeships have been recorded in the Payments service")]
         public void GivenPaymentsForTheFollowingApprenticeshipsHaveBeenRecordedInThePaymentsService(Table table)
@@ -377,6 +376,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             };
             var json = JsonConvert.SerializeObject(request);
             Send(Config.PaymentPreLoadHttpFunction, json);
+        }
+
+        [When(@"I trigger the pre-load of the payment events for all employers")]
+        public void WhenITriggerThePre_LoadOfThePaymentEventsForAllEmployers()
+        {
+            var request = new
+            {
+                PeriodYear = CollectionPeriod.Year.ToString(),
+                PeriodMonth = CollectionPeriod.Month.ToString(),
+                PeriodId = CollectionPeriod.Id
+            };
+            var json = JsonConvert.SerializeObject(request);
+            Send(Config.AllEmployersPaymentPreLoadHttpFunction, json);
         }
 
         [When(@"I trigger the pre-load of anonymised payment events")]

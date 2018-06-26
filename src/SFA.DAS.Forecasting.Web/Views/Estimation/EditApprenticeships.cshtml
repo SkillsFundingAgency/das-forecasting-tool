@@ -1,0 +1,168 @@
+﻿@using SFA.DAS.Forecasting.Web.Extensions
+
+@model SFA.DAS.Forecasting.Web.ViewModels.EditApprenticeshipsViewModel
+
+@{
+    ViewBag.Title = "Edit Apprenticeships";
+}
+
+
+<main id="content" role="main" tabindex="-1">
+    <div id="estimate-edit-apprenticeship">
+
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+
+                @if (!ViewContext.ViewData.ModelState.IsValid)
+                {
+                    <div class="error-summary validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+                        <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+                            Errors to fix
+                        </h1>
+
+                        <p>Please check the details you have entered against the information that's needed.</p>
+
+                        <ul class="error-summary-list list list-links">
+                            @foreach (var stateItem in ViewContext.ViewData.ModelState)
+                            {
+                                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
+
+                                foreach (var error in stateItem.Value.Errors.Take(1))
+                                {
+                                    <li>
+                                        <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
+                                            @error.ErrorMessage
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                }
+
+
+                <div class="hgroup form-group">
+                    <h1 class="heading-xlarge">Edit apprenticeships in your current estimate</h1>
+                    <p>
+                        Edit the apprenticeship details in your estimate so that you can see how much you could transfer to another employer.
+                        We will show the government funding band maximum on funds and typical duration of the apprenticeship.
+                        You can adjust the cost and monthly figures should you need to.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        @using (@Html.BeginForm("PostEditApprenticeships", "Estimation", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="grid-row">
+                <div class="column-two-thirds">
+
+                    @Html.HiddenFor(m => m.FundingCap)
+
+                    <div class="form-group">
+                        <label class="form-label-bold" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCap">Apprenticeship</label>
+                        <label>@Model.CourseTitle - Level: @Model.Level</label>
+                        @Html.HiddenFor(m => m.CourseTitle)
+                        @Html.HiddenFor(m => m.Level)
+                    </div>
+
+
+                    <div class="form-group no-of-apprentice @Html.AddErrorClass(m => m.NumberOfApprentices)">
+                        <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
+                        @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new { id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices) })
+                        @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number" })
+                    </div>
+
+
+                    <div class="form-group no-of-months @Html.AddErrorClass(m => m.TotalInstallments)">
+                        <label class="form-label-bold" for="levy-length">Number of months</label>
+                        <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
+                        @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
+                        @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "levy-length", name = "levy-length", type = "text" })
+                    </div>
+
+                    <div class="form-group @Html.AddErrorClass(m => m.StartDate) @Html.AddErrorClass(m => m.StartDateMonth) @Html.AddErrorClass(m => m.StartDateYear)" id="dateWrapper">
+
+                        <span class="form-label-bold">Start date</span>
+                        <span class="form-hint">For example, 09 2018</span>
+
+                        @Html.ValidationMessageFor(m => m.StartDate, null, new { id = "error-message-" + Html.IdFor(m => m.StartDate) })
+                        @Html.HiddenFor(m => m.StartDate)
+
+                        @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
+                        @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
+                        <div class="form-date">
+                            <div class="form-group form-group-month">
+                                <label for="startDateMonth">Month</label>
+                                @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM" })
+                            </div>
+                            <div class="form-group form-group-year">
+                                <label for="startDateYear">Year</label>
+                                @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY" })
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="form-label-bold">Government funding band maximum</label>
+
+
+                        <span id="details-about-funding-calculated" class="form-hint">
+                            Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCap.FormatCost()</span><br />
+                            Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
+                        </span>
+
+                        <span id="details-about-funding" class="form-hint" style="display: none;">
+                            Choose an apprenticeship and number of apprentices to see this figure <br>
+                            <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
+                        </span>
+                    </div>
+
+                    <!-- Cost -->
+
+                    <div class="form-group @Html.AddErrorClass(m => m.TotalCost)">
+                        <label class="form-label-bold" for="levy-value">Total cost</label>
+                        <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
+                        @Html.ValidationMessageFor(m => m.TotalCost, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCost) })
+                        <label for="levy-value-2" class="form-label-bold">
+                            £
+                            @Html.TextBoxFor(model => model.TotalCost, new { @class = "form-control levy-value", id = "levy-value", name = "levy-value", type = "text" })
+
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="grid-row">
+
+                <div class="column-full">
+                    <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
+                    @*<a class="button text-link pull-right" href="#" style="float: right;">Cancel</a>*@
+
+                    <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" 
+                       aria-label="Cancel" 
+                       class="button text-link">
+                        Cancel
+                    </a>
+
+                </div>
+            </div>
+        }
+
+
+    </div>
+</main>
+
+@section breadcrumb {
+    <div class="breadcrumbs">
+        <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" aria-label="Back" class="back-link">Back</a>
+    </div>
+}

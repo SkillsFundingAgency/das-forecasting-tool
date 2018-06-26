@@ -23,7 +23,7 @@ Scenario: Pre load payments
 	Then the funding projections payments service should record the payments
 	And the funding projections commitments service should record the commitments
 
-	Scenario: Pre-load transfer payments	
+Scenario: Pre-load transfer payments	
 	Given the funding source for the payments is "Levy Transfer"
 	And payments for the following apprenticeships have been recorded in the Payments service
 	| Payment Amount | Apprentice Name   | Course Name   | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | Delivery Period Month | Delivery Period Year | 
@@ -66,3 +66,13 @@ Scenario: Pre load multiple anonymised payments for a single apprenticeship
 	And the Payment Id should be anonymised
 	And the Apprenticeship Id should be anonymised	
 	And the funding projections commitments service should record the anonymised commitment
+
+Scenario: Pre load payments for all employers 
+	Given payments for the following apprenticeships have been recorded in the Payments service
+	| Payment Amount | Apprentice Name   | Course Name   | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | Delivery Period Month | Delivery Period Year |
+	| 166.66667      | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | 01/01/2018 | 166.66667          | 500.00            | 12                     | 2                     | 2018                 |
+	| 83.33333       | Test Apprentice 2 | Test Course 2 | 2            | Test Provider 2 | 01/01/2018 | 83.33333           | 250.00            | 24                     | 2                     | 2018                 |
+	And the payments have also been recorded in the Employer Accounts Service
+	When I trigger the pre-load of the payment events for all employers
+	Then the funding projections payments service should record the payments
+	And the funding projections commitments service should record the commitments

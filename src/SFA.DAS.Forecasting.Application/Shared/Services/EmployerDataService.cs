@@ -12,6 +12,8 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     public interface IEmployerDataService
     {
         Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string employerId, string payrollYear, short periodMonth);
+
+        Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth);
     }
 
     public class LevyDeclarations : List<LevyDeclarationViewModel>, IAccountResource { }
@@ -68,6 +70,22 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 LevyDeclaredInMonth = levy.Amount,
                 SubmissionDate = levy.SubmissionDate,
             }).ToList();
+        }
+
+        public async Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth)
+        {
+            var accountIds = await _databaseService
+                .GetAccountIds(payrollYear, payrollMonth);
+
+            if (accountIds == null || !accountIds.Any())
+            {
+                _logger.Info($"Not able to find any EmployerAccountIds, Year: {payrollYear}, Month: {payrollMonth}");
+                return new List<long>();
+            }
+
+            _logger.Info($"Got {accountIds.Count} for Year: {payrollYear} Month: {payrollMonth}.");
+
+            return accountIds.ToList();
         }
     }
 }

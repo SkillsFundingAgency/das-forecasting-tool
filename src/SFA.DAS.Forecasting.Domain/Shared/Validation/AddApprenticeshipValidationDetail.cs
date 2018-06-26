@@ -7,7 +7,6 @@
         public string NoNumberOfMonths { get; set; }
         public string ShortNumberOfMonths { get; set; }
         public string NoStartMonth { get; set; }
-        public string InvalidStartMonth { get; set; }
         public string NoStartYear { get; set; }
         public string StartDateInPast { get; set; }
 
