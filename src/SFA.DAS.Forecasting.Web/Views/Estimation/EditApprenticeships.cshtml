@@ -166,3 +166,7 @@
         <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" aria-label="Back" class="back-link">Back</a>
     </div>
 }
+
+@section script{
+    @Scripts.Render("~/bundles/addApprenticeship")
+}
