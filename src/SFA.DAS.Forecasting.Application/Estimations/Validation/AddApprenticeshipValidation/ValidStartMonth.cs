@@ -7,10 +7,17 @@ namespace SFA.DAS.Forecasting.Application.Estimations.Validation.AddApprenticesh
     {
         public ValidationResult Validate(ApprenticeshipToAdd apprenticeshipToAdd)
         {
-            return !apprenticeshipToAdd.StartMonth.HasValue || apprenticeshipToAdd.StartMonth.Value < 1 ||
-                   apprenticeshipToAdd.StartMonth.Value > 12
-                ? ValidationResult.Failed("NoStartMonth")
-                : ValidationResult.Success;
+            if (!apprenticeshipToAdd.StartMonth.HasValue)
+            {
+                return ValidationResult.Failed("NoStartMonth");
+            }
+
+            if (apprenticeshipToAdd.StartMonth.Value < 1 || apprenticeshipToAdd.StartMonth.Value > 12)
+            {
+                return ValidationResult.Failed("InvalidStartMonth");
+            }
+
+            return ValidationResult.Success;
         }
     }
 }
