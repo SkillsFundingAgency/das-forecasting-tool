@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 _dataContext.AccountProjectionCommitments
                     .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId).ToList());
             
-            await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@id", new SqlParameter("@Id", employerAccountId));
+            await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
         }
 
         public async Task SaveChanges()
