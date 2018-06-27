@@ -111,7 +111,16 @@
                                     newFinancialYearAccountFunds = false;
                                     var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
 
-                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+                                    if(accountFund.Date > new DateTime(2019, 3, 1))
+                                    {
+                                        <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+                                        <div class="panel-warning2">
+                                            <span class="icon"></span>
+                                            <p>
+                                                The estimate for the account balance projection does not yet show funds that are due to expire. You need to be aware that unused funds will expire after 24 months, which may affect the funds available to spend.
+                                            </p>
+                                        </div>
+                                    }
                                     @:<table class="small responsive">
                                     <thead>
                                     <tr>

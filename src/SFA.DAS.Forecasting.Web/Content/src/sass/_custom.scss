@@ -274,4 +274,17 @@ table.small th, table.small td, table.small .form-hint {
     background: #f7e7e9;
 }
 
+.panel-warning2 {
+    padding-left: 50px;
+    padding-top: 0;
+    position: relative;
+
+    .icon {
+        @include icon(icon-important, 35, 35, '../../Content/dist/images');
+        position: absolute;
+        top: 5px;
+        left: 0;
+    }
+}
+
 // END Estimation Style
