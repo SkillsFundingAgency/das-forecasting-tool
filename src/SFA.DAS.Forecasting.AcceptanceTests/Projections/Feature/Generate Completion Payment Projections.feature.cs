@@ -412,6 +412,74 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Unallocated Completion Payments")]
+        public virtual void UnallocatedCompletionPayments()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Unallocated Completion Payments", ((string[])(null)));
+#line 74
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 75
+ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "ActualEndDate",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table10.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course 1",
+                        "1",
+                        "Test Provider 1",
+                        "last year",
+                        "",
+                        "1333.33",
+                        "1000",
+                        "6",
+                        "Levy"});
+            table10.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course 2",
+                        "1",
+                        "Test Provider 2",
+                        "last year",
+                        "last month",
+                        "666.66",
+                        "2000",
+                        "11",
+                        "Levy"});
+            table10.AddRow(new string[] {
+                        "Test Apprentice 3",
+                        "Test Course 3",
+                        "1",
+                        "Test Provider 2",
+                        "last year",
+                        "",
+                        "666.66",
+                        "3000",
+                        "11",
+                        "Levy"});
+#line 76
+    testRunner.And("the following commitments have been recorded", ((string)(null)), table10, "And ");
+#line 81
+    testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 82
+    testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 83
+ testRunner.And("the unallocated completion amount is 1000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

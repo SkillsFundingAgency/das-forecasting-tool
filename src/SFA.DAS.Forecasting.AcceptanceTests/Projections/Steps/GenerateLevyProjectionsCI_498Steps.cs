@@ -155,5 +155,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         {
             Assert.AreEqual(AccountProjections.First().Month, ProjectionsStartPeriod.Month, $"Expected the first month to be {ProjectionsStartPeriod.Month} but was {AccountProjections.First().Month}");
         }
+
+        [Then(@"the total completion amount is (.*)")]
+        public void ThenTheTotalCompletionAmountIs(int amount)
+        {
+            Assert.AreEqual(amount, AccountProjections.Sum(c=>c.LevyFundedCompletionPayments));
+        }
+
     }
 }

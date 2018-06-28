@@ -296,7 +296,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CourseLevel = commitment.CourseLevel,
                     StartDate = commitment.StartDateValue,
                     PlannedEndDate = commitment.PlannedEndDate,
-                    ActualEndDate = null,
+                    ActualEndDate = commitment.ActualEndDateValue.Value == DateTime.MinValue ? null : commitment.ActualEndDateValue,
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,

@@ -72,7 +72,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.AreEqual(readCsvHeader, "Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Future funds");
+            Assert.AreEqual(readCsvHeader, "Date,Funds in,Cost of training,Completion payments,Your contribution,Government contribution,Balance");
         }
 
         [Then(@"column headers are downloaded for apprenticeship CSV")]
@@ -80,7 +80,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var readCsvHeader = readCsv.First();
-            Assert.AreEqual(readCsvHeader, "Start Date,End Date,Apprenticeship,Apprenticeship Level,Transfer to Employer,Uln,Apprentice Name,UKPRN,Provider Name,Total Cost,Monthly Training Cost,Completion Amount");
+            Assert.AreEqual(readCsvHeader, "Start Date,End Date,Apprenticeship,Apprenticeship Level,Transfer to Employer,ULN,Apprentice Name,UKPRN,Provider Name,Total Cost,Monthly Training Cost,Completion Amount");
         }
 
 
