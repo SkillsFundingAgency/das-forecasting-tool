@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentValidation.Attributes;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
@@ -16,6 +17,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 
         public short TotalInstallments { get; set; }
         public decimal TotalCost { get; set; }
+
+        public string FundingPeriodsJson { get; set; }
+        public string CourseId { get; set; }
 
         public DateTime StartDate
         {

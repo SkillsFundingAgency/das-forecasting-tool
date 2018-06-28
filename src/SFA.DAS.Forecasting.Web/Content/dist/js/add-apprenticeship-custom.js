@@ -4,8 +4,19 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 (function () {
 
     var init = function () {
-        if ($("#choose-apprenticeship")) {
-            $("#choose-apprenticeship").select2();
+        if (document.getElementById("estimate-edit-apprenticeship")) {
+            var fundingBands = JSON.parse($('#FundingPeriodsJson').val())
+            // What if null?
+            sfa.AddApprenticeship.Result = {
+                CourseId: $('#CourseId').val(),
+                NumberOfMonths: $('#levy-length').val(),
+                FundingBands: fundingBands,
+
+            };
+        } else {
+            if ($("#choose-apprenticeship")) {
+                $("#choose-apprenticeship").select2();
+            }
         }
     };
     init();

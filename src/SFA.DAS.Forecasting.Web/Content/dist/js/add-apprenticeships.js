@@ -27,6 +27,10 @@
         if (!cSharpDate)
             return cSharpDate;
 
+        if (cSharpDate.indexOf('-') > -1) {
+            return new Date(cSharpDate);
+        }
+
         var stripedCsharpDate = cSharpDate.replace(/[^0-9 +]/g, '');
         return new Date(parseInt(stripedCsharpDate));
     }

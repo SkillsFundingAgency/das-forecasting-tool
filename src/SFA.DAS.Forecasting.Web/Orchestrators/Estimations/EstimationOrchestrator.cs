@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -99,6 +100,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
 
+            var fundingPeriods = new System.Collections.Generic.List<FundingPeriodViewModel>
+                {
+                    new FundingPeriodViewModel { FromDate = new DateTime(2015, 1, 1), ToDate = new DateTime(2019, 12, 31), FundingCap = 800 },
+                    new FundingPeriodViewModel { FromDate = new DateTime(2020, 1, 1), ToDate = new DateTime(2020, 12, 31), FundingCap = 900 },
+                    new FundingPeriodViewModel { FromDate = new DateTime(2021, 1, 1), ToDate = null, FundingCap = 1000 }
+                };
             return new EditApprenticeshipsViewModel
             {
                 CourseTitle = model.CourseTitle,
@@ -112,7 +119,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 StartDateYear = model.StartDate.Year,
                 HashedAccountId = hashedAccountId,
                 FundingCap = course.FundingCap,
-                CalculatedTotalCap = course.FundingCap * model.ApprenticesCount
+                FundingPeriodsJson = JsonConvert.SerializeObject(fundingPeriods),
+                CalculatedTotalCap = course.FundingCap * model.ApprenticesCount,
+                CourseId = course.Id
+
             };
         }
 
