@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Levy.Handlers;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Domain.Levy;
+using SFA.DAS.Forecasting.Levy.Functions;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
 {
@@ -43,7 +44,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
         public async Task Uses_Repository_To_Get_Levy_Period()
         {
             var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
-            await handler.Handle(LevySchemeDeclaration);
+            await handler.Handle(LevySchemeDeclaration, QueueNames.AllowProjection);
             Moqer.GetMock<ILevyDeclarationRepository>()
                 .Verify(x => x.Get(
                 It.Is<long>(id => id == LevySchemeDeclaration.AccountId),
@@ -56,7 +57,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
         public async Task Stores_Levy_Period()
         {
             var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
-            await handler.Handle(LevySchemeDeclaration);
+            await handler.Handle(LevySchemeDeclaration, QueueNames.AllowProjection);
             Moqer.GetMock<ILevyDeclarationRepository>()
                 .Verify(x => x.Store(It.IsAny<LevyDeclaration>()), Times.Once());
         }
