@@ -105,7 +105,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         public void Fails_If_Funding_Source_Is_MoreThan_2()
         {
             var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.FundingSource = (FundingSource)0;
+            PaymentCreatedMessage.FundingSource = (FundingSource)3;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
