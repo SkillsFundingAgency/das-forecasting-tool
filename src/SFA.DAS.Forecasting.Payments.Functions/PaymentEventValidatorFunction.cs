@@ -28,20 +28,12 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 
                     if (!validationResults.IsValid)
                     {
-                        writer.Warning($"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
                         logger.Warn($"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
-                        
                         return null;
                     }
 
-                    writer.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
-
-                    if (!paymentCreatedMessage.FundingSource.Equals(FundingSource.Levy) ||
-                        !paymentCreatedMessage.FundingSource.Equals(FundingSource.Transfer))
-                    {
-                        writer.Warning($"Invalid paymentmessage: {JsonConvert.SerializeObject(paymentCreatedMessage)}");
-                    }
-
+                    logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
+                    
                     return paymentCreatedMessage;
                 });
         }
