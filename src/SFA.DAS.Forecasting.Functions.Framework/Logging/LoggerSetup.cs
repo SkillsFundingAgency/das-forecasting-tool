@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
     {
         internal static NLogLogger Create(ExecutionContext executionContext, TraceWriter writer, Type type)
         {
-            var appName = executionContext.FunctionName;
+            var appName = GetSetting("AppName");
             var localLogPath = GetSetting("LogDir");
 
             LogManager.Configuration = new LoggingConfiguration();
@@ -37,10 +37,10 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             {
                 Name = "RedisLog",
                 AppName = appName,
-                EnvironmentKey = "EnvironmentName",
-                ConnectionStringKey = "LoggingRedisConnectionString",
+                EnvironmentKey = GetSetting("EnvironmentName"),
+                ConnectionStringKey = GetSetting("LoggingRedisConnectionString"),
                 IncludeAllProperties = true,
-                KeySettingsKey = "LoggingRedisKey",
+                KeySettingsKey = GetSetting("LoggingRedisKey"),
                 Layout = "${message}"
             };
 

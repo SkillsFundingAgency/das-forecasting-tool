@@ -124,6 +124,10 @@
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj">
+      <Project>{602A91CA-3FC9-4A33-8B50-2714173EA22C}</Project>
+      <Name>SFA.DAS.Forecasting.Levy.Functions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
       <Name>SFA.DAS.Forecasting.Models</Name>
