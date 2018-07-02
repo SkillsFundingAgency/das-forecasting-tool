@@ -1,5 +1,9 @@
-﻿using FluentValidation;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FluentValidation;
+using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 {
@@ -31,11 +35,12 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .InclusiveBetween(1, 12)
                 .WithMessage("The start month entered needs to be between 1 and 12");
 
-            RuleFor(m => m.TotalCost)
-                .GreaterThan(0)
+            RuleFor(m => m.TotalCostAsString)
+                .Must(s => s.ToDecimal() > 0)
                 .WithMessage("The total training cost was not entered")
-                .NotEmpty()
-                .WithMessage("The total training cost was not entered");
+                .Must((o, b) => CheckTotalCost(o, b))
+                .WithMessage("The total cost can't be higher than the total government funding band maximum for this apprenticeship")
+                ;
 
             RuleFor(m => m.StartDate)
                 .GreaterThan(DateTime.Now.AddMonths(-1))
@@ -45,6 +50,12 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .WithMessage("The start date must be within the next 4 years")
                 .When(m => m.StartDate != DateTime.MinValue);
 
+        }
+
+        private bool CheckTotalCost(EditApprenticeshipsViewModel vm, string b)
+        {
+            var fundingBand = vm.GetFundingPeriod();
+            return (b.ToDecimal()) <= (fundingBand.FundingCap * vm.NumberOfApprentices);
         }
     }
 }

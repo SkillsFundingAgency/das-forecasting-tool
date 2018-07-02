@@ -26,8 +26,9 @@ namespace SFA.DAS.Forecasting.Web
 
             bundles.Add(new ScriptBundle("~/bundles/addApprenticeship")
                 .Include("~/Content/dist/js/select2.min.js")
-                .Include("~/Content/dist/js/add-apprenticeships.js")
-                .Include("~/Content/dist/js/add-apprenticeship-custom.js")
+                .Include("~/Content/dist/js/add-edit-functions.js")
+                .Include("~/Content/dist/js/add-apprenticeship.js")
+                .Include("~/Content/dist/js/edit-apprenticeship.js")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/c3")

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -106,23 +107,21 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     new FundingPeriodViewModel { FromDate = new DateTime(2020, 1, 1), ToDate = new DateTime(2020, 12, 31), FundingCap = 900 },
                     new FundingPeriodViewModel { FromDate = new DateTime(2021, 1, 1), ToDate = null, FundingCap = 1000 }
                 };
+
             return new EditApprenticeshipsViewModel
             {
+                CourseId = course.Id,
                 CourseTitle = model.CourseTitle,
                 ApprenticeshipsId = apprenticeshipsId,
                 EstimationName = estimationName,
                 Level = model.Level,
                 NumberOfApprentices = model.ApprenticesCount,
                 TotalInstallments = model.TotalInstallments,
-                TotalCost = model.TotalCost,
+                TotalCostAsString = model.TotalCost.FormatValue(),
                 StartDateMonth = model.StartDate.Month,
                 StartDateYear = model.StartDate.Year,
                 HashedAccountId = hashedAccountId,
-                FundingCap = course.FundingCap,
                 FundingPeriodsJson = JsonConvert.SerializeObject(fundingPeriods),
-                CalculatedTotalCap = course.FundingCap * model.ApprenticesCount,
-                CourseId = course.Id
-
             };
         }
 
@@ -131,7 +130,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountId = _hashingService.DecodeValue(model.HashedAccountId);
             var estimations = await _estimationRepository.Get(accountId);
 
-            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCost);
+            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCostAsString.ToDecimal());
             await _estimationRepository.Store(estimations);
         }
     }

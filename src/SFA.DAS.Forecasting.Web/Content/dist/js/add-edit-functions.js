@@ -1,10 +1,10 @@
-﻿var AddApprentiecships = {
-
+﻿
+var AddEditApprentiecships = {
     calculateFundingCap: function (date, model) {
         var today = new Date();
         var thisMonth = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0)
 
-        if (   date === undefined
+        if (date === undefined
             || date.toString() === "Invalid Date"
             || date < thisMonth
             || model === undefined) {
@@ -33,10 +33,23 @@
 
         var stripedCsharpDate = cSharpDate.replace(/[^0-9 +]/g, '');
         return new Date(parseInt(stripedCsharpDate));
+    },
+
+    toGBP: function (data) {
+        return data.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' }).split('.')[0];
+    },
+
+    numberWithCommas: function (number) {
+        var parts = number.toString().split('.');
+        var partToProcess = parts[0];
+        partToProcess = partToProcess.replace(/,/g, '');
+        partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        parts[0] = partToProcess;
+        return parts.join('.');
     }
-}
+};
 
 // For Jasmine testing
-if (typeof(module) != 'undefined') {
-    module.exports = AddApprentiecships;
+if (typeof (module) != 'undefined') {
+    module.exports = AddEditApprentiecships;
 }

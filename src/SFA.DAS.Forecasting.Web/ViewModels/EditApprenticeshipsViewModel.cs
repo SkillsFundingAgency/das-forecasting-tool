@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentValidation.Attributes;
+using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
@@ -16,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int NumberOfApprentices { get; set; }
 
         public short TotalInstallments { get; set; }
-        public decimal TotalCost { get; set; }
+        public string TotalCostAsString { get; set; }
 
         public string FundingPeriodsJson { get; set; }
         public string CourseId { get; set; }
@@ -33,7 +36,21 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int StartDateMonth { get; set; }
         public int StartDateYear { get; set; }
 
-        public decimal? CalculatedTotalCap { get; set; }
-        public decimal FundingCap { get; set; }
+        public decimal? CalculatedTotalCap => GetFundingPeriod().FundingCap * NumberOfApprentices;
+
+        public decimal FundingCapCalculated => GetFundingPeriod().FundingCap;
+
+        public FundingPeriodViewModel GetFundingPeriod()
+        {
+            var fundingBands = JsonConvert.DeserializeObject<IList<FundingPeriodViewModel>>(FundingPeriodsJson);
+            var fundingBand = fundingBands.FirstOrDefault(m =>
+                   m.FromDate < StartDate
+                && m.ToDate == null || m.ToDate > StartDate);
+
+            if (fundingBand == null)
+                fundingBand = fundingBands.Last();
+
+            return fundingBand;
+        }
     }
 }
