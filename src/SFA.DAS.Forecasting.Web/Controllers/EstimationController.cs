@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using FluentValidation.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
@@ -130,28 +131,25 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/CalculateTotalCost", Name = "CalculateTotalCost")]
-        public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue, string estimationName)
+        [Route("{estimationName}/apprenticeship/course")]
+        public async Task<ActionResult> GetCourseInfo(string courseId, string estimationName)
         {
-            var fundingCap = await _addApprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
-            var totalValue = fundingCap * numberOfApprentices;
-            var totalValueAsString = totalValue.FormatValue();
+            var course = await _addApprenticeshipOrchestrator.GetCourse(courseId);
+
+            dynamic o = new { FromDate = DateTime.Today.AddDays(-1), ToDate = "null", FundingCap = course.FundingCap };
+
+            // Test data
+            //dynamic o1 = new { FromDate = new DateTime(2018, 1, 1), ToDate = new DateTime(2018, 12, 31), FundingCap = 1800 };
+            //dynamic o2 = new { FromDate = new DateTime(2019, 1, 1), ToDate = new DateTime(2019, 12, 31), FundingCap = 1900 };
+            //dynamic o3 = new { FromDate = new DateTime(2020, 1, 1), ToDate = "null", FundingCap = 2000 };
+            //var fb = new dynamic[] { o1, o2, o3 };
             var result = new
             {
-                FundingCap = fundingCap.FormatCost(),
-                TotalFundingCap = totalValue.FormatCost(),
-                NumberOfApprentices = numberOfApprentices,
-                TotalFundingCapValue = totalValueAsString
+                CourseId = course.CourseId,
+                NumberOfMonths = course.NumberOfMonths,
+                FundingBands = new dynamic[] { o }
             };
 
-            return Json(result);
-        }
-
-        [HttpPost]
-        [Route("{estimationName}/apprenticeship/GetDefaultNumberOfMonths", Name = "GetDefaultNumberOfMonths")]
-        public async Task<ActionResult> GetDefaultNumberOfMonths(string courseId, string estimationName)
-        {
-            var result = await _addApprenticeshipOrchestrator.GetDefaultNumberOfMonths(courseId);
             return Json(result);
         }
 

@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     EffectiveTo = null,
                     IsActiveStandard = true,
                     IsPublished = true,
-                    MaxFunding = 10000,
+	                CurrentFundingCap = 10000,
                     Title = "Test course",
                 },
                 new StandardSummary
@@ -43,7 +43,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     EffectiveTo = null,
                     IsActiveStandard = false,
                     IsPublished = true,
-                    MaxFunding = 10000,
+	                CurrentFundingCap = 10000,
                     Title = "Test inactive course",
                 },
                 new StandardSummary
@@ -55,7 +55,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     EffectiveTo = null,
                     IsActiveStandard = true,
                     IsPublished = true,
-                    MaxFunding = 10000,
+                    CurrentFundingCap = 10000,
                     Title = "Test course 2",
                 }
             };
