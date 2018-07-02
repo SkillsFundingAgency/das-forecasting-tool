@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
@@ -22,7 +23,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 		[Given(@"I have logged into my Apprenticeship Account")]
 		public void GivenIHaveLoggedIntoMyApprenticeshipAccount()
 		{
-            if (!WebSite.BaseUrl.Host.Contains("localhost"))
+            if (!WebSite.IsLocalhost)
             {
                 var loginPage = WebSite.NavigateToLoginPage();
                 loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
@@ -57,7 +58,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         {
             var page = Get<FundingProjectionPage>();            
             Assert.IsTrue(page.AccountProjectionHeader.Displayed, "ERROR:The account projection header is not visible");
-            Assert.IsTrue(page.AccountProjectionTable.Displayed, "ERROR:The account projection table is not visible");
+            Assert.IsTrue(page.AccountProjectionTables.FirstOrDefault().Displayed, "ERROR:The account projection table is not visible");
 
         }
     }
