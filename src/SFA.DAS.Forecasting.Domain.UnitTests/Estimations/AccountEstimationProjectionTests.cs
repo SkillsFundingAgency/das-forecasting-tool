@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
     {
         private const int EmployerAccountId = 12345;
         private AutoMoq.AutoMoqer _moqer;
-        private List<CommitmentModel> _commitments;
+        private EmployerCommitmentsModel _commitments;
         private List<AccountProjectionModel> _accountProjection;
         private Account _account;
 
@@ -26,27 +26,30 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void SetUp()
         {
             _moqer = new AutoMoqer();
-            _commitments = new List<CommitmentModel>
+            _commitments = new EmployerCommitmentsModel
             {
-                new CommitmentModel
+                LevyFundedCommitments =
                 {
-                    CompletionAmount = 100,
-                    EmployerAccountId = EmployerAccountId,
-                    MonthlyInstallment = 50,
-                    PlannedEndDate = new DateTime(2018, 5, 1),
-                    StartDate = new DateTime(2018, 1, 1),
-                    NumberOfInstallments = 5,
-                    FundingSource = Models.Payments.FundingSource.Levy
-                },
-                new CommitmentModel
-                {
-                    CompletionAmount = 100,
-                    EmployerAccountId = EmployerAccountId,
-                    MonthlyInstallment = 50,
-                    PlannedEndDate = new DateTime(2019, 7, 1),
-                    StartDate = new DateTime(2019, 3, 1),
-                    NumberOfInstallments = 5,
-                    FundingSource = Models.Payments.FundingSource.Levy
+                    new CommitmentModel
+                    {
+                        CompletionAmount = 100,
+                        EmployerAccountId = EmployerAccountId,
+                        MonthlyInstallment = 50,
+                        PlannedEndDate = new DateTime(2018, 5, 1),
+                        StartDate = new DateTime(2018, 1, 1),
+                        NumberOfInstallments = 5,
+                        FundingSource = Models.Payments.FundingSource.Levy
+                    },
+                    new CommitmentModel
+                    {
+                        CompletionAmount = 100,
+                        EmployerAccountId = EmployerAccountId,
+                        MonthlyInstallment = 50,
+                        PlannedEndDate = new DateTime(2019, 7, 1),
+                        StartDate = new DateTime(2019, 3, 1),
+                        NumberOfInstallments = 5,
+                        FundingSource = Models.Payments.FundingSource.Levy
+                    }
                 }
             };
             var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);
@@ -134,7 +137,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             estimationProjection.BuildProjections();
 
             Assert.IsNotNull(estimationProjection);
-            Assert.IsAssignableFrom<ReadOnlyCollection<AccountEstimationProjectionModel>>(estimationProjection.Projections);
+            Assert.IsAssignableFrom<ReadOnlyCollection<AccountEstimationProjectionModel>>(estimationProjection
+                .Projections);
         }
 
         [Test]
@@ -166,7 +170,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
             estimationProjection.BuildProjections();
             estimationProjection.Projections.Where(p => p.Month == 5).ToList()
-                .ForEach(p => Assert.AreEqual((decimal)(_account.TransferAllowance + p.TransferFundsIn - p.FundsOut), p.FutureFunds,
+                .ForEach(p => Assert.AreEqual((decimal) (_account.TransferAllowance + p.TransferFundsIn - p.FundsOut),
+                    p.FutureFunds,
                     $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.FundsOut}, actual: {p.FutureFunds}"));
         }
 
@@ -180,9 +185,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             foreach (var estimation in estimationProjection.Projections)
             {
                 Assert.IsNotNull(estimation);
-                Assert.AreEqual((estimation.Month == 5 ? _account.TransferAllowance :  lastBalance) + estimation.TransferFundsIn - estimation.FundsOut,
+                Assert.AreEqual(
+                    (estimation.Month == 5 ? _account.TransferAllowance : lastBalance) + estimation.TransferFundsIn -
+                    estimation.FundsOut,
                     estimation.FutureFunds);
-                lastBalance =  estimation.FutureFunds;
+                lastBalance = estimation.FutureFunds;
             }
         }
     }
