@@ -63,14 +63,15 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         private Expression<Func<CommitmentModel, bool>> GetReceivingEmployerTransferCommitments(long employerAccountId)
         {
-            return commitment => commitment.EmployerAccountId == employerAccountId
+            return commitment => commitment.SendingEmployerAccountId == employerAccountId
+                                 && commitment.EmployerAccountId != employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
                                  && commitment.ActualEndDate == null;
         }
         private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId)
         {
-            return commitment => commitment.SendingEmployerAccountId == employerAccountId
-                                 && commitment.FundingSource == FundingSource.Levy
+            return commitment => commitment.EmployerAccountId == employerAccountId
+                                 && commitment.FundingSource == FundingSource.Transfer
                                  && commitment.ActualEndDate == null;
         }
 
