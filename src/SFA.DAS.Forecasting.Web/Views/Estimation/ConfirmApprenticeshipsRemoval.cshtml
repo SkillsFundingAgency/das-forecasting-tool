@@ -24,7 +24,7 @@
 
         @using (Html.BeginForm("RemoveApprenticeships", "Estimation", FormMethod.Post))
         {
-
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.EstimationName)
             @Html.HiddenFor(model => model.HashedAccountId)
             @Html.HiddenFor(model => model.ApprenticeshipId)

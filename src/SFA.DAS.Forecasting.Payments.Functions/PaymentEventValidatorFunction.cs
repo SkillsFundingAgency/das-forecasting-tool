@@ -2,10 +2,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Validation;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
@@ -30,7 +32,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                         return null;
                     }
 
-                    logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId}");
+                    logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
+                    
                     return paymentCreatedMessage;
                 });
         }

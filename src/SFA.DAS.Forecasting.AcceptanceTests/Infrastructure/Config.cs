@@ -17,8 +17,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
                                         (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);
         public string LevyFunctionUrl => GetAppSetting("LevyFunctionUrl");
         public string LevyPreLoadFunctionUrl => GetAppSetting("LevyPreLoadFunctionUrl");
+        public string LevyPreLoadFunctionAllEmployersUrl => GetAppSetting("LevyPreLoadFunctionAllEmployersUrl");
         public string PaymentFunctionUrl => GetAppSetting("PaymentFunctionUrl");
         public string PaymentPreLoadHttpFunction => GetAppSetting("PaymentPreLoadHttpFunction");
+        public string AllEmployersPaymentPreLoadHttpFunction => GetAppSetting("AllEmployersPaymentPreLoadHttpFunction");
         public string ProjectionPaymentFunctionUrl => GetAppSetting("ProjectionPaymentFunctionUrl");
         public string ProjectionLevyFunctionUrl => GetAppSetting("ProjectionLevyFunctionUrl");
         public int EmployerAccountId => int.Parse(GetAppSetting("EmployerAccountId"));

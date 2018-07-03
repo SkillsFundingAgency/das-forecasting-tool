@@ -48,7 +48,6 @@
     function resetNumberOfMonths() {
         var courseId = $('#choose-apprenticeship').val();
         var previousCourseId = $('#PreviousCourseId').val();
-        console.log(`Course id: ${courseId}, previous course id: ${previousCourseId}`);
         if (courseId !== previousCourseId) {
             var requestObject = {
                 courseId: courseId

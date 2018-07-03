@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.Documents;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
@@ -39,8 +40,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
             _dataContext.AccountProjectionCommitments.RemoveRange(
                 _dataContext.AccountProjectionCommitments
                     .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId).ToList());
-            var projections = await Get(employerAccountId);
-            _dataContext.AccountProjections.RemoveRange(projections);
+            
+            await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
         }
 
         public async Task SaveChanges()

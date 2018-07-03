@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -30,7 +31,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
 
             var currentBalance = new Mock<CurrentBalance>();
-            currentBalance.Setup(x => x.RefreshBalance()).ReturnsAsync(true);
+            currentBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>())).ReturnsAsync(true);
 
             _currentBalanceRepository = new Mock<ICurrentBalanceRepository>();
             _currentBalanceRepository.Setup(x => x.Get(ExpectedAccountId))
@@ -48,7 +49,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             _orchestrator = new EstimationOrchestrator(_accountEstimationProjectionRepository.Object,
                 _accountEstimationRepository.Object, _hashingService.Object,
-                _currentBalanceRepository.Object);
+                _currentBalanceRepository.Object,
+                Mock.Of<IApprenticeshipCourseDataService>());
         }
 
         [TestCase(100, 100, 100, 100)]
@@ -128,7 +130,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) DateTime.Now.Month,
                     ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
                     ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
-                    FutureFunds = 100
+                    FutureFunds = -100
                 }
             };
             _accountEstimationProjection.Setup(x => x.Projections)
@@ -137,6 +139,50 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
             Assert.IsTrue(actual.TransferAllowances.First().IsLessThanCost);
+        }
+
+        [Test]
+        public async Task Then_The_IsLessThanCost_Flag_Should_Be_False_If_You_Still_Have_Funds()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) DateTime.Now.AddYears(1).Year,
+                    Month = (short) DateTime.Now.Month,
+                    ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    FutureFunds = 100
+                }
+            };
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
+        }
+
+        [Test]
+        public async Task Then_The_IsLessThanCost_Flag_Should_Be_False_If_You_Have_Zero_Funds()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) DateTime.Now.AddYears(1).Year,
+                    Month = (short) DateTime.Now.Month,
+                    ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    FutureFunds = 0
+                }
+            };
+            _accountEstimationProjection.Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
         }
     }
 }
