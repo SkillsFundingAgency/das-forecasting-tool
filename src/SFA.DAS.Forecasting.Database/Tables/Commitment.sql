@@ -28,3 +28,7 @@ CREATE NONCLUSTERED INDEX [idx_commitment_actualendate] ON [dbo].[Commitment] ([
 GO
 CREATE NONCLUSTERED INDEX [idx_commitment_employerAccountId_sending_endDate] ON [dbo].[commitment] ([ActualEndDate],[EmployerAccountId], [SendingEmployerAccountId] ) INCLUDE ([id],[ApprenticeName], [ApprenticeshipId], [CompletionAmount], [CourseLevel], [CourseName], [FundingSource], [LearnerId], [MonthlyInstallment], [NumberOfInstallments], [PlannedEndDate], [ProviderId], [ProviderName], [StartDate]) WHERE(ActualEndDate IS NULL) WITH (ONLINE = ON)
 GO
+CREATE NONCLUSTERED INDEX [idx_commitment_employerAccountId_fundingsource_endDate] ON [dbo].[commitment] ([ActualEndDate],[EmployerAccountId], [fundingsource] ) INCLUDE ([id],[ApprenticeName], [ApprenticeshipId], [CompletionAmount], [CourseLevel], [CourseName], [SendingEmployerAccountId], [LearnerId], [MonthlyInstallment], [NumberOfInstallments], [PlannedEndDate], [ProviderId], [ProviderName], [StartDate]) WHERE(ActualEndDate IS NULL) WITH (ONLINE = ON)
+GO
+CREATE NONCLUSTERED INDEX [idx_commitment_sendingemployerAccountId_fundingsource_endDate] ON [dbo].[commitment] ([ActualEndDate],[SendingEmployerAccountId], [fundingsource] ) INCLUDE ([id],[ApprenticeName], [ApprenticeshipId], [CompletionAmount], [CourseLevel], [CourseName], [EmployerAccountId], [LearnerId], [MonthlyInstallment], [NumberOfInstallments], [PlannedEndDate], [ProviderId], [ProviderName], [StartDate]) WHERE(ActualEndDate IS NULL) WITH (ONLINE = ON)
+GO
