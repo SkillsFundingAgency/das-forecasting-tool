@@ -30,7 +30,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void SetUpNestedContainer()
         {
             NestedContainer = ParentContainer.GetNestedContainer();
-            WebSite = new ForecastingWebSite(Config.WebSiteUrl, Config.Browser);
+            var url = Config.Environment.Equals("DEV", StringComparison.InvariantCultureIgnoreCase) ? Config.WebSiteUrlLocal: Config.WebSiteUrl;
+            WebSite = new ForecastingWebSite(url, Config.Browser);
         }
 
         [AfterScenario(Order = 999)]
