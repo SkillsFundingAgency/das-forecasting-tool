@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         public async Task DeleteAll(long employerAccountId)
         {
             await _dataContext.Database.ExecuteSqlCommandAsync(
-                "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where @employerAccountId=@p0)",
+                "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
                 employerAccountId);
 
             await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
