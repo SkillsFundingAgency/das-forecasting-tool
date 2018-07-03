@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                     .NotNull()
                     .SetValidator(new CollectionPeriodSuperficialValidator());
 
-                RuleFor(m => m.FundingSource).Must(v => v.HasFlag(FundingSource.Levy) || v.HasFlag(FundingSource.Transfer))
+                RuleFor(m => m.FundingSource).Must(v => v.HasFlag(FundingSource.Levy) || v.HasFlag(FundingSource.Transfer));
 
                 RuleFor(m => m.SendingEmployerAccountId)
                     .NotEqual(m => m.EmployerAccountId)
