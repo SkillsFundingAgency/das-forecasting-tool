@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         {
             _logger.Debug($"Getting balances for account: {message.EmployerAccountId}");
             var currentBalance = await _currentBalanceRepository.Get(message.EmployerAccountId);
-            if (!await currentBalance.RefreshBalance())
+            if (!await currentBalance.RefreshBalance(true))
             {
                 _logger.Warn($"Failed to refresh the account balance for account {message.EmployerAccountId}.  It's possible the account has been refreshed recently.");
                 return;

@@ -88,8 +88,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup();
             AssertionExtensions.Should((string) res.Name).Be("Add Apprenticeships");
-            res.ApprenticeshipToAdd.ShouldBeEquivalentTo(new ApprenticeshipToAdd());
-            res.ValidationResults.ShouldBeEquivalentTo(new List<ValidationResult>());
+            res.ApprenticeshipToAdd.Should().BeEquivalentTo(new ApprenticeshipToAdd());
+            res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
             AssertionExtensions.Should((int) res.AvailableApprenticeships.Count()).Be(2);
         }
 
@@ -98,10 +98,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup();
-            res.ValidationResults.ShouldBeEquivalentTo(new List<ValidationResult>());
+            res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
             AssertionExtensions.Should((int) res.AvailableApprenticeships.Count()).Be(2);
-            res.AvailableApprenticeships.First().ShouldBeEquivalentTo(_courseCarpentry);
-            res.AvailableApprenticeships.ElementAt(1).ShouldBeEquivalentTo(_courseElectrician);
+            res.AvailableApprenticeships.First().Should().BeEquivalentTo(_courseCarpentry);
+            res.AvailableApprenticeships.ElementAt(1).Should().BeEquivalentTo(_courseElectrician);
         }
     }
 }

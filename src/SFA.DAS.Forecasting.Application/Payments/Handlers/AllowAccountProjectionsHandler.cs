@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 			if (lastReceivedTime == null)
                 throw new InvalidOperationException($"No last time recorded for employer account: {paymentCreatedMessage.EmployerAccountId}");
 
-			var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.Now;
+			var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
             Logger.Info($"Allow projections '{allowProjections}' for employer '{paymentCreatedMessage.EmployerAccountId}' in response to payment event.");
 			return allowProjections;
         }

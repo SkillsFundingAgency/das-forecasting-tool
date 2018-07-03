@@ -30,10 +30,10 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
                    var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
 
-                   var paymentsJson = JsonConvert.SerializeObject(payments); 
-                   if (payments == null || !payments.Any())
+                   if (!payments?.Any() ?? false)
                    {
                        logger.Info($"No data found for {message.EmployerAccountId}");
+                       return null;
                    }
 
                    foreach (var payment in payments)

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -17,18 +19,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IAccountEstimationRepository _estimationRepository;
         private readonly IHashingService _hashingService;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
+        private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
         public EstimationOrchestrator(
             IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService, 
-            ICurrentBalanceRepository currentBalanceRepository
-            )
+            ICurrentBalanceRepository currentBalanceRepository,
+            IApprenticeshipCourseDataService apprenticeshipCourseService)
         {
             _estimationProjectionRepository = estimationProjectionRepository ?? throw new ArgumentNullException(nameof(estimationProjectionRepository));
             _estimationRepository = estimationRepository ?? throw new ArgumentNullException(nameof(estimationRepository));
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
+            _apprenticeshipCourseService = apprenticeshipCourseService;
         }
 
         public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
@@ -94,6 +98,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 return;
             await _currentBalanceRepository.Store(currentBalance);
         }
+
         private long GetAccountId(string hashedAccountId) => _hashingService.DecodeValue(hashedAccountId);
 
         private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
@@ -123,6 +128,41 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 return 0;
 
             return first.ProjectedFutureFunds;
+        }
+
+        public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
+        {
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var estimations = await _estimationRepository.Get(accountId);
+
+            var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
+
+            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
+
+            return new EditApprenticeshipsViewModel
+            {
+                CourseTitle = model.CourseTitle,
+                ApprenticeshipsId = apprenticeshipsId,
+                EstimationName = estimationName,
+                Level = model.Level,
+                NumberOfApprentices = model.ApprenticesCount,
+                TotalInstallments = model.TotalInstallments,
+                TotalCost = model.TotalCost,
+                StartDateMonth = model.StartDate.Month,
+                StartDateYear = model.StartDate.Year,
+                HashedAccountId = hashedAccountId,
+                FundingCap = course.FundingCap,
+                CalculatedTotalCap = course.FundingCap * model.ApprenticesCount
+            };
+        }
+
+        public async Task UpdateApprenticeshipModel(EditApprenticeshipsViewModel model)
+        {
+            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
+            var estimations = await _estimationRepository.Get(accountId);
+
+            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCost);
+            await _estimationRepository.Store(estimations);
         }
     }
 }

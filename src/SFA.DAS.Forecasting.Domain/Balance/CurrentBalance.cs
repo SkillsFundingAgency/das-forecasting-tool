@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
         }
 
-        public virtual async Task<bool> RefreshBalance()
+        public virtual async Task<bool> RefreshBalance(bool refreshUnallocatedCompletionPayments = false)
         {
             if (Period >= DateTime.UtcNow.AddDays(-1))
                 return false;
@@ -43,13 +43,13 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             if (currentBalance == null)
                 throw new InvalidOperationException($"Failed to get the account balances for account: {EmployerAccountId}");
 
-            var unallocatedCompletionPayments = _employerCommitments.GetUnallocatedCompletionAmount();
-
             Model.Amount = currentBalance.Amount;
             Model.TransferAllowance = currentBalance.TransferAllowance;
             Model.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
             Model.BalancePeriod = DateTime.UtcNow;
             Model.ReceivedDate = DateTime.UtcNow;
+            if (!refreshUnallocatedCompletionPayments) return true;
+            var unallocatedCompletionPayments = _employerCommitments.GetUnallocatedCompletionAmount();
             Model.UnallocatedCompletionPayments = unallocatedCompletionPayments;
             return true;
         }

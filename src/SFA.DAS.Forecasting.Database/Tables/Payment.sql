@@ -15,3 +15,7 @@
 	[DeliveryPeriodYear] INT NOT NULL,
 	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Payment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id)
 )
+
+GO
+
+CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId] ON [dbo].[Payment] (EmployerAccountId) INCLUDE ([ExternalPaymentId], [SendingEmployerAccountId], [ProviderId], [ApprenticeshipId], [Amount], [ReceivedTime], [LearnerId], [CollectionPeriodMonth], [CollectionPeriodYear], [DeliveryPeriodMonth], [DeliveryPeriodYear] , [FundingSource]) WITH (ONLINE = ON)

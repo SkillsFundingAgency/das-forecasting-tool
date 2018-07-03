@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
         public DateTime StartDateValue => StartDate.ToDateTime();
         public DateTime PlannedEndDate => StartDateValue.AddMonths(NumberOfInstallments);
         public string ActualEndDate { get; set; }
-        public DateTime? ActualEndDateValue => ActualEndDate.ToDateTime();
+        public DateTime? ActualEndDateValue => !string.IsNullOrWhiteSpace(ActualEndDate) ? ActualEndDate.ToDateTime() : DateTime.MinValue;
         public decimal InstallmentAmount { get; set; }
         public decimal CompletionAmount { get; set; }
         public int NumberOfInstallments { get; set; }

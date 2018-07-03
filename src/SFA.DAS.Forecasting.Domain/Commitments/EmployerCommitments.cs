@@ -104,10 +104,17 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public virtual decimal GetUnallocatedCompletionAmount()
         {
-            return _commitments
-                .Where(commitment => commitment.PlannedEndDate < DateTime.Today)
+            var limitEndDate = DateTime.Today.GetStartOfMonth();
+            bool Filter(CommitmentModel commitment) => commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) < limitEndDate;
+            var levyUnallocatedCompletions = _levyFundedCommitments
+                .Where((Func<CommitmentModel, bool>) Filter)
                 .Sum(commitment => commitment.CompletionAmount);
+            var senderUnallocatedCompletions = _sendingEmployerTransferCommitments
+                .Where((Func<CommitmentModel, bool>) Filter)
+                .Sum(commitment => commitment.CompletionAmount);
+            return levyUnallocatedCompletions + senderUnallocatedCompletions;
         }
+
         public bool Any()
         {
             return _commitments.Any();

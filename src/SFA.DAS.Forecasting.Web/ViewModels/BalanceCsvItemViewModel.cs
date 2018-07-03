@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         [Name("Government contribution")]
         public decimal CoInvestmentGovernment { get; set; }
 
-        [Name("Future funds")]
+        [Name("Balance")]
         public decimal Balance { get; set; }
     }
 }

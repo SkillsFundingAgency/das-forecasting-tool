@@ -13,6 +13,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                 .NotNull().NotEmpty()
                 .GreaterThan(0);
             RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
+            RuleFor(m => m.FundingSource).Must(v => v.Equals(FundingSource.Levy) || v.Equals(FundingSource.Transfer));
             When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
                 RuleFor(m => m.Ukprn).GreaterThan(0);
                 RuleFor(m => m.ProviderName).NotNull().NotEmpty();
@@ -30,7 +31,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                 RuleFor(m => m.CollectionPeriod)
                     .NotNull()
                     .SetValidator(new CollectionPeriodSuperficialValidator());
-                RuleFor(m => m.FundingSource).Must(v => v.HasFlag(FundingSource.Levy) || v.HasFlag(FundingSource.Transfer));
+                
 
                 RuleFor(m => m.SendingEmployerAccountId)
                     .NotEqual(m => m.EmployerAccountId)
