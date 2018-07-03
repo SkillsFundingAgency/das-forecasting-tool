@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;

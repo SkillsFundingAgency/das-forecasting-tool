@@ -19,5 +19,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string StubEmployerPaymentTable { get; set; }
         public bool AllowTriggerProjections { get; set; }
         public string ApprenticeshipsApiBaseUri { get; set; }
+	    public string AppInsightsInstrumentationKey { get; set; }
     }
 }
