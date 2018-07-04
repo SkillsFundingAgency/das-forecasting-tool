@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Projections.Features
+namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Projection
 {
     using TechTalk.SpecFlow;
     
