@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
+namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Projection
 {
     using TechTalk.SpecFlow;
     
@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "FundingProjectionPage _Accountprojection.feature"
+#line 1 "FundingProjectionPage_Accountprojection.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
