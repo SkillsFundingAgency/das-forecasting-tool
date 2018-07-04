@@ -32,14 +32,19 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payments
         {
             account = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["StorageConnectionString"]?.ConnectionString);
             cloudQueueClient = account.CreateCloudQueueClient();
-            cloudQueueClient.ClearQueue(QueueNames.Payments.PaymentValidator);
-            cloudQueueClient.ClearQueue(QueueNames.Payments.PaymentProcessor);
-            cloudQueueClient.ClearQueue(QueueNames.Payments.CommitmentProcessor);
-            cloudQueueClient.ClearQueue(QueueNames.Payments.AllowProjection);
+            ClearQueues();
 
             functionFunner = new FunctionFunner();
             functionFunner.StartFunction("SFA.DAS.Forecasting.Payments.Functions");
             functionFunner.StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
+        }
+
+        private void ClearQueues()
+        {
+            cloudQueueClient.ClearQueue(QueueNames.Payments.PaymentValidator);
+            cloudQueueClient.ClearQueue(QueueNames.Payments.PaymentProcessor);
+            cloudQueueClient.ClearQueue(QueueNames.Payments.CommitmentProcessor);
+            cloudQueueClient.ClearQueue(QueueNames.Payments.AllowProjection);
         }
 
         [TearDown]
@@ -112,7 +117,6 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payments
             
             var queue = cloudQueueClient.GetQueueReference(QueueNames.Payments.PaymentValidator);
             Assert.IsTrue(queue.Exists(), $"Queue not found: {QueueNames.Payments.PaymentValidator}");
-            queue.Clear();
             //There is an issue with structrmap/nlog where the first set of concurrent calls to the container hang the thread then cause the func to fail.
             for (var i = 0; i < 32; i++)
             {
@@ -121,7 +125,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payments
                 payments.Add(payment);
             }
             Thread.Sleep(TimeSpan.FromSeconds(60));
-
+            ClearQueues();
             Console.WriteLine("Sending message init the payments app. Waiting for 5 seconds.");
             Thread.Sleep(TimeSpan.FromSeconds(5));
             Console.WriteLine("Now generating the test payments.");
