@@ -135,20 +135,11 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public async Task<ActionResult> GetCourseInfo(string courseId, string estimationName)
         {
             var course = await _addApprenticeshipOrchestrator.GetCourse(courseId);
-
-            var o = new FundingPeriodViewModel { FromDate = DateTime.Today.AddDays(-1), ToDate = null, FundingCap = course.FundingCap };
-
-            // Test data
-
-            var fp1 = new FundingPeriodViewModel { FromDate = new DateTime(2018, 1, 1), ToDate = new DateTime(2018, 12, 31), FundingCap = 1800 };
-            var fp2 = new FundingPeriodViewModel { FromDate = new DateTime(2019, 1, 1), ToDate = new DateTime(2019, 12, 31), FundingCap = 1900 };
-            var fp3 = new FundingPeriodViewModel { FromDate = new DateTime(2020, 1, 1), ToDate = null, FundingCap = 2000 };
-            var fb = new FundingPeriodViewModel[] { fp1, fp2, fp3 };
             var result = new
             {
                 CourseId = course.CourseId,
                 NumberOfMonths = course.NumberOfMonths,
-                FundingBands = fb // new FundingPeriodViewModel[] { o }
+                FundingBands = course.FundingPeriods
             };
 
             return Json(result);

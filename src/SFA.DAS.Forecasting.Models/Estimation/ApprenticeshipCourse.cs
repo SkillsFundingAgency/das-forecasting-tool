@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SFA.DAS.Apprenticeships.Api.Types;
 
 namespace SFA.DAS.Forecasting.Models.Estimation
 {

@@ -101,12 +101,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
 
-            var fundingPeriods = new System.Collections.Generic.List<FundingPeriodViewModel>
-                {
-                    new FundingPeriodViewModel { FromDate = new DateTime(2015, 1, 1), ToDate = new DateTime(2019, 12, 31), FundingCap = 800 },
-                    new FundingPeriodViewModel { FromDate = new DateTime(2020, 1, 1), ToDate = new DateTime(2020, 12, 31), FundingCap = 900 },
-                    new FundingPeriodViewModel { FromDate = new DateTime(2021, 1, 1), ToDate = null, FundingCap = 1000 }
-                };
+            var fundingPeriods = course.FundingPeriods.Select(m =>
+                        new FundingPeriodViewModel
+                        {
+                            FromDate = m.EffectiveFrom,
+                            ToDate = m.EffectiveTo,
+                            FundingCap = m.FundingCap
+                        });
 
             return new EditApprenticeshipsViewModel
             {

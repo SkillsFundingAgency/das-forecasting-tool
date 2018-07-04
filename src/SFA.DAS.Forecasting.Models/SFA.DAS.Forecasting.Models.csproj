@@ -53,6 +53,7 @@
     <Compile Include="Estimation\ApprenticeshipCourseType.cs" />
     <Compile Include="Estimation\ApprenticeshipToAdd.cs" />
     <Compile Include="Estimation\ApprenticeshipCourse.cs" />
+    <Compile Include="Estimation\FundingPeriod.cs" />
     <Compile Include="Estimation\VirtualApprenticeship.cs" />
     <Compile Include="IDocument.cs" />
     <Compile Include="Levy\LevyDeclarationModel.cs" />

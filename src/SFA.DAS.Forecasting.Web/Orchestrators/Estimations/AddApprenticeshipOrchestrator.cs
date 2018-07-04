@@ -140,7 +140,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             {
                 CourseId = courseId,
                 NumberOfMonths = course.Duration,
-                FundingCap = course.FundingCap
+                FundingPeriods = course.FundingPeriods
+                                    .Select(m =>
+                                        new FundingPeriodViewModel
+                                        {
+                                            FromDate = m.EffectiveFrom,
+                                            ToDate = m.EffectiveTo,
+                                            FundingCap = m.FundingCap
+                                        })
+                                    .ToList()
             };
         }
 
