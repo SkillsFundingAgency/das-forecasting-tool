@@ -65,8 +65,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
-                    return runAction(nestedContainer, container.GetInstance<ILog>());
+                    ConfigureContainer(executionContext, writer, nestedContainer);
+                    return runAction(nestedContainer, nestedContainer.GetInstance<ILog>());
                 }
             }
             catch (Exception ex)

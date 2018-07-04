@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure
                         }
                         assScanner.RegisterConcreteTypesAgainstTheFirstInterface();
                         assScanner.WithDefaultConventions();
-                        
+
                     });
                 }));
             }
