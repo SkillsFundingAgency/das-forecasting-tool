@@ -89,7 +89,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
-            Assert.AreEqual(7, lineCount);
+            Assert.AreEqual(10, lineCount);
         }
 
         protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }
@@ -127,14 +127,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                            @fundsIn,
                            @totalCostOfTraining,
                            @completionPayments,
-                           @futureFunds,
                            @Yourcontribution,
-                           @Governmentcontribution
+                           @Governmentcontribution,
+                           @futureFunds
                            )";
 
                 foreach (var accountProjectionReadModel in accountProjections)
                 {
-                    var date = DateTime.Parse(accountProjectionReadModel.Date);
+                    var date = DateTime.ParseExact(accountProjectionReadModel.Date, "MMM yy", null);
 
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", employerAccountId, DbType.Int64);
@@ -147,7 +147,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                     parameters.Add("@completionPayments", accountProjectionReadModel.CompletionPayments, DbType.Decimal);
                     parameters.Add("@Yourcontribution", accountProjectionReadModel.YourContribution, DbType.Decimal);
                     parameters.Add("@Governmentcontribution", accountProjectionReadModel.GovernmentContribution, DbType.Decimal);
-                    parameters.Add("@futureFunds", accountProjectionReadModel.FutureFunds, DbType.Decimal);
+                    parameters.Add("@futureFunds", accountProjectionReadModel.Balance, DbType.Decimal);
                     Connection.Execute(sql, parameters, commandType: CommandType.Text);
                 }
                 txScope.Complete();
@@ -168,12 +168,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
     public class TestAccountProjection
     {
         public string Date { get; set; }
-        public string FundsIn { get; set; }
         public decimal CostOfTraining { get; set; }
         public decimal CompletionPayments { get; set; }
+        public string FundsIn { get; set; }
+        public decimal ExpiredFunds { get; set; }
         public decimal YourContribution { get; set; }
         public decimal GovernmentContribution { get; set; }
-        public decimal FutureFunds { get; set; }
+        public decimal Balance { get; set; }
         public decimal TransferOutTotalCostOfTraining { get; set; }
     }
 }

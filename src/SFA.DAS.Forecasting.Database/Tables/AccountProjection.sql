@@ -17,3 +17,8 @@
 	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0),
 	[CoInvestmentGovernment] DECIMAL(18,2) NOT NULL default(0)
 )
+GO
+
+CREATE NONCLUSTERED INDEX [idx_account_projection] ON [dbo].[AccountProjection] ([EmployerAccountId]) 
+	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [Month], [ProjectionCreationDate], [ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining], [Year]) 
+WITH (ONLINE = ON)

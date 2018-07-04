@@ -155,7 +155,51 @@
           "apiVersion": "2016-03-01",
           "location": "[resourceGroup().location]",
           "properties": {
-            "scmSiteAlsoStopped": true
+            "scmSiteAlsoStopped": true,
+            "siteConfig": {
+              "appSettings": [
+                {
+                  "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                  "value": "[reference(resourceId('microsoft.insights/components/', parameters('name')), '2015-05-01').InstrumentationKey]"
+                },
+                {
+                  "name": "EnvironmentName",
+                  "value": "[parameters('EnvironmentName')]"
+                },
+                {
+                  "name": "ForecastingRoutePrefix",
+                  "value": "forecasting"
+                },
+                {
+                  "name": "LimitForecast",
+                  "value": "[parameters('LimitForecast')]"
+                },
+                {
+                  "name": "KeyVaultName",
+                  "value": "[parameters('KeyVaultName')]"
+                },
+                {
+                  "name": "LoggingRedisConnectionString",
+                  "value": "[parameters('LoggingRedisConnectionString')]"
+                },
+                {
+                  "name": "LoggingRedisKey",
+                  "value": "[parameters('LoggingRedisKey')]"
+                },
+                {
+                  "name": "WEBSITE_LOAD_CERTIFICATES",
+                  "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
+                },
+                {
+                  "name": "BaseAddress",
+                  "value": "[parameters('baseAddress')]"
+                },
+                {
+                  "name": "MyaBaseUrl",
+                  "value": "[parameters('myaBaseUrl')]"
+                }
+              ]
+            }
           },
           "dependsOn": [
             "[resourceId('Microsoft.Web/Sites', parameters('name'))]"

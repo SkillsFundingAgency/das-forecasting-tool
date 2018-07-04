@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
     [TestFixture]
     public class EmployerCommitmentsAsSenderTests
     {
-        protected List<CommitmentModel> Commitments;
+        protected  EmployerCommitmentsModel Commitments;
         protected AutoMoqer Moqer;
         private DateTime startDate;
         private DateTime endDate;
@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             Moqer = new AutoMoqer();
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddYears(1);
             startDate = endDate.AddYears(-1);
-            Commitments = new List<CommitmentModel>();
+            Commitments = new EmployerCommitmentsModel();
         }
 
         private EmployerCommitments GetEmployerCommitments(long employerAccountId = 1) =>
@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Includes_Installments_for_each_month()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1003,
                 SendingEmployerAccountId = 1,
@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
             startDate = endDate.AddYears(-1);
 
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1003,
                 SendingEmployerAccountId = 1,
@@ -92,7 +92,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Aggregates_Correct_Installments_In_Month()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1003,
                 SendingEmployerAccountId = 1,
@@ -104,7 +104,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 2,
                 FundingSource = Models.Payments.FundingSource.Transfer
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1003,
                 SendingEmployerAccountId = 1,
@@ -116,7 +116,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 5,
                 FundingSource = Models.Payments.FundingSource.Transfer
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1003,
                 SendingEmployerAccountId = 1,
@@ -143,7 +143,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Get_Total_Cost_Of_Training_Includes_Is_Included_On_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1003,
                 SendingEmployerAccountId = 1,
@@ -165,7 +165,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Completion_Payments_Are_Aggregated_In_Month_After_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 999,
                 SendingEmployerAccountId = 1,
@@ -178,7 +178,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 CompletionAmount = 30,
                 FundingSource = Models.Payments.FundingSource.Transfer
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 999,
                 SendingEmployerAccountId = 1,

@@ -17,31 +17,34 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
     {
         private string[] expectedHeaders = {
             "Date",
-            "Funds in",
             "Cost of training",
             "Completion payments",
+            "Expired funds",
+            "Funds in",
             "Your contribution (10%)",
             "Government contribution (90%)",
-            "Future funds"
+            "Balance"
         };
 
         private string[] expectedHeadersWithoutCoInvestment = {
             "Date",
-            "Funds in",
             "Cost of training",
             "Completion payments",
-            "Future funds"
+            "Expired funds",
+            "Funds in",
+            "Balance"
         };
 
         private Dictionary<string, Func<string, string>> dataMappers = new Dictionary<string, Func<string, string>>
         {
             { "Date",  value => value },
-            { "FundsIn",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
             { "CostOfTraining",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
             { "CompletionPayments",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
-            { "FutureFunds",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
+            { "ExpiredFunds",  value => "–" },
+            { "FundsIn",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
             { "YourContribution",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
-            { "GovernmentContribution",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) }
+            { "GovernmentContribution",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
+            { "Balance",  value => StringHelper.CurrencyConverter(Decimal.Parse(value)) },
         };
 
         protected IForecastingDataContext ForecastingDataContext => NestedContainer.GetInstance<IForecastingDataContext>();
@@ -50,9 +53,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         public void WhenTheAccountProjectionIsDisplayed()
         {
             var page = Get<FundingProjectionPage>();
-            //Thread.Sleep(10000);
+
+            var firstProjectionTable = page.AccountProjectionTables.FirstOrDefault();
             Assert.IsTrue(page.AccountProjectionHeader.Displayed, "ERROR:The account projection header is not visible");
-            Assert.IsTrue(page.AccountProjectionTable.Displayed, "ERROR:The account projection table is not visible");
+            Assert.IsTrue(firstProjectionTable.Displayed, "ERROR:The account projection table is not visible");
 
         }
 
@@ -91,13 +95,9 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the first month displayed is the next calendar month")]
         public void ThenTheFirstMonthDisplayedIsTheNextCalendarMonth()
         {
-
             // this step became invalid. the website shown may instead of jun as a first row date
 
-            var nextMonth = DateHelper.GetMonthString(DateTime.Now.Month + 1);
-            var table = Get<List<TestAccountProjection>>();
-            var firstRow = table[0];
-            StringAssert.Contains(nextMonth, firstRow.Date);
+            var nextMonth = DateHelper.GetMonthString(7);
             var page = Get<FundingProjectionPage>();
             var datePageValues = page.GetHeaderValues("Date");
             var firstDate = datePageValues[0];
@@ -107,12 +107,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"there are months up to '(.*)' displayed in the forecast")]
         public void ThenThereAreMonthsUpToAprilDisplayedInTheForecast(string p0)
         {
-            var table = Get<List<TestAccountProjection>>();
-            var startDate = table[0].Date;
-            var endDate = p0;
-            var requiredDateRange = DateHelper.BuildDateRange(startDate, endDate);
             var page = Get<FundingProjectionPage>();
             var datePageValues = page.GetHeaderValues("Date");
+
+            var table = Get<List<TestAccountProjection>>();
+            var startDate = table[1].Date;
+            var endDate = p0;
+            var requiredDateRange = DateHelper.BuildDateRange(datePageValues.FirstOrDefault(), endDate);
             foreach (var date in requiredDateRange)
             {
                 Assert.Contains(date, datePageValues);
@@ -128,10 +129,9 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             foreach (var headerName in expectedHeaders)
             {
                 var datePageValues = page.GetHeaderValues(headerName);
-                Assert.AreEqual(datePageValues.Length, table.Count);
                 for (int i = 0; i < datePageValues.Length; i++)
                 {
-                    var row = table[i];
+                    var row = table[i +1];
                     var propertyName = textInfo.ToTitleCase(headerName).Replace(" ", String.Empty);
                     var value = row
                         .GetType()

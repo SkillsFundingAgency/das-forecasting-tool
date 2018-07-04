@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public TimeSpan TimeToPause => TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"] ?? "00:00:05");
         public string Environment => GetAppSetting("Environment");
         public string WebSiteUrl => GetAppSetting("WebSiteUrl");
+        public string WebSiteUrlLocal => GetAppSetting("WebSiteUrlLocal");
 
         public string EmployerAccountID => GetAppSetting("EmployerAccountID");
 
