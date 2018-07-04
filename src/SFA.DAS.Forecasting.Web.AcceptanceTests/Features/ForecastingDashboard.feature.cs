@@ -10,7 +10,7 @@
 // ------------------------------------------------------------------------------
 #region Designer generated code
 #pragma warning disable
-namespace SFA.DAS.Forecasting.Web.AcceptanceTests
+namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features
 {
     using TechTalk.SpecFlow;
     
@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Forecasting Dashboard.feature"
+#line 1 "ForecastingDashboard.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]

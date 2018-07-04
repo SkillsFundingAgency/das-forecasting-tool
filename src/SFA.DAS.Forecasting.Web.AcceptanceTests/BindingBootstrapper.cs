@@ -3,6 +3,7 @@ using StructureMap;
 using System;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
+using SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 {

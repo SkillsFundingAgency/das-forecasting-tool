@@ -1,7 +1,7 @@
 ﻿using System;
 using TechTalk.SpecFlow;
 
-namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Security.Steps
+namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Security
 {
     [Binding]
     public class RedirectToLoginPageSteps
