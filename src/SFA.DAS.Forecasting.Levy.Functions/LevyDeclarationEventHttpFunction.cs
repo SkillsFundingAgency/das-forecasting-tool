@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -21,10 +22,13 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             return await FunctionRunner.Run<LevyDeclarationEventHttpFunction, LevySchemeDeclarationUpdatedMessage>(writer, executionContext,
                  async (container, logger) =>
                 {
-                    var body = await req.Content.ReadAsStringAsync();
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+					var body = await req.Content.ReadAsStringAsync();
                     var levySchemeUpdatedEvent = JsonConvert.DeserializeObject<LevySchemeDeclarationUpdatedMessage>(body);
 
-                    logger.Debug($"Received levy scheme declaration event via http endpoint: {levySchemeUpdatedEvent.ToDebugJson()}");
+					telemetry.Info("LevyDeclarationEventHttpFunction", $"Received levy scheme declaration event via http endpoint: {levySchemeUpdatedEvent.ToDebugJson()}", "FunctionRunner.Run", executionContext.InvocationId);
+
                     return levySchemeUpdatedEvent;
                 });
         }

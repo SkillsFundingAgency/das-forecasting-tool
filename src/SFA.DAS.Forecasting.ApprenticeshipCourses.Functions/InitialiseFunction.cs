@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Messages.ApprenticeshipCourses;
@@ -21,11 +22,14 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
         {
             return await FunctionRunner.Run<InitialiseFunction, RefreshCourses>(log, executionContext, async (container, logger) =>
              {
-                //TODO: create generic function or use custom binding
-                log.Info("Initialising the Apprenticeship Courses function application.");
+				 //TODO: create generic function or use custom binding
+				 var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	             telemetry.Info("RefreshStandardsHttpFunction", "Initialising the Apprenticeship Courses function application.", "FunctionRunner.Run", executionContext.InvocationId);
+
                  await container.GetInstance<IFunctionInitialisationService>()
                      .Initialise<InitialiseFunction>();
-                 log.Info("Finished initialising the Apprenticeship Courses function application.");
+	             telemetry.Info("RefreshStandardsHttpFunction", "Finished initialising the Apprenticeship Courses function application.", "FunctionRunner.Run", executionContext.InvocationId);
                  return new RefreshCourses { RequestTime = DateTime.Now };
              });
         }

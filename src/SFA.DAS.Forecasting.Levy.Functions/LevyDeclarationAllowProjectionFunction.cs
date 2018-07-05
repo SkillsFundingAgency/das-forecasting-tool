@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Levy.Handlers;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -21,18 +22,27 @@ namespace SFA.DAS.Forecasting.Levy.Functions
             return await FunctionRunner.Run<LevyDeclarationAllowProjectionFunction, GenerateAccountProjectionCommand>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Debug("Getting levy declaration handler from container.");
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+					telemetry.Info("LevyDeclarationAllowProjectionFunction", "Getting levy declaration handler from container.", "FunctionRunner.Run", executionContext.InvocationId);
+
                     var handler = container.GetInstance<AllowAccountProjectionsHandler>();
-                    if (handler == null)
-                        throw new InvalidOperationException("Faild to get levy handler from container.");
+	                if (handler == null)
+	                {
+						telemetry.Error("LevyDeclarationAllowProjectionFunction", new InvalidOperationException("Faild to get levy handler from container."), "Getting levy declaration handler from container.", "FunctionRunner.Run");
+		                throw new InvalidOperationException("Faild to get levy handler from container.");
+					}
+	                    
                     var allowProjections = await handler.Allow(message);
                     if (!allowProjections)
                     {
-                        logger.Debug($"Cannot generate the projections, still handling levy declarations. Employer: {message.AccountId}");
+	                    telemetry.Warning("LevyDeclarationAllowProjectionFunction", $"Cannot generate the projections, still handling levy declarations. Employer: {message.AccountId}", "FunctionRunner.Run", executionContext.InvocationId);
+
                         return null;
                     }
 
-                    logger.Info($"Now sending message to trigger the account projections for employer '{message.AccountId}'");
+	                telemetry.Info("LevyDeclarationAllowProjectionFunction", $"Now sending message to trigger the account projections for employer '{message.AccountId}'", "FunctionRunner.Run", executionContext.InvocationId);
+
                     return new GenerateAccountProjectionCommand
                     {
                         EmployerAccountId = message.AccountId,

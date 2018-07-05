@@ -20,11 +20,11 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
             {
 	            var telemetry = container.GetInstance<IAppInsightsTelemetry>();
 
-	            telemetry.TrackEvent("StoreCourseFunction", "Received request to store course", "FunctionRunner.Run", executionContext.InvocationId);
+	            telemetry.Info("StoreCourseFunction", "Received request to store course", "FunctionRunner.Run", executionContext.InvocationId);
 
                 var handler = container.GetInstance<StoreCourseHandler>();
                 await handler.Handle(course);
-	            telemetry.TrackEvent("StoreCourseFunction", "Finished handling the request to store the course", "FunctionRunner.Run", executionContext.InvocationId);
+	            telemetry.Info("StoreCourseFunction", "Finished handling the request to store the course", "FunctionRunner.Run", executionContext.InvocationId);
             });
         }
     }

@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
         {
             var standards = (await _standardApiClient.GetAllAsync()).ToList();
             var response = standards.Where(course => course.IsActiveStandard).Select(_mapper.Map).ToList();
-			_appInsightsTelemetry.TrackEvent("GetStandardsFunction", $"Got {standards.Count} standards, but only {response.Count} were active", "GetCourses");
+			_appInsightsTelemetry.Info("GetStandardsFunction", $"Got {standards.Count} standards, but only {response.Count} were active", "GetCourses");
 	        return response;
         }
 

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
-using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.ApprenticeshipCourses;
 
@@ -25,7 +21,10 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
             return FunctionRunner.Run<RefreshStandardsHttpFunction, RefreshCourses>(writer, executionContext,
                 (container, logger) =>
                 {
-                    logger.Info("Received refresh standards request.");
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	                telemetry.Info("RefreshStandardsHttpFunction", "Received refresh standards request.", "FunctionRunner.Run", executionContext.InvocationId);
+
                     return new RefreshCourses{RequestTime = DateTime.Now};
                 });
         }

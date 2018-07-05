@@ -23,11 +23,11 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers
         {
             if (message.RequestTime < DateTime.Now.AddMinutes(-5))
             {
-                _logger.TrackEvent("GetStandardsFunction", $"Received invalid request to get standards. Reason: Request was generated more than 5 minutes ago. Request time: {message.RequestTime}, current time: {DateTime.Now}.", "Handle");
+                _logger.Warning("GetStandardsFunction", $"Received invalid request to get standards. Reason: Request was generated more than 5 minutes ago. Request time: {message.RequestTime}, current time: {DateTime.Now}.", "Handle");
                 return new List<ApprenticeshipCourse>();
             }
 
-            _logger.TrackEvent("GetStandardsFunction", "Getting list of standard courses.", "Handle");
+            _logger.Info("GetStandardsFunction", "Getting list of standard courses.", "Handle");
             return await _standardsService.GetCourses();
         }
     }

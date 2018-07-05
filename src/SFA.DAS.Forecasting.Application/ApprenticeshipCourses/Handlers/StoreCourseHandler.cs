@@ -20,9 +20,9 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers
 
         public async Task Handle(ApprenticeshipCourse course)
         {
-            _logger.TrackEvent("StoreCourseFunction", $"Storing apprenticeship course. Course: {course.ToJson()}", "Handle");
+            _logger.Info("StoreCourseFunction", $"Storing apprenticeship course. Course: {course.ToJson()}", "Handle");
             await _dataService.Store(course);
-            _logger.TrackEvent("StoreCourseFunction", $"Stored apprenticeship course. Course id: {course.Id}", "Handle");
+            _logger.Info("StoreCourseFunction", $"Stored apprenticeship course. Course id: {course.Id}", "Handle");
         }
     }
 }

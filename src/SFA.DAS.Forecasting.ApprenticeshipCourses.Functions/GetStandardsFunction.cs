@@ -1,9 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.ApprenticeshipCourses;
@@ -25,11 +23,11 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
 	            var telemetry = container.GetInstance<IAppInsightsTelemetry>();
 				
 				//TODO: create generic function or use custom binding
-				telemetry.TrackEvent("GetStandardsFunction", "Starting GetStandards Function.", "FunctionRunner.Run", executionContext.InvocationId);
+				telemetry.Info("GetStandardsFunction", "Starting GetStandards Function.", "FunctionRunner.Run", executionContext.InvocationId);
                 var handler = container.GetInstance<GetStandardsHandler>();
                 var courses = await handler.Handle(message);
                 courses.ForEach(storeStandards.Add);
-	            telemetry.TrackEvent("GetStandardsFunction", $"Finished getting standards. Got {courses.Count} courses.", "FunctionRunner.Run", executionContext.InvocationId);
+	            telemetry.Info("GetStandardsFunction", $"Finished getting standards. Got {courses.Count} courses.", "FunctionRunner.Run", executionContext.InvocationId);
             });
         }
     }
