@@ -111,7 +111,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var currentBalance = await _balanceRepository.Get(accountId);
-            await currentBalance.RefreshBalance();
+            if(currentBalance == null)
+                await currentBalance.RefreshBalance();
             await _balanceRepository.Store(currentBalance);
 
             return currentBalance;
