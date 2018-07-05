@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
+using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 
@@ -107,7 +108,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 Level = model.Level,
                 NumberOfApprentices = model.ApprenticesCount,
                 TotalInstallments = model.TotalInstallments,
-                TotalCost = model.TotalCost,
+                TotalCostAsString = model.TotalCost.FormatValue(),
                 StartDateMonth = model.StartDate.Month,
                 StartDateYear = model.StartDate.Year,
                 HashedAccountId = hashedAccountId,
@@ -121,7 +122,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountId = _hashingService.DecodeValue(model.HashedAccountId);
             var estimations = await _estimationRepository.Get(accountId);
 
-            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCost);
+            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCostAsString.ToDecimal());
             await _estimationRepository.Store(estimations);
         }
     }
