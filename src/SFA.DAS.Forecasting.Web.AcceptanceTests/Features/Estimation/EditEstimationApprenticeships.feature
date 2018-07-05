@@ -6,7 +6,7 @@ Scenario: Edit apprenticeship
 	Given that I am an employer
 	And I have an estimated apprenticeships record
 	When I navigate to the Estimated costs page
-	And I click on the 'Edit' link
+	And I click on the Edit link
 	Then I am on the edit apprenticeship page
 	When I edit number of apprenticeship to be 3
 	Then total cost will be 15,000

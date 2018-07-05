@@ -132,6 +132,11 @@
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Features\Estimation\AddEstimationApprenticeships.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AddEstimationApprenticeships.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\Estimation\DisplayModelledApprenticeships.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -184,6 +189,8 @@
       <DependentUpon>RedirectToLoginPage.feature</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DocumentSessionConnectionString.cs" />
+    <Compile Include="StepDefinition\Estimation\AddApprenticeshipSteps.cs" />
+    <Compile Include="StepDefinition\Estimation\AddEditApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\EditApprenticehipSteps.cs" />
     <Compile Include="StepDefinition\Security\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DisplayModelledApprenticeshipsSteps.cs" />
@@ -195,6 +202,10 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Features\Estimation\AddEstimationApprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AddEstimationApprenticeships.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\Estimation\DisplayModelledApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
