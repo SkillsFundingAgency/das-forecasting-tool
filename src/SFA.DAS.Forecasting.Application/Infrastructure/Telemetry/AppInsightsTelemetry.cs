@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 
@@ -21,6 +22,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 		public void TrackEvent(string functionName, string desc, string methodName)
 		{
 			_telemetry.TrackEvent($"{functionName} - {methodName}: {desc}");
+		}
+
+		public void TrackEvent(string functionName, string desc, string methodName, Guid invocationId)
+		{
+			_telemetry.Context.Operation.Id = invocationId.ToString();
+			_telemetry.TrackEvent($"ID:{invocationId} -> {functionName} - {methodName}: {desc}");
 		}
 
 		public void TrackException(string functionName, Exception ex, string desc, string methodName)

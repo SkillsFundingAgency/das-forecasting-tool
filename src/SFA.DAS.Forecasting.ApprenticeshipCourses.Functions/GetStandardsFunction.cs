@@ -25,11 +25,11 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
 	            var telemetry = container.GetInstance<IAppInsightsTelemetry>();
 				
 				//TODO: create generic function or use custom binding
-				telemetry.TrackEvent("GetStandardsFunction", "Starting GetStandards Function.", "FunctionRunner.Run");
+				telemetry.TrackEvent("GetStandardsFunction", "Starting GetStandards Function.", "FunctionRunner.Run", executionContext.InvocationId);
                 var handler = container.GetInstance<GetStandardsHandler>();
                 var courses = await handler.Handle(message);
                 courses.ForEach(storeStandards.Add);
-	            telemetry.TrackEvent("GetStandardsFunction", $"Finished getting standards. Got {courses.Count} courses.", "FunctionRunner.Run");
+	            telemetry.TrackEvent("GetStandardsFunction", $"Finished getting standards. Got {courses.Count} courses.", "FunctionRunner.Run", executionContext.InvocationId);
             });
         }
     }
