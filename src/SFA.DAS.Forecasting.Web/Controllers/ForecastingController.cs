@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("projections", Name = "Balance")]
         public async Task<ActionResult> Balance(string hashedAccountId)
         {
-            var viewModel = await _orchestrator.Balance(hashedAccountId);
+            var viewModel = await _orchestrator.Projection(hashedAccountId);
             return View(viewModel);
         }
 

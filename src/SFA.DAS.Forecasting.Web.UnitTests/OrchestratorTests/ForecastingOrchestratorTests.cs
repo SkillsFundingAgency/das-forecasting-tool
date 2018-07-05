@@ -16,6 +16,7 @@ using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Domain.Balance;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 {
@@ -81,11 +82,19 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             hashingService
                 .Setup(m => m.DecodeValue("CDDC12"))
                 .Returns(ReceivingEmployerAccountId);
-            _balance = new BalanceModel { EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
 
-            _moqer.GetMock<IBalanceDataService>()
-                .Setup(x => x.Get(It.IsAny<long>()))
+            _balance = new BalanceModel { EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
+            _moqer.GetMock<IAccountBalanceService>()
+                .Setup(m => m.GetAccountBalance(It.IsAny<long>()))
                 .ReturnsAsync(_balance);
+
+            var balanceService = _moqer.GetMock<IAccountBalanceService>();
+
+            var currentBalance = new CurrentBalance(_balance, balanceService.Object , new Domain.Commitments.EmployerCommitments(12345, new EmployerCommitmentsModel()));
+
+            _moqer.GetMock<ICurrentBalanceRepository>()
+                .Setup(x => x.Get(It.IsAny<long>()))
+                .ReturnsAsync(currentBalance);
 
             _moqer.SetInstance<IForecastingMapper>(new ForecastingMapper());
         }
@@ -95,7 +104,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         {
             SetUpProjections(48 + 10);
 
-            var balance = await _moqer.Resolve<ForecastingOrchestrator>().Balance("ABBA12");
+            var balance = await _moqer.Resolve<ForecastingOrchestrator>().Projection("ABBA12");
 
             balance.BalanceItemViewModels.Count().Should().Be(48);
         }
@@ -250,7 +259,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _moqer.GetMock<IApplicationConfiguration>().Setup(m => m.LimitForecast)
                 .Returns(true);
 
-            var balance = await _moqer.Resolve<ForecastingOrchestrator>().Balance("ABBA12");
+            var balance = await _moqer.Resolve<ForecastingOrchestrator>().Projection("ABBA12");
 
             balance.BalanceItemViewModels.All(m => m.Date < balanceMaxDate).Should().BeTrue();
             balance.BalanceItemViewModels.Count().Should().BeGreaterOrEqualTo(1);
