@@ -34,10 +34,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 LimitForecast = Boolean.Parse(ConfigurationHelper.GetAppSetting("LimitForecast", false) ?? "false"),
                 StubEmployerPaymentTable = ConfigurationHelper.GetAppSetting("Stub-EmployerPaymentTable", false),
                 AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true"),
-                ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false),
-
-	            AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false)
-			};
+                ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false)
+            };
 
             SetApiConfiguration(configuration);
             return configuration;
