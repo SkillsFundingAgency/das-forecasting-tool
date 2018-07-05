@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Handlers;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -21,18 +22,29 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GenerateAccountProjectionCommand>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Debug("Getting payment declaration handler from container.");
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	                telemetry.Debug("PaymentEventAllowProjectionFunction", "Getting payment declaration handler from container.", "FunctionRunner.Run", executionContext.InvocationId);
+
                     var handler = container.GetInstance<AllowAccountProjectionsHandler>();
-                    if (handler == null)
-                        throw new InvalidOperationException($"Failed to get payment handler from container.");
-                    var allowProjections = await handler.Allow(paymentCreatedMessage);
+	                if (handler == null)
+	                {
+		                telemetry.Error("PaymentEventAllowProjectionFunction",
+			                new InvalidOperationException($"Failed to get payment handler from container."),
+			                "Failed to get payment handler from container.", 
+							"FunctionRunner.Run");
+		                throw new InvalidOperationException($"Failed to get payment handler from container.");
+	                }
+	                var allowProjections = await handler.Allow(paymentCreatedMessage);
                     if (!allowProjections)
                     {
-                        logger.Debug($"Cannot generate the projections, still handling payment events. Employer: {paymentCreatedMessage.EmployerAccountId}");
+	                    telemetry.Debug("PaymentEventAllowProjectionFunction", $"Cannot generate the projections, still handling payment events. Employer: {paymentCreatedMessage.EmployerAccountId}", "FunctionRunner.Run", executionContext.InvocationId);
+
                         return null;
                     }
 
-                    logger.Info($"Now sending message to trigger the account projections for employer '{paymentCreatedMessage.EmployerAccountId}', period: {paymentCreatedMessage.CollectionPeriod?.Id}, {paymentCreatedMessage.CollectionPeriod?.Month}");
+	                telemetry.Info("PaymentEventAllowProjectionFunction", $"Now sending message to trigger the account projections for employer '{paymentCreatedMessage.EmployerAccountId}', period: {paymentCreatedMessage.CollectionPeriod?.Id}, {paymentCreatedMessage.CollectionPeriod?.Month}", "FunctionRunner.Run", executionContext.InvocationId);
+
                     return new GenerateAccountProjectionCommand
                     {
                         EmployerAccountId = paymentCreatedMessage.EmployerAccountId,

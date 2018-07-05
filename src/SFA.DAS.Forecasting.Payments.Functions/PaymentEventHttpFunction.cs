@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 
@@ -21,11 +22,14 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             return await FunctionRunner.Run<PaymentEventHttpFunction, PaymentCreatedMessage>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    var body = await req.Content.ReadAsStringAsync();
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+					var body = await req.Content.ReadAsStringAsync();
                     var paymentEvent = JsonConvert.DeserializeObject<PaymentCreatedMessage>(body);
 
-                    logger.Info($"Added one payment to {QueueNames.PaymentProcessor} queue.");
-                    return await Task.FromResult(paymentEvent);
+					telemetry.Debug("PaymentEventHttpFunction", $"Added one payment to {QueueNames.PaymentProcessor} queue.", "FunctionRunner.Run", executionContext.InvocationId);
+
+					return await Task.FromResult(paymentEvent);
                 });
         }
     }
