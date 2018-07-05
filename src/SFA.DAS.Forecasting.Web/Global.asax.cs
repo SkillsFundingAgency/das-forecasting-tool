@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Mvc;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure;
-using NLog;
+using SFA.DAS.NLog.Logger;
 using System;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Web
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-        private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+        private static ILog _logger;
 
         protected void Application_Start()
         {
@@ -27,13 +27,18 @@ namespace SFA.DAS.Forecasting.Web
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 
             AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
+
+            _logger = DependencyResolver.Current.GetService<ILog>();
         }
 
         protected void Application_Error(object sender, EventArgs e)
         {
+            if(_logger == null)
+                _logger = DependencyResolver.Current.GetService<ILog>();
+
             var exception = Server.GetLastError();
 
-            _logger.Error(exception);
+            _logger.Error(exception, $"Application_Error - {exception.Message}");
         }
     }
 }
