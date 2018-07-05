@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddApprenticeshipsToEstimateCostPage.cs" />
+    <Compile Include="Estimation\EditApprenticeshipsPage.cs" />
     <Compile Include="RemoveApprenticeshipPage.cs" />
     <Compile Include="EstimateCostsPage.cs" />
     <Compile Include="FinancePage.cs" />
