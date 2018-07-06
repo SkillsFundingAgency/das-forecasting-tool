@@ -73,6 +73,17 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         }
 
         [Test]
+        public void Levy_Apprenticeships_Are_Not_Among_Transfer_Apprenticeships()
+        {
+            var estimation = ResolveEstimation();
+            estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Levy);
+            estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Transfer);
+            estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, 0);
+
+            Assert.AreEqual(2, estimation.TransferApprenticeships.Count);
+        }
+
+        [Test]
         public void Remove_Returns_False_If_Apprenticeship_Not_Found()
         {
             var estimation = ResolveEstimation();
