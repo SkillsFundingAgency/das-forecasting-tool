@@ -34,12 +34,19 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         private async Task<List<CommitmentModel>> GetCommitments(Expression<Func<CommitmentModel, bool>> filter)
         {
-            var model = new List<CommitmentModel>();
+            var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
+
+            var model = new List<CommitmentModel>(listSize);
+
+            if (listSize == 0)
+            {
+                return model;
+            }
             var moreData = true;
             var skip = 0;
             while (moreData)
             {
-                var commitments = await _dataContext.Commitments.Where(filter).OrderBy(c=>c.Id).Skip(skip).Take(100).ToListAsync();
+                var commitments = await _dataContext.Commitments.AsNoTracking().Where(filter).OrderBy(c=>c.Id).Skip(skip).Take(100).ToListAsync();
 
                 skip = skip + 100;
                 if (!commitments.Any())
