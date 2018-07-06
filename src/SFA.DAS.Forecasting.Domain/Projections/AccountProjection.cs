@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
-            _projections = new List<AccountProjectionModel>();
+            _projections = new List<AccountProjectionModel>(49);
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
