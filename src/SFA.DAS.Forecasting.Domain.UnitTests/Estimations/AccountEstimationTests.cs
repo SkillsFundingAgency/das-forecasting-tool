@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         {
             var estimation = ResolveEstimation();
             var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Transfer);
-            Assert.IsTrue(estimation.VirtualApprenticeships.Any(x => x.Id == apprenticeship.Id));
+            Assert.IsTrue(estimation.TransferApprenticeships.Any(x => x.Id == apprenticeship.Id));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _model.Apprenticeships.Add(new VirtualApprenticeship { Id = "apprenticeship-1" });
             var estimation = ResolveEstimation();
             estimation.RemoveVirtualApprenticeship("apprenticeship-1");
-            Assert.IsTrue(estimation.VirtualApprenticeships.All(x => x.Id != "apprenticeship-1"));
+            Assert.IsTrue(estimation.TransferApprenticeships.All(x => x.Id != "apprenticeship-1"));
         }
 
         [Test]
@@ -117,9 +117,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             estimation.UpdateApprenticeship(a.Id, 10, DateTime.Today.Year + 2, 6, 12, 1000);
 
-            estimation.VirtualApprenticeships.Count().Should().Be(1);
+            estimation.TransferApprenticeships.Count().Should().Be(1);
 
-            var apprenticeship = estimation.VirtualApprenticeships.First();
+            var apprenticeship = estimation.TransferApprenticeships.First();
             apprenticeship.CourseId.Should().Be("ABBA12");
             apprenticeship.CourseTitle.Should().Be("ABBA 12");
             apprenticeship.Level.Should().Be(1);

@@ -46,7 +46,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 ApprenticeshipRemoved = apprenticeshipRemoved.GetValueOrDefault(),
                 Apprenticeships = new EstimationApprenticeshipsViewModel
                 {
-                    VirtualApprenticeships = accountEstimation?.VirtualApprenticeships?.Select(o =>
+                    VirtualApprenticeships = accountEstimation?.TransferApprenticeships?.Select(o =>
                         new EstimationApprenticeshipViewModel
                         {
                             Id = o.Id,
@@ -62,13 +62,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                         }),
                 },
                 TransferAllowances = estimationProjector?.Projections?
-                .Select(o => new EstimationTransferAllowanceVewModel
-                {
-                    Date = new DateTime(o.Year, o.Month, 1),
-                    ActualCost = o.ActualCosts.TransferFundsOut,
-                    EstimatedCost = o.ModelledCosts.FundsOut,
-                    RemainingAllowance = o.FutureFunds
-                }).ToList()
+                    .Select(o => new EstimationTransferAllowanceVewModel
+                    {
+                        Date = new DateTime(o.Year, o.Month, 1),
+                        ActualCost = o.ActualCosts.TransferFundsOut,
+                        EstimatedCost = o.ModelledCosts.FundsOut,
+                        RemainingAllowance = o.FutureFunds
+                    }).ToList()
             };
             return viewModel;
         }
