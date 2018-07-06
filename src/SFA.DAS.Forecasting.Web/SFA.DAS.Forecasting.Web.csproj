@@ -336,6 +336,7 @@
     <Compile Include="ViewModels\AccountFundsItem.cs" />
     <Compile Include="ViewModels\AccountFundsViewModel.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Orchestrators\Estimations\AddApprenticeshipOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\EstimationOrchestrator.cs" />
     <Compile Include="Orchestrators\Estimations\IAddApprenticeshipOrchestrator.cs" />

@@ -9,7 +9,7 @@ using SFA.DAS.Forecasting.Web.Automation;
 using StructureMap;
 using TechTalk.SpecFlow;
 
-namespace SFA.DAS.Forecasting.Web.AcceptanceTests
+namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
     [Binding]
     public class StepsBase

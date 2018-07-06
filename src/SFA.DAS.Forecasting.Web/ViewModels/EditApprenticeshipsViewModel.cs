@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int NumberOfApprentices { get; set; }
 
         public short TotalInstallments { get; set; }
-        public decimal TotalCost { get; set; }
+        public string TotalCostAsString { get; set; }
 
         public DateTime StartDate
         {

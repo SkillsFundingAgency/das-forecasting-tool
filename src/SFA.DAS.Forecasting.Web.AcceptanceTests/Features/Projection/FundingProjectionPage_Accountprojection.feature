@@ -21,7 +21,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   | Jan 19 | 41000    | 2000             | 10000               | 0                 | 0                       | 1000         |
   | Feb 19 | 10000    | 1800             | 10000               | 0                 | 0                       | 1000         |
   | Mar 19 | 15000    | 1800             | 45000               | 0                 | 0                       | 31000        |
-  | Apr 19 | 42500    | 2100             | 10000               | 0                 | 0                       | 1000         |  
+  | Apr 19 | 42500    | 2100             | 10000               | 0                 | 0                       | 1000         |
    
   And I'm on the Funding projection page
   When the Account projection is displayed
@@ -71,7 +71,7 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   | Jan 19 | 41000    | 2000             | 10000               | 0                 | 0                       | 1000         |
   | Feb 19 | 10000    | 1800             | 10000               | 0                 | 0                       | 1000         |
   | Mar 19 | 15000    | 1800             | 45000               | 0                 | 0                       | 31000        |
-  | Apr 19 | 42500    | 2100             | 10000               | 0                 | 0                       | 1000         |
+  | Apr 19 | 42500    | 2100             | 10000               | 0                 | 0                       | 1000         |   
 
   And I'm on the Funding projection page
   When the Account projection is displayed
@@ -106,27 +106,3 @@ Scenario: FundingProjection completion payments overdue
 	Given I have completion payments of £ 2401 on commitments without stop date
 	And I'm on the Funding projection page
 	Then I see Pending completion payments with the amount of £ 2,401
-
-#  Scenario: FundingProjectionPageAC4: Forecast data when negative balance
-#  Given I have generated the following projections
-#  
-#  | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-#  | Apr 18 | 14000    | 880                    | 32200               | 0            |
-#  | May 18 | 15000    | 880                    | 32200               | 0            |
-#  | Jun 18 | 91000    | 1800                   | 10000               | 0            |
-#  | Jul 18 | 21000    | 2350                   | 50000               | 0            |
-#  | Aug 18 | 45200    | 850                    | 45000               | 0            |
-#  | Sep 18 | 55000    | 700                    | 37880               | 0            |
-#  | Oct 18 | 42000    | 700                    | 37880               | 1000         |
-#  | Nov 18 | 22000    | 1800                   | 45000               | 1000         |
-#  | Dec 18 | 42000    | 1400                   | 10000               | 1000         |
-#  | Jan 19 | 41000    | 2000                   | 10000               | 1000         |
-#  | Feb 19 | 10000    | 1800                   | 10000               | 1000         |
-#  | Mar 19 | 15000    | 1800                   | 45000               | 1000         |
-#  | Apr 19 | 42500    | 2100                   | 10000               | 1000         |   
-#
-#
-#
-#  And I'm on the Funding projection page
-#  When I have a negative balance in a forecast month
-#  Then the balance for that month is displayed correctly as £0
