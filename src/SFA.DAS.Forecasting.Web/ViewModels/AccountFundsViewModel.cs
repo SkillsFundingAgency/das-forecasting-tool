@@ -7,5 +7,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
     {
         public decimal OpeningBalance { get; set; }
         public IReadOnlyList<AccountFundsItem> Records { get; internal set; }
+        public decimal MonthlyInstallmentAmount { get; set; }
     }
 }
