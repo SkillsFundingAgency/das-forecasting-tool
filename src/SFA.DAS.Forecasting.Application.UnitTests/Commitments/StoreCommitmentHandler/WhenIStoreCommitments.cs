@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Commitments;
@@ -14,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
     public class WhenIStoreCommitments
     {
         private Mock<IEmployerCommitmentRepository> _employerCommitmentRepostiory;
-        private Mock<ILog> _logger;
+        private Mock<IAppInsightsTelemetry> _logger;
         private Application.Commitments.Handlers.StoreCommitmentHandler _handler;
         private Mock<IPaymentMapper> _paymentMapper;
         private PaymentCreatedMessage _message;
@@ -44,7 +45,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                     commitmentModel,
                     Mock.Of<ICommitmentValidator>()));
 
-            _logger = new Mock<ILog>();
+            _logger = new Mock<IAppInsightsTelemetry>();
 
             _paymentMapper = new Mock<IPaymentMapper>();
             _paymentMapper.Setup(x =>
