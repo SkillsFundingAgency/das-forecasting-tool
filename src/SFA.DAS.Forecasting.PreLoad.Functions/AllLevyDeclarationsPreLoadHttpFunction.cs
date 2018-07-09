@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 using SFA.DAS.HashingService;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -25,7 +26,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             return await FunctionRunner.Run<AllLevyDeclarationsPreLoadHttpFunction, string>(writer, executionContext,
                 async (container, logger) => 
                 {
-                    var body = await req.Content.ReadAsStringAsync();
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	                telemetry.Info("AllLevyDeclarationsPreLoadHttpFunction", "EmployersForPeriod", "FunctionRunner.Run", executionContext.InvocationId);
+
+					var body = await req.Content.ReadAsStringAsync();
                     var preLoadRequest = JsonConvert.DeserializeObject<PreLoadAllEmployersRequest>(body);
 
                     var levyDataService = container.GetInstance<IEmployerDataService>();
@@ -33,7 +38,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
                     var employerIds = await levyDataService.EmployersForPeriod(preLoadRequest.PeriodYear, preLoadRequest.PeriodMonth);
 
-                    logger.Info($"Found {employerIds.Count} employer(s) for period; Year: {preLoadRequest.PeriodYear} Month: {preLoadRequest.PeriodMonth}");
+	                telemetry.Info("AllLevyDeclarationsPreLoadHttpFunction", $"Found {employerIds.Count} employer(s) for period; Year: {preLoadRequest.PeriodYear} Month: {preLoadRequest.PeriodMonth}", "FunctionRunner.Run", executionContext.InvocationId);
 
                     foreach(var id in employerIds)
                     {
@@ -46,7 +51,9 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                             });
                     }
 
-                    return $"Created {employerIds.Count} {nameof(PreLoadRequest)} messages";
+	                telemetry.Info("AllLevyDeclarationsPreLoadHttpFunction", $"Created {employerIds.Count} {nameof(PreLoadRequest)} messages", "FunctionRunner.Run", executionContext.InvocationId);
+
+					return $"Created {employerIds.Count} {nameof(PreLoadRequest)} messages";
                 });
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -24,7 +25,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             return await FunctionRunner.Run<AllEmployersPaymentPreLoadHttpFunction, string>(writer, executionContext,
                async (container, logger) =>
                {
-                   var employerData = container.GetInstance<IEmployerDatabaseService>();
+	               var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	               telemetry.Info("AllEmployersPaymentPreLoadHttpFunction", "GetEmployerWithPayments", "FunctionRunner.Run", executionContext.InvocationId);
+				   
+				   var employerData = container.GetInstance<IEmployerDatabaseService>();
                    var hashingService = container.GetInstance<IHashingService>();
 
                    var body = await req.Content.ReadAsStringAsync();
@@ -51,7 +56,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    }
 
                    var msg = $"Added {messageCount} message(s) to queue for year: {preLoadRequest.PeriodYear} and month: {preLoadRequest.PeriodMonth}";
-                   logger.Info(msg);
+	               telemetry.Info("AllEmployersPaymentPreLoadHttpFunction", msg, "FunctionRunner.Run", executionContext.InvocationId);
                    return msg;
                });
         }

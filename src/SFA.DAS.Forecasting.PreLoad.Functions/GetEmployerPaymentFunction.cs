@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
@@ -25,14 +26,18 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadPaymentMessage>(writer, executionContext,
                async (container, logger) =>
                {
-                   var employerData = container.GetInstance<IEmployerDatabaseService>();
-                   logger.Info($"Storing data for EmployerAcount: {message.EmployerAccountId}");
+	               var telemetry = container.GetInstance<IAppInsightsTelemetry>();
 
-                   var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
+				   var employerData = container.GetInstance<IEmployerDatabaseService>();
+
+				   telemetry.Info("GetEmployerPaymentFunction", $"Storing data for EmployerAcount: {message.EmployerAccountId}", "FunctionRunner.Run", executionContext.InvocationId);
+
+				   var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
 
                    if (!payments?.Any() ?? false)
                    {
-                       logger.Info($"No data found for {message.EmployerAccountId}");
+	                   telemetry.Info("GetEmployerPaymentFunction", $"No data found for {message.EmployerAccountId}", "FunctionRunner.Run");
+
                        return null;
                    }
 
@@ -41,7 +46,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        var dataService = container.GetInstance<PreLoadPaymentDataService>();
                        await dataService.StorePayment(payment);
 
-                       logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
+	                   telemetry.Info("GetEmployerPaymentFunction", $"Stored new {nameof(payment)} for {payment.AccountId}", "FunctionRunner.Run");
                    }
 
                    return message;

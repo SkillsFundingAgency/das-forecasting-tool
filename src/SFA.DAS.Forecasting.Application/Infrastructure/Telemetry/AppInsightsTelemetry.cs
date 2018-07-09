@@ -4,6 +4,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 {
@@ -80,6 +81,111 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 		{
 			_telemetry.Context.Operation.Id = operationId.ToString();
 			TelemetryTrackException("Error", functionName, ex, desc, methodName);
+		}
+
+		public void Trace(string message)
+		{
+			TelemetryTrackEvent("Trace", string.Empty, message, string.Empty);
+		}
+
+		public void Trace(string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackEvent("Trace", string.Empty, message, string.Empty);
+		}
+
+		public void Trace(string message, ILogEntry logEntry)
+		{
+			TelemetryTrackEvent("Trace", string.Empty, message, string.Empty);
+		}
+
+		public void Debug(string message)
+		{
+			TelemetryTrackEvent("Debug", string.Empty, message, string.Empty);
+		}
+
+		public void Debug(string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackEvent("Debug", string.Empty, message, string.Empty);
+		}
+
+		public void Debug(string message, ILogEntry logEntry)
+		{
+			TelemetryTrackEvent("Debug", string.Empty, message, string.Empty);
+		}
+
+		public void Info(string message)
+		{
+			TelemetryTrackEvent("Info", string.Empty, message, string.Empty);
+		}
+
+		public void Info(string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackEvent("Info", string.Empty, message, string.Empty);
+		}
+
+		public void Info(string message, ILogEntry logEntry)
+		{
+			TelemetryTrackEvent("Info", string.Empty, message, string.Empty);
+		}
+
+		public void Warn(string message)
+		{
+			TelemetryTrackEvent("Warning", string.Empty, message, string.Empty);
+		}
+
+		public void Warn(string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackEvent("Warning", string.Empty, message, string.Empty);
+		}
+
+		public void Warn(string message, ILogEntry logEntry)
+		{
+			TelemetryTrackEvent("Warning", string.Empty, message, string.Empty);
+		}
+
+		public void Warn(Exception ex, string message)
+		{
+			TelemetryTrackException("Warning", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Warn(Exception ex, string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackException("Warning", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Warn(Exception ex, string message, ILogEntry logEntry)
+		{
+			TelemetryTrackException("Warning", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Error(Exception ex, string message)
+		{
+			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Error(Exception ex, string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Error(Exception ex, string message, ILogEntry logEntry)
+		{
+			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Fatal(Exception ex, string message)
+		{
+			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Fatal(Exception ex, string message, IDictionary<string, object> properties)
+		{
+			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
+		}
+
+		public void Fatal(Exception ex, string message, ILogEntry logEntry)
+		{
+			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
 		}
 	}
 }

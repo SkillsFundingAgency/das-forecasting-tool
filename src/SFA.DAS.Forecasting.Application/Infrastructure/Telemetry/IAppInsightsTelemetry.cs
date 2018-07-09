@@ -1,8 +1,9 @@
 ﻿using System;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 {
-	public interface IAppInsightsTelemetry
+	public interface IAppInsightsTelemetry : ILog
 	{
 		void Debug(string functionName, string desc, string methodName);
 		void Debug(string functionName, string desc, string methodName, Guid operationId);

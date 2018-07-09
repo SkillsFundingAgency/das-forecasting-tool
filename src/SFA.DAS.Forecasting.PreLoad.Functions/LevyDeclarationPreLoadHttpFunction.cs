@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 
@@ -22,13 +23,15 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             return await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction, string>(writer, executionContext,
                async (container, logger) =>
                {
-                   var body = await req.Content.ReadAsStringAsync();
+	               var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+				   var body = await req.Content.ReadAsStringAsync();
                    var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
 
                    outputQueueMessage.Add(preLoadRequest);
 
                    var msg = $"Added {nameof(PreLoadRequest)} for levy declaration";
-                   logger.Info(msg);
+	               telemetry.Info("LevyDeclarationPreLoadHttpFunction", msg, "FunctionRunner.Run", executionContext.InvocationId);
                    return msg;
                });
         }

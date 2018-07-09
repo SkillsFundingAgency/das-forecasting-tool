@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 
@@ -18,10 +19,13 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         {
             await FunctionRunner.Run<InitialiseFunction>(log, executionContext, async (container,logger) =>
             {
-                //TODO: create generic function or use custom binding
-                log.Info("Initialising the Payments functions.");
+	            var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	            telemetry.Info("InitialiseFunction", "Initialising the Payments functions.", "FunctionRunner.Run", executionContext.InvocationId);
+
+				//TODO: create generic function or use custom binding
                 await container.GetInstance<IFunctionInitialisationService>().Initialise<InitialiseFunction>();
-                log.Info("Finished initialising the Payments functions.");
+	            telemetry.Info("InitialiseFunction", "Finished initialising the Payments functions.", "FunctionRunner.Run");
             });
 
             return req.CreateResponse(HttpStatusCode.OK);

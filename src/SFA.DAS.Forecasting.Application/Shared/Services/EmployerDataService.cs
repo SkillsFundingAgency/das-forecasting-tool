@@ -6,6 +6,7 @@ using SFA.DAS.NLog.Logger;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.EAS.Account.Api.Types;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
@@ -22,13 +23,13 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         private readonly IAccountApiClient _accountApiClient;
         private readonly IHashingService _hashingService;
-        private readonly ILog _logger;
+        private readonly IAppInsightsTelemetry _logger;
         private readonly IEmployerDatabaseService _databaseService;
 
         public EmployerDataService(
             IAccountApiClient accountApiClient,
             IHashingService hashingService,
-            ILog logger,
+            IAppInsightsTelemetry logger,
             IEmployerDatabaseService databaseService
             )
         {
@@ -46,17 +47,18 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             if (levydeclarations == null)
             {
-                _logger.Debug($"Account API client returned null for GetLevyDeclarations for account {hashedAccountId}, period: {payrollYear}, {payrollMonth}");
+                _logger.Debug("AllLevyDeclarationsPreLoadHttpFunction", $"Account API client returned null for GetLevyDeclarations for account {hashedAccountId}, period: {payrollYear}, {payrollMonth}", "LevyForPeriod");
                 return null;
             }
 
-            _logger.Info($"Got {levydeclarations.Count} levy declarations for employer {hashedAccountId}.");
+	        _logger.Info("AllLevyDeclarationsPreLoadHttpFunction", $"Got {levydeclarations.Count} levy declarations for employer {hashedAccountId}.", "LevyForPeriod");
+
             var validLevyDeclarations = levydeclarations.Where(levy => levy.PayrollYear == payrollYear && levy.PayrollMonth == payrollMonth).ToList();
             validLevyDeclarations = validLevyDeclarations
                 .GroupBy(ld => ld.EmpRef)
                 .Select(g => g.OrderByDescending(ld => ld.SubmissionDate).FirstOrDefault())
                 .ToList();
-            _logger.Info($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {hashedAccountId}.");
+	        _logger.Info("AllLevyDeclarationsPreLoadHttpFunction", $"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {hashedAccountId}.", "LevyForPeriod");
 
             return validLevyDeclarations.Select(levy => new LevySchemeDeclarationUpdatedMessage
             {
@@ -79,11 +81,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             if (accountIds == null || !accountIds.Any())
             {
-                _logger.Info($"Not able to find any EmployerAccountIds, Year: {payrollYear}, Month: {payrollMonth}");
+	            _logger.Info("AllLevyDeclarationsPreLoadHttpFunction", $"Not able to find any EmployerAccountIds, Year: {payrollYear}, Month: {payrollMonth}", "LevyForPeriod");
+
                 return new List<long>();
             }
 
-            _logger.Info($"Got {accountIds.Count} for Year: {payrollYear} Month: {payrollMonth}.");
+	        _logger.Info("AllLevyDeclarationsPreLoadHttpFunction", $"Got {accountIds.Count} for Year: {payrollYear} Month: {payrollMonth}.", "LevyForPeriod");
 
             return accountIds.ToList();
         }

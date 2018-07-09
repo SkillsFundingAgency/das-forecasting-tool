@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
@@ -22,9 +23,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         {
             return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer, executionContext,
                 async (container, logger) => {
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
 
-                    // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
-                    logger.Info($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
+	                telemetry.Info("GetEarningDetailsFunction", $"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}", "FunctionRunner.Run", executionContext.InvocationId);
+
+					// Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
 
                     var paymentDataService = container.GetInstance<PaymentApiDataService>();
                     var hashingService = container.GetInstance<IHashingService>();
@@ -33,14 +36,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
 
                     var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
-                    logger.Info($"Found {earningDetails.Count} for Account: {hashedAccountId}");
+	                telemetry.Info("GetEarningDetailsFunction", $"Found {earningDetails.Count} for Account: {hashedAccountId}", "FunctionRunner.Run");
 
                     foreach (var item in earningDetails)
                     {
                         await dataService.StoreEarningDetails(message.EmployerAccountId, item);
                     }
 
-                    logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
+	                telemetry.Info("GetEarningDetailsFunction", $"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}", "FunctionRunner.Run");
                     return message;
                 });
         }

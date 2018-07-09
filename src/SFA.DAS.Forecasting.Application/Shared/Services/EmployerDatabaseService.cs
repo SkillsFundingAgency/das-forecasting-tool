@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
@@ -27,11 +28,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
     {
-        private readonly ILog _logger;
+        private readonly IAppInsightsTelemetry _logger;
 
         public EmployerDatabaseService(
             IApplicationConfiguration config,
-            ILog logger)
+            IAppInsightsTelemetry logger)
             : base(config.EmployerConnectionString, logger)
         {
             _logger = logger;
@@ -125,7 +126,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Failed to get employer payments");
+                _logger.Error(string.Empty,  ex, "Failed to get employer payments", "GetEmployerPayments");
                 throw;
             }
         }
@@ -157,7 +158,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Failed to get employers for year: {year} and month {month}");
+	            _logger.Error(string.Empty, ex, $"Failed to get employers for year: {year} and month {month}", "GetEmployersWithPayments");
                 throw;
             }
         }

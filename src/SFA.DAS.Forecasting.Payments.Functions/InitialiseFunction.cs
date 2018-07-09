@@ -21,7 +21,6 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             {
 	            var telemetry = container.GetInstance<IAppInsightsTelemetry>();
 
-				//TODO: create generic function or use custom binding
 				telemetry.Info("InitialiseFunction", "Initialising the Payments functions.", "FunctionRunner.Run", executionContext.InvocationId);
 
 				await container.GetInstance<IFunctionInitialisationService>().Initialise<InitialiseFunction>();

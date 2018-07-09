@@ -4,6 +4,7 @@ using SFA.DAS.Provider.Events.Api.Client;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
@@ -11,9 +12,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     public class PaymentApiDataService
     {
         private readonly IPaymentsEventsApiClient _paymentsEventsApiClient;
-        private readonly ILog _logger;
+        private readonly IAppInsightsTelemetry _logger;
 
-        public PaymentApiDataService(IPaymentsEventsApiClient paymentsEventsApiClient, ILog logger)
+        public PaymentApiDataService(IPaymentsEventsApiClient paymentsEventsApiClient, IAppInsightsTelemetry logger)
         {
             _paymentsEventsApiClient = paymentsEventsApiClient;
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -28,11 +29,13 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId.ToString(), i);
                 if (!page.Items.Any())
                 {
-                    _logger.Info($"No payments returned for page {i}.");
+	                _logger.Info("GetEarningDetailsFunction", $"No payments returned for page {i}.", "PaymentForPeriod");
+
                     break;
                 }
 
-                _logger.Debug($"Got {page.Items.Length} payments for page {i}.");
+	            _logger.Debug("GetEarningDetailsFunction", $"Got {page.Items.Length} payments for page {i}.", "PaymentForPeriod");
+
                 var paymentEarningDetails = page.Items
                     .Where(p => p.EarningDetails.Any())
                     .SelectMany(p => p.EarningDetails, (p, e) =>
@@ -51,7 +54,8 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                             TotalInstallments = e.TotalInstallments
                         })
                     .ToList();
-                _logger.Debug($"Got {paymentEarningDetails.Count} payments for page {i}.");
+	            _logger.Debug("GetEarningDetailsFunction", $"Got {paymentEarningDetails.Count} payments for page {i}.", "PaymentForPeriod");
+
                 result.AddRange(paymentEarningDetails);
                 if (page.PageNumber == page.TotalNumberOfPages)
                     break;
