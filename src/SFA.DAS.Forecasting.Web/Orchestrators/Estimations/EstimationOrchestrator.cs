@@ -53,7 +53,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 ApprenticeshipRemoved = apprenticeshipRemoved.GetValueOrDefault(),
                 Apprenticeships = new EstimationApprenticeshipsViewModel
                 {
-                    VirtualApprenticeships = accountEstimation?.VirtualApprenticeships?.Select(o =>
+                    VirtualApprenticeships = accountEstimation?.Apprenticeships?.Select(o =>
                         new EstimationApprenticeshipViewModel
                         {
                             Id = o.Id,
@@ -73,7 +73,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
                         ActualCost = o.ActualCosts.TransferFundsOut,
-                        EstimatedCost = o.ModelledCosts.FundsOut,
+                        EstimatedCost = o.ModelledCosts.TransferFundsOut,
                         RemainingAllowance = o.FutureFunds
                     }).ToList(),
                 AccountFunds =
