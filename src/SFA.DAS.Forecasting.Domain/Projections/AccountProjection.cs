@@ -60,11 +60,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
-            var commitments =
-                totalCostOfTraning.CommitmentIds
-                .Concat(completionPayments.CommitmentIds)
-                .Distinct();
-
+            
             var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;            
             var complPayment = completionPayments.LevyFundedCompletionPayment + completionPayments.TransferOutCompletionPayment;
 
@@ -92,8 +88,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,
                 ProjectionCreationDate = DateTime.UtcNow,
-                ProjectionGenerationType = projectionGenerationType,
-                Commitments = commitments.Select(commitmentId => new AccountProjectionCommitment { CommitmentId = commitmentId }).ToList()
+                ProjectionGenerationType = projectionGenerationType
             };
             return projection;
         }
