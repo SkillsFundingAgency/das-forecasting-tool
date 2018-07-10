@@ -13,7 +13,6 @@ using System.Collections.ObjectModel;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
 using SFA.DAS.Forecasting.Models.Balance;
-using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
@@ -35,7 +34,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             IApplicationConfiguration applicationConfiguration,
             IForecastingMapper mapper,
             IAccountProjectionDataSession accountProjectionDataSession,
-            IProjectionsDataService projectionsDataService
+            IProjectionsDataService projectionsDataService,
             ICommitmentsDataService commitmentsDataService
             )
         {
