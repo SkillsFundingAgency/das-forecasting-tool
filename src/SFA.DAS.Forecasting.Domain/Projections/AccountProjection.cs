@@ -69,6 +69,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
+
             var commitments =
                 totalCostOfTraning.CommitmentIds
                 .Concat(completionPayments.CommitmentIds)
@@ -77,7 +78,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             Model.Commitments = Model.Commitments
                 .Concat(totalCostOfTraning.CommitmentIds)
                 .Distinct().ToList();
-
+          
             var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;            
             var complPayment = completionPayments.LevyFundedCompletionPayment + completionPayments.TransferOutCompletionPayment;
 

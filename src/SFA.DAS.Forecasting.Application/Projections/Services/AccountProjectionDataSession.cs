@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
@@ -17,6 +20,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         public AccountProjectionDataSession(IForecastingDataContext dataContext)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            
         }
 
         public async Task<List<AccountProjectionModel>> Get(long employerAccountId)
@@ -26,12 +30,54 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 .ToListAsync();
         }
 
-        public void Store(IEnumerable<AccountProjectionModel> accountProjections)
+        public async Task Store(IEnumerable<AccountProjectionModel> accountProjections)
         {
+            var insertString = new StringBuilder();
+            var accountCommitmentsInsert =
+                "INSERT INTO dbo.AccountProjection (" +
+                "EmployerAccountId, " +
+                "ProjectionCreationDate," +
+                "ProjectionGenerationType," +
+                "Month," +
+                "Year," +
+                "FundsIn," +
+                "TotalCostOfTraining," +
+                "TransferOutTotalCostOfTraining," +
+                "TransferInTotalCostOfTraining," +
+                "TransferInCompletionPayments," +
+                "CompletionPayments," +
+                "TransferOutCompletionPayments," +
+                "FutureFunds," +
+                "CoInvestmentEmployer," +
+                "CoInvestmentGovernment" +
+                ") VALUES ";
+            
+
+            _dataContext.Configuration.AutoDetectChangesEnabled = false;
+            insertString.Append(accountCommitmentsInsert);
+
             foreach (var accountProjectionModel in accountProjections)
             {
-                _dataContext.AccountProjections.Add(accountProjectionModel);
+                insertString.AppendLine($"({accountProjectionModel.EmployerAccountId}," +
+                                        $"'{accountProjectionModel.ProjectionCreationDate}'," +
+                                        $"{(byte)accountProjectionModel.ProjectionGenerationType}," +
+                                        $"{accountProjectionModel.Month}," +
+                                        $"{accountProjectionModel.Year}," +
+                                        $"{accountProjectionModel.LevyFundsIn}," + //check
+                                        $"{accountProjectionModel.LevyFundedCostOfTraining}," + //check
+                                        $"{accountProjectionModel.TransferOutCostOfTraining}," +
+                                        $"{accountProjectionModel.TransferInCostOfTraining}," +
+                                        $"{accountProjectionModel.TransferInCompletionPayments}," +
+                                        $"{accountProjectionModel.LevyFundedCompletionPayments}," +
+                                        $"{accountProjectionModel.TransferOutCompletionPayments}," +
+                                        $"{accountProjectionModel.FutureFunds}," +
+                                        $"{accountProjectionModel.CoInvestmentEmployer}," +
+                                        $"{accountProjectionModel.CoInvestmentGovernment}" +
+                                        "),");
             }
+
+            await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString().Trim().TrimEnd(','));
+            
         }
 
         public async Task DeleteAll(long employerAccountId)
@@ -46,19 +92,6 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         public async Task SaveChanges()
         {
             await _dataContext.SaveChangesAsync();
-        }
-
-        public async Task<List<CommitmentModel>> GetCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
-        {
-            var query = _dataContext.AccountProjectionCommitments
-                .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId);
-
-            if (forecastLimitDate != null)
-                query = query.Where(apc => apc.AccountProjection.Year >= forecastLimitDate.Value.Year && (apc.AccountProjection.Year > forecastLimitDate.Value.Year || apc.AccountProjection.Month >= forecastLimitDate.Value.Month));
-
-            return await query.Select(apc => apc.Commitment)
-               .Distinct()
-               .ToListAsync();
         }
     }
 }
