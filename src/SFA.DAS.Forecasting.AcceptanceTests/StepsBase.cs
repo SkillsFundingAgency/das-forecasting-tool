@@ -7,13 +7,16 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
+using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Data;
@@ -48,7 +51,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
-        protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
+        protected List<AccountProjectionMonth> AccountProjections { get => Get<List<AccountProjectionMonth>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }
         protected List<Models.Commitments.CommitmentModel> RecordedCommitments { get => Get<List<Models.Commitments.CommitmentModel>>(); set => Set(value); }
         protected CalendarPeriod ProjectionsStartPeriod
@@ -110,6 +113,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             while (DateTime.Now < endTime)
             {
                 if (lookForIt())
+                    return;
+                Thread.Sleep(Config.TimeToPause);
+            }
+            Assert.Fail(failText);
+        }
+
+        protected async Task WaitForIt(Func<Task<bool>> lookForIt, string failText)
+        {
+            var endTime = DateTime.Now.Add(Config.TimeToWait);
+            while (DateTime.Now < endTime)
+            {
+                if (await lookForIt())
                     return;
                 Thread.Sleep(Config.TimeToPause);
             }
@@ -243,6 +258,18 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 .ToList();
             DataContext.AccountProjections.RemoveRange(projections);
             DataContext.SaveChanges();
+        }
+
+        protected void DeleteAccountProjectionsFromDocumentDb(long employerId)
+        {
+            var client = NestedContainer.GetInstance<IDocumentClient>();
+            var conn = NestedContainer.GetInstance<DocumentSessionConnectionString>();
+
+            var session = new DocumentSession(client, conn);
+
+            var task = session.Delete<AccountProjectionDocument>(employerId.ToString());
+
+            Task.WhenAll(task);
         }
 
         protected void InsertLevyDeclarations(IEnumerable<LevySubmission> levySubmissions)
