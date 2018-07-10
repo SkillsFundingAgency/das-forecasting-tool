@@ -14,6 +14,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Data;
@@ -41,6 +42,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
+        protected IDocumentSession Session => NestedContainer.GetInstance<IDocumentSession>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
@@ -48,7 +50,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
-        protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
+        protected List<AccountProjectionMonth> AccountProjections { get => Get<List<AccountProjectionMonth>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }
         protected List<Models.Commitments.CommitmentModel> RecordedCommitments { get => Get<List<Models.Commitments.CommitmentModel>>(); set => Set(value); }
         protected CalendarPeriod ProjectionsStartPeriod
@@ -213,9 +215,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void DeleteCommitments(long employerId)
         {
-            DataContext.AccountProjectionCommitments
-                .RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == employerId || apc.Commitment.SendingEmployerAccountId == employerId).ToList());
+            //DataContext.AccountProjectionCommitments
+            //    .RemoveRange(DataContext.AccountProjectionCommitments
+            //    .Where(apc => apc.Commitment.EmployerAccountId == employerId || apc.Commitment.SendingEmployerAccountId == employerId).ToList());
             var commitments = DataContext.Commitments
                 .Where(c => c.EmployerAccountId == employerId || c.SendingEmployerAccountId == employerId)
                 .ToList();
@@ -234,10 +236,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void DeleteAccountProjections(long employerId)
         {
-            var projectionCommitments = DataContext.AccountProjectionCommitments
-                .Where(ap => ap.AccountProjection.EmployerAccountId == employerId)
-                .ToList();
-            DataContext.AccountProjectionCommitments.RemoveRange(projectionCommitments);
+            
             var projections = DataContext.AccountProjections
                 .Where(projection => projection.EmployerAccountId == employerId)
                 .ToList();

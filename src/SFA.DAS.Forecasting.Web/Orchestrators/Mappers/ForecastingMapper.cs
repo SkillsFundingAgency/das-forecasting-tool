@@ -11,14 +11,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 {
     public interface IForecastingMapper
     {
-        List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data);
+        List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionMonth> data);
         BalanceCsvItemViewModel ToCsvBalance(ProjectiontemViewModel projectionItem);
         ApprenticeshipCsvItemViewModel ToCsvApprenticeship(CommitmentModel commitment, long accountId);
     }
 
     public class ForecastingMapper : IForecastingMapper
     {
-        public List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
+        public List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionMonth> data)
         {
             return data.Select(x =>
                 new ProjectiontemViewModel

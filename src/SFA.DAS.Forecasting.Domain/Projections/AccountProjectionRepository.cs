@@ -44,9 +44,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             if (!accountProjection.Projections.Any())
                 return;
-            await _accountProjectionDataSession.DeleteAll(accountProjection.EmployerAccountId);
-            _accountProjectionDataSession.Store(accountProjection.Projections);
-            await _accountProjectionDataSession.SaveChanges();
+            
+            await _accountProjectionDataSession.Store(accountProjection.Model);
         }
     }
 }

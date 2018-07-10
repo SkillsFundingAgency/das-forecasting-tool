@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;
         private readonly List<AccountEstimationProjectionModel> _estimatedProjections;
-        private readonly IList<AccountProjectionModel> _actualAccountProjections;
+        private readonly IList<AccountProjectionMonth> _actualAccountProjections;
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _estimatedProjections.AsReadOnly();
         public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService)
         {

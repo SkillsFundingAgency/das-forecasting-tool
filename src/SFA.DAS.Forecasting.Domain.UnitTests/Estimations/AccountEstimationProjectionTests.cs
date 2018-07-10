@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         private const int EmployerAccountId = 12345;
         private AutoMoq.AutoMoqer _moqer;
         private EmployerCommitmentsModel _commitments;
-        private List<AccountProjectionModel> _accountProjection;
+        private List<AccountProjectionMonth> _accountProjection;
         private Account _account;
 
         [SetUp]
@@ -54,9 +54,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             };
             var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);
 
-            _accountProjection = new List<AccountProjectionModel>
+            _accountProjection = new List<AccountProjectionMonth>
             {
-                new AccountProjectionModel
+                new AccountProjectionMonth
                 {
                     EmployerAccountId = 54321,
                     Month = 1,
@@ -66,7 +66,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     LevyFundedCompletionPayments = 50,
                     LevyFundedCostOfTraining = 50
                 },
-                new AccountProjectionModel
+                new AccountProjectionMonth
                 {
                     EmployerAccountId = 54321,
                     Month = 2,
@@ -76,7 +76,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50
                 },
-                new AccountProjectionModel
+                new AccountProjectionMonth
                 {
                     EmployerAccountId = 54321,
                     Month = 3,
@@ -86,7 +86,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50
                 },
-                new AccountProjectionModel
+                new AccountProjectionMonth
                 {
                     EmployerAccountId = 54321,
                     Month = 4,
@@ -96,7 +96,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50
                 },
-                new AccountProjectionModel
+                new AccountProjectionMonth
                 {
                     EmployerAccountId = 54321,
                     Month = 5,
@@ -106,7 +106,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50
                 },
-                new AccountProjectionModel
+                new AccountProjectionMonth
                 {
                     EmployerAccountId = 54321,
                     Month = 6,

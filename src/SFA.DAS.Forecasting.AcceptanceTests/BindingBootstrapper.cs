@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         public static void SetUpContainer()
         {
             ParentContainer = new Container(new DefaultRegistry());
+            
         }
 
         [BeforeScenario(Order = 0)]

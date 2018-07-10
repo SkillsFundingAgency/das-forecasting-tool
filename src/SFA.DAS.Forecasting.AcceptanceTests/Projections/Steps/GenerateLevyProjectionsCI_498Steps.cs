@@ -112,7 +112,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         {
             WaitForIt(() =>
             {
-                var projections = new List<AccountProjectionModel>();
+                var projections = new List<AccountProjectionMonth>();
                 ExecuteSql(() =>
                 {
                     projections = DataContext.AccountProjections.Where(projection =>

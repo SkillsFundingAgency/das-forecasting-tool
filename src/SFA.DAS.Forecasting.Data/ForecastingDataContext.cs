@@ -9,8 +9,8 @@ namespace SFA.DAS.Forecasting.Data
 {
     public partial interface IForecastingDataContext : System.IDisposable
     {
-        System.Data.Entity.DbSet<AccountProjectionModel> AccountProjections { get; set; } // AccountProjection
-        System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
+        //System.Data.Entity.DbSet<AccountProjectionMonth> AccountProjections { get; set; } // AccountProjection
+        //System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
         System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
         //System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
@@ -34,8 +34,8 @@ namespace SFA.DAS.Forecasting.Data
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
     public partial class ForecastingDataContext : System.Data.Entity.DbContext, IForecastingDataContext
     {
-        public System.Data.Entity.DbSet<AccountProjectionModel> AccountProjections { get; set; } // AccountProjection
-        public System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
+        //public System.Data.Entity.DbSet<AccountProjectionMonth> AccountProjections { get; set; } // AccountProjection
+        //public System.Data.Entity.DbSet<AccountProjectionCommitment> AccountProjectionCommitments { get; set; } // AccountProjectionCommitment
         public System.Data.Entity.DbSet<BalanceModel> Balances { get; set; } // Balance
         public System.Data.Entity.DbSet<CommitmentModel> Commitments { get; set; } // Commitment
         //public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
@@ -96,8 +96,8 @@ namespace SFA.DAS.Forecasting.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Configurations.Add(new AccountProjectionConfiguration());
-            modelBuilder.Configurations.Add(new AccountProjectionCommitmentConfiguration());
+            //modelBuilder.Configurations.Add(new AccountProjectionConfiguration());
+            //modelBuilder.Configurations.Add(new AccountProjectionCommitmentConfiguration());
             modelBuilder.Configurations.Add(new BalanceConfiguration());
             modelBuilder.Configurations.Add(new CommitmentConfiguration());
             //modelBuilder.Configurations.Add(new FundingSourceConfiguration());
@@ -109,8 +109,8 @@ namespace SFA.DAS.Forecasting.Data
 
         public static System.Data.Entity.DbModelBuilder CreateModel(System.Data.Entity.DbModelBuilder modelBuilder, string schema)
         {
-            modelBuilder.Configurations.Add(new AccountProjectionConfiguration(schema));
-            modelBuilder.Configurations.Add(new AccountProjectionCommitmentConfiguration(schema));
+            //modelBuilder.Configurations.Add(new AccountProjectionConfiguration(schema));
+            //modelBuilder.Configurations.Add(new AccountProjectionCommitmentConfiguration(schema));
             modelBuilder.Configurations.Add(new BalanceConfiguration(schema));
             modelBuilder.Configurations.Add(new CommitmentConfiguration(schema));
             //modelBuilder.Configurations.Add(new FundingSourceConfiguration(schema));

@@ -12,15 +12,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
     public class ForecastingMapperTests
     {
         private ForecastingMapper _mapper;
-        private AccountProjectionModel _projectionModel;
-        private IEnumerable<AccountProjectionModel> _models;
+        private AccountProjectionMonth _projectionMonth;
+        private IEnumerable<AccountProjectionMonth> _models;
 
         [SetUp]
         public void SetUp()
         {
             _mapper = new ForecastingMapper();
-            _projectionModel =
-                new AccountProjectionModel
+            _projectionMonth =
+                new AccountProjectionMonth
                 {
                     Id = 1,
                     EmployerAccountId = 14,
@@ -47,9 +47,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
                     CoInvestmentGovernment = 100,
                 };
 
-            _models = new List<AccountProjectionModel>
+            _models = new List<AccountProjectionMonth>
             {
-                _projectionModel
+                _projectionMonth
             };
         }
 
@@ -59,32 +59,32 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
             
             var result = _mapper.MapProjections(_models);
 
-            result.First().FundsIn.Should().Be(_projectionModel.LevyFundsIn+_projectionModel.TransferInCompletionPayments+_projectionModel.TransferInCostOfTraining);
-            result.First().Balance.Should().Be(_projectionModel.FutureFunds);
-            result.First().CoInvestmentEmployer.Should().Be(_projectionModel.CoInvestmentEmployer);
-            result.First().CoInvestmentGovernment.Should().Be(_projectionModel.CoInvestmentGovernment);
+            result.First().FundsIn.Should().Be(_projectionMonth.LevyFundsIn+_projectionMonth.TransferInCompletionPayments+_projectionMonth.TransferInCostOfTraining);
+            result.First().Balance.Should().Be(_projectionMonth.FutureFunds);
+            result.First().CoInvestmentEmployer.Should().Be(_projectionMonth.CoInvestmentEmployer);
+            result.First().CoInvestmentGovernment.Should().Be(_projectionMonth.CoInvestmentGovernment);
         }
 
         [Test]
         public void ShouldMapCostOfTraining()
         {
-            _projectionModel.LevyFundedCostOfTraining = 200;
-            _projectionModel.TransferOutCostOfTraining = 200;
+            _projectionMonth.LevyFundedCostOfTraining = 200;
+            _projectionMonth.TransferOutCostOfTraining = 200;
 
             var result = _mapper.MapProjections(_models);
 
-            result.First().CostOfTraining.Should().Be(_projectionModel.LevyFundedCostOfTraining + _projectionModel.TransferOutCostOfTraining);
+            result.First().CostOfTraining.Should().Be(_projectionMonth.LevyFundedCostOfTraining + _projectionMonth.TransferOutCostOfTraining);
         }
 
         [Test]
         public void ShouldMapTransferCost()
         {
-            _projectionModel.LevyFundedCompletionPayments = 200;
-            _projectionModel.TransferOutCompletionPayments = 200;
+            _projectionMonth.LevyFundedCompletionPayments = 200;
+            _projectionMonth.TransferOutCompletionPayments = 200;
 
             var result = _mapper.MapProjections(_models);
 
-            result.First().CompletionPayments.Should().Be(_projectionModel.LevyFundedCompletionPayments+ _projectionModel.TransferOutCompletionPayments);
+            result.First().CompletionPayments.Should().Be(_projectionMonth.LevyFundedCompletionPayments+ _projectionMonth.TransferOutCompletionPayments);
         }
 
         [Test]
@@ -98,8 +98,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
         [Test]
         public void Should_be_first_of_month()
         {
-            _projectionModel.Month = 12;
-            _projectionModel.Year = 1998;
+            _projectionMonth.Month = 12;
+            _projectionMonth.Year = 1998;
 
             var result = _mapper.MapProjections(_models);
 

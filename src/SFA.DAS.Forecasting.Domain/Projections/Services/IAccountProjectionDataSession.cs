@@ -8,10 +8,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections.Services
 {
     public interface IAccountProjectionDataSession
     {
-        Task<List<AccountProjectionModel>> Get(long employerId);
-        void Store(IEnumerable<AccountProjectionModel> accountProjections);
-        Task DeleteAll(long employerAccountId);
-        Task SaveChanges();
-        Task<List<CommitmentModel>> GetCommitments(long employerAccountId, DateTime? forecastLimitDate = null);
+        Task<AccountProjectionModel> Get(long employerId);
+        Task Store(AccountProjectionModel accountProjection);
     }
 }

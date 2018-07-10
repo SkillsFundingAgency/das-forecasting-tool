@@ -71,6 +71,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public async Task<IEnumerable<ApprenticeshipCsvItemViewModel>> ApprenticeshipsCsv(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
+            
             var commitments = await _accountProjectionDataSession.GetCommitments(accountId, _applicationConfiguration.LimitForecast ? BalanceMaxDate : (DateTime?)null);
             return commitments
                 .Select(m => _mapper.ToCsvApprenticeship(m, accountId));
@@ -80,7 +81,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var result = await _accountProjection.Get(accountId);
-            var d = _mapper.MapProjections(result);
+            var d = _mapper.MapProjections(result.Projections);
 
             return d.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
                 .OrderBy(m => m.Date)

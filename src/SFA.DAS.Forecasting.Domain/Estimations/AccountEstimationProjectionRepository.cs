@@ -36,13 +36,13 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             var balance = await _currentBalanceRepository.Get(accountEstimation.EmployerAccountId);
             var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.VirtualApprenticeships);
 
-            var actualProjections = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
+            var actualProjection = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
 
             var employerCommitmentsModel = new EmployerCommitmentsModel();
             employerCommitmentsModel.SendingEmployerTransferCommitments = commitments;
 
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, employerCommitmentsModel);
-            var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);
+            var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjection.Projections);
 
             return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService);
         }

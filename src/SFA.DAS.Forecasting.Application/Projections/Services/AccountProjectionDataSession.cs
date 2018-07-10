@@ -3,63 +3,32 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
+using AccountProjection = SFA.DAS.Forecasting.Domain.Projections.AccountProjection;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Services
 {
     public class AccountProjectionDataSession : IAccountProjectionDataSession
     {
-        private readonly IForecastingDataContext _dataContext;
+        private readonly IDocumentSession _session;
 
-        public AccountProjectionDataSession(IForecastingDataContext dataContext)
+        public AccountProjectionDataSession(IDocumentSession session, IForecastingDataContext dataContext)
         {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
-        public async Task<List<AccountProjectionModel>> Get(long employerAccountId)
+        public async Task<AccountProjectionModel> Get(long employerAccountId)
         {
-            return await _dataContext.AccountProjections
-                .Where(projection => projection.EmployerAccountId == employerAccountId)
-                .ToListAsync();
+            return await _session.Get<AccountProjectionModel>(employerAccountId.ToString());
         }
 
-        public void Store(IEnumerable<AccountProjectionModel> accountProjections)
+        public async Task Store(AccountProjectionModel accountProjection)
         {
-            foreach (var accountProjectionModel in accountProjections)
-            {
-                _dataContext.AccountProjections.Add(accountProjectionModel);
-            }
-        }
-
-        public async Task DeleteAll(long employerAccountId)
-        {
-            await _dataContext.Database.ExecuteSqlCommandAsync(
-                "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
-                employerAccountId);
-
-            await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
-        }
-
-        public async Task SaveChanges()
-        {
-            await _dataContext.SaveChangesAsync();
-        }
-
-        public async Task<List<CommitmentModel>> GetCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
-        {
-            var query = _dataContext.AccountProjectionCommitments
-                .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId);
-
-            if (forecastLimitDate!=null)
-                query = query.Where(apc => apc.AccountProjection.Year >= forecastLimitDate.Value.Year && (apc.AccountProjection.Year > forecastLimitDate.Value.Year || apc.AccountProjection.Month >= forecastLimitDate.Value.Month));
-
-             return await query.Select(apc => apc.Commitment)
-                .Distinct()
-                .ToListAsync();
+            await _session.Store(accountProjection);
         }
     }
 }

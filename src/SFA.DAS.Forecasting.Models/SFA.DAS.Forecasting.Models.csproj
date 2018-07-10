@@ -60,6 +60,7 @@
     <Compile Include="Balance\Account.cs" />
     <Compile Include="Projections\AccountProjectionCommitment.cs" />
     <Compile Include="Projections\AccountProjectionModel.cs" />
+    <Compile Include="Projections\AccountProjectionMonth.cs" />
     <Compile Include="Projections\EmployerProjectionAudit.cs" />
     <Compile Include="Projections\ProjectionGenerationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

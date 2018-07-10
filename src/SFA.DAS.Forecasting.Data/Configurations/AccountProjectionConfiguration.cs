@@ -3,7 +3,7 @@
 namespace SFA.DAS.Forecasting.Data.Configurations
 {
     [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class AccountProjectionConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<AccountProjectionModel>
+    public partial class AccountProjectionConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<AccountProjectionMonth>
     {
         public AccountProjectionConfiguration()
             : this("dbo")

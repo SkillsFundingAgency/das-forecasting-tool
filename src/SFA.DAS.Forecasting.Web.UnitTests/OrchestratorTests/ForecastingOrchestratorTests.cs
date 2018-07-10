@@ -295,10 +295,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         private void SetUpProjections(int count)
         {
             var currentMonthDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-1);
-            var projections = new List<AccountProjectionModel>();
+            var projections = new List<AccountProjectionMonth>();
             for (var i = 0; i < count; i++)
             {
-                projections.Add(new AccountProjectionModel
+                projections.Add(new AccountProjectionMonth
                 {
                     Month = (short) currentMonthDate.Month,
                     Year = currentMonthDate.Year,

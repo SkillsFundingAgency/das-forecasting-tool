@@ -101,7 +101,6 @@
     <Compile Include="Levy\LevyDeclarationTests.cs" />
     <Compile Include="Payments\EmployerPaymentsTests.cs" />
     <Compile Include="Projection\AccountProjectionTests.cs" />
-    <Compile Include="Levy\LevyDeclarationHandlerTests.cs" />
     <Compile Include="Levy\LevyPeriodTests.cs" />
     <Compile Include="Payments\EmployerPaymentTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -112,10 +111,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
-      <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
-      <Name>SFA.DAS.Forecasting.Application</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
       <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>
@@ -123,10 +118,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
       <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
       <Name>SFA.DAS.Forecasting.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj">
-      <Project>{602A91CA-3FC9-4A33-8B50-2714173EA22C}</Project>
-      <Name>SFA.DAS.Forecasting.Levy.Functions</Name>
     </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
       <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>

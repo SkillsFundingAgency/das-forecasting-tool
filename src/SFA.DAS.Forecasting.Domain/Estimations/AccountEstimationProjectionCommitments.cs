@@ -7,9 +7,9 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     public class AccountEstimationProjectionCommitments
     {
         public EmployerCommitments VirtualEmployerCommitments { get; set; }
-        public IReadOnlyCollection<AccountProjectionModel> ActualAccountProjections { get; set; }
+        public IReadOnlyCollection<AccountProjectionMonth> ActualAccountProjections { get; set; }
 
-        public AccountEstimationProjectionCommitments(EmployerCommitments virtualEmployerCommitments, IReadOnlyCollection<AccountProjectionModel> actualAccountProjections)
+        public AccountEstimationProjectionCommitments(EmployerCommitments virtualEmployerCommitments, IReadOnlyCollection<AccountProjectionMonth> actualAccountProjections)
         {
             VirtualEmployerCommitments = virtualEmployerCommitments;
             ActualAccountProjections = actualAccountProjections;

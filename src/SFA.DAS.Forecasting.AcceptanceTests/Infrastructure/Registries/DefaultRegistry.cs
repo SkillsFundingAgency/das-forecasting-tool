@@ -19,6 +19,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
                 scan.TheCallingAssembly();
                 scan.RegisterConcreteTypesAgainstTheFirstInterface();
             });
+            IncludeRegistry<SFA.DAS.Forecasting.Application.Infrastructure.Registries.DocumentRegistry>();
 
             ForSingletonOf<Config>().Use(new Config());
             
