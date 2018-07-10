@@ -15,18 +15,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using System.Configuration;
 using System.Net.NetworkInformation;
 using System.Web;
-using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
-using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
 using StructureMap;
 

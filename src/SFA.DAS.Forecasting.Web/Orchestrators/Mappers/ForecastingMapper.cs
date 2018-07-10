@@ -14,6 +14,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
         List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data);
         BalanceCsvItemViewModel ToCsvBalance(ProjectiontemViewModel projectionItem);
         ApprenticeshipCsvItemViewModel ToCsvApprenticeship(CommitmentModel commitment, long accountId);
+        List<ProjectiontemViewModel> MapProjections(AccountProjectionDocument documents);
     }
 
     public class ForecastingMapper : IForecastingMapper
@@ -71,6 +72,23 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
         private static bool IsTransferCommitment(CommitmentModel commitmentModel, long accountId)
         {
             return commitmentModel.FundingSource.Equals(FundingSource.Transfer) && commitmentModel.SendingEmployerAccountId == accountId;
+        }
+
+        public List<ProjectiontemViewModel> MapProjections(AccountProjectionDocument data)
+        {
+            return data.Projections.Select(x =>
+                new ProjectiontemViewModel
+                {
+                    Date = (new DateTime(x.Year, x.Month, 1)),
+                    FundsIn = x.LevyFundsIn + x.TransferInCostOfTraining + x.TransferInCompletionPayments,
+                    CostOfTraining = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining,
+                    CompletionPayments = x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments,
+                    ExpiredFunds = 0,
+                    Balance = x.FutureFunds,
+                    CoInvestmentEmployer = x.CoInvestmentEmployer,
+                    CoInvestmentGovernment = x.CoInvestmentGovernment
+                })
+                .ToList();
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance;
-using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Balance;
-using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
 {
@@ -22,13 +19,18 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly ILevyDataSession _levyDataSession;
         private readonly IAccountProjectionDataSession _accountProjectionDataSession;
+        private readonly IProjectionsDataService _projectionsDataService;
 
-        public AccountProjectionRepository(ICurrentBalanceRepository currentBalanceRepository,
-            ILevyDataSession levyDataSession, IAccountProjectionDataSession accountProjectionDataSession)
+        public AccountProjectionRepository(
+            ICurrentBalanceRepository currentBalanceRepository,
+            ILevyDataSession levyDataSession,
+            IAccountProjectionDataSession accountProjectionDataSession,
+            IProjectionsDataService projectionsDataService)
         {
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
             _levyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
             _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
+            _projectionsDataService = projectionsDataService;
         }
 
         public async Task<AccountProjection> Get(long employerAccountId)
@@ -44,9 +46,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             if (!accountProjection.Projections.Any())
                 return;
-            await _accountProjectionDataSession.DeleteAll(accountProjection.EmployerAccountId);
-            _accountProjectionDataSession.Store(accountProjection.Projections);
-            await _accountProjectionDataSession.SaveChanges();
+
+            await _projectionsDataService.Store(accountProjection.Model);
         }
     }
 }

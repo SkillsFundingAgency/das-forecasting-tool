@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
@@ -54,12 +53,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
             var query = _dataContext.AccountProjectionCommitments
                 .Where(apc => apc.AccountProjection.EmployerAccountId == employerAccountId);
 
-            if (forecastLimitDate!=null)
+            if (forecastLimitDate != null)
                 query = query.Where(apc => apc.AccountProjection.Year >= forecastLimitDate.Value.Year && (apc.AccountProjection.Year > forecastLimitDate.Value.Year || apc.AccountProjection.Month >= forecastLimitDate.Value.Month));
 
-             return await query.Select(apc => apc.Commitment)
-                .Distinct()
-                .ToListAsync();
+            return await query.Select(apc => apc.Commitment)
+               .Distinct()
+               .ToListAsync();
         }
     }
 }
