@@ -54,10 +54,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var course = vm.ApprenticeshipToAdd.AppenticeshipCourse;
 
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
+            var fundingSource = apprenticeshipToAdd.IsTransferFunded ?? true
+                ? Models.Payments.FundingSource.Transfer 
+                : Models.Payments.FundingSource.Levy;
+
             accountEstimation.AddVirtualApprenticeship(course.Id, course.Title, course.Level,
                 apprenticeshipToAdd.StartMonth.GetValueOrDefault(), apprenticeshipToAdd.StartYear.GetValueOrDefault(),
                 apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(), apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
-                apprenticeshipToAdd.TotalCost.GetValueOrDefault(), Models.Payments.FundingSource.Transfer);
+                apprenticeshipToAdd.TotalCost.GetValueOrDefault(), fundingSource);
 
             _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {course}");
             await _accountEstimationRepository.Store(accountEstimation);

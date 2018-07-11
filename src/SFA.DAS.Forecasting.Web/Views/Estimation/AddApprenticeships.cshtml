@@ -14,6 +14,7 @@
             <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
             @Html.HiddenFor(model => model.Name)
             @Html.HiddenFor(model => model.PreviousCourseId)
+            @Html.HiddenFor(model => model.ApprenticeshipToAdd.IsTransferFunded)
 
             <div class="error-summary @HideShowValidation("")  validation-summary-details" role="alert" aria-labelledby="error-summary-heading-details" tabindex="-1">
                 <h1 class="heading-medium error-summary-heading" id="error-summary-heading-details">

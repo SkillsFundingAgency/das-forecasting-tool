@@ -60,11 +60,40 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
-        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
+        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName, bool? isTransferFunded)
         {
+            if(isTransferFunded == null)
+            {
+                return RedirectToAction("TypeOfApprenticeships");
+            }
+
             var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            vm.ApprenticeshipToAdd.IsTransferFunded = isTransferFunded;
 
             return View(vm);
+        }
+
+        [HttpGet]
+        [Route("{estimationName}/apprenticeship/typeof")]
+        public ActionResult TypeOfApprenticeships(string hashedAccountId, string estimationName)
+        {
+            return View(new TypeOfApprenticeshipViewModel { IsTransferFunded = null });
+        }
+
+        [HttpPost]
+        [Route("{estimationName}/apprenticeship/typeof")]
+        public ActionResult PostTypeOfApprenticeships(TypeOfApprenticeshipViewModel model)
+        {
+            if(model.IsTransferFunded == null)
+            {
+                ModelState.AddModelError(
+                    nameof(TypeOfApprenticeshipViewModel.IsTransferFunded), 
+                    "You must select whether this estimation will be funded from a transfer of funds or not");
+
+                return View("TypeOfApprenticeships");
+            }
+
+            return RedirectToAction("AddApprenticeships", new { isTransferFunded = model.IsTransferFunded });
         }
 
         [HttpGet]
@@ -115,6 +144,11 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 viewModel.PreviousCourseId = viewModel.ApprenticeshipToAdd?.CourseId;
                 ModelState.Clear();        
                 return View("AddApprenticeships", viewModel);
+            }
+
+            if(viewModel.ApprenticeshipToAdd.IsTransferFunded == null)
+            {
+                return RedirectToAction("TypeOfApprenticeships");
             }
 
             await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
