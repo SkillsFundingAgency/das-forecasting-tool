@@ -20,13 +20,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
         }
 
-        public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId)
+        public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
             var model = new EmployerCommitmentsModel
             {
-                LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId)),
-                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId)),
-                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId))
+                LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate)),
+                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate)),
+                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate))
             };
 
             return model;
@@ -34,12 +34,19 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         private async Task<List<CommitmentModel>> GetCommitments(Expression<Func<CommitmentModel, bool>> filter)
         {
-            var model = new List<CommitmentModel>();
+            var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
+
+            var model = new List<CommitmentModel>(listSize);
+
+            if (listSize == 0)
+            {
+                return model;
+            }
             var moreData = true;
             var skip = 0;
             while (moreData)
             {
-                var commitments = await _dataContext.Commitments.Where(filter).OrderBy(c=>c.Id).Skip(skip).Take(100).ToListAsync();
+                var commitments = await _dataContext.Commitments.AsNoTracking().Where(filter).OrderBy(c=>c.Id).Skip(skip).Take(100).ToListAsync();
 
                 skip = skip + 100;
                 if (!commitments.Any())
@@ -54,23 +61,26 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             return model;
         }
 
-        private Expression<Func<CommitmentModel, bool>> GetLevyFundedCommiments(long employerAccountId)
+        private Expression<Func<CommitmentModel, bool>> GetLevyFundedCommiments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.EmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Levy
+                                 && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
 
-        private Expression<Func<CommitmentModel, bool>> GetReceivingEmployerTransferCommitments(long employerAccountId)
+        private Expression<Func<CommitmentModel, bool>> GetReceivingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.EmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
+                                 && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
-        private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId)
+        private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
+                                 && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
 

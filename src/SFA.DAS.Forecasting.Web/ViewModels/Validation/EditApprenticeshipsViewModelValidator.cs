@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using FluentValidation;
-using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
@@ -40,7 +37,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .WithMessage("The total training cost was not entered")
                 .Must((o, b) => CheckTotalCost(o, b))
                 .WithMessage("The total cost can't be higher than the total government funding band maximum for this apprenticeship")
-                ;
+                .Must((o, b) => b.ToDecimal() <= o.FundingCapCalculated * o.NumberOfApprentices)
+                .WithMessage("The total cost can't be higher than the total government funding band maximum for this apprenticeship")
+               ;
 
             RuleFor(m => m.StartDate)
                 .GreaterThan(DateTime.Now.AddMonths(-1))
@@ -49,6 +48,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .LessThanOrEqualTo(DateTime.Now.AddYears(4))
                 .WithMessage("The start date must be within the next 4 years")
                 .When(m => m.StartDate != DateTime.MinValue);
+
+            
 
         }
 

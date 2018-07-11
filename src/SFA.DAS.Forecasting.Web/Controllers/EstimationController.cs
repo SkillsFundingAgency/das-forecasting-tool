@@ -87,6 +87,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
             if (!ModelState.IsValid)
             {
+                //editmodel.CalculatedTotalCap = editmodel.FundingCap * editmodel.NumberOfApprentices;
                 return View("EditApprenticeships", editmodel);
             }
 
