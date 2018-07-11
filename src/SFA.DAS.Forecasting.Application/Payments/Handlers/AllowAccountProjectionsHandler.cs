@@ -11,6 +11,7 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.NLog.Logger;
+using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 {
@@ -42,9 +43,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                 return false;
             }
 
-            if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId))
+            if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
             {
-                Logger.Debug($"Triggering of projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
+                Logger.Debug($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
                 return false;
             }
             

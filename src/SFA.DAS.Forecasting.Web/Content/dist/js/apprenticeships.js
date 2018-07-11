@@ -4,15 +4,13 @@
 
     var init = function () {
         if (document.getElementById("estimate-edit-apprenticeship")) {
-            calculateTotalCost();
+            $("#no-of-app").keyup(function () {
+                calculateTotalCost();
+            });
         }
     };
 
     init();
-
-    $("#no-of-app").keyup(function () {
-        calculateTotalCost();
-    });
 
     function calculateTotalCost () {
 
@@ -24,8 +22,9 @@
         var totalCap = (noOfApprentices * fundingCap) || 0;
         $('#apprentice-count-details').text(noOfApprentices);
 
-        $('#total-cap-details').text('£' + totalCap);
-        $('#levy-value').val(totalCap);
+        var totalCapFormated = toGBP(totalCap)
+        $('#total-cap-details').text(totalCapFormated);
+        $('#total-funding-cost').val(numberWithCommas(totalCapFormated).replace('£',''));
 
         if (noOfApprentices > 0) {
             $('#details-about-funding').hide()
@@ -34,5 +33,19 @@
             $('#details-about-funding').show();
             $('#details-about-funding-calculated').hide();
         }
-    } 
+    }
+
+    function toGBP(data) {
+        return data.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' }).split('.')[0];
+    }
+
+    function numberWithCommas(number) {
+        var parts = number.toString().split('.');
+        var partToProcess = parts[0];
+        partToProcess = partToProcess.replace(/,/g, '');
+        partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        parts[0] = partToProcess;
+        return parts.join('.');
+    }
+
 }());

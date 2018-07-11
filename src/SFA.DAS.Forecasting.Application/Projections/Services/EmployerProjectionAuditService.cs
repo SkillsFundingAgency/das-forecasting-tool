@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
+using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Services
 {
     public interface IEmployerProjectionAuditService
     {
-        Task<bool> RecordRunOfProjections(long employerAccountId);
+        Task<bool> RecordRunOfProjections(long employerAccountId, string source);
     }
 
     public class EmployerProjectionAuditService : IEmployerProjectionAuditService
@@ -22,11 +23,11 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
             _documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
         }
 
-        public async Task<bool> RecordRunOfProjections(long employerAccountId)
+        public async Task<bool> RecordRunOfProjections(long employerAccountId, string source)
         {
             try
             {
-                var docId = $"employerprojectionaudit-{employerAccountId}";
+                var docId = $"employerprojectionaudit-{source.ToLower()}-{employerAccountId}";
                 var doc = await _documentSession.GetDocument(docId);
                 if (doc != null)
                 {

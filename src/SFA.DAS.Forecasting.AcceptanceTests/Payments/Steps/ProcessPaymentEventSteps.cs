@@ -42,8 +42,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I have no existing commitments recorded in the forecasting service")]
         public void GivenIHaveNoExistingCommitments()
         {
-            DataContext.AccountProjectionCommitments.RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId || apc.Commitment.EmployerAccountId == 112233).ToList());
             DataContext.Commitments.RemoveRange(DataContext.Commitments
                 .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId || commitment.EmployerAccountId == 112233).ToList());
             DataContext.SaveChanges();

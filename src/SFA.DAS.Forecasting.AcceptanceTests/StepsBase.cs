@@ -213,9 +213,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void DeleteCommitments(long employerId)
         {
-            DataContext.AccountProjectionCommitments
-                .RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == employerId || apc.Commitment.SendingEmployerAccountId == employerId).ToList());
             var commitments = DataContext.Commitments
                 .Where(c => c.EmployerAccountId == employerId || c.SendingEmployerAccountId == employerId)
                 .ToList();
@@ -234,10 +231,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
 
         protected void DeleteAccountProjections(long employerId)
         {
-            var projectionCommitments = DataContext.AccountProjectionCommitments
-                .Where(ap => ap.AccountProjection.EmployerAccountId == employerId)
-                .ToList();
-            DataContext.AccountProjectionCommitments.RemoveRange(projectionCommitments);
             var projections = DataContext.AccountProjections
                 .Where(projection => projection.EmployerAccountId == employerId)
                 .ToList();
