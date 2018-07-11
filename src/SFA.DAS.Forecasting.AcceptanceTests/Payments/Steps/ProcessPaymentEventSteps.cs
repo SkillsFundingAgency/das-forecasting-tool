@@ -336,6 +336,5 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                         c.ApprenticeshipId == payment.ApprenticeshipId && c.ActualEndDate != null));
                 },"Failed to find the ended commitment");
         }
-
     }
 }

@@ -5,6 +5,7 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
@@ -37,7 +38,10 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
             var actualProjections = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
 
-            var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);
+            var employerCommitmentsModel = new EmployerCommitmentsModel();
+            employerCommitmentsModel.SendingEmployerTransferCommitments = commitments;
+
+            var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, employerCommitmentsModel);
             var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);
 
             return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService);

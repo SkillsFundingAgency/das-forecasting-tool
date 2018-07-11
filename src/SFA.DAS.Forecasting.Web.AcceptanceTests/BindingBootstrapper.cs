@@ -3,6 +3,7 @@ using StructureMap;
 using System;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
+using SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 {
@@ -30,7 +31,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void SetUpNestedContainer()
         {
             NestedContainer = ParentContainer.GetNestedContainer();
-            WebSite = new ForecastingWebSite(Config.WebSiteUrl, Config.Browser);
+            var url = Config.Environment.Equals("DEV", StringComparison.InvariantCultureIgnoreCase) ? Config.WebSiteUrlLocal: Config.WebSiteUrl;
+            WebSite = new ForecastingWebSite(url, Config.Browser);
         }
 
         [AfterScenario(Order = 999)]

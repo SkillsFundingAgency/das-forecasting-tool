@@ -10,8 +10,10 @@ using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 using System.Collections.ObjectModel;
+using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
@@ -22,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly IBalanceDataService _balanceDataService;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly IForecastingMapper _mapper;
-        private readonly IAccountProjectionDataSession _accountProjectionDataSession;
+        private readonly ICommitmentsDataService _commitmentsDataService;
 
         private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
@@ -32,7 +34,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             IBalanceDataService balanceDataService,
             IApplicationConfiguration applicationConfiguration,
             IForecastingMapper mapper,
-            IAccountProjectionDataSession accountProjectionDataSession
+            ICommitmentsDataService commitmentsDataService
             )
         {
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
@@ -40,7 +42,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             _balanceDataService = balanceDataService ?? throw new ArgumentNullException(nameof(balanceDataService));
             _applicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
+            _commitmentsDataService = commitmentsDataService ?? throw new ArgumentNullException(nameof(commitmentsDataService));
         }
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
@@ -71,8 +73,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public async Task<IEnumerable<ApprenticeshipCsvItemViewModel>> ApprenticeshipsCsv(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var commitments = await _accountProjectionDataSession.GetCommitments(accountId, _applicationConfiguration.LimitForecast ? BalanceMaxDate : (DateTime?)null);
-            return commitments
+            var commitments = await _commitmentsDataService.GetCurrentCommitments(accountId, _applicationConfiguration.LimitForecast ? BalanceMaxDate : (DateTime?)null);
+            var csvCommitments = new List<CommitmentModel>();
+            csvCommitments = csvCommitments.Concat(commitments.LevyFundedCommitments)
+                .Concat(commitments.ReceivingEmployerTransferCommitments)
+                .Concat(commitments.SendingEmployerTransferCommitments).OrderBy(c=>c.StartDate).ToList();
+
+            return csvCommitments
                 .Select(m => _mapper.ToCsvApprenticeship(m, accountId));
         }
 

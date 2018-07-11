@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                 TransferAllowance = 1000,
                 RemainingTransferBalance = 1000
             };
-            _moqer.SetInstance(new EmployerCommitments(12345, new List<CommitmentModel>
+            _moqer.SetInstance(new EmployerCommitments(12345, new EmployerCommitmentsModel{ LevyFundedCommitments = new List<CommitmentModel>
             {
                 new CommitmentModel
                 {
@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                     MonthlyInstallment = 80,
                     FundingSource = FundingSource.Levy
                 }
-            }));
+            }}));
             _moqer.SetInstance(_previousAccountBalance);
             _moqer.GetMock<IAccountBalanceService>()
                 .Setup(svc => svc.GetAccountBalance(It.IsAny<long>()))

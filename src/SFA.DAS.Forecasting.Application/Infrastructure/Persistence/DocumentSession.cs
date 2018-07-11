@@ -13,7 +13,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
     {
         IQueryable<T> CreateQuery<T>(int maxItemCount = -1) where T : class, IDocument;
         Task<T> Get<T>(string id) where T : class, IDocument;
+        Task<Document> GetDocument(string id);
         Task Store<T>(T item) where T : class, IDocument;
+        Task Store(Document document);
     }
 
     public class DocumentSession : IDocumentSession
@@ -55,9 +57,29 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
             }
         }
 
+        public async Task<Document> GetDocument(string id)
+        {
+            try
+            {
+                var response = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _documentCollection.Id, id));
+                return response.Resource;
+            }
+            catch (DocumentClientException exception)
+            {
+                if (exception.StatusCode == HttpStatusCode.NotFound)
+                    return null;
+                throw;
+            }
+        }
+
         public async Task Store<T>(T item) where T : class, IDocument
         {
             await _client.UpsertDocumentAsync(_documentCollection.SelfLink, new DocumentAdapter<T>(GenerateDocumentId<T>(item.Id), item));
+        }
+
+        public async Task Store(Document document)
+        {
+            await _client.UpsertDocumentAsync(_documentCollection.SelfLink, document);
         }
     }
 }

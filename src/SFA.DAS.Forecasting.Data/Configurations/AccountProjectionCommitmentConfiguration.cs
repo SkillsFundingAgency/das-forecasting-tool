@@ -19,9 +19,6 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.AccountProjectionId).HasColumnName(@"AccountProjectionId").HasColumnType("bigint").IsRequired();
             Property(x => x.CommitmentId).HasColumnName(@"CommitmentId").HasColumnType("bigint").IsRequired();
 
-            // Foreign keys
-            HasRequired(a => a.AccountProjection).WithMany(b => b.Commitments).HasForeignKey(c => c.AccountProjectionId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__AccountProjection
-            HasRequired(a => a.Commitment).WithMany().HasForeignKey(c => c.CommitmentId).WillCascadeOnDelete(false); // FK_AccountProjectionCommitment__Commitment
             InitializePartial();
         }
         partial void InitializePartial();
