@@ -83,6 +83,11 @@ END
 
 
 -- LevyDeclaration
+IF EXISTS(SELECT * FROM sys.indexes WHERE name='idx_commitment_employerAccountId' AND object_id = OBJECT_ID('[dbo].[LevyDeclaration]'))
+BEGIN
+	drop index idx_commitment_employerAccountId ON [dbo].[LevyDeclaration]
+END
+
 IF EXISTS(select 1 from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = 'LevyDeclaration' and COLUMN_NAME = 'LevyAmountDeclared' and NUMERIC_SCALE = 2)
 BEGIN
 	ALTER TABLE [dbo].[LevyDeclaration] ALTER COLUMN LevyAmountDeclared decimal(18,5) NOT NULL
