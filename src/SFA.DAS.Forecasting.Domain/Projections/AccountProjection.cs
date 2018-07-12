@@ -24,7 +24,6 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 Id = account.EmployerAccountId.ToString(),
                 EmployerAccountId = account.EmployerAccountId,
                 ProjectionCreationDate = DateTime.UtcNow,
-                Commitments = new List<long>(),
                 Projections = new List<AccountProjectionMonth>()
             };
 
@@ -74,10 +73,6 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 totalCostOfTraning.CommitmentIds
                 .Concat(completionPayments.CommitmentIds)
                 .Distinct();
-
-            Model.Commitments = Model.Commitments
-                .Concat(totalCostOfTraning.CommitmentIds)
-                .Distinct().ToList();
           
             var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;            
             var complPayment = completionPayments.LevyFundedCompletionPayment + completionPayments.TransferOutCompletionPayment;

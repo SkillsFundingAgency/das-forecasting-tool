@@ -10,6 +10,5 @@ namespace SFA.DAS.Forecasting.Models.Projections
         public System.DateTime ProjectionCreationDate { get; set; }
         public ProjectionGenerationType ProjectionGenerationType { get; set; }
         public List<AccountProjectionMonth> Projections { get; set; } = new List<AccountProjectionMonth>();
-        public List<long> Commitments { get; set; } = new List<long>();
     }
 }
