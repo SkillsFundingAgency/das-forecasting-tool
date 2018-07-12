@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
                 if (FundingSource == 0 || FundingSource == FundingSource.Transfer)
                     return "Employer transfer";
                 if(FundingSource == FundingSource.Levy)
-                    return "Account Funds";
+                    return "Account funds";
                 return "";
             }
         }
