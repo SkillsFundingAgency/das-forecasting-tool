@@ -20,28 +20,30 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     public class ForecastingOrchestrator
     {
         private readonly IHashingService _hashingService;
-        private readonly IAccountProjectionDataSession _accountProjection;
         private readonly IBalanceDataService _balanceDataService;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly IForecastingMapper _mapper;
+        private readonly IAccountProjectionDataSession _accountProjectionDataSession;
+        private readonly IProjectionsDataService _projectionsDataService;
         private readonly ICommitmentsDataService _commitmentsDataService;
-
         private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
             IHashingService hashingService,
-            IAccountProjectionDataSession accountProjection,
             IBalanceDataService balanceDataService,
             IApplicationConfiguration applicationConfiguration,
             IForecastingMapper mapper,
+            IAccountProjectionDataSession accountProjectionDataSession,
+            IProjectionsDataService projectionsDataService,
             ICommitmentsDataService commitmentsDataService
             )
         {
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
-            _accountProjection = accountProjection ?? throw new ArgumentNullException(nameof(accountProjection));
             _balanceDataService = balanceDataService ?? throw new ArgumentNullException(nameof(balanceDataService));
             _applicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
+            _projectionsDataService = projectionsDataService;
             _commitmentsDataService = commitmentsDataService ?? throw new ArgumentNullException(nameof(commitmentsDataService));
         }
 
@@ -86,13 +88,30 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private async Task<List<ProjectiontemViewModel>> GetAccountProjection(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var result = await _accountProjection.Get(accountId);
-            var d = _mapper.MapProjections(result);
+            var projections = await ReadProjections(accountId);
 
-            return d.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
+            return projections.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
                 .OrderBy(m => m.Date)
                 .Take(48)
                 .ToList();
+        }
+
+        private async Task<List<ProjectiontemViewModel>> ReadProjections(long accountId)
+        {
+            List<ProjectiontemViewModel> projections = new List<ProjectiontemViewModel>();
+
+            var documents = await _projectionsDataService.Get(accountId);
+            if (documents != null && documents.Projections.Any())
+            {
+                projections = _mapper.MapProjections(documents);
+            }
+            else
+            {
+                var result = await _accountProjectionDataSession.Get(accountId);
+                projections = _mapper.MapProjections(result);
+            }
+
+            return projections;
         }
 
         private IDictionary<FinancialYear, ReadOnlyCollection<ProjectiontemViewModel>> CreateProjectionTable(List<ProjectiontemViewModel> accountProjection)

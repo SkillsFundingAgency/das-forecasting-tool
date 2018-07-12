@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
@@ -94,6 +93,5 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         {
             await _dataContext.SaveChangesAsync();
         }
-
     }
 }

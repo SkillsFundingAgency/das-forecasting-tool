@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 
         private void GenerateProjections(long id)
         {
-            DeleteAccountProjections(id);
+            DeleteAccountProjectionsFromDocumentDb(id);
             var projectionUrl =
                 Config.ProjectionPaymentFunctionUrl.Replace("{employerAccountId}", id.ToString());
             Console.WriteLine($"Sending payment event to payment projection function: {projectionUrl}");

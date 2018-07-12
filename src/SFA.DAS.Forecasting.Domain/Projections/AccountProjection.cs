@@ -13,13 +13,20 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         public long EmployerAccountId => _account.EmployerAccountId;
         private readonly Account _account;
         private readonly EmployerCommitments _employerCommitments;
-        private readonly List<AccountProjectionModel> _projections;
-        public ReadOnlyCollection<AccountProjectionModel> Projections => _projections.AsReadOnly();
+        internal AccountProjectionDocument Model { get; private set; }
+        public ReadOnlyCollection<AccountProjectionMonth> Projections => Model.Projections.AsReadOnly();
         public AccountProjection(Account account, EmployerCommitments employerCommitments)
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
-            _projections = new List<AccountProjectionModel>(49);
+            Model = new AccountProjectionDocument
+            {
+                Id = account.EmployerAccountId.ToString(),
+                EmployerAccountId = account.EmployerAccountId,
+                ProjectionCreationDate = DateTime.UtcNow,
+                Projections = new List<AccountProjectionMonth>()
+            };
+
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
@@ -36,8 +43,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             var startMonth = 0;
 
-            _projections.Clear();
             var lastBalance = _account.Balance;
+            Model.Projections.Clear();
+
             for (var month = startMonth; month <= numberOfMonths; month++)
             {
                 var levyFundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
@@ -51,16 +59,16 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                     ProjectionGenerationType.LevyDeclaration,
                     ignoreCostOfTraining);
 
-                _projections.Add(projection);
+                Model.Projections.Add(projection);
                 lastBalance = projection.FutureFunds;
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
+        private AccountProjectionMonth CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
-            
+
             var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;
             var complPayment = completionPayments.LevyFundedCompletionPayment + (completionPayments.TransferOutCompletionPayment - completionPayments.TransferInCompletionPayment);
 
@@ -69,10 +77,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
             var balance = moneyIn - moneyOut;
 
-            var projection = new AccountProjectionModel
+            var projection = new AccountProjectionMonth
             {
                 LevyFundsIn = _account.LevyDeclared,
-                EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
 

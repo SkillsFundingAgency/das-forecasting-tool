@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
+using Microsoft.Azure.Documents;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -22,9 +22,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
     [Binding]
     public class GenerateLevyProjectionsCI_498Steps : StepsBase
     {
-
-
-
         [Scope(Feature = "Generate Levy Projections [CI-498]")]
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunction()
@@ -106,20 +103,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             }, "Failed getting commitments.");
         }
 
-
         [Then(@"the account projection should be generated")]
-        public void ThenTheAccountProjectionShouldBeGenerated()
+        public async Task ThenTheAccountProjectionDocumentShouldBeGenerated()
         {
-            WaitForIt(() =>
+            var client = NestedContainer.GetInstance<IDocumentClient>();
+            var conn = NestedContainer.GetInstance<DocumentSessionConnectionString>();
+
+            var session = new DocumentSession(client, conn);
+
+            await WaitForIt(async () =>
             {
-                var projections = new List<AccountProjectionModel>();
-                ExecuteSql(() =>
-                {
-                    projections = DataContext.AccountProjections.Where(projection =>
-                            projection.EmployerAccountId == Config.EmployerAccountId)
-                        .ToList();
-                });
-                if (!projections.Any())
+                var doc = await session.Get<AccountProjectionDocument>("12345");
+                var projections = doc?.Projections;
+                if (projections == null || !projections.Any())
                     return false;
                 projections = projections
                     .OrderBy(projection => $"{projection.Year:0000}-{projection.Month:00}")

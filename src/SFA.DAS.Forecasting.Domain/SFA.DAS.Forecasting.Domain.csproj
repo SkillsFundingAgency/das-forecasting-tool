@@ -88,6 +88,7 @@
     <Compile Include="Levy\LevyDeclarationRepository.cs" />
     <Compile Include="Payments\EmployerPayments.cs" />
     <Compile Include="Payments\EmployerPaymentsRepository.cs" />
+    <Compile Include="Projections\Services\IProjectionsDataService.cs" />
     <Compile Include="Shared\DateTimeService.cs" />
     <Compile Include="Shared\Validation\AddApprenticeshipValidationDetail.cs" />
     <Compile Include="Shared\Validation\ValidationResult.cs" />

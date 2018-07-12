@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Data;
 using StructureMap;
@@ -21,7 +22,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
             });
 
             ForSingletonOf<Config>().Use(new Config());
-            
 
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()
