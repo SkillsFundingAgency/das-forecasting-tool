@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage = new PaymentCreatedMessage
             {
                 EmployerAccountId = 1,
-                SendingEmployerAccountId = 2,
+                SendingEmployerAccountId = 1,
                 Amount = 100,
                 ApprenticeshipId = 1,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod
@@ -146,6 +146,36 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Fails_If_Ids_are_not_equal_and_FundingSource_Levy()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
+            PaymentCreatedMessage.FundingSource = FundingSource.Levy;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Should_have_same_employerid_if_Levy()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
+            PaymentCreatedMessage.FundingSource = FundingSource.Levy;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Should_have_different_employerid_if_transfer()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
+            PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeTrue();
         }
     }
 }
