@@ -2,6 +2,7 @@
 using FluentValidation;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
+using SFA.DAS.Forecasting.Application.Converters;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Validation
 {
@@ -13,7 +14,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                 .NotNull().NotEmpty()
                 .GreaterThan(0);
             RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
-            RuleFor(m => m.FundingSource).Must(v => v.Equals(FundingSource.Levy) || v.Equals(FundingSource.Transfer));
+            RuleFor(m => m.FundingSource)
+				.Must(v => v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy)) 
+						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)) 
+						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedEmployer)) 
+						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
             When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
                 RuleFor(m => m.Ukprn).GreaterThan(0);
                 RuleFor(m => m.ProviderName).NotNull().NotEmpty();
@@ -35,7 +40,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
 
                 RuleFor(m => m.SendingEmployerAccountId)
                     .NotEqual(m => m.EmployerAccountId)
-                    .When(m => m.FundingSource == FundingSource.Transfer)
+                    .When(m => m.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
                     .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.SendingEmployerAccountId)} must not be equal if FundingSource is {FundingSource.Transfer}");
 
             });

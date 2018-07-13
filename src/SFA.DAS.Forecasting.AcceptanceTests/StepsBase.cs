@@ -14,6 +14,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Application.Converters;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Data;
@@ -281,7 +282,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 var commitment = commitments[i];
 
                 var isTransferSender = CommitmentType == CommitmentType.TransferSender;
-                var isFundingSourceLevy = commitment.FundingSource.HasValue && commitment.FundingSource == FundingSource.Levy;
+                var isFundingSourceLevy = commitment.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy);
 
                 DataContext.Commitments.Add(new CommitmentModel
                 {
@@ -302,7 +303,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
                     FundingSource = CommitmentType == CommitmentType.LevyFunded 
                         ? FundingSource.Levy 
-                        : commitment.FundingSource ?? FundingSource.Transfer
+                        : FundingSourceConverter.ConvertToPaymentsFundingSource(commitment.FundingSource)
                 });
             }
 

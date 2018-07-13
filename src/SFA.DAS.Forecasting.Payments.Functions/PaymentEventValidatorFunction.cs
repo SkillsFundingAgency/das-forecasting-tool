@@ -31,12 +31,19 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 
                     if (!validationResults.IsValid)
                     {
-	                    telemetry.Warning("PaymentEventValidatorFunction", $"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}", "FunctionRunner.Run", executionContext.InvocationId);
+	                    telemetry.Warning("PaymentEventValidatorFunction", 
+							$"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, " +
+							$"Errors:{validationResults.ToJson()}", 
+							"FunctionRunner.Run", 
+							executionContext.InvocationId);
 
 						return null;
                     }
 
-	                telemetry.Info("PaymentEventValidatorFunction", $"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}", "FunctionRunner.Run", executionContext.InvocationId);
+	                telemetry.Info("PaymentEventValidatorFunction", 
+						$"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}", 
+						"FunctionRunner.Run", 
+						executionContext.InvocationId);
                     
                     return paymentCreatedMessage;
                 });
