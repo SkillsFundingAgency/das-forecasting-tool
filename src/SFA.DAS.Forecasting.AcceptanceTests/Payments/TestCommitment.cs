@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Forecasting.Models.Payments;
+﻿using SFA.DAS.Provider.Events.Api.Types;
 using System;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
         public decimal CompletionAmount { get; set; }
         public int NumberOfInstallments { get; set; }
         public long SendingEmployerAccountId { get; set; }
-        public FundingSource? FundingSource { get; set; }
+        public FundingSource FundingSource { get; set; }
         public long? EmployerAccountId { get; internal set; }
         public int ApprenticeshipId { get; internal set; }
     }
