@@ -36,11 +36,6 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
                 return false;
             }
 
-            if (!await AuditService.RecordRunOfProjections(levySchemeDeclaration.AccountId,nameof(ProjectionSource.LevyDeclaration)))
-            {
-                Logger.Debug($"Triggering of levy projections for employer {levySchemeDeclaration.AccountId} has already been started.");
-                return false;
-            }
 
             var levyPeriod = await Repository.Get(levySchemeDeclaration.AccountId, levySchemeDeclaration.PayrollYear,
                 levySchemeDeclaration.PayrollMonth.Value);
@@ -50,10 +45,22 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
                 Logger.Warn($"No levy recorded for employer: {levySchemeDeclaration.AccountId}, period: {levySchemeDeclaration.PayrollYear}, {levySchemeDeclaration.PayrollMonth.Value}");
                 return false;
             }
-                
+
             var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
             Logger.Info($"Allow projections '{allowProjections}' for employer '{levySchemeDeclaration.AccountId}' in response to levy event.");
-            return allowProjections;
+
+            if (!allowProjections)
+            {
+                return false;
+            }
+
+            if (!await AuditService.RecordRunOfProjections(levySchemeDeclaration.AccountId,nameof(ProjectionSource.LevyDeclaration)))
+            {
+                Logger.Debug($"Triggering of levy projections for employer {levySchemeDeclaration.AccountId} has already been started.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

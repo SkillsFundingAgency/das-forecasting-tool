@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                     periodStart.AddMonths(month),
                     levyFundsIn,
                     lastBalance, 
-                    ProjectionGenerationType.LevyDeclaration,
+                    projectionGenerationType,
                     ignoreCostOfTraining);
 
                 _projections.Add(projection);
