@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
 {

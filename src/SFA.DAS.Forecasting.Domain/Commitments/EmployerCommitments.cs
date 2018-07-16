@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
     public partial class EmployerCommitments
     {
         public long EmployerAccountId { get; private set; }
-        private readonly IList<CommitmentModel> _commitments;
+        private readonly EmployerCommitmentsModel _employerCommitmentsModel;
 
         private readonly ReadOnlyCollection<CommitmentModel> _levyFundedCommitments;
         private readonly ReadOnlyCollection<CommitmentModel> _receivingEmployerTransferCommitments;
@@ -19,28 +19,16 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public EmployerCommitments(
             long employerAccountId,
-            List<CommitmentModel> commitments)
+            EmployerCommitmentsModel commitments)
         {
             EmployerAccountId = employerAccountId;
-            _commitments = commitments ?? throw new ArgumentNullException(nameof(commitments));
+            _employerCommitmentsModel = commitments ?? throw new ArgumentNullException(nameof(commitments));
 
-            _levyFundedCommitments = _commitments
-                .Where(m => m.EmployerAccountId == EmployerAccountId)
-                .Where(m => m.FundingSource == FundingSource.Levy)
-                .ToList()
-                .AsReadOnly();
+            _levyFundedCommitments = _employerCommitmentsModel.LevyFundedCommitments.AsReadOnly();
 
-            _receivingEmployerTransferCommitments = _commitments
-                .Where(m => m.EmployerAccountId == EmployerAccountId)
-                .Where(m => m.FundingSource == FundingSource.Transfer)
-                .ToList()
-                .AsReadOnly();
-
-            _sendingEmployerTransferCommitments = _commitments
-                .Where(m => m.SendingEmployerAccountId == EmployerAccountId)
-                .Where(m => m.FundingSource == FundingSource.Transfer)
-                .ToList()
-                .AsReadOnly();
+            _receivingEmployerTransferCommitments = _employerCommitmentsModel.ReceivingEmployerTransferCommitments.AsReadOnly();
+                
+            _sendingEmployerTransferCommitments = _employerCommitmentsModel.SendingEmployerTransferCommitments.AsReadOnly();
         }
 
         public virtual CostOfTraining GetTotalCostOfTraining(DateTime date)
@@ -89,28 +77,46 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             };
         }
 
-        public DateTime GetEarliestCommitmentStartDate()
-        {
-            return _commitments.OrderBy(commitment => commitment.StartDate)
-                .Select(commitment => commitment.StartDate)
-                .FirstOrDefault();
-        }
         public DateTime GetLastCommitmentPlannedEndDate()
         {
-            return _commitments.OrderByDescending(commitment => commitment.PlannedEndDate)
-                .Select(commitment => commitment.PlannedEndDate)
-                .FirstOrDefault();
+            //TODO rewrite this
+            var dateList = new List<DateTime>
+            {
+                _employerCommitmentsModel.LevyFundedCommitments
+                    .OrderByDescending(commitment => commitment.PlannedEndDate)
+                    .Select(commitment => commitment.PlannedEndDate)
+                    .FirstOrDefault(),
+                _employerCommitmentsModel.ReceivingEmployerTransferCommitments
+                    .OrderByDescending(commitment => commitment.PlannedEndDate)
+                    .Select(commitment => commitment.PlannedEndDate)
+                    .FirstOrDefault(),
+                _employerCommitmentsModel.SendingEmployerTransferCommitments
+                    .OrderByDescending(commitment => commitment.PlannedEndDate)
+                    .Select(commitment => commitment.PlannedEndDate)
+                    .FirstOrDefault()
+            };
+
+            return dateList.OrderByDescending(c => c.Date).FirstOrDefault();
         }
 
         public virtual decimal GetUnallocatedCompletionAmount()
         {
-            return _commitments
-                .Where(commitment => commitment.PlannedEndDate < DateTime.Today)
+            var limitEndDate = DateTime.Today.GetStartOfMonth();
+            bool Filter(CommitmentModel commitment) => commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) < limitEndDate;
+            var levyUnallocatedCompletions = _levyFundedCommitments
+                .Where((Func<CommitmentModel, bool>) Filter)
                 .Sum(commitment => commitment.CompletionAmount);
+            var senderUnallocatedCompletions = _sendingEmployerTransferCommitments
+                .Where((Func<CommitmentModel, bool>) Filter)
+                .Sum(commitment => commitment.CompletionAmount);
+            return levyUnallocatedCompletions + senderUnallocatedCompletions;
         }
+
         public bool Any()
         {
-            return _commitments.Any();
+            return _employerCommitmentsModel.LevyFundedCommitments.Any() 
+                || _employerCommitmentsModel.ReceivingEmployerTransferCommitments.Any()
+                || _employerCommitmentsModel.SendingEmployerTransferCommitments.Any();
         }
     }
 }

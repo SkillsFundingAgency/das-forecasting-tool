@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
     {
         internal Models.Balance.BalanceModel Model { get; private set; }
         private readonly IAccountBalanceService _accountBalanceService;
-        private readonly EmployerCommitments _employerCommitments;
+        protected internal readonly EmployerCommitments EmployerCommitments;
 
         public virtual long EmployerAccountId => Model.EmployerAccountId;
         public virtual decimal Amount => Model.Amount;
@@ -31,10 +31,10 @@ namespace SFA.DAS.Forecasting.Domain.Balance
         {
             Model = balance ?? throw new ArgumentNullException(nameof(balance));
             _accountBalanceService = accountBalanceService ?? throw new ArgumentNullException(nameof(accountBalanceService));
-            _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
+            EmployerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
         }
 
-        public virtual async Task<bool> RefreshBalance()
+        public virtual async Task<bool> RefreshBalance(bool refreshUnallocatedCompletionPayments = false)
         {
             if (Period >= DateTime.UtcNow.AddDays(-1))
                 return false;
@@ -43,13 +43,13 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             if (currentBalance == null)
                 throw new InvalidOperationException($"Failed to get the account balances for account: {EmployerAccountId}");
 
-            var unallocatedCompletionPayments = _employerCommitments.GetUnallocatedCompletionAmount();
-
             Model.Amount = currentBalance.Amount;
             Model.TransferAllowance = currentBalance.TransferAllowance;
             Model.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
             Model.BalancePeriod = DateTime.UtcNow;
             Model.ReceivedDate = DateTime.UtcNow;
+            if (!refreshUnallocatedCompletionPayments) return true;
+            var unallocatedCompletionPayments = EmployerCommitments.GetUnallocatedCompletionAmount();
             Model.UnallocatedCompletionPayments = unallocatedCompletionPayments;
             return true;
         }

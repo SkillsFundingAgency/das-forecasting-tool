@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Mvc;
+using FluentValidation.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
+using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
@@ -17,11 +19,17 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
+        private readonly EditApprenticeshipsViewModelValidator _validator;
 
-        public EstimationController(IEstimationOrchestrator estimationOrchestrator, IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, IMembershipService membershipService)
+        public EstimationController(
+            IEstimationOrchestrator estimationOrchestrator, 
+            IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
+            IMembershipService membershipService,
+            EditApprenticeshipsViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
+            _validator = validator;
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
         }
 
@@ -59,9 +67,45 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return View(vm);
         }
 
+        [HttpGet]
+        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/EditApprenticeships", Name = "EditApprenticeships")]
+        public async Task<ActionResult> EditApprenticeships(string hashedAccountId, string estimationName, string apprenticeshipsId)
+        {
+            var model = await _estimationOrchestrator.EditApprenticeshipModel(hashedAccountId, apprenticeshipsId, estimationName);
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "PostEditApprenticeships")]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PostEditApprenticeships(EditApprenticeshipsViewModel editmodel)
+        {
+            var results = _validator.Validate(editmodel);
+            results.AddToModelState(ModelState, null);
+
+            if (!ModelState.IsValid)
+            {
+                editmodel.CalculatedTotalCap = editmodel.FundingCap * editmodel.NumberOfApprentices;
+                return View("EditApprenticeships", editmodel);
+            }
+
+            await _estimationOrchestrator.UpdateApprenticeshipModel(editmodel);
+
+
+            return RedirectToAction(nameof(CostEstimation),
+                   new
+                   {
+                       hashedaccountId = editmodel.HashedAccountId,
+                       estimateName = editmodel.EstimationName
+                   });
+            
+        }
+        
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var viewModel = await _addApprenticeshipOrchestrator.ValidateAddApprenticeship(vm);
@@ -129,6 +173,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveApprenticeships(RemoveApprenticeshipViewModel viewModel, string hashedAccountId, string estimationName, string id)
         {
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)

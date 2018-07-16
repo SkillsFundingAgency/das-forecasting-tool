@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -30,7 +31,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
 
             var currentBalance = new Mock<CurrentBalance>();
-            currentBalance.Setup(x => x.RefreshBalance()).ReturnsAsync(true);
+            currentBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>())).ReturnsAsync(true);
 
             _currentBalanceRepository = new Mock<ICurrentBalanceRepository>();
             _currentBalanceRepository.Setup(x => x.Get(ExpectedAccountId))
@@ -48,7 +49,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             _orchestrator = new EstimationOrchestrator(_accountEstimationProjectionRepository.Object,
                 _accountEstimationRepository.Object, _hashingService.Object,
-                _currentBalanceRepository.Object);
+                _currentBalanceRepository.Object,
+                Mock.Of<IApprenticeshipCourseDataService>());
         }
 
         [TestCase(100, 100, 100, 100)]

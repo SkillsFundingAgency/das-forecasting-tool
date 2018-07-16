@@ -3,32 +3,36 @@
         if ($("#choose-apprenticeship")) {
             $("#choose-apprenticeship").select2();
         }
+
+        if ($("#estimate-add-apprenticeship")) {
+
+            // open dropdownon on focus
+            $(document).on('focus', '.select2', function () {
+                $(this).siblings('select').select2('open');
+            });
+
+            // retain tabbed order after selection
+            $('#choose-apprenticeship').on('select2:select', function () {
+                $("#no-of-app").focus();
+            });
+
+            // retain tabbed order on close without selection
+            $('#choose-apprenticeship').on('select2:close', function () {
+                $("#no-of-app").focus();
+            });
+
+            $("#choose-apprenticeship").change(function () {
+                calculateTotalCost();
+                resetNumberOfMonths();
+            });
+
+            $("#no-of-app").change(function () {
+                calculateTotalCost();
+            });
+
+        }
     };
     init();
-
-    // open dropdownon on focus
-    $(document).on('focus', '.select2', function () {
-        $(this).siblings('select').select2('open');
-    });
-
-    // retain tabbed order after selection
-    $('#choose-apprenticeship').on('select2:select', function () {
-        $("#no-of-app").focus();
-    });
-
-    // retain tabbed order on close without selection
-    $('#choose-apprenticeship').on('select2:close', function () {
-        $("#no-of-app").focus();
-    });
-
-    $("#choose-apprenticeship").change(function () {
-        calculateTotalCost();
-        resetNumberOfMonths();
-    });
-
-    $("#no-of-app").change(function () {
-        calculateTotalCost();
-    });
 
     $("#total-funding-cost").keyup(function () {
         var num = $('#total-funding-cost').val();
@@ -48,7 +52,6 @@
     function resetNumberOfMonths() {
         var courseId = $('#choose-apprenticeship').val();
         var previousCourseId = $('#PreviousCourseId').val();
-        console.log(`Course id: ${courseId}, previous course id: ${previousCourseId}`);
         if (courseId !== previousCourseId) {
             var requestObject = {
                 courseId: courseId
@@ -89,15 +92,16 @@
                     $('#funding-cap-details').html(result.FundingCap);
                     $('#apprentice-count-details').html(result.NumberOfApprentices);
                     $('#total-cap-details').html(result.TotalFundingCap);
-                    $('#details-about-funding').addClass("HideFundingCapMessage");
-                    $('#details-about-funding-calculated').removeClass("HideFundingCapMessage");
                     $('#total-funding-cost').val(result.TotalFundingCapValue);
+
+                    $('#details-about-funding').hide();
+                    $('#details-about-funding-calculated').show();
                 }
             });
 
         } else {
-            $('#details-about-funding').removeClass("HideFundingCapMessage");
-            $('#details-about-funding-calculated').addClass("HideFundingCapMessage");
+            $('#details-about-funding').show();
+            $('#details-about-funding-calculated').hide();
         }
     }
 }());

@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
-            _projections = new List<AccountProjectionModel>();
+            _projections = new List<AccountProjectionModel>(49);
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                     periodStart.AddMonths(month),
                     levyFundsIn,
                     lastBalance, 
-                    ProjectionGenerationType.LevyDeclaration,
+                    projectionGenerationType,
                     ignoreCostOfTraining);
 
                 _projections.Add(projection);
@@ -60,13 +60,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
             var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
             var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
-            var commitments =
-                totalCostOfTraning.CommitmentIds
-                .Concat(completionPayments.CommitmentIds)
-                .Distinct();
-
-            var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;            
-            var complPayment = completionPayments.LevyFundedCompletionPayment + completionPayments.TransferOutCompletionPayment;
+            
+            var costOfTraining = totalCostOfTraning.LevyFunded + totalCostOfTraning.TransferOut;
+            var complPayment = completionPayments.LevyFundedCompletionPayment + (completionPayments.TransferOutCompletionPayment - completionPayments.TransferInCompletionPayment);
 
             var moneyOut = ignoreCostOfTraining ? 0 : costOfTraining + complPayment;
             var moneyIn = lastBalance + levyFundsIn + totalCostOfTraning.TransferIn;
@@ -92,8 +88,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 CoInvestmentGovernment = balance < 0 ? (balance * 0.9m) * -1m : 0m,
                 FutureFunds = balance < 0 ? 0m : balance,
                 ProjectionCreationDate = DateTime.UtcNow,
-                ProjectionGenerationType = projectionGenerationType,
-                Commitments = commitments.Select(commitmentId => new AccountProjectionCommitment { CommitmentId = commitmentId }).ToList()
+                ProjectionGenerationType = projectionGenerationType
             };
             return projection;
         }

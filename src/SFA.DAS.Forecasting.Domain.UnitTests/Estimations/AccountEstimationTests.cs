@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -93,6 +94,43 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var estimation = ResolveEstimation();
             estimation.RemoveVirtualApprenticeship("apprenticeship-1");
             Assert.IsTrue(estimation.VirtualApprenticeships.All(x => x.Id != "apprenticeship-1"));
+        }
+
+        [Test]
+        public void Should_Update_Apprenticeship()
+        {
+            var a = new VirtualApprenticeship
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                CourseId = "ABBA12",
+                CourseTitle = "ABBA 12",
+                Level = 1,
+                ApprenticesCount = 10,
+                StartDate = new DateTime(DateTime.Today.Year + 1, 5, 1),
+                TotalInstallments = 24,
+                TotalCost = 2000,
+            };
+
+            _model.Apprenticeships.Add(a);
+
+            var estimation = ResolveEstimation();
+
+            estimation.UpdateApprenticeship(a.Id, 10, DateTime.Today.Year + 2, 6, 12, 1000);
+
+            estimation.VirtualApprenticeships.Count().Should().Be(1);
+
+            var apprenticeship = estimation.VirtualApprenticeships.First();
+            apprenticeship.CourseId.Should().Be("ABBA12");
+            apprenticeship.CourseTitle.Should().Be("ABBA 12");
+            apprenticeship.Level.Should().Be(1);
+            apprenticeship.ApprenticesCount.Should().Be(6);
+            apprenticeship.StartDate.Year.Should().Be(DateTime.Today.Year + 2);
+            apprenticeship.StartDate.Month.Should().Be(10);
+            apprenticeship.TotalCost.Should().Be(1000);
+            apprenticeship.TotalInstallments.Should().Be(12);
+
+            apprenticeship.TotalCompletionAmount.Should().Be(200);
+            Decimal.Round(apprenticeship.TotalInstallmentAmount, 1).Should().Be(66.7M);
         }
 
         [Test]

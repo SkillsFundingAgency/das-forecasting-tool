@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         private readonly IApplicationConfiguration _configuration;
         private readonly IQueueService _queueService;
 
-        public ProcessEmployerPaymentHandler(IEmployerPaymentRepository repository, ILog logger, IPaymentMapper mapper, 
+        public ProcessEmployerPaymentHandler(IEmployerPaymentRepository repository, ILog logger, IPaymentMapper mapper,
             IApplicationConfiguration configuration, IQueueService queueService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -29,13 +29,13 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
         public async Task Handle(PaymentCreatedMessage paymentCreatedMessage, string allowProjectionsEndpoint)
         {
-	        var employerPayment = _mapper.MapToPayment(paymentCreatedMessage);
-			_logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
+            var employerPayment = _mapper.MapToPayment(paymentCreatedMessage);
+            _logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
             var payment = await _repository.Get(paymentCreatedMessage.EmployerAccountId, paymentCreatedMessage.Id);
             payment.RegisterPayment(employerPayment);
-			await _repository.StorePayment(payment);
+            await _repository.StorePayment(payment);
             _logger.Info($"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
-            _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint, TimeSpan.FromSeconds(_configuration.SecondsToWaitToAllowProjections));
+            _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint);
         }
     }
 }

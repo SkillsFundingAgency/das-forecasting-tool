@@ -46,6 +46,24 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             return virtualApprenticeship;
         }
 
+        public VirtualApprenticeship UpdateApprenticeship(string apprenticeshipId, int startMonth, int startYear, int numberOfApprentices, short totalInstallments, decimal totalCost)
+        {
+            var apprenticeship = Model.Apprenticeships.Single(m => m.Id == apprenticeshipId);
+            apprenticeship.TotalCost = totalCost;
+            apprenticeship.TotalInstallments = totalInstallments;
+            apprenticeship.ApprenticesCount = numberOfApprentices;
+            apprenticeship.StartDate = new DateTime(startYear, startMonth, 1);
+
+            var validationResults = _validator.Validate(apprenticeship);
+            if (!validationResults.All(result => result.IsValid))
+                throw new InvalidOperationException($"The virtual apprenticeship is invalid.  Failures: {validationResults.Aggregate(string.Empty, (currText, failure) => $"{currText}{failure}, ")}");
+
+            apprenticeship.TotalCompletionAmount = (totalCost / 100) * 20;
+            apprenticeship.TotalInstallmentAmount = ((totalCost / 100) * 80) / totalInstallments;
+
+            return apprenticeship;
+        }
+
         public bool RemoveVirtualApprenticeship(string virtualApprenticeshipId)
         {
             var virtualApprenticeship = Model.Apprenticeships.FirstOrDefault(apprenticeship =>

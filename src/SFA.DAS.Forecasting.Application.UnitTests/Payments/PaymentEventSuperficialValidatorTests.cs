@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage = new PaymentCreatedMessage
             {
                 EmployerAccountId = 1,
-                SendingEmployerAccountId = 2,
+                SendingEmployerAccountId = 1,
                 Amount = 100,
                 ApprenticeshipId = 1,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod
@@ -105,7 +105,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         public void Fails_If_Funding_Source_Is_MoreThan_2()
         {
             var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.FundingSource = (FundingSource)0;
+            PaymentCreatedMessage.FundingSource = (FundingSource)4;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
@@ -129,6 +129,16 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         }
 
         [Test]
+        public void Actual_End_date_Is_Something_Message_Is_Still_Validated()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.EarningDetails.ActualEndDate = DateTime.Today;
+            PaymentCreatedMessage.FundingSource = (FundingSource)4;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
         public void Failes_If_Ids_are_equal_and_FundingSource_Transefer()
         {
             var validator = new PaymentEventSuperficialValidator();
@@ -136,6 +146,36 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Fails_If_Ids_are_not_equal_and_FundingSource_Levy()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
+            PaymentCreatedMessage.FundingSource = FundingSource.Levy;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Should_have_same_employerid_if_Levy()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
+            PaymentCreatedMessage.FundingSource = FundingSource.Levy;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Should_have_different_employerid_if_transfer()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
+            PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeTrue();
         }
     }
 }
