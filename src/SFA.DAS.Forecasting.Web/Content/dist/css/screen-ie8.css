@@ -4376,3 +4376,24 @@ table.small th, table.small td, table.small .form-hint {
 .tippy-popper .tippy-content {
   text-align: center;
 }
+.panel-warning2 {
+  padding-left: 50px;
+  padding-top: 0;
+  position: relative;
+}
+
+.panel-warning2 .icon {
+  width: 35px;
+  height: 35px;
+  background-image: url("/public/images/../../Content/dist/images/icon-important.png");
+  position: absolute;
+  top: 5px;
+  left: 0;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .panel-warning2 .icon {
+    background-image: url("/public/images/../../Content/dist/images/icon-important-2x.png");
+    background-size: 100%;
+  }
+}
