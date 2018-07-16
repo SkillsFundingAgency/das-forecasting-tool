@@ -12,6 +12,7 @@ using SFA.DAS.HashingService;
 using System.Collections.ObjectModel;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
+using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 
@@ -21,7 +22,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataSession _accountProjection;
-        private readonly IBalanceDataService _balanceDataService;
+        private readonly ICurrentBalanceRepository _balanceRepository;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly IForecastingMapper _mapper;
         private readonly ICommitmentsDataService _commitmentsDataService;
@@ -31,7 +32,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public ForecastingOrchestrator(
             IHashingService hashingService,
             IAccountProjectionDataSession accountProjection,
-            IBalanceDataService balanceDataService,
+            ICurrentBalanceRepository balanceRepository,
             IApplicationConfiguration applicationConfiguration,
             IForecastingMapper mapper,
             ICommitmentsDataService commitmentsDataService
@@ -39,19 +40,19 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
             _accountProjection = accountProjection ?? throw new ArgumentNullException(nameof(accountProjection));
-            _balanceDataService = balanceDataService ?? throw new ArgumentNullException(nameof(balanceDataService));
+            _balanceRepository = balanceRepository;
             _applicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _commitmentsDataService = commitmentsDataService ?? throw new ArgumentNullException(nameof(commitmentsDataService));
         }
 
-        public async Task<BalanceViewModel> Balance(string hashedAccountId)
+        public async Task<ProjectionViewModel> Projection(string hashedAccountId)
         {
             var accountProjection = await GetAccountProjection(hashedAccountId);
 
             var balance = await GetBalance(hashedAccountId);
 
-            return new BalanceViewModel {
+            return new ProjectionViewModel {
                 BalanceItemViewModels = accountProjection,
                 ProjectionTables = CreateProjectionTable(accountProjection),
                 BackLink = _applicationConfiguration.BackLink,
@@ -114,12 +115,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             return dict;
         }
 
-        private async Task<BalanceModel> GetBalance(string hashedAccountId)
+        private async Task<CurrentBalance> GetBalance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var balance = await _balanceDataService.Get(accountId);
+            var currentBalance = await _balanceRepository.Get(accountId);
+            if(currentBalance == null)
+                await currentBalance.RefreshBalance();
+            await _balanceRepository.Store(currentBalance);
 
-            return balance;
+            return currentBalance;
         }
     }
 }

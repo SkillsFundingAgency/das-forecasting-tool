@@ -61,6 +61,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 1,
                     Year = 2018,
+                    LevyFundsIn = 150m,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 50,
@@ -71,6 +72,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 2,
                     Year = 2018,
+                    LevyFundsIn = 30m,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
@@ -81,6 +83,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 3,
                     Year = 2018,
+                    LevyFundsIn = 20m,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
@@ -91,6 +94,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 4,
                     Year = 2018,
+                    LevyFundsIn = 10m,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
@@ -101,6 +105,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 5,
                     Year = 2018,
+                    LevyFundsIn = 50m,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
@@ -111,6 +116,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 6,
                     Year = 2018,
+                    LevyFundsIn = 0m,
                     TransferOutCostOfTraining = 0,
                     TransferOutCompletionPayments = 20,
                     LevyFundedCompletionPayments = 0,
@@ -173,6 +179,17 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 .ForEach(p => Assert.AreEqual((decimal) (_account.TransferAllowance + p.TransferFundsIn - p.FundsOut),
                     p.FutureFunds,
                     $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.FundsOut}, actual: {p.FutureFunds}"));
+        }
+
+        [Test]
+        public void Then_The_MonthlyInstallmentAmount_Is_Populated_From_The_First_Projection_Amount()
+        {
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
+            estimationProjection.BuildProjections();
+
+            Assert.AreEqual(150m,estimationProjection.MonthlyInstallmentAmount);
+            Assert.AreNotEqual(estimationProjection.Projections[1],estimationProjection.MonthlyInstallmentAmount);
         }
 
         [Test]
