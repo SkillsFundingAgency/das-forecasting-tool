@@ -234,7 +234,7 @@
 @section breadcrumb {
     @if (!string.IsNullOrEmpty(Model.BackLink))
     {
-        <div class="breadcrumbs">
+        <div class="breadcrumbs" aria-label="Breadcrumbs">
             <a href="@Model.BackLink" aria-label="Back" class="back-link">Back</a>
         </div>
     }

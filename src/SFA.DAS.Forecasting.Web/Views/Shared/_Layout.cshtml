@@ -82,17 +82,17 @@
     @if (HttpContext.Current.User.Identity.IsAuthenticated || Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
     {
         <div id="floating-menu-holder">
-            <div class="account-information floating-menu" role="navigation">
+            <div class="account-information floating-menu">
                 <div class="js-float">
                     <p class="floating-head-text">Your employer account </p>
-                    <nav id="user-nav">
+                    <nav id="user-nav" role="navigation" aria-label="Main menu">
                         <ul role="menubar">
                             <li><a href="@Url.ExternalUrlAction("service", "help", true)" class="menu-main">Help</a></li>
                             @if (HttpContext.Current.User.Identity.IsAuthenticated)
                             {
 
                                 <li class="has-sub-menu">
-                                    <a href="/" role="menuitem" class="menu-main">Settings</a>
+                                    <a href="/" role="menuitem" class="menu-main" aria-label="Account settings">Settings</a>
                                     <ul role="menu" id="settings-menu">
                                         <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem" class="sub-menu-item">Your accounts</a></li>
                                         @if (string.IsNullOrWhiteSpace(ViewBag.HideNav?.ToString()))
@@ -105,7 +105,7 @@
 
                                     </ul>
                                 </li>
-                                <li><a href="@Url.Action("SignOut", "Service")" role="menuitem" class="menu-main">Sign out</a></li>
+                                <li><a href="@Url.Action("SignOut", "Service")" role="menuitem" class="menu-main" aria-label="Sign out">Sign out</a></li>
 
                             }
                             else

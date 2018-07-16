@@ -17,9 +17,9 @@
                 @if (!ViewContext.ViewData.ModelState.IsValid)
                 {
                     <div class="error-summary validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
-                        <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+                        <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
                             Errors to fix
-                        </h1>
+                        </h2>
 
                         <p>Please check the details you have entered against the information that's needed.</p>
 
@@ -162,7 +162,7 @@
 </main>
 
 @section breadcrumb {
-    <div class="breadcrumbs">
+    <div class="breadcrumbs" aria-label="Breadcrumbs">
         <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" aria-label="Back" class="back-link">Back</a>
     </div>
 }
