@@ -14,7 +14,6 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     public interface IAccountEstimationProjection
     {
         ReadOnlyCollection<AccountEstimationProjectionModel> Projections { get; }
-        decimal MonthlyInstallmentAmount { get; }
 
         void BuildProjections();
     }
@@ -27,7 +26,6 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         private readonly List<AccountEstimationProjectionModel> _estimatedProjections;
         private readonly IList<AccountProjectionModel> _actualAccountProjections;
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _estimatedProjections.AsReadOnly();
-        public decimal MonthlyInstallmentAmount { get; internal set; }
         public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService)
         {
             _dateTimeService = dateTimeService;
@@ -45,7 +43,6 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         {
             _estimatedProjections.Clear();
             var lastBalance = _account.RemainingTransferBalance;
-            
             var startDate = _dateTimeService.GetCurrentDateTime().GetStartOfMonth();
             var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(2).GetStartOfMonth();
 
@@ -65,8 +62,6 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 lastBalance = projection.FutureFunds;
                 projectionDate = projectionDate.AddMonths(1);
             }
-
-            MonthlyInstallmentAmount = _actualAccountProjections.First().LevyFundsIn;
         }
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal lastBalance)
@@ -99,11 +94,10 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                     TransferOutCompletionPayments = actualAccountProjection?.TransferOutCompletionPayments ?? 0m
                 }
             };
-            
+
             var balance = lastBalance + projection.ModelledCosts.TransferFundsIn + projection.ActualCosts.TransferFundsIn -
                       projection.ModelledCosts.FundsOut - projection.ActualCosts.TransferFundsOut;
             projection.FutureFunds = balance;
-            projection.ProjectedFutureFunds = actualAccountProjection?.FutureFunds ?? 0M;
             return projection;
         }
     }

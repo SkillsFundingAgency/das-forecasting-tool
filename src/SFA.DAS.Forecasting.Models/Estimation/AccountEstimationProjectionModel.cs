@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Forecasting.Models.Estimation
+﻿using SFA.DAS.Forecasting.Models.Payments;
+
+namespace SFA.DAS.Forecasting.Models.Estimation
 {
     public class AccountEstimationProjectionModel
     {
@@ -24,9 +26,6 @@
         public decimal FutureFunds { get; set; }
         public decimal TransferFundsIn => ActualCosts.TransferFundsIn + ModelledCosts.TransferFundsIn;
         public decimal FundsOut => ActualCosts.TransferFundsOut + ModelledCosts.FundsOut;
-
-        public decimal ProjectedFutureFunds { get; set; }
-
         public AccountEstimationProjectionModel()
         {
             ModelledCosts = new Cost();

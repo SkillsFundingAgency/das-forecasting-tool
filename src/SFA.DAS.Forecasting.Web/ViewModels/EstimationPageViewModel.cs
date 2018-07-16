@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
@@ -13,6 +12,5 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public IEnumerable<EstimationTransferAllowanceVewModel> TransferAllowances { get; set; }
         public EstimationApprenticeshipsViewModel Apprenticeships { get; set; }
         public bool ApprenticeshipRemoved { get; set; }
-        public AccountFundsViewModel AccountFunds { get; set; }
     }
 }
