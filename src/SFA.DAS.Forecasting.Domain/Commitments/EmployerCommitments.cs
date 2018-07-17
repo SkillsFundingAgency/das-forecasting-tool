@@ -53,9 +53,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
             return new CostOfTraining
             {
-                LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment),
-                TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment) + (coInvestmentCommitments.Sum(m => m.MonthlyInstallment) * 0.9m),
-                TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment) + coInvestmentCommitments.Sum(m => m.MonthlyInstallment),
+                LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment) + coInvestmentCommitments.Sum(m => m.MonthlyInstallment),
+                TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
+                TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
 				CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }
@@ -77,9 +77,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
             return new CompletionPayments
             {
-                LevyFundedCompletionPayment = levyFundedCommitments.Sum(c => c.CompletionAmount),
-                TransferInCompletionPayment = receivingEmployerCommitments.Sum(m => m.CompletionAmount) + coInvestmentCommitments.Sum(m => m.CompletionAmount) * 0.9m,
-                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount) + receivingEmployerCommitments.Sum(m => m.CompletionAmount) + coInvestmentCommitments.Sum(m => m.CompletionAmount),
+                LevyFundedCompletionPayment = levyFundedCommitments.Sum(c => c.CompletionAmount) + coInvestmentCommitments.Sum(m => m.CompletionAmount),
+                TransferInCompletionPayment = receivingEmployerCommitments.Sum(m => m.CompletionAmount),
+                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount) + receivingEmployerCommitments.Sum(m => m.CompletionAmount),
                 CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }
