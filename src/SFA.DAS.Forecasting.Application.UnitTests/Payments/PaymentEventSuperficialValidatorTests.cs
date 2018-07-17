@@ -154,7 +154,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
-            PaymentCreatedMessage.FundingSource = FundingSource.Levy;
+            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy);
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
@@ -164,7 +164,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
-            PaymentCreatedMessage.FundingSource = FundingSource.Levy;
+            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy);
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeTrue();
         }
@@ -174,7 +174,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId + 1;
-            PaymentCreatedMessage.FundingSource = FundingSource.Transfer;
+            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer);
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeTrue();
         }
