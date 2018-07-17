@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.Models.Commitments
             LevyFundedCommitments = new List<CommitmentModel>();
             ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
             SendingEmployerTransferCommitments = new List<CommitmentModel>();
+	        CoInvestmentCommitments = new List<CommitmentModel>();
         }
     }
 }
