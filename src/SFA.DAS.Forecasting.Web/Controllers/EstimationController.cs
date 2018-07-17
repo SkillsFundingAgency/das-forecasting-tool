@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
 		[HttpGet]
-		[Route("start-transfer", Name = "EstimationStart")]
+		[Route("start-estimation", Name = "EstimationStart")]
 		public ActionResult StartEstimation(string hashedAccountId)
 		{
 			ViewBag.HashedAccountId = hashedAccountId;
