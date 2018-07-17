@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly ReadOnlyCollection<CommitmentModel> _levyFundedCommitments;
         private readonly ReadOnlyCollection<CommitmentModel> _receivingEmployerTransferCommitments;
         private readonly ReadOnlyCollection<CommitmentModel> _sendingEmployerTransferCommitments;
+        private readonly ReadOnlyCollection<CommitmentModel> _coInvestmentCommitments;
 
         public EmployerCommitments(
             long employerAccountId,
@@ -29,6 +30,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _receivingEmployerTransferCommitments = _employerCommitmentsModel.ReceivingEmployerTransferCommitments.AsReadOnly();
                 
             _sendingEmployerTransferCommitments = _employerCommitmentsModel.SendingEmployerTransferCommitments.AsReadOnly();
+
+            _coInvestmentCommitments = _employerCommitmentsModel.CoInvestmentCommitments.AsReadOnly();
         }
 
         public virtual CostOfTraining GetTotalCostOfTraining(DateTime date)
@@ -40,18 +43,20 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
             var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
             var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var coInvestmentCommitments = _coInvestmentCommitments.Where(FilterCurrent).ToList();
 
             var includedCommitments = new List<CommitmentModel>();
             includedCommitments.AddRange(levyFundedCommitments);
             includedCommitments.AddRange(sendingEmployerCommitments);
             includedCommitments.AddRange(receivingEmployerCommitments);
+            includedCommitments.AddRange(coInvestmentCommitments);
 
             return new CostOfTraining
             {
                 LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment),
-                TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
-                TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
-                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
+                TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment) + (coInvestmentCommitments.Sum(m => m.MonthlyInstallment) * 0.9m),
+                TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment) + coInvestmentCommitments.Sum(m => m.MonthlyInstallment),
+				CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }
 
@@ -62,17 +67,19 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
             var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
             var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
-
-            var includedCommitments = new List<CommitmentModel>();
+	        var coInvestmentCommitments = _coInvestmentCommitments.Where(FilterCurrent).ToList();
+			
+			var includedCommitments = new List<CommitmentModel>();
             includedCommitments.AddRange(levyFundedCommitments);
             includedCommitments.AddRange(sendingEmployerCommitments);
             includedCommitments.AddRange(receivingEmployerCommitments);
+            includedCommitments.AddRange(coInvestmentCommitments);
 
             return new CompletionPayments
             {
                 LevyFundedCompletionPayment = levyFundedCommitments.Sum(c => c.CompletionAmount),
-                TransferInCompletionPayment = receivingEmployerCommitments.Sum(m => m.CompletionAmount),
-                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount) + receivingEmployerCommitments.Sum(m => m.CompletionAmount),
+                TransferInCompletionPayment = receivingEmployerCommitments.Sum(m => m.CompletionAmount) + coInvestmentCommitments.Sum(m => m.CompletionAmount) * 0.9m,
+                TransferOutCompletionPayment = sendingEmployerCommitments.Sum(m => m.CompletionAmount) + receivingEmployerCommitments.Sum(m => m.CompletionAmount) + coInvestmentCommitments.Sum(m => m.CompletionAmount),
                 CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }

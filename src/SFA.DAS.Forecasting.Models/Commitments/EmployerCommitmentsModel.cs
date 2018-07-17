@@ -11,8 +11,9 @@ namespace SFA.DAS.Forecasting.Models.Commitments
         public List<CommitmentModel> LevyFundedCommitments { get; set; }
         public List<CommitmentModel> ReceivingEmployerTransferCommitments { get; set; }
         public List<CommitmentModel> SendingEmployerTransferCommitments { get; set; }
+	    public List<CommitmentModel> CoInvestmentCommitments { get; set; }
 
-        public EmployerCommitmentsModel()
+	    public EmployerCommitmentsModel()
         {
             LevyFundedCommitments = new List<CommitmentModel>();
             ReceivingEmployerTransferCommitments = new List<CommitmentModel>();

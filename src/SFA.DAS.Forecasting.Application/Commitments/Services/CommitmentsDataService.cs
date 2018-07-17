@@ -26,7 +26,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             {
                 LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId)),
                 ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId)),
-                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId))
+                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId)),
+                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId))
             };
 
             return model;
@@ -67,14 +68,21 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && commitment.FundingSource == FundingSource.Transfer
                                  && commitment.ActualEndDate == null;
         }
-        private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId)
-        {
-            return commitment => commitment.SendingEmployerAccountId == employerAccountId
-                                 && commitment.FundingSource == FundingSource.Transfer
-                                 && commitment.ActualEndDate == null;
-        }
+		private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId)
+		{
+			return commitment => commitment.SendingEmployerAccountId == employerAccountId
+			                     && commitment.FundingSource == FundingSource.Transfer
+			                     && commitment.ActualEndDate == null;
+		}
 
-        public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
+	    private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
+	    {
+		    return commitment => commitment.EmployerAccountId == employerAccountId
+		                         && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
+		                         && commitment.ActualEndDate == null;
+	    }
+
+		public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
             return await _dataContext.Commitments
                 .FirstOrDefaultAsync(commitment =>
