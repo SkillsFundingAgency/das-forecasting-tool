@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Projections.Services;
-using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Payments;
-using SFA.DAS.Forecasting.Models.Projections;
-using SFA.DAS.NLog.Logger;
+using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 {
@@ -43,13 +37,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
                 return false;
             }
-
-            if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId))
-            {
-	            Logger.Debug("PaymentEventAllowProjectionFunction", $"Triggering of projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.", "Allow");
-
-                return false;
-            }
             
             var payments = Repository.Get(paymentCreatedMessage.EmployerAccountId);
 	        var lastReceivedTime = await payments.GetLastTimeReceivedPayment();
@@ -63,7 +50,19 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 	        var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
 	        Logger.Info("PaymentEventAllowProjectionFunction", $"Allow projections '{allowProjections}' for employer '{paymentCreatedMessage.EmployerAccountId}' in response to payment event.", "Allow");
 
-			return allowProjections;
+
+            if (!allowProjections)
+            {
+                return false;
+            }
+
+            if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
+            {
+                Logger.Debug("PaymentEventAllowProjectionFunction", $"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.", "Allow");
+                return false;
+            }
+
+            return true;
         }
     }
 }

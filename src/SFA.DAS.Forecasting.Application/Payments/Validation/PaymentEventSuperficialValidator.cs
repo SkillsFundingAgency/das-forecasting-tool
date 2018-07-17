@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 using FluentValidation;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
@@ -14,12 +14,19 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                 .NotNull().NotEmpty()
                 .GreaterThan(0);
             RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
-            RuleFor(m => m.FundingSource)
+
+			RuleFor(m => m.FundingSource)
 				.Must(v => v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy)) 
 						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)) 
 						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedEmployer)) 
 						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
-            When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
+
+	        RuleFor(m => m.FundingSource).Must(v => v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy))
+	                                             || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
+	                                             || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedEmployer))
+	                                             || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
+
+			When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
                 RuleFor(m => m.Ukprn).GreaterThan(0);
                 RuleFor(m => m.ProviderName).NotNull().NotEmpty();
                 RuleFor(m => m.ApprenticeName).NotNull().NotEmpty();
@@ -29,21 +36,34 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
 
                 RuleFor(m => m.CourseName).NotNull().NotEmpty();
 
+                RuleFor(m => m.SendingEmployerAccountId)
+                    .NotEqual(m => m.EmployerAccountId)
+                    .When(m => m.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
+                    .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.EmployerAccountId)} must not be equal if FundingSource is {FundingSource.Transfer}");
+
+                RuleFor(m => m.SendingEmployerAccountId)
+                    .Equal(m => m.EmployerAccountId)
+                    .When(m => m.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy))
+                    .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.EmployerAccountId)} must be equal if FundingSource is {FundingSource.Levy}");
+
+                RuleFor(m => m.SendingEmployerAccountId)
+                        .NotEqual(m => m.EmployerAccountId)
+                        .When(m => m.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
+                        .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.EmployerAccountId)} must not be equal if FundingSource is {FundingSource.Transfer}");
+
                 RuleFor(m => m.EarningDetails)
-                    .NotNull()
-                    .SetValidator(new EarningDetailsSuperficialValidator());
+                        .NotNull()
+                        .SetValidator(new EarningDetailsSuperficialValidator());
 
                 RuleFor(m => m.CollectionPeriod)
                     .NotNull()
                     .SetValidator(new CollectionPeriodSuperficialValidator());
-                
 
-                RuleFor(m => m.SendingEmployerAccountId)
+				RuleFor(m => m.SendingEmployerAccountId)
                     .NotEqual(m => m.EmployerAccountId)
                     .When(m => m.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
                     .WithMessage(m => $"{nameof(m.SendingEmployerAccountId)} and {nameof(m.SendingEmployerAccountId)} must not be equal if FundingSource is {FundingSource.Transfer}");
-
             });
         }
-    }
+	}
 }
