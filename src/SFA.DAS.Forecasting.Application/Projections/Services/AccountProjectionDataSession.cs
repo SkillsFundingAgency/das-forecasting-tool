@@ -35,32 +35,33 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
         {
             var insertString = new StringBuilder();
             var accountCommitmentsInsert =
-                "INSERT INTO dbo.AccountProjection (" +
-                "EmployerAccountId, " +
-                "ProjectionCreationDate," +
-                "ProjectionGenerationType," +
-                "Month," +
-                "Year," +
-                "FundsIn," +
-                "TotalCostOfTraining," +
-                "TransferOutTotalCostOfTraining," +
-                "TransferInTotalCostOfTraining," +
-                "TransferInCompletionPayments," +
-                "CompletionPayments," +
-                "TransferOutCompletionPayments," +
-                "FutureFunds," +
-                "CoInvestmentEmployer," +
-                "CoInvestmentGovernment" +
-                ") VALUES ";
+                "DECLARE @TempAccountProjection as TABLE" +
+                "(" +
+                "	[EmployerAccountId] BIGINT NOT NULL," +
+                "   [ProjectionCreationDate] DATETIME NOT NULL," +
+                "   [ProjectionGenerationType] TINYINT NOT NULL," +
+                "   [Month] SMALLINT NOT NULL," +
+                "   [Year] INT NOT NULL," +
+                "   [FundsIn] DECIMAL(18,2) NOT NULL," +
+                "   [TotalCostOfTraining] DECIMAL(18,2) NOT NULL," +
+                "	[TransferOutTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0)," +
+                "	[TransferInTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0)," +
+                "	[TransferInCompletionPayments] DECIMAL(18,2) NOT NULL default(0)," +
+                "   [CompletionPayments] DECIMAL(18,2) NOT NULL," +
+                "	[TransferOutCompletionPayments] DECIMAL(18,2) NOT NULL default(0)," +
+                "   [FutureFunds] DECIMAL(18,2) NOT NULL," +
+                "	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0)," +
+                "	[CoInvestmentGovernment] DECIMAL(18,2) NOT NULL default(0)" +
+                ") ";
             
 
             _dataContext.Configuration.AutoDetectChangesEnabled = false;
             insertString.Append(accountCommitmentsInsert);
-
+            insertString.AppendLine("insert into @TempAccountProjection VALUES ");
             foreach (var accountProjectionModel in accountProjections)
             {
                 insertString.AppendLine($"({accountProjectionModel.EmployerAccountId}," +
-                                        $"'{accountProjectionModel.ProjectionCreationDate}'," +
+                                        $"'{accountProjectionModel.ProjectionCreationDate:yyyy-MM-dd HH:mm:ss.fff}'," +
                                         $"{(byte)accountProjectionModel.ProjectionGenerationType}," +
                                         $"{accountProjectionModel.Month}," +
                                         $"{accountProjectionModel.Year}," +
@@ -77,7 +78,33 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                                         "),");
             }
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString().Trim().TrimEnd(','));
+            var insertStatement = insertString.ToString().Trim().TrimEnd(',');
+
+            insertString = new StringBuilder();
+            insertString.AppendLine(insertStatement);
+            insertString.AppendLine("");
+            insertString.AppendLine(" MERGE accountprojection t " +
+                                    " USING (" +
+                                    "   select " +
+                                    " 		*" +
+                                    "     from @TempAccountProjection s" +
+                                    " ) s" +
+                                    " ON t.employeraccountid = s.employeraccountid and t.[month] = s.[month] and t.[year] = s.[year] " +
+                                    " WHEN NOT MATCHED THEN " +
+                                    "     INSERT (EmployerAccountId, ProjectionCreationDate, ProjectionGenerationType, [Month], [Year], FundsIn, TotalCostOfTraining, " +
+                                    " 			TransferOutTotalCostOfTraining, TransferInTotalCostOfTraining, TransferInCompletionPayments, CompletionPayments, " +
+                                    " 			TransferOutCompletionPayments,FutureFunds,CoinvestmentEmployer, CoInvestmentGovernment) " +
+                                    "     VALUES (s.EmployerAccountId,s.ProjectionCreationDate,s.ProjectionGenerationType,s.[Month], " +
+                                    " 			s.[Year],s.fundsIn,s.TotalCostOfTraining,s.TransferOutTotalCostOfTraining,s.TransferInTotalCostOfTraining, s.TransferInCompletionPayments, " +
+                                    " 			s.CompletionPayments, s.TransferOutCompletionPayments, s.FutureFunds, s.CoInvestmentEmployer, s.CoInvestmentGovernment) " +
+                                    " WHEN MATCHED THEN " +
+                                    " 	UPDATE SET ProjectionCreationDate = s.ProjectionCreationDate, FundsIn = s.FundsIn, TotalCostOfTraining = s.TotalCostOfTraining, " +
+                                    " 				TransferOutTotalCostOfTraining = s.TransferOutTotalCostOfTraining,TransferInTotalCostOfTraining = s.TransferInTotalCostOfTraining, " +
+                                    " 				TransferInCompletionPayments = s.TransferInCompletionPayments, CompletionPayments = s.CompletionPayments, " +
+                                    " 				TransferOutCompletionPayments = s.TransferOutCompletionPayments, FutureFunds = s.FutureFunds, " +
+                                    " 				CoinvestmentEmployer = s.CoinvestmentEmployer, CoInvestmentGovernment = s.CoInvestmentGovernment;");
+
+            await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString());
             
         }
 
