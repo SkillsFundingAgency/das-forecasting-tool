@@ -33,52 +33,51 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
 
         public async Task Store(IEnumerable<AccountProjectionModel> accountProjections)
         {
-            var insertString = new StringBuilder();
-            var accountCommitmentsInsert =
-                "INSERT INTO dbo.AccountProjection (" +
-                "EmployerAccountId, " +
-                "ProjectionCreationDate," +
-                "ProjectionGenerationType," +
-                "Month," +
-                "Year," +
-                "FundsIn," +
-                "TotalCostOfTraining," +
-                "TransferOutTotalCostOfTraining," +
-                "TransferInTotalCostOfTraining," +
-                "TransferInCompletionPayments," +
-                "CompletionPayments," +
-                "TransferOutCompletionPayments," +
-                "FutureFunds," +
-                "CoInvestmentEmployer," +
-                "CoInvestmentGovernment" +
-                ") VALUES ";
-            
+			var insertString = new StringBuilder();
+			var accountCommitmentsInsert =
+				"INSERT INTO dbo.AccountProjection (" +
+				"EmployerAccountId, " +
+				"ProjectionCreationDate," +
+				"ProjectionGenerationType," +
+				"Month," +
+				"Year," +
+				"FundsIn," +
+				"TotalCostOfTraining," +
+				"TransferOutTotalCostOfTraining," +
+				"TransferInTotalCostOfTraining," +
+				"TransferInCompletionPayments," +
+				"CompletionPayments," +
+				"TransferOutCompletionPayments," +
+				"FutureFunds," +
+				"CoInvestmentEmployer," +
+				"CoInvestmentGovernment" +
+				") VALUES ";
 
-            _dataContext.Configuration.AutoDetectChangesEnabled = false;
-            insertString.Append(accountCommitmentsInsert);
 
-            foreach (var accountProjectionModel in accountProjections)
-            {
-                insertString.AppendLine($"({accountProjectionModel.EmployerAccountId}," +
-                                        $"'{accountProjectionModel.ProjectionCreationDate}'," +
-                                        $"{(byte)accountProjectionModel.ProjectionGenerationType}," +
-                                        $"{accountProjectionModel.Month}," +
-                                        $"{accountProjectionModel.Year}," +
-                                        $"{accountProjectionModel.LevyFundsIn}," + //check
-                                        $"{accountProjectionModel.LevyFundedCostOfTraining}," + //check
-                                        $"{accountProjectionModel.TransferOutCostOfTraining}," +
-                                        $"{accountProjectionModel.TransferInCostOfTraining}," +
-                                        $"{accountProjectionModel.TransferInCompletionPayments}," +
-                                        $"{accountProjectionModel.LevyFundedCompletionPayments}," +
-                                        $"{accountProjectionModel.TransferOutCompletionPayments}," +
-                                        $"{accountProjectionModel.FutureFunds}," +
-                                        $"{accountProjectionModel.CoInvestmentEmployer}," +
-                                        $"{accountProjectionModel.CoInvestmentGovernment}" +
-                                        "),");
-            }
+			_dataContext.Configuration.AutoDetectChangesEnabled = false;
+			insertString.Append(accountCommitmentsInsert);
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString().Trim().TrimEnd(','));
-            
+			foreach (var accountProjectionModel in accountProjections)
+			{
+				insertString.AppendLine($"({accountProjectionModel.EmployerAccountId}," +
+										$"'{accountProjectionModel.ProjectionCreationDate.Date.ToString("yyyy-MM-dd HH:mm:ss")}'," +
+										$"{(byte)accountProjectionModel.ProjectionGenerationType}," +
+										$"{accountProjectionModel.Month}," +
+										$"{accountProjectionModel.Year}," +
+										$"{accountProjectionModel.LevyFundsIn}," + //check
+										$"{accountProjectionModel.LevyFundedCostOfTraining}," + //check
+										$"{accountProjectionModel.TransferOutCostOfTraining}," +
+										$"{accountProjectionModel.TransferInCostOfTraining}," +
+										$"{accountProjectionModel.TransferInCompletionPayments}," +
+										$"{accountProjectionModel.LevyFundedCompletionPayments}," +
+										$"{accountProjectionModel.TransferOutCompletionPayments}," +
+										$"{accountProjectionModel.FutureFunds}," +
+										$"{accountProjectionModel.CoInvestmentEmployer}," +
+										$"{accountProjectionModel.CoInvestmentGovernment}" +
+										"),");
+			}
+
+			await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString().Trim().TrimEnd(','));
         }
 
         public async Task DeleteAll(long employerAccountId)
