@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -25,24 +26,28 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             await FunctionRunner.Run<LevyDeclarationPreLoadFunction>(writer, executionContext,
                async (container, logger) =>
                {
-                   var hashingService = container.GetInstance<IHashingService>();
+	               var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+				   var hashingService = container.GetInstance<IHashingService>();
 
                    if (request == null)
                    {
                        var msg = $"{nameof(PreLoadRequest)} not valid. Function will exit.";
-                       logger.Warn(msg);
+	                   telemetry.Warning("LevyDeclarationPreLoadFunction", msg, "FunctionRunner.Run", executionContext.InvocationId);
+
                        return;
                    }
 
                    if (request.SubstitutionId.HasValue && request.EmployerAccountIds.Count() != 1)
                    {
                        var msg = $"If {nameof(request.SubstitutionId)} is provided there must be exactly 1 EmployerAccountId";
-                       logger.Warn(msg);
-                       return;
+					   telemetry.Warning("LevyDeclarationPreLoadFunction", msg, "FunctionRunner.Run", executionContext.InvocationId);
+
+					   return;
                    }
 
                    var levyDataService = container.GetInstance<IEmployerDataService>();
-                   logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", request.EmployerAccountIds)}, {request.PeriodYear}, {request.PeriodMonth}");
+				   telemetry.Info("LevyDeclarationPreLoadFunction", $"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", request.EmployerAccountIds)}, {request.PeriodYear}, {request.PeriodMonth}", "FunctionRunner.Run", executionContext.InvocationId);
                    var messageCount = 0;
                    var schemes = new Dictionary<string, string>();
                    foreach (var employerId in request.EmployerAccountIds)
@@ -50,7 +55,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        var levyDeclarations = await levyDataService.LevyForPeriod(employerId, request.PeriodYear, request.PeriodMonth);
                        if (levyDeclarations.Count < 1)
                        {
-                           logger.Info($"No levy declarations found for employer: {employerId}");
+	                       telemetry.Info("LevyDeclarationPreLoadFunction", $"No levy declarations found for employer: {employerId}", "FunctionRunner.Run", executionContext.InvocationId);
                            continue;
                        }
                        levyDeclarations.ForEach(ld =>
@@ -66,14 +71,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                            outputQueueMessage.Add(ld);
                        });
                    }
-
-                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
+	               telemetry.Info("LevyDeclarationPreLoadFunction", $"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.", "FunctionRunner.Run");
 
                    if (request.SubstitutionId.HasValue)
                    {
-                       logger.Info($"Added message with SubstitutionID: {hashingService.HashValue(request.SubstitutionId.Value)}");
+	                   telemetry.Info("LevyDeclarationPreLoadFunction", $"Added message with SubstitutionID: {hashingService.HashValue(request.SubstitutionId.Value)}", "FunctionRunner.Run");
                    }
-                   logger.Info($"Added {messageCount} levy declarations");
+
+	               telemetry.Info("LevyDeclarationPreLoadFunction", $"Added {messageCount} levy declarations", "FunctionRunner.Run");
                });
         }
     }

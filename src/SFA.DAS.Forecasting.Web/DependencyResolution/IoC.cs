@@ -28,8 +28,9 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
             {
                 c.AddRegistry<ConfigurationRegistry>();
                 c.AddRegistry<DocumentRegistry>();
-                c.AddRegistry<Application.Infrastructure.Registries.DefaultRegistry>();
-                c.AddRegistry<Application.Infrastructure.Registries.MediatrRegistry>();
+                c.AddRegistry<DefaultRegistry>();
+                c.AddRegistry<MediatrRegistry>();
+                c.AddRegistry<TelemetryRegistry>();
                 c.AddRegistry<DefaultRegistry>();   
             });
         }

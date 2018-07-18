@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
@@ -12,12 +13,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
     public class ProcessEmployerPaymentHandler
     {
         private readonly IEmployerPaymentRepository _repository;
-        private readonly ILog _logger;
+        private readonly IAppInsightsTelemetry _logger;
         private readonly IPaymentMapper _mapper;
         private readonly IApplicationConfiguration _configuration;
         private readonly IQueueService _queueService;
 
-        public ProcessEmployerPaymentHandler(IEmployerPaymentRepository repository, ILog logger, IPaymentMapper mapper,
+        public ProcessEmployerPaymentHandler(IEmployerPaymentRepository repository, IAppInsightsTelemetry logger, IPaymentMapper mapper,
             IApplicationConfiguration configuration, IQueueService queueService)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -30,11 +31,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         public async Task Handle(PaymentCreatedMessage paymentCreatedMessage, string allowProjectionsEndpoint)
         {
             var employerPayment = _mapper.MapToPayment(paymentCreatedMessage);
-            _logger.Debug($"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
+            _logger.Debug("PaymentEventStorePaymentFunction", $"Now storing the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}", "Handle");
             var payment = await _repository.Get(paymentCreatedMessage.EmployerAccountId, paymentCreatedMessage.Id);
             payment.RegisterPayment(employerPayment);
             await _repository.StorePayment(payment);
-            _logger.Info($"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
+            _logger.Info("PaymentEventStorePaymentFunction", $"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}", "Handle");
             _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint);
         }
     }

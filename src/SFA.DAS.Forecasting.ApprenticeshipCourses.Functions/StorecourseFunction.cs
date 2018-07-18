@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Estimation;
 
@@ -17,10 +18,13 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
         {
             await FunctionRunner.Run<StoreCourseFunction>(log, executionContext, async (container, logger) =>
             {
-                logger.Debug("Received reques to store course");
+	            var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	            telemetry.Info("StoreCourseFunction", "Received request to store course", "FunctionRunner.Run", executionContext.InvocationId);
+
                 var handler = container.GetInstance<StoreCourseHandler>();
                 await handler.Handle(course);
-                log.Info("Finished handling the request to store the course.");
+	            telemetry.Info("StoreCourseFunction", "Finished handling the request to store the course", "FunctionRunner.Run", executionContext.InvocationId);
             });
         }
     }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
@@ -23,16 +24,26 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         {
             return FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer, executionContext, (container, logger) =>
                 {
-                    var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+					var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
                         .Validate(paymentCreatedMessage);
 
                     if (!validationResults.IsValid)
                     {
-                        logger.Warn($"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
-                        return null;
+	                    telemetry.Warning("PaymentEventValidatorFunction", 
+							$"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, " +
+							$"Errors:{validationResults.ToJson()}", 
+							"FunctionRunner.Run", 
+							executionContext.InvocationId);
+
+						return null;
                     }
 
-                    logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
+	                telemetry.Info("PaymentEventValidatorFunction", 
+						$"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}", 
+						"FunctionRunner.Run", 
+						executionContext.InvocationId);
                     
                     return paymentCreatedMessage;
                 });

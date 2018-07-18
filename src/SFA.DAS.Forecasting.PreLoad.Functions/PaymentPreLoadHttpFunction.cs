@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.HashingService;
@@ -25,22 +26,25 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             return await FunctionRunner.Run<PaymentPreLoadHttpFunction, string>(writer, executionContext,
                async (container, logger) =>
                {
-                   var body = await req.Content.ReadAsStringAsync();
+	               var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+				   var body = await req.Content.ReadAsStringAsync();
                    var preLoadRequest = JsonConvert.DeserializeObject<PreLoadPaymentRequest>(body);
 
                    if (preLoadRequest == null)
                    {
-                       logger.Warn($"{nameof(PreLoadPaymentRequest)} not valid. Function will exit.");
+	                   telemetry.Warning("PaymentPreLoadHttpFunction", $"{nameof(PreLoadPaymentRequest)} not valid. Function will exit.", "FunctionRunner.Run", executionContext.InvocationId);
+
                        return "";
                    }
 
-                   logger.Info($"{nameof(PaymentPreLoadHttpFunction)} started. Data: {string.Join("|", preLoadRequest.EmployerAccountIds)}, {preLoadRequest.PeriodYear}, {preLoadRequest.PeriodMonth}");
+	               telemetry.Info("PaymentPreLoadHttpFunction", $"{nameof(PaymentPreLoadHttpFunction)} started. Data: {string.Join("|", preLoadRequest.EmployerAccountIds)}, {preLoadRequest.PeriodYear}, {preLoadRequest.PeriodMonth}", "FunctionRunner.Run", executionContext.InvocationId);
 
                    if (preLoadRequest.SubstitutionId != null && preLoadRequest.EmployerAccountIds.Count() != 1)
                    {
                        var msg = $"If {nameof(preLoadRequest.SubstitutionId)} is provded there may only be 1 EmployerAccountId.";
-                       logger.Warn(msg);
-                       return msg;
+	                   telemetry.Warning("PaymentPreLoadHttpFunction", msg, "FunctionRunner.Run", executionContext.InvocationId);
+					   return msg;
                    }
 
                    var hashingService = container.GetInstance<IHashingService>();
@@ -67,7 +71,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        return $"HashedDubstitutionId: {hashedSubstitutionId}";
                    }
 
-                   logger.Info($"Added {preLoadRequest.EmployerAccountIds.Count()} get payment messages to {QueueNames.PreLoadPayment} queue.");
+	               telemetry.Info("PaymentPreLoadHttpFunction", $"Added {preLoadRequest.EmployerAccountIds.Count()} get payment messages to {QueueNames.PreLoadPayment} queue.", "FunctionRunner.Run", executionContext.InvocationId);
+
                    return $"Message added: {preLoadRequest.EmployerAccountIds.Count()}";
                });
         }

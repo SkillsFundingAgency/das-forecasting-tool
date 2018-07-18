@@ -50,6 +50,9 @@
     <Reference Include="MediatR, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MediatR.4.0.1\lib\net45\MediatR.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.4.0\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Azure.Documents.Client, Version=1.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.21.1\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
     </Reference>
@@ -141,6 +144,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
@@ -183,6 +189,7 @@
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
     <Compile Include="Commitments\Handlers\StoreCommitmentHandler.cs" />
     <Compile Include="Commitments\Services\CommitmentsDataService.cs" />
+    <Compile Include="Converters\FundingSourceConverter.cs" />
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidation\NumberOfMonthsAcceptable.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidation\CourseSelected.cs" />
@@ -208,6 +215,9 @@
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
     <Compile Include="Infrastructure\Registries\DocumentRegistry.cs" />
     <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
+    <Compile Include="Infrastructure\Registries\TelemetryRegistry.cs" />
+    <Compile Include="Infrastructure\Telemetry\AppInsightsTelemetry.cs" />
+    <Compile Include="Infrastructure\Telemetry\IAppInsightsTelemetry.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
@@ -25,18 +26,20 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             return FunctionRunner.Run<CreatePaymentMessageFunction, PreLoadPaymentMessage>(writer, executionContext,
                 (container, logger) =>
                 {
-                    logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	                telemetry.Info("CreatePaymentMessageFunction", $"{nameof(CreatePaymentMessageFunction)} started", "FunctionRunner.Run", executionContext.InvocationId);
 
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
                     var payments = dataService.GetPayments(message.EmployerAccountId).ToList();
                     var earningDetails = dataService.GetEarningDetails(message.EmployerAccountId).ToList();
-                    logger.Info($"Got {payments.Count()} payments to match against {earningDetails.Count} earning details for employer '{message.EmployerAccountId}'");
+	                telemetry.Info("CreatePaymentMessageFunction", $"Got {payments.Count} payments to match against {earningDetails.Count} earning details for employer '{message.EmployerAccountId}'", "FunctionRunner.Run");
                     List<PaymentCreatedMessage> paymentCreatedMessage;
                     if (message.SubstitutionId != null)
                     {
                         paymentCreatedMessage =
                             payments
-                            .Select(p => CreatePaymentSubstituteData(logger, p, earningDetails, message.SubstitutionId.Value))
+                            .Select(p => CreatePaymentSubstituteData(telemetry, p, earningDetails, message.SubstitutionId.Value))
                             .Where(p => p != null)
                             .ToList();
                     }
@@ -44,7 +47,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         paymentCreatedMessage =
                             payments
-                            .Select(p => CreatePayment(logger, p, earningDetails))
+                            .Select(p => CreatePayment(telemetry, p, earningDetails))
                             .Where(p => p != null)
                             .ToList();
                     }
@@ -53,7 +56,9 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         outputQueueMessage.Add(p);
                     }
-                    logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
+
+					telemetry.Info("CreatePaymentMessageFunction", $"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}", "FunctionRunner.Run");
+
                     return message;
                 });
         }
@@ -76,23 +81,25 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 return Apprenticeships[originalApprenticeshipId];
             }
         }
-        private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
+        private static PaymentCreatedMessage CreatePaymentSubstituteData(IAppInsightsTelemetry logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {
             if (payment == null)
             {
-                logger.Warn("No payment passed to CreatePaymentSubstituteData");
+	            logger.Warning("CreatePaymentMessageFunction", "No payment passed to CreatePaymentSubstituteData", "CreatePaymentSubstituteData");
+
                 return null;
             }
 
             var earningDetail = earningDetails.FirstOrDefault(ed => Guid.TryParse(ed.PaymentId, out Guid paymentGuid) && paymentGuid == payment.PaymentId);
             if (earningDetail == null)
             {
-                logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
+	            logger.Warning("CreatePaymentMessageFunction", $"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}", "CreatePaymentSubstituteData");
+				
                 return null;
             }
 
             var apprenticeshipId = GetApprenticeshipId(payment.ApprenticeshipId);
-            logger.Info($"Creating payment event for apprenticeship: {apprenticeshipId}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
+	        logger.Info("CreatePaymentMessageFunction", $"Creating payment event for apprenticeship: {apprenticeshipId}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}", "CreatePaymentSubstituteData");
             earningDetail.RequiredPaymentId = Guid.NewGuid();
             return new PaymentCreatedMessage
             {
@@ -114,17 +121,18 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             };
         }
 
-        public static PaymentCreatedMessage CreatePayment(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)
+        public static PaymentCreatedMessage CreatePayment(IAppInsightsTelemetry logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)
         {
             if (payment == null)
             {
-                logger.Warn("No payment passed to CreatePaymentSubstituteData");
+	            logger.Warning("CreatePaymentMessageFunction", "No payment passed to CreatePayment", "CreatePayment");
+				
                 return null;
             }
             var earningDetail = earningDetails.FirstOrDefault(ed => Guid.TryParse(ed.PaymentId, out Guid paymentGuid) && paymentGuid == payment.PaymentId);
             if (earningDetail == null)
             {
-                logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
+	            logger.Warning("CreatePaymentMessageFunction", $"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}", "CreatePayment");
                 return null;
             }
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -8,6 +7,7 @@ using System.Text;
 using System.Threading;
 using Dapper;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Converters;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 CourseLevel = payment.CourseLevel,
                 CourseName = payment.CourseName,
                 EmployerAccountId = Config.EmployerAccountId,
-                FundingSource = payment.FundingSource ?? FundingSource.Levy,
+                FundingSource = payment.FundingSource,
                 InstallmentAmount = payment.InstallmentAmount,
                 LearnerId = payment.LearnerId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
                 NumberOfInstallments = payment.NumberOfInstallments,
@@ -144,7 +144,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 CourseName = payment.CourseName,
                 Uln = idx,
                 CourseStartDate = payment.StartDateValue,
-                FundingSource = payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSource.Levy : FundingSource.Transfer
+                FundingSource = payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy) : FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)
             })
             .ToList()
             .ForEach(paymentEvent =>

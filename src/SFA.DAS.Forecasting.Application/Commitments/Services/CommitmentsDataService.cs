@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             var model = new EmployerCommitmentsModel
             {
                 LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate)),
+                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId, forecastLimitDate)),
                 ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate)),
                 SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate))
             };
@@ -76,7 +77,16 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
-        private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
+
+	    private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId, DateTime? forecastLimitDate)
+	    {
+		    return commitment => commitment.EmployerAccountId == employerAccountId
+		                         && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
+		                         && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
+								 && commitment.ActualEndDate == null;
+	    }
+
+		private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
@@ -84,7 +94,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && commitment.ActualEndDate == null;
         }
 
-        public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
+		public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
             return await _dataContext.Commitments
                 .FirstOrDefaultAsync(commitment =>

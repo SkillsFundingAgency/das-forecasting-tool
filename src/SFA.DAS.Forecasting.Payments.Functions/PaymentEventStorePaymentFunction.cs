@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Handlers;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -19,11 +20,16 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             return await FunctionRunner.Run<PaymentEventStorePaymentFunction, PaymentCreatedMessage>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Debug($"Storing the payment.  Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.");
+	                var telemetry = container.GetInstance<IAppInsightsTelemetry>();
+
+	                telemetry.Debug("PaymentEventStorePaymentFunction", $"Storing the payment.  Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.", "FunctionRunner.Run", executionContext.InvocationId);
+
                     var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
-                    logger.Debug("Resolved handler");
+	                telemetry.Debug("PaymentEventStorePaymentFunction", "Resolved handler", "FunctionRunner.Run", executionContext.InvocationId);
+
                     await handler.Handle(paymentCreatedMessage, QueueNames.AllowProjection);
-                    logger.Info($"Finished storing payment. Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.");
+	                telemetry.Info("PaymentEventStorePaymentFunction", $"Finished storing payment. Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.", "FunctionRunner.Run", executionContext.InvocationId);
+
                     return paymentCreatedMessage;
                 });
         }
