@@ -4278,6 +4278,11 @@ h2 .float-right {
   width: 200px;
 }
 
+/*Error messages styles */
+#estimate-add-apprenticeship .form-group-error .select2-container--default .select2-selection--single {
+  border: 4px solid #b10e1e;
+}
+
 .funding-projection .info-summary {
   max-width: 30em;
   background: #eaebf3;
@@ -4371,6 +4376,10 @@ table.small th, table.small td, table.small .form-hint {
   display: block;
   color: #005ea5;
   text-decoration: underline;
+}
+
+#BalanceSheet-Tables a:focus {
+  background-color: transparent;
 }
 
 .tippy-popper .tippy-content {
