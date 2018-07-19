@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
@@ -26,19 +25,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             if (message.EarningDetails == null)
                 throw new InvalidOperationException($"Invalid payment created message. Earning details is null so cannot create commitment data. Employer account: {message.EmployerAccountId}, payment id: {message.Id}");
 
-            var employerCommitment = await _repository.Get(message.EmployerAccountId, message.ApprenticeshipId);
-
 			var commitmentModel = _paymentMapper.MapToCommitment(message);
             
-            var commitmentRegistered = employerCommitment.RegisterCommitment(commitmentModel);
-            if (!commitmentRegistered)
+            if(commitmentModel.CompletionAmount > 1)
             {
-                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
-                return;
+                await _repository.Upsert(commitmentModel);
             }
 
-            _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
-            await _repository.Store(employerCommitment);
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
         }
 

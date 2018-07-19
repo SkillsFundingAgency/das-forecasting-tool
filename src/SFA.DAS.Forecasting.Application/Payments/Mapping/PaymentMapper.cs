@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 
 		public CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
 		{
-			return new CommitmentModel
+            var model = new CommitmentModel
 			{
 				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
@@ -61,6 +61,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
                 SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
                 FundingSource = paymentCreatedMessage.FundingSource
 			};
-		}
+
+            if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
+                model.ActualEndDate = null;
+
+            return model;
+        }
 	}
 }
