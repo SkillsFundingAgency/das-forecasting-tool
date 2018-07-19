@@ -102,11 +102,21 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             result.IsValid.Should().BeFalse();
         }
 
-        [Test]
-        public void Fails_If_Funding_Source_Is_MoreThan_4()
+        [TestCase(FundingSource.CoInvestedEmployer)]
+        [TestCase(FundingSource.FullyFundedSfa)]
+        public void Fails_If_Funding_Source_Is_CoInvestedEmployer_Or_FullyFundedSfa(FundingSource fundingSource)
         {
             var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource((FundingSource)7);
+            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource(fundingSource);
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
+        }
+
+        [Test]
+        public void Then_The_Validation_Fails_If_The_FundingSource_Is_Greater_Than_The_Allowed_Values()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource((FundingSource)6);
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
