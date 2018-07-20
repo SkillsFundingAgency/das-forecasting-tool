@@ -301,7 +301,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                         ? FundingSource.Levy 
                         : commitment.FundingSource ?? FundingSource.Transfer
                 };
-                Task.FromResult(CommitmentsDataService.Upsert(commitmentModel)).Wait();
+                CommitmentsDataService.Upsert(commitmentModel).Wait();
             }
 
             DataContext.SaveChanges();

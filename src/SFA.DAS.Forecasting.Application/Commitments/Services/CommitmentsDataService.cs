@@ -20,6 +20,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         public CommitmentsDataService(IForecastingDataContext dataContext)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+
+            _dataContext.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
@@ -110,7 +112,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 {
                     SqlDbType = SqlDbType.DateTime
                 },
-                new SqlParameter("@actualEndDate", (object)commitment.ActualEndDate ?? DBNull.Value)
+                new SqlParameter("@actualEndDate", commitment.ActualEndDate ?? (object) DBNull.Value)
                     {
                         IsNullable = true,
                         SqlDbType = System.Data.SqlDbType.DateTime,
@@ -125,7 +127,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
 
         }
-
+        
         private string UpserSqlString()
         {
             return @"
@@ -159,7 +161,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 		                    ApprenticeName = entity.ApprenticeName,
 		                    ActualEndDate = entity.ActualEndDate
                     WHEN NOT MATCHED 
-                        THEN
+                        AND entity.ActualEndDate is null 
+                        THEN 
                         INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource)
 	                    VALUES (
                                 entity.EmployerAccountId,
