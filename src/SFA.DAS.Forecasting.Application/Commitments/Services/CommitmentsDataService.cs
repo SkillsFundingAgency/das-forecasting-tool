@@ -20,8 +20,6 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         public CommitmentsDataService(IForecastingDataContext dataContext)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-
-            _dataContext.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
