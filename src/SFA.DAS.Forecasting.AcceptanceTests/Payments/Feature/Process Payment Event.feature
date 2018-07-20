@@ -99,9 +99,9 @@ Scenario: Payment with an invalid payment amount but also has an actual end date
 
 Scenario: Payments with invalid earning details but also has an actual end date for an existing commitment (CI-797)
 	Given I have made the following payments
-	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
-	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | Yesterday  | 1.00               | 400.00            | 12                     | Today           |
-	| 133.33         | Test Apprentice 3 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 1.00              | 12                     | Today           |
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date | LearnerId |
+	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | Yesterday  | 1.00               | 400.00            | 12                     | Today           | 1         |
+	| 133.33         | Test Apprentice 3 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 1.00              | 12                     | Today           | 2         |
 	And there is a corresponding commitment stored for each of the payments
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
 	Then the Forecasting Payment service should record that the commitment has ended

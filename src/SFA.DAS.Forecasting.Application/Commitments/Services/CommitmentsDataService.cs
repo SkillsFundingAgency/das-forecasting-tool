@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             var skip = 0;
             while (moreData)
             {
-                var commitments = await _dataContext.Commitments.AsNoTracking().Where(filter).OrderBy(c=>c.Id).Skip(skip).Take(100).ToListAsync();
+                var commitments = await _dataContext.Commitments.AsNoTracking().Where(filter).OrderBy(c => c.Id).Skip(skip).Take(100).ToListAsync();
 
                 skip = skip + 100;
                 if (!commitments.Any())
@@ -90,7 +91,6 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             var sql = UpserSqlString();
             var parameters = new object[]
             {
-                new SqlParameter("@id", commitment.Id),
                 new SqlParameter("@employerAccountId", commitment.EmployerAccountId),
                 new SqlParameter("@sendingEmployerAccountId", commitment.SendingEmployerAccountId),
                 new SqlParameter("@learnerId", commitment.LearnerId),
@@ -102,17 +102,21 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
                 new SqlParameter("@courseName", commitment.CourseName),
                 new SqlParameter("@courseLevel", commitment.CourseLevel),
-                new SqlParameter("@startDate", commitment.StartDate),
-
-                new SqlParameter("@plannedEndDate", commitment.PlannedEndDate),
-                new SqlParameter("@actualEndDate", (object)commitment.ActualEndDate ?? DBNull.Value)
+                new SqlParameter("@startDate", commitment.StartDate)
+                {
+                    SqlDbType = SqlDbType.DateTime
+                },
+                new SqlParameter("@plannedEndDate", commitment.PlannedEndDate)
+                {
+                    SqlDbType = SqlDbType.DateTime
+                },
+                new SqlParameter("@actualEndDate", commitment.ActualEndDate ?? (object) DBNull.Value)
                     {
                         IsNullable = true,
                         SqlDbType = System.Data.SqlDbType.DateTime,
                         Direction = System.Data.ParameterDirection.Input
                     },
                 new SqlParameter("@completionAmount", commitment.CompletionAmount),
-
                 new SqlParameter("@monthlyInstallment", commitment.MonthlyInstallment),
                 new SqlParameter("@numberOfInstallments", commitment.NumberOfInstallments),
                 new SqlParameter("@fundingSource", commitment.FundingSource)
@@ -121,15 +125,14 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
 
         }
-
+        
         private string UpserSqlString()
         {
             return @"
                     MERGE INTO Commitment
                     USING 
                     (
-                        SELECT @id                       as Id,
-		                       @employerAccountId        as EmployerAccountId,
+                        SELECT @employerAccountId        as EmployerAccountId,
 		                       @sendingEmployerAccountId as SendingEmployerAccountId,
 		                       @learnerId                as LearnerId,
 		                       @providerId               as ProviderId,
@@ -145,51 +148,19 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 		                       @monthlyInstallment       as MonthlyInstallment,
 		                       @numberOfInstallments     as NumberOfInstallments,
 		                       @fundingSource            as FundingSource
-		   
-
-		   
                     ) AS entity
-                    ON  Commitment.Id = entity.Id
+                    ON  Commitment.EmployerAccountId = entity.EmployerAccountId 
+                        AND Commitment.learnerId = entity.LearnerId
                     WHEN MATCHED 
-		                    AND Commitment.EmployerAccountId <> entity.EmployerAccountId
-		                    AND Commitment.SendingEmployerAccountId <> entity.SendingEmployerAccountId
-		                    AND Commitment.LearnerId <> entity.LearnerId
-		                    AND Commitment.ProviderId <> entity.ProviderId
-		                    AND Commitment.ProviderName <> entity.ProviderName
-		                    AND Commitment.ApprenticeshipId <> entity.ApprenticeshipId
-		                    AND Commitment.ApprenticeName <> entity.ApprenticeName
-		                    AND Commitment.CourseName <> entity.CourseName
-		                    AND Commitment.CourseLevel <> entity.CourseLevel
-		                    AND Commitment.StartDate <> entity.StartDate
-		                    AND Commitment.PlannedEndDate <> entity.PlannedEndDate
-		                    AND Commitment.ActualEndDate <> entity.ActualEndDate
-		                    AND Commitment.CompletionAmount <> entity.CompletionAmount
-		                    AND Commitment.MonthlyInstallment <> entity.MonthlyInstallment
-		                    AND Commitment.NumberOfInstallments <> entity.NumberOfInstallments
-		                    AND Commitment.FundingSource <> entity.FundingSource    
 	                    THEN
                         UPDATE 
                         SET 
-		                    EmployerAccountId = entity.EmployerAccountId,
-		                    SendingEmployerAccountId = entity.SendingEmployerAccountId, 
-		                    LearnerId = entity.LearnerId,
-		                    ProviderId = entity.ProviderId,
-		                    ProviderName = entity.ProviderName,
 		                    ApprenticeshipId = entity.ApprenticeshipId,
 		                    ApprenticeName = entity.ApprenticeName,
-		                    CourseName = entity.CourseName,
-		                    CourseLevel = entity.CourseLevel,
-		                    StartDate = entity.StartDate,
-		                    PlannedEndDate = entity.PlannedEndDate,
-		                    ActualEndDate = entity.ActualEndDate,
-		                    CompletionAmount = entity.CompletionAmount,
-		                    MonthlyInstallment = entity.MonthlyInstallment,
-		                    NumberOfInstallments = entity.NumberOfInstallments,
-		                    FundingSource = entity.FundingSource
-
+		                    ActualEndDate = entity.ActualEndDate
                     WHEN NOT MATCHED 
-                        AND entity.ActualEndDate is null
-                        THEN
+                        AND entity.ActualEndDate is null 
+                        THEN 
                         INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource)
 	                    VALUES (
                                 entity.EmployerAccountId,
