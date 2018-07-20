@@ -131,9 +131,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
             accountProjection.Projections[6].FutureFunds.Should().Be(1200);
 
-            accountProjection.Projections[7].CoInvestmentEmployer.Should().Be(60);
-            accountProjection.Projections[7].CoInvestmentGovernment.Should().Be(540);
-            accountProjection.Projections[7].FutureFunds.Should().Be(0);
+            accountProjection.Projections[7].CoInvestmentEmployer.Should().Be(90);
+            accountProjection.Projections[7].CoInvestmentGovernment.Should().Be(810);
+            accountProjection.Projections[7].FutureFunds.Should().Be(300);
         }
 
         [Test]
@@ -250,41 +250,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         }
 
         [Test]
-        public void Then_The_Receiving_Employer_FutureFunds_Does_Not_Change_With_Only_Transfers_In()
-        {
-            //Arrange
-            _account = new Account(1, 200, 0, 0, 0);
-            Moqer.SetInstance(_account);
-            _commitments.LevyFundedCommitments = new List<CommitmentModel>();
-            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>();
-            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
-            {
-                new CommitmentModel
-                {
-                    EmployerAccountId = 999,
-                    SendingEmployerAccountId = 1,
-                    ApprenticeshipId = 23,
-                    LearnerId = 33,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
-                    MonthlyInstallment = 2000,
-                    NumberOfInstallments = 6,
-                    CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Transfer
-                }
-            };
-            var employerCommitments = new EmployerCommitments(1, _commitments);
-            Moqer.SetInstance(employerCommitments);
-            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            
-            //Act
-            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
-
-            //Assert
-            Assert.IsTrue(accountProjection.Projections.All(c => c.FutureFunds == 200));
-        }
-
-        [Test]
         public void Then_When_You_Are_A_Sending_Employer_Your_FutureFunds_Are_Updated()
         {
             //Arrange
@@ -369,8 +334,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
 
             //Assert
-            Assert.AreEqual(1000m, accountProjection.Projections[7].FutureFunds);
-            Assert.AreEqual(1000m, accountProjection.Projections.Last().FutureFunds);
+            Assert.AreEqual(1600m, accountProjection.Projections[7].FutureFunds);
+            Assert.AreEqual(1600m, accountProjection.Projections.Last().FutureFunds);
         }
 
 		[TestCase(800, 200, 0, 400, 0, true, 200)]

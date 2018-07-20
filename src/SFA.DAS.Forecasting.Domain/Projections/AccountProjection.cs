@@ -61,10 +61,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 	        var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
 	        var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
 
-	        var isSendingEmployer = totalCostOfTraning.TransferIn == 0
-	                                && totalCostOfTraning.TransferOut != 0
-	                                && completionPayments.TransferInCompletionPayment == 0
-	                                && completionPayments.TransferOutCompletionPayment != 0;
+			var isSendingEmployer = _employerCommitments.IsSendingEmployer();
 
 			var currentBalance = GetCurrentBalance(lastBalance,
 			    completionPayments.TransferOutCompletionPayment, completionPayments.TransferInCompletionPayment,
@@ -100,8 +97,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
-                CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) * -1m : 0m,
-                CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) * -1m : 0m,
+                CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) : 0m,
+                CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) : 0m,
                 FutureFunds = futureFunds,
                 ProjectionCreationDate = DateTime.UtcNow,
                 ProjectionGenerationType = projectionGenerationType

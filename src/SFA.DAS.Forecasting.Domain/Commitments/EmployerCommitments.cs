@@ -118,5 +118,10 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 || _employerCommitmentsModel.ReceivingEmployerTransferCommitments.Any()
                 || _employerCommitmentsModel.SendingEmployerTransferCommitments.Any();
         }
+
+	    public bool IsSendingEmployer()
+	    {
+		    return _sendingEmployerTransferCommitments.Any();
+	    }
     }
 }
