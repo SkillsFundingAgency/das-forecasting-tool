@@ -373,5 +373,41 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             Assert.AreEqual(1000m, accountProjection.Projections.Last().FutureFunds);
         }
 
-    }
+		[TestCase(800, 200, 0, 400, 0, true, 200)]
+		[TestCase(400, 200, 0, 400, 0, true, 0)]
+		[TestCase(-500, 200, 0, 400, 0, true, -500)]
+		[TestCase(800, 200, 100, 400, 100, false, 800)]
+		[TestCase(400, 200, 0, 400, 0, false, 400)]
+		public void ShouldDetermineBalanceForCoInvestmentAfterTransferCosts(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer, decimal expected)
+		{
+			var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+			var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut, completionPaymentsTransferIn, trainingCostTransferOut, trainingCostTransferIn, isSendingEmployer);
+
+			Assert.AreEqual(expected, balance);
+		}
+
+		[TestCase(500, 200, 0)]
+		[TestCase(100, 200, 100)]
+		[TestCase(0, 200, 200)]
+		[TestCase(-100, 200, 200)]
+		public void ShouldDetermineCoInvestedAmountBasedOnCurrentBalanceAndMoneyOut(decimal currentBalance, decimal moneyOut, decimal expected)
+		{
+			var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+			var coInvestmentAmount = accountProjection.GetCoInvestmentAmountBasedOnCurrentBalanceAndTrainingCosts(currentBalance, moneyOut);
+
+			Assert.AreEqual(expected, coInvestmentAmount);
+		}
+
+	    [TestCase(500, 200, 400, 700)]
+	    [TestCase(100, 200, 400, 400)]
+	    [TestCase(0, 200, 400, 400)]
+	    [TestCase(-100, 200, 400, 300)]
+	    public void ShouldDetermineMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal fundsIn, decimal expected)
+	    {
+		    var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+		    var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn);
+
+		    Assert.AreEqual(expected, monthEndBalance);
+	    }
+	}
 }
