@@ -27,10 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
 
 			var commitmentModel = _paymentMapper.MapToCommitment(message);
             
-            if(commitmentModel.CompletionAmount > 1)
-            {
-                await _repository.Upsert(commitmentModel);
-            }
+            await _repository.Upsert(commitmentModel);
 
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
         }
