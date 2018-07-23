@@ -97,7 +97,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         public void Fails_If_Funding_Source_Is_LessThan_0()
         {
             var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource((FundingSource)0);
+            PaymentCreatedMessage.FundingSource = 0;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
@@ -116,7 +116,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         public void Then_The_Validation_Fails_If_The_FundingSource_Is_Greater_Than_The_Allowed_Values()
         {
             var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource((FundingSource)6);
+            PaymentCreatedMessage.FundingSource = (Provider.Events.Api.Types.FundingSource) 6;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
@@ -144,7 +144,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         {
             var validator = new PaymentEventSuperficialValidator();
             PaymentCreatedMessage.EarningDetails.ActualEndDate = DateTime.Today;
-            PaymentCreatedMessage.FundingSource = FundingSourceConverter.ConvertToApiFundingSource((FundingSource)7);
+            PaymentCreatedMessage.FundingSource = (Provider.Events.Api.Types.FundingSource) 7;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }

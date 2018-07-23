@@ -306,7 +306,8 @@ this.FeatureBackground();
                         "Installment Amount",
                         "Completion Amount",
                         "Number Of Installments",
-                        "Sending Employer Account Id"});
+                        "Sending Employer Account Id",
+                        "FundingSource"});
             table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice",
@@ -317,7 +318,8 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "100021"});
+                        "100021",
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 2",
@@ -328,7 +330,8 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "100022"});
+                        "100022",
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 3",
@@ -339,7 +342,8 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "100021"});
+                        "100021",
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 4",
@@ -350,7 +354,8 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "12345"});
+                        "12345",
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 5",
@@ -361,7 +366,8 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        "12345"});
+                        "12345",
+                        "Transfer"});
 #line 40
  testRunner.Given("I have made the following payments", ((string)(null)), table3, "Given ");
 #line 47

@@ -20,8 +20,8 @@ namespace SFA.DAS.Forecasting.Application.Converters
 				case FundingSource.FullyFundedSfa:
 					return FundingSourcePayments.FullyFundedSfa;
 				default:
-					return FundingSourcePayments.FullyFundedSfa;
-			}
+				    return FundingSourcePayments.Levy;
+            }
 		}
 
 		public static FundingSource ConvertToApiFundingSource(FundingSourcePayments commitmentFundingSource)
@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Application.Converters
 				case FundingSourcePayments.FullyFundedSfa:
 					return FundingSource.FullyFundedSfa;
 				default:
-					return FundingSource.FullyFundedSfa;
+					return FundingSource.Levy;
 			}
 		}
 	}
