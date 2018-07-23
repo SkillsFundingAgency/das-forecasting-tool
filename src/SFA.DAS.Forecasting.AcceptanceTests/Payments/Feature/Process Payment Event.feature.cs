@@ -350,7 +350,7 @@ this.FeatureBackground();
                         "133.33",
                         "400.00",
                         "12",
-                        ""});
+                        "12345"});
             table3.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 5",
@@ -672,7 +672,8 @@ this.FeatureBackground();
                         "Installment Amount",
                         "Completion Amount",
                         "Number Of Installments",
-                        "Actual End Date"});
+                        "Actual End Date",
+                        "LearnerId"});
             table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 2",
@@ -683,7 +684,8 @@ this.FeatureBackground();
                         "1.00",
                         "400.00",
                         "12",
-                        "Today"});
+                        "Today",
+                        "1"});
             table10.AddRow(new string[] {
                         "133.33",
                         "Test Apprentice 3",
@@ -694,7 +696,8 @@ this.FeatureBackground();
                         "133.33",
                         "1.00",
                         "12",
-                        "Today"});
+                        "Today",
+                        "2"});
 #line 101
  testRunner.Given("I have made the following payments", ((string)(null)), table10, "Given ");
 #line 105

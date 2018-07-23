@@ -70,7 +70,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 
             var commitments = Payments.Select(payment => new TestCommitment
             {
-                ActualEndDate = payment.ActualEndDate,
+                ActualEndDate = null,// payment.ActualEndDate,
                 ApprenticeName = payment.ApprenticeName,
                 ApprenticeshipId = payment.ApprenticeshipId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
                 CompletionAmount = payment.CompletionAmount,
@@ -142,7 +142,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 ApprenticeName = payment.ApprenticeName,
                 CourseLevel = payment.CourseLevel,
                 CourseName = payment.CourseName,
-                Uln = idx,
+                Uln = idx + 1,
                 CourseStartDate = payment.StartDateValue,
                 FundingSource = payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSource.Levy : FundingSource.Transfer
             })
