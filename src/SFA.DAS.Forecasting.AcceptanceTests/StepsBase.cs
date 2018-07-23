@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Application.Commitments.Services;
 using SFA.DAS.Forecasting.Application.Converters;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
@@ -42,6 +44,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
+
+        protected CommitmentsDataService CommitmentsDataService =>NestedContainer.GetInstance<CommitmentsDataService>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
@@ -277,7 +281,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 var isTransferSender = CommitmentType == CommitmentType.TransferSender;
                 var isFundingSourceLevy = commitment.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy);
 
-                DataContext.Commitments.Add(new CommitmentModel
+                var commitmentModel = new CommitmentModel
                 {
                     EmployerAccountId = isTransferSender && isFundingSourceLevy ? EmployerAccountId : receiverId,
                     LearnerId = i + 1,
@@ -297,7 +301,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     FundingSource = CommitmentType == CommitmentType.LevyFunded 
                         ? FundingSource.Levy 
                         : FundingSourceConverter.ConvertToPaymentsFundingSource(commitment.FundingSource)
-                });
+                };
+                CommitmentsDataService.Upsert(commitmentModel).Wait();
             }
 
             DataContext.SaveChanges();
