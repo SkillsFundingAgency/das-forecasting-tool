@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using Dapper;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Converters;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -48,6 +49,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             DataContext.SaveChanges();
         }
 
+        [Given(@"I have a starting blaance of (.*)")]
+        public void GivenIHaveAStartingBlaanceOf(int p0)
+        {
+
+            ScenarioContext.Current.Pending();
+        }
+
+
         [Given(@"I have made the following payments")]
         public void GivenIHaveMadeTheFollowingPayments(Table table)
         {
@@ -77,7 +86,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 CourseLevel = payment.CourseLevel,
                 CourseName = payment.CourseName,
                 EmployerAccountId = Config.EmployerAccountId,
-                FundingSource = payment.FundingSource ?? FundingSource.Levy,
+                FundingSource = payment.FundingSource,
                 InstallmentAmount = payment.InstallmentAmount,
                 LearnerId = payment.LearnerId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
                 NumberOfInstallments = payment.NumberOfInstallments,
@@ -144,8 +153,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 CourseName = payment.CourseName,
                 Uln = idx + 1,
                 CourseStartDate = payment.StartDateValue,
-                FundingSource = payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSource.Levy : FundingSource.Transfer
-            })
+                FundingSource = GetFundingSource(payment)
+			})
             .ToList()
             .ForEach(paymentEvent =>
             {
@@ -155,6 +164,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 var response = HttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
                 Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             });
+        }
+
+        private Provider.Events.Api.Types.FundingSource GetFundingSource(TestPayment payment)
+        {
+            if (payment.FundingSource != FundingSource.Levy)
+            {
+                return FundingSourceConverter.ConvertToApiFundingSource(payment.FundingSource);
+            }
+
+            return payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy) : FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer);
         }
 
         [Then(@"the Forecasting Payment service should store the payment declarations")]

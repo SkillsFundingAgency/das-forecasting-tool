@@ -28,7 +28,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             {
                 LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate)),
                 ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate)),
-                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate))
+                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate)),
+                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId))
             };
 
             return model;
@@ -78,13 +79,20 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
-        private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
+
+		private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
+	    private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
+	    {
+		    return commitment => commitment.EmployerAccountId == employerAccountId
+		                         && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
+		                         && commitment.ActualEndDate == null;
+	    }
 
         public async Task Upsert(CommitmentModel commitment)
         {
