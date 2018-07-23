@@ -279,7 +279,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 var commitment = commitments[i];
 
                 var isTransferSender = CommitmentType == CommitmentType.TransferSender;
-                var isFundingSourceLevy = commitment.FundingSource == FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy);
+                var isFundingSourceLevy = commitment.FundingSource == FundingSource.Levy;
 
                 var commitmentModel = new CommitmentModel
                 {
@@ -298,9 +298,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
-                    FundingSource = CommitmentType == CommitmentType.LevyFunded 
-                        ? FundingSource.Levy 
-                        : FundingSourceConverter.ConvertToPaymentsFundingSource(commitment.FundingSource)
+                    FundingSource =commitment.FundingSource
                 };
                 CommitmentsDataService.Upsert(commitmentModel).Wait();
             }

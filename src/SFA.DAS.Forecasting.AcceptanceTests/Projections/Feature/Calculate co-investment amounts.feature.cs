@@ -113,7 +113,8 @@ this.FeatureBackground();
                         "Start Date",
                         "Installment Amount",
                         "Completion Amount",
-                        "Number Of Installments"});
+                        "Number Of Installments",
+                        "FundingSource"});
             table3.AddRow(new string[] {
                         "Test Apprentice",
                         "Test Course",
@@ -122,7 +123,8 @@ this.FeatureBackground();
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "CoInvestedSfa"});
             table3.AddRow(new string[] {
                         "Test Apprentice 1",
                         "Test Course",
@@ -131,7 +133,8 @@ this.FeatureBackground();
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "CoInvestedSfa"});
             table3.AddRow(new string[] {
                         "Test Apprentice 2",
                         "Test Course 2",
@@ -140,7 +143,8 @@ this.FeatureBackground();
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "CoInvestedSfa"});
             table3.AddRow(new string[] {
                         "Test Apprentice 3",
                         "Test Course",
@@ -149,7 +153,8 @@ this.FeatureBackground();
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "CoInvestedSfa"});
             table3.AddRow(new string[] {
                         "Test Apprentice 4",
                         "Test Course 2",
@@ -158,7 +163,8 @@ this.FeatureBackground();
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "CoInvestedSfa"});
             table3.AddRow(new string[] {
                         "Test Apprentice 5",
                         "Test Course",
@@ -167,7 +173,8 @@ this.FeatureBackground();
                         "Yesterday",
                         "2000",
                         "1200",
-                        "6"});
+                        "6",
+                        "CoInvestedSfa"});
 #line 17
  testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
 #line 26

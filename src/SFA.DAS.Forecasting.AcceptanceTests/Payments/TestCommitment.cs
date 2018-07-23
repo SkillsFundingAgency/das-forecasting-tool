@@ -1,5 +1,6 @@
-﻿using SFA.DAS.Provider.Events.Api.Types;
+﻿
 using System;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
 {

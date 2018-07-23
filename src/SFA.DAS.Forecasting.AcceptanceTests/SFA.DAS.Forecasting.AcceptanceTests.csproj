@@ -159,11 +159,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
     </Compile>
-    <Compile Include="Projections\Feature\CoInvestmentFundedPayments.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CoInvestmentFundedPayments.feature</DependentUpon>
-    </Compile>
     <Compile Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -257,10 +252,6 @@
     <None Include="Projections\Feature\Calculate co-investment amounts.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\CoInvestmentFundedPayments.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CoInvestmentFundedPayments.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

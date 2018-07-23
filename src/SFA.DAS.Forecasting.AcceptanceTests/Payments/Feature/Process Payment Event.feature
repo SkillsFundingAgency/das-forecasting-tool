@@ -57,6 +57,14 @@ Scenario: Ensure receiving employer transfer payments are processed (CI-762)
 	#Then the Forecasting Payment service should store the payment declarations receiving employer 12345 from sending employer 1
 	Then the Forecasting Payment service should store the commitment declarations for receiving employer 12345 from sending employer 1
 
+Scenario: Process payments that are funding source co-investment
+	Given I have made the following payments
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date       | Installment Amount | Completion Amount | Number Of Installments | Sending Employer Account Id | FundingSource |
+	| 133.33         | Test Apprentice   | Test Course | 1            | Test Provider | 16/04/2015 00:00 | 51000             | 510000.00            | 12                     | 12345                          | CoInvestedSfa      |
+	| 133.33         | Test Apprentice 2 | Test Course | 1            | Test Provider | 16/04/2015 00:00 | 51000             | 510000.00            | 12                     | 12345                           | CoInvestedSfa      |	
+	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
+	Then the Forecasting Payment service should store the commitment declarations
+
 Scenario: Ensure payments for new commitments with an invalid installment amount are ignored (CI-797)
 	Given I have made the following payments
 	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |

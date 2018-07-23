@@ -15,13 +15,13 @@ Background:
 
 Scenario: Calculate co-investment after payment run
 	Given the following commitments have been recorded
-	| Apprentice Name   | Course Name   | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
-	| Test Apprentice   | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
-	| Test Apprentice 1 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
-	| Test Apprentice 2 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
-	| Test Apprentice 3 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
-	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
-	| Test Apprentice 5 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      |
+	| Apprentice Name | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | FundingSource |
+	| Test Apprentice | Test Course | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      | CoInvestedSfa |
+	| Test Apprentice 1 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      | CoInvestedSfa |
+	| Test Apprentice 2 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      | CoInvestedSfa |
+	| Test Apprentice 3 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      | CoInvestedSfa |
+	| Test Apprentice 4 | Test Course 2 | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      | CoInvestedSfa |
+	| Test Apprentice 5 | Test Course   | 1            | Test Provider | Yesterday  | 2000               | 1200              | 6                      | CoInvestedSfa |
 
 	When the account projection is triggered after a payment run
 	Then the account projection should be generated
