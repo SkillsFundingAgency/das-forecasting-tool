@@ -236,6 +236,25 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _moqer.GetMock<IAccountProjectionDataSession>().Verify(m => m.Get(ExpectedAccountId), Times.Once);
         }
 
+        [TestCase(0,false)]
+        [TestCase(1,true)]
+        [TestCase(-1,false)]
+        public async Task Then_The_Show_Projection_Flag_Is_Populated(decimal balance, bool showProjection)
+        {
+            //Arrange
+            SetUpProjections(48 + 10);
+            _balance = new BalanceModel { EmployerAccountId = 12345, Amount = balance, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };
+            _moqer.GetMock<IBalanceDataService>()
+                .Setup(x => x.Get(It.IsAny<long>()))
+                .ReturnsAsync(_balance);
+
+            //Act
+            var actual = await _moqer.Resolve<ForecastingOrchestrator>().Balance("ABBA12");
+
+            //Assert
+            Assert.AreEqual(showProjection, actual.ShowProjection);
+        }
+
         /// <summary>
         /// Setting up projections starting from last month. 
         /// </summary>

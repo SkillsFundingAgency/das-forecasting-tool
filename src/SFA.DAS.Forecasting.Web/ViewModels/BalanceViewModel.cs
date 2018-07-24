@@ -18,5 +18,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public decimal CurrentBalance { get; internal set; }
         public decimal OverdueCompletionPayments { get; set; }
         public bool DisplayCoInvestment { get; set; }
+        public bool ShowProjection { get; set; }
     }
 }
