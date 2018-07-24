@@ -70,6 +70,7 @@
     <Build Include="Tables\AccountProjectionCommitment.sql" />
     <Build Include="Tables\FundingSource.sql" />
     <PostDeploy Include="PostDeployment\Script.PostDeployment1.sql" />
+    <PreDeploy Include="PreDeployment\Script.Fix_AccountProjection_ProjectionGenerationType_Type.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Database.publish.xml" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using Dapper;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Converters;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -42,10 +43,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
         [Given(@"I have no existing commitments recorded in the forecasting service")]
         public void GivenIHaveNoExistingCommitments()
         {
+            DataContext.AccountProjectionCommitments.RemoveRange(DataContext.AccountProjectionCommitments.ToList());
             DataContext.Commitments.RemoveRange(DataContext.Commitments
                 .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId || commitment.EmployerAccountId == 112233).ToList());
             DataContext.SaveChanges();
         }
+
+        [Given(@"I have a starting blaance of (.*)")]
+        public void GivenIHaveAStartingBlaanceOf(int p0)
+        {
+
+            ScenarioContext.Current.Pending();
+        }
+
 
         [Given(@"I have made the following payments")]
         public void GivenIHaveMadeTheFollowingPayments(Table table)
@@ -69,14 +79,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 
             var commitments = Payments.Select(payment => new TestCommitment
             {
-                ActualEndDate = payment.ActualEndDate,
+                ActualEndDate = null,// payment.ActualEndDate,
                 ApprenticeName = payment.ApprenticeName,
                 ApprenticeshipId = payment.ApprenticeshipId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
                 CompletionAmount = payment.CompletionAmount,
                 CourseLevel = payment.CourseLevel,
                 CourseName = payment.CourseName,
                 EmployerAccountId = Config.EmployerAccountId,
-                FundingSource = payment.FundingSource ?? FundingSource.Levy,
+                FundingSource = payment.FundingSource,
                 InstallmentAmount = payment.InstallmentAmount,
                 LearnerId = payment.LearnerId == 0 ? new Random(Guid.NewGuid().GetHashCode()).Next(1, 999) : payment.ApprenticeshipId,
                 NumberOfInstallments = payment.NumberOfInstallments,
@@ -87,7 +97,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
 
             InsertCommitments(commitments);
         }
-
 
         [Given(@"I made some invalid payments")]
         public void GivenIHaveMadeSomeInvalidPayments(Table table)
@@ -103,7 +112,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 var id = idx + 1;
                 var payment = Payments[idx];
-                payment.PaymentId =   id.ToString();
+                payment.PaymentId = id.ToString();
                 payment.ApprenticeshipId = payment.ApprenticeshipId > 0 ? payment.ApprenticeshipId : id;
                 payment.ProviderId = id;
             }
@@ -111,7 +120,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 Id = payment.PaymentId,
                 EmployerAccountId = Config.EmployerAccountId,
-                SendingEmployerAccountId = payment.SendingEmployerAccountId,
+                SendingEmployerAccountId = payment.SendingEmployerAccountId == 0 ? Config.EmployerAccountId : payment.SendingEmployerAccountId,
                 Amount = payment.PaymentAmount,
                 CollectionPeriod = new NamedCalendarPeriod
                 {
@@ -142,10 +151,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 ApprenticeName = payment.ApprenticeName,
                 CourseLevel = payment.CourseLevel,
                 CourseName = payment.CourseName,
-                Uln = idx,
+                Uln = idx + 1,
                 CourseStartDate = payment.StartDateValue,
-                FundingSource = payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSource.Levy : FundingSource.Transfer
-            })
+                FundingSource = GetFundingSource(payment)
+			})
             .ToList()
             .ForEach(paymentEvent =>
             {
@@ -155,6 +164,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 var response = HttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
                 Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             });
+        }
+
+        private Provider.Events.Api.Types.FundingSource GetFundingSource(TestPayment payment)
+        {
+            if (payment.FundingSource != FundingSource.Levy)
+            {
+                return FundingSourceConverter.ConvertToApiFundingSource(payment.FundingSource);
+            }
+
+            return payment.SendingEmployerAccountId == 0 || payment.SendingEmployerAccountId == EmployerAccountId ? FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy) : FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer);
         }
 
         [Then(@"the Forecasting Payment service should store the payment declarations")]
@@ -203,7 +222,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             {
                 foreach (var payment in Payments)
                 {
-
                     var commitmentsCount = DataContext.Commitments
                         .Count(m => m.EmployerAccountId == Config.EmployerAccountId
                                  && m.ApprenticeshipId == payment.ApprenticeshipId
@@ -228,7 +246,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                                  && m.ApprenticeshipId == payment.ApprenticeshipId
                                  && m.FundingSource == FundingSource.Transfer
                                  && m.ProviderId == payment.ProviderId);
-
+                                 
                     return Tuple.Create(commitmentsCount == 1, $"{payment.ToJson()}");
                 }
                 return Tuple.Create(false, $"");
@@ -242,9 +260,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             Thread.Sleep(Config.TimeToWait);
 
             var count = DataContext.Payments
-                    .Count(m => m.EmployerAccountId == Config.EmployerAccountId
+             .Count(m => m.EmployerAccountId == Config.EmployerAccountId
                     && m.CollectionPeriod.Year == DateTime.Now.Year
                     && m.CollectionPeriod.Month == DateTime.Now.Month);
+
             var msg = $"Looking for Payments.Employer Account Id: { Config.EmployerAccountId}, Collection Period Year: { DateTime.Now.Year}, Collection Period Month: { DateTime.Now.Month}";
 
             Assert.AreEqual(0, count, message: msg);
@@ -256,7 +275,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             Thread.Sleep(Config.TimeToWait);
             var count = DataContext.Commitments
                 .Count(m => m.EmployerAccountId == Config.EmployerAccountId );
-            var msg = $"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
+                var msg = $"Looking for Commitments. Employer Account Id: {Config.EmployerAccountId}, Collection Period Year: {DateTime.Now.Year}, Collection Period Month: {DateTime.Now.Month}";
 
             Assert.AreEqual(0, count, msg);
         }
@@ -309,8 +328,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             }, $"Failed finding commitment ({apprenticeshipId}) with actual end date");
         }
 
-        [Then(@"apprenticeship with id (.*) should have completion amount of (.*) and montly installment of (.*)")]
-        public void ThenApprenticeshipWithIdShouldHaveCompletionAmountOfAndMontlyInstallnebtOf(int apprenticeshipId, int completionAmount, Decimal installmentAmount)
+        [Then(@"apprenticeship with id (.*) should have completion amount of (.*) and monthly installment of (.*)")]
+        public void ThenApprenticeshipWithIdShouldHaveCompletionAmountOfAndMonthlyInstallnebtOf(int apprenticeshipId, int completionAmount, Decimal installmentAmount)
         {
             WaitForIt(() =>
             {
@@ -318,11 +337,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     .AsNoTracking()
                     .Single(m => m.ApprenticeshipId == apprenticeshipId);
 
-                var msg = $"Looking for Commitment {apprenticeshipId}. CompletionAmount: {commitment.CompletionAmount} and InstallemntAmount: {commitment.MonthlyInstallment}";
+                var msg = $"Looking for Commitment {apprenticeshipId}. CompletionAmount: {commitment.CompletionAmount} and InstallmentAmount: {commitment.MonthlyInstallment}";
 
                 return Tuple.Create(commitment.CompletionAmount == completionAmount && commitment.MonthlyInstallment == installmentAmount, msg);
 
-            }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletoinAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
+            }, $"Failed finding correct values for commitment ({apprenticeshipId}). Expecting CompletionAmount of {completionAmount} and InstallmentAmount of {installmentAmount}");
         }
 
         [Then(@"the Forecasting Payment service should record that the commitment has ended")]
@@ -335,7 +354,5 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                         c.ApprenticeshipId == payment.ApprenticeshipId && c.ActualEndDate != null));
                 },"Failed to find the ended commitment");
         }
-
-
     }
 }

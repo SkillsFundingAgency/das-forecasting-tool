@@ -175,7 +175,8 @@ this.FeatureBackground();
                         "Completion Amount",
                         "Number Of Installments",
                         "Delivery Period Month",
-                        "Delivery Period Year"});
+                        "Delivery Period Year",
+                        "FundingSource"});
             table3.AddRow(new string[] {
                         "166.66667",
                         "Test Apprentice 1",
@@ -187,7 +188,8 @@ this.FeatureBackground();
                         "500.00",
                         "12",
                         "2",
-                        "2018"});
+                        "2018",
+                        "Transfer"});
             table3.AddRow(new string[] {
                         "83.33333",
                         "Test Apprentice 2",
@@ -199,7 +201,8 @@ this.FeatureBackground();
                         "250.00",
                         "24",
                         "2",
-                        "2018"});
+                        "2018",
+                        "Transfer"});
 #line 28
  testRunner.And("payments for the following apprenticeships have been recorded in the Payments ser" +
                     "vice", ((string)(null)), table3, "And ");
