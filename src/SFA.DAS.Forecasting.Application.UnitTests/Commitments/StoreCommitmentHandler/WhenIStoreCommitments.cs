@@ -83,23 +83,5 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                 x.Upsert(It.Is<CommitmentModel>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
         }
 
-        [TestCase(0)]
-        [TestCase(-1)]
-        [TestCase(-100)]
-        public async Task Then_The_Commitment_Is_Not_Upserted_If_CompletionAmount_Is_LessThan_0(decimal completionAmount)
-        {
-            _commitmentModel.CompletionAmount = completionAmount;
-            _paymentMapper.Setup(x =>
-                    x.MapToCommitment(It.Is<PaymentCreatedMessage>(c =>
-                        c.EmployerAccountId.Equals(ExpectedEmployerAccountId))))
-                .Returns(_commitmentModel);
-
-            //Act
-            await _handler.Handle(_message);
-
-            //Assert
-            _employerCommitmentRepostiory.Verify(x =>
-                x.Upsert(It.Is<CommitmentModel>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))), Times.Never);
-        }
     }
 }
