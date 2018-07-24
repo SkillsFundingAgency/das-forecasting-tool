@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public DateTime? ApprenticeshipCourseStartDate;
         public int ApprenticeshipCourseLevel;
         public string ApprenticeName;
-        public FundingSource FundingSource;
+        public SFA.DAS.Provider.Events.Api.Types.FundingSource FundingSource;
         public long? SenderAccountId;
     }
 }

@@ -170,6 +170,7 @@
       <DependentUpon>Generate Training Cost Projections.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Steps\CalculateCo_InvestmentAmountsCI_570Steps.cs" />
+    <Compile Include="Projections\Steps\CoInvestmentFundedPayments.cs" />
     <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />

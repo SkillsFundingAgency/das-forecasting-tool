@@ -1,4 +1,5 @@
 ﻿using System;
+using SFA.DAS.Forecasting.Application.Converters;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -36,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
                 },
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
 				ReceivedTime = DateTime.Now,
-                FundingSource = paymentCreatedMessage.FundingSource
+                FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource)
 			};
 		}
 
@@ -59,7 +60,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				CourseName = paymentCreatedMessage.CourseName,
 				CourseLevel = paymentCreatedMessage.CourseLevel,
                 SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
-                FundingSource = paymentCreatedMessage.FundingSource
+                FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource)
 			};
 
             if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
