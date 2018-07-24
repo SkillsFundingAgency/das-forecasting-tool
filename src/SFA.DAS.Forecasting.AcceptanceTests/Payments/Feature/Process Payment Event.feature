@@ -91,16 +91,16 @@ Scenario: Ensure payments for new commitments with an invalid payment amount are
 
 Scenario: Ensure payments for new commitments with an actual end date are ignored (CI-797)
 	Given I have made the following payments
-	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
-	| 133.33         | Test Apprentice 5 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
+	| 133.33         | Test Apprentice 5 | Test Course | 1            | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
 #	Then the Forecasting Payment service should not store the payments
 	Then the Forecasting Payment service should not store commitments
 
 Scenario: Payment with an invalid payment amount but also has an actual end date for an existing commitment (CI-797)
 	Given I have made the following payments
-	| Payment Amount | Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
-	| 0              | Test Apprentice 1 | Test Course | 1            | Test Provider | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
+	| Payment Amount | Apprentice Name   | Course Name | Course Level | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
+	| 0              | Test Apprentice 1 | Test Course | 1            | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
 	And there is a corresponding commitment stored for each of the payments
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
 	Then the Forecasting Payment service should record that the commitment has ended

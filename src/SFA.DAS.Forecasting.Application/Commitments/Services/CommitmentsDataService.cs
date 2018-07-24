@@ -104,7 +104,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 new SqlParameter("@learnerId", commitment.LearnerId),
                 new SqlParameter("@providerId", commitment.ProviderId),
 
-                new SqlParameter("@providerName", commitment.ProviderName),
+                new SqlParameter("@providerName", string.IsNullOrEmpty(commitment.ProviderName) ? "No Name Provided" : commitment.ProviderName),
                 new SqlParameter("@apprenticeshipId", commitment.ApprenticeshipId),
                 new SqlParameter("@apprenticeName", commitment.ApprenticeName),
 
