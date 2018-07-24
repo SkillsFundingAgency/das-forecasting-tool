@@ -381,6 +381,7 @@
     <Compile Include="ViewModels\EstimationApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\EstimationPageViewModel.cs" />
     <Compile Include="ViewModels\EstimationTransferAllowanceVewModel.cs" />
+    <Compile Include="ViewModels\StartViweModel.cs" />
     <Compile Include="ViewModels\TypeOfApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
     <Compile Include="ViewModels\Validation\EditApprenticeshipsViewModelValidator.cs" />

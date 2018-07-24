@@ -34,20 +34,28 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("start-transfer", Name = "EstimationStart")]
+        [Route("start", Name = "EstimationStart")]
         public ActionResult StartEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
-            return View();
+            return View("StartEstimation", new StartViweModel { IsTransferFunded = null });
+        }
+
+        [HttpGet]
+        [Route("start-transfer", Name = "StartTransferEstimation")]
+        public ActionResult StartTransferEstimation(string hashedAccountId)
+        {
+            ViewBag.HashedAccountId = hashedAccountId;
+            return View("StartEstimation", new StartViweModel { IsTransferFunded = true });
         }
 
         [HttpGet]
         [Route("start-redirect", Name = "EstimationStartRedirect")]
-        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
+        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId, bool? isTransferFunded)
         {
             return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
                 ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName })
-                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
+                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName, isTransferFunded = isTransferFunded });
         }
 
         [HttpGet]
@@ -74,14 +82,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimationName}/apprenticeship/typeof")]
+        [Route("{estimationName}/apprenticeship/typeofapprenticeship")]
         public ActionResult TypeOfApprenticeships(string hashedAccountId, string estimationName)
         {
             return View(new TypeOfApprenticeshipViewModel { IsTransferFunded = null });
         }
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/typeof")]
+        [Route("{estimationName}/apprenticeship/typeofapprenticeship")]
         public ActionResult PostTypeOfApprenticeships(TypeOfApprenticeshipViewModel model)
         {
             if(model.IsTransferFunded == null)
