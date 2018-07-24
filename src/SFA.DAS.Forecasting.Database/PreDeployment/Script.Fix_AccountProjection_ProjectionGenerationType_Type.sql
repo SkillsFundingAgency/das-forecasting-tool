@@ -33,6 +33,11 @@ IF EXISTS(SELECT * FROM sys.indexes WHERE name='idx_account_projection' AND obje
 BEGIN
 	drop index idx_account_projection ON [dbo].[AccountProjection]
 END
+IF EXISTS(SELECT * FROM sys.indexes WHERE name='idx_account_projection_account_date' AND object_id = OBJECT_ID('[dbo].[AccountProjection]'))
+BEGIN
+	drop index idx_account_projection_account_date ON [dbo].[AccountProjection]
+END
+
 IF EXISTS(SELECT * FROM sys.indexes WHERE name='IDX_Payment_EmployerAccountId' AND object_id = OBJECT_ID('[dbo].[AccountProjection]'))
 BEGIN
 	drop index IDX_Payment_EmployerAccountId ON [dbo].[AccountProjection]
@@ -94,7 +99,7 @@ BEGIN
 END
 
 -- Payment
-IF EXISTS(SELECT * FROM sys.indexes WHERE name='IDX_Payment_EmployerAccountId' AND object_id = OBJECT_ID('[dbo].[AccountProjection]'))
+IF EXISTS(SELECT * FROM sys.indexes WHERE name='IDX_Payment_EmployerAccountId' AND object_id = OBJECT_ID('[dbo].[Payment]'))
 BEGIN
 	drop index IDX_Payment_EmployerAccountId ON [dbo].[Payment]
 END
