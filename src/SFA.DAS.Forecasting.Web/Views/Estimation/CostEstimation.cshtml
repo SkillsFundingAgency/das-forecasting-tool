@@ -89,8 +89,8 @@
             
             <div id="account-funds" class="tab-content" style="">
                 <div class="grid-row">
-                    <div class="column-half">
-                        <h2 class="heading-large">Account Funds</h2>
+                    <div class="column-full">
+                        <h2 class="heading-medium">This table shows your estimated costs against your account projection</h2>
                         <p><b>Opening balance: </b>@Model.AccountFunds.OpeningBalance.FormatCost()</p>
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
@@ -116,9 +116,12 @@
                                     <thead>
                                     <tr>
                                         <th class="nowrap">Date</th>
-                                        <th class="financial">Actual Costs</th>
-                                        <th class="financial">Estimated Costs</th>
-                                        <th class="financial">Balance</th>
+                                        <th class="financial" 
+                                            title="
+Cost of apprenticeships that have already started and currently being paid for.
+Apprenticeships that have not started or been paid for are not included in this colum" >Your current costs</th>
+                                        <th class="financial" title="Cost of apprenticeships you’ve estimated using this tool" >Cost of estimated apprenticeships</th>
+                                        <th class="financial" title="The estimated funds you have left at the end of the month" >Balance</th>
                                     </tr>
                                     </thead>
                                     @:<tbody>
