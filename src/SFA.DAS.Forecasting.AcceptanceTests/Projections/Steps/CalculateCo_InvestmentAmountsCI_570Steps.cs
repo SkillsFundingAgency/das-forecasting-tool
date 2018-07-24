@@ -1,5 +1,8 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using System.Linq;
+using NUnit.Framework;
+using SFA.DAS.Forecasting.Domain.Commitments;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
@@ -21,34 +24,50 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             var projection = AccountProjections
                 .OrderBy(m => m.Year)
                 .ThenBy(m => m.Month)
-                .Skip(1)
                 .First();
 
-            projection.FutureFunds.Should().Be(0);
+            projection.FutureFunds.Should().Be(p0);
         }
 
-        [Then(@"the employer co-investment amount is 10% of the negative balance")]
+        [Then(@"the employer co-investment amount is 10% of the remaining cost of training")]
         public void ThenTheEmployerCo_InvestmentAmountIsOfTheNegativeBalance()
         {
             var projection = AccountProjections
                 .OrderBy(m => m.Year)
                 .ThenBy(m => m.Month)
-                .Skip(1)
                 .First();
 
-            projection.CoInvestmentEmployer.Should().Be(100);
+            var currentBalance = Convert.ToDecimal(ScenarioContext.Current["current_balance"]);
+
+            if (currentBalance < 0)
+            {
+                currentBalance = 0;
+            }
+
+            var coInvestmentAmount = projection.CoInvestmentEmployer;
+            var costOfTraining = projection.LevyFundedCostOfTraining - currentBalance;
+
+            Assert.AreEqual(0.1m, coInvestmentAmount/costOfTraining);
         }
         
-        [Then(@"the government co-investment amount is 90% of the negative value")]
+        [Then(@"the government co-investment amount is 90% of the remaining cost of training")]
         public void ThenTheGovernmentCo_InvestmentAmountIsOfTheNegativeValue()
         {
             var projection = AccountProjections
                 .OrderBy(m => m.Year)
                 .ThenBy(m => m.Month)
-                .Skip(1)
                 .First();
+            var currentBalance = Convert.ToDecimal(ScenarioContext.Current["current_balance"]);
 
-            projection.CoInvestmentGovernment.Should().Be(900);
+            if (currentBalance < 0)
+            {
+                currentBalance = 0;
+            }
+
+            var coInvestmentAmount = projection.CoInvestmentGovernment;
+            var costOfTraining = projection.LevyFundedCostOfTraining - currentBalance;
+
+            Assert.AreEqual(0.9m, coInvestmentAmount/ costOfTraining );
         }
     }
 }
