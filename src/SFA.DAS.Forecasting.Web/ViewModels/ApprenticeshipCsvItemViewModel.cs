@@ -6,7 +6,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
     {
         [Name("Start Date")]
         public string StartDate { get; set; }
-        [Name("End Date")]
+        [Name("Planned End Date")]
         public string PlannedEndDate { get; set; }
         [Name("Apprenticeship")]
         public string Apprenticeship { get; set; }
@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int? ApprenticeshipLevel { get; set; }
         [Name("Transfer to Employer")]
         public string TransferToEmployer { get; set; }
-        [Name("Uln")]
+        [Name("ULN")]
         public string Uln { get; set; }
         [Name("Apprentice Name")]
         public string ApprenticeName { get; set; }

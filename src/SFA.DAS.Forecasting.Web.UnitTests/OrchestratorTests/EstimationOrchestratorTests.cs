@@ -7,6 +7,7 @@ using AutoMoq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -33,7 +34,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .Returns(ExpectedAccountId);
 
             _mocker.GetMock<CurrentBalance>()
-                .Setup(x => x.RefreshBalance()).ReturnsAsync(true);
+                .Setup(x => x.RefreshBalance(It.IsAny<bool>())).ReturnsAsync(true);
 
             _mocker.GetMock<ICurrentBalanceRepository>()
                 .Setup(x => x.Get(ExpectedAccountId))

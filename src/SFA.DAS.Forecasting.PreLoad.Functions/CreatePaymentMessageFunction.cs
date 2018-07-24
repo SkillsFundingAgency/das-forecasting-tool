@@ -110,7 +110,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
-                FundingSource = payment.FundingSource
+                FundingSource = payment.FundingSource,
             };
         }
 
@@ -144,7 +144,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
-                FundingSource = payment.FundingSource
+                FundingSource = payment.FundingSource, 
+                SendingEmployerAccountId = payment.SenderAccountId ?? payment.AccountId
             };
         }
     }

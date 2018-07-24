@@ -7,13 +7,14 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 {
     [TestFixture]
     public class EmployerCommitmentsTests
     {
-        protected List<CommitmentModel> Commitments;
+        protected EmployerCommitmentsModel Commitments;
         protected AutoMoqer Moqer;
         private DateTime startDate;
         private DateTime endDate;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             Moqer = new AutoMoqer();
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddYears(1);
             startDate = endDate.AddYears(-1);
-            Commitments = new List<CommitmentModel>();
+            Commitments = new EmployerCommitmentsModel(); 
         }
 
         private EmployerCommitments GetEmployerCommitments(long employerAccountId = 1) =>
@@ -33,7 +34,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Includes_Installment_For_Each_Month_Including_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -61,7 +62,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void If_Last_Day_Of_Month_Last_Payment_Is_Made_In_Month_After_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -84,7 +85,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Aggregates_Correct_Installments_In_Month()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -95,7 +96,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 2,
                 FundingSource = Models.Payments.FundingSource.Levy
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 3,
@@ -106,7 +107,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 5,
                 FundingSource = Models.Payments.FundingSource.Levy
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 4,
@@ -117,7 +118,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 10,
                 FundingSource = Models.Payments.FundingSource.Levy
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.SendingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 4,
@@ -142,7 +143,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Aggregates_Correct_Installments_In_Month_For_Transfer()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.ReceivingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 SendingEmployerAccountId = 999,
@@ -154,7 +155,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 2,
                 FundingSource = Models.Payments.FundingSource.Transfer
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.ReceivingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 SendingEmployerAccountId = 999,
@@ -166,7 +167,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 5,
                 FundingSource = Models.Payments.FundingSource.Transfer
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 4,
@@ -196,7 +197,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Includes_Correct_Installment_Commitments_In_Month()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 1,
                 EmployerAccountId = 1,
@@ -207,7 +208,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 2
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 2,
                 EmployerAccountId = 1,
@@ -218,7 +219,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 MonthlyInstallment = 15,
                 NumberOfInstallments = 5
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 3,
                 EmployerAccountId = 1,
@@ -241,7 +242,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Get_Total_Cost_Of_Training_Includes_Is_Included_On_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -253,7 +254,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 FundingSource = Models.Payments.FundingSource.Levy
             });
 
-            Commitments.Add(new CommitmentModel
+            Commitments.ReceivingEmployerTransferCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -273,7 +274,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Completion_Payments_Are_Aggregated_In_Month_After_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
@@ -285,7 +286,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 CompletionAmount = 30,
                 FundingSource = Models.Payments.FundingSource.Levy
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 3,
@@ -307,7 +308,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         [Test]
         public void Completion_Payments_Are_Included_In_Month_After_Planned_End_Date()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 1,
                 EmployerAccountId = 1,
@@ -319,7 +320,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 NumberOfInstallments = 2,
                 CompletionAmount = 30
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 2,
                 EmployerAccountId = 1,
@@ -339,46 +340,141 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         }
 
         [Test]
-        public void Gets_Correct_Unallocated_Completion_Amount()
+        public void Get_Unallocated_Completion_Amount_Ignores_Completions_Included_In_The_Projection()
         {
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 1,
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = DateTime.Today,
-                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(2),
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth(),
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 2,
                 CompletionAmount = 30
             });
-            Commitments.Add(new CommitmentModel
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 2,
                 EmployerAccountId = 1,
                 ApprenticeshipId = 3,
                 LearnerId = 4,
-                StartDate = DateTime.Today,
-                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-5),
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 5,
                 CompletionAmount = 50
             });
-            Commitments.Add(new CommitmentModel
+
+            var employerCommitments = GetEmployerCommitments();
+            Assert.AreEqual(0, employerCommitments.GetUnallocatedCompletionAmount());
+        }
+
+        [Test]
+        public void Get_Unallocated_Completion_Amount_Includes_Completions_That_Have_Ended_A_Month_Or_More_Before_The_Start_Of_The_Projection()
+        {
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 1,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 2,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 3,
+                LearnerId = 4,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-2),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 5,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 2,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 3,
+                LearnerId = 4,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-3),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 5,
+                CompletionAmount = 100, 
+                FundingSource = FundingSource.Levy
+            });
+            var employerCommitments = GetEmployerCommitments();
+            Assert.AreEqual(200m, employerCommitments.GetUnallocatedCompletionAmount());
+        }
+
+        [Test]
+        public void Gets_Correct_Unallocated_Completion_Amount()
+        {
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 1,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth(),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                CompletionAmount = 30,
+                FundingSource = FundingSource.Levy
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 2,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 3,
+                LearnerId = 4,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-2),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 5,
+                CompletionAmount = 50,
+                FundingSource = FundingSource.Levy
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
                 Id = 3,
                 EmployerAccountId = 1,
                 ApprenticeshipId = 4,
                 LearnerId = 5,
-                StartDate = DateTime.Today,
+                StartDate = DateTime.Today.AddMonths(-10),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-5),
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 5,
-                CompletionAmount = 50
+                CompletionAmount = 50,
+                FundingSource = FundingSource.Levy
             });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 4,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 5,
+                LearnerId = 6,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                CompletionAmount = 30,
+                FundingSource = FundingSource.Levy
+            });
+
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(100, employerCommitments.GetUnallocatedCompletionAmount());
+            Assert.AreEqual(100m, employerCommitments.GetUnallocatedCompletionAmount());
         }
     }
 }

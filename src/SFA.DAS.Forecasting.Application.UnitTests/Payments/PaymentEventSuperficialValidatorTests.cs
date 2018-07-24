@@ -105,7 +105,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
         public void Fails_If_Funding_Source_Is_MoreThan_2()
         {
             var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.FundingSource = (FundingSource)0;
+            PaymentCreatedMessage.FundingSource = (FundingSource)4;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeFalse();
         }
@@ -126,6 +126,16 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             PaymentCreatedMessage.SendingEmployerAccountId = PaymentCreatedMessage.EmployerAccountId;
             var result = validator.Validate(PaymentCreatedMessage);
             result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Actual_End_date_Is_Something_Message_Is_Still_Validated()
+        {
+            var validator = new PaymentEventSuperficialValidator();
+            PaymentCreatedMessage.EarningDetails.ActualEndDate = DateTime.Today;
+            PaymentCreatedMessage.FundingSource = (FundingSource)4;
+            var result = validator.Validate(PaymentCreatedMessage);
+            result.IsValid.Should().BeFalse();
         }
 
         [Test]

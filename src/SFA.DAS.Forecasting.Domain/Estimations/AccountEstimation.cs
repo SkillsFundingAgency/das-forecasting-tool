@@ -12,7 +12,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         internal AccountEstimationModel Model { get; }
         private readonly IVirtualApprenticeshipValidator _validator;
 
-        public IReadOnlyCollection<VirtualApprenticeship> VirtualApprenticeships => Model.Apprenticeships.AsReadOnly();
+        public IReadOnlyCollection<VirtualApprenticeship> Apprenticeships => Model.Apprenticeships;
+
         public string Name => Model.EstimationName;
         public bool HasValidApprenticeships => Model.Apprenticeships.Any(); //TODO: will also need to make sure all courses start after today
         public long EmployerAccountId => Model.EmployerAccountId;
@@ -44,6 +45,24 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             virtualApprenticeship.TotalInstallmentAmount = ((totalCost / 100) * 80) / numberOfMonths;
             Model.Apprenticeships.Add(virtualApprenticeship);
             return virtualApprenticeship;
+        }
+
+        public VirtualApprenticeship UpdateApprenticeship(string apprenticeshipId, int startMonth, int startYear, int numberOfApprentices, short totalInstallments, decimal totalCost)
+        {
+            var apprenticeship = Model.Apprenticeships.Single(m => m.Id == apprenticeshipId);
+            apprenticeship.TotalCost = totalCost;
+            apprenticeship.TotalInstallments = totalInstallments;
+            apprenticeship.ApprenticesCount = numberOfApprentices;
+            apprenticeship.StartDate = new DateTime(startYear, startMonth, 1);
+
+            var validationResults = _validator.Validate(apprenticeship);
+            if (!validationResults.All(result => result.IsValid))
+                throw new InvalidOperationException($"The virtual apprenticeship is invalid.  Failures: {validationResults.Aggregate(string.Empty, (currText, failure) => $"{currText}{failure}, ")}");
+
+            apprenticeship.TotalCompletionAmount = (totalCost / 100) * 20;
+            apprenticeship.TotalInstallmentAmount = ((totalCost / 100) * 80) / totalInstallments;
+
+            return apprenticeship;
         }
 
         public bool RemoveVirtualApprenticeship(string virtualApprenticeshipId)

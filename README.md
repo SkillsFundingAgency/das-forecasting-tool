@@ -12,7 +12,7 @@ The following needs to be installed on your local machine:
 
 * Visual Studio 2017
 * [Azure Cosmos DB Emulator](https://cosmosdbportalstorage.blob.core.windows.net/emulator/2018.04.20-1.22.0/Azure%20Cosmos%20DB.Emulator.msi)
-* [Azure Function emulator version 1.0.10] (https://github.com/Azure/azure-functions-core-tools/releases/tag/1.0.10)
+* [Azure Function emulator version 1.0.10](https://github.com/Azure/azure-functions-core-tools/releases/tag/1.0.10)
 
 ### Setup
 
@@ -23,6 +23,7 @@ The following needs to be installed on your local machine:
 
 Running the acceptance tests will populate the database with a set of data - the connection string in the app.config file for the acceptance tests may need updating.
 
+To load apprenticeship courses into CosmosDB function run **SFA.DAS.Forecasting.ApprenticeshipCourses.Functions**.
 
 ### Routes for test data
 
@@ -35,3 +36,7 @@ from localhost the following screens are available
 ```
 /accounts/MDPP87/forecasting/projections
 ```
+
+### Tests
+
+For some acceptance tests the [MYA](https://github.com/SkillsFundingAgency/das-employerapprenticeshipsservice) database is required. 

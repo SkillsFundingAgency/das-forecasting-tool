@@ -24,7 +24,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 async (container, logger) => {
 
                     // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
-                    //  --> Save to TS
                     logger.Info($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
 
                     var paymentDataService = container.GetInstance<PaymentApiDataService>();

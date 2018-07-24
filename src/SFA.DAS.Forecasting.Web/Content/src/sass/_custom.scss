@@ -186,6 +186,7 @@ only screen and (max-width: 480px) {
 
 
 
+#estimate-edit-apprenticeship,
 #estimate-add-apprenticeship {
     .no-of-apprentice,
     .no-of-months {
@@ -193,9 +194,12 @@ only screen and (max-width: 480px) {
             width: 50px;
         }
     }
+
+    .levy-value {
     .total-funding-cost {
         width: 200px;
     }
+  }
 }
 
 
@@ -229,9 +233,27 @@ only screen and (max-width: 480px) {
         }
     }
 }
+
+details.projection-survey {
+    border: solid #005ea5 10px;
+    background-color: #005ea5;
+    padding-top: 10px;
+
+    summary {
+        width: 100%;
+        background-color: #005ea5;
+        color: white;
+    }
+
+    iframe {
+        width: 99%;
+        height: 40em;
+    }
+}
+
 // END Funding projection
 /*coinvestment table*/
-#balancesheet {
+.balancesheet, #balancesheet {
     .co-invest-head {
         text-align: center;
     }
@@ -288,3 +310,30 @@ table.small th, table.small td, table.small .form-hint {
 }
 
 // END Estimation Style
+
+// Tooltip styles
+
+#BalanceSheet-Tables, #AccountFunds-Tables {
+    .tip-info {
+        font-weight: normal;
+        background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
+        background-size: 18px;
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        background-position-y: bottom;
+
+        .info-title {
+            padding-right: 22px;
+            display: block;
+            color: #005ea5;
+            text-decoration: underline;
+        }
+    }
+}
+
+.tippy-popper {
+    .tippy-content{
+        text-align:center;
+    }
+}

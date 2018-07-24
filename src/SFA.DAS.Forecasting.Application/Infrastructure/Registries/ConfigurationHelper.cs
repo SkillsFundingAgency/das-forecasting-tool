@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
             return 
-                IsDevEnvironment
+                IsDevOrAtEnvironment
                 ? new AccountApiConfiguration
                 {
                     Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static PaymentsEventsApiConfiguration GetPaymentsEventsApiConfiguration()
         {
-            return IsDevEnvironment
+            return IsDevOrAtEnvironment
                 ? new PaymentsEventsApiConfiguration
                 {
                     ApiBaseUrl = CloudConfigurationManager.GetSetting("PaymentsEvent-ApiBaseUrl"),
@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public static string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return IsDevEnvironment || !isSensitive
+            return IsDevOrAtEnvironment || !isSensitive
                 ? value
                 : GetSecret(keyName).Result;
         }
@@ -72,15 +72,16 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             if (string.IsNullOrEmpty(connectionString))
                 return GetAppSetting(name, true);
 
-            return IsDevEnvironment
+            return IsDevOrAtEnvironment
                 ? connectionString
                 : GetSecret(name).Result;
         }
 
-        public static bool IsDevEnvironment =>
+        public static bool IsDevOrAtEnvironment =>
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("AT") ?? false);
 
         private static async Task<string> GetSecret(string secretName)
         {

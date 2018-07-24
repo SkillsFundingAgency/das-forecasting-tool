@@ -89,15 +89,15 @@
             
             <div id="account-funds" class="tab-content" style="">
                 <div class="grid-row">
-                    <div class="column-half">
-                        <h2 class="heading-large">Account Funds</h2>
+                    <div class="column-full">
+                        <h2 class="heading-medium">This table shows your estimated costs against your account projection</h2>
                         <p><b>Opening balance: </b>@Model.AccountFunds.OpeningBalance.FormatCost()</p>
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
                 </div>
                 
                 <div class="grid-row">
-                    <div class="column-full">
+                    <div class="column-full" id="AccountFunds-Tables">
                         
                             @{
                                 var newFinancialYearAccountFunds = true;
@@ -121,13 +121,25 @@
                                             </p>
                                         </div>
                                     }
-                                    @:<table class="small responsive">
+                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+                                    @:<table class="small">
                                     <thead>
                                     <tr>
                                         <th class="nowrap">Date</th>
-                                        <th class="financial">Actual Costs</th>
-                                        <th class="financial">Estimated Costs</th>
-                                        <th class="financial">Balance</th>
+                                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this colum">
+                                            Your current costs
+                                            <br />
+                                            <span class="tip-info"><span class="info-title">info</span></span>
+                                        </th>
+                                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool" >Cost of estimated apprenticeships
+                                            <br />
+                                            <span class="tip-info"><span class="info-title">info</span></span>
+                                        </th>
+                                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                            Balance
+                                            <br />
+                                            <span class="tip-info"><span class="info-title">info</span></span>
+                                        </th>
                                     </tr>
                                     </thead>
                                     @:<tbody>
@@ -157,6 +169,7 @@
 
             </div>
 
+
             <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
                 @if (Model.TransferAllowances != null)
                 {
@@ -175,13 +188,13 @@
                             var endYear = startDateOfEstimationYear.Month < 3 ? costEstimate.Date.ToString("yyyy") : costEstimate.Date.AddYears(1).ToString("yyyy");
 
                             <h3 class="heading-medium">@costEstimate.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-                            @:<table class="small responsive">
+                            @:<table class="small">
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        <th>Actual transfer costs</th>
-                                        <th>Estimated costs</th>
-                                        <th>Remaining transfer allowance</th>
+                                        <th class="financial">Actual transfer costs</th>
+                                        <th class="financial">Estimated costs</th>
+                                        <th class="financial">Remaining transfer allowance</th>
                                     </tr>
                                 </thead>
                                 @:<tbody class="@tableBodyClass">
@@ -190,10 +203,10 @@
                                 }
 
                                 <tr class="@tableRowClass">
-                                    <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
-                                    <td>@costEstimate.ActualCost.FormatCost()</td>
-                                    <td>@costEstimate.EstimatedCost.FormatCost()</td>
-                                    <td class="@tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+                                    <td >@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                    <td class="financial">@costEstimate.ActualCost.FormatCost()</td>
+                                    <td class="financial">@costEstimate.EstimatedCost.FormatCost()</td>
+                                    <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
                                 </tr>
 
                                 if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Last().Equals(costEstimate))
@@ -237,22 +250,28 @@
                             <th>Monthly payment</th>
                             <th>Completion payment</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
 
                         @foreach (var apprenticeship in Model.Apprenticeships.VirtualApprenticeships)
                         {
-                            <tr>
-                                <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
-                                <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
-                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
-                                <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
-                                <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
-                                <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
-                                <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
-                                <td> @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id }) </td>
-                            </tr>
+                        <tr>
+                            <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
+                            <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
+                            <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
+                            <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
+                            <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
+                            <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
+                            <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
+                            <td>
+                                @Html.RouteLink("Edit", "EditApprenticeships", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, apprenticeshipsId = apprenticeship.Id })
+                            </td>
+                            <td>
+                                @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id })
+                            </td>
+                        </tr>
                         }
                     </tbody>
 

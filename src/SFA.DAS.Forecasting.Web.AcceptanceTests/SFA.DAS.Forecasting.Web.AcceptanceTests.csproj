@@ -115,95 +115,95 @@
   <ItemGroup>
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Features\DisplayModelledApprenticeships.feature.cs">
+    <Compile Include="Features\Estimation\DisplayModelledApprenticeships.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DisplayModelledApprenticeships.feature</DependentUpon>
     </Compile>
-    <Compile Include="Projections\Features\DownloadForecastBalanceSheet.feature.cs">
+    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DownloadForecastBalanceSheet.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\EstimateCostsPage.feature.cs">
+    <Compile Include="Features\Estimation\EstimateCostsPage.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EstimateCostsPage.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\EstimatorStartPage.feature.cs">
+    <Compile Include="Features\Estimation\EstimatorStartPage.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EstimatorStartPage.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\FundingProjectionPage _Accountprojection.feature.cs">
+    <Compile Include="Features\Projection\FundingProjectionPage_Accountprojection.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>FundingProjectionPage _Accountprojection.feature</DependentUpon>
+      <DependentUpon>FundingProjectionPage_Accountprojection.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\RemoveModelledApprenticeship.feature.cs">
+    <Compile Include="Features\Estimation\RemoveModelledApprenticeship.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RemoveModelledApprenticeship.feature</DependentUpon>
     </Compile>
     <Compile Include="FileManager.cs" />
-    <Compile Include="Forecasting Dashboard.feature.cs">
+    <Compile Include="Features\ForecastingDashboard.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Forecasting Dashboard.feature</DependentUpon>
+      <DependentUpon>ForecastingDashboard.feature</DependentUpon>
     </Compile>
     <Compile Include="ForecastingDashboardSteps.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Security\Feature\RedirectToLoginPage.feature.cs">
+    <Compile Include="Features\Security\RedirectToLoginPage.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RedirectToLoginPage.feature</DependentUpon>
     </Compile>
-    <Compile Include="Security\Steps\RedirectToLoginPageSteps.cs" />
+    <Compile Include="StepDefinition\Security\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DisplayModelledApprenticeshipsSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />
     <Compile Include="StepDefinition\EstimatorStartPageSteps.cs" />
     <Compile Include="StepDefinition\FundingProjectionPage_AccountprojectionSteps.cs" />
-    <Compile Include="StepsBase.cs" />
+    <Compile Include="StepDefinition\StepsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Features\DisplayModelledApprenticeships.feature">
+    <None Include="Features\Estimation\DisplayModelledApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DisplayModelledApprenticeships.feature.cs</LastGenOutput>
     </None>
-    <None Include="Projections\Features\DownloadForecastBalanceSheet.feature">
+    <None Include="Features\Projection\DownloadForecastBalanceSheet.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>DownloadForecastBalanceSheet.feature.cs</LastGenOutput>
     </None>
-    <None Include="Features\EstimateCostsPage.feature">
+    <None Include="Features\Estimation\EstimateCostsPage.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>EstimateCostsPage.feature.cs</LastGenOutput>
     </None>
-    <None Include="Features\EstimatorStartPage.feature">
+    <None Include="Features\Estimation\EstimatorStartPage.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>EstimatorStartPage.feature.cs</LastGenOutput>
     </None>
-    <None Include="Features\FundingProjectionPage _Accountprojection.feature">
+    <None Include="Features\Projection\FundingProjectionPage_Accountprojection.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>FundingProjectionPage _Accountprojection.feature.cs</LastGenOutput>
+      <LastGenOutput>FundingProjectionPage_Accountprojection.feature.cs</LastGenOutput>
     </None>
-    <None Include="Features\RemoveModelledApprenticeship.feature">
+    <None Include="Features\Estimation\RemoveModelledApprenticeship.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>RemoveModelledApprenticeship.feature.cs</LastGenOutput>
     </None>
-    <None Include="Forecasting Dashboard.feature">
+    <None Include="Features\ForecastingDashboard.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Forecasting Dashboard.feature.cs</LastGenOutput>
+      <LastGenOutput>ForecastingDashboard.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Security\Feature\RedirectToLoginPage.feature">
+    <None Include="Features\Security\RedirectToLoginPage.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>RedirectToLoginPage.feature.cs</LastGenOutput>
     </None>
@@ -229,9 +229,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

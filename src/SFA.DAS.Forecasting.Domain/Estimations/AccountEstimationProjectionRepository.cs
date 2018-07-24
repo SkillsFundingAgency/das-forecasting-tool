@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Domain.Estimations
 {
@@ -33,11 +35,21 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation)
         {
             var balance = await _currentBalanceRepository.Get(accountEstimation.EmployerAccountId);
-            var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.VirtualApprenticeships);
+            var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.Apprenticeships);
 
             var actualProjections = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
 
-            var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, commitments);
+            var employerCommitmentsModel = new EmployerCommitmentsModel
+            {
+                SendingEmployerTransferCommitments = commitments
+                    .Where(m => m.FundingSource == Models.Payments.FundingSource.Transfer || m.FundingSource == 0)
+                    .ToList(),
+                LevyFundedCommitments = commitments
+                    .Where(m => m.FundingSource == Models.Payments.FundingSource.Levy)
+                    .ToList()
+            };
+
+            var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, employerCommitmentsModel);
             var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);
 
             return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService);

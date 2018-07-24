@@ -22,9 +22,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Given(@"that I'm on the estimator start page")]
         public void GivenThatIMOnTheEstimatorStartPage()
         {
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
-            var financePage = accountHomepage.OpenFinance();
-            financePage.OpenFundingProjection();
+            if (!WebSite.IsLocalhost)
+            {
+                var accountHomepage = WebSite.NavigateToAccountHomePage();
+                var financePage = accountHomepage.OpenFinance();
+                financePage.OpenFundingProjection();
+            }
+
             WebSite.NavigateToEstimateFundsStartPage();
         }
         

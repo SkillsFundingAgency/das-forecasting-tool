@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         protected AutoMoqer Moqer { get; private set; }
         private Account _account;
         private CommitmentModel _commitment;
-        private List<CommitmentModel> _commitments;
+        private EmployerCommitmentsModel _commitments;
 
         [SetUp]
         public void SetUp()
@@ -40,7 +40,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 CompletionAmount = 3000,
                 FundingSource = Models.Payments.FundingSource.Levy
             };
-            _commitments = new List<CommitmentModel> { _commitment };
+            _commitments = new EmployerCommitmentsModel
+            {
+                LevyFundedCommitments = new List<CommitmentModel>
+                {
+                    _commitment
+                }
+            };
             var employerCommitments = new EmployerCommitments(1, _commitments);
             Moqer.SetInstance(employerCommitments);
         }
@@ -136,7 +142,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         [Test]
         public void Receiving_employer_account_has_transfers_in()
         {
-            var commitments = new List<CommitmentModel> {
+            _commitments.LevyFundedCommitments = new List<CommitmentModel>
+            {
                 new CommitmentModel
                 {
                     EmployerAccountId = 1,
@@ -162,7 +169,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
                     FundingSource = Models.Payments.FundingSource.Levy
-                },
+                }
+            };
+            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
+            {
                 new CommitmentModel
                 {
                     EmployerAccountId = 1,
@@ -175,7 +185,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
                     FundingSource = Models.Payments.FundingSource.Transfer
-                },
+                }
+            };
+            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
+            {
                 new CommitmentModel
                 {
                     EmployerAccountId = 999,
@@ -190,8 +203,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     FundingSource = Models.Payments.FundingSource.Transfer
                 }
             };
+        
 
-            var employerCommitments = new EmployerCommitments(1, commitments);
+        var employerCommitments = new EmployerCommitments(1, _commitments);
             Moqer.SetInstance(employerCommitments);
 
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();

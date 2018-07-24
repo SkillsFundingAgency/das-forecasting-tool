@@ -86,7 +86,20 @@ window.onload = function () {
         chart();
     }
 
-   tabs();
+    tabs();
+
+    tippy('.tippy',
+        {
+            arrow: true,
+            size: 'large',
+            duration: 0,
+            offset: '0,10',
+            theme: 'forecasting'
+        });
+
+    $('#BalanceSheet-Tables table.balancesheet a').click(function (e) {
+        e.preventDefault();
+    });
 };
 
 //OR use Object http://jsfiddle.net/etuwo8mz/57/
