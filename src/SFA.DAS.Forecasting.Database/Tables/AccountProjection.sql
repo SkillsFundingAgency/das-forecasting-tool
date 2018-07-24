@@ -22,3 +22,7 @@ GO
 CREATE NONCLUSTERED INDEX [idx_account_projection] ON [dbo].[AccountProjection] ([EmployerAccountId]) 
 	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [Month], [ProjectionCreationDate], [ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining], [Year]) 
 WITH (ONLINE = ON)
+GO
+CREATE NONCLUSTERED INDEX [idx_account_projection_account_date] ON [dbo].[AccountProjection] ([EmployerAccountId],[Month],[Year]) 
+	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [ProjectionCreationDate],[ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining]) 
+WITH (ONLINE = ON)

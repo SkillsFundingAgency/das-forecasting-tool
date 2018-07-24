@@ -43,20 +43,27 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                 return false;
             }
 
-            if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
-            {
-                Logger.Debug($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
-                return false;
-            }
-            
             var payments = Repository.Get(paymentCreatedMessage.EmployerAccountId);
 	        var lastReceivedTime = await payments.GetLastTimeReceivedPayment();
 			if (lastReceivedTime == null)
                 throw new InvalidOperationException($"No last time recorded for employer account: {paymentCreatedMessage.EmployerAccountId}");
 
-			var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
+
+            var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
             Logger.Info($"Allow projections '{allowProjections}' for employer '{paymentCreatedMessage.EmployerAccountId}' in response to payment event.");
-			return allowProjections;
+
+            if (!allowProjections)
+            {
+                return false;
+            }
+
+            if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
+            {
+                Logger.Debug($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
+                return false;
+            }
+
+            return true;
         }
     }
 }

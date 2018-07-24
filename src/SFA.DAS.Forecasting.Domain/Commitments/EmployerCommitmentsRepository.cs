@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
-using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Domain.Events;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
@@ -17,8 +16,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public EmployerCommitmentsRepository(
             ICommitmentsDataService dataService, 
-            IEventPublisher eventPublisher,
-            CommitmentValidator commitmentValidator)
+            IEventPublisher eventPublisher)
         {
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
         }
