@@ -4356,7 +4356,7 @@ table.small th, table.small td, table.small .form-hint {
   background: #f7e7e9;
 }
 
-#BalanceSheet-Tables .tip-info {
+#BalanceSheet-Tables .tip-info, #AccountFunds-Tables .tip-info {
   font-weight: normal;
   background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
   background-size: 18px;
@@ -4366,7 +4366,7 @@ table.small th, table.small td, table.small .form-hint {
   background-position-y: bottom;
 }
 
-#BalanceSheet-Tables .tip-info .info-title {
+#BalanceSheet-Tables .tip-info .info-title, #AccountFunds-Tables .tip-info .info-title {
   padding-right: 22px;
   display: block;
   color: #005ea5;
