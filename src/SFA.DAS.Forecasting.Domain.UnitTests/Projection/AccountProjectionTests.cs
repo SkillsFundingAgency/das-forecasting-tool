@@ -228,13 +228,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         // ------------------------------
 
         [Test]
-        public void Includes_Levy_In_First_Months_For_Payroll_Period_End_Triggered_Projection()
+        public void Includes_Levy_In_First_Months_For_Payroll_Period_End_Triggered_Projection_Less_Costs()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
 
             accountProjection.Projections.First().FutureFunds
-                .Should().Be(_account.Balance + _account.LevyDeclared);
+                .Should().Be(_account.Balance + _account.LevyDeclared - _commitment.MonthlyInstallment);
         }
 
         [Test]
@@ -247,6 +247,122 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             accountProjection.Projections.Skip(1).First().FutureFunds
                 .Should().Be(expected);
+        }
+
+
+        [Test]
+        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Postive_Balance_And_An_Affordable_Commitment()
+        {
+            //Arrange
+            CreateCommitmentModel(200, 300);
+
+            _account = new Account(1, 300, 400, 0, 0);
+            Moqer.SetInstance(_account);
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+
+            //Assert
+            var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
+            Assert.AreEqual(0, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(0, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(500, expectedMonth1?.FutureFunds);
+
+            var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
+            Assert.AreEqual(0, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(0, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(700, expectedMonth2?.FutureFunds);
+
+            var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
+            Assert.AreEqual(0, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(0, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(900, expectedMonth3?.FutureFunds);
+        }
+
+        [Test]
+        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Negative_Balance()
+        {
+            //Arrange
+            CreateCommitmentModel(600m,700m);
+            
+            _account = new Account(1, -300, 400, 0, 0);
+            Moqer.SetInstance(_account);
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+
+            //Assert
+            var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
+            Assert.AreEqual(600*.9, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(600*.1, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(100, expectedMonth1?.FutureFunds);
+
+            var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
+            Assert.AreEqual(500 * .9, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(500 * .1, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth2?.FutureFunds);
+
+            var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
+            Assert.AreEqual(200 * .9, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(200 * .1, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth3?.FutureFunds);
+        }
+
+        [Test]
+        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Balance_That_Does_Not_Cover_The_Cost_Of_Training()
+        {
+            //Arrange
+            CreateCommitmentModel(600m, 700m);
+
+            _account = new Account(1, 300, 400, 0, 0);
+            Moqer.SetInstance(_account);
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+
+            //Assert
+            var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
+            Assert.AreEqual(300 * .9, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(300 * .1, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth1?.FutureFunds);
+
+            var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
+            Assert.AreEqual(200 * .9, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(200 * .1, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth2?.FutureFunds);
+
+            var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
+            Assert.AreEqual(200 * .9, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(200 * .1, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth3?.FutureFunds);
+        }
+
+        private void CreateCommitmentModel(decimal monthlyInstallment, decimal completionAmount)
+        {
+            _commitment = new CommitmentModel
+            {
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                StartDate = DateTime.Today.AddMonths(-1),
+                PlannedEndDate = DateTime.Today.AddMonths(25),
+                MonthlyInstallment = monthlyInstallment,
+                NumberOfInstallments = 4,
+                CompletionAmount = completionAmount,
+                FundingSource = Models.Payments.FundingSource.Levy
+            };
+            _commitments = new EmployerCommitmentsModel
+            {
+                LevyFundedCommitments = new List<CommitmentModel>
+                {
+                    _commitment
+                }
+            };
+            var employerCommitments = new EmployerCommitments(1, _commitments);
+            Moqer.SetInstance(employerCommitments);
         }
 
         [Test]
@@ -337,6 +453,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             Assert.AreEqual(1600m, accountProjection.Projections[7].FutureFunds);
             Assert.AreEqual(1600m, accountProjection.Projections.Last().FutureFunds);
         }
+
+        
 
 		[TestCase(800, 200, 0, 400, 0, true, 200)]
 		[TestCase(400, 200, 0, 400, 0, true, 0)]
