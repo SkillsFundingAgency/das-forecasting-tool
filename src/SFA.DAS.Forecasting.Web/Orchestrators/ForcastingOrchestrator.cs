@@ -89,7 +89,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var result = await _accountProjection.Get(accountId);
             var d = _mapper.MapProjections(result);
 
-            return d.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
+            return d.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today.AddMonths(1)) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
                 .OrderBy(m => m.Date)
                 .Take(48)
                 .ToList();

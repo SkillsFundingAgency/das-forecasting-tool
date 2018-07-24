@@ -89,7 +89,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var readCsv = File.ReadLines(newFilePath);
             var lineCount = File.ReadAllLines(newFilePath).Length;
-            Assert.AreEqual(10, lineCount);
+            
+            Assert.AreEqual(Projections.Count, lineCount);
         }
 
         protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }

@@ -97,7 +97,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             // this step became invalid. the website shown may instead of jun as a first row date
 
-            var nextMonth = DateHelper.GetMonthString(7);
+            var nextMonthDate = DateTime.Now.AddMonths(1);
+            var nextMonth = DateHelper.GetMonthString(nextMonthDate.Month);
             var page = Get<FundingProjectionPage>();
             var datePageValues = page.GetHeaderValues("Date");
             var firstDate = datePageValues[0];
