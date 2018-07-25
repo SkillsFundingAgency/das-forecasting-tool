@@ -134,10 +134,10 @@
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="CommitmentType.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Levy\Feature\Build Projections From Levy Declarations.feature.cs">
+    <Compile Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Build Projections From Levy Declarations.feature</DependentUpon>
+      <DependentUpon>BuildProjectionsFromLevyDeclarations.feature</DependentUpon>
     </Compile>
     <Compile Include="Levy\Steps\BuildProjectionsFromLevyDeclarations.cs" />
     <Compile Include="Payments\Feature\Build Projections From Payment Run.feature.cs">
@@ -225,8 +225,9 @@
       <DependentUpon>App.config</DependentUpon>
       <IsTransformFile>True</IsTransformFile>
     </None>
-    <None Include="Levy\Feature\Build Projections From Levy Declarations.feature">
+    <None Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>BuildProjectionsFromLevyDeclarations.feature.cs</LastGenOutput>
     </None>
     <None Include="Levy\Feature\PreLoadLevyEvents.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
