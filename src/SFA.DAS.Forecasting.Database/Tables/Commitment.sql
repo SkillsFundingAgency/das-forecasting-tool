@@ -13,8 +13,8 @@
 	[StartDate] DATETIME NOT NULL,
     [PlannedEndDate] DATETIME NOT NULL,
     [ActualEndDate] DATETIME NULL,
-    [CompletionAmount] DECIMAL(18,2) NOT NULL,
-    [MonthlyInstallment] DECIMAL(18,2) NOT NULL,
+    [CompletionAmount] DECIMAL(18,5) NOT NULL,
+    [MonthlyInstallment] DECIMAL(18,5) NOT NULL,
     [NumberOfInstallments] SMALLINT NOT NULL,
 	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Commitment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id) default(1)
 )
