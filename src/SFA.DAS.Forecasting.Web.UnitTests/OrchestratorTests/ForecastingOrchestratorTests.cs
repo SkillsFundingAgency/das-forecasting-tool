@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
     {
         private AutoMoqer _moqer;
 
-        private List<CommitmentModel> _commitments;
+        private EmployerCommitmentsModel _commitments;
         private BalanceModel _balance;
         private const long ExpectedAccountId = 12345;
         private const long ReceivingEmployerAccountId = 554400;
@@ -33,7 +34,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public void SetUp()
         {
             _moqer = new AutoMoqer();
-            _commitments = new List<CommitmentModel>
+
+            _commitments = new EmployerCommitmentsModel{ LevyFundedCommitments = new List<CommitmentModel>
             {
                 new CommitmentModel
                 {
@@ -69,10 +71,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     ProviderId = 99876,
                     FundingSource = FundingSource.Transfer
                 }
-            };
-            _moqer.GetMock<IAccountProjectionDataSession>()
-                .Setup(x => x.GetCommitments(It.IsAny<long>(), It.IsAny<DateTime?>()))
-                .Returns(Task.FromResult(_commitments));
+            }};
+            _moqer.GetMock<ICommitmentsDataService>()
+                .Setup(x => x.GetCurrentCommitments(It.IsAny<long>(), It.IsAny<DateTime?>()))
+                .ReturnsAsync(_commitments);
 
             var hashingService = _moqer.GetMock<IHashingService>();
             hashingService
@@ -105,7 +107,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         {
             var apprenticesCsv = await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12");
             apprenticesCsv.Count().Should().Be(2);
-            _moqer.GetMock<IAccountProjectionDataSession>().Verify(x => x.GetCommitments(It.Is<long>(id => id == ExpectedAccountId), It.IsAny<DateTime?>()), Times.Once);
+            _moqer.GetMock<ICommitmentsDataService>().Verify(x => x.GetCurrentCommitments(It.Is<long>(id => id == ExpectedAccountId), It.IsAny<DateTime?>()), Times.Once);
         }
 
         [Test]
@@ -148,60 +150,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             Assert.IsNotNull(firstApprenticeship);
             Assert.IsNotEmpty(firstApprenticeship.ApprenticeName);
             Assert.IsNotEmpty(firstApprenticeship.Uln);
-        }
-
-        [Test]
-        public async Task Then_Commitments_Outside_Of_The_Projection_Date_Are_Not_Used()
-        {
-            //Arrange
-            _commitments.Clear();
-            _commitments.Add(new CommitmentModel
-            {
-                StartDate = DateTime.Now.AddMonths(-12),
-                PlannedEndDate = DateTime.Now.AddMonths(-1),
-                ApprenticeName = "Alan Wake",
-                EmployerAccountId = ExpectedAccountId,
-                SendingEmployerAccountId = ExpectedAccountId,
-                MonthlyInstallment = 10.6m,
-                NumberOfInstallments = 10,
-                CompletionAmount = 100.8m,
-                CourseName = "My Course",
-                CourseLevel = 1,
-                LearnerId = 90,
-                ProviderName = "Test Provider",
-                ProviderId = 99876,
-                FundingSource = FundingSource.Levy
-            });
-            _commitments.Add(new CommitmentModel
-            {
-                StartDate = DateTime.Now.AddMonths(50),
-                PlannedEndDate = DateTime.Now.AddMonths(62),
-                ApprenticeName = "Jane Doe",
-                EmployerAccountId = ExpectedAccountId,
-                SendingEmployerAccountId = ReceivingEmployerAccountId,
-                MonthlyInstallment = 10,
-                NumberOfInstallments = 10,
-                CompletionAmount = 100,
-                CourseName = "My Course",
-                CourseLevel = 1,
-                LearnerId = 90,
-                ProviderName = "Test Provider",
-                ProviderId = 99876,
-                FundingSource = FundingSource.Transfer
-            });
-            _moqer.GetMock<IApplicationConfiguration>().Setup(x => x.LimitForecast).Returns(true);
-            _moqer.GetMock<IAccountProjectionDataSession>()
-                .Setup(x => x.GetCommitments(It.IsAny<long>(), It.IsAny<DateTime?>()))
-                .ReturnsAsync(new List<CommitmentModel>());
-            //Act
-            var balanceCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
-
-            //Assert
-            _moqer.GetMock<IAccountProjectionDataSession>()
-                .Verify(x => x.GetCommitments(It.Is<long>(accountId => accountId == ExpectedAccountId), It.Is<DateTime?>(date => date.HasValue && date == DateTime.Parse("2019-05-01"))));
-            Assert.IsNotNull(balanceCsv);
-            Assert.IsEmpty(balanceCsv);
-
         }
 
         [Test]

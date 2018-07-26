@@ -5,7 +5,6 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Commitments;
-using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.NLog.Logger;
 
@@ -18,7 +17,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         private Application.Commitments.Handlers.StoreCommitmentHandler _handler;
         private Mock<IPaymentMapper> _paymentMapper;
         private PaymentCreatedMessage _message;
-
+        private CommitmentModel _commitmentModel;
         private const long ExpectedEmployerAccountId = 554433;
         private const long ExpectedApprenticeshipId = 552244;
 
@@ -31,18 +30,15 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                 ApprenticeshipId = ExpectedApprenticeshipId,
                 EarningDetails = new EarningDetails()
             };
-            var commitmentModel = new CommitmentModel
+            _commitmentModel = new CommitmentModel
             {
                 EmployerAccountId = ExpectedEmployerAccountId,
                 ActualEndDate = DateTime.Now.AddMonths(1),
-                Id = 3322
+                Id = 3322,
+                CompletionAmount = 100
             };
 
             _employerCommitmentRepostiory = new Mock<IEmployerCommitmentRepository>();
-            _employerCommitmentRepostiory.Setup(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId))
-                .ReturnsAsync(new EmployerCommitment(
-                    commitmentModel,
-                    Mock.Of<ICommitmentValidator>()));
 
             _logger = new Mock<ILog>();
 
@@ -50,7 +46,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _paymentMapper.Setup(x =>
                     x.MapToCommitment(It.Is<PaymentCreatedMessage>(c =>
                         c.EmployerAccountId.Equals(ExpectedEmployerAccountId))))
-                .Returns(commitmentModel);
+                .Returns(_commitmentModel);
 
             _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
                 _logger.Object, _paymentMapper.Object);
@@ -67,17 +63,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         }
 
         [Test]
-        public async Task Then_The_Commitment_Is_Read_From_The_Repository()
-        {
-            //Act
-            await _handler.Handle(_message);
-
-            //Assert
-            _employerCommitmentRepostiory.Verify(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId),
-                Times.Once);
-        }
-
-        [Test]
         public async Task Then_The_Commitment_Is_Mapped_If_The_Message_Is_Valid()
         {
             //Act
@@ -88,14 +73,15 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         }
 
         [Test]
-        public async Task Then_The_Commitment_Is_Stored_In_The_Repository()
+        public async Task Then_The_Commitment_Is_Upserted_In_The_Repository()
         {
             //Act
             await _handler.Handle(_message);
 
             //Assert
             _employerCommitmentRepostiory.Verify(x =>
-                x.Store(It.Is<EmployerCommitment>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
+                x.Upsert(It.Is<CommitmentModel>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
         }
+
     }
 }

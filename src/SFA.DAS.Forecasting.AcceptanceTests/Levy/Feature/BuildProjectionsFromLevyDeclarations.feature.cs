@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Build Projections From Levy Declarations.feature"
+#line 1 "BuildProjectionsFromLevyDeclarations.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
