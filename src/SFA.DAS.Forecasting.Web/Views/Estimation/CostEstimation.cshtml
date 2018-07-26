@@ -1,5 +1,4 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
-@using SFA.DAS.Forecasting.Web.Mvc
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
 @{
@@ -45,10 +44,17 @@
             <h1 class="heading-xlarge">Estimated costs</h1>
             <p class="lede">This page shows:</p>
             <ul class="list list-bullet">
+
                 <li>cost of apprenticeships you've estimated</li>
-                <li>your available account funds</li>
-                <li>your available transfer allowance</li>
-                
+                @if (Model.AnyLevyApprenticeships)
+                {
+                    <li>your available account funds</li>
+                }
+                @if (Model.AnyTransferApprenticeships)
+                {
+                    <li>your available transfer allowance</li>
+                }
+
             </ul>
 
             <p>
@@ -84,8 +90,11 @@
 
                 <li id="tab-apprenticeships-added"><a href="#apprenticeships-added">Apprenticeships added</a></li>
                 <li id="tab-account-funds" class="current"><a href="#account-funds">Account funds</a></li>
-                <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
-            </ul>
+                @if (Model.AnyTransferApprenticeships)
+                {
+                    <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
+                }
+                </ul>
             
             <div id="account-funds" class="tab-content" style="">
                 <div class="grid-row">
@@ -238,6 +247,7 @@
                             <th>Number of monthly payments</th>
                             <th>Monthly payment</th>
                             <th>Completion payment</th>
+                            <th>Type of estimate</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -254,6 +264,7 @@
                             <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
                             <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
                             <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
+                            <td data-label="Completion payment">@apprenticeship.FundingSourceText </td>
                             <td>
                                 @Html.RouteLink("Edit", "EditApprenticeships", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, apprenticeshipsId = apprenticeship.Id })
                             </td>

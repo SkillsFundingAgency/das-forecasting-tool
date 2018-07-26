@@ -68,7 +68,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             FundingSource = o.FundingSource
                         }),
                 },
-                TransferAllowances = estimationProjector?.Projections?
+                TransferAllowances = estimationProjections?
                     .Select(o => new EstimationTransferAllowanceVewModel
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
@@ -79,7 +79,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 AccountFunds =
                     new AccountFundsViewModel
                     {
-                        OpeningBalance = GetOpeningBalance(estimationProjector.Projections),
+                        OpeningBalance = GetOpeningBalance(estimationProjections),
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
                         Records = GetAccountFunds(estimationProjections)
                     }
