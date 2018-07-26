@@ -366,6 +366,7 @@
     <Compile Include="Orchestrators\Mappers\ForecastingMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AddEditApprenticeshipsViewModel.cs" />
     <Compile Include="ViewModels\EditApprenticeshipsViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipCsvItemViewModel.cs" />
     <Compile Include="ViewModels\FinancialYear.cs" />

@@ -82,12 +82,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PostEditApprenticeships(EditApprenticeshipsViewModel editmodel)
         {
-            var results = _validator.Validate(editmodel);
-            results.AddToModelState(ModelState, null);
-
             if (!ModelState.IsValid)
             {
-                //editmodel.CalculatedTotalCap = editmodel.FundingCap * editmodel.NumberOfApprentices;
                 return View("EditApprenticeships", editmodel);
             }
 
@@ -109,12 +105,17 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            var viewModel = await _addApprenticeshipOrchestrator.ValidateAddApprenticeship(vm);
-
-            if (viewModel.ValidationResults.Count > 0)
+            // Validate funding cap
+            var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
+            if(viewModel.Course == null)
             {
-                viewModel.PreviousCourseId = viewModel.ApprenticeshipToAdd?.CourseId;
-                ModelState.Clear();        
+                ModelState.AddModelError("Course", "You must choose 1 apprenticeship");
+            }
+
+            if(!ModelState.IsValid)
+            {
+                viewModel.Courses = _addApprenticeshipOrchestrator.GetStandardCourses();
+
                 return View("AddApprenticeships", viewModel);
             }
 

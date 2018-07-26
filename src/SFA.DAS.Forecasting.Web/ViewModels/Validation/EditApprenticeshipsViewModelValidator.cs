@@ -4,9 +4,19 @@ using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 {
-    public class EditApprenticeshipsViewModelValidator : AbstractValidator<EditApprenticeshipsViewModel>
+    public class EditApprenticeshipsViewModelValidator : AddEditApprenticeshipViewModelValidator<EditApprenticeshipsViewModel>
     {
         public EditApprenticeshipsViewModelValidator()
+        {
+        }
+    }
+
+    public class AddApprenticeshipViewModelValidator : AddEditApprenticeshipViewModelValidator<AddApprenticeshipViewModel>
+    {
+    }
+    public class AddEditApprenticeshipViewModelValidator<T> : AbstractValidator<T> where T : AddEditApprenticeshipsViewModel
+    {
+        public AddEditApprenticeshipViewModelValidator()
         {
             RuleFor(m => m.NumberOfApprentices)
                 .NotNull()
@@ -14,13 +24,11 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .GreaterThan(0)
                 .WithMessage("Make sure you have at least 1 or more apprentices");
 
-
             RuleFor(m => m.TotalInstallments)
                 .NotEmpty()
                 .WithMessage("The number of months was not entered")
                 .GreaterThan((short)0)
                 .WithMessage("The number of months must be 12 months or more");
-
 
             RuleFor(m => m.StartDateYear)
                 .NotEmpty()
@@ -48,14 +56,12 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .LessThanOrEqualTo(DateTime.Now.AddYears(4))
                 .WithMessage("The start date must be within the next 4 years")
                 .When(m => m.StartDate != DateTime.MinValue);
-
-            
-
         }
 
-        private bool CheckTotalCost(EditApprenticeshipsViewModel vm, string b)
+        private bool CheckTotalCost(AddEditApprenticeshipsViewModel vm, string b)
         {
             var fundingBand = vm.GetFundingPeriod();
+
             return (b.ToDecimal()) <= (fundingBand.FundingCap * vm.NumberOfApprentices);
         }
     }
