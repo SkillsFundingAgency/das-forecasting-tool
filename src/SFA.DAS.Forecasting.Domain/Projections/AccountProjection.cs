@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             {
                 var levyFundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
                         ? 0 : _account.LevyDeclared;
-                var ignoreCostOfTraining = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth;
+                var ignoreCostOfTraining = month == startMonth;
 
                 var projection = CreateProjection(
                     periodStart.AddMonths(month),
