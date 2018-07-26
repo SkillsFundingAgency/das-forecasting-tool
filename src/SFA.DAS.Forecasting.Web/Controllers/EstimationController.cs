@@ -33,15 +33,22 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
         }
 
-        [HttpGet]
-        [Route("start-transfer", Name = "EstimationStart")]
-        public ActionResult StartEstimation(string hashedAccountId)
-        {
-            ViewBag.HashedAccountId = hashedAccountId;
-            return View();
-        }
+		[HttpGet]
+		[Route("start-estimation", Name = "EstimationStart")]
+		public ActionResult StartEstimation(string hashedAccountId)
+		{
+			ViewBag.HashedAccountId = hashedAccountId;
+			return View();
+		}
 
-        [HttpGet]
+	    [HttpGet]
+	    [Route("start-transfer", Name = "EstimationStartRedirection")]
+	    public ActionResult StartEstimationRedirect(string hashedAccountId)
+	    {
+		    return RedirectToAction(nameof(StartEstimation), new { hashedaccountId = hashedAccountId });
+	    }
+
+		[HttpGet]
         [Route("start-redirect", Name = "EstimationStartRedirect")]
         public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
