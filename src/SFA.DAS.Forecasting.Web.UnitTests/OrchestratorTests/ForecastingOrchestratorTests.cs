@@ -245,6 +245,21 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _moqer.GetMock<IAccountProjectionDataSession>().Verify(m => m.Get(ExpectedAccountId), Times.Once);
         }
 
+        [Test]
+        public async Task Should_start_with_projections_from_next_month()
+        {
+            var expectedProjections = 48;
+            SetUpProjections(48 + 10);
+
+            var projections = await _moqer.Resolve<ForecastingOrchestrator>().BalanceCsv("ABBA12");
+
+            projections.Count().Should().Be(expectedProjections);
+            projections
+                .First()
+                .Date
+                .Should().Be(DateTime.Now.AddMonths(1).ToString("MMM yy"));
+        }
+
         /// <summary>
         /// Setting up projections starting from last month. 
         /// </summary>
