@@ -45,14 +45,14 @@
             <p class="lede">This page shows:</p>
             <ul class="list list-bullet">
 
-                <li>cost of apprenticeships you've estimated</li>
-                @if (Model.AnyLevyApprenticeships)
+                <li>apprentiechips you've added</li>
+                @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
                 {
-                    <li>your available account funds</li>
+                    <li>your account funds</li>
                 }
                 @if (Model.AnyTransferApprenticeships)
                 {
-                    <li>your available transfer allowance</li>
+                    <li>your remaining transfer allowance</li>
                 }
 
             </ul>
