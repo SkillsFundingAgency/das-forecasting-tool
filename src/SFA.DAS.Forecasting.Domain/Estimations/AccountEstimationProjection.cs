@@ -66,7 +66,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 projectionDate = projectionDate.AddMonths(1);
             }
 
-            MonthlyInstallmentAmount = _actualAccountProjections.First().LevyFundsIn;
+            MonthlyInstallmentAmount = _actualAccountProjections.FirstOrDefault()?.LevyFundsIn ?? 0;
         }
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal lastBalance)

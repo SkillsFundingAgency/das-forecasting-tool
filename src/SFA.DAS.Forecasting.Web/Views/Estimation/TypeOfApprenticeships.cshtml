@@ -1,0 +1,56 @@
+﻿@model SFA.DAS.Forecasting.Web.ViewModels.TypeOfApprenticeshipViewModel
+@using SFA.DAS.Forecasting.Web.Extensions
+@{
+    ViewBag.Title = "Tell us if this estimation is for a transfer";
+}
+<main id="content" role="main">
+    <div id="estimate-typeof-transfer">
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h1 class="heading-xlarge">
+                    Tell us if this estimation is for a transfer
+                </h1>
+                <p>
+                    If you're using the tool to estimate how much you can transfer to another employer to
+                    pay for their apprenticeships you need to know that transfers can only be used for apprenticeship standards.
+                </p>
+                <p class="font-xsmall">
+                    The calculations in this tool are based on your current funds in your account and the <a href="https://www.gov.uk/guidance/transferring-apprenticeship-service-funds" title="transfer allowance"> transfer allowance</a> that you can use to transfer to another employer.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+
+
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div class="column-two-thirds">
+                    <div class="form-group">
+                        <fieldset>
+
+                            <legend>
+                                <h2 class="heading-small">
+                                    Are you using this estimation to see how many apprenticeship you could fund using a transfer?
+                                </h2>
+                            </legend>
+
+                            <div class="multiple-choice">
+                                <input id="transfer-funded" type="radio" name="IsTransferFunded" value="true">
+                                <label for="transfer-funded">Yes, it's to estimate a transfer of funds</label>
+                            </div>
+                            <div class="multiple-choice">
+                                <input id="levy-funded" type="radio" name="IsTransferFunded" value="false">
+                                <label for="levy-funded">No, it's not to use for a transfer</label>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+                <div class="column-full">
+                    <button type="submit" id="continue" name="continue" value="Continue" class="button continue">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
