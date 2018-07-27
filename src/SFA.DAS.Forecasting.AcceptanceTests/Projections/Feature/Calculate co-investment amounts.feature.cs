@@ -462,7 +462,7 @@ this.ScenarioSetup(scenarioInfo);
 #line 107
  testRunner.And("the following commitments have been recorded", ((string)(null)), table18, "And ");
 #line 110
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 111
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 112

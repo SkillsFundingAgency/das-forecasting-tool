@@ -107,7 +107,7 @@ Scenario: Calculate co-investment after levy run with positive balance and affor
 	And the following commitments have been recorded
 	| Apprentice Name | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments | FundingSource |
 	| Test Apprentice | Test Course | 1            | Test Provider | last month  | 200               | 300              | 6                      | CoInvestedSfa |
-	When the account projection is triggered after a payment run
+	When the account projection is triggered after levy has been declared
 	Then the account projection should be generated
 	And the balance should be 300
 	And the co-investment amount is zero
