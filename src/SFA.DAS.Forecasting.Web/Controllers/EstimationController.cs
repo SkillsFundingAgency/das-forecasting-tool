@@ -1,10 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
-using FluentValidation.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -20,13 +17,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
-        private readonly EditApprenticeshipsViewModelValidator _validator;
+        private readonly AddEditApprenticeshipViewModelValidator<AddApprenticeshipViewModel> _validator;
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
             IMembershipService membershipService,
-            EditApprenticeshipsViewModelValidator validator)
+            AddApprenticeshipViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService;
@@ -95,8 +92,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                    {
                        hashedaccountId = editmodel.HashedAccountId,
                        estimateName = editmodel.EstimationName
-                   });
-            
+                   });   
         }
         
 
@@ -105,11 +101,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            // Validate funding cap
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
-            if(viewModel.Course == null)
+
+            var result = _validator.ValidateAdd(vm);
+
+            foreach(var r in result)
             {
-                ModelState.AddModelError("Course", "You must choose 1 apprenticeship");
+                ModelState.AddModelError(r.Key, r.Value);
             }
 
             if(!ModelState.IsValid)

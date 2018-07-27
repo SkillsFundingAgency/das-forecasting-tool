@@ -6,6 +6,8 @@ namespace SFA.DAS.Forecasting.Web.Extensions
     {
         public static decimal ToDecimal(this string str)
         {
+            if (str.StartsWith("-"))
+                return 0M;
             var text = Regex.Replace(str ?? string.Empty, "[^0-9]", "");
             if (decimal.TryParse(text, out decimal d))
                 return d;

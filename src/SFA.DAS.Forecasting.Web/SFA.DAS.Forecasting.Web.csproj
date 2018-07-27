@@ -383,6 +383,8 @@
     <Compile Include="ViewModels\EstimationPageViewModel.cs" />
     <Compile Include="ViewModels\EstimationTransferAllowanceVewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
+    <Compile Include="ViewModels\Validation\AddApprenticeshipViewModelValidator.cs" />
+    <Compile Include="ViewModels\Validation\AddEditApprenticeshipViewModelValidator.cs" />
     <Compile Include="ViewModels\Validation\EditApprenticeshipsViewModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
