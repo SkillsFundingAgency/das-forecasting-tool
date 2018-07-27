@@ -739,6 +739,7 @@
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
     <Content Include="Views\Estimation\ConfirmApprenticeshipsRemoval.cshtml" />
     <Content Include="Views\Estimation\EditApprenticeships.cshtml" />
+    <Content Include="Views\Shared\_validationErrors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

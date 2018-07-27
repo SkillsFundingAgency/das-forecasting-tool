@@ -14,34 +14,7 @@
         <div class="grid-row">
             <div class="column-two-thirds">
 
-                @if (!ViewContext.ViewData.ModelState.IsValid)
-                {
-                    <div class="error-summary validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
-                        <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
-                            Errors to fix
-                        </h1>
-
-                        <p>Please check the details you have entered against the information that's needed.</p>
-
-                        <ul class="error-summary-list list list-links">
-                            @foreach (var stateItem in ViewContext.ViewData.ModelState)
-                            {
-                                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
-
-                                foreach (var error in stateItem.Value.Errors.Take(1))
-                                {
-                                    <li>
-                                        <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
-                                            @error.ErrorMessage
-                                        </a>
-                                    </li>
-                                }
-                            }
-
-                        </ul>
-                    </div>
-                }
-
+                @Html.Partial("_validationErrors")
 
                 <div class="hgroup form-group">
                     <h1 class="heading-xlarge">Edit apprenticeships in your current estimate</h1>

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
-using SFA.DAS.Forecasting.Application.Estimations.Validation;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
@@ -17,17 +16,18 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
-        private readonly IAddApprenticeshipValidator _validator;
         private readonly ILog _logger;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
         public AddApprenticeshipOrchestrator(
-            IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IAddApprenticeshipValidator validator, ILog logger)
+            IHashingService hashingService, 
+            IAccountEstimationRepository accountEstimationRepository, 
+            IApprenticeshipCourseDataService apprenticeshipCourseService,
+            ILog logger)
         {
             _hashingService = hashingService;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
-            _validator = validator;
             _logger = logger;
         }
 
@@ -40,40 +40,30 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            var course = vm.Course;
-
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
-            accountEstimation.AddVirtualApprenticeship(course.Id, course.Title, course.Level,
+            accountEstimation.AddVirtualApprenticeship(vm.Course.Id, vm.Course.Title, vm.Course.Level,
                 vm.StartDateMonth, vm.StartDateYear,
                 vm.NumberOfApprentices, vm.TotalInstallments,
                 vm.TotalCostAsString.ToDecimal(), Models.Payments.FundingSource.Transfer);
 
-            _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {course}");
+            _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {vm.Course}");
             await _accountEstimationRepository.Store(accountEstimation);
         }
 
         public async Task<AddApprenticeshipViewModel> UpdateAddApprenticeship(AddApprenticeshipViewModel viewModel)
         {
-            if (!int.TryParse(viewModel.CourseId, out int courseId) && courseId < 1)
-            {
-                viewModel.Course = null;
-            }
-            else
-            {
-                viewModel.Course =
-                   await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId);
-            }
+            var course = (!int.TryParse(viewModel.CourseId, out int courseId) && courseId < 1)
+                ? null
+                : await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId);
 
-            SetTotalCostWithCommas(viewModel);
+            var totalCostAsString = (decimal.TryParse(viewModel.TotalCostAsString, out decimal result))
+                ? result.FormatValue()
+                : viewModel.TotalCostAsString = string.Empty;
+
+            viewModel.Course = course;
+            viewModel.TotalCostAsString = totalCostAsString;
+
             return viewModel;
-        }
-
-        private static void SetTotalCostWithCommas(AddApprenticeshipViewModel vm)
-        {
-            if (decimal.TryParse(vm.TotalCostAsString, out decimal result))
-                vm.TotalCostAsString = result.FormatValue();
-            else
-                vm.TotalCostAsString = string.Empty;
         }
 
         public async Task<CourseViewModel> GetCourse(string courseId)
