@@ -6,7 +6,7 @@
 	[SendingEmployerAccountId] BIGINT NOT NULL Constraint DF_Payment__SendingEmployerAccountId default(0),
 	[ProviderId] BIGINT NOT NULL,
 	[ApprenticeshipId] BIGINT NOT NULL,
-	[Amount] DECIMAL(18,2) NOT NULL,
+	[Amount] DECIMAL(18,5) NOT NULL,
 	[ReceivedTime] DATETIME NOT NULL,
 	[LearnerId] BIGINT NOT NULL, 
 	[CollectionPeriodMonth] INT NOT NULL,

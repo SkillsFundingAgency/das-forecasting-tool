@@ -65,10 +65,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void FeatureBackground()
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after payment run with positive balance")]
+        public virtual void CalculateCo_InvestmentAfterPaymentRunWithPositiveBalance()
         {
-#line 6
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after payment run with positive balance", ((string[])(null)));
 #line 7
+this.ScenarioSetup(scenarioInfo);
+#line 8
  testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
@@ -77,7 +81,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
             table1.AddRow(new string[] {
                         "18-19",
                         "1"});
-#line 8
+#line 9
  testRunner.And("the payroll period is", ((string)(null)), table1, "And ");
 #line hidden
             TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
@@ -86,24 +90,12 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
                         "Created Date"});
             table2.AddRow(new string[] {
                         "ABC-1234",
-                        "3000",
+                        "400",
                         "Today"});
-#line 11
+#line 12
  testRunner.And("the following levy declarations have been recorded", ((string)(null)), table2, "And ");
-#line 14
- testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after payment run")]
-        public virtual void CalculateCo_InvestmentAfterPaymentRun()
-        {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after payment run", ((string[])(null)));
-#line 16
-this.ScenarioSetup(scenarioInfo);
-#line 6
-this.FeatureBackground();
+#line 15
+ testRunner.And("the current balance is 300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                         "Apprentice Name",
@@ -113,73 +105,370 @@ this.FeatureBackground();
                         "Start Date",
                         "Installment Amount",
                         "Completion Amount",
-                        "Number Of Installments"});
+                        "Number Of Installments",
+                        "FundingSource"});
             table3.AddRow(new string[] {
                         "Test Apprentice",
                         "Test Course",
                         "1",
                         "Test Provider",
-                        "Yesterday",
-                        "2000",
-                        "1200",
-                        "6"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 1",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "2000",
-                        "1200",
-                        "6"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 2",
-                        "Test Course 2",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "2000",
-                        "1200",
-                        "6"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 3",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "2000",
-                        "1200",
-                        "6"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 4",
-                        "Test Course 2",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "2000",
-                        "1200",
-                        "6"});
-            table3.AddRow(new string[] {
-                        "Test Apprentice 5",
-                        "Test Course",
-                        "1",
-                        "Test Provider",
-                        "Yesterday",
-                        "2000",
-                        "1200",
-                        "6"});
-#line 17
- testRunner.Given("the following commitments have been recorded", ((string)(null)), table3, "Given ");
-#line 26
+                        "last month",
+                        "600",
+                        "700",
+                        "6",
+                        "CoInvestedSfa"});
+#line 16
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table3, "And ");
+#line 19
  testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 27
+#line 20
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 28
- testRunner.And("the balance should be 0", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 29
- testRunner.And("the employer co-investment amount is 10% of the negative balance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 21
+ testRunner.And("the balance should be 400", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 22
+ testRunner.And("the employer co-investment amount is 10% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 23
+ testRunner.And("the government co-investment amount is 90% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after payment run with positive balance and affordable co" +
+            "mmitment")]
+        public virtual void CalculateCo_InvestmentAfterPaymentRunWithPositiveBalanceAndAffordableCommitment()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after payment run with positive balance and affordable co" +
+                    "mmitment", ((string[])(null)));
+#line 25
+this.ScenarioSetup(scenarioInfo);
+#line 26
+ testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payroll Year",
+                        "Payroll Month"});
+            table4.AddRow(new string[] {
+                        "18-19",
+                        "1"});
+#line 27
+ testRunner.And("the payroll period is", ((string)(null)), table4, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table5.AddRow(new string[] {
+                        "ABC-1234",
+                        "400",
+                        "Today"});
 #line 30
- testRunner.And("the government co-investment amount is 90% of the negative value", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("the following levy declarations have been recorded", ((string)(null)), table5, "And ");
+#line 33
+ testRunner.And("the current balance is 300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table6.AddRow(new string[] {
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "last month",
+                        "200",
+                        "300",
+                        "6",
+                        "CoInvestedSfa"});
+#line 34
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table6, "And ");
+#line 37
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 38
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 39
+ testRunner.And("the balance should be 700", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 40
+ testRunner.And("the co-investment amount is zero", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after payment run with negative balance")]
+        public virtual void CalculateCo_InvestmentAfterPaymentRunWithNegativeBalance()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after payment run with negative balance", ((string[])(null)));
+#line 43
+this.ScenarioSetup(scenarioInfo);
+#line 44
+ testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payroll Year",
+                        "Payroll Month"});
+            table7.AddRow(new string[] {
+                        "18-19",
+                        "1"});
+#line 45
+ testRunner.And("the payroll period is", ((string)(null)), table7, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table8.AddRow(new string[] {
+                        "ABC-1234",
+                        "400",
+                        "Today"});
+#line 48
+ testRunner.And("the following levy declarations have been recorded", ((string)(null)), table8, "And ");
+#line 51
+ testRunner.And("the current balance is -300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table9.AddRow(new string[] {
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "last month",
+                        "600",
+                        "700",
+                        "6",
+                        "CoInvestedSfa"});
+#line 52
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table9, "And ");
+#line 55
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 56
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 57
+ testRunner.And("the balance should be 100", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 58
+ testRunner.And("the employer co-investment amount is 10% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 59
+ testRunner.And("the government co-investment amount is 90% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after levy run with positive balance")]
+        public virtual void CalculateCo_InvestmentAfterLevyRunWithPositiveBalance()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after levy run with positive balance", ((string[])(null)));
+#line 62
+this.ScenarioSetup(scenarioInfo);
+#line 63
+ testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payroll Year",
+                        "Payroll Month"});
+            table10.AddRow(new string[] {
+                        "18-19",
+                        "1"});
+#line 64
+ testRunner.And("the payroll period is", ((string)(null)), table10, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table11 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table11.AddRow(new string[] {
+                        "ABC-1234",
+                        "400",
+                        "Today"});
+#line 67
+ testRunner.And("the following levy declarations have been recorded", ((string)(null)), table11, "And ");
+#line 70
+ testRunner.And("the current balance is 300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table12 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table12.AddRow(new string[] {
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "last month",
+                        "600",
+                        "700",
+                        "6",
+                        "CoInvestedSfa"});
+#line 71
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table12, "And ");
+#line 74
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 75
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 76
+ testRunner.And("the balance should be 300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 77
+ testRunner.And("the employer co-investment amount is 10% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 78
+ testRunner.And("the government co-investment amount is 90% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after levy run with negative balance")]
+        public virtual void CalculateCo_InvestmentAfterLevyRunWithNegativeBalance()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after levy run with negative balance", ((string[])(null)));
+#line 80
+this.ScenarioSetup(scenarioInfo);
+#line 81
+ testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table13 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payroll Year",
+                        "Payroll Month"});
+            table13.AddRow(new string[] {
+                        "18-19",
+                        "1"});
+#line 82
+ testRunner.And("the payroll period is", ((string)(null)), table13, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table14 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table14.AddRow(new string[] {
+                        "ABC-1234",
+                        "400",
+                        "Today"});
+#line 85
+ testRunner.And("the following levy declarations have been recorded", ((string)(null)), table14, "And ");
+#line 88
+ testRunner.And("the current balance is -300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table15 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table15.AddRow(new string[] {
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "last month",
+                        "600",
+                        "700",
+                        "6",
+                        "CoInvestedSfa"});
+#line 89
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table15, "And ");
+#line 92
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 93
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 94
+ testRunner.And("the balance should be -300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 95
+ testRunner.And("the employer co-investment amount is 10% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 96
+ testRunner.And("the government co-investment amount is 90% of the remaining cost of training", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Calculate co-investment after levy run with positive balance and affordable commi" +
+            "tment")]
+        public virtual void CalculateCo_InvestmentAfterLevyRunWithPositiveBalanceAndAffordableCommitment()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Calculate co-investment after levy run with positive balance and affordable commi" +
+                    "tment", ((string[])(null)));
+#line 98
+this.ScenarioSetup(scenarioInfo);
+#line 99
+ testRunner.Given("I\'m a levy paying employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table16 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Payroll Year",
+                        "Payroll Month"});
+            table16.AddRow(new string[] {
+                        "18-19",
+                        "1"});
+#line 100
+ testRunner.And("the payroll period is", ((string)(null)), table16, "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table17 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table17.AddRow(new string[] {
+                        "ABC-1234",
+                        "400",
+                        "Today"});
+#line 103
+ testRunner.And("the following levy declarations have been recorded", ((string)(null)), table17, "And ");
+#line 106
+ testRunner.And("the current balance is 300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table18 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table18.AddRow(new string[] {
+                        "Test Apprentice",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "last month",
+                        "200",
+                        "300",
+                        "6",
+                        "CoInvestedSfa"});
+#line 107
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table18, "And ");
+#line 110
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 111
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line 112
+ testRunner.And("the balance should be 300", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 113
+ testRunner.And("the co-investment amount is zero", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
         }

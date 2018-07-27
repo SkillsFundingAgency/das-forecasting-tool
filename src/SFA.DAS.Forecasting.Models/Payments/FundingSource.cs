@@ -2,7 +2,10 @@
 {
     public enum FundingSource: byte
     {
-        Levy = 1, 
-        Transfer = 2
+		Levy = 1,
+		Transfer = 2,
+		CoInvestedSfa = 3,
+		CoInvestedEmployer = 4,
+		FullyFundedSfa = 5
     }
 }

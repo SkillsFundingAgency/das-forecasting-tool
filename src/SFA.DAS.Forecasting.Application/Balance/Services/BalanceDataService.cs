@@ -35,8 +35,13 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 persistedBalance.UnallocatedCompletionPayments = balance.UnallocatedCompletionPayments;
             }
             else
-                _forecastingDataContext.Balances.Add(balance);
-
+            {
+                if (balance.ReceivedDate != DateTime.MinValue && balance.BalancePeriod != DateTime.MinValue)
+                {
+                    _forecastingDataContext.Balances.Add(balance);
+                }
+            }
+                
             await _forecastingDataContext.SaveChangesAsync();
         }
     }
