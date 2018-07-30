@@ -49,26 +49,30 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<BalanceViewModel> Balance(string hashedAccountId)
         {
-            var accountProjection = await GetAccountProjection(hashedAccountId);
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountProjection = await ReadProjection(accountId);
 
             var balance = await GetBalance(hashedAccountId);
 
             return new BalanceViewModel {
-                BalanceItemViewModels = accountProjection,
-                ProjectionTables = CreateProjectionTable(accountProjection),
+                BalanceItemViewModels = accountProjection.Projections,
+                ProjectionTables = CreateProjectionTable(accountProjection.Projections),
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
-                BalanceStringArray = string.Join(",", accountProjection.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", accountProjection.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                BalanceStringArray = string.Join(",", accountProjection.Projections.Select(m => m.Balance.ToString())),
+                DatesStringArray = string.Join(",", accountProjection.Projections.Select(m => m.Date.ToString("yyyy-MM-dd"))),
                 CurrentBalance = balance.Amount,
                 OverdueCompletionPayments = balance.UnallocatedCompletionPayments,
-                DisplayCoInvestment = accountProjection.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0)
+                DisplayCoInvestment = accountProjection.Projections.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0),
+                ProjectionDate = accountProjection.CreatedOn
             };
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
         {
-            return (await GetAccountProjection(hashedAccountId))
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            return (await ReadProjection(accountId))
+                .Projections
                 .Select(m => _mapper.ToCsvBalance(m));
         }
 
@@ -85,24 +89,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 .Select(m => _mapper.ToCsvApprenticeship(m, accountId));
         }
 
-        private async Task<List<ProjectiontemViewModel>> GetAccountProjection(string hashedAccountId)
-        {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var projections = await ReadProjections(accountId);
-
-            return projections.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
-                .OrderBy(m => m.Date)
-                .Take(48)
-                .ToList();
-        }
-
-        private async Task<List<ProjectiontemViewModel>> ReadProjections(long accountId)
+        private async Task<ProjectionModel> ReadProjection(long accountId)
         {
             List<ProjectiontemViewModel> projections = new List<ProjectiontemViewModel>();
 
             var documents = await _projectionsDataService.Get(accountId);
+            DateTime? createdOn = null;
             if (documents != null && documents.Projections.Any())
             {
+                createdOn = documents.ProjectionCreationDate;
                 projections = _mapper.MapProjections(documents);
             }
             else
@@ -111,7 +106,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
                 projections = _mapper.MapProjections(result);
             }
 
-            return projections;
+            return new ProjectionModel
+            {
+                Projections = projections
+                    .Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
+                    .OrderBy(m => m.Date)
+                    .Take(48)
+                    .ToList(),
+                CreatedOn = createdOn
+            };
         }
 
         private IDictionary<FinancialYear, ReadOnlyCollection<ProjectiontemViewModel>> CreateProjectionTable(List<ProjectiontemViewModel> accountProjection)
@@ -139,6 +142,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             var balance = await _balanceDataService.Get(accountId);
 
             return balance;
+        }
+
+        private struct ProjectionModel
+        {
+            public List<ProjectiontemViewModel> Projections { get; set; }
+            public DateTime? CreatedOn { get; set; }
         }
     }
 }

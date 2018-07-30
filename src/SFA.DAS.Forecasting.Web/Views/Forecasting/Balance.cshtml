@@ -65,6 +65,12 @@
 <!-- CHART -->
 <div class="grid-row">
     <div class="column-full">
+        @if (@Model.ProjectionDate.HasValue)
+        {
+            <div class="panel projection-date">
+                <p>Your projeciton was last updated on @Model.ProjectionDate.Value.ToGdsFormatFull()</p>
+            </div>
+        }
         <div class="chart-container">
             <div class="chart-data"
                  data-dates="@Model.DatesStringArray"
