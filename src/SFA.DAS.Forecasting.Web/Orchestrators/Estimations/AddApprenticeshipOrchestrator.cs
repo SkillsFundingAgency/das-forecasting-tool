@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -33,9 +34,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public AddApprenticeshipViewModel GetApprenticeshipAddSetup()
         {
-            var courses = _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses();
-            var result = new AddApprenticeshipViewModel { Courses = courses };
-            return result;
+            return new AddApprenticeshipViewModel
+            {
+                Courses = _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
+            };
         }
 
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
@@ -62,6 +64,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             viewModel.Course = course;
             viewModel.TotalCostAsString = totalCostAsString;
+            viewModel.FundingPeriodsJson = course?.FundingPeriods != null 
+                ? JsonConvert.SerializeObject(course.FundingPeriods) 
+                : string.Empty;
 
             return viewModel;
         }
@@ -69,6 +74,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         public async Task<CourseViewModel> GetCourse(string courseId)
         {
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
+            if (course == null)
+                return null;
+
             return new CourseViewModel
             {
                 CourseId = courseId,

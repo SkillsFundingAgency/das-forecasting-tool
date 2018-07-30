@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 using FluentValidation.Attributes;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
@@ -32,5 +33,17 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
                     .ToList();
             }
         }
+
+        public override string FundingPeriodsJson {
+            get
+            {
+                return Course != null ?
+                    JsonConvert.SerializeObject(
+                        Course.FundingPeriods
+                            .Select(m => new FundingPeriodViewModel { FromDate = m.EffectiveFrom, ToDate = m.EffectiveTo, FundingCap = m.FundingCap }))
+                    : null;
+            }
+        }
+
     }
 }

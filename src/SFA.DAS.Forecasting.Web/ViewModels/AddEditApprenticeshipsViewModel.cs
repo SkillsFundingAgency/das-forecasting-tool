@@ -45,6 +45,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
             return fundingBand;
         }
 
-        public string FundingPeriodsJson { get; set; }
+        public virtual string FundingPeriodsJson { get; set; }
     }
 }

@@ -63,7 +63,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             var vm = new AddApprenticeshipViewModel
             {
                 CourseId = "123",
-                Course = new ApprenticeshipCourse()
+                Course = null,
+                TotalCostAsString = "10"
             };
 
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
@@ -72,7 +73,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
 
             await _controller.Save(vm, "ABBA12", "default");
             _controller.ViewData.ModelState.Count
-                .Should().Be(0);
+                .Should().Be(1);
         }
 
         [TestCase("0", true)]
@@ -82,11 +83,17 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
         [TestCase("10", false)]
         public async Task Apprenticeship_Must_Have_Total_Cost(string costAsString, bool shouldError)
         {
-            var vm = new Web.ViewModels.AddApprenticeshipViewModel
+            var fundingPeriods = new List<FundingPeriod>
+            {
+                new FundingPeriod{ EffectiveFrom = DateTime.MinValue, EffectiveTo = DateTime.MaxValue, FundingCap = 20 * 1000 }
+            };
+
+            var vm = new AddApprenticeshipViewModel
             {
                 CourseId = "123",
-                Course = new ApprenticeshipCourse(),
-                TotalCostAsString = costAsString
+                Course = new ApprenticeshipCourse { FundingPeriods = fundingPeriods },
+                TotalCostAsString = costAsString,
+                NumberOfApprentices = 2
             };
 
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
@@ -102,20 +109,22 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
         [TestCase("10000", false)]
         public async Task Apprenticeship_Must_Not_Have_higher_Total_Cost_than_FundingBand(string costAsString, bool shouldError)
         {
-            var fundingBands = new List<FundingPeriodViewModel>
+            var fundingBands = new List<FundingPeriod>
             {
-                new FundingPeriodViewModel { FromDate = DateTime.Today.AddMonths(-24), ToDate = DateTime.Today.AddMonths(-2), FundingCap = 1000 },
-                new FundingPeriodViewModel { FromDate = DateTime.Today.AddMonths(-1), ToDate = DateTime.Today.AddMonths(24), FundingCap = 5000 },
-                new FundingPeriodViewModel { FromDate = DateTime.Today.AddMonths(25), ToDate = DateTime.Today.AddMonths(12 * 4), FundingCap = 10000 }
+                new FundingPeriod { EffectiveFrom = DateTime.Today.AddMonths(-24), EffectiveTo = DateTime.Today.AddMonths(-2), FundingCap = 1000 },
+                new FundingPeriod { EffectiveFrom = DateTime.Today.AddMonths(-1), EffectiveTo = DateTime.Today.AddMonths(24), FundingCap = 5000 },
+                new FundingPeriod { EffectiveFrom = DateTime.Today.AddMonths(25), EffectiveTo = DateTime.Today.AddMonths(12 * 4), FundingCap = 10000 }
             };
 
             var vm = new AddApprenticeshipViewModel
             {
                 CourseId = "123",
-                Course = new ApprenticeshipCourse(),
+                Course = new ApprenticeshipCourse
+                {
+                    FundingPeriods = fundingBands
+                },
                 TotalCostAsString = costAsString,
                 NumberOfApprentices = 2,
-                FundingPeriodsJson = JsonConvert.SerializeObject(fundingBands),
                 StartDateMonth = DateTime.Today.Month,
                 StartDateYear = DateTime.Today.Year,
             };

@@ -137,9 +137,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             var course = await _addApprenticeshipOrchestrator.GetCourse(courseId);
             var result = new
             {
-                CourseId = course.CourseId,
-                NumberOfMonths = course.NumberOfMonths,
-                FundingBands = course.FundingPeriods
+                CourseId = course?.CourseId,
+                NumberOfMonths = course?.NumberOfMonths,
+                FundingBands = course?.FundingPeriods
             };
 
             return Json(result);
