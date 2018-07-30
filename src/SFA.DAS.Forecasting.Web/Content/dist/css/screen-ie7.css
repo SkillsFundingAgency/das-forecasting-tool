@@ -4349,6 +4349,10 @@ h2 .float-right {
   }
 }
 
+.projection-date {
+  border-left: solid 10px #bfc1c3;
+}
+
 details.projection-survey {
   border: solid #005ea5 10px;
   background-color: #005ea5;
