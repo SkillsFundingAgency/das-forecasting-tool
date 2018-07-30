@@ -76,6 +76,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 .Select(directoryI => new DirectoryInfo(directoryI))
                 .Select(directoryInfo => directoryInfo.Name)
                 .ToList()
+                .Where(c => Convert.ToInt32(c.Split('.').First()) == 1)
                 .OrderByDescending(c => Convert.ToInt32(c.Split('.')[0]))
                 .ThenByDescending(c => Convert.ToInt32(c.Split('.')[1]))
                 .ThenByDescending(c => Convert.ToInt32(c.Split('.')[2]))
