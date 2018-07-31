@@ -7,8 +7,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string DatabaseConnectionString { get; set; }
         public string StorageConnectionString { get; set; }
         public string BackLink { get; set; }
-        public string AllowedHashstringCharacters { get; set; }
-        public string Hashstring { get; set; }
+        public string AllowedHashStringCharacters { get; set; }
+        public string HashString { get; set; }
         public int SecondsToWaitToAllowProjections { get; set; }
         public int NumberOfMonthsToProject { get; set; }
         public bool LimitForecast { get; set; }
@@ -19,5 +19,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string StubEmployerPaymentTable { get; set; }
         public bool AllowTriggerProjections { get; set; }
         public string ApprenticeshipsApiBaseUri { get; set; }
+        public string AppInsightsInstrumentationKey { get; set; }
     }
 }

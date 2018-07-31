@@ -19,19 +19,22 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             var appName = GetSetting("AppName");
             var localLogPath = GetSetting("LogDir");
 
-            LogManager.Configuration = new LoggingConfiguration();
-            LogManager.ThrowConfigExceptions = true;
+            var config = new LoggingConfiguration();
+
 
             if (ConfigurationHelper.IsDevOrAtEnvironment)
-                AddLocalTarget(localLogPath, appName);
+                AddLocalTarget(config, localLogPath, appName);
             else
-                AddRedisTarget(appName);
+                AddRedisTarget(config, appName);
 
-            AddAzureTarget(writer);
+            //AddAzureTarget(writer);
+
+            LogManager.Configuration = config;
+            LogManager.ThrowConfigExceptions = true;
             return new NLogLogger(type);
         }
 
-        private static void AddRedisTarget(string appName)
+        private static void AddRedisTarget(LoggingConfiguration config, string appName)
         {
             var target = new RedisTarget
             {
@@ -44,11 +47,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
                 Layout = "${message}"
             };
 
-            LogManager.Configuration.AddTarget(target);
-            LogManager.Configuration.AddRule(GetMinLogLevel(), LogLevel.Fatal, "RedisLog");
+            config.AddTarget(target);
+            config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "RedisLog");
         }
 
-        private static void AddLocalTarget(string localLogPath, string appName)
+        private static void AddLocalTarget(LoggingConfiguration config, string localLogPath, string appName)
         {
             InternalLogger.LogFile = Path.Combine(localLogPath, $"{appName}\\nlog-internal.{appName}.log");
             var fileTarget = new FileTarget("Disk")
@@ -57,8 +60,15 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
                 Layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}"
             };
 
-            LogManager.Configuration.AddTarget(fileTarget);
-            LogManager.Configuration.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
+            var consoleTarget = new ColoredConsoleTarget("Console")
+            {
+                Layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}"
+            };
+            config.AddTarget(consoleTarget);
+
+            config.AddTarget(fileTarget);
+            config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
+            config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Console");
         }
 
         private static void AddAzureTarget(TraceWriter writer)
