@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 		    ForSingletonOf<TelemetryConfiguration>().Use<TelemetryConfiguration>()
 		        .Ctor<string>(ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false));
 		    ForSingletonOf<TelemetryClient>().Use<TelemetryClient>().Ctor<TelemetryConfiguration>().Is(ctx => ctx.GetInstance<TelemetryConfiguration>());
-//			For<IAppInsightsTelemetry>().Use<AppInsightsTelemetry>();
+//			For<ITelemetry>().Use<AppInsightsTelemetry>();
 		}
 	}
 }

@@ -106,7 +106,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var client = new TelemetryClient();
                 var context = client.StartOperation<RequestTelemetry>(typeof(TFunction).Name);
                 c.For<IOperationHolder<RequestTelemetry>>().Use(context);
-                c.For<IAppInsightsTelemetry>().Use<AppInsightsTelemetry>();
+                c.For<ITelemetry>().Use<AppInsightsTelemetry>();
                 c.For<TraceWriter>().Use(writer);
                 c.For<TraceWriterLogger>().Use<TraceWriterLogger>();
                 c.For<ILog>().Use<CompositeLogger>();

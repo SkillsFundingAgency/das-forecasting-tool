@@ -8,7 +8,7 @@ using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 {
-	public class AppInsightsTelemetry : IAppInsightsTelemetry
+	public class AppInsightsTelemetry : ITelemetry
 	{
 		private readonly IApplicationConfiguration _configuration;
 		private TelemetryClient _telemetry;
