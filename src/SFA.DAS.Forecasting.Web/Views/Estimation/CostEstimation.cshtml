@@ -87,7 +87,6 @@
     <div class="grid-row">
         <div id="tabs-container">
             <ul class="tabs-menu">
-
                 <li id="tab-apprenticeships-added"><a href="#apprenticeships-added">Apprenticeships added</a></li>
                 <li id="tab-account-funds" class="current"><a href="#account-funds">Account funds</a></li>
                 @if (Model.AnyTransferApprenticeships)
@@ -180,6 +179,7 @@
 
 
             <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
+
                 @if (Model.TransferAllowances != null)
                 {
                     var tableBodyClass =Model.CanFund ? "" : "errorTable";
@@ -247,7 +247,7 @@
                 </div>
             </div>
 
-            <div id="apprenticeships-added" class="tab-content" style="display: none;">
+            <div id="tab-2" class="tab-content">
                 <table class="small responsive">
                     <thead>
                         <tr>

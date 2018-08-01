@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class BalanceViewModel
+    public class ProjectionViewModel
     {
         public IEnumerable<ProjectiontemViewModel> BalanceItemViewModels { get; set; }
 

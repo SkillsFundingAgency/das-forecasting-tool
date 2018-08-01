@@ -10,7 +10,6 @@ Background:
 Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23rd of month
      Given I have generated the following projections
 	 | Date   | Funds in | Cost of training | Completion payments | Your contribution | Government contribution | Future funds |
-	 | Jun 18 | 1000     | 1800             | 10000               | 1000              | 1339                    | 12000        |
 	 | Jul 18 | 1000     | 2350             | 50000               | 1000              | 1339                    | 12000        |
 	 | Aug 18 | 1000     | 850              | 45000               | 1000              | 1339                    | 12000        |
 	 | Sep 18 | 1000     | 700              | 37880               | 1000              | 1339                    | 12000        |
@@ -35,7 +34,6 @@ Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23r
   Given I have generated the following projections
   
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-  | Jun 18 | 1000     | 1800             | 10000               | 1000         |
   | Jul 18 | 1000     | 2350             | 50000               | 1000         |
   | Aug 18 | 1000     | 850              | 45000               | 1000         |
   | Sep 18 | 1000     | 700              | 37880               | 1000         |
@@ -57,7 +55,6 @@ Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23r
 
   Given I have generated the following projections
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-  | Jun 18 | 1000     | 1800             | 10000               | 1000         |
   | Jul 18 | 1000     | 2350             | 50000               | 1000         |
   | Aug 18 | 1000     | 850              | 45000               | 1000         |
   | Sep 18 | 1000     | 700              | 37880               | 1000         |
@@ -79,7 +76,6 @@ Scenario: DownloadForecastBalanceSheetAC1_Forecast between payments made and 23r
 
   Given I have generated the following projections
   | Date   | Funds in | Cost Of Training | Completion Payments | Future Funds |
-  | Jun 18 | 1000     | 1800             | 10000               | 1000         |
   | Jul 18 | 1000     | 2350             | 50000               | 1000         |
   | Aug 18 | 1000     | 850              | 45000               | 1000         |
   | Sep 18 | 1000     | 700              | 37880               | 1000         |

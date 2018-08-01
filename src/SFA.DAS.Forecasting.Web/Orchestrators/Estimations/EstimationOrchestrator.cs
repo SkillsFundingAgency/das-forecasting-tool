@@ -22,8 +22,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
-        public EstimationOrchestrator(
-            IAccountEstimationProjectionRepository estimationProjectionRepository,
+        public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService, 
             ICurrentBalanceRepository currentBalanceRepository,
@@ -43,8 +42,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountEstimation = await _estimationRepository.Get(accountId);
             var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation);
             estimationProjector.BuildProjections();
-
-            var estimationProjections =  estimationProjector.Projections;
 
             var viewModel = new EstimationPageViewModel
             {
@@ -68,7 +65,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             FundingSource = o.FundingSource
                         }),
                 },
-                TransferAllowances = estimationProjections?
+                TransferAllowances = estimationProjector?.Projections?
                     .Select(o => new EstimationTransferAllowanceVewModel
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
@@ -79,19 +76,22 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 AccountFunds =
                     new AccountFundsViewModel
                     {
-                        OpeningBalance = GetOpeningBalance(estimationProjections),
+                        OpeningBalance = GetOpeningBalance(estimationProjector?.Projections),
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
-                        Records = GetAccountFunds(estimationProjections)
+                        Records = GetAccountFunds(estimationProjector?.Projections)
                     }
             };
             return viewModel;
         }
+
+        private long GetAccountId(string hashedAccountId) => _hashingService.DecodeValue(hashedAccountId);
 
         public async Task<bool> HasValidApprenticeships(string hashedAccountId)
         {
             var accountEstimation = await _estimationRepository.Get(GetAccountId(hashedAccountId));
             return accountEstimation.HasValidApprenticeships;
         }
+
 
         public async Task RefreshCurrentBalance(long accountId)
         {
@@ -101,15 +101,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
-        private long GetAccountId(string hashedAccountId) => _hashingService.DecodeValue(hashedAccountId);
-
         private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
         {
             decimal estimatedFundsOut = 0;
             var accountFumds = estimations.Select(projection =>
             {
                 estimatedFundsOut += projection.ModelledCosts.FundsOut;
-                var balance = projection.ProjectedFutureFunds - estimatedFundsOut;
+                var balance = projection.FutureFunds - estimatedFundsOut;
 
                 return new AccountFundsItem
                 {
@@ -129,7 +127,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             if (first == null)
                 return 0;
 
-            return first.ProjectedFutureFunds;
+            return first.FutureFunds;
         }
 
         public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)

@@ -1746,7 +1746,6 @@ input[type=number] {
 }
 
 .phase-banner span {
-  display: table-cell;
   vertical-align: baseline;
 }
 
@@ -1795,7 +1794,6 @@ input[type=number] {
 
 .phase-banner-alpha span,
 .phase-banner-beta span {
-  display: table-cell;
   vertical-align: baseline;
 }
 
@@ -2102,6 +2100,24 @@ table.top-border {
   margin-right: 0;
   padding-left: 0;
   padding-right: 0;
+}
+
+.phase-banner {
+  margin: 0 15px;
+}
+
+@media (min-width: 641px) {
+  .phase-banner {
+    max-width: 960px;
+    margin: 0 30px;
+  }
+}
+
+@media (min-width: 1020px) {
+  .phase-banner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
 }
 
 #global-header-bar {
@@ -3286,7 +3302,7 @@ table.responsive tr th.tw-70 {
 .panel-warning .icon {
   width: 35px;
   height: 35px;
-  background-image: url("/public/images/../../Content/dist/images/icon-important.png");
+  background-image: url("/public/images/../../comt-assets/images/icon-important.png");
   position: absolute;
   top: 20px;
   left: 0;
@@ -3294,7 +3310,7 @@ table.responsive tr th.tw-70 {
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .panel-warning .icon {
-    background-image: url("/public/images/../../Content/dist/images/icon-important-2x.png");
+    background-image: url("/public/images/../../comt-assets/images/icon-important-2x.png");
     background-size: 100%;
   }
 }
@@ -4413,6 +4429,7 @@ table.small th, table.small td, table.small .form-hint {
   background: #f7e7e9;
 }
 
+<<<<<<< HEAD
 .panel-warning2 {
   padding-left: 50px;
   padding-top: 0;
@@ -4436,6 +4453,9 @@ table.small th, table.small td, table.small .form-hint {
 }
 
 #BalanceSheet-Tables .tip-info, #AccountFunds-Tables .tip-info {
+=======
+#BalanceSheet-Tables .tip-info {
+>>>>>>> master
   font-weight: normal;
   background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
   background-size: 18px;
