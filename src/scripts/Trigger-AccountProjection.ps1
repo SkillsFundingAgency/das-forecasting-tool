@@ -8,7 +8,15 @@ Param(
 
     [ValidateSet("PaymentPeriodEnd","LevyDeclaration")]
     [Parameter(Mandatory=$True)]
-    [string]$projectionSource
+    [string]$projectionSource,
+
+    [ValidateRange(1,12)]
+    [Parameter(Mandatory=$false)]
+    [int]$startPeriodMonth,
+
+    [ValidateRange(2018,2099)]
+    [Parameter(Mandatory=$false)]
+    [int]$startPeriodYear
 )
 
 
@@ -28,7 +36,16 @@ $invisibleTimeout = [System.TimeSpan]::FromSeconds(30)
 $storageContext = New-AzureStorageContext -ConnectionString $connectionString
 $generateProjectionsQueue = Get-Queue -queueName "forecasting-projections-generate-projections"
 Write-Verbose "Got build projections queue, now generating the command."
-$command = @{ "EmployerAccountId" = $accountId; "ProjectionSource" = $projectionSource  }
+$command = @{ 
+    EmployerAccountId = $accountId
+    ProjectionSource = $projectionSource
+}
+if ($startPeriodMonth -and $startPeriodYear) {
+    $command.startPeriod = @{
+        Month = $startPeriodMonth
+        Year = $startPeriodYear
+    }
+}
 $message = New-Object -TypeName Microsoft.WindowsAzure.Storage.Queue.CloudQueueMessage -ArgumentList (ConvertTo-Json $command)
 Write-Verbose "Now sending the message to trigger account projection."
 $generateProjectionsQueue.CloudQueue.AddMessage($message)

@@ -8,15 +8,14 @@
 
  #*************************************************************
  $accountIds = @(12345
- #,
- #54321, 
- #67890,
- #09876
+ , 54321
+ ,67890
+ ,09876
  )
  #*************************************************************
 
  foreach ($listedAccountId in $accountIds) {    
-    .\Trigger-AccountProjection.ps1 -connectionString $connectionString -accountId $listedAccountId -projectionSource $projectionSource
+    .\Trigger-AccountProjection.ps1 -connectionString $connectionString -accountId $listedAccountId -projectionSource $projectionSource -startPeriodMonth 7 -startPeriodYear 2018
  }
 
  

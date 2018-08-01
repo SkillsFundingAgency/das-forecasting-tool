@@ -36,9 +36,6 @@
     <Reference Include="Microsoft.ApplicationInsights, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.6.4\lib\net46\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ApplicationInsights.NLogTarget, Version=2.6.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.ApplicationInsights.NLogTarget.2.6.4\lib\net45\Microsoft.ApplicationInsights.NLogTarget.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
     </Reference>
@@ -225,7 +222,8 @@
     <Compile Include="Infrastructure\Registries\LoggingRegistry.cs" />
     <Compile Include="Logging\AzureFunctionLogTarget.cs" />
     <Compile Include="Logging\CompositeLogger.cs" />
-    <Compile Include="Logging\LoggerSetup.cs" />
+    <Compile Include="Logging\NLogLoggerSetup.cs" />
+    <Compile Include="Logging\TraceWriterLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

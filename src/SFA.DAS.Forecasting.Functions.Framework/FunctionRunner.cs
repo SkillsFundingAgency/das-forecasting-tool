@@ -94,10 +94,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             }
             catch (Exception ex)
             {
-                if (logger != null)
-                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
-                else
-                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
         }
@@ -110,7 +107,9 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var context = client.StartOperation<RequestTelemetry>(typeof(TFunction).Name);
                 c.For<IOperationHolder<RequestTelemetry>>().Use(context);
                 c.For<IAppInsightsTelemetry>().Use<AppInsightsTelemetry>();
-                c.For<ILog>().Use(x => LoggerSetup.Create(executionContext, writer, x.ParentType));
+                c.For<TraceWriter>().Use(writer);
+                c.For<TraceWriterLogger>().Use<TraceWriterLogger>();
+                c.For<ILog>().Use<CompositeLogger>();
             });
         }
     }

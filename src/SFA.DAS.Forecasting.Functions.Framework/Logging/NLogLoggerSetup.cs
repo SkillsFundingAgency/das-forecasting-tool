@@ -5,16 +5,14 @@ using NLog.Config;
 using NLog.Targets;
 using SFA.DAS.NLog.Logger;
 using System;
-using System.Configuration;
 using System.IO;
-using Microsoft.Azure.WebJobs;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
-    public class LoggerSetup
+    public class NLogLoggerSetup
     {
-        internal static NLogLogger Create(ExecutionContext executionContext, TraceWriter writer, Type type)
+        internal static NLogLogger Create(Type type)
         {
             var appName = GetSetting("AppName");
             var localLogPath = GetSetting("LogDir");
@@ -58,31 +56,30 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
                 FileName = Path.Combine(localLogPath, $"{appName}\\{appName}.${{shortdate}}.log"),
                 Layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}"
             };
+            config.AddTarget(fileTarget);
 
             var consoleTarget = new ColoredConsoleTarget("Console")
             {
                 Layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}"
             };
             config.AddTarget(consoleTarget);
-
-            config.AddTarget(fileTarget);
             config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
             config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Console");
         }
 
-        private static void AddAzureTarget(TraceWriter writer)
-        {
-            var config = LogManager.Configuration ?? new LoggingConfiguration();
+        //private static void AddAzureTarget(TraceWriter writer)
+        //{
+        //    var config = LogManager.Configuration ?? new LoggingConfiguration();
 
-            var azureTarget = new AzureFunctionLogTarget(writer);
-            config.AddTarget("azure", azureTarget);
+        //    var azureTarget = new AzureFunctionLogTarget(writer);
+        //    config.AddTarget("azure", azureTarget);
 
-            azureTarget.Layout = @"${level:uppercase=true}|${threadid:padCharacter=0:padding=3}|${message}";
+        //    azureTarget.Layout = @"${level:uppercase=true}|${threadid:padCharacter=0:padding=3}|${message}";
 
-            var rule1 = new LoggingRule("*", GetMinLogLevel(), azureTarget);
-            config.LoggingRules.Add(rule1);
-            LogManager.Configuration = config;
-        }
+        //    var rule1 = new LoggingRule("*", GetMinLogLevel(), azureTarget);
+        //    config.LoggingRules.Add(rule1);
+        //    LogManager.Configuration = config;
+        //}
 
         private static string GetSetting(string key, bool isSensitive = false)
         {
