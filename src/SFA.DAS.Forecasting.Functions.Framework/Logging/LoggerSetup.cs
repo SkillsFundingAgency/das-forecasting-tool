@@ -21,7 +21,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 
             var config = new LoggingConfiguration();
 
-
             if (ConfigurationHelper.IsDevOrAtEnvironment)
                 AddLocalTarget(config, localLogPath, appName);
             else

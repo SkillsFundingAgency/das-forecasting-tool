@@ -224,6 +224,7 @@
     <Compile Include="Infrastructure\FunctionInitialisationService.cs" />
     <Compile Include="Infrastructure\Registries\LoggingRegistry.cs" />
     <Compile Include="Logging\AzureFunctionLogTarget.cs" />
+    <Compile Include="Logging\CompositeLogger.cs" />
     <Compile Include="Logging\LoggerSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
