@@ -24,8 +24,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             else
                 AddRedisTarget(config, appName);
 
-            //AddAzureTarget(writer);
-
             LogManager.Configuration = config;
             LogManager.ThrowConfigExceptions = true;
             return new NLogLogger(type);
@@ -58,28 +56,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             };
             config.AddTarget(fileTarget);
 
-            var consoleTarget = new ColoredConsoleTarget("Console")
-            {
-                Layout = "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}"
-            };
-            config.AddTarget(consoleTarget);
             config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
-            config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Console");
         }
-
-        //private static void AddAzureTarget(TraceWriter writer)
-        //{
-        //    var config = LogManager.Configuration ?? new LoggingConfiguration();
-
-        //    var azureTarget = new AzureFunctionLogTarget(writer);
-        //    config.AddTarget("azure", azureTarget);
-
-        //    azureTarget.Layout = @"${level:uppercase=true}|${threadid:padCharacter=0:padding=3}|${message}";
-
-        //    var rule1 = new LoggingRule("*", GetMinLogLevel(), azureTarget);
-        //    config.LoggingRules.Add(rule1);
-        //    LogManager.Configuration = config;
-        //}
 
         private static string GetSetting(string key, bool isSensitive = false)
         {
