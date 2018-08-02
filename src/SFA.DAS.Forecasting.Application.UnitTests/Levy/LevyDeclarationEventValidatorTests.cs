@@ -64,6 +64,14 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
             result.IsValid.Should().BeFalse();
         }
 
+        [Test]
+        public void Passes_If_Amount_Is_Zero()
+        {
+            var validator = new LevyDeclarationEventValidator();
+            LevySchemeDeclarationUpdatedMessage.LevyDeclaredInMonth = 0;
+            var result = validator.Validate(LevySchemeDeclarationUpdatedMessage);
+            result.IsValid.Should().BeTrue();
+        }
 
         [Test]
         public void Fails_If_Transaction_Date_Is_Invalid()
