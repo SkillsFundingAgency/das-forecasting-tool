@@ -101,6 +101,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
+      <Project>{B6B0820B-097F-4938-A1D4-FE92F3A1308F}</Project>
+      <Name>SFA.DAS.Forecasting.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
       <Project>{426ce92a-1acb-4ffe-adb2-5b49484f33ca}</Project>
       <Name>SFA.DAS.Forecasting.Core</Name>

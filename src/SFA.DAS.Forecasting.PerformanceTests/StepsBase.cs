@@ -157,6 +157,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests
 
         protected void DeleteCommitments()
         {
+            
             DataContext.AccountProjectionCommitments
                 .RemoveRange(DataContext.AccountProjectionCommitments
                 .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId).ToList());
