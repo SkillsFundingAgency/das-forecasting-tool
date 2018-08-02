@@ -8,8 +8,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
     public class TraceWriterLogger: ILog
     {
         private readonly TraceWriter _traceWriter;
-        private static readonly Dictionary<string, object> EmptyDictionary = new Dictionary<string, object>();
-
         public TraceWriterLogger(TraceWriter traceWriter)
         {
             _traceWriter = traceWriter ?? throw new ArgumentNullException(nameof(traceWriter));

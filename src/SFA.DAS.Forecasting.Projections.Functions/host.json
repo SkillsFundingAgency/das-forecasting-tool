@@ -4,5 +4,16 @@
     "newBatchThreshold": 16,
     "maxPollingInterval": 500,
     "maxDequeueCount": 2
-  }
+   }
+  //  ,
+  //"logger": {
+  //  "categoryFilter": {
+  //    "defaultLevel": "Trace",
+  //    "categoryLevels": {
+  //      "Host": "Error",
+  //      "Function": "Trace",
+  //      "Host.Aggregator": "Information"
+  //    }
+  //  }
+  //}
 }

@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 
             var config = new LoggingConfiguration();
 
-            if (ConfigurationHelper.IsDevOrAtEnvironment)
+            if (ConfigurationHelper.IsDevEnvironment)
                 AddLocalTarget(config, localLogPath, appName);
             else
                 AddRedisTarget(config, appName);

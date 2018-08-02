@@ -9,11 +9,16 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 	{
 		public TelemetryRegistry()
 		{
+		    var config =
+		        new TelemetryConfiguration(ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false));
+            var client = new TelemetryClient(config);
+		    client.InstrumentationKey = config.InstrumentationKey;
 
-		    ForSingletonOf<TelemetryConfiguration>().Use<TelemetryConfiguration>()
-		        .Ctor<string>(ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false));
-		    ForSingletonOf<TelemetryClient>().Use<TelemetryClient>().Ctor<TelemetryConfiguration>().Is(ctx => ctx.GetInstance<TelemetryConfiguration>());
-//			For<ITelemetry>().Use<AppInsightsTelemetry>();
+		    //ForSingletonOf<TelemetryConfiguration>().Use<TelemetryConfiguration>()
+		    //    .Ctor<string>(ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false));
+		    //ForSingletonOf<TelemetryClient>().Use<TelemetryClient>().Ctor<TelemetryConfiguration>().Is(ctx => ctx.GetInstance<TelemetryConfiguration>());
+		    ForSingletonOf<TelemetryConfiguration>().Use(config);
+		    ForSingletonOf<TelemetryClient>().Use(client);
 		}
 	}
 }

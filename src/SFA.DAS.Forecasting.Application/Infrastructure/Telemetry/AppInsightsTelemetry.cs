@@ -1,191 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Core;
 using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 {
-	public class AppInsightsTelemetry : ITelemetry
-	{
-		private readonly IApplicationConfiguration _configuration;
-		private TelemetryClient _telemetry;
+    public class AppInsightsTelemetry : ITelemetry, IDisposable
+    {
+        private readonly TelemetryClient _telemetry;
+        private readonly Dictionary<string, string> _properties;
+        public AppInsightsTelemetry(TelemetryClient telemetry)
+        {
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _properties = new Dictionary<string, string>();
+        }
 
-		public AppInsightsTelemetry(IApplicationConfiguration configuration)
-		{
-			_configuration = configuration;
-			_telemetry = new TelemetryClient();
-			TelemetryConfiguration.Active.InstrumentationKey = _configuration.AppInsightsInstrumentationKey;
-		}
+        public void AddProperty(string propertyName, string value)
+        {
+            _properties.Add(propertyName, value);
+        }
 
-		public void Debug(string functionName, string desc, string methodName)
-		{
-			TelemetryTrackEvent("Debug", functionName, desc, methodName);
-		}
+        public void TrackEvent(string eventName, Dictionary<string, string> properties)
+        {
+            _telemetry.TrackEvent(eventName, _properties.ConcatDictionary(properties));
+        }
 
-		public void Debug(string functionName, string desc, string methodName, Guid operationId)
-		{
-			TelemetryTrackEvent("Debug", functionName, desc, methodName, operationId);
-		}
+        public void TrackDuration(string durationName, TimeSpan duration, Dictionary<string, string> properties)
+        {
+            _telemetry.TrackMetric(durationName, duration.TotalMilliseconds, _properties.ConcatDictionary(properties));
+        }
 
-		public void Info(string functionName, string desc, string methodName)
-		{
-			TelemetryTrackEvent("Info", functionName, desc, methodName);
-		}
+        public void TrackDependency(string dependencyType, string dependencyName, DateTimeOffset startTime, TimeSpan duration, bool success,
+            Dictionary<string, string> properties)
+        {
+            _telemetry.TrackDependency(dependencyType, dependencyName, JsonConvert.SerializeObject(_properties.ConcatDictionary(properties)), startTime, duration, success);
+        }
 
-		public void Info(string functionName, string desc, string methodName, Guid operationId)
-		{
-			TelemetryTrackEvent("Info", functionName, desc, methodName, operationId);
-		}
+        private void ReleaseUnmanagedResources()
+        {
+            _telemetry?.Flush();
+        }
 
-		public void Warning(string functionName, string desc, string methodName)
-		{
-			TelemetryTrackEvent("Warning", functionName, desc, methodName);		
-		}
+        public void Dispose()
+        {
+            ReleaseUnmanagedResources();
+            GC.SuppressFinalize(this);
+        }
 
-		public void Warning(string functionName, string desc, string methodName, Guid operationId)
-		{
-			TelemetryTrackEvent("Warning", functionName, desc, methodName, operationId);
-		}
-
-		public void Error(string functionName, Exception ex, string desc, string methodName)
-		{
-			TelemetryTrackException("Error", functionName, ex, desc, methodName);
-		}
-
-		public void Error(string functionName, Exception ex, string desc, string methodName, Guid operationId)
-		{
-			TelemetryTrackException("Error", functionName, ex, desc, methodName, operationId);
-		}
-
-		private void TelemetryTrackEvent(string logLevel, string functionName, string desc, string methodName)
-		{
-			_telemetry.TrackEvent($"{logLevel.ToUpper()} --> {functionName} - {methodName}: {desc}");
-		}
-
-		private void TelemetryTrackEvent(string logLevel, string functionName, string desc, string methodName, Guid operationId)
-		{
-			_telemetry.Context.Operation.Id = operationId.ToString();
-			TelemetryTrackEvent(logLevel, functionName, desc, methodName);
-		}
-
-		private void TelemetryTrackException(string logLevel, string functionName, Exception ex, string desc, string methodName)
-		{
-			var properties = new Dictionary<string, string>() { { "Function", functionName }, { "Method", methodName }, { "Description", desc } };
-			_telemetry.TrackException(ex, properties);
-		}
-
-		private void TelemetryTrackException(string logLevel, string functionName, Exception ex, string desc, string methodName, Guid operationId)
-		{
-			_telemetry.Context.Operation.Id = operationId.ToString();
-			TelemetryTrackException("Error", functionName, ex, desc, methodName);
-		}
-
-		public void Trace(string message)
-		{
-			TelemetryTrackEvent("Trace", string.Empty, message, string.Empty);
-		}
-
-		public void Trace(string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackEvent("Trace", string.Empty, message, string.Empty);
-		}
-
-		public void Trace(string message, ILogEntry logEntry)
-		{
-			TelemetryTrackEvent("Trace", string.Empty, message, string.Empty);
-		}
-
-		public void Debug(string message)
-		{
-			TelemetryTrackEvent("Debug", string.Empty, message, string.Empty);
-		}
-
-		public void Debug(string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackEvent("Debug", string.Empty, message, string.Empty);
-		}
-
-		public void Debug(string message, ILogEntry logEntry)
-		{
-			TelemetryTrackEvent("Debug", string.Empty, message, string.Empty);
-		}
-
-		public void Info(string message)
-		{
-			TelemetryTrackEvent("Info", string.Empty, message, string.Empty);
-		}
-
-		public void Info(string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackEvent("Info", string.Empty, message, string.Empty);
-		}
-
-		public void Info(string message, ILogEntry logEntry)
-		{
-			TelemetryTrackEvent("Info", string.Empty, message, string.Empty);
-		}
-
-		public void Warn(string message)
-		{
-			TelemetryTrackEvent("Warning", string.Empty, message, string.Empty);
-		}
-
-		public void Warn(string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackEvent("Warning", string.Empty, message, string.Empty);
-		}
-
-		public void Warn(string message, ILogEntry logEntry)
-		{
-			TelemetryTrackEvent("Warning", string.Empty, message, string.Empty);
-		}
-
-		public void Warn(Exception ex, string message)
-		{
-			TelemetryTrackException("Warning", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Warn(Exception ex, string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackException("Warning", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Warn(Exception ex, string message, ILogEntry logEntry)
-		{
-			TelemetryTrackException("Warning", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Error(Exception ex, string message)
-		{
-			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Error(Exception ex, string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Error(Exception ex, string message, ILogEntry logEntry)
-		{
-			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Fatal(Exception ex, string message)
-		{
-			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Fatal(Exception ex, string message, IDictionary<string, object> properties)
-		{
-			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
-		}
-
-		public void Fatal(Exception ex, string message, ILogEntry logEntry)
-		{
-			TelemetryTrackException("Error", string.Empty, ex, message, string.Empty);
-		}
-	}
+        ~AppInsightsTelemetry()
+        {
+            ReleaseUnmanagedResources();
+        }
+    }
 }

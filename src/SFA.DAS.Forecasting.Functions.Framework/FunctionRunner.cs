@@ -103,7 +103,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
         {
             container.Configure(c =>
             {
-                var client = new TelemetryClient();
+                var client = container.GetInstance<TelemetryClient>();
                 var context = client.StartOperation<RequestTelemetry>(typeof(TFunction).Name);
                 c.For<IOperationHolder<RequestTelemetry>>().Use(context);
                 c.For<ITelemetry>().Use<AppInsightsTelemetry>();
