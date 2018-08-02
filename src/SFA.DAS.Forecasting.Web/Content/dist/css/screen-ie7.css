@@ -1207,6 +1207,25 @@ details summary {
   cursor: pointer;
   position: relative;
   margin-bottom: 0.2631578947em;
+  padding-left: 25px;
+}
+
+details summary:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  -webkit-clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  border-width: 7px 0 7px 12.124px;
+  border-left-color: inherit;
 }
 
 details summary:hover {
@@ -1217,13 +1236,28 @@ details summary:focus {
   outline: 3px solid #ffbf47;
 }
 
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] > summary:before {
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  -webkit-clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+  clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+  border-width: 12.124px 7px 0 7px;
+  border-top-color: inherit;
+}
+
 details .summary {
   text-decoration: underline;
 }
 
 details .arrow {
-  margin-right: .35em;
-  font-style: normal;
+  display: none;
 }
 
 .panel {
@@ -4372,7 +4406,6 @@ details.projection-survey {
 }
 
 details.projection-survey summary {
-  width: 100%;
   background-color: #005ea5;
   color: white;
 }
@@ -4421,7 +4454,6 @@ table.small th, table.small td, table.small .form-hint {
   background: #f7e7e9;
 }
 
-<<<<<<< HEAD
 .panel-warning2 {
   padding-left: 50px;
   padding-top: 0;
@@ -4445,9 +4477,6 @@ table.small th, table.small td, table.small .form-hint {
 }
 
 #BalanceSheet-Tables .tip-info, #AccountFunds-Tables .tip-info {
-=======
-#BalanceSheet-Tables .tip-info {
->>>>>>> master
   font-weight: normal;
   background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
   background-size: 18px;
