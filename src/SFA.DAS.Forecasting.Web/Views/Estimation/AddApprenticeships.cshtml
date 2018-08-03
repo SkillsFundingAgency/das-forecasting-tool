@@ -28,6 +28,8 @@
             <form method="post">
                 <div class="grid-row">
                     <div class="column-two-thirds">
+                        <input id="FundingPeriodsJson" name="FundingPeriodsJson" type="hidden" value="@Model.FundingPeriodsJson">
+                        @Html.HiddenFor(m => m.CalculatedTotalCap)
 
                         <div class="form-group @Html.AddErrorClass(m => m.Course)">
                             <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
@@ -82,35 +84,16 @@
                         <div class="form-group">
                             <label class="form-label-bold">Government funding band maximum</label>
 
-                            @{
-                                var calculatedFundingCapMessageClass = "HideFundingCapMessage";
-                                var defaultFundingCapMessageClass = "";
+                            <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
+                                Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCapCalculated.FormatCost()</span><br />
+                                Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
+                            </span>
 
-                                decimal? fundingCap = null;
-                                int? apprenticeCount = null;
-                                decimal? totalCap = null;
+                            <span id="details-about-funding" class="form-hint">
+                                Choose an apprenticeship and number of apprentices to see this figure <br>
+                                <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
+                            </span>
 
-                                if (Model.CalculatedTotalCap > 0)
-                                {
-                                    fundingCap = Model.Course.FundingCap;
-                                    apprenticeCount = Model.NumberOfApprentices;
-                                    totalCap = Model.CalculatedTotalCap;
-                                    calculatedFundingCapMessageClass = "";
-                                    defaultFundingCapMessageClass = "HideFundingCapMessage";
-                                }
-
-                                <span id="details-about-funding-calculated" class="form-hint @calculatedFundingCapMessageClass" style="display: none;">
-                                    Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                    Total government funding band maximum for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
-                                </span>
-
-                                <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
-                                    Choose an apprenticeship and number of apprentices to see this figure <br>
-                                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
-                                </span>
-
-
-                            }
                         </div>
 
 
