@@ -32,7 +32,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 if (doc != null)
                 {
                     var lastRunTime = doc.GetPropertyValue<DateTimeOffset>("lastRunTime");
-                    if (lastRunTime >= DateTimeOffset.UtcNow.AddMinutes(-10))
+                    var allowTime = DateTime.UtcNow.AddMinutes(-10);
+                    if (lastRunTime >= allowTime)
                         return false;
                 }
                 else
@@ -42,18 +43,19 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 }
 
                 doc.SetPropertyValue("employerAccountId", employerAccountId);
-                doc.SetPropertyValue("lastRunTime", DateTimeOffset.UtcNow);
+                doc.SetPropertyValue("lastRunTime", DateTime.UtcNow);
                 await _documentSession.Store(doc);
             }
             catch (DocumentClientException dce)
             {
                 //   now notice the failure when attempting the update 
-                //   this is because the ETag on the server no longer matches the ETag of doc (b/c it was changed in step 2)
+                //   this is because the ETag on the server no longer matches the ETag of doc (b/c it was changed by another thread)
                 if (dce.StatusCode == HttpStatusCode.PreconditionFailed)
                 {
                     //no need to record the audit as a concurrent thread has already recorded the audit
                     return false;
                 }
+                throw;
             }
             return true;
         }

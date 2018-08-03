@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
         Task<Document> GetDocument(string id);
         Task Store<T>(T item) where T : class, IDocument;
         Task Store(Document document);
+        Task Delete(string id);
     }
 
     public class DocumentSession : IDocumentSession
@@ -80,6 +81,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
         public async Task Store(Document document)
         {
             await _client.UpsertDocumentAsync(_documentCollection.SelfLink, document);
+        }
+
+        public async Task Delete(string id)
+        {
+            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _documentCollection.Id, id));
         }
     }
 }
