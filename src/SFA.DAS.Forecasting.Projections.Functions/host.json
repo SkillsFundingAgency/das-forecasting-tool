@@ -4,5 +4,6 @@
     "newBatchThreshold": 16,
     "maxPollingInterval": 500,
     "maxDequeueCount": 2,
-    "visibilityTimeout" : "00:02:30"
+    "visibilityTimeout": "00:02:30"
+  }
 }
