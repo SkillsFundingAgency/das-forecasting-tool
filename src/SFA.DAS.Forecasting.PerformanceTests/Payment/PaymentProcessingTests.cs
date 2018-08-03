@@ -5,64 +5,21 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Bogus;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
-using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Provider.Events.Api.Types;
 using CalendarPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.CalendarPeriod;
-using Database = Bogus.Database;
 using NamedCalendarPeriod = SFA.DAS.Forecasting.Application.Payments.Messages.NamedCalendarPeriod;
 
 namespace SFA.DAS.Forecasting.PerformanceTests.Payment
 {
-    public class BaseProcessingTests
-    {
-        protected IDocumentSession CreateDocumentSession()
-        {
-            var connectionString = ConfigurationHelper.GetConnectionString("CosmosDbConnectionString");
-            if (string.IsNullOrEmpty(connectionString))
-                throw new InvalidOperationException("No 'DocumentConnectionString' connection string found.");
-            var documentConnectionString = new DocumentSessionConnectionString { ConnectionString = connectionString };
-
-            var client = new DocumentClient(new Uri(documentConnectionString.AccountEndpoint), documentConnectionString.AccountKey);
-            client.CreateDatabaseIfNotExistsAsync(new Microsoft.Azure.Documents.Database { Id = documentConnectionString.Database }).Wait();
-
-            client.CreateDocumentCollectionIfNotExistsAsync(
-                UriFactory.CreateDatabaseUri(documentConnectionString.Database), new DocumentCollection
-                {
-                    Id = documentConnectionString.Collection
-                },
-                new RequestOptions { OfferThroughput = int.Parse(documentConnectionString.ThroughputOffer) }).Wait();
-            return new DocumentSession(client, documentConnectionString);
-        }
-
-        protected void RemoveEmployerProjectionAuditDocuments(ProjectionSource projectionSource, params long[] employerAccountIds)
-        {
-            var session = CreateDocumentSession();
-            RemoveEmployerProjectionAuditDocuments(session, projectionSource, employerAccountIds);
-        }
-
-        protected void RemoveEmployerProjectionAuditDocuments(IDocumentSession session, ProjectionSource projectionSource, params long[] employerAccountIds)
-        {
-            foreach (var employerAccountId in employerAccountIds)
-            {
-                var docId = $"employerprojectionaudit-{projectionSource.ToString("G").ToLower()}-{employerAccountId}";
-                session.Delete(docId).Wait();
-            }
-        }
-
-    }
-
     [TestFixture]
-    public class PaymentProcessingTests: BaseProcessingTests
+    public class PaymentProcessingTests : BaseProcessingTests
     {
         [SetUp]
         public void SetUp()
@@ -111,38 +68,24 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
             return paymentFaker;
         }
 
-        [Test]
-        public void Test_Payments_Random()
+        private List<PaymentCreatedMessage> SendPayments(Faker<PaymentCreatedMessage> paymentFaker, int count = 10)
         {
-            //            var accountIds = new[] { 9912345, 9923451, 9934512, 9945123, 9951234, 9954321 };
-            var accountIds = new long[] { 9912345 };
             var account = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["StorageConnectionString"]?.ConnectionString);
             var queue = account.CreateCloudQueueClient().GetQueueReference(QueueNames.PaymentValidator);
             Assert.IsTrue(queue.Exists(), $"Queue not found: {QueueNames.PaymentValidator}");
             var payments = new List<PaymentCreatedMessage>();
-            var dataContext = new ForecastingDataContext(ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString);
-            //dataContext.Database.ExecuteSqlCommand(
-            //    $"delete from AccountProjectionCommitment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-            dataContext.Database.ExecuteSqlCommand(
-                $"delete from AccountProjection where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-            dataContext.Database.ExecuteSqlCommand(
-                $"delete from Commitment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-            dataContext.Database.ExecuteSqlCommand(
-                $"delete from Payment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-
-            var paymentFaker = CreateFakePayments(accountIds);
-            RemoveEmployerProjectionAuditDocuments(ProjectionSource.PaymentPeriodEnd,accountIds);
-            
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < count; i++)
             {
                 var payment = paymentFaker.Generate();
                 var payload = JsonConvert.SerializeObject(payment);
                 queue.AddMessage(new CloudQueueMessage(payload));
                 payments.Add(payment);
             }
+            return payments;
+        }
 
+        private void FindPayments(ForecastingDataContext dataContext, List<PaymentCreatedMessage> payments)
+        {
             var timeToWait = TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToWait"]);
             var timeToPause = TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"]);
             var endTime = DateTime.Now.Add(timeToWait);
@@ -153,8 +96,8 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
                     break;
 
                 if (dataContext.Payments.Any(p => p.EmployerAccountId == payment.EmployerAccountId &&
-                                                             p.ApprenticeshipId == payment.ApprenticeshipId &&
-                                                             p.LearnerId == payment.Uln))
+                                                  p.ApprenticeshipId == payment.ApprenticeshipId &&
+                                                  p.LearnerId == payment.Uln))
                 {
                     payments.Remove(payment);
                     Console.WriteLine($"Found payment: {payment.Id}, {payment.EmployerAccountId}, {payment.ApprenticeName}");
@@ -163,13 +106,36 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
                 Console.WriteLine($"Payment not found: {payment.Id}, {payment.EmployerAccountId}, {payment.ApprenticeName}");
                 Thread.Sleep(timeToPause);
             }
+        }
+
+        [Test]
+        public void Test_Payments_Random()
+        {
+            AccountIds = new long[] { 9912345 };
+            var dataContext = new ForecastingDataContext(ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString);
+            //dataContext.Database.ExecuteSqlCommand(
+            //    $"delete from AccountProjectionCommitment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
+            dataContext.Database.ExecuteSqlCommand(
+                $"delete from AccountProjection where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
+            dataContext.Database.ExecuteSqlCommand(
+                $"delete from Commitment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
+            dataContext.Database.ExecuteSqlCommand(
+                $"delete from Payment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
+
+            var paymentFaker = CreateFakePayments(AccountIds);
+            RemoveEmployerProjectionAuditDocuments(ProjectionSource.PaymentPeriodEnd, AccountIds);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var payments = SendPayments(paymentFaker);
+            FindPayments(dataContext, payments);
             stopwatch.Stop();
-            if (payments.Any())
+            if (!payments.Any())
             {
-                payments.ForEach(payment => Console.WriteLine($"Failed to find payment: {payment.Id}, {payment.EmployerAccountId}, {payment.ApprenticeName}"));
-                Assert.Fail("Failed to find all the payments");
+                Console.WriteLine($"Found all payments. Took: {stopwatch.ElapsedMilliseconds}ms");
             }
-            Console.WriteLine($"Found all payments. Took: {stopwatch.ElapsedMilliseconds}ms");
+            payments.ForEach(payment => Console.WriteLine($"Failed to find payment: {payment.Id}, {payment.EmployerAccountId}, {payment.ApprenticeName}"));
+            Assert.Fail("Failed to find all the payments");
         }
     }
 }

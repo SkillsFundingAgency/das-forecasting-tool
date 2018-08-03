@@ -114,6 +114,7 @@
     <Compile Include="Infrastructure\Config.cs" />
     <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
     <Compile Include="Levy\LevyProcessingTests.cs" />
+    <Compile Include="Payment\BaseProcessingTests.cs" />
     <Compile Include="Payment\PaymentProcessingTests.cs" />
     <Compile Include="PayrollPeriod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
