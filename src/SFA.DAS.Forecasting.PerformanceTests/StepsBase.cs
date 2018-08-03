@@ -158,14 +158,14 @@ namespace SFA.DAS.Forecasting.PerformanceTests
         protected void DeleteCommitments()
         {
             
-            DataContext.AccountProjectionCommitments
-                .RemoveRange(DataContext.AccountProjectionCommitments
-                .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId).ToList());
-            var commitments = DataContext.Commitments
-                .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId)
-                .ToList();
-            DataContext.Commitments.RemoveRange(commitments);
-            DataContext.SaveChanges();
+            //DataContext.AccountProjectionCommitments
+            //    .RemoveRange(DataContext.AccountProjectionCommitments
+            //    .Where(apc => apc.Commitment.EmployerAccountId == Config.EmployerAccountId).ToList());
+            //var commitments = DataContext.Commitments
+            //    .Where(commitment => commitment.EmployerAccountId == Config.EmployerAccountId)
+            //    .ToList();
+            //DataContext.Commitments.RemoveRange(commitments);
+            //DataContext.SaveChanges();
         }
 
         protected void DeleteBalance()
@@ -179,15 +179,15 @@ namespace SFA.DAS.Forecasting.PerformanceTests
 
         protected void DeleteAccountProjections()
         {
-            var projectionCommitments = DataContext.AccountProjectionCommitments
-                .Where(ap => ap.AccountProjection.EmployerAccountId == Config.EmployerAccountId)
-                .ToList();
-            DataContext.AccountProjectionCommitments.RemoveRange(projectionCommitments);
-            var projections = DataContext.AccountProjections
-                .Where(projection => projection.EmployerAccountId == Config.EmployerAccountId)
-                .ToList();
-            DataContext.AccountProjections.RemoveRange(projections);
-            DataContext.SaveChanges();
+            //var projectionCommitments = DataContext.AccountProjectionCommitments
+            //    .Where(ap => ap.AccountProjection.EmployerAccountId == Config.EmployerAccountId)
+            //    .ToList();
+            //DataContext.AccountProjectionCommitments.RemoveRange(projectionCommitments);
+            //var projections = DataContext.AccountProjections
+            //    .Where(projection => projection.EmployerAccountId == Config.EmployerAccountId)
+            //    .ToList();
+            //DataContext.AccountProjections.RemoveRange(projections);
+            //DataContext.SaveChanges();
         }
 
         protected void InsertLevyDeclarations(PayrollPeriod period, IList<LevyDeclarationModel> levySubmissions)
