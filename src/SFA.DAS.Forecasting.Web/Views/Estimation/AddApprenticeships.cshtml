@@ -9,7 +9,7 @@
 @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    <main id="content" role="main" tabindex="-1">
+ 
         <div id="estimate-add-apprenticeship">
             <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
             @Html.HiddenFor(model => model.Name)
@@ -180,7 +180,7 @@
             </div>
 
         </div>
-    </main>
+
 }
 
 @functions{
