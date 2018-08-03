@@ -178,3 +178,23 @@ $(window).scroll(function () {
 sfa.navigation.init();
 
 $('ul#global-nav-links').collapsableNav();
+
+$(function () {
+    $('.error-summary-with-sticky-header a').on('click touch', function (e) {
+
+        var target = $(this).prop('hash'),
+            $target = $(target);
+
+        if ($target.length === 0) {
+            return;
+        }
+
+        window.scrollTo(0, $target.offset().top - 130);
+
+        if ($target.is('input, select')) {
+            $target.focus();
+        }
+
+        e.preventDefault();
+    });
+});
