@@ -127,7 +127,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var payments = SendPayments(paymentFaker);
+            var payments = SendPayments(paymentFaker,100);
             FindPayments(dataContext, payments);
             stopwatch.Stop();
             if (!payments.Any())
