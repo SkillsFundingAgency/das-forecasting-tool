@@ -133,6 +133,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
             if (!payments.Any())
             {
                 Console.WriteLine($"Found all payments. Took: {stopwatch.ElapsedMilliseconds}ms");
+                return;
             }
             payments.ForEach(payment => Console.WriteLine($"Failed to find payment: {payment.Id}, {payment.EmployerAccountId}, {payment.ApprenticeName}"));
             Assert.Fail("Failed to find all the payments");
