@@ -85,7 +85,16 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
 
         public async Task Delete(string id)
         {
-            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _documentCollection.Id, id));
+            try
+            {
+                await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _documentCollection.Id, id));
+            }
+            catch (DocumentClientException exception)
+            {
+                if (exception.StatusCode == HttpStatusCode.NotFound)
+                    return;
+                throw;
+            }
         }
     }
 }
