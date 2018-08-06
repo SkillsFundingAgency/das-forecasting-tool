@@ -60,8 +60,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()
                 .Ctor<IApplicationConnectionStrings>("config")
-                .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>())
-                .ContainerScoped();
+                .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>());
 
             For<IEmployerDatabaseService>()
                 .Use<EmployerDatabaseService>();
