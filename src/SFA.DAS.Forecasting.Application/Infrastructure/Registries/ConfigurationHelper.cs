@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
             return 
-                IsDevOrAtEnvironment
+                IsDevOrTestEnvironment
                 ? new AccountApiConfiguration
                 {
                     Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
@@ -84,6 +84,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static bool IsDevOrAtEnvironment =>
             IsDevEnvironment || (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("AT") ?? false);
+
+        public static bool IsDevOrTestEnvironment =>
+            IsDevOrAtEnvironment || 
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("TEST") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("TEST2") ?? false);
 
         private static async Task<string> GetSecret(string secretName)
         {
