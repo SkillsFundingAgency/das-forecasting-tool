@@ -63,7 +63,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             StartDate = o.StartDate,
                             TotalCost = o.TotalCost,
                             FundingSource = o.FundingSource
-                        }),
+                        }).ToList(),
                 },
                 TransferAllowances = estimationProjector?.Projections?
                     .Select(o => new EstimationTransferAllowanceVewModel
