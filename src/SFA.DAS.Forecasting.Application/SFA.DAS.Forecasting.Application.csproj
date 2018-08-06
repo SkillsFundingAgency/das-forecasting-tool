@@ -107,6 +107,15 @@
     <Reference Include="SFA.DAS.Apprenticeships.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Apprenticeships.Api.Types.0.11.30\lib\net462\SFA.DAS.Apprenticeships.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.Commitments.Api.Client, Version=2.1.511.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Client.2.1.511\lib\net45\SFA.DAS.Commitments.Api.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Commitments.Api.Types, Version=2.1.511.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Commitments.Api.Types.2.1.511\lib\net45\SFA.DAS.Commitments.Api.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Common.Domain, Version=1.3.0.44308, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Common.Domain.1.3.0.44308\lib\net45\SFA.DAS.Common.Domain.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.Configuration, Version=1.0.0.53229, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Configuration.1.0.0.53229\lib\net45\SFA.DAS.Configuration.dll</HintPath>
     </Reference>
@@ -121,6 +130,9 @@
     </Reference>
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.57835, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.Http, Version=1.0.0.35471, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Http.1.0.0.35471\lib\net45\SFA.DAS.Http.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
@@ -197,6 +209,7 @@
     <Compile Include="Estimations\Validation\AddApprenticeshipValidation\IAddApprenticeshipValidation.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidator.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Infrastructure\Configuration\CommitmentsApiConfig.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
@@ -212,6 +225,7 @@
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />
+    <Compile Include="Apprenticeship\Messages\GetApprenticesihpMessage.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
