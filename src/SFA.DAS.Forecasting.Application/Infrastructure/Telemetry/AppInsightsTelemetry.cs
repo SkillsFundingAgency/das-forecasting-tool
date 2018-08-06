@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 {
     public class AppInsightsTelemetry : ITelemetry, IDisposable
     {
-        private readonly TelemetryClient _telemetry;
+        private TelemetryClient _telemetry;
         private readonly Dictionary<string, string> _properties;
         public AppInsightsTelemetry(TelemetryClient telemetry)
         {
@@ -40,6 +40,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
         private void ReleaseUnmanagedResources()
         {
             _telemetry?.Flush();
+            _telemetry = null;
         }
 
         public void Dispose()
