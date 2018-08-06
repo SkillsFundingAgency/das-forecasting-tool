@@ -171,6 +171,7 @@
     <Compile Include="Estimations\AddApprenticeshipOrchestatorTests.cs" />
     <Compile Include="Estimations\Validation\AddApprenticeshipValidatorTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
+    <Compile Include="Levy\LevyDeclarationHandlerTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
     <Compile Include="Payments\CollectionPeriodValidatorTests.cs" />
     <Compile Include="Payments\EarningDetailsValidatorTests.cs" />

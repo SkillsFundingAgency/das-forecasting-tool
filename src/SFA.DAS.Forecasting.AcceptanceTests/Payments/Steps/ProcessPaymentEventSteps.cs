@@ -93,6 +93,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 ProviderName = payment.ProviderName,
                 SendingEmployerAccountId = Config.EmployerAccountId,
                 StartDate = payment.StartDate,
+                
             }).ToList();
 
             InsertCommitments(commitments);

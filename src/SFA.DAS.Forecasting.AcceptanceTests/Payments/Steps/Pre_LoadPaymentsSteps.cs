@@ -135,6 +135,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     ApprenticeshipVersion = "123456-001",
                     ContractType = ContractType.ContractWithEmployer,
                     EmployerAccountId = Config.EmployerAccountId.ToString(),
+                    
                     EmployerAccountVersion = "11111111",
                     EvidenceSubmittedOn = DateTime.Today,
                     ProgrammeType = 25,

@@ -34,7 +34,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         public async Task Handle(PaymentCreatedMessage paymentCreatedMessage, string allowProjectionsEndpoint)
         {
             _telemetry.AddEmployerAccountId(paymentCreatedMessage.EmployerAccountId);
-            _telemetry.AddProperty("Payment Id",paymentCreatedMessage.Id);
+            _telemetry.AddProperty("Payment Id", paymentCreatedMessage.Id);
+            _telemetry.AddProperty("Apprenticeship Id", paymentCreatedMessage.ApprenticeshipId.ToString());
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var employerPayment = _mapper.MapToPayment(paymentCreatedMessage);
@@ -42,11 +43,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             var payment = await _repository.Get(paymentCreatedMessage.EmployerAccountId, paymentCreatedMessage.Id);
             payment.RegisterPayment(employerPayment);
             await _repository.StorePayment(payment);
-            _logger.Info($"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
-            _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint);
             stopwatch.Stop();
             _telemetry.TrackDuration("Store Payment", stopwatch.Elapsed);
             _telemetry.TrackEvent("Stored Payment");
+            _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint);
+            _logger.Info($"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
         }
     }
 }

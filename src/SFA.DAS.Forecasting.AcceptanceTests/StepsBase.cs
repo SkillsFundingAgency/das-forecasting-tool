@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Validation;
+using System.Data.Services.Client;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,9 +19,11 @@ using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Commitments.Services;
 using SFA.DAS.Forecasting.Application.Converters;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -44,7 +48,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
-
+        protected IDocumentSession DocumentSession => NestedContainer.GetInstance<IDocumentSession>();
         protected CommitmentsDataService CommitmentsDataService =>NestedContainer.GetInstance<CommitmentsDataService>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
@@ -301,10 +305,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
                     FundingSource = GetFundingSource(commitment)
                 };
-                CommitmentsDataService.Upsert(commitmentModel).Wait();
+                DataContext.Commitments.Add(commitmentModel);
             }
 
-            DataContext.SaveChanges();
+            SaveChanges();
+
         }
 
         private FundingSource GetFundingSource(TestCommitment commitment)
@@ -339,6 +344,40 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         {
             Console.WriteLine($"{description} Uri: {endpoint}, Payload: {payload}");
             HttpClient.PostAsync(endpoint, new StringContent(payload)).Wait();
+        }
+
+        protected void RemoveEmployerProjectionAuditDocuments(params long[] employerAccountIds)
+        {
+            RemoveEmployerProjectionAuditDocuments(ProjectionSource.PaymentPeriodEnd, employerAccountIds);
+            RemoveEmployerProjectionAuditDocuments(ProjectionSource.LevyDeclaration , employerAccountIds);
+        }
+
+        protected void RemoveEmployerProjectionAuditDocuments(ProjectionSource projectionSource, params long[] employerAccountIds)
+        {
+            RemoveEmployerProjectionAuditDocuments(DocumentSession, projectionSource, employerAccountIds);
+        }
+
+        protected void RemoveEmployerProjectionAuditDocuments(IDocumentSession session, ProjectionSource projectionSource, params long[] employerAccountIds)
+        {
+            foreach (var employerAccountId in employerAccountIds)
+            {
+                var docId = $"employerprojectionaudit-{projectionSource.ToString("G").ToLower()}-{employerAccountId}";
+                session.Delete(docId).Wait();
+            }
+        }
+        protected void SaveChanges()
+        {
+            try
+            {
+                DataContext.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                ex.EntityValidationErrors.SelectMany(error => error.ValidationErrors)
+                    .ToList()
+                    .ForEach(error => Console.WriteLine("Entity validation error: {0} - {1}", error.PropertyName, error.ErrorMessage));
+                throw;
+            }
         }
 
     }

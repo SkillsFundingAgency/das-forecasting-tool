@@ -9,6 +9,7 @@ using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
+using FundingSource = SFA.DAS.Provider.Events.Api.Types.FundingSource;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -92,6 +93,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             }
 
             var apprenticeshipId = GetApprenticeshipId(payment.ApprenticeshipId);
+            
             logger.Info($"Creating payment event for apprenticeship: {apprenticeshipId}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
             earningDetail.RequiredPaymentId = Guid.NewGuid();
             return new PaymentCreatedMessage
@@ -111,6 +113,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource,
+                SendingEmployerAccountId = payment.FundingSource == FundingSource.LevyTransfer  ? 54321 : substitutionId
             };
         }
 

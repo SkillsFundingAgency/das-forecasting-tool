@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
@@ -42,11 +43,17 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
-            return await _dataContext
+            var stopwatch = new Stopwatch();
+            var startTime = DateTime.UtcNow;
+            stopwatch.Start();
+            var receivedTime = await _dataContext
                 .Payments.Where(payment => payment.EmployerAccountId == employerAccountId)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync();
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseInsert, "Get Payment Last Received Time", startTime, stopwatch.Elapsed, true);
+            return receivedTime;
         }
 
         public async Task SaveChanges()
@@ -54,7 +61,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
             var stopwatch = new Stopwatch();
             var startTime = DateTime.UtcNow;
             stopwatch.Start();
-            await _dataContext.SaveChangesAsync();
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _dataContext.SaveChangesAsync();
+                scope.Complete();
+            }
             stopwatch.Stop();
             _telemetry.TrackDependency(DependencyType.SqlDatabaseInsert, "Store Payment", startTime, stopwatch.Elapsed, true);
         }

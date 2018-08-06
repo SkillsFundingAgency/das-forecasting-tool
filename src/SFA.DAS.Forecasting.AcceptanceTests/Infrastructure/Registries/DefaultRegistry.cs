@@ -13,6 +13,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
 
         public DefaultRegistry()
         {
+            
             Scan(scan =>
             {
                 scan.AssembliesFromApplicationBaseDirectory(a => a.GetName().Name.StartsWith(ServiceNamespace));

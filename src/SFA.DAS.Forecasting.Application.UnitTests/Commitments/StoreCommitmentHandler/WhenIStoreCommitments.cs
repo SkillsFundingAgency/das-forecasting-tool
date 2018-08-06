@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMoq;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Commitments.Validation;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.NLog.Logger;
 
@@ -13,44 +14,55 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
 {
     public class WhenIStoreCommitments
     {
+        private AutoMoq.AutoMoqer _moqer;
         private Mock<IEmployerCommitmentRepository> _employerCommitmentRepostiory;
         private Mock<ILog> _logger;
         private Application.Commitments.Handlers.StoreCommitmentHandler _handler;
         private Mock<IPaymentMapper> _paymentMapper;
         private PaymentCreatedMessage _message;
-        private CommitmentModel _commitmentModel;
+        private CommitmentModel _newCommitmentModel;
+        private CommitmentModel _dbCommitmentModel;
         private const long ExpectedEmployerAccountId = 554433;
         private const long ExpectedApprenticeshipId = 552244;
 
         [SetUp]
         public void Arrange()
         {
+            _moqer = new AutoMoqer();
             _message = new PaymentCreatedMessage
             {
                 EmployerAccountId = ExpectedEmployerAccountId,
                 ApprenticeshipId = ExpectedApprenticeshipId,
                 EarningDetails = new EarningDetails()
             };
-            _commitmentModel = new CommitmentModel
+            _newCommitmentModel = new CommitmentModel
             {
                 EmployerAccountId = ExpectedEmployerAccountId,
                 ActualEndDate = DateTime.Now.AddMonths(1),
                 Id = 3322,
                 CompletionAmount = 100
             };
+            _dbCommitmentModel = new CommitmentModel
+            {
+                EmployerAccountId = ExpectedEmployerAccountId,
+                ActualEndDate = DateTime.Now.AddMonths(1),
+                Id = 3322,
+                CompletionAmount = 50
+            };
 
-            _employerCommitmentRepostiory = new Mock<IEmployerCommitmentRepository>();
+            _moqer.GetMock<ICommitmentValidator>().Setup(x => x.IsValid(It.IsAny<CommitmentModel>())).Returns(true);
+            _employerCommitmentRepostiory = _moqer.GetMock<IEmployerCommitmentRepository>();
+            _employerCommitmentRepostiory.Setup(x => x.Get(It.IsAny<long>(), It.IsAny<long>()))
+                .ReturnsAsync(new EmployerCommitment(_dbCommitmentModel, _moqer.GetMock<ICommitmentValidator>().Object));
+            _logger = _moqer.GetMock<ILog>();
 
-            _logger = new Mock<ILog>();
-
-            _paymentMapper = new Mock<IPaymentMapper>();
+            _paymentMapper = _moqer.GetMock<IPaymentMapper>();
             _paymentMapper.Setup(x =>
                     x.MapToCommitment(It.Is<PaymentCreatedMessage>(c =>
                         c.EmployerAccountId.Equals(ExpectedEmployerAccountId))))
-                .Returns(_commitmentModel);
+                .Returns(_newCommitmentModel);
 
-            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
-                _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object);
+            _handler = _moqer.Resolve<Application.Commitments.Handlers.StoreCommitmentHandler>();
         }
 
         [Test]
@@ -74,14 +86,23 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         }
 
         [Test]
-        public async Task Then_The_Commitment_Is_Upserted_In_The_Repository()
+        public async Task Then_The_Commitment_Is_Stored_By_The_Repository()
         {
             //Act
             await _handler.Handle(_message);
 
             //Assert
             _employerCommitmentRepostiory.Verify(x =>
-                x.Upsert(It.Is<CommitmentModel>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
+                x.Store(It.Is<EmployerCommitment>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
+        }
+
+        [Test]
+        public async Task Then_The_Commitment_Is_Not_Stored_If_Commitment_Details_Have_Not_Changed()
+        {
+            _newCommitmentModel.CompletionAmount = _dbCommitmentModel.CompletionAmount;
+            await _handler.Handle(_message);
+
+            _employerCommitmentRepostiory.Verify(x => x.Store(It.IsAny<EmployerCommitment>()),Times.Never);
         }
 
     }

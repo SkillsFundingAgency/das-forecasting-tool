@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         public void GivenNoAccountProjectionsHaveBeenGenerated()
         {
             DeleteAccountProjections(Config.EmployerAccountId);
+            RemoveEmployerProjectionAuditDocuments(Config.EmployerAccountId,54321);
         }
     }
 }

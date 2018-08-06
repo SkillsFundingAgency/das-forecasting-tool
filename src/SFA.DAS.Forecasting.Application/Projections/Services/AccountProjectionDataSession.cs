@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
@@ -106,7 +107,11 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                                     " 				TransferOutCompletionPayments = s.TransferOutCompletionPayments, FutureFunds = s.FutureFunds, " +
                                     " 				CoinvestmentEmployer = s.CoinvestmentEmployer, CoInvestmentGovernment = s.CoInvestmentGovernment;");
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString());
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString());
+                scope.Complete();
+            }
             stopwatch.Stop();
             _telemetry.TrackDependency(DependencyType.SqlDatabaseMerge, "Store Account Projections", startTime, stopwatch.Elapsed, true);
         }
@@ -116,12 +121,15 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var startTime = DateTime.UtcNow;
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _dataContext.Database.ExecuteSqlCommandAsync(
+                    "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
+                    employerAccountId);
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(
-                "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
-                employerAccountId);
-
-            await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
+                await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
+                scope.Complete();
+            }
             stopwatch.Stop();
             _telemetry.TrackDependency(DependencyType.SqlDatabaseDelete, "Delete Account Projections", startTime, stopwatch.Elapsed, true);
         }

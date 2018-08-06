@@ -30,15 +30,23 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
                 throw new InvalidOperationException($"Invalid payment created message. Earning details is null so cannot create commitment data. Employer account: {message.EmployerAccountId}, payment id: {message.Id}");
 
             _telemetry.AddEmployerAccountId(message.EmployerAccountId);
+            _telemetry.AddProperty("Payment Id", message.Id);
+            _telemetry.AddProperty("Apprenticeship Id", message.ApprenticeshipId.ToString());
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+            var commitment = await _repository.Get(message.EmployerAccountId, message.ApprenticeshipId);
             var commitmentModel = _paymentMapper.MapToCommitment(message);
+            if (!commitment.RegisterCommitment(commitmentModel))
+            {
+                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
+                return;
+            }
 
-            await _repository.Upsert(commitmentModel);
-
-            _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
+            _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
+            await _repository.Store(commitment);
+            _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
             stopwatch.Stop();
-            _telemetry.TrackDuration("Store Commitment", stopwatch.Elapsed);
+            _telemetry.TrackDuration("Stored Commitment", stopwatch.Elapsed);
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System.Threading;
-using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using StructureMap;
 using TechTalk.SpecFlow;
+using DefaultRegistry = SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries.DefaultRegistry;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests
 {
@@ -11,7 +12,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         [BeforeTestRun(Order = 0)]
         public static void SetUpContainer()
         {
-            ParentContainer = new Container(new DefaultRegistry());
+            ParentContainer = new Container(c =>
+            {
+                c.AddRegistry<DefaultRegistry>();
+                c.AddRegistry<DocumentRegistry>();
+            });
         }
 
         [BeforeScenario(Order = 0)]
