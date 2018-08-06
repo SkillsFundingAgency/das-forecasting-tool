@@ -73,32 +73,30 @@
                         </div>
 
 
-                        <div class="form-group form-group-error">
-                            <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
-                            <span class="error-message">Please enter error message here....</span>
+                        <div class="form-group">
+                            <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>       
                             @Html.DropDownListFor(model => model.ApprenticeshipToAdd.CourseId, @Model.ApprenticeshipList(), new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
                         </div>
 
 
-                        <div class="form-group no-of-apprentice form-group-error">
-                            <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                            <span class="error-message">Please enter error message here....</span>
+                        <div class="form-group no-of-apprentice">
+                            <label class="form-label-bold" for="no-of-app">Number of apprentices</label>                     
                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new { @class = "form-control form-control-error", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text" })
                         </div>
 
 
-                        <div class="form-group no-of-months form-group-error">
+                        <div class="form-group no-of-months">
                             <label class="form-label-bold" for="apprenticeship-length">Number of months</label>
                             <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
-                            <span class="error-message">Please enter error message here....</span>
+                   
                             @Html.TextBoxFor(model => model.ApprenticeshipToAdd.NumberOfMonths, new { @class = "form-control form-control-error", id = "apprenticeship-length", name = "apprenticeship-length", type = "text" })
                         </div>
 
-                        <div class="form-group form-group-error" id="dateWrapper">
+                        <div class="form-group" id="dateWrapper">
 
                             <span class="form-label-bold">Start date</span>
                             <span class="form-hint">For example, 09 2018</span>
-                            <span class="error-message">Please enter error message here....</span>
+                           
                             <div class="form-date">
                                 <div class="form-group form-group-month">
                                     <label for="startDateMonth">Month</label>
@@ -149,10 +147,10 @@
                         </div>
 
 
-                        <div class="form-group form-group-error">
+                        <div class="form-group">
                             <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                             <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
-                            <span class="error-message">Please enter error message here....</span>
+                   
                             <label for="total-funding-cost-2" class="form-label-bold">
                                 £
                                 @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCostAsString, new { @class = "form-control total-funding-cost form-control-error", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
