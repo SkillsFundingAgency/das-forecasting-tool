@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace SFA.DAS.Forecasting.Core
@@ -35,6 +37,12 @@ namespace SFA.DAS.Forecasting.Core
         public static DateTime GetLastPaymentDate(this DateTime plannedEndDate)
         {
             return plannedEndDate.IsLastDayOfMonth() ? plannedEndDate.AddMonths(1) : plannedEndDate;
+        }
+
+        public static Dictionary<string, string> ConcatDictionary(this Dictionary<string, string> first,
+            Dictionary<string, string> second)
+        {
+            return second == null ? first : first.Concat(second).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
     }
 }

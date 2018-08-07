@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Projections.Functions
                     logger.Debug("Resolving BuildAccountProjectionHandler from container.");
                     var handler = container.GetInstance<BuildAccountProjectionHandler>();
                     if (handler == null)
-                        throw new InvalidOperationException("Faild to resolve BuildAccountProjectionHandler from container.");
+                        throw new InvalidOperationException("Failed to resolve BuildAccountProjectionHandler from container.");
                     await handler.Handle(message);
                     logger.Info($"Finished building the account projection for employer: {message.EmployerAccountId}");
                 });
