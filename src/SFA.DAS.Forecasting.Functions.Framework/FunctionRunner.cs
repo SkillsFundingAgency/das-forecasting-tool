@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
 using SFA.DAS.Forecasting.Functions.Framework.Logging;
 using SFA.DAS.NLog.Logger;
@@ -19,7 +23,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
+                    ConfigureContainer<TFunction>(executionContext, writer, container);
                     logger = container.GetInstance<ILog>();
                     await runAction(nestedContainer, logger);
                 }
@@ -43,7 +47,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
+                    ConfigureContainer<TFunction>(executionContext, writer, container);
                     logger = container.GetInstance<ILog>();
                     runAction(nestedContainer, logger);
                 }
@@ -65,7 +69,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    ConfigureContainer(executionContext, writer, container);
+                    ConfigureContainer<TFunction>(executionContext, writer, container);
                     return runAction(nestedContainer, container.GetInstance<ILog>());
                 }
             }
@@ -82,28 +86,30 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
-                ConfigureContainer(executionContext, writer, container);
-                logger = container.GetInstance<ILog>();
                 using (var nestedContainer = container.GetNestedContainer())
                 {
-                    return await runAction(nestedContainer, logger);
+                    ConfigureContainer<TFunction>(executionContext, writer, container);
+                    return await runAction(nestedContainer, container.GetInstance<ILog>());
                 }
             }
             catch (Exception ex)
             {
-                if (logger != null)
-                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
-                else
-                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
                 throw;
             }
         }
 
-        private static void ConfigureContainer(ExecutionContext executionContext, TraceWriter writer, IContainer container)
+        private static void ConfigureContainer<TFunction>(ExecutionContext executionContext, TraceWriter writer, IContainer container) where TFunction : IFunction
         {
             container.Configure(c =>
             {
-                c.For<ILog>().Use(x => LoggerSetup.Create(executionContext, writer, x.ParentType));
+                var client = container.GetInstance<TelemetryClient>();
+                var context = client.StartOperation<RequestTelemetry>(typeof(TFunction).Name);
+                c.For<IOperationHolder<RequestTelemetry>>().Use(context);
+                c.For<ITelemetry>().Use<AppInsightsTelemetry>();
+                c.For<TraceWriter>().Use(writer);
+                c.For<TraceWriterLogger>().Use<TraceWriterLogger>();
+                c.For<ILog>().Use<CompositeLogger>();
             });
         }
     }

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
-using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Services
@@ -17,11 +15,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
     public class AccountProjectionDataSession : IAccountProjectionDataSession
     {
         private readonly IForecastingDataContext _dataContext;
+        private readonly ITelemetry _telemetry;
 
-        public AccountProjectionDataSession(IForecastingDataContext dataContext)
+        public AccountProjectionDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
 
         public async Task<List<AccountProjectionModel>> Get(long employerAccountId)
@@ -33,6 +32,9 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
 
         public async Task Store(IEnumerable<AccountProjectionModel> accountProjections)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var startTime = DateTime.UtcNow;
             var insertString = new StringBuilder();
             var accountCommitmentsInsert =
                 "DECLARE @TempAccountProjection as TABLE" +
@@ -42,18 +44,18 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 "   [ProjectionGenerationType] TINYINT NOT NULL," +
                 "   [Month] SMALLINT NOT NULL," +
                 "   [Year] INT NOT NULL," +
-                "   [FundsIn] DECIMAL(18,2) NOT NULL," +
-                "   [TotalCostOfTraining] DECIMAL(18,2) NOT NULL," +
-                "	[TransferOutTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0)," +
-                "	[TransferInTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0)," +
-                "	[TransferInCompletionPayments] DECIMAL(18,2) NOT NULL default(0)," +
-                "   [CompletionPayments] DECIMAL(18,2) NOT NULL," +
-                "	[TransferOutCompletionPayments] DECIMAL(18,2) NOT NULL default(0)," +
-                "   [FutureFunds] DECIMAL(18,2) NOT NULL," +
-                "	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0)," +
-                "	[CoInvestmentGovernment] DECIMAL(18,2) NOT NULL default(0)" +
+                "   [FundsIn] DECIMAL(18,5) NOT NULL," +
+                "   [TotalCostOfTraining] DECIMAL(18,5) NOT NULL," +
+                "	[TransferOutTotalCostOfTraining] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[TransferInTotalCostOfTraining] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[TransferInCompletionPayments] DECIMAL(18,5) NOT NULL default(0)," +
+                "   [CompletionPayments] DECIMAL(18,5) NOT NULL," +
+                "	[TransferOutCompletionPayments] DECIMAL(18,5) NOT NULL default(0)," +
+                "   [FutureFunds] DECIMAL(18,5) NOT NULL," +
+                "	[CoInvestmentEmployer] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0)" +
                 ") ";
-            
+
 
             _dataContext.Configuration.AutoDetectChangesEnabled = false;
             insertString.Append(accountCommitmentsInsert);
@@ -105,22 +107,33 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                                     " 				CoinvestmentEmployer = s.CoinvestmentEmployer, CoInvestmentGovernment = s.CoInvestmentGovernment;");
 
             await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString());
-            
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseMerge, "Store Account Projections", startTime, stopwatch.Elapsed, true);
         }
 
         public async Task DeleteAll(long employerAccountId)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var startTime = DateTime.UtcNow;
+
             await _dataContext.Database.ExecuteSqlCommandAsync(
                 "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
                 employerAccountId);
 
             await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseDelete, "Delete Account Projections", startTime, stopwatch.Elapsed, true);
         }
 
         public async Task SaveChanges()
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var startTime = DateTime.UtcNow;
             await _dataContext.SaveChangesAsync();
-        }
+            _telemetry.TrackDependency("EF Context Save Changes", "Account Projections", startTime, stopwatch.Elapsed, true);
 
+        }
     }
 }

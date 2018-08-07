@@ -14,7 +14,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 case "now":
                     return DateTime.Now;
                 case "yesterday":
-                    return DateTime.Today.AddDays(-1);
+                case "this month":
+                    return new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                 case "last week":
                     return DateTime.Today.AddDays(-7);
                 case "last month":
