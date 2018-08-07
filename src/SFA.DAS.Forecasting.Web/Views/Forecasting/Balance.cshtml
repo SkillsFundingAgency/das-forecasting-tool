@@ -20,7 +20,7 @@
                 <summary>More information</summary>
                 <div>
                     <p>
-                        These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
+                    These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
                     <p />
                     <p>
                         The projection doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider. These will be added to the funding projection soon.
@@ -30,6 +30,8 @@
                     </p>
                 </div>
             </details>
+            
+            @Html.ActionLink("Estimate apprrenticeships you could fund", "StartEstimation", "Estimation", null, new { @class = "button margin-top-x2" })
         </div>
     </div>
 
