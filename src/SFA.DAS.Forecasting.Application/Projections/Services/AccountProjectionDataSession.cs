@@ -44,16 +44,16 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 "   [ProjectionGenerationType] TINYINT NOT NULL," +
                 "   [Month] SMALLINT NOT NULL," +
                 "   [Year] INT NOT NULL," +
-                "   [FundsIn] DECIMAL(18,2) NOT NULL," +
-                "   [TotalCostOfTraining] DECIMAL(18,2) NOT NULL," +
-                "	[TransferOutTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0)," +
-                "	[TransferInTotalCostOfTraining] DECIMAL(18,2) NOT NULL default(0)," +
-                "	[TransferInCompletionPayments] DECIMAL(18,2) NOT NULL default(0)," +
-                "   [CompletionPayments] DECIMAL(18,2) NOT NULL," +
-                "	[TransferOutCompletionPayments] DECIMAL(18,2) NOT NULL default(0)," +
-                "   [FutureFunds] DECIMAL(18,2) NOT NULL," +
-                "	[CoInvestmentEmployer] DECIMAL(18,2) NOT NULL default(0)," +
-                "	[CoInvestmentGovernment] DECIMAL(18,2) NOT NULL default(0)" +
+                "   [FundsIn] DECIMAL(18,5) NOT NULL," +
+                "   [TotalCostOfTraining] DECIMAL(18,5) NOT NULL," +
+                "	[TransferOutTotalCostOfTraining] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[TransferInTotalCostOfTraining] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[TransferInCompletionPayments] DECIMAL(18,5) NOT NULL default(0)," +
+                "   [CompletionPayments] DECIMAL(18,5) NOT NULL," +
+                "	[TransferOutCompletionPayments] DECIMAL(18,5) NOT NULL default(0)," +
+                "   [FutureFunds] DECIMAL(18,5) NOT NULL," +
+                "	[CoInvestmentEmployer] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0)" +
                 ") ";
 
 
