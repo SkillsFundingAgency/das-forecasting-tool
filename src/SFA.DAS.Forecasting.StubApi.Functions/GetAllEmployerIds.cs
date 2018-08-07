@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -16,7 +17,10 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
         {
             writer.Info("C# HTTP trigger function processed a request.");
 
-            return new List<long> { 12345, 999 };
+            return
+                StubDataStore.Apprenticeships
+                    .Select(m => long.Parse(m.Key))
+                    .Distinct();
         }
     }
 }

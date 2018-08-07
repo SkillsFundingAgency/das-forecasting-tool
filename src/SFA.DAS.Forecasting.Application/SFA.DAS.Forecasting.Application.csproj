@@ -190,6 +190,7 @@
     <Compile Include="ApprenticeshipCourses\Services\ApprenticeshipCourseDataService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\StandardsService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\StandardSummaryMapper.cs" />
+    <Compile Include="Apprenticeship\Messages\ApprenticeshipMessage.cs" />
     <Compile Include="Balance\Services\AccountBalanceService.cs" />
     <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
@@ -289,7 +290,9 @@
       <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Apprenticeship\Validation\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Azure.Services.AppAuthentication.1.1.0-preview\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\packages\Microsoft.Azure.Services.AppAuthentication.1.1.0-preview\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

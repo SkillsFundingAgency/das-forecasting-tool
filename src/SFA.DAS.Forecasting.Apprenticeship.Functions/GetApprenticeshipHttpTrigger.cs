@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
             return await FunctionRunner.Run<GetApprenticeshipHttpTrigger, string>(writer, executionContext,
                async (container, logger) =>
                {
-                   logger.Debug("Getting all emplouer ids...");
+                   logger.Debug("Getting all employer ids...");
                    var employerCommitmentsApi = container.GetInstance<IEmployerCommitmentApi>();
                    var allEmployerIds = await employerCommitmentsApi.GetAllEmployerAccountIds();
 
