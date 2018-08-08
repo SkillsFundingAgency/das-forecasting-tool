@@ -6,7 +6,7 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Messages.Projections;
 
-namespace SFA.DAS.Forecasting.PerformanceTests.Payment
+namespace SFA.DAS.Forecasting.PerformanceTests
 {
     [TestFixture]
     public class BaseProcessingTests
