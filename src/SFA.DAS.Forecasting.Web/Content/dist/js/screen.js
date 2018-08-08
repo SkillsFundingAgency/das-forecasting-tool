@@ -55,6 +55,7 @@ var chart = (function () {
 });
 
 var tabs = (function () {
+
     $(".tabs-menu a").click(function (e) {
         e.preventDefault();
         $(this).parent().addClass("current");
@@ -62,6 +63,11 @@ var tabs = (function () {
         var tab = $(this).attr("href");
         $(".tab-content").not(tab).css("display", "none");
         $(tab).fadeIn();
+
+        if (history.replaceState)
+            history.replaceState(null, null, tab);
+        else
+            location.hash = tab;
     });
 });
 
