@@ -86,11 +86,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@accountId", Config.EmployerAccountId);
-                    connection.Execute("delete from [employer_financial].[LevyDeclaration] where AccountId = @accountId; delete from [employer_financial].[Payment] where AccountId = @accountId;", parameters, commandType: CommandType.Text);
-
-                    //parameters = new DynamicParameters();
-                    //parameters.Add("@transfers", ToTransferDataTable(Payments.Where(p => p.FundingSource == Models.Payments.FundingSource.Transfer).ToList()).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
-                    //connection.Execute("[employer_financial].[CreateAccountTransfers]", parameters, commandType: CommandType.StoredProcedure);
+                    connection.Execute("delete from [employer_financial].[AccountTransfers] where ReceiverAccountId = @accountId; delete from [employer_financial].[LevyDeclaration] where AccountId = @accountId; delete from [employer_financial].[Payment] where AccountId = @accountId;", parameters, commandType: CommandType.Text);
                 }
             });
         }
