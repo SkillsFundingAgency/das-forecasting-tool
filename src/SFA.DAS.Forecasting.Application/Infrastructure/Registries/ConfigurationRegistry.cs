@@ -26,15 +26,18 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 EmployerConnectionString = ConfigurationHelper.GetConnectionString("EmployerConnectionString"),
                 StorageConnectionString = ConfigurationHelper.GetConnectionString("StorageConnectionString"),
 
-                Hashstring = ConfigurationHelper.GetAppSetting("HashString", true),
-                AllowedHashstringCharacters = ConfigurationHelper.GetAppSetting("AllowedHashstringCharacters", true),
+                HashString = ConfigurationHelper.GetAppSetting("HashString", true),
+                AllowedHashStringCharacters = ConfigurationHelper.GetAppSetting("AllowedHashStringCharacters", true),
                 NumberOfMonthsToProject = int.Parse(ConfigurationHelper.GetAppSetting("NumberOfMonthsToProject", false) ?? "0"),
                 SecondsToWaitToAllowProjections = int.Parse(ConfigurationHelper.GetAppSetting("SecondsToWaitToAllowProjections", false) ?? "0"),
                 BackLink = ConfigurationHelper.GetAppSetting("BackLink", false),
                 LimitForecast = Boolean.Parse(ConfigurationHelper.GetAppSetting("LimitForecast", false) ?? "false"),
                 StubEmployerPaymentTable = ConfigurationHelper.GetAppSetting("Stub-EmployerPaymentTable", false),
                 AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true"),
-                ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false)
+                ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false),
+                AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false)
+
+            
             };
 
             SetApiConfiguration(configuration);

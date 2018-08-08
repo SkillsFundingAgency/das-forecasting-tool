@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
@@ -16,29 +18,37 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
     public class CommitmentsDataService : ICommitmentsDataService
     {
         private readonly IForecastingDataContext _dataContext;
+        private readonly ITelemetry _telemetry;
 
-        public CommitmentsDataService(IForecastingDataContext dataContext)
+        public CommitmentsDataService(IForecastingDataContext dataContext, ITelemetry telemetry)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var model = new EmployerCommitmentsModel
             {
-                LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate)),
-                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate)),
-                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate)),
-                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId))
+                LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate), "Levy Funded Commitments"),
+                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate), "Receiving Employer Transfer Commitments"),
+                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate), "Sending Employer Transfer Commitments"),
+                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId), "Co-Investment Commitments")
             };
-
+            stopwatch.Stop();
+            _telemetry.TrackDuration("Get Current Commitments", stopwatch.Elapsed);
             return model;
         }
 
-        private async Task<List<CommitmentModel>> GetCommitments(Expression<Func<CommitmentModel, bool>> filter)
+        private async Task<List<CommitmentModel>> GetCommitments(Expression<Func<CommitmentModel, bool>> filter, string queryName)
         {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
             var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
-
+            stopwatch.Stop();
+            _telemetry.TrackDuration("Get Commitment Count: " + queryName, stopwatch.Elapsed);
             var model = new List<CommitmentModel>(listSize);
 
             if (listSize == 0)
@@ -47,6 +57,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             }
             var moreData = true;
             var skip = 0;
+            stopwatch.Restart();
             while (moreData)
             {
                 var commitments = await _dataContext.Commitments.AsNoTracking().Where(filter).OrderBy(c => c.Id).Skip(skip).Take(100).ToListAsync();
@@ -61,6 +72,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                     model.AddRange(commitments);
                 }
             }
+            stopwatch.Stop();
+            _telemetry.TrackDuration($"Get {queryName}", stopwatch.Elapsed);
             return model;
         }
 
@@ -80,19 +93,19 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && commitment.ActualEndDate == null;
         }
 
-		private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
+        private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
-	    private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
-	    {
-		    return commitment => commitment.EmployerAccountId == employerAccountId
-		                         && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
-		                         && commitment.ActualEndDate == null;
-	    }
+        private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
+        {
+            return commitment => commitment.EmployerAccountId == employerAccountId
+                                 && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
+                                 && commitment.ActualEndDate == null;
+        }
 
         public async Task Upsert(CommitmentModel commitment)
         {
@@ -134,7 +147,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
 
         }
-        
+
         private string UpserSqlString()
         {
             return @"

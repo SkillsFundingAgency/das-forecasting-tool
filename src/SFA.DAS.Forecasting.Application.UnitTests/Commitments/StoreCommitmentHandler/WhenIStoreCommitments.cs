@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Commitments;
@@ -48,8 +49,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                         c.EmployerAccountId.Equals(ExpectedEmployerAccountId))))
                 .Returns(_commitmentModel);
 
-            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
-                _logger.Object, _paymentMapper.Object, new Apprenticeship.Mapping.ApprenticeshipMapping());
+            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(
+                _employerCommitmentRepostiory.Object,
+                _logger.Object, 
+                _paymentMapper.Object, 
+                new Mock<ITelemetry>().Object, 
+                new Apprenticeship.Mapping.ApprenticeshipMapping());
         }
 
         [Test]

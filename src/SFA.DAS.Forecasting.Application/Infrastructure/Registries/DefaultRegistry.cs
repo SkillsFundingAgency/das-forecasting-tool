@@ -41,8 +41,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     .Use<AccountBalanceService>();
                 For<IHashingService>()
                     .Use<HashingService.HashingService>()
-                    .Ctor<string>("allowedCharacters").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AllowedHashstringCharacters)
-                    .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().Hashstring);
+                    .Ctor<string>("allowedCharacters").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().AllowedHashStringCharacters)
+                    .Ctor<string>("hashstring").Is(ctx => ctx.GetInstance<IApplicationConfiguration>().HashString);
             }
 
             var apiConfig = ConfigurationHelper.GetAccountApiConfiguration();

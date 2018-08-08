@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -11,17 +13,25 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
     public class EmployerPaymentDataSession : IEmployerPaymentDataSession
     {
         private readonly IForecastingDataContext _dataContext;
+        private readonly ITelemetry _telemetry;
 
-        public EmployerPaymentDataSession(IForecastingDataContext dataContext)
+        public EmployerPaymentDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
 
-        public Task<PaymentModel> Get(long employerAccountId, string paymentId)
+        public async Task<PaymentModel> Get(long employerAccountId, string paymentId)
         {
-            return _dataContext.Payments
-                .FirstOrDefaultAsync(payment => payment.EmployerAccountId == employerAccountId && 
+            var stopwatch = new Stopwatch();
+            var startTime = DateTime.UtcNow;
+            stopwatch.Start();
+            var employerPayment = await _dataContext.Payments
+                .FirstOrDefaultAsync(payment => payment.EmployerAccountId == employerAccountId &&
                                                 payment.ExternalPaymentId == paymentId);
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Payment", startTime, stopwatch.Elapsed, employerPayment != null);
+            return employerPayment;
         }
 
         public void Store(PaymentModel payment)
@@ -41,7 +51,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task SaveChanges()
         {
+            var stopwatch = new Stopwatch();
+            var startTime = DateTime.UtcNow;
+            stopwatch.Start();
             await _dataContext.SaveChangesAsync();
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseInsert, "Store Payment", startTime, stopwatch.Elapsed, true);
         }
     }
 }
