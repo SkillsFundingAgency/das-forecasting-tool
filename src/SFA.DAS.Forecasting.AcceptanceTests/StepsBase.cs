@@ -12,6 +12,7 @@ using System.Transactions;
 using Dapper;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
@@ -37,7 +38,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static Config Config => ParentContainer.GetInstance<Config>();
         protected static readonly string FunctionsToolsRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AzureFunctionsTools", "Releases");
         protected static string FunctionsToolsPath => Path.Combine(FunctionsToolsRootPath, GetAzureFunctionsToolsVersion(), "cli", "func.exe");
-        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli" );
+        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli");
         protected static string FunctionsCliPath => Path.Combine(FunctionsCliRootPath, GetAzureFunctionsCliVersion(), "func.exe");
         protected static string FunctionsPath => Directory.Exists(FunctionsToolsRootPath) ? FunctionsToolsPath : FunctionsCliPath;
 
@@ -45,13 +46,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
 
-        protected CommitmentsDataService CommitmentsDataService =>NestedContainer.GetInstance<CommitmentsDataService>();
+        protected CommitmentsDataService CommitmentsDataService => NestedContainer.GetInstance<CommitmentsDataService>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
         protected List<TestPayment> Payments { get => Get<List<TestPayment>>(); set => Set(value); }
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
+        protected List<TestApprenticeship> TestApprenticeships { get => Get<List<TestApprenticeship>>(); set => Set(value); }
+
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
         protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }

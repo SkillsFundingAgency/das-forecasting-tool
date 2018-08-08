@@ -131,6 +131,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Apprenticeship\Feature\LoadApprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>LoadApprenticeships.feature.cs</LastGenOutput>
+    </None>
+    <Compile Include="Apprenticeship\Feature\LoadApprenticeships.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoadApprenticeships.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Apprenticeship\Steps\ApprenticeshipsSteps.cs" />
+    <Compile Include="Apprenticeship\TestApprenticeship.cs" />
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="CommitmentType.cs" />
     <Compile Include="Extensions.cs" />

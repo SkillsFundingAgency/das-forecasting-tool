@@ -35,11 +35,13 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                    IEnumerable<ApiApprenticeship> apiApprenticeships = 
                       await employerCommitmentsApi.GetEmployerApprenticeships(message.EmployerId)
                       ?? new List<ApiApprenticeship>();
+                   IEnumerable<long> failedValidation;
 
-                   logger.Info($"Found {apiApprenticeships.Count()} apprenticeships in Commitments API for Employer: {message.EmployerId} ");
+                   (apiApprenticeships, failedValidation) = BusinessValidation(apiApprenticeships);
+                   logger.Info($"{failedValidation.Count()} apprenticeships failed business validation");
 
-                   apiApprenticeships = BusinessValidation(apiApprenticeships);
-                   apiApprenticeships = InputValidation(apiApprenticeships);
+                   (apiApprenticeships, failedValidation)  = InputValidation(apiApprenticeships);
+                   logger.Info($"{failedValidation.Count()} apprenticeships failed input validation");
 
                    var apprenticeships = apiApprenticeships.Select(Map);
 
@@ -49,25 +51,40 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                    {
                        outputQueueMessage.Add(await apprenticeship);
                    }
-
                });
         }
 
-        private static IEnumerable<ApiApprenticeship> BusinessValidation(IEnumerable<ApiApprenticeship> apprenticeships)
+        private static Tuple<IEnumerable<ApiApprenticeship>, IEnumerable<long>> BusinessValidation(IEnumerable<ApiApprenticeship> apprenticeships)
         {
-            return apprenticeships
+            var filteredApprenticeships = 
+                apprenticeships
                 .Where(m => !m.HasHadDataLockSuccess)
                 .Where(m => m.StopDate == null)
                 .Where(m => m.PauseDate == null)
                 .Where(m => m.PaymentStatus == Commitments.Api.Types.Apprenticeship.Types.PaymentStatus.Active);
+
+            return CreateResult(filteredApprenticeships, apprenticeships);
         }
 
-        private static IEnumerable<ApiApprenticeship> InputValidation(IEnumerable<ApiApprenticeship> apprenticeships)
+        private static Tuple<IEnumerable<ApiApprenticeship>, IEnumerable<long>> InputValidation(IEnumerable<ApiApprenticeship> apprenticeships)
         {
-            return apprenticeships
+            var filteredApprenticeships = 
+                apprenticeships
                 .Where(m => m.StartDate.HasValue)
                 .Where(m => m.EndDate.HasValue)
                 .Where(m => m.Cost.HasValue);
+
+            return CreateResult(filteredApprenticeships, apprenticeships);
+        }
+
+        private static Tuple<IEnumerable<ApiApprenticeship>, IEnumerable<long>> CreateResult(
+            IEnumerable<ApiApprenticeship> filteredApprenticeships, 
+            IEnumerable<ApiApprenticeship> apprenticeships)
+        {
+            var failedValidation = apprenticeships
+                        .Select(m => m.Id).Except(filteredApprenticeships.Select(m => m.Id));
+
+            return Tuple.Create(filteredApprenticeships, failedValidation);
         }
 
         private static async Task<ApprenticeshipMessage> Map(ApiApprenticeship apprenticeship)
@@ -75,11 +92,12 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
             int NumberOfInstallments(DateTime start, DateTime end)
             {
                 var count = 0;
-                while (start < end) { count++; start = end.AddMonths(1); }
+                while (start < end) { count++; start = start.AddMonths(1); }
                 return count;
             }
             var duration = NumberOfInstallments(apprenticeship.StartDate.Value, apprenticeship.EndDate.Value);
-            var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.TrainingCode);
+            Models.Estimation.ApprenticeshipCourse training = null;
+            training = await _apprenticeshipCourseDataService?.GetApprenticeshipCourse(apprenticeship.TrainingCode);
 
             return new ApprenticeshipMessage
             {
@@ -95,8 +113,8 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                 StartDate = apprenticeship.StartDate.Value,
                 PlannedEndDate = apprenticeship.EndDate.Value,
                 ActualEndDate = null,
-                CompletionAmount = apprenticeship.Cost.Value * 0.8M,
-                MonthlyInstallment = (apprenticeship.Cost.Value * 0.2M) / duration,
+                CompletionAmount = apprenticeship.Cost.Value * 0.2M,
+                MonthlyInstallment = (apprenticeship.Cost.Value * 0.8M) / duration,
                 NumberOfInstallments = duration,
                 FundingSource = apprenticeship.TransferSenderId == null ? FundingSource.Levy : FundingSource.Transfer
             };

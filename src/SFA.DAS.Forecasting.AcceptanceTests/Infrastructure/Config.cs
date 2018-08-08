@@ -29,7 +29,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public string ApiInsertBalanceUrl => GetAppSetting("ApiInsertBalanceUrl");
         public string ApiInsertPaymentUrl => GetAppSetting("ApiInsertPaymentUrl");
         public string ApiInsertLevyUrl => GetAppSetting("ApiInsertLevyUrl");
-        public string StubEmployerPaymentTable => GetAppSetting("Stub-EmployerPaymentTable");
+        public string ApiInsertApprenticeshipsUrl => GetAppSetting("ApiInsertApprenticeshipsUrl");
+        public string GetApprenticeshipHttpTriggerUrl => GetAppSetting("GetApprenticeshipHttpTriggerUrl");
 
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
         protected string GetConnectionString(string name) => ConfigurationManager.ConnectionStrings[name].ConnectionString ?? throw new InvalidOperationException($"{name} not found in connection strings.");
