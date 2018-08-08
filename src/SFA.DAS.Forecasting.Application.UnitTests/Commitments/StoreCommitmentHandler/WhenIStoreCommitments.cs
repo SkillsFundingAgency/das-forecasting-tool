@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                 .Returns(_commitmentModel);
 
             _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
-                _logger.Object, _paymentMapper.Object);
+                _logger.Object, _paymentMapper.Object, new Apprenticeship.Mapping.ApprenticeshipMapping());
         }
 
         [Test]

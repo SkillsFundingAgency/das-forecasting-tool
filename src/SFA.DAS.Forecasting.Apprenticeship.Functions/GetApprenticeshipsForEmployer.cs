@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
 
@@ -15,6 +16,8 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
 {
     public class GetApprenticeshipsForEmployer : IFunction
     {
+        private static IApprenticeshipCourseDataService _apprenticeshipCourseDataService;
+
         [FunctionName("GetApprenticeshipsForEmployer")]
         public static async Task Run(
             [QueueTrigger(QueueNames.GetApprenticeshipsForEmployer)]GetApprenticesihpMessage message,
@@ -27,19 +30,24 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                {
                    logger.Debug($"Getting apprenticeships for employer {message.EmployerId}...");
                    var employerCommitmentsApi = container.GetInstance<IEmployerCommitmentApi>();
+                   _apprenticeshipCourseDataService = container.GetInstance<IApprenticeshipCourseDataService>();
+
                    IEnumerable<ApiApprenticeship> apiApprenticeships = 
                       await employerCommitmentsApi.GetEmployerApprenticeships(message.EmployerId)
                       ?? new List<ApiApprenticeship>();
+
+                   logger.Info($"Found {apiApprenticeships.Count()} apprenticeships in Commitments API for Employer: {message.EmployerId} ");
 
                    apiApprenticeships = BusinessValidation(apiApprenticeships);
                    apiApprenticeships = InputValidation(apiApprenticeships);
 
                    var apprenticeships = apiApprenticeships.Select(Map);
-                   logger.Info($"Apprenticeship Count: {apprenticeships.Count()}");
+
+                   logger.Info($"Sending {apprenticeships.Count()} apprenticeships for storing. EmployerId: {message.EmployerId} ");
 
                    foreach (var apprenticeship in apprenticeships)
                    {
-                       outputQueueMessage.Add(apprenticeship);
+                       outputQueueMessage.Add(await apprenticeship);
                    }
 
                });
@@ -62,7 +70,7 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                 .Where(m => m.Cost.HasValue);
         }
 
-        private static ApprenticeshipMessage Map(ApiApprenticeship apprenticeship)
+        private static async Task<ApprenticeshipMessage> Map(ApiApprenticeship apprenticeship)
         {
             int NumberOfInstallments(DateTime start, DateTime end)
             {
@@ -71,19 +79,21 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                 return count;
             }
             var duration = NumberOfInstallments(apprenticeship.StartDate.Value, apprenticeship.EndDate.Value);
+            var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.TrainingCode);
+
             return new ApprenticeshipMessage
             {
                 EmployerAccountId = apprenticeship.EmployerAccountId,
                 SendingEmployerAccountId = apprenticeship.TransferSenderId,
-                LearnerId = apprenticeship.ULN,
+                LearnerId = long.TryParse(apprenticeship.ULN, out long result) ? result : 0,
                 ProviderId = apprenticeship.ProviderId,
                 ProviderName = apprenticeship.ProviderName,
                 ApprenticeshipId = apprenticeship.Id,
                 ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
                 CourseName = apprenticeship.TrainingName,
-                CourseLevel = 1,
-                StartDate = apprenticeship.StartDate,
-                PlannedEndDate = apprenticeship.EndDate,
+                CourseLevel = training?.Level ?? 0,
+                StartDate = apprenticeship.StartDate.Value,
+                PlannedEndDate = apprenticeship.EndDate.Value,
                 ActualEndDate = null,
                 CompletionAmount = apprenticeship.Cost.Value * 0.8M,
                 MonthlyInstallment = (apprenticeship.Cost.Value * 0.2M) / duration,

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Mapping;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Domain.Commitments;
@@ -10,12 +12,18 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
     public class StoreCommitmentHandler
     {
         private readonly IPaymentMapper _paymentMapper;
+        private readonly ApprenticeshipMapping _apprenticeshipMapping;
         private readonly IEmployerCommitmentRepository _repository;
         private readonly ILog _logger;
 
-        public StoreCommitmentHandler(IEmployerCommitmentRepository repository, ILog logger, IPaymentMapper paymentMapper)
+        public StoreCommitmentHandler(
+            IEmployerCommitmentRepository repository, 
+            ILog logger, 
+            IPaymentMapper paymentMapper,
+            ApprenticeshipMapping apprenticeshipMapping)
         {
             _paymentMapper = paymentMapper;
+            _apprenticeshipMapping = apprenticeshipMapping;
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
@@ -32,5 +40,18 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
         }
 
+        public async Task Handle(ApprenticeshipMessage message)
+        {
+            if (message.LearnerId <= 0)
+                throw new InvalidOperationException("Apprenticeship requires LearnerId");
+            if (message.CourseLevel <= 0)
+                throw new InvalidOperationException("Apprenticeship requires CourseLevel");
+
+            var commitmentModel = _apprenticeshipMapping.MapToCommitment(message);
+
+            await _repository.Upsert(commitmentModel);
+
+            _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}");
+        }
     }
 }

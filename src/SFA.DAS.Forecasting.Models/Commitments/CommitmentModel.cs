@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Models.Commitments
@@ -23,5 +22,6 @@ namespace SFA.DAS.Forecasting.Models.Commitments
         public string CourseName { get; set; }
         public int? CourseLevel { get; set; }
         public FundingSource FundingSource { get; set; }
+        public bool HasHadPayment { get; set; }
     }
 }

@@ -127,7 +127,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 new SqlParameter("@completionAmount", commitment.CompletionAmount),
                 new SqlParameter("@monthlyInstallment", commitment.MonthlyInstallment),
                 new SqlParameter("@numberOfInstallments", commitment.NumberOfInstallments),
-                new SqlParameter("@fundingSource", commitment.FundingSource)
+                new SqlParameter("@fundingSource", commitment.FundingSource),
+                new SqlParameter("@hasHadPayment", commitment.HasHadPayment)
             };
 
             await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
@@ -155,7 +156,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 		                       @completionAmount         as CompletionAmount,
 		                       @monthlyInstallment       as MonthlyInstallment,
 		                       @numberOfInstallments     as NumberOfInstallments,
-		                       @fundingSource            as FundingSource
+		                       @fundingSource            as FundingSource,
+                               @hasHadPayment            as HasHadPayment
                     ) AS entity
                     ON  Commitment.EmployerAccountId = entity.EmployerAccountId 
                         AND Commitment.learnerId = entity.LearnerId
@@ -165,11 +167,12 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                         SET 
 		                    ApprenticeshipId = entity.ApprenticeshipId,
 		                    ApprenticeName = entity.ApprenticeName,
-		                    ActualEndDate = entity.ActualEndDate
+		                    ActualEndDate = entity.ActualEndDate,
+                            HasHadPayment = entity.HasHadPayment
                     WHEN NOT MATCHED 
                         AND entity.ActualEndDate is null 
                         THEN 
-                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource)
+                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource, HasHadPayment)
 	                    VALUES (
                                 entity.EmployerAccountId,
                                 entity.SendingEmployerAccountId,
@@ -186,7 +189,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                 entity.CompletionAmount, 
                                 entity.MonthlyInstallment, 
                                 entity.NumberOfInstallments, 
-                                entity.FundingSource);
+                                entity.FundingSource,
+                                entity.HasHadPayment);
                     ";
 
         }
