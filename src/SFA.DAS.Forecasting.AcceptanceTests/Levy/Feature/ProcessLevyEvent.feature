@@ -22,3 +22,10 @@ Scenario: AC2 - Do not store invalid levy credit event data
 	Given I made some invalid levy declarations
 	When the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations
 	Then the Forecasting Levy service should not store the levy declarations
+
+Scenario: AC3 - Store levy declarations with 0 amount
+	Given I have made the following levy declarations
+	| Scheme   | Amount | Created Date |
+	| ABC-1234 | 0      | Today        |
+	When the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations
+	Then the Forecasting Levy service should store the levy declarations	

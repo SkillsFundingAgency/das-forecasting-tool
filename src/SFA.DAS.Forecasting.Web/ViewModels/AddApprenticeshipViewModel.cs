@@ -24,15 +24,18 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 
         public IEnumerable<SelectListItem> ApprenticeshipCourses
         {
-            get
-            {
-                return
-                    Courses
-                    .OrderBy(course => course.Title)
-                    .Select(item => new SelectListItem { Value = item.Id, Text = item.Title, Selected = item.Id == CourseId })
-                    .ToList();
-            }
-        }
+	        var res = (from availableApprenticeship in AvailableApprenticeships
+		        let text = availableApprenticeship.CourseType == ApprenticeshipCourseType.Standard ? $"{availableApprenticeship.Title}, Level: {availableApprenticeship.Level} (Standard)" : $"{availableApprenticeship.Title}, Level: {availableApprenticeship.Level}"
+		        select new SelectListItem
+		        {
+			        Value = availableApprenticeship.Id,
+			        Text = text,
+              Selected = item.Id == CourseId
+		        }).ToList();
+            
+            // ToDo: Fix
+            return res;
+          }
 
         public override string FundingPeriodsJson {
             get

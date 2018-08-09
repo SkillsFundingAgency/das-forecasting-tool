@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Commitments;
@@ -34,12 +35,19 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation)
         {
             var balance = await _currentBalanceRepository.Get(accountEstimation.EmployerAccountId);
-            var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.VirtualApprenticeships);
+            var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.Apprenticeships);
 
             var actualProjections = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
 
-            var employerCommitmentsModel = new EmployerCommitmentsModel();
-            employerCommitmentsModel.SendingEmployerTransferCommitments = commitments;
+            var employerCommitmentsModel = new EmployerCommitmentsModel
+            {
+                SendingEmployerTransferCommitments = commitments
+                    .Where(m => m.FundingSource == Models.Payments.FundingSource.Transfer || m.FundingSource == 0)
+                    .ToList(),
+                LevyFundedCommitments = commitments
+                    .Where(m => m.FundingSource == Models.Payments.FundingSource.Levy)
+                    .ToList()
+            };
 
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, employerCommitmentsModel);
             var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);

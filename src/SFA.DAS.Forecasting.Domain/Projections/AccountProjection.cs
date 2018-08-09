@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             {
                 var levyFundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
                         ? 0 : _account.LevyDeclared;
-                var ignoreCostOfTraining = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth;
+                var ignoreCostOfTraining = month == startMonth;
 
                 var projection = CreateProjection(
                     periodStart.AddMonths(month),
@@ -82,7 +82,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
             var moneyIn = levyFundsIn + totalCostOfTraning.TransferIn + completionPayments.TransferInCompletionPayment;
 
-			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn);
+			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, ignoreCostOfTraining);
 
             var projection = new AccountProjectionModel
             {
@@ -142,8 +142,13 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 		    return trainingCosts;
 		}
 
-	    public decimal GetMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal levyFundsIn)
+	    public decimal GetMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal levyFundsIn, ProjectionGenerationType projectionGenerationType, bool isFirstMonth)
 	    {
+	        if (projectionGenerationType == ProjectionGenerationType.LevyDeclaration && isFirstMonth)
+	        {
+	            return currentBalance;
+	        }
+
 			if (currentBalance > 0 && currentBalance >= moneyOut)
 		    {
 			    return currentBalance + levyFundsIn - moneyOut;

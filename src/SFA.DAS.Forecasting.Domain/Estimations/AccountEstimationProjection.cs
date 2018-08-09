@@ -14,6 +14,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     public interface IAccountEstimationProjection
     {
         ReadOnlyCollection<AccountEstimationProjectionModel> Projections { get; }
+        decimal MonthlyInstallmentAmount { get; }
 
         void BuildProjections();
     }
@@ -26,6 +27,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         private readonly List<AccountEstimationProjectionModel> _estimatedProjections;
         private readonly IList<AccountProjectionModel> _actualAccountProjections;
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _estimatedProjections.AsReadOnly();
+        public decimal MonthlyInstallmentAmount { get; internal set; }
         public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService)
         {
             _dateTimeService = dateTimeService;
@@ -62,6 +64,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 lastBalance = projection.FutureFunds;
                 projectionDate = projectionDate.AddMonths(1);
             }
+
+            MonthlyInstallmentAmount = _actualAccountProjections.FirstOrDefault()?.LevyFundsIn ?? 0;
         }
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal lastBalance)

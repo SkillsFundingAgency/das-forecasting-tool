@@ -240,7 +240,6 @@ details.projection-survey {
     padding-top: 10px;
 
     summary {
-        width: 100%;
         background-color: #005ea5;
         color: white;
     }
@@ -296,11 +295,25 @@ table.small th, table.small td, table.small .form-hint {
     background: #f7e7e9;
 }
 
+.panel-warning2 {
+    padding-left: 50px;
+    padding-top: 0;
+    position: relative;
+
+    .icon {
+        @include icon(icon-important, 35, 35, '../../Content/dist/images');
+        position: absolute;
+        top: 5px;
+        left: 0;
+    }
+}
+
+
 // END Estimation Style
 
 // Tooltip styles
 
-#BalanceSheet-Tables {
+#BalanceSheet-Tables, #AccountFunds-Tables {
     .tip-info {
         font-weight: normal;
         background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;

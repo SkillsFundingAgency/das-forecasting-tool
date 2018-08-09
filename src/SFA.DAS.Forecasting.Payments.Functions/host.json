@@ -4,5 +4,9 @@
     "newBatchThreshold": 16,
     "maxPollingInterval": 500,
     "maxDequeueCount": 2
+  },
+  "tracing": {
+    "consoleLevel": "verbose",
+    "fileLoggingMode": "debugOnly"
   }
 }

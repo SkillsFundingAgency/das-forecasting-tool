@@ -43,10 +43,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
+            var fundingSource = apprenticeshipToAdd.IsTransferFunded ?? true
+               ? Models.Payments.FundingSource.Transfer 
+               : Models.Payments.FundingSource.Levy;
+            
             accountEstimation.AddVirtualApprenticeship(vm.Course.Id, vm.Course.Title, vm.Course.Level,
                 vm.StartDateMonth, vm.StartDateYear,
                 vm.NumberOfApprentices, vm.TotalInstallments,
-                vm.TotalCostAsString.ToDecimal(), Models.Payments.FundingSource.Transfer);
+                vm.TotalCostAsString.ToDecimal(), fundingSource);
 
             _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {vm.Course}");
             await _accountEstimationRepository.Store(accountEstimation);
