@@ -43,7 +43,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
-            var fundingSource = apprenticeshipToAdd.IsTransferFunded ?? true
+
+            var fundingSource = vm.IsTransferFunded ?? true
                ? Models.Payments.FundingSource.Transfer 
                : Models.Payments.FundingSource.Levy;
             

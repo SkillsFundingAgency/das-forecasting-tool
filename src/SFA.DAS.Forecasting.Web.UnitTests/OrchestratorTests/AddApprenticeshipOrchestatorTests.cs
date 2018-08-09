@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using FluentAssertions;
+using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using FluentValidation.Results;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Models.Estimation;
-using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
@@ -106,14 +106,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
             AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
 
-            var courseCarpentry = res.ApprenticeshipCourses.First();
-            var courseElectrician = res.ApprenticeshipCourses.ElementAt(1);
+            var courseElectrician = res.ApprenticeshipCourses.First();
+            var courseCarpentry = res.ApprenticeshipCourses.ElementAt(1);
 
             courseCarpentry.Value.Should().Be(_courseCarpentry.Id);
-            courseCarpentry.Text.Should().Be(_courseCarpentry.Title);
+            courseCarpentry.Text.Should().Be($"{_courseCarpentry.Title}, Level: {_courseCarpentry.Level} (Standard)");
 
             courseElectrician.Value.Should().Be(_courseElectrician.Id);
-            courseElectrician.Text.Should().Be(_courseElectrician.Title);
+            courseElectrician.Text.Should().Be($"{_courseElectrician.Title}, Level: {_courseElectrician.Level} (Standard)");
         }
     }
 }

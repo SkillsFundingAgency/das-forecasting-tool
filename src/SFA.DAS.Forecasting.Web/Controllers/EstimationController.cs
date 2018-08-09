@@ -74,7 +74,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             }
 
             var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup();
-            vm.ApprenticeshipToAdd.IsTransferFunded = isTransferFunded;
+            vm.IsTransferFunded = isTransferFunded;
 
             return View(vm);
         }
@@ -154,7 +154,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 return View("AddApprenticeships", viewModel);
             }
 
-            if(viewModel.ApprenticeshipToAdd.IsTransferFunded == null)
+            if(viewModel.IsTransferFunded == null)
             {
                 return RedirectToAction("TypeOfApprenticeships");
             }

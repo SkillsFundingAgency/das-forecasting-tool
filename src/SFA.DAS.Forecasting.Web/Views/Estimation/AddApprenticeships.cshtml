@@ -29,6 +29,7 @@
             <form method="post">
                 <div class="grid-row">
                     <div class="column-two-thirds">
+                        @Html.HiddenFor(m => m.IsTransferFunded)
 
                         <div class="form-group @Html.AddErrorClass(m => m.Course)">
                             <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
