@@ -3,11 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using FluentAssertions;
+using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using FluentValidation.Results;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Models.Estimation;
-using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
@@ -59,27 +59,34 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
         }
         
-        [TestCase("6,000", 6000, "6,000")]
-        [TestCase("6000", 6000, "6,000")]
-        [TestCase("6,000.49", 6000, "6,000")]
-        [TestCase("6,000.50", 6001, "6,001")]
-        [TestCase("£6,000", null, "")]
-        [TestCase("A6,000", null, "")]
-        [TestCase("600", 600, "600")]
-        [TestCase("6600", 6600, "6,600")]
-        [TestCase("66,000", 66000, "66,000")]
-        [TestCase("66,000,000", 66000000, "66,000,000")]
-        [TestCase("66000000", 66000000, "66,000,000")]
-        [TestCase("660,00,000", 66000000, "66,000,000")]
-        [TestCase("66,000000", 66000000, "66,000,000")]
-        public async Task TestingCommasAddedToTotalCostAsStringSetsExcpectedTotalCostValues(string totalCostAsStringInput, decimal? totalCost, string totalCostAsStringOutput)
+        [TestCase("6,000", "6,000")]
+        [TestCase("6000", "6,000")]
+        [TestCase("6,000.49", "6,000")]
+        [TestCase("6,000.50", "6,001")]
+        [TestCase("£6,000", "")]
+        [TestCase("A6,000", "")]
+        [TestCase("600", "600")]
+        [TestCase("6600", "6,600")]
+        [TestCase("66,000", "66,000")]
+        [TestCase("66,000,000", "66,000,000")]
+        [TestCase("66000000", "66,000,000")]
+        [TestCase("660,00,000", "66,000,000")]
+        [TestCase("66,000000", "66,000,000")]
+        public async Task TestingCommasAddedToTotalCostAsStringSetsExcpectedTotalCostValues(string totalCostAsStringInput, string totalCostAsStringOutput)
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-            var vm = new AddApprenticeshipViewModel {ApprenticeshipToAdd = new ApprenticeshipToAdd {TotalCostAsString = totalCostAsStringInput } };
-            var res = await orchestrator.ValidateAddApprenticeship(vm);
+            var vm = new AddApprenticeshipViewModel()
+            {
+                NumberOfApprentices = 1,
+                TotalCostAsString = totalCostAsStringInput,
+                Course = new ApprenticeshipCourse()
+            };
+            
+            // Act
+            var res = await orchestrator.UpdateAddApprenticeship(vm);
 
-            AssertionExtensions.Should((decimal?) res.ApprenticeshipToAdd.TotalCost).Be(totalCost);
-            AssertionExtensions.Should((string) res.ApprenticeshipToAdd.TotalCostAsString).Be(totalCostAsStringOutput);      
+            // Assert
+            AssertionExtensions.Should((string) res.TotalCostAsString).Be(totalCostAsStringOutput);      
         }
 
         [Test]
@@ -87,10 +94,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup();
-            AssertionExtensions.Should((string) res.Name).Be("Add Apprenticeships");
-            res.ApprenticeshipToAdd.Should().BeEquivalentTo(new ApprenticeshipToAdd());
             res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
-            AssertionExtensions.Should((int) res.AvailableApprenticeships.Count()).Be(2);
+            AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
         }
 
         [Test]
@@ -99,9 +104,16 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup();
             res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
-            AssertionExtensions.Should((int) res.AvailableApprenticeships.Count()).Be(2);
-            res.AvailableApprenticeships.First().Should().BeEquivalentTo(_courseCarpentry);
-            res.AvailableApprenticeships.ElementAt(1).Should().BeEquivalentTo(_courseElectrician);
+            AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
+
+            var courseElectrician = res.ApprenticeshipCourses.First();
+            var courseCarpentry = res.ApprenticeshipCourses.ElementAt(1);
+
+            courseCarpentry.Value.Should().Be(_courseCarpentry.Id);
+            courseCarpentry.Text.Should().Be($"{_courseCarpentry.Title}, Level: {_courseCarpentry.Level} (Standard)");
+
+            courseElectrician.Value.Should().Be(_courseElectrician.Id);
+            courseElectrician.Text.Should().Be($"{_courseElectrician.Title}, Level: {_courseElectrician.Level} (Standard)");
         }
     }
 }
