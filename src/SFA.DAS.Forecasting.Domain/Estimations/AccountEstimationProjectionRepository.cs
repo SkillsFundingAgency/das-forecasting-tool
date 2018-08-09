@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation)
         {
             var balance = await _currentBalanceRepository.Get(accountEstimation.EmployerAccountId);
-            var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.VirtualApprenticeships);
+            var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.TransferApprenticeships);
 
             var actualProjections = await _accountProjectionRepository.Get(accountEstimation.EmployerAccountId);
 

@@ -12,7 +12,11 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         internal AccountEstimationModel Model { get; }
         private readonly IVirtualApprenticeshipValidator _validator;
 
-        public IReadOnlyCollection<VirtualApprenticeship> VirtualApprenticeships => Model.Apprenticeships.AsReadOnly();
+        public IReadOnlyCollection<VirtualApprenticeship> TransferApprenticeships => Model.Apprenticeships
+                            .Where(m => m.FundingSource == FundingSource.Transfer || m.FundingSource == 0)
+                            .ToList()
+                            .AsReadOnly();
+
         public string Name => Model.EstimationName;
         public bool HasValidApprenticeships => Model.Apprenticeships.Any(); //TODO: will also need to make sure all courses start after today
         public long EmployerAccountId => Model.EmployerAccountId;
