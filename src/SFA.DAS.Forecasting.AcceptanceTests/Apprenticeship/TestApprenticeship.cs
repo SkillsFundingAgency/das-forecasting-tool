@@ -13,9 +13,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship
 
         private DateTime? GetDate(string dateString)
         {
-            var match = Regex.Match(dateString, "[0-9]*");
-            var yearsAgo = int.Parse(match.Value);
-            return DateTime.Today.AddYears(-yearsAgo);
+            if (Regex.IsMatch(dateString, "^in ([0-9] years)", RegexOptions.IgnoreCase))
+            {
+                string result = Regex.Replace(dateString, @"[^\d]", "");
+                var inYears = int.Parse(result);
+                
+                return DateTime.Today.AddYears(inYears);
+            }
+            else
+            {
+                var match = Regex.Match(dateString, "[0-9]*");
+                var yearsAgo = int.Parse(match.Value);
+                return DateTime.Today.AddYears(-yearsAgo);
+            }
         }
 
         public string StartDateString { get; set; }

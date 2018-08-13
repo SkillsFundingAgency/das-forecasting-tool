@@ -87,17 +87,17 @@ this.ScenarioSetup(scenarioInfo);
                         "12346",
                         "1",
                         "Abba",
-                        "2 years ago",
-                        "1 year ago",
-                        "1000"});
+                        "in 1 years",
+                        "in 2 years",
+                        "1500"});
             table1.AddRow(new string[] {
                         "12345",
                         "",
                         "2",
                         "Abba",
-                        "3 years ago",
-                        "1 year ago",
-                        "1000"});
+                        "in 0 years",
+                        "in 2 years",
+                        "48000"});
 #line 8
  testRunner.And("there is following apprenticehsips in the commitments API", ((string)(null)), table1, "And ");
 #line 12
@@ -114,16 +114,16 @@ this.ScenarioSetup(scenarioInfo);
             table2.AddRow(new string[] {
                         "1",
                         "Abba",
-                        "200",
-                        "66.66667",
+                        "300",
+                        "100",
                         "12",
                         "6",
                         "Transfer"});
             table2.AddRow(new string[] {
                         "2",
                         "Abba",
-                        "200",
-                        "33.33333",
+                        "9600",
+                        "1600",
                         "24",
                         "6",
                         "Levy"});
