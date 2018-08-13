@@ -7,12 +7,13 @@ var AddEditApprentiecships = {
         if (date === undefined
             || date.toString() === "Invalid Date"
             || date < thisMonth
-            || model === undefined) {
+            || model === undefined
+            || model.FundingBands == null ){
             return undefined;
         }
 
         var fundingBand = model.FundingBands.find(function (fb) {
-            return date > this.getDate(fb.FromDate) && date < this.getDate(fb.ToDate)
+            return date > AddEditApprentiecships.getDate(fb.FromDate) && date < AddEditApprentiecships.getDate(fb.ToDate)
         })
             || model.FundingBands[model.FundingBands.length - 1];
 

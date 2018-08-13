@@ -26,9 +26,6 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 
         $("#choose-apprenticeship").change(function () {
             calculateTotalCost();
-
-            if (sfa.AddApprenticeship.Result)
-                $('#apprenticeship-length').val(sfa.AddApprenticeship.Result.NumberOfMonths || 0);
         });
 
         $("#no-of-app").change(function () {
@@ -39,7 +36,10 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         });
 
         $("#startDateMonth, #startDateYear").change(function () {
-            calculateTotalCostLocal();
+            if (sfa.AddApprenticeship.Result)
+                calculateTotalCostLocal();
+            else
+                calculateTotalCost();
         });
 
         $("#total-funding-cost").keyup(function () {
@@ -47,7 +47,10 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             var commaNum = AddEditApprentiecships.numberWithCommas(num);
             $('#total-funding-cost').val(commaNum);
         });
-        
+
+        var model = GetAddApprenticeshipForm();
+        showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
+
     };
 
     if (document.getElementById("estimate-add-apprenticeship")) {
@@ -86,13 +89,11 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
                 var update = refreshCalculation(model, result);
                 showFundingCapMessage(update);
 
-                if (model.NumberOfMonths === 0)
-                    $('#apprenticeship-length').val(result.NumberOfMonths || 0);
+                $('#apprenticeship-length').val(result.NumberOfMonths || 0);
             }
         });
 
         showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
-
     }
 
     function refreshCalculation(model, result) {

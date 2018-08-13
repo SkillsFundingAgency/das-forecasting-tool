@@ -9,12 +9,12 @@
 @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
- 
+
         <div id="estimate-add-apprenticeship">
             <div class="grid-row">
                 <div class="column-two-thirds">
                     <div class="hgroup form-group">
-                        <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
+                        <a href="@Url.ExternalUrlAction("transfers", string.Empty, false)" class="link-back">Back to Transfers</a>
 
                         @Html.Partial("_validationErrors")
 
@@ -35,10 +35,10 @@
                             <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
                             @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
                             @Html.DropDownListFor(model =>
-                                    model.CourseId,
-                                    @Model.ApprenticeshipCourses,
-                                    "Select one",
-                                    new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
+             model.CourseId,
+             @Model.ApprenticeshipCourses,
+             "Select one",
+             new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
                         </div>
 
 
@@ -85,34 +85,21 @@
                             <label class="form-label-bold">Government funding band maximum</label>
 
                             @{
-                                var calculatedFundingCapMessageClass = "HideFundingCapMessage";
-                                var defaultFundingCapMessageClass = "";
-
-                                decimal? fundingCap = null;
-                                int? apprenticeCount = null;
-                                decimal? totalCap = null;
-
-                                if (Model.CalculatedTotalCap > 0)
+                                decimal fundingCap = 0;
+                                if (Model.Course != null)
                                 {
                                     fundingCap = Model.Course.FundingCap;
-                                    apprenticeCount = Model.NumberOfApprentices;
-                                    totalCap = Model.CalculatedTotalCap;
-                                    calculatedFundingCapMessageClass = "";
-                                    defaultFundingCapMessageClass = "HideFundingCapMessage";
                                 }
+                            } 
+                            <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
+                                Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                                Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
+                            </span>
 
-                                <span id="details-about-funding-calculated" class="form-hint @calculatedFundingCapMessageClass" style="display: none;">
-                                    Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                    Total government funding band maximum for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
-                                </span>
-
-                                <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
-                                    Choose an apprenticeship and number of apprentices to see this figure <br>
-                                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
-                                </span>
-
-
-                            }
+                            <span id="details-about-funding" class="form-hint">
+                                Choose an apprenticeship and number of apprentices to see this figure <br>
+                                <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
+                            </span>
                         </div>
 
 

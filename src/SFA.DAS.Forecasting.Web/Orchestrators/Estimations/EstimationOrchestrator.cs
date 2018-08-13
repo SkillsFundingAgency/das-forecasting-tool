@@ -137,7 +137,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var estimations = await _estimationRepository.Get(accountId);
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
-
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
 
             var fundingPeriods = course.FundingPeriods.Select(m =>
