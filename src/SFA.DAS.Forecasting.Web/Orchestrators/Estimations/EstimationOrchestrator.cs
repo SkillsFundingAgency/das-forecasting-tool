@@ -9,6 +9,7 @@ using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -79,7 +80,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     {
                         OpeningBalance = GetOpeningBalance(estimationProjector?.Projections),
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
-                        Records = GetAccountFunds(estimationProjector?.Projections)
+                        Records = GetAccountFunds(estimationProjector?.Projections, estimationProjector.MonthlyInstallmentAmount)
                     }
             };
             return viewModel;
@@ -102,19 +103,29 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
-        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
+        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations, decimal monthlyInstallmentAmount)
         {
             decimal estimatedFundsOut = 0;
-            var accountFumds = estimations.Select(projection =>
+            decimal balance =0;
+            var firstMonth = true;
+            var accountFumds = estimations.Select(estimation =>
             {
-                estimatedFundsOut += projection.ModelledCosts.FundsOut;
-                var balance = projection.FutureFunds - estimatedFundsOut;
+
+                if (firstMonth)
+                {
+                    balance = estimation.FutureFunds - estimation.ModelledCosts.FundsOut;
+                    firstMonth = false;
+                }
+                else
+                {
+                    balance = balance - estimation.ModelledCosts.FundsOut- estimation.ActualCosts.FundsOut + monthlyInstallmentAmount;
+                }
 
                 return new AccountFundsItem
                 {
-                    Date = new DateTime(projection.Year, projection.Month, 1),
-                    ActualCost = projection.ActualCosts.FundsOut,
-                    EstimatedCost = projection.ModelledCosts.FundsOut,
+                    Date = new DateTime(estimation.Year, estimation.Month, 1),
+                    ActualCost = estimation.ActualCosts.FundsOut,
+                    EstimatedCost = estimation.ModelledCosts.FundsOut,
                     Balance = balance
                 };
             });
