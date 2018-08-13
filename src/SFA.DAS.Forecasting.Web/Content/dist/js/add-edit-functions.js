@@ -11,7 +11,7 @@ var AddEditApprentiecships = {
             return undefined;
         }
 
-        var fundingBand = model.FundingBands.find((fb) => {
+        var fundingBand = model.FundingBands.find(function (fb) {
             return date > this.getDate(fb.FromDate) && date < this.getDate(fb.ToDate)
         })
             || model.FundingBands[model.FundingBands.length - 1];
