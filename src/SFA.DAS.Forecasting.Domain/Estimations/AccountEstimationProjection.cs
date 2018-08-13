@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 projectionDate = projectionDate.AddMonths(1);
             }
 
-            MonthlyInstallmentAmount = _actualAccountProjections.FirstOrDefault()?.LevyFundsIn ?? 0;
+            MonthlyInstallmentAmount = _account.LevyDeclared;
         }
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal lastBalance)
@@ -78,7 +78,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             {
                 Month = (short)period.Month,
                 Year = (short)period.Year,
-
+                ProjectionGenerationType = actualAccountProjection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration,
                 ModelledCosts = new AccountEstimationProjectionModel.Cost
                 {
                     LevyCostOfTraining = modelledCostOfTraining.LevyFunded,
@@ -100,7 +100,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             };
 
             var balance = lastBalance + projection.ModelledCosts.TransferFundsIn + projection.ActualCosts.TransferFundsIn -
-                      projection.ModelledCosts.FundsOut - projection.ActualCosts.TransferFundsOut;
+                      projection.ModelledCosts.FundsOut - projection.ActualCosts.TransferFundsOut + _account.LevyDeclared;
             projection.FutureFunds = balance;
             return projection;
         }

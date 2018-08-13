@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Models.Estimation
 {
@@ -31,5 +32,6 @@ namespace SFA.DAS.Forecasting.Models.Estimation
             ModelledCosts = new Cost();
             ActualCosts = new Cost();
         }
+        public ProjectionGenerationType ProjectionGenerationType { get; set; }
     }
 }

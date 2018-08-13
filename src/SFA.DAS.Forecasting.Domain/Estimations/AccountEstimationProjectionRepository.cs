@@ -49,10 +49,12 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                     .ToList()
             };
 
+            var levyFundsIn = actualProjections?.FirstOrDefault()?.LevyFundsIn ?? 0;
+
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, employerCommitmentsModel);
             var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);
 
-            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, 0, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService);
+            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, levyFundsIn, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService);
         }
     }
 }
