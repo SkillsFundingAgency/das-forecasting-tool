@@ -120,7 +120,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         }
 
         [Test]
-        public async Task Then_The_IsLessThanCost_Flag_Uses_Actual_And_Estimated_Values()
+        public async Task Then_The_IsLessThanCost_Flag_Uses_AvailableTransferFundsBalance()
         {
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
             {
@@ -130,7 +130,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) DateTime.Now.Month,
                     ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
                     ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
-                    FutureFunds = -100
+                    AvailableTransferFundsBalance = -100
                 }
             };
 
@@ -154,7 +154,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) DateTime.Now.Month,
                     ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
                     ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
-                    FutureFunds = 100
+                    AvailableTransferFundsBalance = 100
                 }
             };
 
@@ -178,7 +178,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) DateTime.Now.Month,
                     ModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
                     ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
-                    FutureFunds = 0
+                    AvailableTransferFundsBalance = 0
                 }
             };
 
