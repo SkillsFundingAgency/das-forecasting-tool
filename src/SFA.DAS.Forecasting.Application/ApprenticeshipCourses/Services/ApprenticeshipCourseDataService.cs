@@ -10,6 +10,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
     public interface IApprenticeshipCourseDataService
     {
         List<ApprenticeshipCourse> GetAllStandardApprenticeshipCourses();
+        List<ApprenticeshipCourse> GetAllApprenticeshipCourses();
         Task<ApprenticeshipCourse> GetApprenticeshipCourse(string courseId);
         Task Store(ApprenticeshipCourse course);
     }
@@ -27,6 +28,12 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
         {
             return _documentSession.CreateQuery<ApprenticeshipCourse>()
                 .Where(course => course.CourseType == ApprenticeshipCourseType.Standard)
+                .ToList();
+        }
+
+        public List<ApprenticeshipCourse> GetAllApprenticeshipCourses()
+        {
+            return _documentSession.CreateQuery<ApprenticeshipCourse>()
                 .ToList();
         }
 
