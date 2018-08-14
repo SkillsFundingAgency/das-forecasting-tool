@@ -1,6 +1,6 @@
-﻿using FluentValidation;
-using SFA.DAS.Forecasting.Web.Extensions;
 using System;
+using FluentValidation;
+using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 {
@@ -35,7 +35,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
             RuleFor(m => m.TotalCostAsString)
                 .Must(s => s.ToDecimal() > 0)
                 .WithMessage("The total training cost was not entered")
-                .Must((o, b) => b.ToDecimal() <= o.FundingCap * o.NumberOfApprentices)
+                .Must((o, b) => CheckTotalCost(o, b))
+                .WithMessage("The total cost can't be higher than the total government funding band maximum for this apprenticeship")
+                .Must((o, b) => b.ToDecimal() <= o.FundingCapCalculated * o.NumberOfApprentices)
                 .WithMessage("The total cost can't be higher than the total government funding band maximum for this apprenticeship")
                ;
 
@@ -49,6 +51,12 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 
             
 
+        }
+
+        private bool CheckTotalCost(EditApprenticeshipsViewModel vm, string b)
+        {
+            var fundingBand = vm.GetFundingPeriod();
+            return (b.ToDecimal()) <= (fundingBand.FundingCap * vm.NumberOfApprentices);
         }
     }
 }

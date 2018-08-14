@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Forecasting.Models.Estimation
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.Forecasting.Models.Estimation
 {
     public class ApprenticeshipCourse : IDocument
     {
@@ -6,7 +8,11 @@
         public string Title { get; set; }
         public decimal FundingCap { get; set; }
         public int Level { get; set; }
-        public int Duration { get; set; }
-        public ApprenticeshipCourseType CourseType { get; set; }
+
+		public int Duration { get; set; }
+
+		public ApprenticeshipCourseType CourseType { get; set; }
+
+		public List<FundingPeriod> FundingPeriods { get; set; }
     }
 }

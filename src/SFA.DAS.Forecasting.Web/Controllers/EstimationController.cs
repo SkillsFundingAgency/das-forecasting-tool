@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using FluentValidation.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
@@ -93,7 +94,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                editmodel.CalculatedTotalCap = editmodel.FundingCap * editmodel.NumberOfApprentices;
+                //editmodel.CalculatedTotalCap = editmodel.FundingCap * editmodel.NumberOfApprentices;
                 return View("EditApprenticeships", editmodel);
             }
 
@@ -138,28 +139,17 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/CalculateTotalCost", Name = "CalculateTotalCost")]
-        public async Task<ActionResult> CalculateTotalCost(string courseId, int numberOfApprentices, decimal? levyValue, string estimationName)
+        [Route("{estimationName}/apprenticeship/course")]
+        public async Task<ActionResult> GetCourseInfo(string courseId, string estimationName)
         {
-            var fundingCap = await _addApprenticeshipOrchestrator.GetFundingCapForCourse(courseId);
-            var totalValue = fundingCap * numberOfApprentices;
-            var totalValueAsString = totalValue.FormatValue();
+            var course = await _addApprenticeshipOrchestrator.GetCourse(courseId);
             var result = new
             {
-                FundingCap = fundingCap.FormatCost(),
-                TotalFundingCap = totalValue.FormatCost(),
-                NumberOfApprentices = numberOfApprentices,
-                TotalFundingCapValue = totalValueAsString
+                CourseId = course.CourseId,
+                NumberOfMonths = course.NumberOfMonths,
+                FundingBands = course.FundingPeriods
             };
 
-            return Json(result);
-        }
-
-        [HttpPost]
-        [Route("{estimationName}/apprenticeship/GetDefaultNumberOfMonths", Name = "GetDefaultNumberOfMonths")]
-        public async Task<ActionResult> GetDefaultNumberOfMonths(string courseId, string estimationName)
-        {
-            var result = await _addApprenticeshipOrchestrator.GetDefaultNumberOfMonths(courseId);
             return Json(result);
         }
 

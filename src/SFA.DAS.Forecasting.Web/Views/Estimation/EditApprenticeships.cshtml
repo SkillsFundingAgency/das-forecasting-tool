@@ -60,13 +60,13 @@
             <div class="grid-row">
                 <div class="column-two-thirds">
 
-                    @Html.HiddenFor(m => m.FundingCap)
-
                     <div class="form-group">
-                        <label class="form-label-bold" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCap">Apprenticeship</label>
+                        <label class="form-label-bold" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCapCalculated">Apprenticeship</label>
                         <label>@Model.CourseTitle - Level: @Model.Level</label>
                         @Html.HiddenFor(m => m.CourseTitle)
                         @Html.HiddenFor(m => m.Level)
+                        @Html.HiddenFor(m => m.CourseId)
+                        @Html.HiddenFor(m => m.FundingPeriodsJson)
                     </div>
 
 
@@ -113,7 +113,7 @@
 
 
                         <span id="details-about-funding-calculated" class="form-hint">
-                            Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCap.FormatCost()</span><br />
+                            Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCapCalculated.FormatCost()</span><br />
                             Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
                         </span>
 
@@ -126,12 +126,12 @@
                     <!-- Cost -->
 
                     <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
-                        <label class="form-label-bold" for="levy-value">Total cost</label>
+                        <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                         <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                         @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                        <label for="total-funding-cost-2" class="form-label-bold">
+                        <label for="total-funding-cost" class="form-label-bold">
                             £
-                            @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control levy-value", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
+                            @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
 
                         </label>
                     </div>
