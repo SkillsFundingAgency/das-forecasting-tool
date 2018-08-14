@@ -7,7 +7,7 @@
 }
 
 
-<main id="content" role="main" tabindex="-1">
+
     <div id="estimate-edit-apprenticeship">
 
 
@@ -68,11 +68,11 @@
                         @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
                         @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
                         <div class="form-date">
-                            <div class="form-group form-group-month">
+                            <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                 <label for="startDateMonth">Month</label>
                                 @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM" })
                             </div>
-                            <div class="form-group form-group-year">
+                            <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
                                 <label for="startDateYear">Year</label>
                                 @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY" })
                             </div>
@@ -132,7 +132,7 @@
 
 
     </div>
-</main>
+
 
 @section breadcrumb {
     <div class="breadcrumbs">

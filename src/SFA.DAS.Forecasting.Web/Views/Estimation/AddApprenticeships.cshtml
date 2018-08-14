@@ -67,11 +67,11 @@
                             @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
                             @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
                             <div class="form-date">
-                                <div class="form-group form-group-month">
+                                <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                     <label for="startDateMonth">Month</label>
                                     @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
                                 </div>
-                                <div class="form-group form-group-year">
+                                <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
                                     <label for="startDateYear">Year</label>
                                     @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
                                 </div>
@@ -107,11 +107,12 @@
                             <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                             <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                             @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                            <label for="total-funding-cost-2" class="form-label-bold">
+                            <label class="form-label-bold">
                                 £
                                 @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
-
                             </label>
+
+                            
                         </div>
                     </div>
                 </div>
