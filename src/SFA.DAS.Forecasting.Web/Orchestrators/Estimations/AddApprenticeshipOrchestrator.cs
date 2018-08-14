@@ -32,11 +32,18 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             _logger = logger;
         }
 
-        public AddApprenticeshipViewModel GetApprenticeshipAddSetup()
+        public AddApprenticeshipViewModel GetApprenticeshipAddSetup(bool standardsOnly)
         {
+            var courses = standardsOnly
+                 ? _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
+                 : _apprenticeshipCourseService.GetAllApprenticeshipCourses();
+
             return new AddApprenticeshipViewModel
             {
-                Courses = _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
+                Courses =
+                    courses
+                    .OrderBy(m => m.Title)
+                    .ToList()
             };
         }
 

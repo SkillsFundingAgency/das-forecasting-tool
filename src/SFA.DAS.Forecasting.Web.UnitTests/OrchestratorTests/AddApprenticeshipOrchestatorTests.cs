@@ -56,7 +56,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _moqer.GetMock<IApprenticeshipCourseDataService>()
                 .Setup(x => x.GetAllStandardApprenticeshipCourses())
                 .Returns(_apprenticeshipCourses);
-
         }
         
         [TestCase("6,000", "6,000")]
@@ -93,7 +92,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public void TestingAddApprenticeSetupReturnsExpectedDefaultSetup()
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-            var res = orchestrator.GetApprenticeshipAddSetup();
+            var res = orchestrator.GetApprenticeshipAddSetup(true);
             res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
             AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
         }
@@ -102,12 +101,12 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public void TestingAddApprenticeSetupReturnsDefaultSetupWithAvailableApprenticeshipsOrderedAsExpected()
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-            var res = orchestrator.GetApprenticeshipAddSetup();
+            var res = orchestrator.GetApprenticeshipAddSetup(true);
             res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
             AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
 
-            var courseElectrician = res.ApprenticeshipCourses.First();
-            var courseCarpentry = res.ApprenticeshipCourses.ElementAt(1);
+            var courseCarpentry = res.ApprenticeshipCourses.First();
+            var courseElectrician = res.ApprenticeshipCourses.ElementAt(1);
 
             courseCarpentry.Value.Should().Be(_courseCarpentry.Id);
             courseCarpentry.Text.Should().Be($"{_courseCarpentry.Title}, Level: {_courseCarpentry.Level} (Standard)");

@@ -73,7 +73,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 return RedirectToAction("TypeOfApprenticeships");
             }
 
-            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup();
+            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(isTransferFunded.Value);
             vm.IsTransferFunded = isTransferFunded;
 
             return View(vm);
