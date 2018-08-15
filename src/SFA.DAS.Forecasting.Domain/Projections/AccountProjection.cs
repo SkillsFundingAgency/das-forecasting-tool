@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
 			var currentBalance = GetCurrentBalance(lastBalance,
 			    completionPayments.TransferOutCompletionPayment, completionPayments.TransferInCompletionPayment,
-			    totalCostOfTraning.TransferOut, totalCostOfTraning.TransferIn, isSendingEmployer);
+			    totalCostOfTraning.TransferOut, totalCostOfTraning.TransferIn, isSendingEmployer, projectionGenerationType, ignoreCostOfTraining);
 
 			var costOfTraining = totalCostOfTraning.LevyFunded;
 	        var complPayment = completionPayments.LevyFundedCompletionPayment;
@@ -80,7 +80,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
             var moneyOut = ignoreCostOfTraining ? coInvestmentAmount : trainingCosts - coInvestmentAmount;
 
-            var moneyIn = levyFundsIn + totalCostOfTraning.TransferIn + completionPayments.TransferInCompletionPayment;
+            var moneyIn = ignoreCostOfTraining && projectionGenerationType == ProjectionGenerationType.LevyDeclaration ? 0: 
+                levyFundsIn + totalCostOfTraning.TransferIn + completionPayments.TransferInCompletionPayment;
 
 			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, ignoreCostOfTraining);
 
@@ -108,14 +109,19 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             return projection;
         }
 
-	    public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer)
+	    public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer, ProjectionGenerationType projectionGenerationType, bool isFirstMonth)
 	    {
 		    if (!isSendingEmployer)
 		    {
 			    return lastBalance;
 		    }
 
-		    var transferCosts = completionPaymentsTransferOut + trainingCostTransferOut;
+	        if (projectionGenerationType == ProjectionGenerationType.LevyDeclaration && isFirstMonth)
+	        {
+	            return lastBalance;
+	        }
+
+            var transferCosts = completionPaymentsTransferOut + trainingCostTransferOut;
 		    var currentBalance = lastBalance;
 
 		    if (lastBalance > 0)

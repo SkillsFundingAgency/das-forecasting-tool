@@ -516,8 +516,81 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             Assert.AreEqual(1600m, accountProjection.Projections.Last().FutureFunds);
         }
 
+        [Test]
+        public void Then_If_I_Am_A_Receiving_Employer_My_Balance_Is_Equal_To_My_Current_Balance_For_All_Months_For_A_Levy_Run()
+        {
+            //Arrange
+            _account = new Account(1, 2000, 0, 0, 0);
+            Moqer.SetInstance(_account);
+            _commitments.LevyFundedCommitments = new List<CommitmentModel>();
+            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>();
+            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
+            {
+                new CommitmentModel
+                {
+                    EmployerAccountId = 999,
+                    SendingEmployerAccountId = 1,
+                    ApprenticeshipId = 23,
+                    LearnerId = 33,
+                    StartDate = DateTime.Today.AddMonths(-2),
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    MonthlyInstallment = 2000,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 1200,
+                    FundingSource = Models.Payments.FundingSource.Transfer
+                }
+            };
 
-		[TestCase(800, 200, 0, 400, 0, true, 200)]
+            var employerCommitments = new EmployerCommitments(1, _commitments);
+            Moqer.SetInstance(employerCommitments);
+
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
+
+            //Assert
+            Assert.IsTrue(accountProjection.Projections.All(c=>c.FutureFunds.Equals(2000m)));
+        }
+
+
+        [Test]
+        public void Then_If_I_Am_A_Receiving_Employer_My_Balance_Is_Equal_To_My_Current_Balance_For_All_Months_For_A_Payment_Run()
+        {
+            //Arrange
+            _account = new Account(1, 2000, 0, 0, 0);
+            Moqer.SetInstance(_account);
+            _commitments.LevyFundedCommitments = new List<CommitmentModel>();
+            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>();
+            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
+            {
+                new CommitmentModel
+                {
+                    EmployerAccountId = 999,
+                    SendingEmployerAccountId = 1,
+                    ApprenticeshipId = 23,
+                    LearnerId = 33,
+                    StartDate = DateTime.Today.AddMonths(-2),
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    MonthlyInstallment = 2000,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 1200,
+                    FundingSource = Models.Payments.FundingSource.Transfer
+                }
+            };
+
+            var employerCommitments = new EmployerCommitments(1, _commitments);
+            Moqer.SetInstance(employerCommitments);
+
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
+
+            //Assert
+            Assert.IsTrue(accountProjection.Projections.All(c => c.FutureFunds.Equals(2000m)));
+        }
+
+
+        [TestCase(800, 200, 0, 400, 0, true, 200)]
 		[TestCase(400, 200, 0, 400, 0, true, 0)]
 		[TestCase(-500, 200, 0, 400, 0, true, -500)]
 		[TestCase(800, 200, 100, 400, 100, false, 800)]
@@ -525,7 +598,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 		public void ShouldDetermineBalanceForCoInvestmentAfterTransferCosts(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer, decimal expected)
 		{
 			var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-			var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut, completionPaymentsTransferIn, trainingCostTransferOut, trainingCostTransferIn, isSendingEmployer);
+			var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut, completionPaymentsTransferIn, trainingCostTransferOut, trainingCostTransferIn, isSendingEmployer, ProjectionGenerationType.PayrollPeriodEnd, false);
 
 			Assert.AreEqual(expected, balance);
 		}

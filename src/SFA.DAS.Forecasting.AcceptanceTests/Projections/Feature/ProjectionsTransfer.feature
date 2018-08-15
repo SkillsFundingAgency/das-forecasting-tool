@@ -22,11 +22,11 @@ Scenario: Sending employer with transfer out after levy run
 	Then the account projection should be generated
 	And should have the following projected values
 	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds |
-	| 0             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 400         |
-	| 1             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 300         |
-	| 2             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 200         |
-	| 3             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 100         |
-	| 4             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 0           |
+	| 0             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 1             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 400         |
+	| 2             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 300         |
+	| 3             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 200         |
+	| 4             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 100           |
 	| 5             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 00.0                          | 0           |
 	| 6             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 2000.00                       | 0           |
 	| 7             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 0           |
@@ -64,8 +64,8 @@ Scenario: Receiving employer account has transfers in after levy run
 	| 3             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
 	| 4             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
 	| 5             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
-	| 6             | 0.00                | 0.00                           | 0.00                          | 2000.00                      | 0.00               | 2000.00                       | 2000        |
-	| 7             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 2000        |
+	| 6             | 0.00                | 0.00                           | 0.00                          | 2000.00                      | 0.00               | 2000.00                       | 500        |
+	| 7             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 500        |
 
 Scenario: Receiving employer account has transfers in after payment run
 	Given I am a receiving employer
@@ -76,11 +76,11 @@ Scenario: Receiving employer account has transfers in after payment run
 	Then the account projection should be generated
 	And should have the following projected values
 	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds |
-	| 0             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 600         |
-	| 1             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 600         |
-	| 2             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 600         |
-	| 3             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 600         |
-	| 4             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 600         |
-	| 5             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 600         |
-	| 6             | 0.00                | 0.00                           | 0.00                          | 2000.00                      | 0.00               | 2000.00                       | 2000        |
-	| 7             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 2000        |
+	| 0             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 1             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 2             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 3             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 4             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 5             | 0.00                | 100                            | 100                           | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 6             | 0.00                | 0.00                           | 0.00                          | 2000.00                      | 0.00               | 2000.00                       | 500        |
+	| 7             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 500        |
