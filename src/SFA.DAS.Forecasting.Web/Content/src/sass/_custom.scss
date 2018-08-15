@@ -45,72 +45,93 @@
 
 h2{     
 .float-right{font-size:19px;}
-} 
+}
 
 /*floating menu style - EMPLOYER */
-#floating-menu-holder{
+#floating-menu-holder {
+    background: $mauve;
+
+    @include media (tablet) {
+        padding: 0 30px;
+    }
+}
+
+.sticky-nav {
+    .floating-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        max-width: 100%;
+    }
+
+    .js-float {
+        max-width: 960px;
+        margin: 0 auto;
+
+        @include media (tablet) {
+            padding: 0 30px;
+        }
+    }
+}
+
+.floating-menu {
+    clear: both;
+    max-width: 960px;
     width: 100%;
     background: $mauve;
-    .fixed-header {
-	  position: fixed;
-	  top:0; left:0;
-	  max-width: 100%; 
-	}
-    .width-adjust{
-      max-width: 960px;
-      margin: 0 auto;
-      }
+    color: #fff;
+    z-index: 1;
+    margin: 0 auto;
 
+    nav#user-nav {
+        clear: both;
+        float: left;
+        margin: 0 0 0 20px;
+
+        @include media(tablet) {
+            margin: 0;
+            clear: none;
+            float: right;
+        }
+
+
+        li {
+
+            a {
+                border: 0;
+                color: #fff;
+            }
+
+            .has-sub-menu {
+                a.menu-main {
+                    border: 0;
+                    color: #fff;
+                }
+            }
+
+            .open {
+                a.menu-main {
+                    color: #4c2c92;
+                }
+            }
+        }
+    }
+
+    p.floating-head-text {
+        float: left;
+        margin: 10px 0 0 10px;
+        text-align: left;
+        font-weight: bold;
+        font-size: 19px;
+
+        @include media(tablet) {
+            margin: 10px 0 0 0px;
+        }
+    }
 }
-  .floating-menu{ 
-	clear:both;
-	max-width:960px;
-	width:100%;
-	background:$mauve;
-	color:#fff;
-    z-index:1;
-    margin:0 auto;
-        nav#user-nav{
-            clear:both;
-            float:left;
-            margin:0 0 0 20px;   
-                 @include media(tablet){
-                     margin:0;                  
-                     clear:none;
-                     float:right;
-                 }
-                li{
-                    a{
-                        border:0;                     
-                        color:#fff;  
-                                
-                    }
-                    .has-sub-menu{ 
-                        a.menu-main{
-                            border:0;
-                            color:#fff;
-                        }  
-                  
-                    }  
-                .open{
-                     a.menu-main{color:#4c2c92;}
-                    }  
-                            
-                }         
-            }
-    
-        p.floating-head-text{
-              float:left; 
-              margin:10px 0 0 10px;
-              font-weight:bold;
-              font-size:19px;
 
-              @include media(tablet){
-                 margin:10px 0 10px 0px;
-                 }
-            }
-  }
- /* - END floating menu style */
+/* - END floating menu style */
+
 
   .js-enabled #user-nav li.has-sub-menu>a:before{
       border-left-color:#fff;
@@ -232,6 +253,10 @@ only screen and (max-width: 480px) {
             max-width: 290px;
         }
     }
+}
+
+.projection-date {
+    border-left: solid 10px #bfc1c3;
 }
 
 details.projection-survey {

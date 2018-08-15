@@ -59,6 +59,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         }
 
         private static readonly Dictionary<long, long> Apprenticeships = new Dictionary<long, long>();
+        private static readonly Dictionary<long, long> Employers = new Dictionary<long, long>();
         private static readonly object LockObject = new object();
 
         private static long GetApprenticeshipId(long originalApprenticeshipId)
@@ -76,6 +77,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 return Apprenticeships[originalApprenticeshipId];
             }
         }
+
         private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
         {
             if (payment == null)
@@ -94,6 +96,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             var apprenticeshipId = GetApprenticeshipId(payment.ApprenticeshipId);
             logger.Info($"Creating payment event for apprenticeship: {apprenticeshipId}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
             earningDetail.RequiredPaymentId = Guid.NewGuid();
+
             return new PaymentCreatedMessage
             {
                 Id = Guid.NewGuid().ToString(),
@@ -105,12 +108,13 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 ApprenticeName = "Apprentice Name",
                 CourseName = payment.ApprenticeshipCourseName,
                 CourseLevel = payment.ApprenticeshipCourseLevel,
-                Uln = 1234567890,
+                Uln = new Random(Guid.NewGuid().GetHashCode()).Next(10000, 9999999),
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource,
+                SendingEmployerAccountId = payment.SenderAccountId.HasValue ? 54321 : substitutionId //TODO: need to generate or pass in a valid substitute sender account for transfers
             };
         }
 
@@ -144,7 +148,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
                 EarningDetails = earningDetail,
-                FundingSource = payment.FundingSource, 
+                FundingSource = payment.FundingSource,
                 SendingEmployerAccountId = payment.SenderAccountId ?? payment.AccountId
             };
         }

@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 using Dapper;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
@@ -17,9 +19,12 @@ using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
 using SFA.DAS.Forecasting.Application.Commitments.Services;
 using SFA.DAS.Forecasting.Application.Converters;
+using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -37,15 +42,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static Config Config => ParentContainer.GetInstance<Config>();
         protected static readonly string FunctionsToolsRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AzureFunctionsTools", "Releases");
         protected static string FunctionsToolsPath => Path.Combine(FunctionsToolsRootPath, GetAzureFunctionsToolsVersion(), "cli", "func.exe");
-        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli" );
+        protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli");
         protected static string FunctionsCliPath => Path.Combine(FunctionsCliRootPath, GetAzureFunctionsCliVersion(), "func.exe");
         protected static string FunctionsPath => Directory.Exists(FunctionsToolsRootPath) ? FunctionsToolsPath : FunctionsCliPath;
 
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
         protected ForecastingDataContext DataContext => NestedContainer.GetInstance<ForecastingDataContext>();
+        protected IDocumentSession Session => NestedContainer.GetInstance<IDocumentSession>();
 
-        protected CommitmentsDataService CommitmentsDataService =>NestedContainer.GetInstance<CommitmentsDataService>();
+        protected CommitmentsDataService CommitmentsDataService => NestedContainer.GetInstance<CommitmentsDataService>();
         protected string EmployerHash { get => Get<string>("employer_hash"); set => Set(value, "employer_hash"); }
         protected static List<Process> Processes = new List<Process>();
         protected int EmployerAccountId => Config.EmployerAccountId;
@@ -89,7 +95,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 .Select(directoryI => new DirectoryInfo(directoryI))
                 .Select(directoryInfo => directoryInfo.Name)
                 .ToList()
-                .OrderByDescending(c=>Convert.ToInt32(c.Split('.')[0]))
+                .OrderByDescending(c => Convert.ToInt32(c.Split('.')[0]))
                 .ThenByDescending(c => Convert.ToInt32(c.Split('.')[1]))
                 .ThenByDescending(c => Convert.ToInt32(c.Split('.')[2]))
                 .First();
@@ -242,6 +248,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 .ToList();
             DataContext.AccountProjections.RemoveRange(projections);
             DataContext.SaveChanges();
+            RemoveEmployerProjectionAuditDocuments(ProjectionSource.PaymentPeriodEnd, employerId);
+            RemoveEmployerProjectionAuditDocuments(ProjectionSource.LevyDeclaration, employerId);
         }
 
         protected void InsertLevyDeclarations(IEnumerable<LevySubmission> levySubmissions)
@@ -339,6 +347,20 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         {
             Console.WriteLine($"{description} Uri: {endpoint}, Payload: {payload}");
             HttpClient.PostAsync(endpoint, new StringContent(payload)).Wait();
+        }
+
+        protected void RemoveEmployerProjectionAuditDocuments(ProjectionSource projectionSource, params long[] employerAccountIds)
+        {
+            RemoveEmployerProjectionAuditDocuments(Session, projectionSource, employerAccountIds);
+        }
+
+        protected void RemoveEmployerProjectionAuditDocuments(IDocumentSession session, ProjectionSource projectionSource, params long[] employerAccountIds)
+        {
+            foreach (var employerAccountId in employerAccountIds)
+            {
+                var docId = $"employerprojectionaudit-{projectionSource.ToString("G").ToLower()}-{employerAccountId}";  //TODO: should really be using a common bit of code here
+                session.Delete(docId).Wait();
+            }
         }
 
     }

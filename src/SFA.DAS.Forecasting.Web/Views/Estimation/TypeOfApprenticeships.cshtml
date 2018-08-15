@@ -3,8 +3,41 @@
 @{
     ViewBag.Title = "Tell us if this estimation is for a transfer";
 }
-<main id="content" role="main">
+
     <div id="estimate-typeof-transfer">
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                @if (!ViewContext.ViewData.ModelState.IsValid)
+                {
+                    <div class="error-summary validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+                        <h2 class="heading-medium error-summary-heading" id="error-summary-heading-details">
+                            Errors to fix
+                        </h2>
+
+                        <p>Please check the details you have entered against the information that's needed.</p>
+
+                        <ul class="error-summary-list list list-links">
+                            @foreach (var stateItem in ViewContext.ViewData.ModelState)
+                            {
+                                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
+
+                                foreach (var error in stateItem.Value.Errors.Take(1))
+                                {
+                                    <li>
+                                        <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
+                                            @error.ErrorMessage
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
         <div class="grid-row">
             <div class="column-two-thirds">
                 <h1 class="heading-xlarge">
@@ -21,20 +54,17 @@
         </div>
 
         <div class="grid-row">
-
-
             <form method="post">
                 @Html.AntiForgeryToken()
                 <div class="column-two-thirds">
-                    <div class="form-group">
+                    <div class="form-group  @Html.AddErrorClass(m => m.IsTransferFunded)">
                         <fieldset>
-
                             <legend>
                                 <h2 class="heading-small">
                                     Are you using this estimation to see how many apprenticeship you could fund using a transfer?
                                 </h2>
                             </legend>
-
+                            @Html.ValidationMessageFor(m => m.IsTransferFunded, null, new { id = "error-message-" + Html.IdFor(m => m.IsTransferFunded) })
                             <div class="multiple-choice">
                                 <input id="transfer-funded" type="radio" name="IsTransferFunded" value="true">
                                 <label for="transfer-funded">Yes, it's to estimate a transfer of funds</label>
@@ -53,4 +83,3 @@
             </form>
         </div>
     </div>
-</main>

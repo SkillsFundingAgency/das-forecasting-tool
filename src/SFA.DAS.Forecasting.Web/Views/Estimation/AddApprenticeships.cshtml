@@ -2,54 +2,22 @@
 @model SFA.DAS.Forecasting.Web.ViewModels.AddApprenticeshipViewModel
 
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = "Add Apprenticeships";
     ViewBag.Description = "Add Apprenticeships to your Estimation";
 }
 
 @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    <main id="content" role="main" tabindex="-1">
+
         <div id="estimate-add-apprenticeship">
-            <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
-            @Html.HiddenFor(model => model.Name)
-            @Html.HiddenFor(model => model.PreviousCourseId)
-            @Html.HiddenFor(model => model.ApprenticeshipToAdd.IsTransferFunded)
-
-            <div class="error-summary @HideShowValidation("")  validation-summary-details" role="alert" aria-labelledby="error-summary-heading-details" tabindex="-1">
-                <h1 class="heading-medium error-summary-heading" id="error-summary-heading-details">
-                    Errors to fix
-                </h1>
-
-                <p>Please check the details you have entered against the information that's needed.</p>
-
-                <ul class="error-summary-list list list-links">
-                    <li class="@HideShowValidation("NoApprenticeshipSelected")" id="noStandardSelected"><a href="#select2-choose-apprenticeship-container">You must choose 1 apprenticeship</a></li>
-                    <li class="@HideShowValidation("NoNumberOfApprentices")" id="noNumberOfApprentices"><a href="#no-of-app">Make sure you have at least 1 or more apprentices</a></li>
-                    <li class="@HideShowValidation("NoNumberOfMonths")" id="noLength"><a href="#apprenticeship-length">The number of months was not entered</a></li>
-                    <li class="@HideShowValidation("ShortNumberOfMonths")" id="shortLength"><a href="#apprenticeship-length">The number of months must be 12 months or more</a></li>
-                    <li class="@HideShowValidation("NoStartMonth")" id="noStartMonth"><a href="#startDateMonth">The start month was not entered</a></li>
-                    <li class="@HideShowValidation("InvalidStartMonth")" id="invalidStartMonth"><a href="#startDateMonth">The start month entered needs to be between 1 and 12</a></li>
-                    <li class="@HideShowValidation("NoStartYear")" id="noStartYear"><a href="#startDateYear">The start year was not entered</a></li>
-                    <li class="@HideShowValidation("LateDate")" id="lateDate"><a href="#startDateMonth">The start date entered must be in the next 4 years</a></li>
-                    <li class="@HideShowValidation("StartDateInPast")" id="startDateInPast"><a href="#startDateMonth">The start date cannot be in the past</a></li>
-                    <li class="@HideShowValidation("StartDateBeforeMay2018")" id="startDateBeforeMay2018"><a href="#startDateMonth">The start date must be on or after May 2018</a></li>
-                    <li class="@HideShowValidation("OverCap")" id="overCap"><a href="#total-funding-cost">The total cost can't be higher than the total government funding band maximum for this apprenticeship</a></li>
-                    <li class="@HideShowValidation("NoCost")" id="noCost"><a href="#total-funding-cost">The total training cost was not entered</a></li>
-                </ul>
-            </div>
-
-
-            <div class="success-summary hidden" id="apprenticeshipAdded">
-                <h1 class="heading-medium">Apprenticeship added</h1>
-                <p>
-                    The apprenticeship <span class="apprenticeship-name">{apprenticeship}</span> has been added.
-                </p>
-            </div>
-
             <div class="grid-row">
                 <div class="column-two-thirds">
                     <div class="hgroup form-group">
+                        <a href="@Url.ExternalUrlAction("transfers", string.Empty, false)" class="link-back">Back to Transfers</a>
+
+                        @Html.Partial("_validationErrors")
+
                         <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
                         <p>
                             Add the apprenticeship details so you can estimate the cost of the apprenticeships you’ve chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
@@ -61,52 +29,51 @@
             <form method="post">
                 <div class="grid-row">
                     <div class="column-two-thirds">
+                        @Html.HiddenFor(m => m.IsTransferFunded)
 
-                        <div class="form-group hidden">
-                            <fieldset class="inline">
-                                <h2 class="heading-small">Are you transferring funds to another employer for this apprenticeship?</h2>
-                                <div class="multiple-choice">
-                                    <input id="radio-inline-1" type="radio" name="radio-inline-group" value="1">
-                                    <label for="radio-inline-1">Yes</label>
-                                </div>
-                                <div class="multiple-choice">
-                                    <input id="radio-inline-2" type="radio" name="radio-inline-group" value="0">
-                                    <label for="radio-inline-2">No</label>
-                                </div>
-                            </fieldset>
-                        </div>
-
-
-                        <div class="form-group">
+                        <div class="form-group @Html.AddErrorClass(m => m.Course)">
                             <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
-                            @Html.DropDownListFor(model => model.ApprenticeshipToAdd.CourseId, @Model.ApprenticeshipList(), new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
+                            @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
+                            @Html.DropDownListFor(model =>
+             model.CourseId,
+             @Model.ApprenticeshipCourses,
+             "Select one",
+             new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
                         </div>
 
 
-                        <div class="form-group no-of-apprentice">
+                        <div class="form-group no-of-apprentice @Html.AddErrorClass(m => m.NumberOfApprentices)">
                             <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                            @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text" })
+                            @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new { id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices) })
+                            @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text", @Value = valueOrEmpty(Model.NumberOfApprentices) })
                         </div>
 
 
-                        <div class="form-group no-of-months">
+                        <div class="form-group no-of-months @Html.AddErrorClass(m => m.TotalInstallments)">
                             <label class="form-label-bold" for="apprenticeship-length">Number of months</label>
                             <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
-                            @Html.TextBoxFor(model => model.ApprenticeshipToAdd.NumberOfMonths, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "text" })
+                            @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
+                            @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "text", @Value = valueOrEmpty(Model.TotalInstallments) })
                         </div>
 
-                        <div class="form-group" id="dateWrapper">
+                        <div class="form-group  @Html.AddErrorClass(m => m.StartDate) @Html.AddErrorClass(m => m.StartDateMonth) @Html.AddErrorClass(m => m.StartDateYear)" id="dateWrapper">
 
                             <span class="form-label-bold">Start date</span>
                             <span class="form-hint">For example, 09 2018</span>
+
+                            @Html.ValidationMessageFor(m => m.StartDate, null, new { id = "error-message-" + Html.IdFor(m => m.StartDate) })
+                            @Html.HiddenFor(m => m.StartDate)
+
+                            @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
+                            @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
                             <div class="form-date">
-                                <div class="form-group form-group-month">
+                                <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                     <label for="startDateMonth">Month</label>
-                                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM" })
+                                    @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
                                 </div>
-                                <div class="form-group form-group-year">
+                                <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
                                     <label for="startDateYear">Year</label>
-                                    @Html.TextBoxFor(model => model.ApprenticeshipToAdd.StartYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY" })
+                                    @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
                                 </div>
                             </div>
 
@@ -118,45 +85,34 @@
                             <label class="form-label-bold">Government funding band maximum</label>
 
                             @{
-                                var calculatedFundingCapMessageClass = "HideFundingCapMessage";
-                                var defaultFundingCapMessageClass = "";
-
-                                decimal? fundingCap = null;
-                                int? apprenticeCount = null;
-                                decimal? totalCap = null;
-
-                                if (Model.ApprenticeshipToAdd.CalculatedTotalCap.HasValue && Model.ApprenticeshipToAdd.CalculatedTotalCap > 0)
+                                decimal fundingCap = 0;
+                                if (Model.Course != null)
                                 {
-                                    fundingCap = Model.ApprenticeshipToAdd.AppenticeshipCourse.FundingCap;
-                                    apprenticeCount = Model.ApprenticeshipToAdd.ApprenticesCount;
-                                    totalCap = Model.ApprenticeshipToAdd.CalculatedTotalCap;
-                                    calculatedFundingCapMessageClass = "";
-                                    defaultFundingCapMessageClass = "HideFundingCapMessage";
+                                    fundingCap = Model.Course.FundingCap;
                                 }
+                            } 
+                            <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
+                                Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                                Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
+                            </span>
 
-                                <span id="details-about-funding-calculated" class="form-hint @calculatedFundingCapMessageClass" style="display: none;">
-                                    Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                    Total government funding band maximum for <b id="apprentice-count-details">@apprenticeCount</b> apprentices is <b id="total-cap-details">@totalCap.FormatCost() </b>
-                                </span>
-
-                                <span id="details-about-funding" class="form-hint @defaultFundingCapMessageClass">
-                                    Choose an apprenticeship and number of apprentices to see this figure <br>
-                                    <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
-                                </span>
-
-
-                            }
+                            <span id="details-about-funding" class="form-hint">
+                                Choose an apprenticeship and number of apprentices to see this figure <br>
+                                <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
+                            </span>
                         </div>
 
 
-                        <div class="form-group">
+                        <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
                             <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                             <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
-                            <label for="total-funding-cost-2" class="form-label-bold">
+                            @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
+                            <label class="form-label-bold">
                                 £
-                                @Html.TextBoxFor(model => model.ApprenticeshipToAdd.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
-
+                                @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
                             </label>
+
+                            
                         </div>
                     </div>
                 </div>
@@ -183,18 +139,13 @@
             </div>
 
         </div>
-    </main>
+
 }
 
-@functions{
-    public string HideShowValidation(string validatorToCheck)
+@functions {
+    public string valueOrEmpty(int value)
     {
-        if (validatorToCheck == string.Empty)
-        {
-            return Model.ValidationResults.Count > 0 ? string.Empty : "hidden";
-        }
-
-        return Model.ValidationResults.Count(x => x.FailureReason == validatorToCheck) > 0 ? string.Empty : "hidden";
+        return value > 0 ? value.ToString() : "";
     }
 }
 

@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.PageObjects;
 using Sfa.Automation.Framework.Extensions;
 using Sfa.Automation.Framework.Selenium;
+using SFA.DAS.Forecasting.Web.Automation.Estimation;
 using System;
 using System.Linq;
 
@@ -12,6 +13,9 @@ namespace SFA.DAS.Forecasting.Web.Automation
         [FindsBy(How = How.XPath, Using = "//h1[text()='Estimated costs']")] public IWebElement PageHeader { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//*[text()='Remove']")] public IWebElement RemoveApprenticeshipButton { get; set; }
+
+        [FindsBy(How = How.XPath, Using = "//*[text()='Edit']")] public IWebElement EditApprenticeshipButton { get; set; }
+
         [FindsBy(How = How.XPath, Using = "//*[text()='Remaining transfer allowance']")] public IWebElement RemainingTransferAllowanceTabButton { get; set; }
         [FindsBy(How = How.CssSelector, Using = ".total *[data-label='Total Cost']")] public IWebElement TotalCostLabel { get; set; }
         [FindsBy(How = How.XPath, Using = "//*[contains(@href, 'apprenticeship/add')]")] public IWebElement AddApprenticeshipsButton { get; set; }
@@ -40,6 +44,12 @@ namespace SFA.DAS.Forecasting.Web.Automation
         {
             this.AddApprenticeshipsButton.ClickThisElement();
             return new AddApprenticeshipsToEstimateCostPage(Driver);
+        }
+
+        public EditApprenticeshipsPage EditApprenticeships()
+        {
+            this.EditApprenticeshipButton.ClickThisElement();
+            return new EditApprenticeshipsPage(Driver);
         }
 
         public string[] GetApprenticeshipsAddedTableHeaders()

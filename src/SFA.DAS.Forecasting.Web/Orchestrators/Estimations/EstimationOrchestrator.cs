@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -63,20 +63,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             StartDate = o.StartDate,
                             TotalCost = o.TotalCost,
                             FundingSource = o.FundingSource
-                        }),
+                        }).ToList(),
                 },
                 TransferAllowances = estimationProjector?.Projections?
                     .Select(o => new EstimationTransferAllowanceVewModel
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
                         ActualCost = o.ActualCosts.TransferFundsOut,
-                        EstimatedCost = o.ModelledCosts.TransferFundsOut,
-                        RemainingAllowance = o.FutureFunds
+                        EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
+                        RemainingAllowance = o.AvailableTransferFundsBalance
                     }).ToList(),
                 AccountFunds =
                     new AccountFundsViewModel
                     {
-                        OpeningBalance = GetOpeningBalance(estimationProjector?.Projections),
+                        OpeningBalance = GetOpeningBalance(estimationProjector.Projections),
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
                         Records = GetAccountFunds(estimationProjector?.Projections)
                     }
@@ -103,22 +103,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
         {
-            decimal estimatedFundsOut = 0;
-            var accountFumds = estimations.Select(projection =>
+            var accountFunds = estimations.Select(estimation => new AccountFundsItem
             {
-                estimatedFundsOut += projection.ModelledCosts.FundsOut;
-                var balance = projection.FutureFunds - estimatedFundsOut;
-
-                return new AccountFundsItem
-                {
-                    Date = new DateTime(projection.Year, projection.Month, 1),
-                    ActualCost = projection.ActualCosts.FundsOut,
-                    EstimatedCost = projection.ModelledCosts.FundsOut,
-                    Balance = balance
-                };
+                Date = new DateTime(estimation.Year, estimation.Month, 1),
+                ActualCost = estimation.ActualCosts.FundsOut,
+                EstimatedCost = estimation.AllModelledCosts.FundsOut,
+                Balance = estimation.EstimatedProjectionBalance
             });
 
-            return accountFumds.ToList();
+            return accountFunds.ToList();
         }
 
         private decimal GetOpeningBalance(ReadOnlyCollection<AccountEstimationProjectionModel> projections)
@@ -127,7 +120,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             if (first == null)
                 return 0;
 
-            return first.FutureFunds;
+            return first.EstimatedProjectionBalance;
         }
 
         public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
@@ -136,11 +129,19 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var estimations = await _estimationRepository.Get(accountId);
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
-
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
+
+            var fundingPeriods = course.FundingPeriods.Select(m =>
+                        new FundingPeriodViewModel
+                        {
+                            FromDate = m.EffectiveFrom,
+                            ToDate = m.EffectiveTo,
+                            FundingCap = m.FundingCap
+                        });
 
             return new EditApprenticeshipsViewModel
             {
+                CourseId = course.Id,
                 CourseTitle = model.CourseTitle,
                 ApprenticeshipsId = apprenticeshipsId,
                 EstimationName = estimationName,
@@ -151,8 +152,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 StartDateMonth = model.StartDate.Month,
                 StartDateYear = model.StartDate.Year,
                 HashedAccountId = hashedAccountId,
-                FundingCap = course.FundingCap,
-                CalculatedTotalCap = course.FundingCap * model.ApprenticesCount
+                FundingPeriodsJson = JsonConvert.SerializeObject(fundingPeriods),
             };
         }
 

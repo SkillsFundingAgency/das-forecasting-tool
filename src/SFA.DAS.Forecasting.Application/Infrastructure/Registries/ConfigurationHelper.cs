@@ -77,11 +77,18 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 : GetSecret(name).Result;
         }
 
-        public static bool IsDevOrAtEnvironment =>
+        public static bool IsDevEnvironment =>
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("AT") ?? false);
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
+
+        public static bool IsDevOrAtEnvironment =>
+            IsDevEnvironment || (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("AT") ?? false);
+
+        public static bool IsDevOrTestEnvironment =>
+            IsDevOrAtEnvironment || 
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("TEST") ?? false) ||
+            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("TEST2") ?? false);
 
         private static async Task<string> GetSecret(string secretName)
         {

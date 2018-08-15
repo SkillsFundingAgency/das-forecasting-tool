@@ -136,6 +136,35 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("AC3 - Store levy declarations with 0 amount")]
+        public virtual void AC3_StoreLevyDeclarationsWith0Amount()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3 - Store levy declarations with 0 amount", ((string[])(null)));
+#line 26
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table3.AddRow(new string[] {
+                        "ABC-1234",
+                        "0",
+                        "Today"});
+#line 27
+ testRunner.Given("I have made the following levy declarations", ((string)(null)), table3, "Given ");
+#line 30
+ testRunner.When("the SFA Employer HMRC Levy service notifies the Forecasting service of the levy d" +
+                    "eclarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 31
+ testRunner.Then("the Forecasting Levy service should store the levy declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore
