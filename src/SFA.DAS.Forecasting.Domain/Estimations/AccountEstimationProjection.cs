@@ -74,8 +74,8 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal accountRemainingTransferBalance, decimal lastProjectedBalance)
         {
-            var modelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
-            var modelledCompletionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
+            var modelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period, true);
+            var modelledCompletionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period, true);
             var actualAccountProjection = _actualAccountProjections.FirstOrDefault(c=>c.Month == period.Month && c.Year == period.Year);
 
             

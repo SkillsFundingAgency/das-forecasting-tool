@@ -50,7 +50,17 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                         StartDate = new DateTime(2019, 3, 1),
                         NumberOfInstallments = 5,
                         FundingSource = Models.Payments.FundingSource.Levy
-                    }
+                    },
+                    new CommitmentModel
+                    {
+                        CompletionAmount = 100,
+                        EmployerAccountId = EmployerAccountId,
+                        MonthlyInstallment = 50,
+                        PlannedEndDate = new DateTime(2018, 5, 1),
+                        StartDate = new DateTime(2018, 1, 1),
+                        NumberOfInstallments = 5,
+                        FundingSource = Models.Payments.FundingSource.Transfer
+                    },
                 }
             };
             var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);
@@ -235,6 +245,41 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
             Assert.AreEqual(9940 , actual.AvailableTransferFundsBalance);
+        }
+
+        [Test]
+        public void Then_The_Estimation_Only_Includes_Modelled_Transfer_Estimates_And_Not_Projection_Estimates()
+        {
+            //Arrange
+            var commitments = new EmployerCommitmentsModel
+            {
+                SendingEmployerTransferCommitments =
+                {
+                    new CommitmentModel
+                    {
+                        CompletionAmount = 100,
+                        EmployerAccountId = EmployerAccountId,
+                        MonthlyInstallment = 50,
+                        PlannedEndDate = new DateTime(2018, 5, 1),
+                        StartDate = new DateTime(2018, 1, 1),
+                        NumberOfInstallments = 5,
+                        FundingSource = Models.Payments.FundingSource.Levy
+                    }
+                }
+            };
+            var employerCommitments = new EmployerCommitments(EmployerAccountId, commitments);
+            var accountEstimationProjectionCommitments =
+                new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
+            _moqer.SetInstance(accountEstimationProjectionCommitments);
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
+            //Act
+            estimationProjection.BuildProjections();
+
+            //Assert
+            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(9990, actual.AvailableTransferFundsBalance);
         }
 
         [Test]
