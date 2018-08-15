@@ -17,7 +17,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
     public class AccountEstimationProjectionTests
     {
         private const int EmployerAccountId = 12345;
-        private AutoMoq.AutoMoqer _moqer;
+        private const int TransferAllowance = 15000;
+        private AutoMoqer _moqer;
         private EmployerCommitmentsModel _commitments;
         private List<AccountProjectionModel> _accountProjection;
         private Account _account;
@@ -28,7 +29,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _moqer = new AutoMoqer();
             _commitments = new EmployerCommitmentsModel
             {
-                LevyFundedCommitments =
+                SendingEmployerTransferCommitments = 
                 {
                     new CommitmentModel
                     {
@@ -61,60 +62,72 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     EmployerAccountId = 54321,
                     Month = 1,
                     Year = 2018,
+                    LevyFundsIn = 100,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 50,
-                    LevyFundedCostOfTraining = 50
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 500
                 },
                 new AccountProjectionModel
                 {
                     EmployerAccountId = 54321,
                     Month = 2,
                     Year = 2018,
+                    LevyFundsIn = 100,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 50
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 540
                 },
                 new AccountProjectionModel
                 {
                     EmployerAccountId = 54321,
                     Month = 3,
                     Year = 2018,
+                    LevyFundsIn = 100,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 50
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 580
                 },
                 new AccountProjectionModel
                 {
                     EmployerAccountId = 54321,
                     Month = 4,
                     Year = 2018,
+                    LevyFundsIn = 100,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 50
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 620
                 },
                 new AccountProjectionModel
                 {
                     EmployerAccountId = 54321,
                     Month = 5,
                     Year = 2018,
+                    LevyFundsIn = 100,
                     TransferOutCostOfTraining = 10,
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 50
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 660
                 },
                 new AccountProjectionModel
                 {
                     EmployerAccountId = 54321,
                     Month = 6,
                     Year = 2018,
+                    LevyFundsIn = 100,
                     TransferOutCostOfTraining = 0,
                     TransferOutCompletionPayments = 20,
                     LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 50
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 690
                 }
             };
 
@@ -126,7 +139,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             _moqer.SetInstance(accountEstimationProjectionCommitments);
 
-            _account = new Account(EmployerAccountId, 10000, 0, 15000, 10000);
+            _account = new Account(EmployerAccountId, 10000, 0, TransferAllowance, 10000);
             _moqer.SetInstance(_account);
         }
 
@@ -170,9 +183,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
             estimationProjection.BuildProjections();
             estimationProjection.Projections.Where(p => p.Month == 5).ToList()
-                .ForEach(p => Assert.AreEqual((decimal) (_account.TransferAllowance + p.TransferFundsIn - p.FundsOut),
-                    p.FutureFunds,
-                    $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.FundsOut}, actual: {p.FutureFunds}"));
+                .ForEach(p => Assert.AreEqual(_account.TransferAllowance + p.TransferFundsIn - p.TransferFundsOut,
+                    p.AvailableTransferFundsBalance,
+                    $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.ModelledCosts.FundsOut}, actual: {p.AvailableTransferFundsBalance}"));
         }
 
         [Test]
@@ -186,11 +199,92 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             {
                 Assert.IsNotNull(estimation);
                 Assert.AreEqual(
-                    (estimation.Month == 5 ? _account.TransferAllowance : lastBalance) + estimation.TransferFundsIn -
-                    estimation.FundsOut,
-                    estimation.FutureFunds);
-                lastBalance = estimation.FutureFunds;
+                    (estimation.Month == 5 ? _account.TransferAllowance : lastBalance) + estimation.TransferFundsIn - estimation.TransferFundsOut,
+                    estimation.AvailableTransferFundsBalance);
+                lastBalance = estimation.AvailableTransferFundsBalance;
             }
+        }
+
+        [Test]
+        public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance()
+        {
+            //Arrange
+            _moqer.GetMock<IDateTimeService>()
+                .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
+            //Act
+            estimationProjection.BuildProjections();
+
+            //Assert
+            var actual = estimationProjection.Projections.OrderBy(c=>c.Year).ThenBy(c=>c.Month).FirstOrDefault();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(_accountProjection.First().FutureFunds, actual.EstimatedProjectionBalance);
+        }
+
+        [Test]
+        public void Then_The_Estimation_Uses_Actual_And_Modelled_Costs_Against_My_Transfer_Allowance()
+        {
+            //Arrange
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
+            //Act
+            estimationProjection.BuildProjections();
+
+            //Assert
+            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(9940 , actual.AvailableTransferFundsBalance);
+        }
+
+        [Test]
+        public void Then_Transfer_Funds_In_Are_Reflected_In_My_Balance()
+        {
+            //Arrange
+            _accountProjection = new List<AccountProjectionModel>
+            {
+                new AccountProjectionModel
+                {
+                    EmployerAccountId = 54321,
+                    Month = 1,
+                    Year = 2018,
+                    LevyFundsIn = 100,
+                    TransferOutCostOfTraining = 10,
+                    TransferInCostOfTraining = 10,
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 50,
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 500
+                },
+                new AccountProjectionModel
+                {
+                    EmployerAccountId = 54321,
+                    Month = 2,
+                    Year = 2018,
+                    LevyFundsIn = 100,
+                    TransferOutCostOfTraining = 10,
+                    TransferInCostOfTraining = 10,
+                    TransferOutCompletionPayments = 0,
+                    LevyFundedCompletionPayments = 0,
+                    LevyFundedCostOfTraining = 50,
+                    FutureFunds = 540
+                }
+            };
+            _moqer.GetMock<IDateTimeService>()
+                .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
+            var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);
+            var accountEstimationProjectionCommitments =
+                new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
+            _moqer.SetInstance(accountEstimationProjectionCommitments);
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
+            //Act
+            estimationProjection.BuildProjections();
+
+            //Assert
+            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).Skip(1).FirstOrDefault();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(400, actual.EstimatedProjectionBalance);
         }
     }
 }

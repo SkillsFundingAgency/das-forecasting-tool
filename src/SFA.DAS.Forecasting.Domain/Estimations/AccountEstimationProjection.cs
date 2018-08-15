@@ -28,6 +28,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         private readonly IList<AccountProjectionModel> _actualAccountProjections;
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _estimatedProjections.AsReadOnly();
         public decimal MonthlyInstallmentAmount { get; internal set; }
+        public decimal TransferAllowance { get; set; }
         public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService)
         {
             _dateTimeService = dateTimeService;
@@ -44,7 +45,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         public void BuildProjections()
         {
             _estimatedProjections.Clear();
-            var lastBalance = _account.RemainingTransferBalance;
+            var accountRemainingTransferBalance = _account.RemainingTransferBalance;
             var startDate = _dateTimeService.GetCurrentDateTime().GetStartOfMonth();
             var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(2).GetStartOfMonth();
 
@@ -55,25 +56,29 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 throw new InvalidOperationException($"The start date for the earliest commitment is after the last planned end date. Account: {_account.EmployerAccountId}, Start date: {startDate}, End date: {endDate}");
 
             var projectionDate = startDate;
+            var lastProjectedBalance = _actualAccountProjections.FirstOrDefault(c => c.Month == startDate.Month && c.Year == startDate.Year)?.FutureFunds ?? 0;
             while (projectionDate <= endDate)
             {
                 if (projectionDate.Month == 5)
-                    lastBalance = _account.TransferAllowance;
-                var projection = CreateProjection(projectionDate, lastBalance);
+                    accountRemainingTransferBalance = _account.TransferAllowance;
+                var projection = CreateProjection(projectionDate, accountRemainingTransferBalance, lastProjectedBalance);
                 _estimatedProjections.Add(projection);
-                lastBalance = projection.FutureFunds;
+                accountRemainingTransferBalance = projection.AvailableTransferFundsBalance;
+                lastProjectedBalance = projection.EstimatedProjectionBalance + _account.LevyDeclared;
                 projectionDate = projectionDate.AddMonths(1);
             }
 
+            TransferAllowance = _account.TransferAllowance;
             MonthlyInstallmentAmount = _account.LevyDeclared;
         }
 
-        private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal lastBalance)
+        private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal accountRemainingTransferBalance, decimal lastProjectedBalance)
         {
             var modelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
             var modelledCompletionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
             var actualAccountProjection = _actualAccountProjections.FirstOrDefault(c=>c.Month == period.Month && c.Year == period.Year);
-			            
+
+            
             var projection = new AccountEstimationProjectionModel
             {
                 Month = (short)period.Month,
@@ -99,9 +104,18 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 }
             };
 
-            var balance = lastBalance + projection.ModelledCosts.TransferFundsIn + projection.ActualCosts.TransferFundsIn -
-                      projection.ModelledCosts.FundsOut - projection.ActualCosts.TransferFundsOut + _account.LevyDeclared;
-            projection.FutureFunds = balance;
+            if (_estimatedProjections.Any())
+            {
+                lastProjectedBalance = lastProjectedBalance - projection.ActualCosts.FundsOut;
+            }
+
+            //transfer projection
+            projection.AvailableTransferFundsBalance = accountRemainingTransferBalance - projection.TransferFundsOut;
+
+            //estimate balance
+            projection.EstimatedProjectionBalance = lastProjectedBalance - projection.ModelledCosts.FundsOut; 
+
+
             return projection;
         }
     }

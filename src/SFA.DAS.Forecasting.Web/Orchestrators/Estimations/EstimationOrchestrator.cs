@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
-using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -73,14 +71,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                         Date = new DateTime(o.Year, o.Month, 1),
                         ActualCost = o.ActualCosts.TransferFundsOut,
                         EstimatedCost = o.ModelledCosts.TransferFundsOut,
-                        RemainingAllowance = o.FutureFunds
+                        RemainingAllowance = o.AvailableTransferFundsBalance
                     }).ToList(),
                 AccountFunds =
                     new AccountFundsViewModel
                     {
-                        OpeningBalance = GetOpeningBalance(estimationProjector?.Projections),
+                        OpeningBalance = GetOpeningBalance(estimationProjector.Projections),
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
-                        Records = GetAccountFunds(estimationProjector?.Projections, estimationProjector.MonthlyInstallmentAmount)
+                        Records = GetAccountFunds(estimationProjector?.Projections)
                     }
             };
             return viewModel;
@@ -103,31 +101,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
-        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations, decimal monthlyInstallmentAmount)
+        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
         {
-            decimal estimatedFundsOut = 0;
-            decimal balance =0;
-            var firstMonth = true;
-            var accountFumds = estimations.Select(estimation =>
+            var accountFumds = estimations.Select(estimation => new AccountFundsItem
             {
-
-                if (firstMonth)
-                {
-                    balance = estimation.FutureFunds - estimation.ModelledCosts.FundsOut;
-                    firstMonth = false;
-                }
-                else
-                {
-                    balance = balance - estimation.ModelledCosts.FundsOut- estimation.ActualCosts.FundsOut + monthlyInstallmentAmount;
-                }
-
-                return new AccountFundsItem
-                {
-                    Date = new DateTime(estimation.Year, estimation.Month, 1),
-                    ActualCost = estimation.ActualCosts.FundsOut,
-                    EstimatedCost = estimation.ModelledCosts.FundsOut,
-                    Balance = balance
-                };
+                Date = new DateTime(estimation.Year, estimation.Month, 1),
+                ActualCost = estimation.ActualCosts.FundsOut,
+                EstimatedCost = estimation.ModelledCosts.FundsOut,
+                Balance = estimation.EstimatedProjectionBalance
             });
 
             return accountFumds.ToList();
@@ -139,7 +120,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             if (first == null)
                 return 0;
 
-            return first.FutureFunds;
+            return first.EstimatedProjectionBalance;
         }
 
         public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
