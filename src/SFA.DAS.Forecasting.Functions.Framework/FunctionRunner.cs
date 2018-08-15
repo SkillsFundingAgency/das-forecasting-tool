@@ -17,47 +17,40 @@ namespace SFA.DAS.Forecasting.Functions.Framework
     {
         public static async Task Run<TFunction>(TraceWriter writer, ExecutionContext executionContext, Func<IContainer, ILog, Task> runAction) where TFunction : IFunction
         {
-            ILog logger = null;
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
-                using (var nestedContainer = container.GetNestedContainer())
+                using (var nestedContainer = CreateNestedContainer<TFunction>(writer, container))
                 {
-                    ConfigureContainer<TFunction>(executionContext, writer, container);
-                    logger = container.GetInstance<ILog>();
-                    await runAction(nestedContainer, logger);
+                    using (StartTelemetryScope<TFunction>(nestedContainer))  //TODO: might be ok to wait for container to be disposed. in that case can get rid of this scope
+                    {
+                        await runAction(nestedContainer, nestedContainer.GetInstance<ILog>());
+                    }
                 }
             }
             catch (Exception ex)
             {
-                if (logger != null)
-                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
-                else
-                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
-
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex);
                 throw;
             }
         }
 
         public static void Run<TFunction>(TraceWriter writer, ExecutionContext executionContext, Action<IContainer, ILog> runAction) where TFunction : IFunction
         {
-            ILog logger = null;
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
-                using (var nestedContainer = container.GetNestedContainer())
+                using (var nestedContainer = CreateNestedContainer<TFunction>(writer, container))
                 {
-                    ConfigureContainer<TFunction>(executionContext, writer, container);
-                    logger = container.GetInstance<ILog>();
-                    runAction(nestedContainer, logger);
+                    using (StartTelemetryScope<TFunction>(nestedContainer))
+                    {
+                        runAction(nestedContainer, nestedContainer.GetInstance<ILog>());
+                    }
                 }
             }
             catch (Exception ex)
             {
-                if (logger != null)
-                    logger.Error(ex, $"Error invoking function: {typeof(TFunction)}.");
-                else
-                    writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex);
                 throw;
             }
         }
@@ -67,50 +60,62 @@ namespace SFA.DAS.Forecasting.Functions.Framework
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
-                using (var nestedContainer = container.GetNestedContainer())
+                using (var nestedContainer = CreateNestedContainer<TFunction>(writer, container))
                 {
-                    ConfigureContainer<TFunction>(executionContext, writer, container);
-                    return runAction(nestedContainer, container.GetInstance<ILog>());
+                    using (StartTelemetryScope<TFunction>(nestedContainer))
+                    {
+                        return runAction(nestedContainer, nestedContainer.GetInstance<ILog>());
+                    }
                 }
             }
             catch (Exception ex)
             {
-                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex);
                 throw;
             }
         }
 
         public static async Task<TReturn> Run<TFunction, TReturn>(TraceWriter writer, ExecutionContext executionContext, Func<IContainer, ILog, Task<TReturn>> runAction) where TFunction : IFunction
         {
-            ILog logger = null;
             try
             {
                 var container = ContainerBootstrapper.Bootstrap(writer, executionContext);
-                using (var nestedContainer = container.GetNestedContainer())
+                using (var nestedContainer = CreateNestedContainer<TFunction>(writer, container))
                 {
-                    ConfigureContainer<TFunction>(executionContext, writer, container);
-                    return await runAction(nestedContainer, container.GetInstance<ILog>());
+                    using (StartTelemetryScope<TFunction>(nestedContainer))
+                    {
+                        return await runAction(nestedContainer, nestedContainer.GetInstance<ILog>());
+                    }
                 }
             }
             catch (Exception ex)
             {
-                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex: ex);
+                writer.Error($"Error invoking function: {typeof(TFunction)}.", ex);
                 throw;
             }
         }
 
-        private static void ConfigureContainer<TFunction>(ExecutionContext executionContext, TraceWriter writer, IContainer container) where TFunction : IFunction
+        private static IOperationHolder<RequestTelemetry> StartTelemetryScope<TFunction>(IContainer container)
         {
-            container.Configure(c =>
-            {
-                var client = container.GetInstance<TelemetryClient>();
-                var context = client.StartOperation<RequestTelemetry>(typeof(TFunction).Name);
-                c.For<IOperationHolder<RequestTelemetry>>().Use(context);
-                c.For<ITelemetry>().Use<AppInsightsTelemetry>();
-                c.For<TraceWriter>().Use(writer);
-                c.For<TraceWriterLogger>().Use<TraceWriterLogger>();
-                c.For<ILog>().Use<CompositeLogger>();
-            });
+            return container.GetInstance<TelemetryClient>()
+                .StartOperation<RequestTelemetry>(typeof(TFunction).Name);
+        }
+
+        private static IContainer CreateNestedContainer<TFunction>(TraceWriter writer, IContainer parentContainer) where TFunction : IFunction
+        {
+            var nestedContainer = parentContainer.GetNestedContainer();
+            nestedContainer.Configure(c =>
+           {
+               //TODO: Possibly return  
+               //var client = nestedContainer.GetInstance<TelemetryClient>();
+               //var context = client.StartOperation<RequestTelemetry>(typeof(TFunction).Name);
+               //c.For<IOperationHolder<RequestTelemetry>>().Use(context);
+               c.For<ITelemetry>().Use<AppInsightsTelemetry>();
+               c.For<TraceWriter>().Use(writer);
+               c.For<TraceWriterLogger>().Use<TraceWriterLogger>();
+               c.For<ILog>().Use<CompositeLogger>();  //TODO: Move to logging or default registry
+           });
+            return nestedContainer;
         }
     }
 }
