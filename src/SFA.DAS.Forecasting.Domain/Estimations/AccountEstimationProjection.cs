@@ -74,8 +74,10 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal accountRemainingTransferBalance, decimal lastProjectedBalance)
         {
-            var modelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period, true);
-            var modelledCompletionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period, true);
+            var transferModelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period, true);
+            var transferModelledCompletionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period, true);
+            var allModelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period);
+            var allModelledCompletionPayments = _virtualEmployerCommitments.GetTotalCompletionPayments(period);
             var actualAccountProjection = _actualAccountProjections.FirstOrDefault(c=>c.Month == period.Month && c.Year == period.Year);
 
             
@@ -84,14 +86,23 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 Month = (short)period.Month,
                 Year = (short)period.Year,
                 ProjectionGenerationType = actualAccountProjection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration,
-                ModelledCosts = new AccountEstimationProjectionModel.Cost
+                TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                 {
-                    LevyCostOfTraining = modelledCostOfTraining.LevyFunded,
-                    LevyCompletionPayments = modelledCompletionPayments.LevyFundedCompletionPayment,
-                    TransferInCostOfTraining = modelledCostOfTraining.TransferIn,
-                    TransferInCompletionPayments = modelledCompletionPayments.TransferInCompletionPayment,
-                    TransferOutCostOfTraining = modelledCostOfTraining.TransferOut,
-                    TransferOutCompletionPayments = modelledCompletionPayments.TransferOutCompletionPayment
+                    LevyCostOfTraining = transferModelledCostOfTraining.LevyFunded,
+                    LevyCompletionPayments = transferModelledCompletionPayments.LevyFundedCompletionPayment,
+                    TransferInCostOfTraining = transferModelledCostOfTraining.TransferIn,
+                    TransferInCompletionPayments = transferModelledCompletionPayments.TransferInCompletionPayment,
+                    TransferOutCostOfTraining = transferModelledCostOfTraining.TransferOut,
+                    TransferOutCompletionPayments = transferModelledCompletionPayments.TransferOutCompletionPayment
+                },
+                AllModelledCosts = new AccountEstimationProjectionModel.Cost
+                {
+                    LevyCostOfTraining = allModelledCostOfTraining.LevyFunded,
+                    LevyCompletionPayments = allModelledCompletionPayments.LevyFundedCompletionPayment,
+                    TransferInCostOfTraining = allModelledCostOfTraining.TransferIn,
+                    TransferInCompletionPayments = allModelledCompletionPayments.TransferInCompletionPayment,
+                    TransferOutCostOfTraining = allModelledCostOfTraining.TransferOut,
+                    TransferOutCompletionPayments = allModelledCompletionPayments.TransferOutCompletionPayment
                 },
                 ActualCosts = new AccountEstimationProjectionModel.Cost
                 {
@@ -113,7 +124,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             projection.AvailableTransferFundsBalance = accountRemainingTransferBalance - projection.TransferFundsOut;
 
             //estimate balance
-            projection.EstimatedProjectionBalance = lastProjectedBalance - projection.ModelledCosts.FundsOut; 
+            projection.EstimatedProjectionBalance = lastProjectedBalance - projection.AllModelledCosts.FundsOut; 
 
 
             return projection;

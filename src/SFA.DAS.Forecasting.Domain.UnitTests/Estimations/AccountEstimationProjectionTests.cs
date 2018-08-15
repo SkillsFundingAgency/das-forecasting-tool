@@ -195,7 +195,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             estimationProjection.Projections.Where(p => p.Month == 5).ToList()
                 .ForEach(p => Assert.AreEqual(_account.TransferAllowance + p.TransferFundsIn - p.TransferFundsOut,
                     p.AvailableTransferFundsBalance,
-                    $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.ModelledCosts.FundsOut}, actual: {p.AvailableTransferFundsBalance}"));
+                    $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.TransferModelledCosts.FundsOut}, actual: {p.AvailableTransferFundsBalance}"));
         }
 
         [Test]
@@ -329,7 +329,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             //Assert
             var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).Skip(1).FirstOrDefault();
             Assert.IsNotNull(actual);
-            Assert.AreEqual(400, actual.EstimatedProjectionBalance);
+            Assert.AreEqual(350, actual.EstimatedProjectionBalance);
         }
     }
 }
