@@ -4476,19 +4476,24 @@ table.small th, table.small td, table.small .form-hint {
   }
 }
 
-#BalanceSheet-Tables .tip-info, #AccountFunds-Tables .tip-info {
+#BalanceSheet-Tables .tip-info,
+#AccountFunds-Tables .tip-info,
+#remaining-transfer-allowance .tip-info,
+#apprenticeships-added .tip-info {
   font-weight: normal;
   background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
   background-size: 18px;
-  display: block;
-  width: 100%;
+  display: inline-block;
   cursor: pointer;
   background-position-y: bottom;
 }
 
-#BalanceSheet-Tables .tip-info .info-title, #AccountFunds-Tables .tip-info .info-title {
+#BalanceSheet-Tables .tip-info .info-title,
+#AccountFunds-Tables .tip-info .info-title,
+#remaining-transfer-allowance .tip-info .info-title,
+#apprenticeships-added .tip-info .info-title {
   padding-right: 22px;
-  display: block;
+  display: inline-block;
   color: #005ea5;
   text-decoration: underline;
 }

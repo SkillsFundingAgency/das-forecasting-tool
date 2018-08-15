@@ -313,19 +313,20 @@ table.small th, table.small td, table.small .form-hint {
 
 // Tooltip styles
 
-#BalanceSheet-Tables, #AccountFunds-Tables {
+#BalanceSheet-Tables,
+#AccountFunds-Tables,
+#remaining-transfer-allowance,
+#apprenticeships-added {
     .tip-info {
         font-weight: normal;
         background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
         background-size: 18px;
-        display: block;
-        width: 100%;
+        display: inline-block;
         cursor: pointer;
         background-position-y: bottom;
-
         .info-title {
             padding-right: 22px;
-            display: block;
+            display: inline-block;
             color: #005ea5;
             text-decoration: underline;
         }
