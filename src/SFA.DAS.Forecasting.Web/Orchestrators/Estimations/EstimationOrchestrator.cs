@@ -70,7 +70,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
                         ActualCost = o.ActualCosts.TransferFundsOut,
-                        EstimatedCost = o.ModelledCosts.TransferFundsOut,
+                        EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
                         RemainingAllowance = o.AvailableTransferFundsBalance
                     }).ToList(),
                 AccountFunds =
@@ -103,15 +103,15 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
         {
-            var accountFumds = estimations.Select(estimation => new AccountFundsItem
+            var accountFunds = estimations.Select(estimation => new AccountFundsItem
             {
                 Date = new DateTime(estimation.Year, estimation.Month, 1),
                 ActualCost = estimation.ActualCosts.FundsOut,
-                EstimatedCost = estimation.ModelledCosts.FundsOut,
+                EstimatedCost = estimation.AllModelledCosts.FundsOut,
                 Balance = estimation.EstimatedProjectionBalance
             });
 
-            return accountFumds.ToList();
+            return accountFunds.ToList();
         }
 
         private decimal GetOpeningBalance(ReadOnlyCollection<AccountEstimationProjectionModel> projections)
