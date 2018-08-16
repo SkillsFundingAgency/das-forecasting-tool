@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
@@ -54,7 +55,11 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var startTime = DateTime.UtcNow;
-            await _forecastingDataContext.SaveChangesAsync();
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _forecastingDataContext.SaveChangesAsync();
+                scope.Complete();
+            }
             stopwatch.Stop();
             _telemetry.TrackDependency(DependencyType.SqlDatabaseUpdate, "Store Balance", startTime, stopwatch.Elapsed, true);
         }

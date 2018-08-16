@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
@@ -143,7 +144,11 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 new SqlParameter("@fundingSource", commitment.FundingSource)
             };
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
+                scope.Complete();
+            }
 
         }
 

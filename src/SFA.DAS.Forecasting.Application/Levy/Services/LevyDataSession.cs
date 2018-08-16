@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Models.Levy;
@@ -51,7 +52,11 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task SaveChanges()
         {
-            await _dataContext.SaveChangesAsync();
+            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _dataContext.SaveChangesAsync();
+                scope.Complete();
+            }
         }
 
         public void Store(LevyDeclarationModel levyDeclaration)
