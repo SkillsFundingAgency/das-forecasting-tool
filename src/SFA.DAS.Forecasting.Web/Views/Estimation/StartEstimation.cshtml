@@ -1,9 +1,9 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+﻿@model SFA.DAS.Forecasting.Web.ViewModels.StartViweModel
 
 @{
     ViewBag.Title = "Start Estimation";
 }
-<main id="content" role="main" tabindex="-1">
+
     <div id="estimate-start-transfer">
         <div class="grid-row">
             <div class="column-two-thirds">
@@ -14,13 +14,11 @@
             </div>
         </div>
 
-
         <div class="grid-row">
             <div class="column-two-thirds">
-                <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId})'>Start</a>
+                <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId, isTransferFunded = Model.IsTransferFunded })'>Start</a>
             </div>
         </div>
-
         <div class="grid-row disclaimer">
             <div class="column-two-thirds">
                 <div class="panel panel-border-wide">
@@ -31,5 +29,4 @@
                    </div>
             </div>
         </div>
-    </div> 
-</main>
+    </div>

@@ -31,8 +31,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     EffectiveTo = null,
                     IsActiveStandard = true,
                     IsPublished = true,
-                    MaxFunding = 10000,
+                    CurrentFundingCap = 10000,
                     Title = "Test course",
+                    FundingPeriods = new List<FundingPeriod>()
                 },
                 new StandardSummary
                 {
@@ -43,8 +44,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     EffectiveTo = null,
                     IsActiveStandard = false,
                     IsPublished = true,
-                    MaxFunding = 10000,
+	                CurrentFundingCap = 10000,
                     Title = "Test inactive course",
+                    FundingPeriods = new List<FundingPeriod>()
                 },
                 new StandardSummary
                 {
@@ -55,14 +57,15 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     EffectiveTo = null,
                     IsActiveStandard = true,
                     IsPublished = true,
-                    MaxFunding = 10000,
+                    CurrentFundingCap = 10000,
                     Title = "Test course 2",
+                    FundingPeriods = new List<FundingPeriod>()
                 }
             };
             _moqer.GetMock<IStandardApiClient>()
                 .Setup(x => x.GetAllAsync())
                 .Returns(Task.FromResult<IEnumerable<StandardSummary>>(_summaries));
-            _moqer.SetInstance<IStandardSummaryMapper>(new StandardSummaryMapper());
+            _moqer.SetInstance<IApprenticehipsCourseMapper>(new ApprenticehipsCourseMapper());
         }
 
         [Test]
