@@ -221,11 +221,9 @@
             <p>You should therefore not rely solely on the information provided by this tool when making decisions about how to spend future levy funds.</p>
         </div>
 
-        <details class="projection-survey">
+        <details id="projection-survey" class="projection-survey">
             <summary>Help us improve this section</summary>
-            <iframe src="https://www.smartsurvey.co.uk/s/7DFNM/">
-
-            </iframe>
+            <iframe src="https://www.smartsurvey.co.uk/s/7DFNM/"></iframe>
         </details>
     </div>
 
@@ -238,4 +236,15 @@
             <a href="@Model.BackLink" aria-label="Back" class="back-link">Back</a>
         </div>
     }
+}
+
+@section betabanner{
+<div class="phase-banner phase-banner-beta">
+    <div class="phase-banner-info">
+        <strong class="phase-tag">BETA</strong>
+        <span>
+            This is a new feature – your <a href="#projection-survey">feedback</a> will help us to improve it.
+        </span>
+    </div>
+</div>
 }

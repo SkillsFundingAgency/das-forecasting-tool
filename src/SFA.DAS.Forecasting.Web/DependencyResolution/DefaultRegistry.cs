@@ -19,6 +19,8 @@ using System;
 using System.Configuration;
 using System.Net.NetworkInformation;
 using System.Web;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
@@ -55,6 +57,10 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
             For<HttpContextBase>().Use(() => new HttpContextWrapper(HttpContext.Current));
 
             For<IMembershipService>().Use<MembershipService>();
+            var config =
+                new TelemetryConfiguration(ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false));
+            var client = new TelemetryClient(config);
+            client.InstrumentationKey = config.InstrumentationKey;
         }
 
         private void ConfigureLogging()

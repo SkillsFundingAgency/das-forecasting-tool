@@ -50,12 +50,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
 
             var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
-            Logger.Info($"Allow projections '{allowProjections}' for employer '{paymentCreatedMessage.EmployerAccountId}' in response to payment event.");
-
             if (!allowProjections)
             {
+                Logger.Debug($"Cannot allow projections for employer {paymentCreatedMessage.EmployerAccountId}. Not enough time has elapsed since last payment received.");
                 return false;
             }
+            Logger.Debug($"Enough time has elapsed since last received payment to allow projections to be generated for employer {paymentCreatedMessage.EmployerAccountId}.");
 
             if (!await AuditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
             {

@@ -1746,7 +1746,6 @@ input[type=number] {
 }
 
 .phase-banner span {
-  display: table-cell;
   vertical-align: baseline;
 }
 
@@ -1795,7 +1794,6 @@ input[type=number] {
 
 .phase-banner-alpha span,
 .phase-banner-beta span {
-  display: table-cell;
   vertical-align: baseline;
 }
 
@@ -2102,6 +2100,24 @@ table.top-border {
   margin-right: 0;
   padding-left: 0;
   padding-right: 0;
+}
+
+.phase-banner {
+  margin: 0 15px;
+}
+
+@media (min-width: 641px) {
+  .phase-banner {
+    max-width: 960px;
+    margin: 0 30px;
+  }
+}
+
+@media (min-width: 1020px) {
+  .phase-banner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
 }
 
 #global-header-bar {
