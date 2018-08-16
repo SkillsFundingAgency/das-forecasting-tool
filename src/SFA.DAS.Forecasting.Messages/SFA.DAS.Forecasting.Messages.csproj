@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApprenticeshipCourses\CourseType.cs" />
     <Compile Include="ApprenticeshipCourses\RefreshCourses.cs" />
     <Compile Include="Projections\GenerateAccountProjectionCommand.cs" />
     <Compile Include="Projections\ProjectionSource.cs" />

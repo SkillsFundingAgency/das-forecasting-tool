@@ -19,20 +19,26 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 
         public ApprenticeshipCourse Course { get; set; }
 
+        public bool? IsTransferFunded { get; set; }
+
         // ToDo: Get Funding Period?
         public decimal CalculatedTotalCap => Course != null ? Course.FundingCap * NumberOfApprentices : 0;
 
         public IEnumerable<SelectListItem> ApprenticeshipCourses
         {
-            get
-            {
-                return
-                    Courses
-                    .OrderBy(course => course.Title)
-                    .Select(item => new SelectListItem { Value = item.Id, Text = item.Title, Selected = item.Id == CourseId })
-                    .ToList();
+            get {
+	            return 
+                  
+                    (from course in Courses
+		                let text = course.CourseType == ApprenticeshipCourseType.Standard ? $"{course.Title}, Level: {course.Level} (Standard)" : $"{course.Title}, Level: {course.Level}"
+		                select new SelectListItem
+		                {
+			                Value = course.Id,
+			                Text = text,
+                            Selected = course.Id == CourseId
+		                }).ToList();
             }
-        }
+          }
 
         public override string FundingPeriodsJson {
             get
@@ -44,6 +50,5 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
                     : null;
             }
         }
-
     }
 }

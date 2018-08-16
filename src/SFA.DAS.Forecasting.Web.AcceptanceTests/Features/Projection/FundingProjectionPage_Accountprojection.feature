@@ -11,7 +11,6 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
   | Date   | Funds in | Cost Of Training | Completion Payments | Your Contribution | Government Contribution | Future Funds |
-  | Jun 18 | 91000    | 1800             | 10000               | 0                 | 0                       | 23000        |
   | Jul 18 | 21000    | 2350             | 50000               | 0                 | 0                       | 23000        |
   | Aug 18 | 45200    | 850              | 45000               | 0                 | 0                       | 1000         |
   | Sep 18 | 55000    | 700              | 37880               | 0                 | 0                       | 12000        |
@@ -36,7 +35,6 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
  | Date   | Funds in | Cost Of Training | Completion Payments | Your Contribution | Government Contribution | Future Funds |
- | Jun 18 | 91000    | 1800             | 10000               | 0                 | 0                       | 23000        |
  | Jul 18 | 21000    | 2350             | 50000               | 0                 | 0                       | 23000        |
  | Aug 18 | 45200    | 850              | 45000               | 0                 | 0                       | 1000         |
  | Sep 18 | 55000    | 700              | 37880               | 0                 | 0                       | 12000        |
@@ -61,7 +59,6 @@ Scenario: FundingProjectionPageAC1: Forecast data is displayed correctly when fo
   Given I have generated the following projections
   
   | Date   | Funds in | Cost Of Training | Completion Payments | Your Contribution | Government Contribution | Future Funds |
-  | Jun 18 | 91000    | 1800             | 10000               | 0                 | 0                       | 23000        |
   | Jul 18 | 21000    | 2350             | 50000               | 0                 | 0                       | 23000        |
   | Aug 18 | 45200    | 850              | 45000               | 0                 | 0                       | 1000         |
   | Sep 18 | 55000    | 700              | 37880               | 0                 | 0                       | 12000        |

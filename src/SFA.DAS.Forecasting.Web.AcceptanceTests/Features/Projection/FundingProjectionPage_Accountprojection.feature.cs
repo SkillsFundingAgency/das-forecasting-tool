@@ -96,14 +96,6 @@ this.FeatureBackground();
                         "Government Contribution",
                         "Future Funds"});
             table1.AddRow(new string[] {
-                        "Jun 18",
-                        "91000",
-                        "1800",
-                        "10000",
-                        "0",
-                        "0",
-                        "23000"});
-            table1.AddRow(new string[] {
                         "Jul 18",
                         "21000",
                         "2350",
@@ -185,17 +177,17 @@ this.FeatureBackground();
                         "1000"});
 #line 11
   testRunner.Given("I have generated the following projections", ((string)(null)), table1, "Given ");
-#line 26
+#line 25
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 27
+#line 26
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 28
+#line 27
   testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 29
+#line 28
   testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 30
+#line 29
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
+#line 30
   testRunner.And("the data is displayed correctly in each column", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -208,7 +200,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjectionPageAC2: Forecast data is displayed correctly when forecast betw" +
                     "een 23rd of month until end of month", ((string[])(null)));
-#line 35
+#line 34
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -222,14 +214,6 @@ this.FeatureBackground();
                         "Government Contribution",
                         "Future Funds"});
             table2.AddRow(new string[] {
-                        "Jun 18",
-                        "91000",
-                        "1800",
-                        "10000",
-                        "0",
-                        "0",
-                        "23000"});
-            table2.AddRow(new string[] {
                         "Jul 18",
                         "21000",
                         "2350",
@@ -309,19 +293,19 @@ this.FeatureBackground();
                         "0",
                         "0",
                         "1000"});
-#line 36
+#line 35
   testRunner.Given("I have generated the following projections", ((string)(null)), table2, "Given ");
-#line 51
+#line 49
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 52
+#line 50
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 53
+#line 51
   testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 54
+#line 52
   testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 55
+#line 53
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 56
+#line 54
   testRunner.And("the data is displayed correctly in each column", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -334,7 +318,7 @@ this.FeatureBackground();
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjectionPageAC3: Forecast data is displayed correctly when forecast betw" +
                     "een 1st of month until next payments made", ((string[])(null)));
-#line 60
+#line 58
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -348,14 +332,6 @@ this.FeatureBackground();
                         "Government Contribution",
                         "Future Funds"});
             table3.AddRow(new string[] {
-                        "Jun 18",
-                        "91000",
-                        "1800",
-                        "10000",
-                        "0",
-                        "0",
-                        "23000"});
-            table3.AddRow(new string[] {
                         "Jul 18",
                         "21000",
                         "2350",
@@ -435,19 +411,19 @@ this.FeatureBackground();
                         "0",
                         "0",
                         "1000"});
-#line 61
+#line 59
   testRunner.Given("I have generated the following projections", ((string)(null)), table3, "Given ");
-#line 76
+#line 73
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 77
+#line 74
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 78
+#line 75
   testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 79
+#line 76
   testRunner.And("the first month displayed is the next calendar month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 80
+#line 77
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 81
+#line 78
   testRunner.And("the data is displayed correctly in each column", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -458,7 +434,7 @@ this.FeatureBackground();
         public virtual void HideCo_InvestmentColumns()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Hide Co-investment columns", ((string[])(null)));
-#line 83
+#line 80
   this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
@@ -575,15 +551,15 @@ this.FeatureBackground();
                         "0",
                         "0",
                         "1000"});
-#line 84
+#line 81
   testRunner.Given("I have generated the following projections", ((string)(null)), table4, "Given ");
-#line 100
+#line 97
   testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 101
+#line 98
   testRunner.When("the Account projection is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 102
+#line 99
   testRunner.Then("the Account projection has the correct columns without Co-Investment", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 103
+#line 100
   testRunner.And("there are months up to \'Apr 19\' displayed in the forecast", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -594,15 +570,15 @@ this.FeatureBackground();
         public virtual void FundingProjectionCompletionPaymentsOverdue()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("FundingProjection completion payments overdue", ((string[])(null)));
-#line 105
+#line 102
 this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 106
+#line 103
  testRunner.Given("I have completion payments of £ 2401 on commitments without stop date", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 107
+#line 104
  testRunner.And("I\'m on the Funding projection page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 108
+#line 105
  testRunner.Then("I see Pending completion payments with the amount of £ 2,401", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

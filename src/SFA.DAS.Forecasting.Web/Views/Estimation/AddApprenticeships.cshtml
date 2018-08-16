@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Extensions
 @model SFA.DAS.Forecasting.Web.ViewModels.AddApprenticeshipViewModel
 
 @{
@@ -9,18 +9,19 @@
 @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    <main id="content" role="main" tabindex="-1">
-        <div id="estimate-add-apprenticeship">
 
+        <div id="estimate-add-apprenticeship">
             <div class="grid-row">
                 <div class="column-two-thirds">
                     <div class="hgroup form-group">
-                        <a href="@Url.ExternalUrlAction("transfers",string.Empty,false)" class="link-back">Back to Transfers</a>
+                        <a href="@Url.ExternalUrlAction("transfers", string.Empty, false)" class="link-back">Back to Transfers</a>
 
                         @Html.Partial("_validationErrors")
 
                         <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
-                        <p>Add the apprenticeship details so you can estimate the cost and see how much you could transfer to another employer. We will show the funding band maximum value for the apprenticeship and you can adjust this figure should you need to.</p>
+                        <p>
+                            Add the apprenticeship details so you can estimate the cost of the apprenticeships you’ve chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -30,15 +31,16 @@
                     <div class="column-two-thirds">
                         <input id="FundingPeriodsJson" name="FundingPeriodsJson" type="hidden" value="@Model.FundingPeriodsJson">
                         @Html.HiddenFor(m => m.CalculatedTotalCap)
+                        @Html.HiddenFor(m => m.IsTransferFunded)
 
                         <div class="form-group @Html.AddErrorClass(m => m.Course)">
                             <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
                             @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
                             @Html.DropDownListFor(model =>
-                                    model.CourseId,
-                                    @Model.ApprenticeshipCourses,
-                                    "Select one",
-                                    new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
+             model.CourseId,
+             @Model.ApprenticeshipCourses,
+             "Select one",
+             new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
                         </div>
 
 
@@ -67,11 +69,11 @@
                             @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
                             @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
                             <div class="form-date">
-                                <div class="form-group form-group-month">
+                                <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                     <label for="startDateMonth">Month</label>
                                     @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
                                 </div>
-                                <div class="form-group form-group-year">
+                                <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
                                     <label for="startDateYear">Year</label>
                                     @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
                                 </div>
@@ -84,8 +86,15 @@
                         <div class="form-group">
                             <label class="form-label-bold">Government funding band maximum</label>
 
+                            @{
+                                decimal fundingCap = 0;
+                                if (Model.Course != null)
+                                {
+                                    fundingCap = Model.Course.FundingCap;
+                                }
+                            } 
                             <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
-                                Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCapCalculated.FormatCost()</span><br />
+                                Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
                                 Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
                             </span>
 
@@ -93,7 +102,6 @@
                                 Choose an apprenticeship and number of apprentices to see this figure <br>
                                 <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
                             </span>
-
                         </div>
 
 
@@ -101,11 +109,12 @@
                             <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                             <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                             @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                            <label for="total-funding-cost-2" class="form-label-bold">
+                            <label class="form-label-bold">
                                 £
                                 @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
-
                             </label>
+
+                            
                         </div>
                     </div>
                 </div>
@@ -132,7 +141,7 @@
             </div>
 
         </div>
-    </main>
+
 }
 
 @functions {

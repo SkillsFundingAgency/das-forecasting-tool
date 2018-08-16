@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
     public class InitialiseFunction : IFunction
     {
         [FunctionName("InitialiseFunction")]
-        [return: Queue(QueueNames.GetStandards)]
+        [return: Queue(QueueNames.GetCourses)]
         public static async Task<RefreshCourses> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req,
             ExecutionContext executionContext,
             TraceWriter log)
@@ -26,7 +26,10 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
                  await container.GetInstance<IFunctionInitialisationService>()
                      .Initialise<InitialiseFunction>();
                  log.Info("Finished initialising the Apprenticeship Courses function application.");
-                 return new RefreshCourses { RequestTime = DateTime.Now };
+                 return new RefreshCourses {
+                     RequestTime = DateTime.Now,
+                     CourseType = CourseType.Standards | CourseType.Frameworks
+                 };
              });
         }
     }

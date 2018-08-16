@@ -28,6 +28,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 
             projection.FutureFunds.Should().Be(p0);
         }
+        [Then(@"the co-investment amount is zero")]
+        public void ThenTheCo_InvestmentAmountIsZero()
+        {
+            var projection = AccountProjections
+                .OrderBy(m => m.Year)
+                .ThenBy(m => m.Month)
+                .First();
+
+            Assert.AreEqual(0, projection.CoInvestmentEmployer + projection.CoInvestmentGovernment);
+        }
 
         [Then(@"the employer co-investment amount is 10% of the remaining cost of training")]
         public void ThenTheEmployerCo_InvestmentAmountIsOfTheNegativeBalance()

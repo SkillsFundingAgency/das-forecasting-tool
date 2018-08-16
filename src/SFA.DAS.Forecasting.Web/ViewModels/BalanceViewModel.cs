@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class BalanceViewModel
+    public class ProjectionViewModel
     {
         public IEnumerable<ProjectiontemViewModel> BalanceItemViewModels { get; set; }
 
@@ -18,5 +19,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public decimal CurrentBalance { get; internal set; }
         public decimal OverdueCompletionPayments { get; set; }
         public bool DisplayCoInvestment { get; set; }
+        public DateTime? ProjectionDate { get; internal set; }
     }
 }

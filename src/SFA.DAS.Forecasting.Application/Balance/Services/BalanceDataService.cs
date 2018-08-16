@@ -1,25 +1,35 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
 {
-    public class BalanceDataService: IBalanceDataService
+    public class BalanceDataService : IBalanceDataService
     {
         private readonly IForecastingDataContext _forecastingDataContext;
+        private readonly ITelemetry _telemetry;
 
-        public BalanceDataService(IForecastingDataContext  forecastingDataContext)
+        public BalanceDataService(IForecastingDataContext forecastingDataContext, ITelemetry telemetry)
         {
             _forecastingDataContext = forecastingDataContext ?? throw new ArgumentNullException(nameof(forecastingDataContext));
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
 
         public async Task<Models.Balance.BalanceModel> Get(long employerAccountId)
         {
-            return await _forecastingDataContext
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var startTime = DateTime.UtcNow;
+            var accountBalance = await _forecastingDataContext
                 .Balances
                 .FirstOrDefaultAsync(balance => balance.EmployerAccountId == employerAccountId);
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Balance", startTime, stopwatch.Elapsed, accountBalance != null);
+            return accountBalance;
         }
 
         public async Task Store(Models.Balance.BalanceModel balance)
@@ -35,9 +45,18 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                 persistedBalance.UnallocatedCompletionPayments = balance.UnallocatedCompletionPayments;
             }
             else
-                _forecastingDataContext.Balances.Add(balance);
-
+            {
+                if (balance.ReceivedDate != DateTime.MinValue && balance.BalancePeriod != DateTime.MinValue)
+                {
+                    _forecastingDataContext.Balances.Add(balance);
+                }
+            }
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var startTime = DateTime.UtcNow;
             await _forecastingDataContext.SaveChangesAsync();
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseUpdate, "Store Balance", startTime, stopwatch.Elapsed, true);
         }
     }
 }

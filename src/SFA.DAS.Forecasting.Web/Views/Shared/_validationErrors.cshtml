@@ -1,14 +1,14 @@
 ﻿
 @if (!ViewContext.ViewData.ModelState.IsValid)
 {
-    <div class="error-summary validation-summary-details" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
-        <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+    <div class="error-summary validation-summary-details error-summary-with-sticky-header" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
             Errors to fix
-        </h1>
+        </h2>
 
         <p>Please check the details you have entered against the information that's needed.</p>
 
-        <ul class="error-summary-list list list-links">
+        <ul class="error-summary-list">
             @foreach (var stateItem in ViewContext.ViewData.ModelState)
             {
                 var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;

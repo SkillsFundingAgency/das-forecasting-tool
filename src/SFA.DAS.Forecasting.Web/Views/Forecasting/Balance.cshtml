@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
-@model SFA.DAS.Forecasting.Web.ViewModels.BalanceViewModel
+@model SFA.DAS.Forecasting.Web.ViewModels.ProjectionViewModel
 
 @{
     ViewBag.Title = "Funding projection";
@@ -20,7 +20,7 @@
                 <summary>More information</summary>
                 <div>
                     <p>
-                        These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
+                    These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
                     <p />
                     <p>
                         The projection doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider. These will be added to the funding projection soon.
@@ -30,12 +30,14 @@
                     </p>
                 </div>
             </details>
+            
+            @Html.ActionLink("Estimate apprenticeships you could fund", "StartEstimation", "Estimation", null, new { @class = "button margin-top-x2" })
         </div>
     </div>
 
     <div class="column-one-third">
         <div class="related">
-            <h3 class="heading-small">Download data as a CSV file</h3>
+            <h3 class="heading-small">Download data as a spreadsheet</h3>
             <div class="form-group">
                 <ul class="list list-links">
 
@@ -63,8 +65,31 @@
 </div>
 
 <!-- CHART -->
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @if (@Model.ProjectionDate.HasValue)
+        {
+            <div class="panel projection-date">
+                <p>Your projeciton was last updated on @Model.ProjectionDate.Value.ToGdsFormatFull()</p>
+            </div>
+        }
+        else
+        {
+            <div class="panel projection-date">
+                <p>
+                    If you have declared your levy and/or made a payment to your training provider, your account will show the projection when it next updates. The account is updated twice a month.
+                </p>
+                <p>
+                    You won't see a projection of funds until you declare your levy or make a payment to a training provider.
+                </p>
+            </div>
+        }
+    </div>
+</div>
 <div class="grid-row">
     <div class="column-full">
+
         <div class="chart-container">
             <div class="chart-data"
                  data-dates="@Model.DatesStringArray"
@@ -124,30 +149,31 @@
                     <tr>
                         <th style="width: 60px;">Date</th>
                         <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for.  This figure also includes any transfers you’ve made. Apprenticeships that have not started or been paid for are not included in this column">
-                        Cost of <br />training<br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                    </th>
+                            Cost of <br />training<br />
+                            <span class="tip-info"><span class="info-title">info</span></span>
+                        </th>
                         <th class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">
-                        Completion payments<br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                    </th>
+                            Completion payments<br />
+                            <span class="tip-info"><span class="info-title">info</span></span>
+                        </th>
                         <th class="financial tippy" data-tippy-trigger="click" title="These figures are not currently shown in the projection tool, but will be soon. Funds will start to expire from May 2019">
                             Expired funds<br />
-                            <span class="tip-info"><span class="info-title">available soon</span></span> 
+                            <span class="tip-info"><span class="info-title">available soon</span></span>
                         </th>
-                        <th class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">Funds in<br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                    </th>
+                        <th class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">
+                            Funds in<br />
+                            <span class="tip-info"><span class="info-title">info</span></span>
+                        </th>
                         @if (Model.DisplayCoInvestment)
                         {
                             <th class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment you pay if your funds run out which will be 10% of the outstanding balance for that month">
-                            Your <br />contribution (10%)<br />
-                            <span class="tip-info"><span aria-hidden="true" class="info-title">info</span></span>
-                        </th>
-                        <th class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment the government will pay, which is 90% of the outstanding balance for that month, up to the funding band maximum">
-                            Government <br /> contribution (90%)<br />
-                            <span class="tip-info"><span class="info-title">info</span></span>
-                        </th>
+                                Your <br />contribution (10%)<br />
+                                <span class="tip-info"><span aria-hidden="true" class="info-title">info</span></span>
+                            </th>
+                            <th class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment the government will pay, which is 90% of the outstanding balance for that month, up to the funding band maximum">
+                                Government <br /> contribution (90%)<br />
+                                <span class="tip-info"><span class="info-title">info</span></span>
+                            </th>
                         }
                         <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
                             Balance<br />
@@ -214,18 +240,16 @@
 </div>
 <div class="grid-row">
     <div class="column-full">
-        <div class="info-summary">
+        <div class="panel panel-filled-purple panel-border-wide">
             <h3 class="heading-medium">Disclaimer</h3>
             <p>This tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account.</p>
             <p>The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employed, or the cost and duration of their training.</p>
             <p>You should therefore not rely solely on the information provided by this tool when making decisions about how to spend future levy funds.</p>
         </div>
 
-        <details class="projection-survey">
+        <details id="projection-survey" class="projection-survey">
             <summary>Help us improve this section</summary>
-            <iframe src="https://www.smartsurvey.co.uk/s/7DFNM/">
-
-            </iframe>
+            <iframe src="https://www.smartsurvey.co.uk/s/7DFNM/"></iframe>
         </details>
     </div>
 
@@ -238,4 +262,15 @@
             <a href="@Model.BackLink" aria-label="Back" class="back-link">Back</a>
         </div>
     }
+}
+
+@section betabanner{
+<div class="phase-banner phase-banner-beta">
+    <div class="phase-banner-info">
+        <strong class="phase-tag">BETA</strong>
+        <span>
+            This is a new feature – your <a href="#projection-survey">feedback</a> will help us to improve it.
+        </span>
+    </div>
+</div>
 }

@@ -8,7 +8,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
     public interface IAddApprenticeshipOrchestrator
     {
-        AddApprenticeshipViewModel GetApprenticeshipAddSetup();
+        AddApprenticeshipViewModel GetApprenticeshipAddSetup(bool standardsOnly);
 
         Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName);
 

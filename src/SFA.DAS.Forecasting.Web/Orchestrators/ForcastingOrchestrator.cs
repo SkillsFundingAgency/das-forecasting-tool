@@ -12,6 +12,7 @@ using SFA.DAS.HashingService;
 using System.Collections.ObjectModel;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
+using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 
@@ -21,7 +22,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataSession _accountProjection;
-        private readonly IBalanceDataService _balanceDataService;
+        private readonly ICurrentBalanceRepository _balanceRepository;
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly IForecastingMapper _mapper;
         private readonly ICommitmentsDataService _commitmentsDataService;
@@ -31,7 +32,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         public ForecastingOrchestrator(
             IHashingService hashingService,
             IAccountProjectionDataSession accountProjection,
-            IBalanceDataService balanceDataService,
+            ICurrentBalanceRepository balanceRepository,
             IApplicationConfiguration applicationConfiguration,
             IForecastingMapper mapper,
             ICommitmentsDataService commitmentsDataService
@@ -39,34 +40,39 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         {
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
             _accountProjection = accountProjection ?? throw new ArgumentNullException(nameof(accountProjection));
-            _balanceDataService = balanceDataService ?? throw new ArgumentNullException(nameof(balanceDataService));
+            _balanceRepository = balanceRepository;
             _applicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _commitmentsDataService = commitmentsDataService ?? throw new ArgumentNullException(nameof(commitmentsDataService));
         }
 
-        public async Task<BalanceViewModel> Balance(string hashedAccountId)
+        public async Task<ProjectionViewModel> Projection(string hashedAccountId)
         {
-            var accountProjection = await GetAccountProjection(hashedAccountId);
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
 
             var balance = await GetBalance(hashedAccountId);
+            var accountProjection = await ReadProjection(accountId);
 
-            return new BalanceViewModel {
-                BalanceItemViewModels = accountProjection,
-                ProjectionTables = CreateProjectionTable(accountProjection),
+            return new ProjectionViewModel {
+                BalanceItemViewModels = accountProjection.Projections,
+                ProjectionTables = CreateProjectionTable(accountProjection.Projections),
                 BackLink = _applicationConfiguration.BackLink,
                 HashedAccountId = hashedAccountId,
-                BalanceStringArray = string.Join(",", accountProjection.Select(m => m.Balance.ToString())),
-                DatesStringArray = string.Join(",", accountProjection.Select(m => m.Date.ToString("yyyy-MM-dd"))),
+                BalanceStringArray = string.Join(",", accountProjection.Projections.Select(m => m.Balance.ToString())),
+                DatesStringArray = string.Join(",", accountProjection.Projections.Select(m => m.Date.ToString("yyyy-MM-dd"))),
                 CurrentBalance = balance.Amount,
                 OverdueCompletionPayments = balance.UnallocatedCompletionPayments,
-                DisplayCoInvestment = accountProjection.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0)
+                DisplayCoInvestment = accountProjection.Projections.Any(m => m.CoInvestmentEmployer + m.CoInvestmentGovernment > 0),
+                ProjectionDate = accountProjection.CreatedOn
             };
         }
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
         {
-            return (await GetAccountProjection(hashedAccountId))
+            var accountId = _hashingService.DecodeValue(hashedAccountId);
+
+            return (await ReadProjection(accountId))
+                .Projections
                 .Select(m => _mapper.ToCsvBalance(m));
         }
 
@@ -81,18 +87,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
             return csvCommitments
                 .Select(m => _mapper.ToCsvApprenticeship(m, accountId));
-        }
-
-        private async Task<List<ProjectiontemViewModel>> GetAccountProjection(string hashedAccountId)
-        {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var result = await _accountProjection.Get(accountId);
-            var d = _mapper.MapProjections(result);
-
-            return d.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
-                .OrderBy(m => m.Date)
-                .Take(48)
-                .ToList();
         }
 
         private IDictionary<FinancialYear, ReadOnlyCollection<ProjectiontemViewModel>> CreateProjectionTable(List<ProjectiontemViewModel> accountProjection)
@@ -114,12 +108,42 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             return dict;
         }
 
-        private async Task<BalanceModel> GetBalance(string hashedAccountId)
+        private async Task<CurrentBalance> GetBalance(string hashedAccountId)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
-            var balance = await _balanceDataService.Get(accountId);
+            var currentBalance = await _balanceRepository.Get(accountId);
+            if(currentBalance == null)
+                await currentBalance.RefreshBalance();
+            await _balanceRepository.Store(currentBalance);
 
-            return balance;
+            return currentBalance;
+        }
+
+        private async Task<ProjectionModel> ReadProjection(long accountId)
+        {
+            var result = await _accountProjection.Get(accountId);
+
+            var date = result.FirstOrDefault()?.ProjectionCreationDate;
+
+            var d = _mapper.MapProjections(result);
+
+            var projections = d.Where(m => m.Date.IsAfterOrSameMonth(DateTime.Today.AddMonths(1)) && (!_applicationConfiguration.LimitForecast || m.Date < BalanceMaxDate))
+                .OrderBy(m => m.Date)
+                .Take(48)
+                .ToList();
+
+            return new ProjectionModel
+            {
+                CreatedOn = date,
+                Projections = projections
+
+            };
+        }
+
+        private struct ProjectionModel
+        {
+            public List<ProjectiontemViewModel> Projections { get; set; }
+            public DateTime? CreatedOn { get; set; }
         }
     }
 }

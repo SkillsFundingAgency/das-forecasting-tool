@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
+using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
@@ -48,7 +50,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 ApprenticeshipRemoved = apprenticeshipRemoved.GetValueOrDefault(),
                 Apprenticeships = new EstimationApprenticeshipsViewModel
                 {
-                    VirtualApprenticeships = accountEstimation?.VirtualApprenticeships?.Select(o =>
+                    VirtualApprenticeships = accountEstimation?.Apprenticeships?.Select(o =>
                         new EstimationApprenticeshipViewModel
                         {
                             Id = o.Id,
@@ -61,16 +63,23 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             StartDate = o.StartDate,
                             TotalCost = o.TotalCost,
                             FundingSource = o.FundingSource
-                        }),
+                        }).ToList(),
                 },
                 TransferAllowances = estimationProjector?.Projections?
-                .Select(o => new EstimationTransferAllowanceVewModel
-                {
-                    Date = new DateTime(o.Year, o.Month, 1),
-                    ActualCost = o.ActualCosts.TransferFundsOut,
-                    EstimatedCost = o.ModelledCosts.FundsOut,
-                    RemainingAllowance = o.FutureFunds
-                }).ToList()
+                    .Select(o => new EstimationTransferAllowanceVewModel
+                    {
+                        Date = new DateTime(o.Year, o.Month, 1),
+                        ActualCost = o.ActualCosts.TransferFundsOut,
+                        EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
+                        RemainingAllowance = o.AvailableTransferFundsBalance
+                    }).ToList(),
+                AccountFunds =
+                    new AccountFundsViewModel
+                    {
+                        OpeningBalance = GetOpeningBalance(estimationProjector.Projections),
+                        MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
+                        Records = GetAccountFunds(estimationProjector?.Projections)
+                    }
             };
             return viewModel;
         }
@@ -92,13 +101,34 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
+        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
+        {
+            var accountFunds = estimations.Select(estimation => new AccountFundsItem
+            {
+                Date = new DateTime(estimation.Year, estimation.Month, 1),
+                ActualCost = estimation.ActualCosts.FundsOut,
+                EstimatedCost = estimation.AllModelledCosts.FundsOut,
+                Balance = estimation.EstimatedProjectionBalance
+            });
+
+            return accountFunds.ToList();
+        }
+
+        private decimal GetOpeningBalance(ReadOnlyCollection<AccountEstimationProjectionModel> projections)
+        {
+            var first = projections.FirstOrDefault();
+            if (first == null)
+                return 0;
+
+            return first.EstimatedProjectionBalance;
+        }
+
         public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var estimations = await _estimationRepository.Get(accountId);
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
-
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
 
             var fundingPeriods = course.FundingPeriods.Select(m =>

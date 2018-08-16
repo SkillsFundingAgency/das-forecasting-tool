@@ -21,7 +21,6 @@ namespace SFA.DAS.Forecasting.Web
                 .Include("~/Content/dist/js/jquery-1.10.2.min.js")
                 .Include("~/Content/dist/js/stacker.js")
                 .Include("~/Content/dist/js/showhide-content.js")
-                .Include("~/Content/dist/js/custom.js")
             );
 
             bundles.Add(new ScriptBundle("~/bundles/addApprenticeship")

@@ -1,0 +1,85 @@
+﻿@model SFA.DAS.Forecasting.Web.ViewModels.TypeOfApprenticeshipViewModel
+@using SFA.DAS.Forecasting.Web.Extensions
+@{
+    ViewBag.Title = "Tell us if this estimation is for a transfer";
+}
+
+    <div id="estimate-typeof-transfer">
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                @if (!ViewContext.ViewData.ModelState.IsValid)
+                {
+                    <div class="error-summary validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+                        <h2 class="heading-medium error-summary-heading" id="error-summary-heading-details">
+                            Errors to fix
+                        </h2>
+
+                        <p>Please check the details you have entered against the information that's needed.</p>
+
+                        <ul class="error-summary-list list list-links">
+                            @foreach (var stateItem in ViewContext.ViewData.ModelState)
+                            {
+                                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
+
+                                foreach (var error in stateItem.Value.Errors.Take(1))
+                                {
+                                    <li>
+                                        <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
+                                            @error.ErrorMessage
+                                        </a>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <h1 class="heading-xlarge">
+                    Tell us if this estimation is for a transfer
+                </h1>
+                <p>
+                    If you're using the tool to estimate how much you can transfer to another employer to
+                    pay for their apprenticeships you need to know that transfers can only be used for apprenticeship standards.
+                </p>
+                <p class="font-xsmall">
+                    The calculations in this tool are based on your current funds in your account and the <a href="https://www.gov.uk/guidance/transferring-apprenticeship-service-funds" title="transfer allowance"> transfer allowance</a> that you can use to transfer to another employer.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div class="column-two-thirds">
+                    <div class="form-group  @Html.AddErrorClass(m => m.IsTransferFunded)">
+                        <fieldset>
+                            <legend>
+                                <h2 class="heading-small">
+                                    Are you using this estimation to see how many apprenticeship you could fund using a transfer?
+                                </h2>
+                            </legend>
+                            @Html.ValidationMessageFor(m => m.IsTransferFunded, null, new { id = "error-message-" + Html.IdFor(m => m.IsTransferFunded) })
+                            <div class="multiple-choice">
+                                <input id="transfer-funded" type="radio" name="IsTransferFunded" value="true">
+                                <label for="transfer-funded">Yes, it's to estimate a transfer of funds</label>
+                            </div>
+                            <div class="multiple-choice">
+                                <input id="levy-funded" type="radio" name="IsTransferFunded" value="false">
+                                <label for="levy-funded">No, it's not to use for a transfer</label>
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+                <div class="column-full">
+                    <button type="submit" id="continue" name="continue" value="Continue" class="button continue">Continue</button>
+                </div>
+            </form>
+        </div>
+    </div>

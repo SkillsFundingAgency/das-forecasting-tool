@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Feature
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Build Projections From Levy Declarations.feature"
+#line 1 "BuildProjectionsFromLevyDeclarations.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]
@@ -146,6 +146,67 @@ this.FeatureBackground();
  testRunner.When("the SFA Employer HMRC Levy service notifies the Forecasting service of the levy d" +
                     "eclarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 25
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Levy Declaration with 0 amount triggers build of projections")]
+        public virtual void LevyDeclarationWith0AmountTriggersBuildOfProjections()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Levy Declaration with 0 amount triggers build of projections", ((string[])(null)));
+#line 27
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Yesterday",
+                        "500",
+                        "3000",
+                        "24"});
+            table4.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Last year",
+                        "250",
+                        "1500",
+                        "48"});
+#line 28
+ testRunner.Given("the following commitments have been recorded", ((string)(null)), table4, "Given ");
+#line 32
+ testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table5.AddRow(new string[] {
+                        "ABC-1234",
+                        "0",
+                        "Today"});
+#line 33
+ testRunner.And("I have made the following levy declarations", ((string)(null)), table5, "And ");
+#line 36
+ testRunner.When("the SFA Employer HMRC Levy service notifies the Forecasting service of the levy d" +
+                    "eclarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 37
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 {
@@ -234,7 +235,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
 
             accountProjection.Projections.First().FutureFunds
-                .Should().Be(_account.Balance + _account.LevyDeclared - _commitment.MonthlyInstallment);
+                .Should().Be(_account.Balance + _account.LevyDeclared);// - _commitment.MonthlyInstallment);
         }
 
         [Test]
@@ -251,7 +252,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
 
         [Test]
-        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Postive_Balance_And_An_Affordable_Commitment()
+        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Postive_Balance_And_An_Affordable_Commitment_For_Payment_Run()
         {
             //Arrange
             CreateCommitmentModel(200, 300);
@@ -267,17 +268,78 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
             Assert.AreEqual(0, expectedMonth1?.CoInvestmentGovernment);
             Assert.AreEqual(0, expectedMonth1?.CoInvestmentEmployer);
-            Assert.AreEqual(500, expectedMonth1?.FutureFunds);
+            Assert.AreEqual(700, expectedMonth1?.FutureFunds);
 
             var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
             Assert.AreEqual(0, expectedMonth2?.CoInvestmentGovernment);
             Assert.AreEqual(0, expectedMonth2?.CoInvestmentEmployer);
-            Assert.AreEqual(700, expectedMonth2?.FutureFunds);
+            Assert.AreEqual(900, expectedMonth2?.FutureFunds);
 
             var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(0, expectedMonth3?.CoInvestmentGovernment);
             Assert.AreEqual(0, expectedMonth3?.CoInvestmentEmployer);
-            Assert.AreEqual(900, expectedMonth3?.FutureFunds);
+            Assert.AreEqual(1100, expectedMonth3?.FutureFunds);
+        }
+
+        [Test]
+        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Postive_Balance_And_An_Affordable_Commitment_For_Levy_Run()
+        {
+            //Arrange
+            CreateCommitmentModel(200, 300);
+
+            _account = new Account(1, 300, 400, 0, 0);
+            Moqer.SetInstance(_account);
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+
+            //Assert
+            var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
+            Assert.AreEqual(0, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(0, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(300, expectedMonth1?.FutureFunds);
+
+            var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
+            Assert.AreEqual(0, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(0, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(500, expectedMonth2?.FutureFunds);
+
+            var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
+            Assert.AreEqual(0, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(0, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(700, expectedMonth3?.FutureFunds);
+        }
+
+
+        [Test]
+        public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Postive_Balance_And_An_Nonaffordable_Commitment_For_Levy_Run()
+        {
+            //Arrange
+            CreateCommitmentModel(600, 700);
+
+            _account = new Account(1, 300, 400, 0, 0);
+            Moqer.SetInstance(_account);
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+
+            //Assert
+            var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
+            Assert.AreEqual(0.9*300, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(0.1 * 300, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(300, expectedMonth1?.FutureFunds);
+
+            var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
+            Assert.AreEqual(0.9*300, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(0.1*300, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth2?.FutureFunds);
+
+            var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
+            Assert.AreEqual(0.9 * 200, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(0.1*200, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth3?.FutureFunds);
         }
 
         [Test]
@@ -454,7 +516,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             Assert.AreEqual(1600m, accountProjection.Projections.Last().FutureFunds);
         }
 
-        
 
 		[TestCase(800, 200, 0, 400, 0, true, 200)]
 		[TestCase(400, 200, 0, 400, 0, true, 0)]
@@ -488,7 +549,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 	    public void ShouldDetermineMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal fundsIn, decimal expected)
 	    {
 		    var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-		    var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn);
+		    var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn,ProjectionGenerationType.PayrollPeriodEnd,false);
 
 		    Assert.AreEqual(expected, monthEndBalance);
 	    }

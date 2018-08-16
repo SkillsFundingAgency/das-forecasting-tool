@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
             _moqer.GetMock<IStandardApiClient>()
                 .Setup(x => x.GetAllAsync())
                 .Returns(Task.FromResult<IEnumerable<StandardSummary>>(_summaries));
-            _moqer.SetInstance<IStandardSummaryMapper>(new StandardSummaryMapper());
+            _moqer.SetInstance<IApprenticehipsCourseMapper>(new ApprenticehipsCourseMapper());
         }
 
         [Test]
