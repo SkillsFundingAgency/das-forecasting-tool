@@ -84,7 +84,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
             return payments;
         }
 
-        private void FindPayments(ForecastingDataContext dataContext, List<PaymentCreatedMessage> payments)
+        private void FindPayments(List<PaymentCreatedMessage> payments)
         {
             var timeToWait = TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToWait"]);
             var timeToPause = TimeSpan.Parse(ConfigurationManager.AppSettings["TimeToPause"]);
@@ -95,7 +95,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
                 if (payment == null)
                     break;
 
-                if (dataContext.Payments.Any(p => p.EmployerAccountId == payment.EmployerAccountId &&
+                if (DataContext.Payments.Any(p => p.EmployerAccountId == payment.EmployerAccountId &&
                                                   p.ApprenticeshipId == payment.ApprenticeshipId &&
                                                   p.LearnerId == payment.Uln))
                 {
@@ -111,24 +111,27 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Payment
         [Test]
         public void Test_Payments_Random()
         {
-            AccountIds = new long[] { 9912345 };
-            var dataContext = new ForecastingDataContext(ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString);
+            //AccountIds = new long[] { 9912345 };
             //dataContext.Database.ExecuteSqlCommand(
             //    $"delete from AccountProjectionCommitment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-            dataContext.Database.ExecuteSqlCommand(
+            DataContext.Database.ExecuteSqlCommand(
                 $"delete from AccountProjection where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-            dataContext.Database.ExecuteSqlCommand(
+            DataContext.Database.ExecuteSqlCommand(
                 $"delete from Commitment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-            dataContext.Database.ExecuteSqlCommand(
+            DataContext.Database.ExecuteSqlCommand(
                 $"delete from Payment where EmployerAccountId = 9912345 or EmployerAccountId =  9923451 or EmployerAccountId =  9934512 or EmployerAccountId =  9945123 or EmployerAccountId = 9951234 or EmployerAccountId = 9954321");
-
+            CreateAccountBalances();
             var paymentFaker = CreateFakePayments(AccountIds);
             RemoveEmployerProjectionAuditDocuments(ProjectionSource.PaymentPeriodEnd, AccountIds);
-
+            Console.WriteLine("Finished cleaning up old test data. Now sending the payments.");
+            Console.Out?.Flush();
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var payments = SendPayments(paymentFaker,100);
-            FindPayments(dataContext, payments);
+            Console.WriteLine($"Finished sending the payments, took: {stopwatch.ElapsedMilliseconds}ms now timing the storing of payments.");
+            Console.Out?.Flush();
+            stopwatch.Restart();
+            FindPayments(payments);
             stopwatch.Stop();
             if (!payments.Any())
             {
