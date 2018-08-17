@@ -55,7 +55,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 1);
 
-            accountProjection.Projections.First().Month.Should().Be((short)DateTime.Today.Month);
+            accountProjection.Projections.First().Month.Should().Be((short) DateTime.Today.Month);
         }
 
         [Test]
@@ -91,7 +91,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
 
-            var expected = accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment;
+            var expected = accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared -
+                           _commitment.MonthlyInstallment;
             var funds2ndMonth = accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds;
             funds2ndMonth.Should().Be(expected);
         }
@@ -119,7 +120,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 .ShouldBeEquivalentTo(_account.Balance, because: "First month should be the same as current balance");
 
             accountProjection.Projections.Skip(1).First().FutureFunds
-                .ShouldBeEquivalentTo(accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment);
+                .ShouldBeEquivalentTo(accountProjection.Projections.FirstOrDefault()?.FutureFunds +
+                                      _account.LevyDeclared - _commitment.MonthlyInstallment);
         }
 
         [Test]
@@ -201,9 +203,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     FundingSource = Models.Payments.FundingSource.Transfer
                 }
             };
-        
 
-        var employerCommitments = new EmployerCommitments(1, _commitments);
+
+            var employerCommitments = new EmployerCommitments(1, _commitments);
             Moqer.SetInstance(employerCommitments);
 
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
@@ -235,7 +237,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
 
             accountProjection.Projections.First().FutureFunds
-                .Should().Be(_account.Balance + _account.LevyDeclared);// - _commitment.MonthlyInstallment);
+                .Should().Be(_account.Balance + _account.LevyDeclared); // - _commitment.MonthlyInstallment);
         }
 
         [Test]
@@ -244,7 +246,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
 
-            var expected = accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared - _commitment.MonthlyInstallment;
+            var expected = accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared -
+                           _commitment.MonthlyInstallment;
 
             accountProjection.Projections.Skip(1).First().FutureFunds
                 .Should().Be(expected);
@@ -327,18 +330,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
-            Assert.AreEqual(0.9*300, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(0.9 * 300, expectedMonth1?.CoInvestmentGovernment);
             Assert.AreEqual(0.1 * 300, expectedMonth1?.CoInvestmentEmployer);
             Assert.AreEqual(300, expectedMonth1?.FutureFunds);
 
             var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
-            Assert.AreEqual(0.9*300, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(0.1*300, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(0.9 * 300, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(0.1 * 300, expectedMonth2?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth2?.FutureFunds);
 
             var expectedMonth3 = accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(0.9 * 200, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(0.1*200, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(0.1 * 200, expectedMonth3?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth3?.FutureFunds);
         }
 
@@ -346,8 +349,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Then_The_CoInvestment_Is_Calculated_Correctly_For_The_First_Month_With_A_Negative_Balance()
         {
             //Arrange
-            CreateCommitmentModel(600m,700m);
-            
+            CreateCommitmentModel(600m, 700m);
+
             _account = new Account(1, -300, 400, 0, 0);
             Moqer.SetInstance(_account);
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
@@ -357,8 +360,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
-            Assert.AreEqual(600*.9, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(600*.1, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(600 * .9, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(600 * .1, expectedMonth1?.CoInvestmentEmployer);
             Assert.AreEqual(100, expectedMonth1?.FutureFunds);
 
             var expectedMonth2 = accountProjection.Projections.Skip(1).FirstOrDefault();
@@ -460,61 +463,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
 
             //Assert
-            Assert.AreEqual(1000m,accountProjection.Projections[7].FutureFunds);
-            Assert.AreEqual(1000m,accountProjection.Projections.Last().FutureFunds);
+            Assert.AreEqual(1000m, accountProjection.Projections[7].FutureFunds);
+            Assert.AreEqual(1000m, accountProjection.Projections.Last().FutureFunds);
         }
 
-        [Test]
-        public void Then_If_I_Am_A_Sending_And_Receiving_Employer_My_Funds_Are_Updated()
-        {
-            //Arrange
-            _account = new Account(1, 2000, 0, 0, 0);
-            Moqer.SetInstance(_account);
-            _commitments.LevyFundedCommitments = new List<CommitmentModel>();
-            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
-            {
-                new CommitmentModel
-                {
-                    EmployerAccountId = 999,
-                    SendingEmployerAccountId = 1,
-                    ApprenticeshipId = 23,
-                    LearnerId = 33,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
-                    MonthlyInstallment = 2000,
-                    NumberOfInstallments = 6,
-                    CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Transfer
-                }
-            };
-            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
-            {
-                new CommitmentModel
-                {
-                    EmployerAccountId = 1,
-                    SendingEmployerAccountId = 999,
-                    ApprenticeshipId = 23,
-                    LearnerId = 33,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
-                    MonthlyInstallment = 100,
-                    NumberOfInstallments = 6,
-                    CompletionAmount = 400,
-                    FundingSource = Models.Payments.FundingSource.Transfer
-                }
-            };
-
-            var employerCommitments = new EmployerCommitments(1, _commitments);
-            Moqer.SetInstance(employerCommitments);
-
-            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-
-            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
-
-            //Assert
-            Assert.AreEqual(1600m, accountProjection.Projections[7].FutureFunds);
-            Assert.AreEqual(1600m, accountProjection.Projections.Last().FutureFunds);
-        }
 
         [Test]
         public void Then_If_I_Am_A_Receiving_Employer_My_Balance_Is_Equal_To_My_Current_Balance_For_All_Months_For_A_Levy_Run()
@@ -528,8 +480,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             {
                 new CommitmentModel
                 {
-                    EmployerAccountId = 999,
-                    SendingEmployerAccountId = 1,
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
                     StartDate = DateTime.Today.AddMonths(-2),
@@ -549,15 +501,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
 
             //Assert
-            Assert.IsTrue(accountProjection.Projections.All(c=>c.FutureFunds.Equals(2000m)));
+            Assert.IsTrue(accountProjection.Projections.All(c => c.FutureFunds.Equals(2000m)));
         }
 
 
         [Test]
-        public void Then_If_I_Am_A_Receiving_Employer_My_Balance_Is_Equal_To_My_Current_Balance_For_All_Months_For_A_Payment_Run()
+        public void Then_If_I_Am_A_Receiving_Employer_My_Balance_Is_Equal_To_My_Current_Balance_For_All_Months_For_A_Payment_Run_And_I_Have_No_Coinvestment()
         {
             //Arrange
-            _account = new Account(1, 2000, 0, 0, 0);
+            _account = new Account(1, 400, 0, 0, 0);
             Moqer.SetInstance(_account);
             _commitments.LevyFundedCommitments = new List<CommitmentModel>();
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>();
@@ -565,8 +517,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             {
                 new CommitmentModel
                 {
-                    EmployerAccountId = 999,
-                    SendingEmployerAccountId = 1,
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
                     StartDate = DateTime.Today.AddMonths(-2),
@@ -586,45 +538,79 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
 
             //Assert
-            Assert.IsTrue(accountProjection.Projections.All(c => c.FutureFunds.Equals(2000m)));
+            Assert.IsTrue(accountProjection.Projections.All(c => c.FutureFunds.Equals(400m)));
+            Assert.IsTrue(accountProjection.Projections.All(c => c.CoInvestmentEmployer.Equals(0m)));
+            Assert.IsTrue(accountProjection.Projections.All(c => c.CoInvestmentGovernment.Equals(0m)));
         }
 
 
-        [TestCase(800, 200, 0, 400, 0, true, 200)]
-		[TestCase(400, 200, 0, 400, 0, true, 0)]
-		[TestCase(-500, 200, 0, 400, 0, true, -500)]
-		[TestCase(800, 200, 100, 400, 100, false, 800)]
-		[TestCase(400, 200, 0, 400, 0, false, 400)]
-		public void ShouldDetermineBalanceForCoInvestmentAfterTransferCosts(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer, decimal expected)
-		{
-			var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-			var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut, completionPaymentsTransferIn, trainingCostTransferOut, trainingCostTransferIn, isSendingEmployer, ProjectionGenerationType.PayrollPeriodEnd, false);
+        [TestCase(800, 200, 400, true, 200)]
+        [TestCase(400, 200, 400, true, 0)]
+        [TestCase(-500, 200, 400, true, -500)]
+        [TestCase(800, 200, 400, false, 800)]
+        [TestCase(400, 200, 400, false, 400)]
+        public void ShouldDetermineBalanceForCoInvestmentAfterTransferCosts(decimal lastBalance, decimal completionPaymentsTransferOut, decimal trainingCostTransferOut, bool isSendingEmployer, decimal expected)
+        {
+            //Arrange
+            if (isSendingEmployer)
+            {
+                _commitments.LevyFundedCommitments = new List<CommitmentModel>();
+                _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
+                _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
+                {
+                    new CommitmentModel
+                    {
+                        EmployerAccountId = 1,
+                        SendingEmployerAccountId = 999,
+                        ApprenticeshipId = 23,
+                        LearnerId = 33,
+                        StartDate = DateTime.Today.AddMonths(-2),
+                        PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                        MonthlyInstallment = 2000,
+                        NumberOfInstallments = 6,
+                        CompletionAmount = 1200,
+                        FundingSource = Models.Payments.FundingSource.Transfer
+                    }
+                };
 
-			Assert.AreEqual(expected, balance);
-		}
+                var employerCommitments = new EmployerCommitments(1, _commitments);
+                Moqer.SetInstance(employerCommitments);
+            }
 
-		[TestCase(500, 200, 0)]
-		[TestCase(100, 200, 100)]
-		[TestCase(0, 200, 200)]
-		[TestCase(-100, 200, 200)]
-		public void ShouldDetermineCoInvestedAmountBasedOnCurrentBalanceAndMoneyOut(decimal currentBalance, decimal moneyOut, decimal expected)
-		{
-			var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-			var coInvestmentAmount = accountProjection.GetCoInvestmentAmountBasedOnCurrentBalanceAndTrainingCosts(currentBalance, moneyOut);
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
-			Assert.AreEqual(expected, coInvestmentAmount);
-		}
+            //Act
+            var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut,
+                trainingCostTransferOut, ProjectionGenerationType.PayrollPeriodEnd, false);
 
-	    [TestCase(500, 200, 400, 700)]
-	    [TestCase(100, 200, 400, 400)]
-	    [TestCase(0, 200, 400, 400)]
-	    [TestCase(-100, 200, 400, 300)]
-	    public void ShouldDetermineMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal fundsIn, decimal expected)
-	    {
-		    var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-		    var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn,ProjectionGenerationType.PayrollPeriodEnd,false);
+            //Assert
+            Assert.AreEqual(expected, balance);
+        }
 
-		    Assert.AreEqual(expected, monthEndBalance);
-	    }
-	}
+        [TestCase(500, 200, 0)]
+        [TestCase(100, 200, 100)]
+        [TestCase(0, 200, 200)]
+        [TestCase(-100, 200, 200)]
+        public void ShouldDetermineCoInvestedAmountBasedOnCurrentBalanceAndMoneyOut(decimal currentBalance, decimal moneyOut, decimal expected)
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+            var coInvestmentAmount =
+                accountProjection.GetCoInvestmentAmountBasedOnCurrentBalanceAndTrainingCosts(currentBalance, moneyOut);
+
+            Assert.AreEqual(expected, coInvestmentAmount);
+        }
+
+        [TestCase(500, 200, 400, 700)]
+        [TestCase(100, 200, 400, 400)]
+        [TestCase(0, 200, 400, 400)]
+        [TestCase(-100, 200, 400, 300)]
+        public void ShouldDetermineMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal fundsIn, decimal expected)
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+            var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn,
+                ProjectionGenerationType.PayrollPeriodEnd, false);
+
+            Assert.AreEqual(expected, monthEndBalance);
+        }
+    }
 }
