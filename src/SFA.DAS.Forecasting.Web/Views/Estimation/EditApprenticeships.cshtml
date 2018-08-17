@@ -102,11 +102,14 @@
                         <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                         <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                         @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                        <label for="total-funding-cost" class="form-label-bold">
-                            £
+               
+                        <div class="form-control-group">
+                            <div class="form-control-group-prepend">
+                                <span>&pound;</span>
+                            </div>
                             @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
+                        </div>
 
-                        </label>
                     </div>
 
                 </div>

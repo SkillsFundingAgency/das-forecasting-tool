@@ -20,7 +20,7 @@
 
                         <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
                         <p>
-                            Add the apprenticeship details so you can estimate the cost of the apprenticeships you’ve chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
+                            Add the apprenticeship details so you can estimate the cost of the apprenticeships you've chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
                         </p>
                     </div>
                 </div>
@@ -107,10 +107,13 @@
                             <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                             <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                             @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                            <label class="form-label-bold">
-                                £
+                            
+                            <div class="form-control-group">
+                                <div class="form-control-group-prepend">
+                                    <span>&pound;</span>
+                                </div>
                                 @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
-                            </label>
+                            </div>
 
                             
                         </div>
