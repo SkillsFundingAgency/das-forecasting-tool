@@ -15,9 +15,9 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
     public class StandardsService: IStandardsService
     {
         private readonly IStandardApiClient _standardApiClient;
-        private readonly IStandardSummaryMapper _mapper;
+        private readonly IApprenticehipsCourseMapper _mapper;
 
-        public StandardsService(IStandardApiClient standardApiClient, IStandardSummaryMapper mapper)
+        public StandardsService(IStandardApiClient standardApiClient, IApprenticehipsCourseMapper mapper)
         {
             _standardApiClient = standardApiClient ?? throw new ArgumentNullException(nameof(standardApiClient));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));

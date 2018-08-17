@@ -861,18 +861,18 @@ hr {
   box-shadow: 0 0 0 #00823b;
 }
 
-.button.disabled, .disabled.button-link, .button[disabled="disabled"], .button-link[disabled="disabled"], .button[disabled], .button-link[disabled] {
+.button.disabled, .disabled.button-link, .button[disabled="disabled"], [disabled="disabled"].button-link, .button[disabled], [disabled].button-link {
   zoom: 1;
   filter: alpha(opacity=50);
   opacity: 0.5;
 }
 
-.button.disabled:hover, .disabled.button-link:hover, .button[disabled="disabled"]:hover, .button-link[disabled="disabled"]:hover, .button[disabled]:hover, .button-link[disabled]:hover {
+.button.disabled:hover, .disabled.button-link:hover, .button[disabled="disabled"]:hover, [disabled="disabled"].button-link:hover, .button[disabled]:hover, [disabled].button-link:hover {
   cursor: default;
   background-color: #00823b;
 }
 
-.button.disabled:active, .disabled.button-link:active, .button[disabled="disabled"]:active, .button-link[disabled="disabled"]:active, .button[disabled]:active, .button-link[disabled]:active {
+.button.disabled:active, .disabled.button-link:active, .button[disabled="disabled"]:active, [disabled="disabled"].button-link:active, .button[disabled]:active, [disabled].button-link:active {
   top: 0;
   -webkit-box-shadow: 0 2px 0 #003618;
   -moz-box-shadow: 0 2px 0 #003618;
@@ -915,11 +915,11 @@ hr {
   outline: 3px solid #ffbf47;
 }
 
-.button[disabled="disabled"], .button-link[disabled="disabled"] {
+.button[disabled="disabled"], [disabled="disabled"].button-link {
   background: #00823b;
 }
 
-.button[disabled="disabled"]:focus, .button-link[disabled="disabled"]:focus {
+.button[disabled="disabled"]:focus, [disabled="disabled"].button-link:focus {
   outline: none;
 }
 
@@ -1392,6 +1392,25 @@ details summary {
   cursor: pointer;
   position: relative;
   margin-bottom: 0.2631578947em;
+  padding-left: 25px;
+}
+
+details summary:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  -webkit-clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+  border-width: 7px 0 7px 12.124px;
+  border-left-color: inherit;
 }
 
 details summary:hover {
@@ -1402,13 +1421,28 @@ details summary:focus {
   outline: 3px solid #ffbf47;
 }
 
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] > summary:before {
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  -webkit-clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+  clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+  border-width: 12.124px 7px 0 7px;
+  border-top-color: inherit;
+}
+
 details .summary {
   text-decoration: underline;
 }
 
 details .arrow {
-  margin-right: .35em;
-  font-style: normal;
+  display: none;
 }
 
 .panel {
@@ -2768,7 +2802,7 @@ nav ul {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: rgba(0, 0, 0, 0);
+  border-color: transparent;
   border-left-color: black;
   border-style: solid;
   left: 10px;
@@ -2875,7 +2909,7 @@ li.menu-link.sub-menu-open ul li a {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: rgba(0, 0, 0, 0);
+  border-color: transparent;
   border-left-color: black;
   border-style: solid;
   left: 10px;
@@ -2910,7 +2944,7 @@ a#link-settings:before {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: rgba(0, 0, 0, 0);
+  border-color: transparent;
   border-left-color: black;
   border-style: solid;
   left: 10px;
@@ -3515,8 +3549,7 @@ td.link-action {
   width: 10%;
 }
 
-table th,
-table td {
+table th, table td {
   vertical-align: top;
 }
 
@@ -4213,7 +4246,7 @@ table.responsive tr.total {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: rgba(0, 0, 0, 0);
+  border-color: transparent;
   border-left-color: #005ea5;
   border-style: solid;
   left: 10px;
@@ -4829,20 +4862,31 @@ h2 .float-right {
 
 /*floating menu style - EMPLOYER */
 #floating-menu-holder {
-  width: 100%;
   background: #6f72af;
 }
 
-#floating-menu-holder .fixed-header {
+@media (min-width: 641px) {
+  #floating-menu-holder {
+    padding: 0 30px;
+  }
+}
+
+.sticky-nav .floating-menu {
   position: fixed;
   top: 0;
   left: 0;
   max-width: 100%;
 }
 
-#floating-menu-holder .width-adjust {
+.sticky-nav .js-float {
   max-width: 960px;
   margin: 0 auto;
+}
+
+@media (min-width: 641px) {
+  .sticky-nav .js-float {
+    padding: 0 30px;
+  }
 }
 
 .floating-menu {
@@ -4886,13 +4930,14 @@ h2 .float-right {
 .floating-menu p.floating-head-text {
   float: left;
   margin: 10px 0 0 10px;
+  text-align: left;
   font-weight: bold;
   font-size: 19px;
 }
 
 @media (min-width: 641px) {
   .floating-menu p.floating-head-text {
-    margin: 10px 0 10px 0px;
+    margin: 10px 0 0 0px;
   }
 }
 
@@ -4992,6 +5037,10 @@ h2 .float-right {
   }
 }
 
+.projection-date {
+  border-left: solid 10px #bfc1c3;
+}
+
 details.projection-survey {
   border: solid #005ea5 10px;
   background-color: #005ea5;
@@ -4999,7 +5048,6 @@ details.projection-survey {
 }
 
 details.projection-survey summary {
-  width: 100%;
   background-color: #005ea5;
   color: white;
 }
@@ -5048,19 +5096,46 @@ table.small th, table.small td, table.small .form-hint {
   background: #f7e7e9;
 }
 
-#BalanceSheet-Tables .tip-info {
+.panel-warning2 {
+  padding-left: 50px;
+  padding-top: 0;
+  position: relative;
+}
+
+.panel-warning2 .icon {
+  width: 35px;
+  height: 35px;
+  background-image: url("/public/images/../../Content/dist/images/icon-important.png");
+  position: absolute;
+  top: 5px;
+  left: 0;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+  .panel-warning2 .icon {
+    background-image: url("/public/images/../../Content/dist/images/icon-important-2x.png");
+    background-size: 100%;
+  }
+}
+
+#BalanceSheet-Tables .tip-info,
+#AccountFunds-Tables .tip-info,
+#remaining-transfer-allowance .tip-info,
+#apprenticeships-added .tip-info {
   font-weight: normal;
   background: url(/Content/dist/images/info-blue.png) no-repeat 100% 1px;
   background-size: 18px;
-  display: block;
-  width: 100%;
+  display: inline-block;
   cursor: pointer;
   background-position-y: bottom;
 }
 
-#BalanceSheet-Tables .tip-info .info-title {
+#BalanceSheet-Tables .tip-info .info-title,
+#AccountFunds-Tables .tip-info .info-title,
+#remaining-transfer-allowance .tip-info .info-title,
+#apprenticeships-added .tip-info .info-title {
   padding-right: 22px;
-  display: block;
+  display: inline-block;
   color: #005ea5;
   text-decoration: underline;
 }
@@ -5340,4 +5415,9 @@ input[type=number] {
   color: #b10e1e;
   font-weight: bold;
   text-decoration: underline;
+}
+
+.error .form-group.error {
+  border-left: 0;
+  padding-left: 0;
 }

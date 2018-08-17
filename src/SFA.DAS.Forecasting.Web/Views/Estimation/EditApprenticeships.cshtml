@@ -6,42 +6,13 @@
     ViewBag.Title = "Edit Apprenticeships";
 }
 
-
-<main id="content" role="main" tabindex="-1">
     <div id="estimate-edit-apprenticeship">
 
 
         <div class="grid-row">
             <div class="column-two-thirds">
 
-                @if (!ViewContext.ViewData.ModelState.IsValid)
-                {
-                    <div class="error-summary validation-summary-max-funding" role="alert" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
-                        <h2 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
-                            Errors to fix
-                        </h2>
-
-                        <p>Please check the details you have entered against the information that's needed.</p>
-
-                        <ul class="error-summary-list list list-links">
-                            @foreach (var stateItem in ViewContext.ViewData.ModelState)
-                            {
-                                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
-
-                                foreach (var error in stateItem.Value.Errors.Take(1))
-                                {
-                                    <li>
-                                        <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
-                                            @error.ErrorMessage
-                                        </a>
-                                    </li>
-                                }
-                            }
-
-                        </ul>
-                    </div>
-                }
-
+                @Html.Partial("_validationErrors")
 
                 <div class="hgroup form-group">
                     <h1 class="heading-xlarge">Edit apprenticeships in your current estimate</h1>
@@ -60,13 +31,13 @@
             <div class="grid-row">
                 <div class="column-two-thirds">
 
-                    @Html.HiddenFor(m => m.FundingCap)
-
                     <div class="form-group">
-                        <label class="form-label-bold" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCap">Apprenticeship</label>
+                        <label class="form-label-bold" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCapCalculated">Apprenticeship</label>
                         <label>@Model.CourseTitle - Level: @Model.Level</label>
                         @Html.HiddenFor(m => m.CourseTitle)
                         @Html.HiddenFor(m => m.Level)
+                        @Html.HiddenFor(m => m.CourseId)
+                        @Html.HiddenFor(m => m.FundingPeriodsJson)
                     </div>
 
 
@@ -95,11 +66,11 @@
                         @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
                         @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
                         <div class="form-date">
-                            <div class="form-group form-group-month">
+                            <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                 <label for="startDateMonth">Month</label>
                                 @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM" })
                             </div>
-                            <div class="form-group form-group-year">
+                            <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
                                 <label for="startDateYear">Year</label>
                                 @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY" })
                             </div>
@@ -113,7 +84,7 @@
 
 
                         <span id="details-about-funding-calculated" class="form-hint">
-                            Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCap.FormatCost()</span><br />
+                            Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@Model.FundingCapCalculated.FormatCost()</span><br />
                             Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
                         </span>
 
@@ -126,12 +97,12 @@
                     <!-- Cost -->
 
                     <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
-                        <label class="form-label-bold" for="levy-value">Total cost</label>
+                        <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                         <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
                         @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                        <label for="total-funding-cost-2" class="form-label-bold">
+                        <label for="total-funding-cost" class="form-label-bold">
                             £
-                            @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control levy-value", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
+                            @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
 
                         </label>
                     </div>
@@ -159,7 +130,7 @@
 
 
     </div>
-</main>
+
 
 @section breadcrumb {
     <div class="breadcrumbs" aria-label="Breadcrumbs">
