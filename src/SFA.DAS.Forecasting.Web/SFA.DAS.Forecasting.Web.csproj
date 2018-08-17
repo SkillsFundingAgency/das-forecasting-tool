@@ -333,6 +333,8 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="ViewModels\AccountFundsItem.cs" />
+    <Compile Include="ViewModels\AccountFundsViewModel.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Orchestrators\Estimations\AddApprenticeshipOrchestrator.cs" />
@@ -366,10 +368,13 @@
     <Compile Include="Orchestrators\Mappers\ForecastingMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\AddEditApprenticeshipsViewModel.cs" />
     <Compile Include="ViewModels\EditApprenticeshipsViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipCsvItemViewModel.cs" />
     <Compile Include="ViewModels\FinancialYear.cs" />
     <Compile Include="ViewModels\EqualityComparer\FinancialYearIEqualityComparer.cs" />
+    <Compile Include="ViewModels\CourseViewModel.cs" />
+    <Compile Include="ViewModels\FundingPeriod.cs" />
     <Compile Include="ViewModels\RemoveApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\AddApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\BalanceCsvItemViewModel.cs" />
@@ -379,7 +384,11 @@
     <Compile Include="ViewModels\EstimationApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\EstimationPageViewModel.cs" />
     <Compile Include="ViewModels\EstimationTransferAllowanceVewModel.cs" />
+    <Compile Include="ViewModels\StartViweModel.cs" />
+    <Compile Include="ViewModels\TypeOfApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
+    <Compile Include="ViewModels\Validation\AddApprenticeshipViewModelValidator.cs" />
+    <Compile Include="ViewModels\Validation\AddEditApprenticeshipViewModelValidator.cs" />
     <Compile Include="ViewModels\Validation\EditApprenticeshipsViewModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -400,8 +409,9 @@
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
     <Content Include="Content\dist\images\info-blue.png" />
-    <Content Include="Content\dist\js\apprenticeships.js" />
-    <Content Include="Content\dist\js\add-apprenticeship-custom.js" />
+    <Content Include="Content\dist\js\add-apprenticeship.js" />
+    <Content Include="Content\dist\js\edit-apprenticeship.js" />
+    <Content Include="Content\dist\js\add-edit-functions.js" />
     <Content Include="Content\dist\js\jquery-1.10.2.min.js" />
     <Content Include="Content\dist\js\screen.js" />
     <Content Include="Content\dist\js\select2.min.js" />
@@ -445,6 +455,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Content\README.md" />
+    <Content Include="Content\spec\AddAppreniceshipsSpec.js" />
     <Content Include="Content\src\govuk_frontend_toolkit\images\accordian-arrow-2x.png" />
     <Content Include="Content\src\govuk_frontend_toolkit\images\accordian-arrow.png" />
     <Content Include="Content\src\govuk_frontend_toolkit\images\arrow-sprite.png" />
@@ -736,6 +747,8 @@
     <Content Include="Views\Estimation\StartEstimation.cshtml" />
     <Content Include="Views\Estimation\ConfirmApprenticeshipsRemoval.cshtml" />
     <Content Include="Views\Estimation\EditApprenticeships.cshtml" />
+    <Content Include="Views\Shared\_validationErrors.cshtml" />
+    <Content Include="Views\Estimation\TypeOfApprenticeships.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -749,6 +762,7 @@
     <Content Include="Content\src\sass\forms\_form-date.scss" />
     <Content Include="Content\src\sass\forms\_form-multiple-choice.scss" />
     <Content Include="Content\src\sass\forms\_form-validation.scss" />
+    <Content Include="Content\spec\support\jasmine.json" />
     <None Include="Project_Readme.html" />
     <Content Include="Views\Forecasting\Apprenticeships.cshtml" />
   </ItemGroup>

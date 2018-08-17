@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Models.Estimation
 {
@@ -15,21 +16,25 @@ namespace SFA.DAS.Forecasting.Models.Estimation
             public decimal TransferFundsIn => TransferInCostOfTraining + TransferInCompletionPayments;
             public decimal TransferFundsOut => TransferOutCostOfTraining + TransferOutCompletionPayments;
             public decimal FundsOut => LevyCostOfTraining + LevyCompletionPayments + TransferOutCostOfTraining +
-                                       TransferOutCompletionPayments;
+                                       TransferOutCompletionPayments - TransferInCostOfTraining - TransferInCompletionPayments;
         }
 
         public short Month { get; set; }
         public short Year { get; set; }
 
-        public Cost ModelledCosts { get; set; }
+        public Cost TransferModelledCosts { get; set; }
         public Cost ActualCosts { get; set; }
-        public decimal FutureFunds { get; set; }
-        public decimal TransferFundsIn => ActualCosts.TransferFundsIn + ModelledCosts.TransferFundsIn;
-        public decimal FundsOut => ActualCosts.TransferFundsOut + ModelledCosts.FundsOut;
+        public decimal TransferFundsIn => ActualCosts.TransferFundsIn + TransferModelledCosts.TransferFundsIn;
+        public decimal TransferFundsOut => ActualCosts.TransferFundsOut + TransferModelledCosts.FundsOut;
         public AccountEstimationProjectionModel()
         {
-            ModelledCosts = new Cost();
+            TransferModelledCosts = new Cost();
             ActualCosts = new Cost();
+            AllModelledCosts = new Cost();
         }
+        public ProjectionGenerationType ProjectionGenerationType { get; set; }
+        public decimal AvailableTransferFundsBalance { get; set; }
+        public decimal EstimatedProjectionBalance { get; set; }
+        public Cost AllModelledCosts { get; set; }
     }
 }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
-using SFA.DAS.Forecasting.Application.Estimations.Validation;
 using SFA.DAS.Forecasting.Domain.Estimations;
-using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
@@ -19,134 +17,89 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
-        private readonly IAddApprenticeshipValidator _validator;
         private readonly ILog _logger;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
         public AddApprenticeshipOrchestrator(
-            IHashingService hashingService, IAccountEstimationRepository accountEstimationRepository, IApprenticeshipCourseDataService apprenticeshipCourseService, IAddApprenticeshipValidator validator, ILog logger)
+            IHashingService hashingService, 
+            IAccountEstimationRepository accountEstimationRepository, 
+            IApprenticeshipCourseDataService apprenticeshipCourseService,
+            ILog logger)
         {
             _hashingService = hashingService;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
-            _validator = validator;
             _logger = logger;
         }
 
-        public AddApprenticeshipViewModel GetApprenticeshipAddSetup()
+        public AddApprenticeshipViewModel GetApprenticeshipAddSetup(bool standardsOnly)
         {
-            var result = new AddApprenticeshipViewModel
+            var courses = standardsOnly
+                 ? _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
+                 : _apprenticeshipCourseService.GetAllApprenticeshipCourses();
+
+            return new AddApprenticeshipViewModel
             {
-                Name = "Add Apprenticeships",
-                ApprenticeshipToAdd = new ApprenticeshipToAdd(),
-                AvailableApprenticeships = _apprenticeshipCourseService
-                    .GetAllStandardApprenticeshipCourses()
-                    .OrderBy(course => course.Title)
-                    .ToList(),
-                ValidationResults = new List<ValidationResult>()
+                Courses =
+                    courses
+                    .OrderBy(m => m.Title)
+                    .ToList()
             };
-            return result;
         }
 
         public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
         {
-            var apprenticeshipToAdd = vm.ApprenticeshipToAdd;
-            var course = vm.ApprenticeshipToAdd.AppenticeshipCourse;
-
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
-            accountEstimation.AddVirtualApprenticeship(course.Id, course.Title, course.Level,
-                apprenticeshipToAdd.StartMonth.GetValueOrDefault(), apprenticeshipToAdd.StartYear.GetValueOrDefault(),
-                apprenticeshipToAdd.ApprenticesCount.GetValueOrDefault(), apprenticeshipToAdd.NumberOfMonths.GetValueOrDefault(),
-                apprenticeshipToAdd.TotalCost.GetValueOrDefault(), Models.Payments.FundingSource.Transfer);
 
-            _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {course}");
+            var fundingSource = vm.IsTransferFunded ?? true
+               ? Models.Payments.FundingSource.Transfer 
+               : Models.Payments.FundingSource.Levy;
+            
+            accountEstimation.AddVirtualApprenticeship(vm.Course.Id, vm.Course.Title, vm.Course.Level,
+                vm.StartDateMonth, vm.StartDateYear,
+                vm.NumberOfApprentices, vm.TotalInstallments,
+                vm.TotalCostAsString.ToDecimal(), fundingSource);
+
+            _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {vm.Course}");
             await _accountEstimationRepository.Store(accountEstimation);
         }
 
-        public async Task<AddApprenticeshipViewModel> ValidateAddApprenticeship(AddApprenticeshipViewModel vm)
+        public async Task<AddApprenticeshipViewModel> UpdateAddApprenticeship(AddApprenticeshipViewModel viewModel)
         {
+            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId);
 
-            var viewModel = ResetViewModelDetails(vm);
+            var totalCostAsString = (decimal.TryParse(viewModel.TotalCostAsString, out decimal result))
+                ? result.FormatValue()
+                : viewModel.TotalCostAsString = string.Empty;
 
-            if (viewModel.ApprenticeshipToAdd.CourseId is null)
-            {
-                viewModel.ApprenticeshipToAdd.AppenticeshipCourse = null;
-            }
-            else
-            {
-                viewModel.ApprenticeshipToAdd.AppenticeshipCourse =
-                   await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.ApprenticeshipToAdd.CourseId);
-            }
-
-            AdjustNumberOfMonthsApprenticeship(viewModel);
-
-            viewModel.ValidationResults = _validator.ValidateApprenticeship(viewModel.ApprenticeshipToAdd);
-
-            AdjustTotalCostApprenticeship(viewModel);
+            viewModel.Course = course;
+            viewModel.TotalCostAsString = totalCostAsString;
+            viewModel.FundingPeriodsJson = course?.FundingPeriods != null 
+                ? JsonConvert.SerializeObject(course.FundingPeriods) 
+                : string.Empty;
 
             return viewModel;
         }
 
-        private static void SetTotalCostWithCommas(ApprenticeshipToAdd apprenticeshipDetailsToPersist)
-        {
-
-            if (decimal.TryParse(apprenticeshipDetailsToPersist.TotalCostAsString, out decimal result))
-            {
-                apprenticeshipDetailsToPersist.TotalCost = Math.Round(result, 0, MidpointRounding.AwayFromZero);
-                apprenticeshipDetailsToPersist.TotalCostAsString = result.FormatValue();
-            }
-            else
-            {
-                apprenticeshipDetailsToPersist.TotalCostAsString = string.Empty;
-                apprenticeshipDetailsToPersist.TotalCost = null;
-            }
-        }
-
-        private AddApprenticeshipViewModel ResetViewModelDetails(AddApprenticeshipViewModel vm)
-        {
-            var apprenticeshipDetailsToPersist = vm.ApprenticeshipToAdd;
-            SetTotalCostWithCommas(apprenticeshipDetailsToPersist);
-            var previousCourseId = vm.PreviousCourseId;
-            var viewModel = GetApprenticeshipAddSetup();
-            viewModel.PreviousCourseId = previousCourseId;
-            viewModel.ApprenticeshipToAdd = apprenticeshipDetailsToPersist;
-            return viewModel;
-        }
-        private void AdjustNumberOfMonthsApprenticeship(AddApprenticeshipViewModel viewModel)
-        {
-            var apprenticeToAdd = viewModel.ApprenticeshipToAdd;
-            if (apprenticeToAdd.AppenticeshipCourse != null && viewModel.PreviousCourseId != apprenticeToAdd.CourseId)
-            {
-                viewModel.ApprenticeshipToAdd.NumberOfMonths = apprenticeToAdd.AppenticeshipCourse.Duration;
-            }
-        }
-
-
-        public void AdjustTotalCostApprenticeship(AddApprenticeshipViewModel viewModel)
-        {
-            var apprenticeToAdd = viewModel.ApprenticeshipToAdd;
-
-            if (apprenticeToAdd?.CalculatedTotalCap != null &&
-                    (apprenticeToAdd.TotalCost.HasValue == false || apprenticeToAdd.TotalCost > apprenticeToAdd.CalculatedTotalCap))
-            {
-                viewModel.ApprenticeshipToAdd.TotalCost = apprenticeToAdd.CalculatedTotalCap;
-            }
-        }
-
-        public async Task<decimal?> GetFundingCapForCourse(string courseId)
+        public async Task<CourseViewModel> GetCourse(string courseId)
         {
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
-            var res = course.FundingCap;
-            return res;
-        }
+            if (course == null)
+                return null;
 
-        public async Task<dynamic> GetDefaultNumberOfMonths(string courseId)
-        {
-
-            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(courseId);
-            return new
+            return new CourseViewModel
             {
-                NumberOfMonths = course.Duration
+                CourseId = courseId,
+                NumberOfMonths = course.Duration,
+                FundingPeriods = course.FundingPeriods
+                                    .Select(m =>
+                                        new FundingPeriodViewModel
+                                        {
+                                            FromDate = m.EffectiveFrom,
+                                            ToDate = m.EffectiveTo,
+                                            FundingCap = m.FundingCap
+                                        })
+                                    .ToList()
             };
         }
 
@@ -182,6 +135,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             return await _accountEstimationRepository.Get(accountId);
+        }
+
+        public List<ApprenticeshipCourse> GetStandardCourses()
+        {
+            return _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses();
         }
     }
 }
