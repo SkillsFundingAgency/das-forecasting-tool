@@ -52,7 +52,7 @@
                         <label class="form-label-bold" for="levy-length">Number of months</label>
                         <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
                         @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
-                        @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "levy-length", name = "levy-length", type = "text" })
+                        @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "levy-length", name = "levy-length", type = "number" })
                     </div>
 
                     <div class="form-group @Html.AddErrorClass(m => m.StartDate) @Html.AddErrorClass(m => m.StartDateMonth) @Html.AddErrorClass(m => m.StartDateYear)" id="dateWrapper">

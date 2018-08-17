@@ -46,16 +46,6 @@
                         </div>
 
 
-                        @*<div class="form-group">
-                            <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>       
-                            @Html.DropDownListFor(model => model.CourseId, @Model.ApprenticeshipList(), new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
-                        </div>
-
-
-                        <div class="form-group no-of-apprentice">
-                            <label class="form-label-bold" for="no-of-app">Number of apprentices</label>                     
-                            @Html.TextBoxFor(model => model.ApprenticeshipToAdd.ApprenticesCount, new { @class = "form-control form-control-error", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text" })
-*@
                         <div class="form-group @Html.AddErrorClass(m => m.Course)">
                             <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
                             @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
@@ -70,7 +60,7 @@
                         <div class="form-group no-of-apprentice @Html.AddErrorClass(m => m.NumberOfApprentices)">
                             <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
                             @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new { id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices) })
-                            @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text", @Value = valueOrEmpty(Model.NumberOfApprentices) })
+                            @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices) })
                         </div>
 
 
@@ -79,7 +69,7 @@
                             <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
 
                             @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
-                            @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control form-control-error", id = "apprenticeship-length", name = "apprenticeship-length", type = "text", @Value = valueOrEmpty(Model.TotalInstallments) })
+                            @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments) })
                         </div>
 
                         <div class="form-group  @Html.AddErrorClass(m => m.StartDate) @Html.AddErrorClass(m => m.StartDateMonth) @Html.AddErrorClass(m => m.StartDateYear)" id="dateWrapper">
@@ -97,11 +87,11 @@
                                 <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                     <label for="startDateMonth">Month</label>
 
-                                    @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control form-control-error", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
+                                    @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
                                 </div>
                                 <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
                                     <label for="startDateYear">Year</label>
-                                    @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control form-control-error", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
+                                    @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
                                 </div>
                             </div>
 
@@ -138,7 +128,7 @@
                             @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
                             <label for="total-funding-cost" class="form-label-bold">
                                 £
-                                @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost form-control-error", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
+                                @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
                             </label>
                             
                         </div>
