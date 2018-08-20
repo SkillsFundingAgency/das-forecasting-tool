@@ -2,8 +2,8 @@
     /* Your styling here. Example: */
     background-color: #005ea5;
     color: white;
-    padding: 30px;
-    outline: 3px solid #ffbf47;
+    padding: 20px;
+    border: 3px solid #ffbf47;
     border-radius: 0;
     box-shadow: 0px 0px 50px -10px black;
 }

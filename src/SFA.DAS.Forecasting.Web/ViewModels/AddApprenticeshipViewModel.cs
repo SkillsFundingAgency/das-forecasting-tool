@@ -3,26 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
+using SFA.DAS.Forecasting.Web.ViewModels.Validation;
+using FluentValidation.Attributes;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    public class AddApprenticeshipViewModel
+    [Validator(typeof(AddApprenticeshipViewModelValidator))]
+    public class AddApprenticeshipViewModel : AddEditApprenticeshipsViewModel
     {
-        public string Name { get; set; }
-        public IEnumerable<ApprenticeshipCourse> AvailableApprenticeships { get; set; }
+        public List<ApprenticeshipCourse> Courses { get; set; } = new List<ApprenticeshipCourse>();
+        public List<ValidationResult> ValidationResults { get; set; } = new List<ValidationResult>();
 
-        public ApprenticeshipToAdd ApprenticeshipToAdd { get; set; }
+        public string CourseId { get; set; }
 
-        public string PreviousCourseId { get; set; }
-      
-        public List<ValidationResult> ValidationResults { get; set; }
+        public ApprenticeshipCourse Course { get; set; }
 
-        public IEnumerable<SelectListItem> ApprenticeshipList()
+        public bool? IsTransferFunded { get; set; }
+
+        // ToDo: Get Funding Period?
+        public decimal CalculatedTotalCap => Course != null ? Course.FundingCap * NumberOfApprentices : 0;
+
+        public IEnumerable<SelectListItem> ApprenticeshipCourses
         {
-            var res = AvailableApprenticeships.Select(item => new SelectListItem {Value = item.Id, Text = item.Title}).ToList();
+            get {
+	            return 
+                  
+                    (from course in Courses
+		                let text = course.CourseType == ApprenticeshipCourseType.Standard ? $"{course.Title}, Level: {course.Level} (Standard)" : $"{course.Title}, Level: {course.Level}"
+		                select new SelectListItem
+		                {
+			                Value = course.Id,
+			                Text = text,
+                            Selected = course.Id == CourseId
+		                }).ToList();
+            }
+          }
 
-            res.Insert(0, new SelectListItem { Selected = true, Value = "", Text = "Select one" } );
-            return  res;
+        public override string FundingPeriodsJson {
+            get
+            {
+                return Course != null ?
+                    JsonConvert.SerializeObject(
+                        Course.FundingPeriods
+                            .Select(m => new FundingPeriodViewModel { FromDate = m.EffectiveFrom, ToDate = m.EffectiveTo, FundingCap = m.FundingCap }))
+                    : null;
+            }
         }
     }
 }

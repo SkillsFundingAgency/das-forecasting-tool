@@ -34,11 +34,12 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _coInvestmentCommitments = _employerCommitmentsModel.CoInvestmentCommitments.AsReadOnly();
         }
 
-        public virtual CostOfTraining GetTotalCostOfTraining(DateTime date)
+        public virtual CostOfTraining GetTotalCostOfTraining(DateTime date, bool isVirtual = false)
         {
             bool FilterCurrent(CommitmentModel c) =>
                       c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
-                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth();
+                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth() &&
+                      (!isVirtual || c.FundingSource == FundingSource.Transfer);
 
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
             var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
@@ -60,9 +61,10 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             };
         }
 
-        public virtual CompletionPayments GetTotalCompletionPayments(DateTime date)
+        public virtual CompletionPayments GetTotalCompletionPayments(DateTime date, bool isVirtual = false)
         {
-            bool FilterCurrent(CommitmentModel c) => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth();
+            bool FilterCurrent(CommitmentModel c) => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth() 
+                                                     && (!isVirtual || c.FundingSource == FundingSource.Transfer);
 
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
             var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();

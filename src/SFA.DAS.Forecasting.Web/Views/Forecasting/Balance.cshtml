@@ -20,7 +20,7 @@
                 <summary>More information</summary>
                 <div>
                     <p>
-                        These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
+                    These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
                     <p />
                     <p>
                         The projection doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider. These will be added to the funding projection soon.
@@ -30,12 +30,14 @@
                     </p>
                 </div>
             </details>
+            
+            @Html.ActionLink("Estimate apprenticeships you could fund", "StartEstimation", "Estimation", null, new { @class = "button margin-top-x2" })
         </div>
     </div>
 
     <div class="column-one-third">
         <div class="related">
-            <h3 class="heading-small">Download data as a CSV file</h3>
+            <h3 class="heading-small">Download data as a spreadsheet</h3>
             <div class="form-group">
                 <ul class="list list-links">
 
@@ -63,8 +65,31 @@
 </div>
 
 <!-- CHART -->
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        @if (@Model.ProjectionDate.HasValue)
+        {
+            <div class="panel projection-date">
+                <p>Your projeciton was last updated on @Model.ProjectionDate.Value.ToGdsFormatFull()</p>
+            </div>
+        }
+        else
+        {
+            <div class="panel projection-date">
+                <p>
+                    If you have declared your levy and/or made a payment to your training provider, your account will show the projection when it next updates. The account is updated twice a month.
+                </p>
+                <p>
+                    You won't see a projection of funds until you declare your levy or make a payment to a training provider.
+                </p>
+            </div>
+        }
+    </div>
+</div>
 <div class="grid-row">
     <div class="column-full">
+
         <div class="chart-container">
             <div class="chart-data"
                  data-dates="@Model.DatesStringArray"
