@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public ActionResult StartEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
-            return View("StartEstimation", new StartViweModel { IsTransferFunded = null });
+            return View("StartEstimation");
         }
 
         [HttpGet]
@@ -44,16 +44,16 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public ActionResult StartTransferEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
-            return View("StartEstimation", new StartViweModel { IsTransferFunded = true });
+            return View("StartEstimation");
         }
 
         [HttpGet]
         [Route("start-redirect", Name = "EstimationStartRedirect")]
-        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId, bool? isTransferFunded)
+        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
             return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
                 ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName })
-                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName, isTransferFunded = isTransferFunded });
+                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
         }
 
         [HttpGet]
@@ -118,8 +118,6 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             {
                 ModelState.AddModelError(r.Key, r.Value);
             }
-
-            viewModel.IsTransferFunded = "";
 
             if (!ModelState.IsValid)
             {
