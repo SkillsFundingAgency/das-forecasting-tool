@@ -51,7 +51,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         {
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
 
-            var fundingSource = vm.IsTransferFunded ?? true
+            var fundingSource = vm.IsTransferFunded == "on"
                ? Models.Payments.FundingSource.Transfer 
                : Models.Payments.FundingSource.Levy;
             
@@ -66,7 +66,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public async Task<AddApprenticeshipViewModel> UpdateAddApprenticeship(AddApprenticeshipViewModel viewModel)
         {
-            var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId);
+            var course =
+                viewModel.CourseId != null
+                ? await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId)
+                : null;
 
             var totalCostAsString = (decimal.TryParse(viewModel.TotalCostAsString, out decimal result))
                 ? result.FormatValue()

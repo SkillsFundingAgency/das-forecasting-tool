@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
-        private readonly AddEditApprenticeshipViewModelValidator<AddApprenticeshipViewModel> _validator;
+        private readonly AddApprenticeshipViewModelValidator _validator;
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             AddApprenticeshipViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
-            _membershipService = membershipService;
+            _membershipService = membershipService; 
             _validator = validator;
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
         }
@@ -68,9 +68,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
         public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
-
             var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false);
-            vm.IsTransferFunded = false;
+            vm.IsTransferFunded = "";
 
             return View(vm);
         }
@@ -120,15 +119,15 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 ModelState.AddModelError(r.Key, r.Value);
             }
 
-            viewModel.IsTransferFunded = false;
+            viewModel.IsTransferFunded = "";
 
             if (!ModelState.IsValid)
             {
-                viewModel.Courses = _addApprenticeshipOrchestrator.GetStandardCourses();
+                viewModel.Courses = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false).Courses;
 
                 return View("AddApprenticeships", viewModel);
             }
-            
+
             await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
