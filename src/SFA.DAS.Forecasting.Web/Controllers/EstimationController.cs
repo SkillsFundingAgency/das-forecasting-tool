@@ -66,40 +66,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
-        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName, bool? isTransferFunded)
+        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            if(isTransferFunded == null)
-            {
-                return RedirectToAction("TypeOfApprenticeships");
-            }
 
-            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(isTransferFunded.Value);
-            vm.IsTransferFunded = isTransferFunded;
+            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false);
+            vm.IsTransferFunded = false;
 
             return View(vm);
-        }
-
-        [HttpGet]
-        [Route("{estimationName}/apprenticeship/typeofapprenticeship")]
-        public ActionResult TypeOfApprenticeships(string hashedAccountId, string estimationName)
-        {
-            return View(new TypeOfApprenticeshipViewModel { IsTransferFunded = null });
-        }
-
-        [HttpPost]
-        [Route("{estimationName}/apprenticeship/typeofapprenticeship")]
-        public ActionResult PostTypeOfApprenticeships(TypeOfApprenticeshipViewModel model)
-        {
-            if(model.IsTransferFunded == null)
-            {
-                ModelState.AddModelError(
-                    nameof(TypeOfApprenticeshipViewModel.IsTransferFunded), 
-                    "You must select whether this estimation will be funded from a transfer of funds or not");
-
-                return View("TypeOfApprenticeships");
-            }
-
-            return RedirectToAction("AddApprenticeships", new { isTransferFunded = model.IsTransferFunded });
         }
 
         [HttpGet]
@@ -147,18 +120,15 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 ModelState.AddModelError(r.Key, r.Value);
             }
 
-            if(!ModelState.IsValid)
+            viewModel.IsTransferFunded = false;
+
+            if (!ModelState.IsValid)
             {
                 viewModel.Courses = _addApprenticeshipOrchestrator.GetStandardCourses();
 
                 return View("AddApprenticeships", viewModel);
             }
-
-            if(viewModel.IsTransferFunded == null)
-            {
-                return RedirectToAction("TypeOfApprenticeships");
-            }
-
+            
             await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);
 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
