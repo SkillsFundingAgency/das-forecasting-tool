@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
             return 
-                IsDevOrTestEnvironment
+                IsDevOrAtEnvironment
                 ? new AccountApiConfiguration
                 {
                     Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),

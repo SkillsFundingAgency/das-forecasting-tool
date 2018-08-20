@@ -55,6 +55,7 @@ var chart = (function () {
 });
 
 var tabs = (function () {
+
     $(".tabs-menu a").click(function (e) {
         e.preventDefault();
         $(this).parent().addClass("current");
@@ -62,6 +63,11 @@ var tabs = (function () {
         var tab = $(this).attr("href");
         $(".tab-content").not(tab).css("display", "none");
         $(tab).fadeIn();
+
+        if (history.replaceState)
+            history.replaceState(null, null, tab);
+        else
+            location.hash = tab;
     });
 });
 
@@ -178,3 +184,23 @@ $(window).scroll(function () {
 sfa.navigation.init();
 
 $('ul#global-nav-links').collapsableNav();
+
+$(function () {
+    $('.error-summary-with-sticky-header a').on('click touch', function (e) {
+
+        var target = $(this).prop('hash'),
+            $target = $(target);
+
+        if ($target.length === 0) {
+            return;
+        }
+
+        window.scrollTo(0, $target.offset().top - 130);
+
+        if ($target.is('input, select')) {
+            $target.focus();
+        }
+
+        e.preventDefault();
+    });
+});

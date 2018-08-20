@@ -23,5 +23,10 @@ namespace SFA.DAS.Forecasting.Data
         {
             InitializePartial();
         }
+
+        partial void DisposePartial(bool disposing)
+        {
+            Database?.Connection?.GetType()?.GetField("StateChange", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(Database?.Connection, null);
+        }
     }
 }

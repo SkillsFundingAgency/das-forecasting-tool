@@ -21,13 +21,14 @@ namespace SFA.DAS.Forecasting.Web
                 .Include("~/Content/dist/js/jquery-1.10.2.min.js")
                 .Include("~/Content/dist/js/stacker.js")
                 .Include("~/Content/dist/js/showhide-content.js")
-                .Include("~/Content/dist/js/select2.min.js")
-                .Include("~/Content/dist/js/custom.js"));
+            );
 
             bundles.Add(new ScriptBundle("~/bundles/addApprenticeship")
-                    .Include("~/Content/dist/js/apprenticeships.js")
-                    .Include("~/Content/dist/js/add-apprenticeship-custom.js")
-                );
+                .Include("~/Content/dist/js/select2.min.js")
+                .Include("~/Content/dist/js/add-edit-functions.js")
+                .Include("~/Content/dist/js/add-apprenticeship.js")
+                .Include("~/Content/dist/js/edit-apprenticeship.js")
+            );
 
             bundles.Add(new ScriptBundle("~/bundles/c3")
                 .Include("~/Content/dist/c3/d3.min.js")
