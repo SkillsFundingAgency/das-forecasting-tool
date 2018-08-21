@@ -42,20 +42,30 @@
     <div class="column-two-thirds">
         <div class="hgroup form-group">
             <h1 class="heading-xlarge">Estimated costs</h1>
-            <p class="lede">This page shows:</p>
-            <ul class="list list-bullet">
 
-                <li>apprenticeships you've added</li>
-                @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
-                {
-                    <li>your account funds</li>
-                }
-                @if (Model.AnyTransferApprenticeships)
-                {
-                    <li>your remaining transfer allowance</li>
-                }
+            @if (Model.Apprenticeships.TotalApprenticeshipCount > 0)
+            {
+                <p class="lede">This page shows:</p>
+                <ul class="list list-bullet">
 
-            </ul>
+                    <li>apprenticeships you've added</li>
+                    @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
+                    {
+                        <li>your account funds</li>
+                    }
+                    @if (Model.AnyTransferApprenticeships)
+                    {
+                        <li>your remaining transfer allowance</li>
+                    }
+
+                </ul>
+            }
+            else
+            {
+                <div class="panel panel-width-thin">
+                    <p>You have not selected any apprenticeships for your estimation. You need to select at least one apprenticeship to make an estimation.</p>
+                </div>
+            }
 
             <p>
                 @{
@@ -325,17 +335,4 @@
             </div>
         </div>
     </div>
-
 }
-else
-{
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <div class="panel panel-width-thin">
-                <p>You have not selected any apprenticeships for your estimation. You need to select at least one apprenticeship to make an estimation.</p>
-            </div>
-        </div>
-    </div>
-}
-
-
