@@ -28,14 +28,14 @@
                 "tier": "Standard",
                 "size": "S1",
                 "family": "S",
-                "capacity": 1
+                "capacity": 2
             },
             "Isolated": {
                 "name": "I1",
                 "tier": "Isolated",
                 "size": "I1",
                 "family": "I",
-                "capacity": 1
+                "capacity": 2
             }
         },
         "ASPResourceProperties": {
