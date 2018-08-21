@@ -46,25 +46,5 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 
             return (b.ToDecimal()) <= (fundingBand.FundingCap * vm.NumberOfApprentices);
         }
-
-        internal Dictionary<string, string> ValidateAdd(AddApprenticeshipViewModel vm)
-        {
-            var dict = new Dictionary<string, string>();
-
-            if (vm.TotalCostAsString.ToDecimal() < 1)
-                dict.Add($"{nameof(vm.TotalCostAsString)}", "The total training cost was not entered");
-
-            if (vm.Course == null)
-            {
-                dict.Add($"{nameof(vm.Course)}", "You must choose 1 apprenticeship");
-            }
-            else
-            {
-                if(!CheckTotalCost(vm, vm.TotalCostAsString))
-                    dict.Add($"{nameof(vm.TotalCostAsString)}", "The total cost can't be higher than the total government funding band maximum for this apprenticeship");
-            }
-
-            return dict;
-        }
     }
 }
