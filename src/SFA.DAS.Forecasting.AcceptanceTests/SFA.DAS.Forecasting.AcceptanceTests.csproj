@@ -173,10 +173,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
     </Compile>
-    <Compile Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs">
+    <Compile Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs">
+      <DependentUpon>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Projections For Employers With Levy Funded And Transfer Funded Commitments.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Projections_for_non_paid_Apprenticeships.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Feature\Generate Training Cost Projections.feature.cs">
       <AutoGen>True</AutoGen>
@@ -268,9 +273,13 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
     </None>
-    <None Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature">
+    <None Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs</LastGenOutput>
+      <LastGenOutput>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Projections_for_non_paid_Apprenticeships.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

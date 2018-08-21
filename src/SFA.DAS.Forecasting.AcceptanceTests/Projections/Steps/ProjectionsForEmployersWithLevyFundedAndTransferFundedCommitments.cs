@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
     {
 
         [Scope(Feature = "Projections For Employers With Levy Funded And Transfer Funded Commitments")]
+        [Scope(Feature = "Projections For Employers With Non Paid Apprenticeships")]
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunctionFundsInReceiving()
         {
