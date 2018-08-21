@@ -71,6 +71,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
 
+            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+                .Setup(x => x.GetApprenticeshipAddSetup(false))
+                .Returns(new AddApprenticeshipViewModel { Courses = new List<ApprenticeshipCourse>() } );
+
             await _controller.Save(vm, "ABBA12", "default");
             _controller.ViewData.ModelState.Count
                 .Should().Be(1);
@@ -99,6 +103,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
+
+            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+                .Setup(x => x.GetApprenticeshipAddSetup(false))
+                .Returns(new AddApprenticeshipViewModel { Courses = new List<ApprenticeshipCourse>() });
 
             await _controller.Save(vm, "ABBA12", "default");
             _controller.ViewData.ModelState.Count
@@ -132,6 +140,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
+
+            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+                .Setup(x => x.GetApprenticeshipAddSetup(false))
+                .Returns(new AddApprenticeshipViewModel { Courses = new List<ApprenticeshipCourse>() });
 
             await _controller.Save(vm, "ABBA12", "default");
             _controller.ViewData.ModelState.Count

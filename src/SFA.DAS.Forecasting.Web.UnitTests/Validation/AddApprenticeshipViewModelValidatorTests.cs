@@ -3,108 +3,74 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
 {
     [TestFixture]
-    public class AddEditApprenticeshipViewModelValidatorTests
+    public class AddApprenticeshipViewModelValidatorTests
     {
-        private AddEditApprenticeshipsViewModel _validViewModel;
-        private AddEditApprenticeshipViewModelValidator<AddEditApprenticeshipsViewModel> _validator;
+        private AddApprenticeshipViewModel _validViewModel;
+        private AddApprenticeshipViewModelValidator _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validViewModel = new AddEditApprenticeshipsViewModel
+            _validViewModel = new AddApprenticeshipViewModel
             {
                 NumberOfApprentices = 2,
                 TotalInstallments = 24,
                 StartDateMonth = DateTime.Today.Month,
-                StartDateYear= DateTime.Today.Year,
-                TotalCostAsString = "12000"
-            };
-            _validator = new AddEditApprenticeshipViewModelValidator<AddEditApprenticeshipsViewModel>();
+                StartDateYear = DateTime.Today.Year,
+                TotalCostAsString = "12000",
+                IsTransferFunded = "",
+                Course = new Models.Estimation.ApprenticeshipCourse
+                {
+                    CourseType = Models.Estimation.ApprenticeshipCourseType.Standard,
+                    Duration = 12,
+                    FundingCap = 2,
+                    Id = "hello",
+                    Level = 2,
+                    Title = "Test Standard",
+                    FundingPeriods = new List<Models.Estimation.FundingPeriod>
+                    {
+                        new Models.Estimation.FundingPeriod
+                        {
+                            EffectiveFrom = DateTime.Today.AddMonths(-1),
+                            EffectiveTo = DateTime.Today.AddMonths(11),
+                            FundingCap = 6000
+                        }
+                    }
+                }
+        };
+            _validator = new AddApprenticeshipViewModelValidator();
         }
 
         [Test]
-        public void ViewModel_Is_Valid()
+        public void ViewModel_Can_Have_Framework_If_Transfer_Funding()
         {
-            var result = _validator.Validate(_validViewModel);
-            result.IsValid.Should().BeTrue();
+            _validViewModel.IsTransferFunded = "on";
+
+            var result = _validator.ValidateAdd(_validViewModel);
+            result.Count().Should().Be(0);
+
         }
 
         [Test]
-        public void ViewModel_must_have_number_of_apprenticeships()
+        public void ViewModel_Cant_Have_Framework_If_Transfer_Funding()
         {
-            _validViewModel.NumberOfApprentices = 0;
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.NumberOfApprentices));
-            error.ErrorMessage.Should().Be("Make sure you have at least 1 or more apprentices");
-        }
+            _validViewModel.IsTransferFunded = "on";
+            _validViewModel.Course.Title = "test Framework";
+            _validViewModel.Course.CourseType = Models.Estimation.ApprenticeshipCourseType.Framework;
 
-        [Test]
-        public void ViewModel_must_have_total_intallments_of_at_least_12s()
-        {
-            _validViewModel.TotalInstallments = 0;
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => 
-                m.PropertyName == nameof(_validViewModel.TotalInstallments)
-                && 
-                m.ErrorMessage == "The number of months must be 12 months or more"
-                );
-            error.ErrorMessage.Should().Be("The number of months must be 12 months or more");
-        }
+            var result = _validator.ValidateAdd(_validViewModel);
 
-        [Test]
-        public void ViewModel_must_have_start_month()
-        {
-            _validViewModel.StartDateMonth = 0;
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.First(m => m.PropertyName == nameof(_validViewModel.StartDateMonth));
-            error.ErrorMessage.Should().Be("The start month was not entered");
-        }
+            var error = result.Single(m => m.Key == nameof(_validViewModel.IsTransferFunded));
+            error.Value.Should().Be("You can only fund Standards with your transfer allowance");
 
-        [Test]
-        public void ViewModel_must_have_start_month_less_that_12()
-        {
-            _validViewModel.StartDateMonth = 13;
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.StartDateMonth));
-            error.ErrorMessage.Should().Be("The start month entered needs to be between 1 and 12");
-        }
-
-        [Test]
-        public void ViewModel_must_have_start_year()
-        {
-            _validViewModel.StartDateYear = 0;
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.StartDateYear));
-            error.ErrorMessage.Should().Be("The start year was not entered");
-        }
-
-        [Test]
-        public void ViewModel_start_date_must_not_be_in_the_past()
-        {
-            var date = DateTime.Today.AddMonths(-1);
-            _validViewModel.StartDateMonth = date.Month;
-            _validViewModel.StartDateYear = date.Year;
-
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.StartDate));
-            error.ErrorMessage.Should().Be("The start date cannot be in the past");
-        }
-
-        [Test]
-        public void ViewModel_start_date_must_not_be_more_then_4_years_from_now()
-        {
-            var date = DateTime.Today.AddYears(4).AddMonths(1);
-            _validViewModel.StartDateMonth = date.Month;
-            _validViewModel.StartDateYear = date.Year;
-            
-            var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.StartDate));
-            error.ErrorMessage.Should().Be("The start date must be within the next 4 years");
         }
     }
 }

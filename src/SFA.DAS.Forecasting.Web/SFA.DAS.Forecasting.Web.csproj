@@ -385,7 +385,6 @@
     <Compile Include="ViewModels\EstimationPageViewModel.cs" />
     <Compile Include="ViewModels\EstimationTransferAllowanceVewModel.cs" />
     <Compile Include="ViewModels\StartViweModel.cs" />
-    <Compile Include="ViewModels\TypeOfApprenticeshipViewModel.cs" />
     <Compile Include="ViewModels\UserLinksViewModel.cs" />
     <Compile Include="ViewModels\Validation\AddApprenticeshipViewModelValidator.cs" />
     <Compile Include="ViewModels\Validation\AddEditApprenticeshipViewModelValidator.cs" />
@@ -748,7 +747,6 @@
     <Content Include="Views\Estimation\ConfirmApprenticeshipsRemoval.cshtml" />
     <Content Include="Views\Estimation\EditApprenticeships.cshtml" />
     <Content Include="Views\Shared\_validationErrors.cshtml" />
-    <Content Include="Views\Estimation\TypeOfApprenticeships.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
   </ItemGroup>
   <ItemGroup>

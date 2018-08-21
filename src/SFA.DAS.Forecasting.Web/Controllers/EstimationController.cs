@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
-        private readonly AddEditApprenticeshipViewModelValidator<AddApprenticeshipViewModel> _validator;
+        private readonly AddApprenticeshipViewModelValidator _validator;
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             AddApprenticeshipViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
-            _membershipService = membershipService;
+            _membershipService = membershipService; 
             _validator = validator;
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
         }
@@ -36,7 +36,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public ActionResult StartEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
-            return View("StartEstimation", new StartViweModel { IsTransferFunded = null });
+            return View("StartEstimation");
         }
 
         [HttpGet]
@@ -44,16 +44,16 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public ActionResult StartTransferEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
-            return View("StartEstimation", new StartViweModel { IsTransferFunded = true });
+            return View("StartEstimation");
         }
 
         [HttpGet]
         [Route("start-redirect", Name = "EstimationStartRedirect")]
-        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId, bool? isTransferFunded)
+        public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
             return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
                 ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName })
-                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName, isTransferFunded = isTransferFunded });
+                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
         }
 
         [HttpGet]
@@ -66,40 +66,12 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [HttpGet]
         [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
-        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName, bool? isTransferFunded)
+        public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
-            if(isTransferFunded == null)
-            {
-                return RedirectToAction("TypeOfApprenticeships");
-            }
-
-            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(isTransferFunded.Value);
-            vm.IsTransferFunded = isTransferFunded;
+            var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false);
+            vm.IsTransferFunded = "";
 
             return View(vm);
-        }
-
-        [HttpGet]
-        [Route("{estimationName}/apprenticeship/typeofapprenticeship")]
-        public ActionResult TypeOfApprenticeships(string hashedAccountId, string estimationName)
-        {
-            return View(new TypeOfApprenticeshipViewModel { IsTransferFunded = null });
-        }
-
-        [HttpPost]
-        [Route("{estimationName}/apprenticeship/typeofapprenticeship")]
-        public ActionResult PostTypeOfApprenticeships(TypeOfApprenticeshipViewModel model)
-        {
-            if(model.IsTransferFunded == null)
-            {
-                ModelState.AddModelError(
-                    nameof(TypeOfApprenticeshipViewModel.IsTransferFunded), 
-                    "You must select whether this estimation will be funded from a transfer of funds or not");
-
-                return View("TypeOfApprenticeships");
-            }
-
-            return RedirectToAction("AddApprenticeships", new { isTransferFunded = model.IsTransferFunded });
         }
 
         [HttpGet]
@@ -147,16 +119,11 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                 ModelState.AddModelError(r.Key, r.Value);
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                viewModel.Courses = _addApprenticeshipOrchestrator.GetStandardCourses();
+                viewModel.Courses = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false).Courses;
 
                 return View("AddApprenticeships", viewModel);
-            }
-
-            if(viewModel.IsTransferFunded == null)
-            {
-                return RedirectToAction("TypeOfApprenticeships");
             }
 
             await _addApprenticeshipOrchestrator.StoreApprenticeship(viewModel, hashedAccountId, estimationName);

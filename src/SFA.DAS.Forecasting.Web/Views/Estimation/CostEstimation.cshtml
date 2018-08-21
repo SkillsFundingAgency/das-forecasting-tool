@@ -42,20 +42,30 @@
     <div class="column-two-thirds">
         <div class="hgroup form-group">
             <h1 class="heading-xlarge">Estimated costs</h1>
-            <p class="lede">This page shows:</p>
-            <ul class="list list-bullet">
 
-                <li>apprenticeships you've added</li>
-                @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
-                {
-                    <li>your account funds</li>
-                }
-                @if (Model.AnyTransferApprenticeships)
-                {
-                    <li>your remaining transfer allowance</li>
-                }
+            @if (Model.Apprenticeships.TotalApprenticeshipCount > 0)
+            {
+                <p class="lede">This page shows:</p>
+                <ul class="list list-bullet">
 
-            </ul>
+                    <li>apprenticeships you've added</li>
+                    @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
+                    {
+                        <li>your account funds</li>
+                    }
+                    @if (Model.AnyTransferApprenticeships)
+                    {
+                        <li>your remaining transfer allowance</li>
+                    }
+
+                </ul>
+            }
+            else
+            {
+                <div class="panel panel-width-thin">
+                    <p>You have not selected any apprenticeships for your estimation. You need to select at least one apprenticeship to make an estimation.</p>
+                </div>
+            }
 
             <p>
                 @{
@@ -99,7 +109,6 @@
                 <div class="grid-row">
                     <div class="column-full">
                         <h2 class="heading-medium">This table shows your estimated costs against your account projection</h2>
-                        <p><b>Opening balance: </b>@Model.AccountFunds.OpeningBalance.FormatCost()</p>
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
                 </div>
@@ -202,7 +211,7 @@
                                     <tr>
                                         <th class="nowrap">Date</th>
                                         <th class="financial tippy" data-tippy-trigger="click" title="Cost of transfer funded apprenticeships that have already started and are currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
-                                            Your current costs
+                                            Your current transfer costs
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
@@ -212,7 +221,7 @@
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
                                         <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
-                                            Balance
+                                            Remaining transfer allowance
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
@@ -270,7 +279,7 @@
                             <th>Number of monthly payments</th>
                             <th>Monthly payment</th>
                             <th>Completion payment</th>
-                            <th class="financial tippy" data-tippy-trigger="click" title="Indicates if the apprenticeship is to be used for an estimate against your transfer allowance">
+                            <th class="financial tippy" data-tippy-trigger="click" title="Shows if the estimated cost of apprenticeships is to be paid for using funds from your transfer allowance">
                                 Transfer estimate
                                 <br />
                                 <span class="tip-info"><span class="info-title">info</span></span>
@@ -325,17 +334,4 @@
             </div>
         </div>
     </div>
-
 }
-else
-{
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <div class="panel panel-width-thin">
-                <p>You have not selected any apprenticeships for your estimation. You need to select at least one apprenticeship to make an estimation.</p>
-            </div>
-        </div>
-    </div>
-}
-
-

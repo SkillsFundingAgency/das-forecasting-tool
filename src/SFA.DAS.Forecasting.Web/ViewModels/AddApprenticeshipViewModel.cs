@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 
         public ApprenticeshipCourse Course { get; set; }
 
-        public bool? IsTransferFunded { get; set; }
+        public string IsTransferFunded { get; set; }
 
         // ToDo: Get Funding Period?
         public decimal CalculatedTotalCap => Course != null ? Course.FundingCap * NumberOfApprentices : 0;
