@@ -407,6 +407,7 @@
     <Content Include="Content\dist\govuk-template-ie8.css" />
     <Content Include="Content\dist\govuk-template-print.css" />
     <Content Include="Content\dist\govuk-template.css" />
+    <Content Include="Content\dist\images\govuk-crest-2x.png" />
     <Content Include="Content\dist\images\info-blue.png" />
     <Content Include="Content\dist\js\add-apprenticeship.js" />
     <Content Include="Content\dist\js\edit-apprenticeship.js" />
