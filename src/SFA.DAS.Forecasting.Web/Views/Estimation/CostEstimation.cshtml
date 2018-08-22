@@ -168,7 +168,7 @@
                                     <td class="nowrap">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
                                     <td class="financial">@accountFund.ActualCost.FormatCost()</td>
                                     <td class="financial">@accountFund.EstimatedCost.FormatCost()</td>
-                                    <td class="financial">@accountFund.Balance.FormatCost()</td>
+                                    <td class="financial">@accountFund.FormattedBalance</td>
                                 </tr>
 
                                 if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))

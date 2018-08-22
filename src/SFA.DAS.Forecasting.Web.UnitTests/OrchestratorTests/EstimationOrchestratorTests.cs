@@ -385,5 +385,59 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
         }
+
+        [Test]
+        public async Task Then_Balance_Values_Less_Than_Or_Equal_To_Zero_Are_Not_Shown_In_The_Model()
+        {
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>
+            {
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) _dateFrom.Year,
+                    Month = (short) _dateFrom.Month,
+                    EstimatedProjectionBalance = 10
+                },
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) _dateFrom.AddMonths(1).Year,
+                    Month = (short) _dateFrom.AddMonths(1).Month,
+                    EstimatedProjectionBalance = 1
+                },
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) _dateFrom.AddMonths(2).Year,
+                    Month = (short) _dateFrom.AddMonths(2).Month,
+                    EstimatedProjectionBalance = 0
+                },
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) _dateFrom.AddMonths(3).Year,
+                    Month = (short) _dateFrom.AddMonths(3).Month,
+                    EstimatedProjectionBalance = -10
+                },
+                new AccountEstimationProjectionModel
+                {
+                    Year = (short) _dateFrom.AddMonths(3).Year,
+                    Month = (short) _dateFrom.AddMonths(3).Month,
+                    EstimatedProjectionBalance = -20
+                }
+            };
+
+            //Act
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+            _mocker.GetMock<IAccountEstimationProjectionRepository>()
+                .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+                .ReturnsAsync(_accountEstimationProjection);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+            //Assert
+            Assert.AreEqual("£1", actual.AccountFunds.Records[0].FormattedBalance);
+            Assert.AreEqual("-", actual.AccountFunds.Records[1].FormattedBalance);
+            Assert.AreEqual("-", actual.AccountFunds.Records[2].FormattedBalance);
+            Assert.AreEqual("-", actual.AccountFunds.Records[3].FormattedBalance);
+        }
     }
 }

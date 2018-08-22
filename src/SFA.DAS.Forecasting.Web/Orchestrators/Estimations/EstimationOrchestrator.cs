@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                     new AccountFundsViewModel
                     {
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
-                        Records = GetAccountFunds(estimationProjector?.Projections.Skip(1))
+                        Records = GetAccountFunds(estimationProjector.Projections?.Skip(1))
                     }
             };
             return viewModel;
@@ -107,7 +107,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 Date = new DateTime(estimation.Year, estimation.Month, 1),
                 ActualCost = estimation.ActualCosts.FundsOut,
                 EstimatedCost = estimation.AllModelledCosts.FundsOut,
-                Balance = estimation.EstimatedProjectionBalance
+                Balance = estimation.EstimatedProjectionBalance,
+                FormattedBalance = estimation.EstimatedProjectionBalance > 0 ? estimation.EstimatedProjectionBalance.FormatCost() : "-"
             });
 
             return accountFunds.ToList();
