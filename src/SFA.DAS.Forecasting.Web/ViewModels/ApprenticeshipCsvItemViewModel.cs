@@ -6,12 +6,12 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
     {
         [Name("ILR actual start date")]
         public string StartDate { get; set; }
-        [Name("ILR planed end date")]
+        [Name("ILR planned end date")]
         public string PlannedEndDate { get; set; }
 
-        [Name("DAS planed start date")]
+        [Name("DAS planned start date")]
         public string DasStartDate { get; set; }
-        [Name("DAS planed end date")]
+        [Name("DAS planned end date")]
         public string DasPlannedEndDate { get; set; }
 
         [Name("Apprenticeship")]
