@@ -1,5 +1,15 @@
 ﻿
 var AddEditApprentiecships = {
+
+    altFind: function (arr, callback) {
+        for (var i = 0; i < arr.length; i++) {
+            var match = callback(arr[i]);
+            if (match) {
+                return arr[i];
+            }
+        }
+    },
+
     calculateFundingCap: function (date, model) {
         var today = new Date();
         var thisMonth = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0)
@@ -12,10 +22,9 @@ var AddEditApprentiecships = {
             return undefined;
         }
 
-        var fundingBand = model.FundingBands.find(function (fb) {
-            return date > AddEditApprentiecships.getDate(fb.FromDate) && date < AddEditApprentiecships.getDate(fb.ToDate)
-        })
-            || model.FundingBands[model.FundingBands.length - 1];
+        var fundingBand = AddEditApprentiecships.altFind(model.FundingBands, function (fb) {
+            return date > AddEditApprentiecships.getDate(fb.FromDate) && date < AddEditApprentiecships.getDate(fb.ToDate);
+        }) || model.FundingBands[model.FundingBands.length - 1];
 
         var result = {
             FundingCap: fundingBand.FundingCap
@@ -48,6 +57,7 @@ var AddEditApprentiecships = {
         parts[0] = partToProcess;
         return parts.join('.');
     }
+    
 };
 
 // For Jasmine testing
