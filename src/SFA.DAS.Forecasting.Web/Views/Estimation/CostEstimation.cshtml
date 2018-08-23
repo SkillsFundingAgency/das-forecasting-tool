@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+﻿@using SFA.DAS.Forecasting.Models.Payments
+@using SFA.DAS.Forecasting.Web.Extensions
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
 @{
@@ -7,27 +8,6 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-
-        @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
-        {
-            if (Model.CanFund)
-            {
-                <div class="success-summary">
-                    <h3 class="heading-medium">Yes, you can fund these apprenticeships</h3>
-                    <p>For more detail look at the remaining transfer allowance table.</p>
-                </div>
-            }
-            else
-            {
-                <div class="error-summary" id="errorOne">
-                    <h3 class="heading-medium">You can’t fund these apprenticeships</h3>
-                    <p>You don't have enough transfer allowance.</p>
-                    <p class="hidden">You don't have enough transfer allowance from December 2018 to support this transfer.</p>
-                </div>
-            }
-        }
-
-
         @if (Model.ApprenticeshipRemoved)
         {
             <div class="success-summary">
@@ -123,6 +103,9 @@
 
                             @foreach (var accountFund in Model.AccountFunds.Records)
                             {
+                                var tableRowClass = accountFund.Balance <=0 ? "error-row" : "";
+                                var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
+
                                 if (newFinancialYearAccountFunds)
                                 {
                                     newFinancialYearAccountFunds = false;
@@ -139,7 +122,7 @@
                                         </div>
                                     }
                                     <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-                                    @:<table class="small">
+                                    @:<table class="small errorTable">
                                     <thead>
                                     <tr>
                                         <th class="nowrap">Date</th>
@@ -164,11 +147,11 @@
 
                                 }
 
-                                <tr>
+                                <tr class="@tableRowClass">
                                     <td class="nowrap">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
                                     <td class="financial">@accountFund.ActualCost.FormatCost()</td>
                                     <td class="financial">@accountFund.EstimatedCost.FormatCost()</td>
-                                    <td class="financial">@accountFund.FormattedBalance</td>
+                                    <td class="financial @tableCellClass">@accountFund.FormattedBalance</td>
                                 </tr>
 
                                 if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
