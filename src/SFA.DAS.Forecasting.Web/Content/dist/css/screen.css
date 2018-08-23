@@ -5087,7 +5087,7 @@ table.small th, table.small td, table.small .form-hint {
   font-size: 16px;
 }
 
-.errorTable tr.error-row {
+tr.error-row {
   box-shadow: -5px 0px 0px 0px #f7e7e9, -10px 0px 0px 0px #b10e1e;
   background: #f7e7e9;
 }
