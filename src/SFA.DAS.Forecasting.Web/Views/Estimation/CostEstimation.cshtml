@@ -103,7 +103,6 @@
 
                             @foreach (var accountFund in Model.AccountFunds.Records)
                             {
-                                var tableBodyClass = accountFund.Balance <= 0 ? "errorTable" : "";
                                 var tableRowClass = accountFund.Balance <=0 ? "error-row" : "";
                                 var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
 
