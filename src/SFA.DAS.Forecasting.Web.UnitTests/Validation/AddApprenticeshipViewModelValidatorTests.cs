@@ -71,10 +71,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             var result = _validator.Validate(_validViewModel);
             var error = result.Errors.Single(m => 
                 m.PropertyName == nameof(_validViewModel.TotalInstallments)
-                && 
-                m.ErrorMessage == "The number of months must be 12 months or more"
+                &&
+                m.ErrorMessage == "The number of months must be between 12 months and 60 months"
                 );
-            error.ErrorMessage.Should().Be("The number of months must be 12 months or more");
+            error.ErrorMessage.Should().Be("The number of months must be between 12 months and 60 months");
         }
 
         [Test]
