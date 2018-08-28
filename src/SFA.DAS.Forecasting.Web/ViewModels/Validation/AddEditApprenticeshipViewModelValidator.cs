@@ -18,8 +18,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
             RuleFor(m => m.TotalInstallments)
                 .NotEmpty()
                 .WithMessage("The number of months was not entered")
-                .GreaterThan((short)11)
-                .WithMessage("The number of months must be 12 months or more");
+                .InclusiveBetween((short)12, (short)60)
+                .WithMessage("The number of months must be between 12 months and 60 months");
 
             RuleFor(m => m.StartDateYear)
                 .NotEmpty()

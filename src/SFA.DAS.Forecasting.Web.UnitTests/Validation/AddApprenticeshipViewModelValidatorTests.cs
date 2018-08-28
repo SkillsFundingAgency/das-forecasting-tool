@@ -48,7 +48,62 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
         };
             _validator = new AddApprenticeshipViewModelValidator();
         }
+[Test]
+        public void ViewModel_Is_Valid()
+        {
+            var result = _validator.Validate(_validViewModel);
+            result.IsValid.Should().BeTrue();
+        }
 
+        [Test]
+        public void ViewModel_must_have_number_of_apprenticeships()
+        {
+            _validViewModel.NumberOfApprentices = 0;
+            var result = _validator.Validate(_validViewModel);
+            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.NumberOfApprentices));
+            error.ErrorMessage.Should().Be("Make sure you have at least 1 or more apprentices");
+        }
+
+        [Test]
+        public void ViewModel_must_have_total_intallments_of_at_least_12s()
+        {
+            _validViewModel.TotalInstallments = 0;
+            var result = _validator.Validate(_validViewModel);
+            var error = result.Errors.Single(m => 
+                m.PropertyName == nameof(_validViewModel.TotalInstallments)
+                && 
+                m.ErrorMessage == "The number of months must be 12 months or more"
+                );
+            error.ErrorMessage.Should().Be("The number of months must be 12 months or more");
+        }
+
+        [Test]
+        public void ViewModel_must_have_start_month()
+        {
+            _validViewModel.StartDateMonth = 0;
+            var result = _validator.Validate(_validViewModel);
+            var error = result.Errors.First(m => m.PropertyName == nameof(_validViewModel.StartDateMonth));
+            error.ErrorMessage.Should().Be("The start month was not entered");
+        }
+
+        [Test]
+        public void ViewModel_must_have_start_month_less_that_12()
+        {
+            _validViewModel.StartDateMonth = 13;
+            var result = _validator.Validate(_validViewModel);
+            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.StartDateMonth));
+            error.ErrorMessage.Should().Be("The start month entered needs to be between 1 and 12");
+        }
+
+        [Test]
+        public void ViewModel_must_have_start_year()
+        {
+            _validViewModel.StartDateYear = 0;
+            var result = _validator.Validate(_validViewModel);
+            var error = result.Errors.Single(m => m.PropertyName == nameof(_validViewModel.StartDateYear));
+            error.ErrorMessage.Should().Be("The start year was not entered");
+        }
+		
         [Test]
         public void ViewModel_Can_Have_Framework_If_Transfer_Funding()
         {

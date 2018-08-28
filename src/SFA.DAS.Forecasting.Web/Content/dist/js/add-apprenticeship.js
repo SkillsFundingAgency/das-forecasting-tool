@@ -5,6 +5,9 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 
     var init = function () {
 
+        var formModel = GetAddApprenticeshipForm();
+        showFundingCapMessage(formModel.TotalFundingCap !== undefined && formModel.TotalFundingCap !== "0")
+
         if ($("#choose-apprenticeship")) {
             $("#choose-apprenticeship").select2();
         }
@@ -68,9 +71,9 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
     }
 
     function calculateTotalCostLocal() {
-        var model = GetAddApprenticeshipForm();
+        var formModel = GetAddApprenticeshipForm();
 
-        var updated = refreshCalculation(model, sfa.AddApprenticeship.Result);
+        var updated = refreshCalculation(formModel, sfa.AddApprenticeship.Result);
         showFundingCapMessage(updated);
 
     }
@@ -96,16 +99,16 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
     }
 
-    function refreshCalculation(model, result) {
-        var calc = AddEditApprentiecships.calculateFundingCap(model.StartDate, result)
+    function refreshCalculation(formModel, course) {
+        var calc = AddEditApprentiecships.calculateFundingCap(formModel.StartDate, course)
 
         var fc = calc ? calc.FundingCap : 0;
-        model.FundingCap = fc;
-        model.TotalFundingCap = fc * model.NumberOfApprentices;
+        formModel.FundingCap = fc;
+        formModel.TotalFundingCap = fc * formModel.NumberOfApprentices;
 
-        updateView(model);
+        updateView(formModel);
 
-        return model.FundingCap > 0 && model.TotalFundingCap > 0;
+        return formModel.FundingCap > 0 && formModel.TotalFundingCap > 0;
     }
 
     function GetAddApprenticeshipForm() {
@@ -114,7 +117,10 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             NumberOfApprentices: parseInt($('#no-of-app').val()),
             LevyValue: parseFloat($('#total-funding-cost').val()),
             StartDate: new Date($('#startDateYear').val(), $('#startDateMonth').val() - 1, 1),
-            NumberOfMonths: parseInt($('#apprenticeship-length').val() || 0)
+            NumberOfMonths: parseInt($('#apprenticeship-length').val() || 0),
+            FundingBands: $('#FundingPeriodsJson').val() ? JSON.parse($('#FundingPeriodsJson').val()) : '',
+            TotalFundingCost: $('#total-funding-cost').val(),
+            TotalFundingCap: $('#CalculatedTotalCap').val()
         }
     }
 

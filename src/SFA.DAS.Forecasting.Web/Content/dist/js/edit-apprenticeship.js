@@ -4,7 +4,6 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 (function () {
 
     var init = function () {
-        console.log("init");
         var fundingBands = JSON.parse($('#FundingPeriodsJson').val())
         sfa.AddApprenticeship.Result = {
             CourseId: $('#CourseId').val(),
