@@ -29,7 +29,6 @@
             <div class="column-two-thirds">
 <input id="FundingPeriodsJson" name="FundingPeriodsJson" type="hidden" value="@Model.FundingPeriodsJson">
                         @Html.HiddenFor(m => m.CalculatedTotalCap)
-                        @Html.HiddenFor(m => m.IsTransferFunded)
                 <div class="form-group @Html.AddErrorClass(m => m.IsTransferFunded)">
                     <fieldset>
                         <h2 class="heading-small">Will this apprenticeship be funded by your transfer allowance?</h2>
