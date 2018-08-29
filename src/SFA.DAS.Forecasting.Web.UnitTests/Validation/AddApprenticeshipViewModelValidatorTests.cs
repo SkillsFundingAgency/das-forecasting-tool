@@ -48,11 +48,28 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
         };
             _validator = new AddApprenticeshipViewModelValidator();
         }
-[Test]
+
+        [Test]
         public void ViewModel_Is_Valid()
         {
             var result = _validator.Validate(_validViewModel);
             result.IsValid.Should().BeTrue();
+        }
+
+        [TestCase("0")]
+        [TestCase("-10")]
+        public void Then_The_Total_Cost_Value_Is_Greater_Than_Zero(string totalCost)
+        {
+            //Arrange
+            _validViewModel.TotalCostAsString = totalCost;
+
+            //Act
+            var actual = _validator.Validate(_validViewModel);
+
+            //Assert
+            var actualError = actual.Errors.SingleOrDefault(m => m.PropertyName == nameof(_validViewModel.TotalCostAsString));
+            Assert.IsNotNull(actualError);
+            Assert.AreEqual("You must enter a number that is above zero", actualError.ErrorMessage);
         }
 
         [Test]
