@@ -78,6 +78,11 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
                 calculateTotalCostLocal();
             else
                 calculateTotalCost();
+        }).on('keypress', function (e) {
+            return e.metaKey ||
+                e.which <= 0 ||
+                e.which == 8 ||
+                /[0-9]/.test(String.fromCharCode(e.which));
         });
 
         $("#startDateMonth, #startDateYear").change(function () {
