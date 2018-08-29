@@ -16,7 +16,7 @@
 
                 <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
                 <p>
-                    Add the apprenticeship details so you can estimate the cost of the apprenticeships you've chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
+                    Add the apprenticeship details so you can estimate the cost of the apprenticeships you've chosen. We will show the government funding band maximum and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
                 </p>
             </div>
         </div>
@@ -115,7 +115,7 @@
 
                 <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
                     <label class="form-label-bold" for="total-funding-cost">Total cost</label>
-                    <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
+                    <span class="form-hint">You can change this number but if you go above the funding band maximum value - the difference will be co-invested</span>
                     @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
 
                     <div class="form-control-group">
