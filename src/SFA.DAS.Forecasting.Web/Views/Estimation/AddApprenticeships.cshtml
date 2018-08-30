@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Extensions
 @model SFA.DAS.Forecasting.Web.ViewModels.AddApprenticeshipViewModel
 
 @{
@@ -16,7 +16,7 @@
 
                 <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
                 <p>
-                    Add the apprenticeship details so you can estimate the cost of the apprenticeships you've chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
+                    Add the apprenticeship details so you can estimate the cost of the apprenticeships you've chosen. We will show the government funding band maximum and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
                 </p>
             </div>
         </div>
@@ -27,6 +27,8 @@
         @Html.AntiForgeryToken()
         <div class="grid-row">
             <div class="column-two-thirds">
+<input id="FundingPeriodsJson" name="FundingPeriodsJson" type="hidden" value="@Model.FundingPeriodsJson">
+                        @Html.HiddenFor(m => m.CalculatedTotalCap)
                 <div class="form-group @Html.AddErrorClass(m => m.IsTransferFunded)">
                     <fieldset>
                         <h2 class="heading-small">Will this apprenticeship be funded by your transfer allowance?</h2>
@@ -50,40 +52,40 @@
                 </div>
 
 
-                <div class="form-group no-of-apprentice @Html.AddErrorClass(m => m.NumberOfApprentices)">
-                    <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                    @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new { id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices) })
-                    @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "text", @Value = valueOrEmpty(Model.NumberOfApprentices) })
-                </div>
-
-
-                <div class="form-group no-of-months @Html.AddErrorClass(m => m.TotalInstallments)">
-                    <label class="form-label-bold" for="apprenticeship-length">Number of months</label>
-                    <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
-                    @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
-                    @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "text", @Value = valueOrEmpty(Model.TotalInstallments) })
-                </div>
-
-                <div class="form-group  @Html.AddErrorClass(m => m.StartDate) @Html.AddErrorClass(m => m.StartDateMonth) @Html.AddErrorClass(m => m.StartDateYear)" id="dateWrapper">
-
-                    <span class="form-label-bold">Start date</span>
-                    <span class="form-hint">For example, 09 2018</span>
-
-                    @Html.ValidationMessageFor(m => m.StartDate, null, new { id = "error-message-" + Html.IdFor(m => m.StartDate) })
-                    @Html.HiddenFor(m => m.StartDate)
-
-                    @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
-                    @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
-                    <div class="form-date">
-                        <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
-                            <label for="startDateMonth">Month</label>
-                            @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
+                        <div class="form-group no-of-apprentice @Html.AddErrorClass(m => m.NumberOfApprentices)">
+                            <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
+                            @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new { id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices) })
+                            @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices) })
                         </div>
-                        <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
-                            <label for="startDateYear">Year</label>
-                            @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
+
+
+                        <div class="form-group no-of-months @Html.AddErrorClass(m => m.TotalInstallments)">
+                            <label class="form-label-bold" for="apprenticeship-length">Number of months</label>
+                            <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
+                            @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
+                            @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments) })
                         </div>
-                    </div>
+
+                        <div class="form-group  @Html.AddErrorClass(m => m.StartDate) @Html.AddErrorClass(m => m.StartDateMonth) @Html.AddErrorClass(m => m.StartDateYear)" id="dateWrapper">
+
+                            <span class="form-label-bold">Start date</span>
+                            <span class="form-hint">For example, 09 2018</span>
+
+                            @Html.ValidationMessageFor(m => m.StartDate, null, new { id = "error-message-" + Html.IdFor(m => m.StartDate) })
+                            @Html.HiddenFor(m => m.StartDate)
+
+                            @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
+                            @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
+                            <div class="form-date">
+                                <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
+                                    <label for="startDateMonth">Month</label>
+                                    @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
+                                </div>
+                                <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
+                                    <label for="startDateYear">Year</label>
+                                    @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
+                                </div>
+                            </div>
 
 
                 </div>
@@ -113,7 +115,7 @@
 
                 <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
                     <label class="form-label-bold" for="total-funding-cost">Total cost</label>
-                    <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
+                    <span class="form-hint">You can change this number but if you go above the funding band maximum value - the difference will be co-invested</span>
                     @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
 
                     <div class="form-control-group">

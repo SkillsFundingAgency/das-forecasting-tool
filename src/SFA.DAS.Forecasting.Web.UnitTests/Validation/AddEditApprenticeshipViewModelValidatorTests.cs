@@ -10,13 +10,13 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
     [TestFixture]
     public class AddEditApprenticeshipViewModelValidatorTests
     {
-        private AddEditApprenticeshipsViewModel _validViewModel;
-        private AddEditApprenticeshipViewModelValidator<AddEditApprenticeshipsViewModel> _validator;
+        private EditApprenticeshipsViewModel _validViewModel;
+        private EditApprenticeshipsViewModelValidator _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validViewModel = new AddEditApprenticeshipsViewModel
+            _validViewModel = new EditApprenticeshipsViewModel
             {
                 NumberOfApprentices = 2,
                 TotalInstallments = 24,
@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
                 StartDateYear= DateTime.Today.Year,
                 TotalCostAsString = "12000"
             };
-            _validator = new AddEditApprenticeshipViewModelValidator<AddEditApprenticeshipsViewModel>();
+            _validator = new EditApprenticeshipsViewModelValidator();
         }
 
         [Test]
@@ -43,6 +43,22 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             error.ErrorMessage.Should().Be("Make sure you have at least 1 or more apprentices");
         }
 
+        [TestCase("0")]
+        [TestCase("-10")]
+        public void Then_The_Total_Cost_Value_Is_Greater_Than_Zero(string totalCost)
+        {
+            //Arrange
+            _validViewModel.TotalCostAsString = totalCost;
+
+            //Act
+            var actual = _validator.Validate(_validViewModel);
+
+            //Assert
+            var actualError = actual.Errors.SingleOrDefault(m => m.PropertyName == nameof(_validViewModel.TotalCostAsString));
+            Assert.IsNotNull(actualError);
+            Assert.AreEqual("You must enter a number that is above zero", actualError.ErrorMessage);
+        }
+
         [Test]
         public void ViewModel_must_have_total_intallments_of_at_least_12s()
         {
@@ -51,9 +67,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             var error = result.Errors.Single(m => 
                 m.PropertyName == nameof(_validViewModel.TotalInstallments)
                 && 
-                m.ErrorMessage == "The number of months must be 12 months or more"
+                m.ErrorMessage == "The number of months must be between 12 months and 60 months"
                 );
-            error.ErrorMessage.Should().Be("The number of months must be 12 months or more");
+            error.ErrorMessage.Should().Be("The number of months must be between 12 months and 60 months");
         }
 
         [Test]

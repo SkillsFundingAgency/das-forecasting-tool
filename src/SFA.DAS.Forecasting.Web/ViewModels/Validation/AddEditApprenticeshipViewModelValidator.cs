@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using FluentValidation;
 using SFA.DAS.Forecasting.Web.Extensions;
 
@@ -18,8 +17,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
             RuleFor(m => m.TotalInstallments)
                 .NotEmpty()
                 .WithMessage("The number of months was not entered")
-                .GreaterThan((short)11)
-                .WithMessage("The number of months must be 12 months or more");
+                .InclusiveBetween((short) 12, (short) 60)
+                .WithMessage("The number of months must be between 12 months and 60 months");
 
             RuleFor(m => m.StartDateYear)
                 .NotEmpty()
@@ -38,13 +37,10 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                 .LessThanOrEqualTo(DateTime.Now.AddYears(4))
                 .WithMessage("The start date must be within the next 4 years")
                 .When(m => m.StartDate != DateTime.MinValue);
-        }
 
-        protected bool CheckTotalCost(AddEditApprenticeshipsViewModel vm, string b)
-        {
-            var fundingBand = vm.GetFundingPeriod();
-
-            return (b.ToDecimal()) <= (fundingBand.FundingCap * vm.NumberOfApprentices);
+            RuleFor(m => m.TotalCostAsString)
+                .Must(s => s.ToDecimal() > 0)
+                .WithMessage("You must enter a number that is above zero");
         }
     }
 }

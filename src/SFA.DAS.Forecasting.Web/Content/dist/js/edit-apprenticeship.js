@@ -4,7 +4,6 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 (function () {
 
     var init = function () {
-        console.log("init");
         var fundingBands = JSON.parse($('#FundingPeriodsJson').val())
         sfa.AddApprenticeship.Result = {
             CourseId: $('#CourseId').val(),
@@ -15,6 +14,11 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         $("#no-of-app").change(function () {
             if (sfa.AddApprenticeship.Result)
                 calculateTotalCostLocal();
+        }).on('keypress', function (e) {
+            return e.metaKey ||
+                e.which <= 0 ||
+                e.which == 8 ||
+                /[0-9]/.test(String.fromCharCode(e.which));
         });
 
         $("#startDateMonth, #startDateYear").change(function () {

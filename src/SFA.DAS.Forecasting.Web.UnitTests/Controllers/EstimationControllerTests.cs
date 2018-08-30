@@ -113,41 +113,5 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 .Should().Be(shouldError ? 1 : 0);
         }
 
-        [TestCase("11000", true)]
-        [TestCase("10000", false)]
-        public async Task Apprenticeship_Must_Not_Have_higher_Total_Cost_than_FundingBand(string costAsString, bool shouldError)
-        {
-            var fundingBands = new List<FundingPeriod>
-            {
-                new FundingPeriod { EffectiveFrom = DateTime.Today.AddMonths(-24), EffectiveTo = DateTime.Today.AddMonths(-2), FundingCap = 1000 },
-                new FundingPeriod { EffectiveFrom = DateTime.Today.AddMonths(-1), EffectiveTo = DateTime.Today.AddMonths(24), FundingCap = 5000 },
-                new FundingPeriod { EffectiveFrom = DateTime.Today.AddMonths(25), EffectiveTo = DateTime.Today.AddMonths(12 * 4), FundingCap = 10000 }
-            };
-
-            var vm = new AddApprenticeshipViewModel
-            {
-                CourseId = "123",
-                Course = new ApprenticeshipCourse
-                {
-                    FundingPeriods = fundingBands
-                },
-                TotalCostAsString = costAsString,
-                NumberOfApprentices = 2,
-                StartDateMonth = DateTime.Today.Month,
-                StartDateYear = DateTime.Today.Year,
-            };
-
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
-                .Setup(x => x.UpdateAddApprenticeship(vm))
-                .Returns(Task.FromResult(vm));
-
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
-                .Setup(x => x.GetApprenticeshipAddSetup(false))
-                .Returns(new AddApprenticeshipViewModel { Courses = new List<ApprenticeshipCourse>() });
-
-            await _controller.Save(vm, "ABBA12", "default");
-            _controller.ViewData.ModelState.Count
-                .Should().Be(shouldError ? 1 : 0);
-        }
     }
 }

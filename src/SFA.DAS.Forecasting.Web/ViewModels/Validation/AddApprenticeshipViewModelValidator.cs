@@ -9,8 +9,10 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
         {
             var dict = new Dictionary<string, string>();
 
-            if (vm.TotalCostAsString.ToDecimal() < 1)
-                dict.Add($"{nameof(vm.TotalCostAsString)}", "The total training cost was not entered");
+            if (vm.TotalCostAsString.ToDecimal() <= 0)
+            {
+                dict.Add($"{nameof(vm.TotalCostAsString)}", "You must enter a number that is above zero");
+            } 
 
             if (vm.Course == null)
             {
@@ -18,9 +20,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
             }
             else
             {
-                if (!CheckTotalCost(vm, vm.TotalCostAsString))
-                    dict.Add($"{nameof(vm.TotalCostAsString)}", "The total cost can't be higher than the total government funding band maximum for this apprenticeship");
-
                 if (vm.IsTransferFunded == "on" && vm.Course.CourseType == Models.Estimation.ApprenticeshipCourseType.Framework)
                     dict.Add($"{nameof(vm.IsTransferFunded)}", "You can only fund Standards with your transfer allowance");
             }
