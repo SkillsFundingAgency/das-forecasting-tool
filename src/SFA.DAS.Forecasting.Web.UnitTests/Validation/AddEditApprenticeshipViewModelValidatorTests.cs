@@ -59,17 +59,29 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             Assert.AreEqual("You must enter a number that is above zero", actualError.ErrorMessage);
         }
 
-        [Test]
-        public void ViewModel_must_have_total_intallments_of_at_least_12s()
+        [TestCase(0)]
+        [TestCase(101)]
+        public void ViewModel_must_have_total_intallments_of_at_least_12s(short installments)
         {
-            _validViewModel.TotalInstallments = 0;
+            _validViewModel.TotalInstallments = installments;
             var result = _validator.Validate(_validViewModel);
             var error = result.Errors.Single(m => 
                 m.PropertyName == nameof(_validViewModel.TotalInstallments)
                 && 
-                m.ErrorMessage == "The number of months must be between 12 months and 60 months"
+                m.ErrorMessage == "The number of months must be between 12 months and 100 months"
                 );
-            error.ErrorMessage.Should().Be("The number of months must be between 12 months and 60 months");
+            error.ErrorMessage.Should().Be("The number of months must be between 12 months and 100 months");
+        }
+
+        [TestCase(12)]
+        [TestCase(100)]
+        public void Then_Installments_Between_Twelve_And_One_Hundred_Are_Allowed(short installments)
+        {
+            _validViewModel.TotalInstallments = installments;
+
+            var result = _validator.Validate(_validViewModel);
+
+            Assert.IsTrue(result.IsValid);
         }
 
         [Test]
