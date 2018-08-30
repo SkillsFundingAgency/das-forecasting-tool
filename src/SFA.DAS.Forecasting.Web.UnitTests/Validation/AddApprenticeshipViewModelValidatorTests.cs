@@ -81,29 +81,31 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             error.ErrorMessage.Should().Be("Make sure you have at least 1 or more apprentices");
         }
 
-        [TestCase(0)]
-        [TestCase(101)]
-        public void ViewModel_must_have_total_intallments_of_at_least_12s(short installments)
+        [TestCase(0, false)]
+        [TestCase(101, false)]
+        [TestCase(12, true)]
+        [TestCase(100, true)]
+        public void Then_Installments_Between_Twelve_And_One_Hundred_Are_Allowed(short installments, bool isValid)
         {
             _validViewModel.TotalInstallments = installments;
+
             var result = _validator.Validate(_validViewModel);
-            var error = result.Errors.Single(m => 
-                m.PropertyName == nameof(_validViewModel.TotalInstallments)
-                &&
-                m.ErrorMessage == "The number of months must be between 12 months and 100 months"
+
+            if (isValid)
+            {
+                Assert.IsTrue(result.IsValid);
+            }
+            else
+            {
+                Assert.IsFalse(result.IsValid);
+                var error = result.Errors.Single(m =>
+                    m.PropertyName == nameof(_validViewModel.TotalInstallments)
+                    &&
+                    m.ErrorMessage == "The number of months must be between 12 months and 100 months"
                 );
-            error.ErrorMessage.Should().Be("The number of months must be between 12 months and 100 months");
-        }
+                error.ErrorMessage.Should().Be("The number of months must be between 12 months and 100 months");
+            }
 
-        [TestCase(12)]
-        [TestCase(100)]
-        public void Then_Installments_Between_Twelve_And_One_Hundred_Are_Allowed(short installments)
-        {
-            _validViewModel.TotalInstallments = installments;
-
-            var result = _validator.Validate(_validViewModel);
-
-            Assert.IsTrue(result.IsValid);
         }
 
 
