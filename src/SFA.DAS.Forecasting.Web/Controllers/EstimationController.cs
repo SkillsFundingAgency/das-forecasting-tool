@@ -44,6 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public ActionResult StartTransferEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
+            ViewBag.FromTransfers = true;
             return View("StartEstimation");
         }
 
