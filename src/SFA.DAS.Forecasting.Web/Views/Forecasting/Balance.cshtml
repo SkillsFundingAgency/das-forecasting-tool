@@ -25,9 +25,6 @@
                     <p>
                         The projection doesn’t include any future apprenticeship starts or apprentices who’ve already started and payment has not yet been made to their training provider. These will be added to the funding projection soon.
                     </p>
-                    <p>
-                        In the next update of this tool, you’ll be able to estimate how many apprenticeships you could fund in the future - either by transferring any remaining funds to another employer or by taking on more apprentices yourself.
-                    </p>
                 </div>
             </details>
             
@@ -71,7 +68,7 @@
         @if (@Model.ProjectionDate.HasValue)
         {
             <div class="panel projection-date">
-                <p>Your projeciton was last updated on @Model.ProjectionDate.Value.ToGdsFormatFull()</p>
+                <p>Your projection was last updated on @Model.ProjectionDate.Value.ToGdsFormatFull()</p>
             </div>
         }
         else

@@ -1,4 +1,4 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Extensions
 @model SFA.DAS.Forecasting.Web.ViewModels.AddApprenticeshipViewModel
 
 @{
@@ -6,55 +6,51 @@
     ViewBag.Description = "Add Apprenticeships to your Estimation";
 }
 
-@using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
+<div id="estimate-add-apprenticeship">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="hgroup form-group">
+                <a href="@Url.ExternalUrlAction("transfers", string.Empty, false)" class="link-back">Back to Transfers</a>
 
-        <div id="estimate-add-apprenticeship">
-            <div class="grid-row">
-                <div class="column-two-thirds">
-                    <div class="hgroup form-group">
-                        <a href="@Url.ExternalUrlAction("transfers", string.Empty, false)" class="link-back">Back to Transfers</a>
+                @Html.Partial("_validationErrors")
 
-                        @Html.Partial("_validationErrors")
-
-                        <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
-                        <p>
-                            Add the apprenticeship details so you can estimate the cost of the apprenticeships you’ve chosen. We will show the government cap on funds and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
-                        </p>
-                    </div>
-                </div>
+                <h1 class="heading-xlarge">Add apprenticeships to estimate cost</h1>
+                <p>
+                    Add the apprenticeship details so you can estimate the cost of the apprenticeships you've chosen. We will show the government funding band maximum and typical duration of the apprenticeship. You can adjust the cost and monthly figures should you need to.
+                </p>
             </div>
+        </div>
+    </div>
 
-            <form method="post">
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        @Html.HiddenFor(m => m.IsTransferFunded)
 
-                        <div class="form-group hidden">
-                            <fieldset class="inline">
-                                <h2 class="heading-small">Are you transferring funds to another employer for this apprenticeship?</h2>
-                                <div class="multiple-choice">
-                                    <input id="radio-inline-1" type="radio" name="radio-inline-group" value="1">
-                                    <label for="radio-inline-1">Yes</label>
-                                </div>
-                                <div class="multiple-choice">
-                                    <input id="radio-inline-2" type="radio" name="radio-inline-group" value="0">
-                                    <label for="radio-inline-2">No</label>
-                                </div>
-                            </fieldset>
+    @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="grid-row">
+            <div class="column-two-thirds">
+<input id="FundingPeriodsJson" name="FundingPeriodsJson" type="hidden" value="@Model.FundingPeriodsJson">
+                        @Html.HiddenFor(m => m.CalculatedTotalCap)
+                <div class="form-group @Html.AddErrorClass(m => m.IsTransferFunded)">
+                    <fieldset>
+                        <h2 class="heading-small">Will this apprenticeship be funded by your transfer allowance?</h2>
+                        @Html.ValidationMessageFor(m => m.IsTransferFunded, null, new { id = "error-message-" + Html.IdFor(m => m.IsTransferFunded) })
+                        <div class="multiple-choice">
+                            <input id="IsTransferFunded" type="checkbox" name="IsTransferFunded" @isChecked(Model.IsTransferFunded)>
+                            <label for="IsTransferFunded">Use transfer allowance</label>
                         </div>
+                    </fieldset>
+                </div>
 
 
-                        <div class="form-group @Html.AddErrorClass(m => m.Course)">
-                            <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
-                            @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
-                            @Html.DropDownListFor(model =>
-                                 model.CourseId,
-                                 @Model.ApprenticeshipCourses,
-                                 "Select one",
-                                 new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
-                        </div>
+                <div class="form-group @Html.AddErrorClass(m => m.Course)">
+                    <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
+                    @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
+                    @Html.DropDownListFor(model =>
+                     model.CourseId,
+                     @Model.ApprenticeshipCourses,
+                     "Select one",
+                     new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
+                </div>
 
 
                         <div class="form-group no-of-apprentice @Html.AddErrorClass(m => m.NumberOfApprentices)">
@@ -96,73 +92,81 @@
                             </div>
 
 
-                        </div>
-
-
-                        <div class="form-group">
-                            <label class="form-label-bold">Government funding band maximum</label>
-
-                            @{
-                                decimal fundingCap = 0;
-                                if (Model.Course != null)
-                                {
-                                    fundingCap = Model.Course.FundingCap;
-                                }
-                            } 
-                            <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
-                                Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
-                                Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
-                            </span>
-
-                            <span id="details-about-funding" class="form-hint">
-                                Choose an apprenticeship and number of apprentices to see this figure <br>
-                                <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
-                            </span>
-                        </div>
-
-
-                        <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
-                            <label class="form-label-bold" for="total-funding-cost">Total cost</label>
-                            <span class="form-hint">You can change this number if the total cost is below the funding band maximum value - this is the highest amount you can transfer</span>
-
-                            @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
-                            <label for="total-funding-cost" class="form-label-bold">
-                                £
-                                @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
-                            </label>
-                            
-                        </div>
-                    </div>
                 </div>
 
 
-                <hr />
+                <div class="form-group">
+                    <label class="form-label-bold">Government funding band maximum</label>
 
-                <div class="grid-row">
+                    @{
+                        decimal fundingCap = 0;
+                        if (Model.Course != null)
+                        {
+                            fundingCap = Model.Course.FundingCap;
+                        }
+                    }
+                    <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
+                        Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                        Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
+                    </span>
 
-                    <div class="column-full">
-                        <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
-                        <a class="button text-link pull-right" href="cancel" style="float: right;">Cancel</a>
-
-                    </div>
+                    <span id="details-about-funding" class="form-hint">
+                        Choose an apprenticeship and number of apprentices to see this figure <br>
+                        <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
+                    </span>
                 </div>
-            </form>
-            <div class="grid-row hidden" id="existingApps">
-                <div class="column-full">
-                    <h3 class="heading-medium">
-                        Estimated transfer costs by apprenticeships
-                    </h3>
+
+
+                <div class="form-group @Html.AddErrorClass(m => m.TotalCostAsString)">
+                    <label class="form-label-bold" for="total-funding-cost">Total cost</label>
+                    <span class="form-hint">You can change this number but if you go above the funding band maximum value - the difference will be co-invested</span>
+                    @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
+
+                    <div class="form-control-group">
+                        <div class="form-control-group-prepend">
+                            <span>&pound;</span>
+                        </div>
+                        @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
+                    </div>
+
 
                 </div>
             </div>
+        </div>
+
+
+        <hr />
+
+        <div class="grid-row">
+
+            <div class="column-full">
+                <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
+                <a class="button text-link pull-right" href="cancel" style="float: right;">Cancel</a>
+
+            </div>
+        </div>
+    }
+    <div class="grid-row hidden" id="existingApps">
+        <div class="column-full">
+            <h3 class="heading-medium">
+                Estimated transfer costs by apprenticeships
+            </h3>
 
         </div>
-}
+
+    </div>
+
+</div>
 
 @functions {
     public string valueOrEmpty(int value)
     {
         return value > 0 ? value.ToString() : "";
+    }
+
+    public string isChecked(string value)
+    {
+        return value == "on" ? "checked" : "";
     }
 }
 
