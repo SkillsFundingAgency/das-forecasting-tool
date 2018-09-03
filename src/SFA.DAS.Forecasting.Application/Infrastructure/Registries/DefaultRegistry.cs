@@ -80,8 +80,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         private void SetUpCommitmentsApi()
         {
+            var apiConfig = ConfigurationHelper.GetCommitmentsApiConfiguration();
+            var bearerToken = (IGenerateBearerToken)new JwtBearerTokenGenerator(apiConfig);
+
             var httpClient = new HttpClientBuilder()
                 .WithDefaultHeaders()
+                .WithBearerAuthorisationHeader(bearerToken)
                 .Build();
 
             For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>()
