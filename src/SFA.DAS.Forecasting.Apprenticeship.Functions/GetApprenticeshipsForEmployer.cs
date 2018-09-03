@@ -5,19 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship;
+using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Apprenticeship.Functions.Application;
 using SFA.DAS.Forecasting.Functions.Framework;
 
-using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
-
 namespace SFA.DAS.Forecasting.Apprenticeship.Functions
 {
     public class GetApprenticeshipsForEmployer : IFunction
     {
-        private static IApprenticeshipCourseDataService _apprenticeshipCourseDataService;
-
         [FunctionName("GetApprenticeshipsForEmployer")]
         public static async Task Run(
             [QueueTrigger(QueueNames.GetApprenticeshipsForEmployer)]GetApprenticesihpMessage message,
@@ -33,22 +31,59 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                    var apprenticeshipValidation = new ApprenticeshipValidation();
                    var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
-                   IEnumerable<ApiApprenticeship> apiApprenticeships = 
-                      await employerCommitmentsApi.GetEmployerApprenticeships(message.EmployerId)
-                      ?? new List<ApiApprenticeship>();
+                   var apiApprenticeships = 
+                      await employerCommitmentsApi.GetEmployerApprenticeships(
+                          message.EmployerId, new ApprenticeshipSearchQuery
+                          {
+                              ApprenticeshipStatuses = new List<ApprenticeshipStatus>
+                              {
+                                  ApprenticeshipStatus.WaitingToStart,
+                                  ApprenticeshipStatus.Live
+                              }
+                          })
+                      ?? new ApprenticeshipSearchResponse();
+
+                   var pageNumber = 2;
+
+                   var apprenticeships = apiApprenticeships.Apprenticeships.ToList();
+
+                   if (apiApprenticeships.TotalPages > 1)
+                   {
+                       while (pageNumber != apiApprenticeships.TotalPages)
+                       {
+
+                           var pageOfApprenticeshipSearchResponse =
+                               await employerCommitmentsApi.GetEmployerApprenticeships(
+                                   message.EmployerId, new ApprenticeshipSearchQuery
+                                   {
+                                       ApprenticeshipStatuses = new List<ApprenticeshipStatus>
+                                       {
+                                           ApprenticeshipStatus.WaitingToStart,
+                                           ApprenticeshipStatus.Live
+                                       },
+                                       PageNumber = pageNumber
+                                   });
+
+                           apprenticeships.AddRange(pageOfApprenticeshipSearchResponse.Apprenticeships);
+
+                           pageNumber++;
+                       }
+                       
+                   }
+
                    IEnumerable<long> failedValidation;
 
-                   (apiApprenticeships, failedValidation) = apprenticeshipValidation.BusinessValidation(apiApprenticeships);
+                   (apprenticeships, failedValidation) = apprenticeshipValidation.BusinessValidation(apprenticeships);
                    logger.Info($"{failedValidation.Count()} apprenticeships failed business validation");
 
-                   (apiApprenticeships, failedValidation)  = apprenticeshipValidation.InputValidation(apiApprenticeships);
+                   (apprenticeships, failedValidation)  = apprenticeshipValidation.InputValidation(apprenticeships);
                    logger.Info($"{failedValidation.Count()} apprenticeships failed input validation");
 
-                   var apprenticeships = apiApprenticeships.Select(mapper.Map);
+                   var mappeApprenticeships = apprenticeships.Select(mapper.Map).ToList();
 
-                   logger.Info($"Sending {apprenticeships.Count()} apprenticeships for storing. EmployerId: {message.EmployerId} ");
+                   logger.Info($"Sending {mappeApprenticeships.Count()} apprenticeships for storing. EmployerId: {message.EmployerId} ");
 
-                   foreach (var apprenticeship in apprenticeships)
+                   foreach (var apprenticeship in mappeApprenticeships)
                    {
                        outputQueueMessage.Add(await apprenticeship);
                    }
