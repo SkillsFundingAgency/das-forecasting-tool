@@ -14,12 +14,9 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         $("#no-of-app").change(function () {
             if (sfa.AddApprenticeship.Result)
                 calculateTotalCostLocal();
-        }).on('keypress', function (e) {
-            return e.metaKey ||
-                e.which <= 0 ||
-                e.which == 8 ||
-                /[0-9]/.test(String.fromCharCode(e.which));
-        });
+        }).on('keypress', AddEditApprentiecships.onlyAllowNumbers);
+
+        $('#apprenticeship-length').on('keypress', AddEditApprentiecships.onlyAllowNumbers);
 
         $("#startDateMonth, #startDateYear").change(function () {
             if (sfa.AddApprenticeship.Result)
