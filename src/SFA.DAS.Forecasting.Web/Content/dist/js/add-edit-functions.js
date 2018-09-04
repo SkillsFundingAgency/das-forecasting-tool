@@ -56,6 +56,13 @@ var AddEditApprentiecships = {
         partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         parts[0] = partToProcess;
         return parts.join('.');
+    }, 
+
+    onlyAllowNumbers: function (event) {
+        return event.metaKey ||
+            event.which <= 0 ||
+            event.which == 8 ||
+            /[0-9]/.test(String.fromCharCode(event.which));
     }
     
 };
