@@ -2,7 +2,7 @@
 {
     internal class QueueNames
     {
-        public const string GetApprenticeshipsForEmployer = "get-apprenticeship-for-employer";
-        public const string StoreApprenticeships = "store-apprenticeship-for-employer";
+        public const string GetApprenticeshipsForEmployer = "forecasting-get-apprenticeship-for-employer";
+        public const string StoreApprenticeships = "forecasting-store-apprenticeship-for-employer";
     }
 }
