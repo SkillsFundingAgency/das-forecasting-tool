@@ -1,34 +1,53 @@
-﻿@model SFA.DAS.Forecasting.Web.ViewModels.StartViweModel
+﻿@using SFA.DAS.Forecasting.Web.Extensions
+@model SFA.DAS.Forecasting.Web.ViewModels.StartViweModel
 
 @{
     ViewBag.Title = "Start Estimation";
 }
 
-<main id="content" role="main">
-    <div id="estimate-start-transfer">
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <h1 class="heading-xlarge">
-                    Estimate apprenticeships you could fund
-                </h1>
-                <p>Use this tool to see how many apprenticeships you can fund from your own account or how much of your unused funds you could transfer to another employer.</p>
-            </div>
-        </div>
+<div class="breadcrumbs">
+    <ol role="navigation">
+        <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
+        <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li>
+        <li>
+            @if (ViewBag.FromTransfers == true)
+            {
+                <a href="@Url.ExternalUrlAction("transfers")">Transfers</a>
+            }
+            else
+            {
+                <a href="@Url.Action("Balance","Forecasting")">Funding projection</a>
+            }
+        </li>
+        <li>Estimate apprenticeships you could fund</li>
+    </ol>
+</div>
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId })'>Start</a>
-            </div>
+<main id="content" role="main">
+<div id="estimate-start-transfer">
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <h1 class="heading-xlarge">
+                Estimate apprenticeships you could fund
+            </h1>
+            <p>Use this tool to see how many apprenticeships you can fund from your own account or how much of your unused funds you could transfer to another employer.</p>
         </div>
-        <div class="grid-row disclaimer">
-            <div class="column-two-thirds">
-                <div class="panel panel-border-wide">
-                    <h2 class="heading-medium">Disclaimer</h2>
-                    <p>This tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account and the funding band maximum for the estimated apprenticeships you have added, using this estimator.</p>
-                    <p>The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employers, or the cost and duration of their training.</p>
-                    <p>You should therefore not rely solely on the information provided by this tool when making decisions about funding apprenticeships.</p>
-                   </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId })'>Start</a>
+        </div>
+    </div>
+    <div class="grid-row disclaimer">
+        <div class="column-two-thirds">
+            <div class="panel panel-border-wide">
+                <h2 class="heading-medium">Disclaimer</h2>
+                <p>This tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account and the funding band maximum for the estimated apprenticeships you have added, using this estimator.</p>
+                <p>The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employers, or the cost and duration of their training.</p>
+                <p>You should therefore not rely solely on the information provided by this tool when making decisions about funding apprenticeships.</p>
             </div>
         </div>
     </div>
+</div>
 </main>
