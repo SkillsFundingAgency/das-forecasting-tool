@@ -79,11 +79,11 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                    (apprenticeships, failedValidation)  = apprenticeshipValidation.InputValidation(apprenticeships);
                    logger.Info($"{failedValidation.Count()} apprenticeships failed input validation");
 
-                   var mappeApprenticeships = apprenticeships.Select(mapper.Map).ToList();
+                   var mappedApprenticeships = apprenticeships.Select(mapper.Map).ToList();
 
-                   logger.Info($"Sending {mappeApprenticeships.Count()} apprenticeships for storing. EmployerId: {message.EmployerId} ");
+                   logger.Info($"Sending {mappedApprenticeships.Count()} apprenticeships for storing. EmployerId: {message.EmployerId} ");
 
-                   foreach (var apprenticeship in mappeApprenticeships)
+                   foreach (var apprenticeship in mappedApprenticeships)
                    {
                        outputQueueMessage.Add(await apprenticeship);
                    }
