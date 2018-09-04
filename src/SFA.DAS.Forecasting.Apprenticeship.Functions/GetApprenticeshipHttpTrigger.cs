@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Commitments.Api.Client;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Apprenticeship.Functions

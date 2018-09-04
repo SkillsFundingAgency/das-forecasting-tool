@@ -3,7 +3,7 @@ using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Threading.Tasks;
-
+using SFA.DAS.Forecasting.Models.Estimation;
 using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
 
 namespace SFA.DAS.Forecasting.Apprenticeship.Functions.Application
@@ -19,21 +19,26 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions.Application
 
         internal async Task<ApprenticeshipMessage> Map(ApiApprenticeship apprenticeship)
         {
-            int NumberOfInstallments(DateTime start, DateTime end)
+            if (apprenticeship == null)
             {
-                var count = 0;
-                while (start < end) { count++; start = start.AddMonths(1); }
-                return count;
+                return new ApprenticeshipMessage();
             }
-            var duration = NumberOfInstallments(apprenticeship.StartDate.Value, apprenticeship.EndDate.Value);
-            Models.Estimation.ApprenticeshipCourse training = null;
-            training = await _apprenticeshipCourseDataService?.GetApprenticeshipCourse(apprenticeship.TrainingCode);
+
+            var duration = 0;
+
+            if (apprenticeship.EndDate.HasValue && apprenticeship.StartDate.HasValue)
+            {
+                duration = (apprenticeship.EndDate.Value.Year - apprenticeship.StartDate.Value.Year) * 12 +
+                           apprenticeship.EndDate.Value.Month - apprenticeship.EndDate.Value.Month;
+            }
+
+            var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.TrainingCode);
 
             return new ApprenticeshipMessage
             {
                 EmployerAccountId = apprenticeship.EmployerAccountId,
                 SendingEmployerAccountId = apprenticeship.TransferSenderId,
-                LearnerId = long.TryParse(apprenticeship.ULN, out long result) ? result : 0,
+                LearnerId = long.TryParse(apprenticeship.ULN, out var result) ? result : 0,
                 ProviderId = apprenticeship.ProviderId,
                 ProviderName = apprenticeship.ProviderName,
                 ApprenticeshipId = apprenticeship.Id,
