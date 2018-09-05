@@ -165,7 +165,7 @@ h2{
 }
 .panel-border-wide {
     border-color: $purple;
-    background: $grey-3;
+    background: $grey-4;
 }
 
 
@@ -222,6 +222,18 @@ only screen and (max-width: 480px) {
     }
   }
 }
+
+/*Error messages styles */
+#estimate-add-apprenticeship {
+    .form-group-error {
+        .select2-container--default .select2-selection--single {
+            border: 4px solid #b10e1e;
+        }
+    }
+}
+
+
+
 
 
 
@@ -357,7 +369,11 @@ tr.error-row {
         }
     }
 }
-
+#BalanceSheet-Tables {
+    a:focus {
+        background-color: transparent;
+    }
+}
 .tippy-popper {
     .tippy-content{
         text-align:center;

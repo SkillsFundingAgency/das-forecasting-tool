@@ -22,6 +22,7 @@
         </div>
     </div>
 
+
     @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
@@ -62,6 +63,7 @@
                         <div class="form-group no-of-months @Html.AddErrorClass(m => m.TotalInstallments)">
                             <label class="form-label-bold" for="apprenticeship-length">Number of months</label>
                             <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
+
                             @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
                             @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments) })
                         </div>
@@ -76,9 +78,11 @@
 
                             @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
                             @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
+
                             <div class="form-date">
                                 <div class="form-group form-group-month @Html.AddErrorClass(m => m.StartDateMonth)">
                                     <label for="startDateMonth">Month</label>
+
                                     @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
                                 </div>
                                 <div class="form-group form-group-year @Html.AddErrorClass(m => m.StartDateYear)">
@@ -149,6 +153,7 @@
             </h3>
 
         </div>
+
     </div>
 
 </div>

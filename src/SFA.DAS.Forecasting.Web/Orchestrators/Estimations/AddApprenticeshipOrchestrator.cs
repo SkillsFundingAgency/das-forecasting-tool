@@ -66,11 +66,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public async Task<AddApprenticeshipViewModel> UpdateAddApprenticeship(AddApprenticeshipViewModel viewModel)
         {
+
             var course =
                 viewModel.CourseId != null
                 ? await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId)
                 : null;
-
+                
             var totalCostAsString = (decimal.TryParse(viewModel.TotalCostAsString, out decimal result))
                 ? result.FormatValue()
                 : viewModel.TotalCostAsString = string.Empty;

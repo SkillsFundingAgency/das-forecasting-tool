@@ -267,8 +267,8 @@
                                 <br />
                                 <span class="tip-info"><span class="info-title">info</span></span>
                             </th>
-                            <th></th>
-                            <th></th>
+                            <th class="hidden">Edit apprentice</th>
+                            <th class="hidden">Remove apprentice</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -295,24 +295,25 @@
                     </tbody>
 
 
-                    <tfoot class="total">
+                    <tfoot class="total">                      
                         <tr class="total">
-                            <td data-label="Totals">&nbsp;</td>
+                            <th scope="row" class="hidden">Totals</th> 
                             <td data-label="Number of apprentices">
                                 <span class="bold-xsmall"> @Model.Apprenticeships.TotalApprenticeshipCount </span>
                             </td>
-                            <td>&nbsp;</td>
+                            <td class="hidden">Not applicable</td>
                             <td data-label="Total Cost">@Model.Apprenticeships.TotalCost.FormatCost()</td>
-                            <td>&nbsp;</td>
+                            <td class="hidden">Not applicable</td>
                             <td data-label="Monthly payment">
                                 <span class="bold-xsmall">@Model.Apprenticeships.TotalMonthlyPayment.FormatCost()</span>
                             </td>
                             <td data-label="Completion payment">
                                 <span class="bold-xsmall">@Model.Apprenticeships.TotalCompletionPayment.FormatCost() </span>
                             </td>
-                            <td></td>
+                            <td class="hidden">Not applicable</td>
+                            <td class="hidden">Not applicable</td>
                         </tr>
-                    </tfoot>
+                    </tfoot> 
                 </table>
             </div>
         </div>
