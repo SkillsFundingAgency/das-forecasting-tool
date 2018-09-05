@@ -4346,7 +4346,7 @@ h2 .float-right {
 
 .panel-border-wide {
   border-color: #2e358b;
-  background: #dee0e2;
+  background: #f8f8f8;
 }
 
 /*Estimator start page*/
@@ -4377,6 +4377,11 @@ h2 .float-right {
 #estimate-edit-apprenticeship .levy-value .total-funding-cost,
 #estimate-add-apprenticeship .levy-value .total-funding-cost {
   width: 200px;
+}
+
+/*Error messages styles */
+#estimate-add-apprenticeship .form-group-error .select2-container--default .select2-selection--single {
+  border: 4px solid #b10e1e;
 }
 
 .funding-projection .info-summary {
@@ -4455,7 +4460,7 @@ table.small th, table.small td, table.small .form-hint {
   font-size: 16px;
 }
 
-.errorTable tr.error-row {
+tr.error-row {
   box-shadow: -5px 0px 0px 0px #f7e7e9, -10px 0px 0px 0px #b10e1e;
   background: #f7e7e9;
 }
@@ -4502,6 +4507,10 @@ table.small th, table.small td, table.small .form-hint {
   display: inline-block;
   color: #005ea5;
   text-decoration: underline;
+}
+
+#BalanceSheet-Tables a:focus {
+  background-color: transparent;
 }
 
 .tippy-popper .tippy-content {

@@ -65,7 +65,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             FundingSource = o.FundingSource
                         }).ToList(),
                 },
-                TransferAllowances = estimationProjector?.Projections?
+                TransferAllowances = estimationProjector?.Projections?.Skip(1)
                     .Select(o => new EstimationTransferAllowanceVewModel
                     {
                         Date = new DateTime(o.Year, o.Month, 1),
@@ -76,9 +76,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 AccountFunds =
                     new AccountFundsViewModel
                     {
-                        OpeningBalance = GetOpeningBalance(estimationProjector.Projections),
                         MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
-                        Records = GetAccountFunds(estimationProjector?.Projections)
+                        Records = GetAccountFunds(estimationProjector.Projections?.Skip(1))
                     }
             };
             return viewModel;
@@ -101,26 +100,18 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
-        private IReadOnlyList<AccountFundsItem> GetAccountFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimations)
+        private IReadOnlyList<AccountFundsItem> GetAccountFunds(IEnumerable<AccountEstimationProjectionModel> estimations)
         {
             var accountFunds = estimations.Select(estimation => new AccountFundsItem
             {
                 Date = new DateTime(estimation.Year, estimation.Month, 1),
                 ActualCost = estimation.ActualCosts.FundsOut,
                 EstimatedCost = estimation.AllModelledCosts.FundsOut,
-                Balance = estimation.EstimatedProjectionBalance
+                Balance = estimation.EstimatedProjectionBalance,
+                FormattedBalance = estimation.EstimatedProjectionBalance > 0 ? estimation.EstimatedProjectionBalance.FormatCost() : "-"
             });
 
             return accountFunds.ToList();
-        }
-
-        private decimal GetOpeningBalance(ReadOnlyCollection<AccountEstimationProjectionModel> projections)
-        {
-            var first = projections.FirstOrDefault();
-            if (first == null)
-                return 0;
-
-            return first.EstimatedProjectionBalance;
         }
 
         public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)

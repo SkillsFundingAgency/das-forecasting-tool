@@ -4,7 +4,6 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 (function () {
 
     var init = function () {
-        console.log("init");
         var fundingBands = JSON.parse($('#FundingPeriodsJson').val())
         sfa.AddApprenticeship.Result = {
             CourseId: $('#CourseId').val(),
@@ -15,7 +14,9 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         $("#no-of-app").change(function () {
             if (sfa.AddApprenticeship.Result)
                 calculateTotalCostLocal();
-        });
+        }).on('keypress', AddEditApprentiecships.onlyAllowNumbers);
+
+        $('#apprenticeship-length').on('keypress', AddEditApprentiecships.onlyAllowNumbers);
 
         $("#startDateMonth, #startDateYear").change(function () {
             if (sfa.AddApprenticeship.Result)

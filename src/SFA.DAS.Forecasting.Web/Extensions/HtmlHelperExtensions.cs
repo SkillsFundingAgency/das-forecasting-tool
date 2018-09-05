@@ -20,6 +20,6 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             }
 
             return new MvcHtmlString("error");
-        }
+        }   
     }
 }

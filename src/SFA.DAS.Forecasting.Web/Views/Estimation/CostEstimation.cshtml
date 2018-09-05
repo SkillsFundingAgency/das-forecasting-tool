@@ -1,4 +1,5 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+﻿@using SFA.DAS.Forecasting.Models.Payments
+@using SFA.DAS.Forecasting.Web.Extensions
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
 @{
@@ -7,27 +8,6 @@
 
 <div class="grid-row">
     <div class="column-two-thirds">
-
-        @if (Model.Apprenticeships?.VirtualApprenticeships?.Count() > 0)
-        {
-            if (Model.CanFund)
-            {
-                <div class="success-summary">
-                    <h3 class="heading-medium">Yes, you can fund these apprenticeships</h3>
-                    <p>For more detail look at the remaining transfer allowance table.</p>
-                </div>
-            }
-            else
-            {
-                <div class="error-summary" id="errorOne">
-                    <h3 class="heading-medium">You can’t fund these apprenticeships</h3>
-                    <p>You don't have enough transfer allowance.</p>
-                    <p class="hidden">You don't have enough transfer allowance from December 2018 to support this transfer.</p>
-                </div>
-            }
-        }
-
-
         @if (Model.ApprenticeshipRemoved)
         {
             <div class="success-summary">
@@ -42,20 +22,30 @@
     <div class="column-two-thirds">
         <div class="hgroup form-group">
             <h1 class="heading-xlarge">Estimated costs</h1>
-            <p class="lede">This page shows:</p>
-            <ul class="list list-bullet">
 
-                <li>apprenticeships you've added</li>
-                @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
-                {
-                    <li>your account funds</li>
-                }
-                @if (Model.AnyTransferApprenticeships)
-                {
-                    <li>your remaining transfer allowance</li>
-                }
+            @if (Model.Apprenticeships.TotalApprenticeshipCount > 0)
+            {
+                <p class="lede">This page shows:</p>
+                <ul class="list list-bullet">
 
-            </ul>
+                    <li>apprenticeships you've added</li>
+                    @if (Model.AnyLevyApprenticeships || Model.AnyTransferApprenticeships)
+                    {
+                        <li>your account funds</li>
+                    }
+                    @if (Model.AnyTransferApprenticeships)
+                    {
+                        <li>your remaining transfer allowance</li>
+                    }
+
+                </ul>
+            }
+            else
+            {
+                <div class="panel panel-width-thin">
+                    <p>You have not selected any apprenticeships for your estimation. You need to select at least one apprenticeship to make an estimation.</p>
+                </div>
+            }
 
             <p>
                 @{
@@ -99,7 +89,6 @@
                 <div class="grid-row">
                     <div class="column-full">
                         <h2 class="heading-medium">This table shows your estimated costs against your account projection</h2>
-                        <p><b>Opening balance: </b>@Model.AccountFunds.OpeningBalance.FormatCost()</p>
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
                 </div>
@@ -114,6 +103,9 @@
 
                             @foreach (var accountFund in Model.AccountFunds.Records)
                             {
+                                var tableRowClass = accountFund.Balance <=0 ? "error-row" : "";
+                                var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
+
                                 if (newFinancialYearAccountFunds)
                                 {
                                     newFinancialYearAccountFunds = false;
@@ -130,7 +122,7 @@
                                         </div>
                                     }
                                     <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-                                    @:<table class="small">
+                                    @:<table class="small errorTable">
                                     <thead>
                                     <tr>
                                         <th class="nowrap">Date</th>
@@ -155,11 +147,11 @@
 
                                 }
 
-                                <tr>
+                                <tr class="@tableRowClass">
                                     <td class="nowrap">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
                                     <td class="financial">@accountFund.ActualCost.FormatCost()</td>
                                     <td class="financial">@accountFund.EstimatedCost.FormatCost()</td>
-                                    <td class="financial">@accountFund.Balance.FormatCost()</td>
+                                    <td class="financial @tableCellClass">@accountFund.FormattedBalance</td>
                                 </tr>
 
                                 if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
@@ -202,7 +194,7 @@
                                     <tr>
                                         <th class="nowrap">Date</th>
                                         <th class="financial tippy" data-tippy-trigger="click" title="Cost of transfer funded apprenticeships that have already started and are currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
-                                            Your current costs
+                                            Your current transfer costs
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
@@ -212,7 +204,7 @@
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
                                         <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
-                                            Balance
+                                            Remaining transfer allowance
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
@@ -270,13 +262,13 @@
                             <th>Number of monthly payments</th>
                             <th>Monthly payment</th>
                             <th>Completion payment</th>
-                            <th class="financial tippy" data-tippy-trigger="click" title="Indicates if the apprenticeship is to be used for an estimate against your transfer allowance">
+                            <th class="financial tippy" data-tippy-trigger="click" title="Shows if the estimated cost of apprenticeships is to be paid for using funds from your transfer allowance">
                                 Transfer estimate
                                 <br />
                                 <span class="tip-info"><span class="info-title">info</span></span>
                             </th>
-                            <th></th>
-                            <th></th>
+                            <th class="hidden">Edit apprentice</th>
+                            <th class="hidden">Remove apprentice</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -303,39 +295,27 @@
                     </tbody>
 
 
-                    <tfoot class="total">
+                    <tfoot class="total">                      
                         <tr class="total">
-                            <td data-label="Totals">&nbsp;</td>
+                            <th scope="row" class="hidden">Totals</th> 
                             <td data-label="Number of apprentices">
                                 <span class="bold-xsmall"> @Model.Apprenticeships.TotalApprenticeshipCount </span>
                             </td>
-                            <td>&nbsp;</td>
+                            <td class="hidden">Not applicable</td>
                             <td data-label="Total Cost">@Model.Apprenticeships.TotalCost.FormatCost()</td>
-                            <td>&nbsp;</td>
+                            <td class="hidden">Not applicable</td>
                             <td data-label="Monthly payment">
                                 <span class="bold-xsmall">@Model.Apprenticeships.TotalMonthlyPayment.FormatCost()</span>
                             </td>
                             <td data-label="Completion payment">
                                 <span class="bold-xsmall">@Model.Apprenticeships.TotalCompletionPayment.FormatCost() </span>
                             </td>
-                            <td></td>
+                            <td class="hidden">Not applicable</td>
+                            <td class="hidden">Not applicable</td>
                         </tr>
-                    </tfoot>
+                    </tfoot> 
                 </table>
             </div>
         </div>
     </div>
-
 }
-else
-{
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <div class="panel panel-width-thin">
-                <p>You have not selected any apprenticeships for your estimation. You need to select at least one apprenticeship to make an estimation.</p>
-            </div>
-        </div>
-    </div>
-}
-
-
