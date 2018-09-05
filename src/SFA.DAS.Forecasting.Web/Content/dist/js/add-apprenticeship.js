@@ -46,8 +46,6 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
                 })
                 : sfa.AddApprenticeship.Courses;
 
-            console.log(list.length)
-
             list.forEach(function (o) {
                 var isSelected = o.value === selectedOption.value;
                 select.appendChild(new Option(o.text, o.value, isSelected, isSelected))
@@ -83,12 +81,20 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
                 /[0-9]/.test(String.fromCharCode(e.which));
         });
 
-        $("#startDateMonth, #startDateYear").change(function () {
+        $("#startDateMonth").change(function () {
             if (sfa.AddApprenticeship.Result)
                 calculateTotalCostLocal();
             else
                 calculateTotalCost();
         });
+
+        $("#startDateYear").on('change keyup', function () {
+            if (sfa.AddApprenticeship.Result)
+                calculateTotalCostLocal();
+            else
+                calculateTotalCost();
+        });
+
 
         $("#total-funding-cost").keyup(function () {
             var num = $('#total-funding-cost').val();
