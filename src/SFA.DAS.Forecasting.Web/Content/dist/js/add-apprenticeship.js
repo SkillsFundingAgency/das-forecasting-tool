@@ -15,18 +15,13 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             var select = document.getElementById("choose-apprenticeship");
             sfa.AddApprenticeship.Courses = []
 
-            for (var i in select.options) {
-                var o = select.options[i];
+            for (var i = 0; i < select.options.length; i++) {
                 sfa.AddApprenticeship.Courses.push(
-                    {
-                        text: o.text,
-                        value: o.value
-                    });
+                {
+                        text: select[i].text,
+                        value: select[i].value
+                });
             }
-
-            sfa.AddApprenticeship.Courses =
-                sfa.AddApprenticeship.Courses
-                    .filter(o => o.text != undefined);
         }
 
         // open dropdownon on focus
@@ -44,13 +39,16 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             newSelectedIndex = useTransferAllowance && isFramework ? 0 : select.options.selectedIndex;
             selectedOption = select.options[newSelectedIndex];
             select.innerText = ""
-            
+
             var list = useTransferAllowance
-                    ? sfa.AddApprenticeship.Courses.filter(o => o.value.indexOf('-') == -1)
-                    : sfa.AddApprenticeship.Courses;
-                
-            list.forEach(o =>
-            {
+                ? sfa.AddApprenticeship.Courses.filter(function (o) {
+                    return o.value.indexOf('-') == -1
+                })
+                : sfa.AddApprenticeship.Courses;
+
+            console.log(list.length)
+
+            list.forEach(function (o) {
                 var isSelected = o.value === selectedOption.value;
                 select.appendChild(new Option(o.text, o.value, isSelected, isSelected))
             });
