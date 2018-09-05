@@ -18,12 +18,12 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
     {
         [FunctionName("GetApprenticeshipsForEmployer")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.GetApprenticeshipsForEmployer)]GetApprenticesihpMessage message,
+            [QueueTrigger(QueueNames.RefreshApprenticeshipsForEmployer)]RefreshApprenticeshipForAccountMessage message,
             [Queue(QueueNames.StoreApprenticeships)] ICollector<ApprenticeshipMessage> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<GetApprenticeshipHttpTrigger>(writer, executionContext,
+            await FunctionRunner.Run<GetApprenticeshipsForEmployer>(writer, executionContext,
                async (container, logger) =>
                {
                    logger.Debug($"Getting apprenticeships for employer {message.EmployerId}...");
@@ -31,45 +31,7 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                    var apprenticeshipValidation = new ApprenticeshipValidation();
                    var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
-                   var apiApprenticeships = 
-                      await employerCommitmentsApi.GetEmployerApprenticeships(
-                          message.EmployerId, new ApprenticeshipSearchQuery
-                          {
-                              ApprenticeshipStatuses = new List<ApprenticeshipStatus>
-                              {
-                                  ApprenticeshipStatus.WaitingToStart,
-                                  ApprenticeshipStatus.Live
-                              }
-                          })
-                      ?? new ApprenticeshipSearchResponse();
-
-                   var pageNumber = 2;
-
-                   var apprenticeships = apiApprenticeships.Apprenticeships.ToList();
-
-                   if (apiApprenticeships.TotalPages > 1)
-                   {
-                       while (pageNumber != apiApprenticeships.TotalPages)
-                       {
-
-                           var pageOfApprenticeshipSearchResponse =
-                               await employerCommitmentsApi.GetEmployerApprenticeships(
-                                   message.EmployerId, new ApprenticeshipSearchQuery
-                                   {
-                                       ApprenticeshipStatuses = new List<ApprenticeshipStatus>
-                                       {
-                                           ApprenticeshipStatus.WaitingToStart,
-                                           ApprenticeshipStatus.Live
-                                       },
-                                       PageNumber = pageNumber
-                                   });
-
-                           apprenticeships.AddRange(pageOfApprenticeshipSearchResponse.Apprenticeships);
-
-                           pageNumber++;
-                       }
-                       
-                   }
+                   var apprenticeships = await GetApprenticeshipsForAccount(message.EmployerId, employerCommitmentsApi);
 
                    IEnumerable<long> failedValidation;
 
@@ -81,13 +43,56 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
 
                    var mappedApprenticeships = apprenticeships.Select(mapper.Map).ToList();
 
-                   logger.Info($"Sending {mappedApprenticeships.Count()} apprenticeships for storing. EmployerId: {message.EmployerId} ");
+                   logger.Info($"Sending {mappedApprenticeships.Count} apprenticeships for storing. EmployerId: {message.EmployerId} ");
 
                    foreach (var apprenticeship in mappedApprenticeships)
                    {
                        outputQueueMessage.Add(await apprenticeship);
                    }
                });
+        }
+
+        private static async Task<List<Commitments.Api.Types.Apprenticeship.Apprenticeship>> GetApprenticeshipsForAccount(long employerAccountId, IEmployerCommitmentApi employerCommitmentsApi)
+        {
+            var apiApprenticeships =
+                await employerCommitmentsApi.GetEmployerApprenticeships(
+                    employerAccountId, new ApprenticeshipSearchQuery
+                    {
+                        ApprenticeshipStatuses = new List<ApprenticeshipStatus>
+                        {
+                            ApprenticeshipStatus.WaitingToStart,
+                            ApprenticeshipStatus.Live
+                        }
+                    })
+                ?? new ApprenticeshipSearchResponse();
+
+            var pageNumber = 2;
+
+            var apprenticeships = apiApprenticeships.Apprenticeships.ToList();
+
+            if (apiApprenticeships.TotalPages > 1)
+            {
+                while (pageNumber != apiApprenticeships.TotalPages)
+                {
+                    var pageOfApprenticeshipSearchResponse =
+                        await employerCommitmentsApi.GetEmployerApprenticeships(
+                            employerAccountId, new ApprenticeshipSearchQuery
+                            {
+                                ApprenticeshipStatuses = new List<ApprenticeshipStatus>
+                                {
+                                    ApprenticeshipStatus.WaitingToStart,
+                                    ApprenticeshipStatus.Live
+                                },
+                                PageNumber = pageNumber
+                            });
+
+                    apprenticeships.AddRange(pageOfApprenticeshipSearchResponse.Apprenticeships);
+
+                    pageNumber++;
+                }
+            }
+
+            return apprenticeships;
         }
     }
 }
