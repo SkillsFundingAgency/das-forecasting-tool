@@ -3223,7 +3223,7 @@ table.responsive tr th:before, table.responsive tr td:before {
   display: none;
 }
 
-table.responsive tr th.numeric, table.responsive tr td.numeric {
+table.responsive tr th.numeric, table.responsive tr th.financial, table.responsive tr td.numeric, table.responsive tr td.financial {
   text-align: right;
 }
 

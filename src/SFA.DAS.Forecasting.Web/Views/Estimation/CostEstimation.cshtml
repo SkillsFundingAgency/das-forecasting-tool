@@ -124,21 +124,21 @@
                                     </div>
                                 }
                                 <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-                                @:<table class="small errorTable">
+                                @:<table class="small errorTable responsive">
                                     <thead>
                                         <tr>
-                                            <th class="nowrap">Date</th>
-                                            <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
+                                            <th class="nowrap tw-10">Date</th>
+                                            <th class="financial tippy tw-30" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
                                                 Your current costs
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
                                             </th>
-                                            <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
+                                            <th class="financial tippy tw-35" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
                                                 Cost of estimated apprenticeships
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
                                             </th>
-                                            <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
                                                 Balance
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
@@ -153,10 +153,10 @@
                                     }
 
                                     <tr class="@tableRowClass">
-                                        <td class="nowrap">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                                        <td class="financial">@accountFund.ActualCost.FormatCost()</td>
-                                        <td class="financial">@accountFund.EstimatedCost.FormatCost()</td>
-                                        <td class="financial @tableCellClass">@accountFund.FormattedBalance</td>
+                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                                        <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
+                                        <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
+                                        <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
                                     </tr>
 
                                     if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
