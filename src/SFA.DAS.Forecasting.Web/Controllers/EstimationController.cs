@@ -86,26 +86,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return View("AddApprenticeships",model);
         }
 
-        [HttpPost]
-        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "PostEditApprenticeships")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PostEditApprenticeships(AddEditApprenticeshipsViewModel editmodel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("AddApprenticeships", editmodel);
-            }
-
-            await _estimationOrchestrator.UpdateApprenticeshipModel(editmodel);
-
-
-            return RedirectToAction(nameof(CostEstimation),
-                   new
-                   {
-                       hashedaccountId = editmodel.HashedAccountId,
-                       estimateName = editmodel.EstimationName
-                   });   
-        }
+       
         
 
         [HttpPost]
@@ -115,12 +96,16 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-            var result = _validator.ValidateAdd(vm);
-
-            foreach(var r in result)
+            if (vm.ApprenticeshipsId == null)
             {
-                ModelState.AddModelError(r.Key, r.Value);
+                var result = _validator.ValidateAdd(vm);
+
+                foreach (var r in result)
+                {
+                    ModelState.AddModelError(r.Key, r.Value);
+                }
             }
+           
 
             if (!ModelState.IsValid)
             {

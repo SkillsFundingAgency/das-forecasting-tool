@@ -54,11 +54,20 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var fundingSource = vm.IsTransferFunded == "on"
                ? Models.Payments.FundingSource.Transfer 
                : Models.Payments.FundingSource.Levy;
+
+            if (vm.ApprenticeshipsId == null)
+            {
+                accountEstimation.AddVirtualApprenticeship(vm.Course.Id, vm.Course.Title, vm.Course.Level,
+                    vm.StartDateMonth, vm.StartDateYear,
+                    vm.NumberOfApprentices, vm.TotalInstallments,
+                    vm.TotalCostAsString.ToDecimal(), fundingSource);
+            }
+            else
+            {
+                accountEstimation.UpdateApprenticeship(vm.ApprenticeshipsId, vm.StartDateMonth, vm.StartDateYear, vm.NumberOfApprentices, vm.TotalInstallments, vm.TotalCostAsString.ToDecimal());
+
+            }
             
-            accountEstimation.AddVirtualApprenticeship(vm.Course.Id, vm.Course.Title, vm.Course.Level,
-                vm.StartDateMonth, vm.StartDateYear,
-                vm.NumberOfApprentices, vm.TotalInstallments,
-                vm.TotalCostAsString.ToDecimal(), fundingSource);
 
             _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {vm.Course}");
             await _accountEstimationRepository.Store(accountEstimation);
@@ -69,17 +78,16 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             var course =
                 viewModel.Course.Id != null
-                ? await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.Course.Id)
-                : null;
-                
+                    ? await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.Course.Id)
+                    : null;
+
             var totalCostAsString = (decimal.TryParse(viewModel.TotalCostAsString, out decimal result))
                 ? result.FormatValue()
                 : viewModel.TotalCostAsString = string.Empty;
 
             viewModel.Course = course;
             viewModel.TotalCostAsString = totalCostAsString;
-           
-
+            
             return viewModel;
         }
 

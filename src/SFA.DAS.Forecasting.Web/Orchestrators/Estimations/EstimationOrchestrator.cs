@@ -144,14 +144,5 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
              //  FundingPeriodsJson = JsonConvert.SerializeObject(fundingPeriods),
             };
         }
-
-        public async Task UpdateApprenticeshipModel(AddEditApprenticeshipsViewModel model)
-        {
-            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
-            var estimations = await _estimationRepository.Get(accountId);
-
-            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCostAsString.ToDecimal());
-            await _estimationRepository.Store(estimations);
-        }
     }
 }
