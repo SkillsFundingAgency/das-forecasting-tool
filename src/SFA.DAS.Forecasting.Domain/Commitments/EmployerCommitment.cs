@@ -34,18 +34,23 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public bool RegisterCommitment(CommitmentModel model)
         {
-            if (Commitment.EmployerAccountId <= 0)
+            if (model.EmployerAccountId <= 0)
+            {
                 return false;
+            }
 
             if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
+            {
                 model.ActualEndDate = null;
+            }
 
             if (Commitment.Id == 0 && model.ActualEndDate != null)
+            {
                 return false;
-
-
+            }
+            
             if (Commitment.Id != 0
-                && (model.ActualEndDate != null
+                && (model.ActualEndDate != Commitment.ActualEndDate
                     || model.ApprenticeName != Commitment.ApprenticeName
                     || model.ApprenticeshipId != Commitment.ApprenticeshipId))
             {
@@ -55,22 +60,12 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 return true;
             }
 
-            if (Commitment.ApprenticeName == model.ApprenticeName &&
-                Commitment.LearnerId == model.LearnerId &&
-                Commitment.CourseLevel == model.CourseLevel &&
-                Commitment.CourseName == model.CourseName &&
-                Commitment.ProviderId == model.ProviderId &&
-                Commitment.ProviderName == model.ProviderName &&
-                Commitment.StartDate == model.StartDate &&
-                Commitment.PlannedEndDate == model.PlannedEndDate &&
-                Commitment.MonthlyInstallment == model.MonthlyInstallment &&
-                Commitment.CompletionAmount == model.CompletionAmount &&
-                Commitment.NumberOfInstallments == model.NumberOfInstallments &&
-                Commitment.SendingEmployerAccountId == model.SendingEmployerAccountId)
+            if (Commitment.Id != 0)
             {
-                return false;  
+                return false;
             }
-                
+    
+            Commitment.ApprenticeshipId = model.ApprenticeshipId;
             Commitment.ApprenticeName = model.ApprenticeName;
             Commitment.LearnerId = model.LearnerId;
             Commitment.CourseLevel = model.CourseLevel;
@@ -85,8 +80,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.NumberOfInstallments = model.NumberOfInstallments;
             Commitment.SendingEmployerAccountId = model.SendingEmployerAccountId;
             Commitment.FundingSource = model.FundingSource;
+            Commitment.EmployerAccountId = model.EmployerAccountId;
 
-            
             return true;
         }
     }
