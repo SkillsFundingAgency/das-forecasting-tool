@@ -35,8 +35,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _commitmentModel = new CommitmentModel
             {
                 EmployerAccountId = ExpectedEmployerAccountId,
-                ActualEndDate = DateTime.Now.AddMonths(1),
-                Id = 3322,
                 CompletionAmount = 100
             };
             
