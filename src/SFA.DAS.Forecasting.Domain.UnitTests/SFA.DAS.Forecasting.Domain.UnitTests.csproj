@@ -94,6 +94,7 @@
     <Compile Include="Balance\CurrentBalanceTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentsAsSenderTests.cs" />
     <Compile Include="Commitments\EmployerCommitmentsTests.cs" />
+    <Compile Include="Commitments\WhenRegisteringACommitment.cs" />
     <Compile Include="Estimations\AccountEstimationProjectionTests.cs" />
     <Compile Include="Estimations\AccountEstimationTests.cs" />
     <Compile Include="Estimations\CommitmentModelListBuilderTests.cs" />
