@@ -19,6 +19,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         private Mock<IPaymentMapper> _paymentMapper;
         private PaymentCreatedMessage _message;
         private CommitmentModel _commitmentModel;
+        private EmployerCommitment _employerCommitment;
         private const long ExpectedEmployerAccountId = 554433;
         private const long ExpectedApprenticeshipId = 552244;
 
@@ -38,7 +39,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                 Id = 3322,
                 CompletionAmount = 100
             };
-
+            
+            _employerCommitment = new EmployerCommitment(_commitmentModel);
+            
             _employerCommitmentRepostiory = new Mock<IEmployerCommitmentRepository>();
 
             _logger = new Mock<ILog>();
@@ -48,6 +51,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
                     x.MapToCommitment(It.Is<PaymentCreatedMessage>(c =>
                         c.EmployerAccountId.Equals(ExpectedEmployerAccountId))))
                 .Returns(_commitmentModel);
+
+            _employerCommitmentRepostiory.Setup(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId))
+                .ReturnsAsync(_employerCommitment);
 
             _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
                 _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object);
@@ -64,6 +70,16 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         }
 
         [Test]
+        public async Task Then_The_Commtiemtn_Is_Retrieved_From_The_Repository()
+        {
+            //Act
+            await _handler.Handle(_message);
+
+            //Assert
+            _employerCommitmentRepostiory.Verify(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId));
+        }
+
+        [Test]
         public async Task Then_The_Commitment_Is_Mapped_If_The_Message_Is_Valid()
         {
             //Act
@@ -74,14 +90,43 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         }
 
         [Test]
-        public async Task Then_The_Commitment_Is_Upserted_In_The_Repository()
+        public async Task Then_The_Commitment_Is_Stored_In_The_Repository()
         {
             //Act
             await _handler.Handle(_message);
 
             //Assert
             _employerCommitmentRepostiory.Verify(x =>
-                x.Upsert(It.Is<CommitmentModel>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
+                x.Store(It.Is<EmployerCommitment>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
+        }
+
+        [Test]
+        public async Task Then_The_Commitment_Is_Not_Stored_If_The_Registration_Check_Fails()
+        {
+            //Arrange
+            _commitmentModel = new CommitmentModel
+            {
+                ApprenticeshipId = ExpectedApprenticeshipId,
+                EmployerAccountId = ExpectedEmployerAccountId,
+                ActualEndDate = null,
+                Id = 3322,
+                CompletionAmount = 100
+            };
+            _paymentMapper.Setup(x =>
+                    x.MapToCommitment(It.Is<PaymentCreatedMessage>(c =>
+                        c.EmployerAccountId.Equals(ExpectedEmployerAccountId))))
+                .Returns(_commitmentModel);
+            _employerCommitment = new EmployerCommitment(_commitmentModel);
+            _employerCommitmentRepostiory.Setup(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId))
+                .ReturnsAsync(_employerCommitment);
+            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
+                _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object);
+
+            //Act
+            await _handler.Handle(_message);
+
+            //Assert
+            _employerCommitmentRepostiory.Verify(x => x.Store(It.IsAny<EmployerCommitment>()), Times.Never());
         }
 
     }
