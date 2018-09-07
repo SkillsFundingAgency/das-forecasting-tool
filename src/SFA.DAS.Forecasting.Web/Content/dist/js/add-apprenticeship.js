@@ -118,7 +118,7 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
        
         $.ajax({
             type: "POST",
-            url: getCourseApiUrl(),
+            url: getCourseApiUrl($('#choose-apprenticeship').length),
             data: JSON.stringify(model),
             contentType: "application/json; charset=utf-8",
             success: function (result) {
@@ -133,11 +133,14 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
     }
 
-    function getCourseApiUrl() {
+    function getCourseApiUrl(addApprenticeship) {
+
         var pathArray = window.location.pathname.split("/");
 
+        var indexMax = pathArray.length - (addApprenticeship ? 1 : 2); 
+       
         var newPathname = "";
-        for (i = 1; i < (pathArray.length - 2); i++) {
+        for (i = 1; i < indexMax; i++) {
             newPathname += "/";
             newPathname += pathArray[i];
         }
