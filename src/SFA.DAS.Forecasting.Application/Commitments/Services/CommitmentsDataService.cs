@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -7,11 +7,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
+using IsolationLevel = System.Data.IsolationLevel;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Services
 {
@@ -33,9 +35,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             var model = new EmployerCommitmentsModel
             {
                 LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate), "Levy Funded Commitments"),
-                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate), "Receiving Employer Transfer Commitments"),
-                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate), "Sending Employer Transfer Commitments"),
-                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId), "Co-Investment Commitments")
+                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate),"Receiving Employer Transfer Commitments"),
+                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate),"Sending Employer Transfer Commitments"),
+                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId),"Co-Investment Commitments")
             };
             stopwatch.Stop();
             _telemetry.TrackDuration("Get Current Commitments", stopwatch.Elapsed);
@@ -55,6 +57,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             {
                 return model;
             }
+
             var moreData = true;
             var skip = 0;
             stopwatch.Restart();
@@ -72,6 +75,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                     model.AddRange(commitments);
                 }
             }
+
             stopwatch.Stop();
             _telemetry.TrackDuration($"Get {queryName}", stopwatch.Elapsed);
             return model;
@@ -100,12 +104,51 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
+
         private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
         {
             return commitment => commitment.EmployerAccountId == employerAccountId
-                                 && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
+                                 && (commitment.FundingSource == FundingSource.CoInvestedEmployer ||
+                                     commitment.FundingSource == FundingSource.CoInvestedSfa)
                                  && commitment.ActualEndDate == null;
         }
+
+        public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
+        {
+            var startTime = DateTime.UtcNow;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var commitmentModel = await _dataContext.Commitments.FirstOrDefaultAsync(commitment =>
+                commitment.EmployerAccountId == employerAccountId &&
+                commitment.ApprenticeshipId == apprenticeshipId);
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Commitment", startTime, stopwatch.Elapsed,
+                commitmentModel != null);
+            return commitmentModel;
+        }
+
+        public async Task Store(CommitmentModel commitment)
+        {
+            var startTime = DateTime.UtcNow;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (commitment.Id <= 0)
+                _dataContext.Commitments.Add(commitment);
+
+            using (var scope = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions() ,
+                TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await _dataContext.SaveChangesAsync();
+                scope.Complete();
+            }
+
+            stopwatch.Stop();
+            _telemetry.AddProperty("Commitment Id", commitment.Id.ToString());
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime,
+                stopwatch.Elapsed, true);
+        }
+
 
         public async Task Upsert(CommitmentModel commitment)
         {
@@ -154,36 +197,36 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                     USING 
                     (
                         SELECT @employerAccountId        as EmployerAccountId,
-		                       @sendingEmployerAccountId as SendingEmployerAccountId,
-		                       @learnerId                as LearnerId,
-		                       @providerId               as ProviderId,
-		                       @providerName             as ProviderName,
-		                       @apprenticeshipId         as ApprenticeshipId,
-		                       @apprenticeName           as ApprenticeName,
-		                       @courseName               as CourseName,
-		                       @courseLevel              as CourseLevel,
-		                       @startDate                as StartDate,
-		                       @plannedEndDate           as PlannedEndDate,
-		                       @actualEndDate            as ActualEndDate,
-		                       @completionAmount         as CompletionAmount,
-		                       @monthlyInstallment       as MonthlyInstallment,
-		                       @numberOfInstallments     as NumberOfInstallments,
-		                       @fundingSource            as FundingSource
+                         @sendingEmployerAccountId as SendingEmployerAccountId,
+                         @learnerId                as LearnerId,
+                         @providerId               as ProviderId,
+                         @providerName             as ProviderName,
+                         @apprenticeshipId         as ApprenticeshipId,
+                         @apprenticeName           as ApprenticeName,
+                         @courseName               as CourseName,
+                         @courseLevel              as CourseLevel,
+                         @startDate                as StartDate,
+                         @plannedEndDate           as PlannedEndDate,
+                         @actualEndDate            as ActualEndDate,
+                         @completionAmount         as CompletionAmount,
+                         @monthlyInstallment       as MonthlyInstallment,
+                         @numberOfInstallments     as NumberOfInstallments,
+                         @fundingSource            as FundingSource
                     ) AS entity
                     ON  Commitment.EmployerAccountId = entity.EmployerAccountId 
                         AND Commitment.learnerId = entity.LearnerId
                     WHEN MATCHED 
-	                    THEN
+                     THEN
                         UPDATE 
                         SET 
-		                    ApprenticeshipId = entity.ApprenticeshipId,
-		                    ApprenticeName = entity.ApprenticeName,
-		                    ActualEndDate = entity.ActualEndDate
+                      ApprenticeshipId = entity.ApprenticeshipId,
+                      ApprenticeName = entity.ApprenticeName,
+                      ActualEndDate = entity.ActualEndDate
                     WHEN NOT MATCHED 
                         AND entity.ActualEndDate is null 
                         THEN 
                         INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource)
-	                    VALUES (
+                     VALUES (
                                 entity.EmployerAccountId,
                                 entity.SendingEmployerAccountId,
                                 entity.LearnerId, 

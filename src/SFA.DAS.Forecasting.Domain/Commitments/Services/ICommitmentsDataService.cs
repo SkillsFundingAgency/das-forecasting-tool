@@ -8,5 +8,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments.Services
     {
         Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null);
         Task Upsert(CommitmentModel commitment);
+        Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId);
+        Task Store(CommitmentModel commitment);
     }
 }
