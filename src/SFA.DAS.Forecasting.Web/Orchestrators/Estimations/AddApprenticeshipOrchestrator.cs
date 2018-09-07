@@ -32,13 +32,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             _logger = logger;
         }
 
-        public AddApprenticeshipViewModel GetApprenticeshipAddSetup(bool standardsOnly)
+        public AddEditApprenticeshipsViewModel GetApprenticeshipAddSetup(bool standardsOnly)
         {
             var courses = standardsOnly
                  ? _apprenticeshipCourseService.GetAllStandardApprenticeshipCourses()
                  : _apprenticeshipCourseService.GetAllApprenticeshipCourses();
 
-            return new AddApprenticeshipViewModel
+            return new AddEditApprenticeshipsViewModel
             {
                 Courses =
                     courses
@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             };
         }
 
-        public async Task StoreApprenticeship(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
+        public async Task StoreApprenticeship(AddEditApprenticeshipsViewModel vm, string hashedAccountId, string estimationName)
         {
             var accountEstimation = await GetAccountEstimation(hashedAccountId);
 
@@ -64,12 +64,12 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _accountEstimationRepository.Store(accountEstimation);
         }
 
-        public async Task<AddApprenticeshipViewModel> UpdateAddApprenticeship(AddApprenticeshipViewModel viewModel)
+        public async Task<AddEditApprenticeshipsViewModel> UpdateAddApprenticeship(AddEditApprenticeshipsViewModel viewModel)
         {
 
             var course =
-                viewModel.CourseId != null
-                ? await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.CourseId)
+                viewModel.Course.Id != null
+                ? await _apprenticeshipCourseService.GetApprenticeshipCourse(viewModel.Course.Id)
                 : null;
                 
             var totalCostAsString = (decimal.TryParse(viewModel.TotalCostAsString, out decimal result))
@@ -78,9 +78,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             viewModel.Course = course;
             viewModel.TotalCostAsString = totalCostAsString;
-            viewModel.FundingPeriodsJson = course?.FundingPeriods != null 
-                ? JsonConvert.SerializeObject(course.FundingPeriods) 
-                : string.Empty;
+           
 
             return viewModel;
         }

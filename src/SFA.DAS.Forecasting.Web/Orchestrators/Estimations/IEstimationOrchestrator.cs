@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
     {
         Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved);
         Task<bool> HasValidApprenticeships(string hashedAccountId);
-        Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName);
-        Task UpdateApprenticeshipModel(EditApprenticeshipsViewModel editApprenticeships);
+        Task<AddEditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName);
+        Task UpdateApprenticeshipModel(AddEditApprenticeshipsViewModel editApprenticeships);
     }
 }
