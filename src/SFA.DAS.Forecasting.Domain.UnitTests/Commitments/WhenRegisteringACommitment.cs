@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Commitments;
@@ -12,12 +8,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 {
     public class WhenRegisteringACommitment
     {
-        [SetUp]
-        public void Arrange()
-        {
-
-        }
-
         [Test]
         public void Then_If_No_EmployerAccountId_Has_Been_Supplied_False_Is_Returned()
         {
