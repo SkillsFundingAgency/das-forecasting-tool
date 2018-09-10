@@ -5,13 +5,58 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 
     var init = function () {
 
+        var formModel = GetAddApprenticeshipForm();
+        showFundingCapMessage(formModel.TotalFundingCap !== undefined && formModel.TotalFundingCap !== "0")
+
         if ($("#choose-apprenticeship")) {
             $("#choose-apprenticeship").select2();
+
+            // Storing courses for future use when updating the drowdown. 
+            var select = document.getElementById("choose-apprenticeship");
+            sfa.AddApprenticeship.Courses = []
+
+            for (var i in select.options) {
+                var o = select.options[i];
+                sfa.AddApprenticeship.Courses.push(
+                    {
+                        text: o.text,
+                        value: o.value
+                    });
+            }
+
+            sfa.AddApprenticeship.Courses =
+                sfa.AddApprenticeship.Courses
+                    .filter(o => o.text != undefined);
         }
 
         // open dropdownon on focus
         $(document).on('focus', '.select2', function () {
             $(this).siblings('select').select2('open');
+        });
+
+        $('#IsTransferFunded').on('click', function () {
+            var select = document.getElementById("choose-apprenticeship");
+
+            var useTransferAllowance = document.getElementById("IsTransferFunded").checked;
+            var isFramework = select.options[select.options.selectedIndex].value.indexOf('-') > 0;
+
+            // resetting dropdown if apprenticeship is a transfer and selected course is a framework.
+            newSelectedIndex = useTransferAllowance && isFramework ? 0 : select.options.selectedIndex;
+            selectedOption = select.options[newSelectedIndex];
+            select.innerText = ""
+            
+            var list = useTransferAllowance
+                    ? sfa.AddApprenticeship.Courses.filter(o => o.value.indexOf('-') == -1)
+                    : sfa.AddApprenticeship.Courses;
+                
+            list.forEach(o =>
+            {
+                var isSelected = o.value === selectedOption.value;
+                select.appendChild(new Option(o.text, o.value, isSelected, isSelected))
+            });
+
+            if (newSelectedIndex === 0)
+                $('#apprenticeship-length').val(0);
         });
 
         // retain tabbed order after selection
@@ -33,7 +78,9 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
                 calculateTotalCostLocal();
             else
                 calculateTotalCost();
-        });
+        }).on('keypress', AddEditApprentiecships.onlyAllowNumbers);
+
+        $('#apprenticeship-length').on('keypress', AddEditApprentiecships.onlyAllowNumbers);
 
         $("#startDateMonth, #startDateYear").change(function () {
             if (sfa.AddApprenticeship.Result)
@@ -57,20 +104,10 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         init();
     }
 
-    function resetNumberOfMonths() {
-        var courseId = $('#choose-apprenticeship').val();
-        var previousCourseId = $('#PreviousCourseId').val();
-        if (courseId !== previousCourseId) {
-            var requestObject = {
-                courseId: courseId
-            };
-        }
-    }
-
     function calculateTotalCostLocal() {
-        var model = GetAddApprenticeshipForm();
+        var formModel = GetAddApprenticeshipForm();
 
-        var updated = refreshCalculation(model, sfa.AddApprenticeship.Result);
+        var updated = refreshCalculation(formModel, sfa.AddApprenticeship.Result);
         showFundingCapMessage(updated);
 
     }
@@ -96,16 +133,16 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
     }
 
-    function refreshCalculation(model, result) {
-        var calc = AddEditApprentiecships.calculateFundingCap(model.StartDate, result)
+    function refreshCalculation(formModel, course) {
+        var calc = AddEditApprentiecships.calculateFundingCap(formModel.StartDate, course)
 
         var fc = calc ? calc.FundingCap : 0;
-        model.FundingCap = fc;
-        model.TotalFundingCap = fc * model.NumberOfApprentices;
+        formModel.FundingCap = fc;
+        formModel.TotalFundingCap = fc * formModel.NumberOfApprentices;
 
-        updateView(model);
+        updateView(formModel);
 
-        return model.FundingCap > 0 && model.TotalFundingCap > 0;
+        return formModel.FundingCap > 0 && formModel.TotalFundingCap > 0;
     }
 
     function GetAddApprenticeshipForm() {
@@ -114,7 +151,10 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             NumberOfApprentices: parseInt($('#no-of-app').val()),
             LevyValue: parseFloat($('#total-funding-cost').val()),
             StartDate: new Date($('#startDateYear').val(), $('#startDateMonth').val() - 1, 1),
-            NumberOfMonths: parseInt($('#apprenticeship-length').val() || 0)
+            NumberOfMonths: parseInt($('#apprenticeship-length').val() || 0),
+            FundingBands: $('#FundingPeriodsJson').val() ? JSON.parse($('#FundingPeriodsJson').val()) : '',
+            TotalFundingCost: $('#total-funding-cost').val(),
+            TotalFundingCap: $('#CalculatedTotalCap').val()
         }
     }
 

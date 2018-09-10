@@ -700,18 +700,18 @@ hr {
   box-shadow: 0 0 0 #00823b;
 }
 
-.button.disabled, .disabled.button-link, .button[disabled="disabled"], [disabled="disabled"].button-link, .button[disabled], [disabled].button-link {
+.button.disabled, .disabled.button-link, .button[disabled="disabled"], .button-link[disabled="disabled"], .button[disabled], .button-link[disabled] {
   zoom: 1;
   filter: alpha(opacity=50);
   opacity: 0.5;
 }
 
-.button.disabled:hover, .disabled.button-link:hover, .button[disabled="disabled"]:hover, [disabled="disabled"].button-link:hover, .button[disabled]:hover, [disabled].button-link:hover {
+.button.disabled:hover, .disabled.button-link:hover, .button[disabled="disabled"]:hover, .button-link[disabled="disabled"]:hover, .button[disabled]:hover, .button-link[disabled]:hover {
   cursor: default;
   background-color: #00823b;
 }
 
-.button.disabled:active, .disabled.button-link:active, .button[disabled="disabled"]:active, [disabled="disabled"].button-link:active, .button[disabled]:active, [disabled].button-link:active {
+.button.disabled:active, .disabled.button-link:active, .button[disabled="disabled"]:active, .button-link[disabled="disabled"]:active, .button[disabled]:active, .button-link[disabled]:active {
   top: 0;
   -webkit-box-shadow: 0 2px 0 #003618;
   -moz-box-shadow: 0 2px 0 #003618;
@@ -739,11 +739,11 @@ hr {
   height: 120%;
 }
 
-.button[type="submit"], [type="submit"].button-link, .button[type="reset"], [type="reset"].button-link, .button[type="button"], [type="button"].button-link {
+.button[type="submit"], .button-link[type="submit"], .button[type="reset"], .button-link[type="reset"], .button[type="button"], .button-link[type="button"] {
   filter: chroma(color=#0b0c0c);
 }
 
-.button[type=submit].button, [type=submit].button-link {
+.button[type=submit].button, .button-link[type="submit"] {
   filter: none;
 }
 
@@ -756,11 +756,11 @@ hr {
   outline: 3px solid #ffbf47;
 }
 
-.button[disabled="disabled"], [disabled="disabled"].button-link {
+.button[disabled="disabled"], .button-link[disabled="disabled"] {
   background: #00823b;
 }
 
-.button[disabled="disabled"]:focus, [disabled="disabled"].button-link:focus {
+.button[disabled="disabled"]:focus, .button-link[disabled="disabled"]:focus {
   outline: none;
 }
 
@@ -2355,7 +2355,7 @@ nav ul {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: transparent;
+  border-color: rgba(0, 0, 0, 0);
   border-left-color: black;
   border-style: solid;
   left: 10px;
@@ -2456,7 +2456,7 @@ li.menu-link.sub-menu-open ul li a {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: transparent;
+  border-color: rgba(0, 0, 0, 0);
   border-left-color: black;
   border-style: solid;
   left: 10px;
@@ -2491,7 +2491,7 @@ a#link-settings:before {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: transparent;
+  border-color: rgba(0, 0, 0, 0);
   border-left-color: black;
   border-style: solid;
   left: 10px;
@@ -2859,7 +2859,7 @@ legend {
   filter: chroma(color=#0b0c0c);
 }
 
-.button-secondary[type=submit].button, .button-secondary[type=submit].button-link {
+.button-secondary[type=submit].button, .button-secondary.button-link[type=submit] {
   filter: none;
 }
 
@@ -2952,7 +2952,7 @@ legend {
   filter: chroma(color=#0b0c0c);
 }
 
-.button-link[type=submit].button, .button-link[type=submit] {
+.button-link[type=submit].button, .button-link[type="submit"] {
   filter: none;
 }
 
@@ -3074,7 +3074,8 @@ td.link-action {
   width: 10%;
 }
 
-table th, table td {
+table th,
+table td {
   vertical-align: top;
 }
 
@@ -3725,7 +3726,7 @@ table.responsive tr th.tw-70 {
   height: 0;
   display: block;
   border-width: 4px 7px;
-  border-color: transparent;
+  border-color: rgba(0, 0, 0, 0);
   border-left-color: #005ea5;
   border-style: solid;
   left: 10px;
@@ -4345,7 +4346,7 @@ h2 .float-right {
 
 .panel-border-wide {
   border-color: #2e358b;
-  background: #dee0e2;
+  background: #f8f8f8;
 }
 
 /*Estimator start page*/
@@ -4376,6 +4377,11 @@ h2 .float-right {
 #estimate-edit-apprenticeship .levy-value .total-funding-cost,
 #estimate-add-apprenticeship .levy-value .total-funding-cost {
   width: 200px;
+}
+
+/*Error messages styles */
+#estimate-add-apprenticeship .form-group-error .select2-container--default .select2-selection--single {
+  border: 4px solid #b10e1e;
 }
 
 .funding-projection .info-summary {
@@ -4454,7 +4460,7 @@ table.small th, table.small td, table.small .form-hint {
   font-size: 16px;
 }
 
-.errorTable tr.error-row {
+tr.error-row {
   box-shadow: -5px 0px 0px 0px #f7e7e9, -10px 0px 0px 0px #b10e1e;
   background: #f7e7e9;
 }
@@ -4501,6 +4507,10 @@ table.small th, table.small td, table.small .form-hint {
   display: inline-block;
   color: #005ea5;
   text-decoration: underline;
+}
+
+#BalanceSheet-Tables a:focus {
+  background-color: transparent;
 }
 
 .tippy-popper .tippy-content {
