@@ -122,12 +122,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
             stopwatch.Start();
             var startTime = DateTime.UtcNow;
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(
-                "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
-                employerAccountId);
-
             using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Snapshot }, TransactionScopeAsyncFlowOption.Enabled))
             {
+                await _dataContext.Database.ExecuteSqlCommandAsync(
+                    "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
+                    employerAccountId);
+
                 await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
                 scope.Complete();
             }
