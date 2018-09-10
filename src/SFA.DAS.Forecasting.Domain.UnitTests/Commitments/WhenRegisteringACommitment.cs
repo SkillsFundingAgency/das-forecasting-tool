@@ -63,18 +63,21 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             Assert.IsFalse(actual);
         }
 
-        [TestCase(nameof(CommitmentModel.ActualEndDate))]
-        [TestCase(nameof(CommitmentModel.ApprenticeName))]
-        [TestCase(nameof(CommitmentModel.ApprenticeshipId))]
-        public void Then_If_It_Is_An_Existing_Commitment_And_The_Allowed_Updated_Values_Are_Changed_True_Is_Retruned(string fieldName)
+        [Test]
+        public void Then_If_It_Is_An_Existing_Commitment_And_The_Allowed_Updated_Values_Are_Changed_True_Is_Retruned()
         {
             //Arrange
             var commitment = new CommitmentModel
             {
                 EmployerAccountId = 12345,
-                ApprenticeName = fieldName == nameof(CommitmentModel.ApprenticeName) ? "Mr Test Tester":null,
-                ApprenticeshipId = fieldName == nameof(CommitmentModel.ApprenticeshipId) ? 88775544 : 0,
-                ActualEndDate = fieldName == nameof(CommitmentModel.ActualEndDate) ? DateTime.Today : (DateTime?)null
+                ApprenticeName = "Mr Test Tester",
+                ApprenticeshipId = 88775544,
+                ActualEndDate = DateTime.Today.AddMonths(11),
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.AddMonths(12),
+                MonthlyInstallment = 10m,
+                CompletionAmount = 100m,
+                NumberOfInstallments = 12
             };
             var employerCommitment = new EmployerCommitment(new CommitmentModel{Id = 65421});
 
@@ -83,18 +86,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
 
             //Assert
             Assert.IsTrue(actual);
-            if (fieldName == nameof(CommitmentModel.ApprenticeName))
-            {
-                Assert.AreEqual(commitment.ApprenticeName, employerCommitment.ApprenticeName);
-            }
-            if (fieldName == nameof(CommitmentModel.ApprenticeshipId))
-            {
-                Assert.AreEqual(commitment.ApprenticeshipId, employerCommitment.ApprenticeshipId);
-            }
-            if (fieldName == nameof(CommitmentModel.ActualEndDate))
-            {
-                Assert.AreEqual(commitment.ActualEndDate, employerCommitment.ActualEndDate);
-            }
+            Assert.AreEqual(commitment.ApprenticeName, employerCommitment.ApprenticeName);
+            Assert.AreEqual(commitment.ApprenticeshipId, employerCommitment.ApprenticeshipId);
+            Assert.AreEqual(commitment.ActualEndDate, employerCommitment.ActualEndDate);
+            Assert.AreEqual(commitment.StartDate, employerCommitment.StartDate);
+            Assert.AreEqual(commitment.PlannedEndDate, employerCommitment.PlannedEndDate);
+            Assert.AreEqual(commitment.MonthlyInstallment, employerCommitment.MonthlyInstallment);
+            Assert.AreEqual(commitment.CompletionAmount, employerCommitment.CompletionAmount);
+            Assert.AreEqual(commitment.NumberOfInstallments, employerCommitment.NumberOfInstallments);
         }
 
         [Test]

@@ -52,11 +52,21 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             if (Commitment.Id != 0
                 && (model.ActualEndDate != Commitment.ActualEndDate
                     || model.ApprenticeName != Commitment.ApprenticeName
-                    || model.ApprenticeshipId != Commitment.ApprenticeshipId))
+                    || model.ApprenticeshipId != Commitment.ApprenticeshipId
+                    || model.StartDate != Commitment.StartDate
+                    || model.PlannedEndDate != Commitment.PlannedEndDate
+                    || model.MonthlyInstallment != Commitment.MonthlyInstallment
+                    || model.CompletionAmount != Commitment.CompletionAmount
+                    || model.NumberOfInstallments != Commitment.NumberOfInstallments))
             {
                 Commitment.ActualEndDate = model.ActualEndDate;
                 Commitment.ApprenticeName = model.ApprenticeName;
                 Commitment.ApprenticeshipId = model.ApprenticeshipId;
+                Commitment.StartDate = model.StartDate;
+                Commitment.PlannedEndDate = model.PlannedEndDate;
+                Commitment.MonthlyInstallment = model.MonthlyInstallment;
+                Commitment.CompletionAmount = model.CompletionAmount;
+                Commitment.NumberOfInstallments = model.NumberOfInstallments;
                 return true;
             }
 
