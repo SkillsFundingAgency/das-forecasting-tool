@@ -31,11 +31,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 .ToListAsync();
         }
 
-        public async Task Store(IEnumerable<AccountProjectionModel> accountProjections)
+        public async Task Store(IList<AccountProjectionModel> accountProjections)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var startTime = DateTime.UtcNow;
+
             var insertString = new StringBuilder();
             var accountCommitmentsInsert =
                 "DECLARE @TempAccountProjection as TABLE" +
