@@ -133,7 +133,7 @@ sfa.navigation = {
         if ($li.hasClass("open")) {
             // Close menu
             $li.removeClass("open");
-            subMenu.addClass("js-hisfadden").attr("aria-hidden", "true");
+            subMenu.addClass("js-hidden").attr("aria-hidden", "true");
         } else {
             // Open menu
             this.closeAllOpenMenus();
@@ -168,6 +168,21 @@ sfa.navigation = {
         }
     }
 }
+
+sfa.backLink = {
+    init: function () {
+        var backLink = $('<a>')
+            .attr({ 'href': '#', 'class': 'link-back' })
+            .text('Back')
+            .on('click', function (e) { window.history.back(); e.preventDefault(); });
+        $('#js-breadcrumbs').html(backLink);
+    }
+};
+
+if ($('#js-breadcrumbs')) {
+    sfa.backLink.init();
+}
+
 
 //floating menu
 $(window).scroll(function () {

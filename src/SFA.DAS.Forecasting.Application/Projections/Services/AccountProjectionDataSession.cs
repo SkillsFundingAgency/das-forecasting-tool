@@ -117,10 +117,6 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
             stopwatch.Start();
             var startTime = DateTime.UtcNow;
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(
-                "DELETE FROM dbo.AccountProjectionCommitment where AccountProjectionId in (SELECT id from dbo.AccountProjection where EmployerAccountId=@p0)",
-                employerAccountId);
-
             await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
             stopwatch.Stop();
             _telemetry.TrackDependency(DependencyType.SqlDatabaseDelete, "Delete Account Projections", startTime, stopwatch.Elapsed, true);
