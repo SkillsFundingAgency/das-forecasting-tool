@@ -3231,10 +3231,12 @@ table.responsive tr.total {
   border: none;
 }
 
+table.responsive tr.total th,
 table.responsive tr.total td {
   border-bottom: none;
 }
 
+table.responsive tr.total th.total,
 table.responsive tr.total td.total {
   border-bottom: 2px solid #000;
 }
