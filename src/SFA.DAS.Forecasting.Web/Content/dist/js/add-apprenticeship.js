@@ -15,18 +15,13 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             var select = document.getElementById("choose-apprenticeship");
             sfa.AddApprenticeship.Courses = []
 
-            for (var i in select.options) {
-                var o = select.options[i];
+            for (var i = 0; i < select.options.length; i++) {
                 sfa.AddApprenticeship.Courses.push(
-                    {
-                        text: o.text,
-                        value: o.value
-                    });
+                {
+                        text: select[i].text,
+                        value: select[i].value
+                });
             }
-
-            sfa.AddApprenticeship.Courses =
-                sfa.AddApprenticeship.Courses
-                    .filter(o => o.text != undefined);
         }
 
         // open dropdownon on focus
@@ -44,13 +39,14 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
             newSelectedIndex = useTransferAllowance && isFramework ? 0 : select.options.selectedIndex;
             selectedOption = select.options[newSelectedIndex];
             select.innerText = ""
-            
+
             var list = useTransferAllowance
-                    ? sfa.AddApprenticeship.Courses.filter(o => o.value.indexOf('-') == -1)
-                    : sfa.AddApprenticeship.Courses;
-                
-            list.forEach(o =>
-            {
+                ? sfa.AddApprenticeship.Courses.filter(function (o) {
+                    return o.value.indexOf('-') == -1
+                })
+                : sfa.AddApprenticeship.Courses;
+
+            list.forEach(function (o) {
                 var isSelected = o.value === selectedOption.value;
                 select.appendChild(new Option(o.text, o.value, isSelected, isSelected))
             });
@@ -82,12 +78,20 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 
         $('#apprenticeship-length').on('keypress', AddEditApprentiecships.onlyAllowNumbers);
 
-        $("#startDateMonth, #startDateYear").change(function () {
+        $("#startDateMonth").change(function () {
             if (sfa.AddApprenticeship.Result)
                 calculateTotalCostLocal();
             else
                 calculateTotalCost();
         });
+
+        $("#startDateYear").on('change keyup', function () {
+            if (sfa.AddApprenticeship.Result)
+                calculateTotalCostLocal();
+            else
+                calculateTotalCost();
+        });
+
 
         $("#total-funding-cost").keyup(function () {
             var num = $('#total-funding-cost').val();
