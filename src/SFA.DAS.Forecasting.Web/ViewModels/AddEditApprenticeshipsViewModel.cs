@@ -30,13 +30,12 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public ApprenticeshipCourse Course { get; set; } = new ApprenticeshipCourse();
         public string IsTransferFunded { get; set; }
 
-        private IList<FundingPeriodViewModel> FundingBands => Course.Id != null ? Course.FundingPeriods
-                                                                                .Select(m => new FundingPeriodViewModel
-                                                                                {
-                                                                                    FromDate = m.EffectiveFrom,
-                                                                                    ToDate = m.EffectiveTo,
-                                                                                    FundingCap = m.FundingCap
-                                                                                }).ToList() : null;
+        private IList<FundingPeriodViewModel> FundingBands => Course?.FundingPeriods?.Select(m => new FundingPeriodViewModel
+                                                                                                {
+                                                                                                    FromDate = m.EffectiveFrom,
+                                                                                                    ToDate = m.EffectiveTo,
+                                                                                                    FundingCap = m.FundingCap
+                                                                                                }).ToList();
         public IEnumerable<SelectListItem> ApprenticeshipCourses
         {
             get
@@ -44,14 +43,14 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
                 return
 
                     (from course in Courses
-                        let text = course.CourseType == ApprenticeshipCourseType.Standard ? $"{course.Title}, Level: {course.Level} (Standard)" : $"{course.Title}, Level: {course.Level}"
-                        select new SelectListItem
-                        {
-                            Value = course.Id,
-                            Text = text,
+                     let text = course.CourseType == ApprenticeshipCourseType.Standard ? $"{course.Title}, Level: {course.Level} (Standard)" : $"{course.Title}, Level: {course.Level}"
+                     select new SelectListItem
+                     {
+                         Value = course.Id,
+                         Text = text,
 
-                            Selected = course.Id == Course.Id
-                        }).ToList();
+                         Selected = course.Id == Course?.Id
+                     }).ToList();
             }
         }
         public DateTime StartDate
@@ -67,10 +66,10 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 
         public FundingPeriodViewModel GetFundingPeriod()
         {
-            if (Course.FundingPeriods == null)
+            if (Course?.FundingPeriods == null)
                 return new FundingPeriodViewModel { FromDate = DateTime.MinValue, ToDate = DateTime.MaxValue, FundingCap = 0 };
 
-          
+
 
             var fundingBand = FundingBands.FirstOrDefault(m =>
                                   m.FromDate < StartDate
@@ -85,7 +84,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
             {
                 _fundingPeriodJson = JsonConvert.SerializeObject(FundingBands);
 
-                return Course.Id != null ? _fundingPeriodJson : null;
+                return Course?.Id != null ? _fundingPeriodJson : null;
             }
 
         }

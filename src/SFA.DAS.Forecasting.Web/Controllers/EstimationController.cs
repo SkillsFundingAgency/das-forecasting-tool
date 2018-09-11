@@ -73,6 +73,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false);
             vm.IsTransferFunded = "";
+            vm.HashedAccountId = hashedAccountId;
+            vm.EstimationName = estimationName;
 
             return View(vm);
         }
