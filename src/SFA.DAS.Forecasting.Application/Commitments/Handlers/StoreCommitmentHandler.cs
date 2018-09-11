@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.NLog.Logger;
 
@@ -15,16 +17,18 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
         private readonly ITelemetry _telemetry;
         private readonly IEmployerCommitmentRepository _repository;
         private readonly ILog _logger;
+        private readonly IQueueService _queueService;
 
-        public StoreCommitmentHandler(IEmployerCommitmentRepository repository, ILog logger, IPaymentMapper paymentMapper, ITelemetry telemetry)
+        public StoreCommitmentHandler(IEmployerCommitmentRepository repository, ILog logger, IPaymentMapper paymentMapper, ITelemetry telemetry, IQueueService queueService)
         {
             _paymentMapper = paymentMapper;
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _queueService = queueService ?? throw new ArgumentNullException(nameof(queueService));
         }
 
-        public async Task Handle(PaymentCreatedMessage message)
+        public async Task Handle(PaymentCreatedMessage message, string allowProjectionsEndpoint)
         {
             if (message.EarningDetails == null)
                 throw new InvalidOperationException($"Invalid payment created message. Earning details is null so cannot create commitment data. Employer account: {message.EmployerAccountId}, payment id: {message.Id}");
@@ -37,6 +41,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             await _repository.Upsert(commitmentModel);
 
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.Id}");
+            _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
             stopwatch.Stop();
             _telemetry.TrackDuration("Store Commitment", stopwatch.Elapsed);
         }
