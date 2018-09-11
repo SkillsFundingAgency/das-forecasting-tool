@@ -120,15 +120,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
-
-            //var fundingPeriods = course.FundingPeriods.Select(m =>
-            //            new FundingPeriodViewModel
-            //            {
-            //                FromDate = m.EffectiveFrom,
-            //                ToDate = m.EffectiveTo,
-            //                FundingCap = m.FundingCap
-            //            });
-
+            
             return new AddEditApprenticeshipsViewModel
             {
                 Course = course,
@@ -141,7 +133,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 StartDateMonth = model.StartDate.Month,
                 StartDateYear = model.StartDate.Year,
                 HashedAccountId = hashedAccountId
-             //  FundingPeriodsJson = JsonConvert.SerializeObject(fundingPeriods),
             };
         }
     }

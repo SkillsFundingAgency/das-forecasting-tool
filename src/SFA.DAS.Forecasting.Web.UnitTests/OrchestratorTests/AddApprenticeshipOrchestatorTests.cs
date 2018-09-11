@@ -47,15 +47,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Title = "Carpentry"
                 };
 
-            //_apprenticeshipCourses = new List<ApprenticeshipCourse>
-            //{
-            //    _courseElectrician,
-            //   _courseCarpentry,
-            //};
+            _apprenticeshipCourses = new List<ApprenticeshipCourse>
+            {
+                _courseElectrician,
+               _courseCarpentry,
+            };
 
-            //_moqer.GetMock<IApprenticeshipCourseDataService>()
-            //    .Setup(x => x.GetAllStandardApprenticeshipCourses())
-            //    .Returns(_apprenticeshipCourses);
+            _moqer.GetMock<IApprenticeshipCourseDataService>()
+                .Setup(x => x.GetAllStandardApprenticeshipCourses())
+                .Returns(_apprenticeshipCourses);
         }
         
         [TestCase("6,000", "6,000")]
@@ -87,32 +87,23 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             // Assert
             AssertionExtensions.Should((string) res.TotalCostAsString).Be(totalCostAsStringOutput);      
         }
+        
+        [Test]
+        public void TestingAddApprenticeSetupReturnsDefaultSetupWithAvailableApprenticeshipsOrderedAsExpected()
+        {
+            var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
+            var res = orchestrator.GetApprenticeshipAddSetup(true);
+           
+            AssertionExtensions.Should((int)res.ApprenticeshipCourses.Count()).Be(2);
 
-       // [Test]
-        //public void TestingAddApprenticeSetupReturnsExpectedDefaultSetup()
-        //{
-        //    var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-        //    var res = orchestrator.GetApprenticeshipAddSetup(true);
-        //    res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
-        //    AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
-        //}
+            var courseCarpentry = res.ApprenticeshipCourses.First();
+            var courseElectrician = res.ApprenticeshipCourses.ElementAt(1);
 
-        //[Test]
-        //public void TestingAddApprenticeSetupReturnsDefaultSetupWithAvailableApprenticeshipsOrderedAsExpected()
-        //{
-        //    var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-        //    var res = orchestrator.GetApprenticeshipAddSetup(true);
-        //    res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
-        //    AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
+            courseCarpentry.Value.Should().Be(_courseCarpentry.Id);
+            courseCarpentry.Text.Should().Be($"{_courseCarpentry.Title}, Level: {_courseCarpentry.Level} (Standard)");
 
-        //    var courseCarpentry = res.ApprenticeshipCourses.First();
-        //    var courseElectrician = res.ApprenticeshipCourses.ElementAt(1);
-
-        //    courseCarpentry.Value.Should().Be(_courseCarpentry.Id);
-        //    courseCarpentry.Text.Should().Be($"{_courseCarpentry.Title}, Level: {_courseCarpentry.Level} (Standard)");
-
-        //    courseElectrician.Value.Should().Be(_courseElectrician.Id);
-        //    courseElectrician.Text.Should().Be($"{_courseElectrician.Title}, Level: {_courseElectrician.Level} (Standard)");
-        //}
+            courseElectrician.Value.Should().Be(_courseElectrician.Id);
+            courseElectrician.Text.Should().Be($"{_courseElectrician.Title}, Level: {_courseElectrician.Level} (Standard)");
+        }
     }
 }
