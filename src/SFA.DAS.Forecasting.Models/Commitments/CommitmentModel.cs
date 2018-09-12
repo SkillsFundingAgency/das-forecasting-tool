@@ -23,6 +23,6 @@ namespace SFA.DAS.Forecasting.Models.Commitments
         public int? CourseLevel { get; set; }
         public FundingSource FundingSource { get; set; }
         public DateTime UpdatedDateTime { get; set; }
-    }
+    
     }
 }
