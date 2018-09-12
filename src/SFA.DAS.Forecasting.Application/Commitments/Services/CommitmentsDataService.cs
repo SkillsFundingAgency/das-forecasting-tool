@@ -54,7 +54,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
+            int listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
             stopwatch.Stop();
             _telemetry.TrackDuration("Get Commitment Count: " + queryName, stopwatch.Elapsed);
             var model = new List<CommitmentModel>(listSize);
@@ -199,7 +199,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                     WHEN NOT MATCHED 
                         AND entity.ActualEndDate is null 
                         THEN 
-                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource, HasHadPayment,UpdatedDateTime)
+                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource, UpdatedDateTime,HasHadPayment)
 	                    VALUES (
                                 entity.EmployerAccountId,
                                 entity.SendingEmployerAccountId,
