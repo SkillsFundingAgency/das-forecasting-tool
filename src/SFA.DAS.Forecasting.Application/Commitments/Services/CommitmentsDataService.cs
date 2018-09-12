@@ -25,6 +25,14 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
+        public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
+        {
+            return await _dataContext
+                .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId)
+                .OrderByDescending(commitment => commitment.ReceivedTime)
+                .Select(commitment => commitment.ReceivedTime)
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
