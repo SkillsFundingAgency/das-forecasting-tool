@@ -14,6 +14,7 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
@@ -58,6 +59,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected List<TestPayment> Payments { get => Get<List<TestPayment>>(); set => Set(value); }
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
+        protected List<TestApprenticeship> TestApprenticeships { get => Get<List<TestApprenticeship>>(); set => Set(value); }
+
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
         protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }

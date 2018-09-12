@@ -61,6 +61,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				CourseLevel = paymentCreatedMessage.CourseLevel,
                 SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
                 FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource),
+                HasHadPayment = true,
                 UpdatedDateTime = DateTime.UtcNow
 			};
 

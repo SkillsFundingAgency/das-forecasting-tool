@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Mapping;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
@@ -14,14 +16,22 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
     public class StoreCommitmentHandler
     {
         private readonly IPaymentMapper _paymentMapper;
-        private readonly ITelemetry _telemetry;
+        private readonly ApprenticeshipMapping _apprenticeshipMapping;
         private readonly IEmployerCommitmentRepository _repository;
         private readonly ILog _logger;
+        private readonly ITelemetry _telemetry;
         private readonly IQueueService _queueService;
 
-        public StoreCommitmentHandler(IEmployerCommitmentRepository repository, ILog logger, IPaymentMapper paymentMapper, ITelemetry telemetry, IQueueService queueService)
+        public StoreCommitmentHandler(
+            IEmployerCommitmentRepository repository, 
+            ILog logger, 
+            IPaymentMapper paymentMapper,
+            ITelemetry telemetry,
+            ApprenticeshipMapping apprenticeshipMapping,
+            IQueueService queueService)
         {
             _paymentMapper = paymentMapper;
+            _apprenticeshipMapping = apprenticeshipMapping;
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -44,6 +54,21 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
             stopwatch.Stop();
             _telemetry.TrackDuration("Store Commitment", stopwatch.Elapsed);
+        }
+
+        public async Task Handle(ApprenticeshipMessage message, string allowProjectionsEndpoint)
+        {
+            if (message.LearnerId <= 0)
+                throw new InvalidOperationException("Apprenticeship requires LearnerId");
+            if (message.CourseLevel <= 0)
+                throw new InvalidOperationException("Apprenticeship requires CourseLevel");
+
+            var commitmentModel = _apprenticeshipMapping.MapToCommitment(message);
+
+            await _repository.Upsert(commitmentModel);
+
+            _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}");
+            _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
         }
     }
 }

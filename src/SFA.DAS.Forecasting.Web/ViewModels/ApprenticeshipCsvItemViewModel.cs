@@ -4,10 +4,16 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class ApprenticeshipCsvItemViewModel
     {
-        [Name("Start Date")]
+        [Name("ILR actual start date")]
         public string StartDate { get; set; }
-        [Name("Planned End Date")]
+        [Name("ILR planned end date")]
         public string PlannedEndDate { get; set; }
+
+        [Name("DAS planned start date")]
+        public string DasStartDate { get; set; }
+        [Name("DAS planned end date")]
+        public string DasPlannedEndDate { get; set; }
+
         [Name("Apprenticeship")]
         public string Apprenticeship { get; set; }
         [Name("Apprenticeship Level")]
@@ -28,5 +34,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public int MonthlyTrainingCost { get; set; }
         [Name("Completion Amount")]
         public int CompletionAmount { get; set; }
+
+        [Name("Apprenticeship Status")]
+        public string Status { get; set; }
     }
 }

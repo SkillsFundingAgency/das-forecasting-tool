@@ -17,7 +17,8 @@
     [MonthlyInstallment] DECIMAL(18,5) NOT NULL,
     [NumberOfInstallments] SMALLINT NOT NULL,
 	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Commitment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id) default(1), 
-    [UpdatedDateTime] DATETIME NOT NULL
+    [UpdatedDateTime] DATETIME NOT NULL,
+	[HasHadPayment] BIT NOT NULL default(1)
 )
 
 GO

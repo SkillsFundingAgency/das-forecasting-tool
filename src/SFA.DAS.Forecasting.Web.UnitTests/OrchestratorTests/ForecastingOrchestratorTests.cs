@@ -53,7 +53,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     LearnerId = 90,
                     ProviderName = "Test Provider",
                     ProviderId = 99876,
-                    FundingSource = FundingSource.Levy
+                    FundingSource = FundingSource.Levy,
+                    HasHadPayment = true
                 },
                 new CommitmentModel
                 {
@@ -67,12 +68,50 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     CompletionAmount = 100,
                     CourseName = "My Course",
                     CourseLevel = 1,
-                    LearnerId = 90,
+                    LearnerId = 997,
                     ProviderName = "Test Provider",
                     ProviderId = 99876,
-                    FundingSource = FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer,
+                    HasHadPayment = true
+                },
+                new CommitmentModel
+                {
+                    StartDate = DateTime.Now.AddMonths(2),
+                    PlannedEndDate = DateTime.Now.AddMonths(12),
+                    ApprenticeName = "Jane Doe",
+                    EmployerAccountId = ReceivingEmployerAccountId,
+                    SendingEmployerAccountId = ExpectedAccountId,
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 10,
+                    CompletionAmount = 100,
+                    CourseName = "My Course",
+                    CourseLevel = 1,
+                    LearnerId = 998,
+                    ProviderName = "Test Provider",
+                    ProviderId = 99876,
+                    FundingSource = FundingSource.Levy,
+                    HasHadPayment = false
+                },
+                new CommitmentModel
+                {
+                    StartDate = DateTime.Now.AddMonths(-2),
+                    PlannedEndDate = DateTime.Now.AddMonths(12),
+                    ApprenticeName = "Jane Doe",
+                    EmployerAccountId = ReceivingEmployerAccountId,
+                    SendingEmployerAccountId = ExpectedAccountId,
+                    MonthlyInstallment = 10,
+                    NumberOfInstallments = 10,
+                    CompletionAmount = 100,
+                    CourseName = "My Course",
+                    CourseLevel = 1,
+                    LearnerId = 999,
+                    ProviderName = "Test Provider",
+                    ProviderId = 99876,
+                    FundingSource = FundingSource.Levy,
+                    HasHadPayment = false
                 }
-            }};
+            }
+            };
             _moqer.GetMock<ICommitmentsDataService>()
                 .Setup(x => x.GetCurrentCommitments(It.IsAny<long>(), It.IsAny<DateTime?>()))
                 .ReturnsAsync(_commitments);
@@ -115,7 +154,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public async Task Should_Take_Commitments_Used_For_projection_To_Build_Csv_File_At_The_Active_Commitment_Level()
         {
             var apprenticesCsv = await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12");
-            apprenticesCsv.Count().Should().Be(2);
+            apprenticesCsv.Count().Should().Be(4);
             _moqer.GetMock<ICommitmentsDataService>().Verify(x => x.GetCurrentCommitments(It.Is<long>(id => id == ExpectedAccountId), It.IsAny<DateTime?>()), Times.Once);
         }
 
@@ -128,7 +167,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             //Assert
             Assert.IsNotNull(apprenticeshipCsv);
             Assert.IsNotEmpty(apprenticeshipCsv);
-            var firstApprenticeship = apprenticeshipCsv.First();
+            var firstApprenticeship = apprenticeshipCsv.Single(m => m.Uln == "90");
             Assert.IsNotNull(firstApprenticeship);
             Assert.AreEqual(207, firstApprenticeship.TotalCost);
             Assert.AreEqual(11, firstApprenticeship.MonthlyTrainingCost);
@@ -142,7 +181,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            var lastApprenticeship = apprenticeshipCsv.Last();
+            var lastApprenticeship = apprenticeshipCsv.Single(m => m.Uln == "");
             Assert.IsNotNull(lastApprenticeship);
             Assert.IsEmpty(lastApprenticeship.ApprenticeName);
             Assert.IsEmpty(lastApprenticeship.Uln);
@@ -168,8 +207,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            Assert.AreEqual("N", apprenticeshipCsv[0].TransferToEmployer);
-            Assert.AreEqual("Y", apprenticeshipCsv[1].TransferToEmployer);
+            Assert.AreEqual("N", apprenticeshipCsv.Single(m => m.Uln == "90").TransferToEmployer);
+            Assert.AreEqual("Y", apprenticeshipCsv.Single(m => m.Uln == "").TransferToEmployer);
         }
 
         [Test]
@@ -179,7 +218,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            var actualFirstCommitment = apprenticeshipCsv.First();
+            var actualFirstCommitment = apprenticeshipCsv.Single(m => m.Uln == "90");
             Assert.IsNotNull(actualFirstCommitment);
             Assert.AreEqual(DateTime.Now.AddMonths(-1).ToString("MMM-yy"), actualFirstCommitment.StartDate);
             Assert.AreEqual(DateTime.Now.AddMonths(12).ToString("MMM-yy"), actualFirstCommitment.PlannedEndDate);
@@ -193,7 +232,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
 
             //Assert
-            var actualFirstCommitment = apprenticeshipCsv.First();
+            var actualFirstCommitment = apprenticeshipCsv.Single(m => m.Uln == "90");
             Assert.IsNotNull(actualFirstCommitment);
             Assert.AreEqual("N", actualFirstCommitment.TransferToEmployer);
         }
@@ -258,6 +297,56 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .First()
                 .Date
                 .Should().Be(DateTime.Now.AddMonths(1).ToString("MMM yy"));
+        }
+
+        [Test]
+        public async Task Started_not_paid_commitment_must_only_have_DAS_date()
+        {
+            //Act
+            var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
+
+            //Assert
+            var notStartedNotPaid = apprenticeshipCsv.Single(m => m.Uln == "998");
+
+            Assert.IsNotNull(notStartedNotPaid);
+
+            notStartedNotPaid.StartDate.Should().BeNullOrEmpty();
+            notStartedNotPaid.PlannedEndDate.Should().BeNullOrEmpty();
+
+            Assert.AreEqual(DateTime.Now.AddMonths(2).ToString("MMM-yy"), notStartedNotPaid.DasStartDate);
+            Assert.AreEqual(DateTime.Now.AddMonths(12).ToString("MMM-yy"), notStartedNotPaid.DasPlannedEndDate);
+        }
+
+        [Test]
+        public async Task Not_started_not_paid_commitment_must_only_have_DAS_date()
+        {
+            //Act
+            var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
+
+            //Assert
+            var startedNotPaid = apprenticeshipCsv.Single(m => m.Uln == "999");
+
+            Assert.IsNotNull(startedNotPaid);
+
+            startedNotPaid.StartDate.Should().BeNullOrEmpty();
+            startedNotPaid.PlannedEndDate.Should().BeNullOrEmpty();
+
+            Assert.AreEqual(DateTime.Now.AddMonths(-2).ToString("MMM-yy"), startedNotPaid.DasStartDate);
+            Assert.AreEqual(DateTime.Now.AddMonths(12).ToString("MMM-yy"), startedNotPaid.DasPlannedEndDate);
+        }
+
+        [Test]
+        public async Task Commitments_must_have_correct_status()
+        {
+            var apprenticeshipCsv = (await _moqer.Resolve<ForecastingOrchestrator>().ApprenticeshipsCsv("ABBA12")).ToList();
+
+            var paid = apprenticeshipCsv.Single(m => m.Uln == "90");
+            var notStartedNotPaid = apprenticeshipCsv.Single(m => m.Uln == "998");
+            var startedNotPaid = apprenticeshipCsv.Single(m => m.Uln == "999");
+
+            paid.Status.Should().Be("Live and paid");
+            notStartedNotPaid.Status.Should().Be("Waiting to start");
+            startedNotPaid.Status.Should().Be("Live and not paid");
         }
 
         /// <summary>

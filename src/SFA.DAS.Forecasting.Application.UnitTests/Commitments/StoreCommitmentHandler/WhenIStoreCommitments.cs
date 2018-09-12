@@ -56,10 +56,13 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             
 
             _queueServiceMock = new Mock<IQueueService>();
-           
 
-            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
-                _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object, _queueServiceMock.Object);
+            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(
+                _employerCommitmentRepostiory.Object,
+                _logger.Object, 
+                _paymentMapper.Object, 
+                new Mock<ITelemetry>().Object, 
+                new Apprenticeship.Mapping.ApprenticeshipMapping(), _queueServiceMock.Object);
         }
 
         [Test]
