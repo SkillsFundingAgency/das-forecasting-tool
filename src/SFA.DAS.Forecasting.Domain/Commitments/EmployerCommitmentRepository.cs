@@ -7,7 +7,6 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 {
     public interface IEmployerCommitmentRepository
     {
-        Task Upsert(CommitmentModel commitment);
         Task<EmployerCommitment> Get(long employerAccountId, long apprenticeshipId);
         Task Store(EmployerCommitment commitment);
     }
@@ -20,12 +19,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         {
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
         }
-
-        public async Task Upsert(CommitmentModel commitment)
-        {
-            await _dataService.Upsert(commitment);
-        }
-
+        
         public async Task<EmployerCommitment> Get(long employerAccountId, long apprenticeshipId)
         {
             var commitment = await _dataService.Get(employerAccountId, apprenticeshipId)

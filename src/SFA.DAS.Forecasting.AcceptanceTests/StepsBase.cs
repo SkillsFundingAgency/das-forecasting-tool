@@ -24,6 +24,7 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Levy;
@@ -309,10 +310,16 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
                     FundingSource = GetFundingSource(commitment)
                 };
-                CommitmentsDataService.Upsert(commitmentModel).Wait();
+                var commitmentRepo = CommitmentsDataService.Get(commitmentModel.EmployerAccountId, commitmentModel.ApprenticeshipId).Result ??
+                                     new CommitmentModel();
+                var employerCommitment = new EmployerCommitment(commitmentRepo);
+                if (!employerCommitment.RegisterCommitment(commitmentModel))
+                {
+                    continue;
+                }
+                CommitmentsDataService.Store(commitmentModel).Wait();
             }
 
-            DataContext.SaveChanges();
         }
 
         private FundingSource GetFundingSource(TestCommitment commitment)

@@ -144,107 +144,10 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             }
 
             stopwatch.Stop();
-            _telemetry.AddProperty("Commitment Id", commitment.Id.ToString());
+           // _telemetry.AddProperty("Commitment Id", commitment.Id.ToString());
             _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime,
                 stopwatch.Elapsed, true);
         }
 
-
-        public async Task Upsert(CommitmentModel commitment)
-        {
-            var sql = UpserSqlString();
-            var parameters = new object[]
-            {
-                new SqlParameter("@employerAccountId", commitment.EmployerAccountId),
-                new SqlParameter("@sendingEmployerAccountId", commitment.SendingEmployerAccountId),
-                new SqlParameter("@learnerId", commitment.LearnerId),
-                new SqlParameter("@providerId", commitment.ProviderId),
-
-                new SqlParameter("@providerName", string.IsNullOrEmpty(commitment.ProviderName) ? "No Name Provided" : commitment.ProviderName),
-                new SqlParameter("@apprenticeshipId", commitment.ApprenticeshipId),
-                new SqlParameter("@apprenticeName", commitment.ApprenticeName),
-
-                new SqlParameter("@courseName", commitment.CourseName),
-                new SqlParameter("@courseLevel", commitment.CourseLevel),
-                new SqlParameter("@startDate", commitment.StartDate)
-                {
-                    SqlDbType = SqlDbType.DateTime
-                },
-                new SqlParameter("@plannedEndDate", commitment.PlannedEndDate)
-                {
-                    SqlDbType = SqlDbType.DateTime
-                },
-                new SqlParameter("@actualEndDate", commitment.ActualEndDate ?? (object) DBNull.Value)
-                    {
-                        IsNullable = true,
-                        SqlDbType = System.Data.SqlDbType.DateTime,
-                        Direction = System.Data.ParameterDirection.Input
-                    },
-                new SqlParameter("@completionAmount", commitment.CompletionAmount),
-                new SqlParameter("@monthlyInstallment", commitment.MonthlyInstallment),
-                new SqlParameter("@numberOfInstallments", commitment.NumberOfInstallments),
-                new SqlParameter("@fundingSource", commitment.FundingSource)
-            };
-
-            await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
-
-        }
-
-        private string UpserSqlString()
-        {
-            return @"
-                    MERGE INTO Commitment
-                    USING 
-                    (
-                        SELECT @employerAccountId        as EmployerAccountId,
-                         @sendingEmployerAccountId as SendingEmployerAccountId,
-                         @learnerId                as LearnerId,
-                         @providerId               as ProviderId,
-                         @providerName             as ProviderName,
-                         @apprenticeshipId         as ApprenticeshipId,
-                         @apprenticeName           as ApprenticeName,
-                         @courseName               as CourseName,
-                         @courseLevel              as CourseLevel,
-                         @startDate                as StartDate,
-                         @plannedEndDate           as PlannedEndDate,
-                         @actualEndDate            as ActualEndDate,
-                         @completionAmount         as CompletionAmount,
-                         @monthlyInstallment       as MonthlyInstallment,
-                         @numberOfInstallments     as NumberOfInstallments,
-                         @fundingSource            as FundingSource
-                    ) AS entity
-                    ON  Commitment.EmployerAccountId = entity.EmployerAccountId 
-                        AND Commitment.learnerId = entity.LearnerId
-                    WHEN MATCHED 
-                     THEN
-                        UPDATE 
-                        SET 
-                      ApprenticeshipId = entity.ApprenticeshipId,
-                      ApprenticeName = entity.ApprenticeName,
-                      ActualEndDate = entity.ActualEndDate
-                    WHEN NOT MATCHED 
-                        AND entity.ActualEndDate is null 
-                        THEN 
-                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource)
-                     VALUES (
-                                entity.EmployerAccountId,
-                                entity.SendingEmployerAccountId,
-                                entity.LearnerId, 
-                                entity.ProviderId, 
-                                entity.ProviderName,
-                                entity.ApprenticeshipId, 
-                                entity.ApprenticeName, 
-                                entity.CourseName, 
-                                entity.CourseLevel, 
-                                entity.StartDate, 
-                                entity.PlannedEndDate, 
-                                entity.ActualEndDate, 
-                                entity.CompletionAmount, 
-                                entity.MonthlyInstallment, 
-                                entity.NumberOfInstallments, 
-                                entity.FundingSource);
-                    ";
-
-        }
     }
 }
