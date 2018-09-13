@@ -144,7 +144,10 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             }
 
             stopwatch.Stop();
-           // _telemetry.AddProperty("Commitment Id", commitment.Id.ToString());
+            if (commitment.Id != 0)
+            {
+                _telemetry.AddProperty("Commitment Id", commitment.Id.ToString());
+            }
             _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime,
                 stopwatch.Elapsed, true);
         }
