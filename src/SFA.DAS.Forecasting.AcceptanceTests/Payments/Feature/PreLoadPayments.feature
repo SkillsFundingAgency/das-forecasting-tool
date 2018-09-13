@@ -57,9 +57,9 @@ Scenario: Pre load anonymised payments
 Scenario: Pre load multiple anonymised payments for a single apprenticeship
 	Given payments for the following apprenticeship have been recorded in the Payments service
 	| Payment Amount | Apprentice Name   | Course Name   | Course Level | Provider Name   | Start Date | Installment Amount | Completion Amount | Number Of Installments | Delivery Period Month | Delivery Period Year |
-	| 166.66667      | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | 01/01/2018 | 166.66667          | 500.00            | 12                     | 2                     | 2018                 |
-	| 83.33333       | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | 01/01/2018 | 83.33333           | 250.00            | 24                     | 1                     | 2018                 |
-	| 333.333334     | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | 01/01/2018 | 333.333334         | 1000.00           | 6                      | 12                    | 2017                 |
+	| 166.66667      | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | last month | 166.66667          | 500.00            | 12                     | 2                     | 2018                 |
+	| 83.33333       | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | last month | 83.33333           | 250.00            | 24                     | 1                     | 2018                 |
+	| 333.333334     | Test Apprentice 1 | Test Course 1 | 1            | Test Provider 1 | last month | 333.333334         | 1000.00           | 6                      | 12                    | 2017                 |
 	And the payments have also been recorded in the Employer Accounts Service
 	When I trigger the pre-load of anonymised payment events
 	Then the funding projections payments service should record the anonymised payments
