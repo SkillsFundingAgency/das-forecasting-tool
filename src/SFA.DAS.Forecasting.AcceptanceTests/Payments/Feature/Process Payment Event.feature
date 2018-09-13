@@ -99,8 +99,8 @@ Scenario: Ensure payments for new commitments with an actual end date are ignore
 
 Scenario: Payment with an invalid payment amount but also has an actual end date for an existing commitment (CI-797)
 	Given I have made the following payments
-	| Payment Amount | Apprentice Name   | Course Name | Course Level | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
-	| 0              | Test Apprentice 1 | Test Course | 1            | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
+	| Payment Amount | Apprentice Name   | Provider Name | Course Name | Course Level | Start Date | Installment Amount | Completion Amount | Number Of Installments | Actual End Date |
+	| 0              | Test Apprentice 1 | Test Provider | Test Course | 1            | Yesterday  | 133.33             | 400.00            | 12                     | Today           |
 	And there is a corresponding commitment stored for each of the payments
 	When the SFA Employer HMRC Payment service notifies the Forecasting service of the payment
 	Then the Forecasting Payment service should record that the commitment has ended
