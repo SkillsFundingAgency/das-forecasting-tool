@@ -24,7 +24,7 @@ Scenario: Sending employer account has transfers in with non paid apprenticeship
 	And should have the following projected values
 	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds |
 	| 0             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 8000        |
-	| 1             | 600                 | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 17400       |
+	| 1             | 600                 | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 10400       |
 	| 2             | 600                 | 400                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 12400       |
 	| 3             | 600                 | 400                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 14400       |
 	| 4             | 600                 | 400                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 16400       |

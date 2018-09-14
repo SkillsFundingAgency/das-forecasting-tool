@@ -172,7 +172,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "17400"});
+                        "10400"});
             table4.AddRow(new string[] {
                         "2",
                         "600",
