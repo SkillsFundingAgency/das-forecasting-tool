@@ -38,6 +38,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _queueService = queueService ?? throw new ArgumentNullException(nameof(queueService));
             _telemetry = telemetry;
             _apprenticeshipMapping = apprenticeshipMapping;
+            _paymentMapper = paymentMapper;
         }
 
         public async Task Handle(PaymentCreatedMessage message, string allowProjectionsEndpoint)
