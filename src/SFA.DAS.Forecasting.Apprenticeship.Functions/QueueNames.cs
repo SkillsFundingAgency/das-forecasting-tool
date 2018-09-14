@@ -6,5 +6,6 @@
         public const string RefreshApprenticeshipsForEmployer = "forecasting-refresh-apprenticeship-for-employer";
         public const string StoreApprenticeships = "forecasting-store-apprenticeship-for-employer";
         public const string AllowProjection = "forecasting-payment-allow-projection";
+
     }
 }

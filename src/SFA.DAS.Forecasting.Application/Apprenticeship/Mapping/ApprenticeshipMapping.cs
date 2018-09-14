@@ -1,4 +1,5 @@
-﻿using System;
+
+using System;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Models.Commitments;
 

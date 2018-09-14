@@ -28,11 +28,7 @@ CREATE NONCLUSTERED INDEX [idx_commitment_sendingEmployerAccountId] ON [dbo].[Co
 GO
 CREATE NONCLUSTERED INDEX [idx_commitment_actualendate] ON [dbo].[Commitment] ([ActualEndDate])INCLUDE ([EmployerAccountId],[SendingEmployerAccountId],[LearnerId],[ProviderId],[ProviderName],[ApprenticeshipId],[ApprenticeName],[CourseName],[CourseLevel],[StartDate],[PlannedEndDate],[CompletionAmount],[MonthlyInstallment],[FundingSource],   [NumberOfInstallments]   ) WITH (ONLINE = ON)
 GO
-CREATE NONCLUSTERED INDEX [idx_commitment_employerAccountId_sending_endDate] ON [dbo].[commitment] ([ActualEndDate],[EmployerAccountId], [SendingEmployerAccountId] ) INCLUDE ([id],[ApprenticeName], [ApprenticeshipId], [CompletionAmount], [CourseLevel], [CourseName], [FundingSource], [LearnerId], [MonthlyInstallment], [NumberOfInstallments], [PlannedEndDate], [ProviderId], [ProviderName], [StartDate]) WHERE(ActualEndDate IS NULL) WITH (ONLINE = ON)
-GO
 CREATE NONCLUSTERED INDEX [idx_commitment_employerAccountId_fundingsource_endDate] ON [dbo].[commitment] ([ActualEndDate],[EmployerAccountId], [FundingSource] , [StartDate]) INCLUDE ([id],[ApprenticeName], [ApprenticeshipId], [CompletionAmount], [CourseLevel], [CourseName], [SendingEmployerAccountId], [LearnerId], [MonthlyInstallment], [NumberOfInstallments], [PlannedEndDate], [ProviderId], [ProviderName]) WHERE(ActualEndDate IS NULL) WITH (ONLINE = ON)
 GO
 CREATE NONCLUSTERED INDEX [idx_commitment_sendingemployerAccountId_fundingsource_endDate] ON [dbo].[commitment] ([ActualEndDate],[SendingEmployerAccountId], [FundingSource], [StartDate] ) INCLUDE ([id],[ApprenticeName], [ApprenticeshipId], [CompletionAmount], [CourseLevel], [CourseName], [EmployerAccountId], [LearnerId], [MonthlyInstallment], [NumberOfInstallments], [PlannedEndDate], [ProviderId], [ProviderName]) WHERE(ActualEndDate IS NULL) WITH (ONLINE = ON)
-GO
-CREATE NONCLUSTERED INDEX [IX_Commitment_EmployerAccountId_ApprenticeshipId_ActualEndDate] ON [dbo].[Commitment] ([EmployerAccountId], [ApprenticeshipId], [ActualEndDate]) WITH (ONLINE = ON)
 GO

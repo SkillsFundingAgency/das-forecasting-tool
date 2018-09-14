@@ -22,6 +22,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
         private readonly ITelemetry _telemetry;
         private readonly IQueueService _queueService;
 
+
         public StoreCommitmentHandler(
             IEmployerCommitmentRepository repository, 
             ILog logger, 
@@ -30,12 +31,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             ApprenticeshipMapping apprenticeshipMapping,
             IQueueService queueService)
         {
-            _paymentMapper = paymentMapper;
             _apprenticeshipMapping = apprenticeshipMapping;
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _queueService = queueService ?? throw new ArgumentNullException(nameof(queueService));
+            _telemetry = telemetry;
+            _apprenticeshipMapping = apprenticeshipMapping;
         }
 
         public async Task Handle(PaymentCreatedMessage message, string allowProjectionsEndpoint)
@@ -57,6 +59,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
         }
 
         public async Task Handle(ApprenticeshipMessage message, string allowProjectionsEndpoint)
+
         {
             if (message.LearnerId <= 0)
                 throw new InvalidOperationException("Apprenticeship requires LearnerId");

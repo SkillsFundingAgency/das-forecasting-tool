@@ -3,6 +3,25 @@ using System.Text.RegularExpressions;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship
 {
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using NUnit.Framework;
+
+namespace SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship
+{
+    public class TestApprenticehsipSearchModel
+    {
+        public TestApprenticehsipSearchModel(List<TestApprenticeship> apprenticeships)
+        {
+            Apprenticeships = apprenticeships;
+            TotalApprenticeships = apprenticeships.Count;
+        }
+        public List<TestApprenticeship> Apprenticeships { get; set; }
+        public int PageSize { get; set; } = 25;
+        public int PageNumber { get; set; } = 1;
+        public int TotalApprenticeships { get; set; }
+    }
+
     public class TestApprenticeship
     {
         public long? TransferSenderId { get; set; } = null;
