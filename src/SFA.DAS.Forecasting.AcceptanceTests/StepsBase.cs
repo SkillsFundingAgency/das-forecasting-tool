@@ -310,7 +310,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
-                    FundingSource = GetFundingSource(commitment)
+                    FundingSource = GetFundingSource(commitment),
+                    UpdatedDateTime = DateTime.UtcNow
                 };
                 CommitmentsDataService.Upsert(commitmentModel).Wait();
             }
