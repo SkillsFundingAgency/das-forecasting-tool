@@ -15,17 +15,13 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
         [FunctionName("GetEmployerApprenticeships")]
         public static async Task<HttpResponseMessage> Run([
             HttpTrigger(AuthorizationLevel.Function, "get",
-            Route = "employer/{employerAccountId}/apprenticeships/")]HttpRequestMessage req, string employerAccountId, TraceWriter writer)
+            Route = "employer/{employerAccountId}/apprenticeships/search")]HttpRequestMessage req, string employerAccountId, TraceWriter writer)
         {
-
-            IEnumerable<Commitments.Api.Types.Apprenticeship.Apprenticeship> data;
-            StubDataStore.Apprenticeships.TryGetValue(employerAccountId, out data);
-
-            var d = JsonConvert.SerializeObject(data);
+            StubDataStore.Apprenticeships.TryGetValue(employerAccountId, out var data);
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(d, Encoding.UTF8, "application/json")
+                Content = new StringContent(data, Encoding.UTF8, "application/json")
             };
         }
     }
