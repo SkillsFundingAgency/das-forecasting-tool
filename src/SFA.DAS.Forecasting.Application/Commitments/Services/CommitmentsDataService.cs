@@ -29,8 +29,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
             return await _dataContext
                 .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId)
-                .OrderByDescending(commitment => commitment.ReceivedTime)
-                .Select(commitment => commitment.ReceivedTime)
+                .OrderByDescending(commitment => commitment.UpdatedDateTime)
+                .Select(commitment => commitment.UpdatedDateTime)
                 .FirstOrDefaultAsync();
         }
 
