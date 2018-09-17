@@ -112,10 +112,10 @@
                             {
                                 newFinancialYearAccountFunds = false;
                                 var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
+                                <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
 
                                 if (accountFund.Date > new DateTime(2019, 3, 1))
                                 {
-                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
                                     <div class="panel-warning2">
                                         <span class="icon"></span>
                                         <p>
@@ -123,7 +123,6 @@
                                         </p>
                                     </div>
                                 }
-                                <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
                                 @:<table class="small errorTable responsive">
                                     <thead>
                                         <tr>
