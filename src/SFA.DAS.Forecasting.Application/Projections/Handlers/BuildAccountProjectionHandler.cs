@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             var startDate = new DateTime(
                 GetValue(message.StartPeriod?.Year, DateTime.Today.Year),
                 GetValue(message.StartPeriod?.Month, DateTime.Today.Month),
-                1);
+                GetValue(message.StartPeriod?.Day, DateTime.Today.Day));
 
             if (message.ProjectionSource == ProjectionSource.LevyDeclaration)
                 projections.BuildLevyTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
