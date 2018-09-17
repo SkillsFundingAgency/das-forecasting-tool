@@ -72,17 +72,43 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [When(@"the account projection is triggered after levy has been declared")]
         public void WhenTheAccountProjectionIsGenerated()
         {
+            var defaultCalendarPeriod = new CalendarPeriod
+            {
+                Year = DateTime.Today.Year,
+                Month = DateTime.Today.Month,
+                Day = 20
+            };
+
+            TriggerProjectionForAccount(defaultCalendarPeriod);
+        }
+
+        [When(@"the account projection is triggered before levy has been declared")]
+        public void WhenTheAccountProjectionIsTriggeredBeforeLevyHasBeenDeclared()
+        {
+            var defaultCalendarPeriod = new CalendarPeriod
+            {
+                Year = DateTime.Today.Year,
+                Month = DateTime.Today.Month,
+                Day = 18
+            };
+            TriggerProjectionForAccount(defaultCalendarPeriod);
+        }
+
+        private void TriggerProjectionForAccount(CalendarPeriod defaultCalendarPeriod)
+        {
             var startPeriodJson = ScenarioContext.Current.ContainsKey("projections_start_period")
                 ? ProjectionsStartPeriod.ToJson()
-                : string.Empty;
+                : defaultCalendarPeriod.ToJson();
 
             DeleteAccountProjections(Config.EmployerAccountId);
             var projectionUrl =
                 Config.ProjectionLevyFunctionUrl.Replace("{employerAccountId}", Config.EmployerAccountId.ToString());
             Console.WriteLine($"Sending levy event to levy function: {projectionUrl}, payload: {startPeriodJson}");
-            var response = HttpClient.PostAsync(projectionUrl, new StringContent(startPeriodJson, Encoding.UTF8, "application/json")).Result;
+            var response = HttpClient
+                .PostAsync(projectionUrl, new StringContent(startPeriodJson, Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
+
 
         [Then(@"there should be (.*) commitments")]
         public void ThenThereShouldBeCommitments(int commitmetnCount)
@@ -129,6 +155,30 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 return true;
             }, "Account projection failed.");
         }
+
+        [Then(@"the first month projected balance is (.*)")]
+        public void ThenTheFirstMonthProjectedBalanceIs(int p0)
+        {
+            WaitForIt(() =>
+            {
+                var projections = new List<AccountProjectionModel>();
+                ExecuteSql(() =>
+                {
+                    projections = DataContext.AccountProjections.Where(projection =>
+                            projection.EmployerAccountId == Config.EmployerAccountId)
+                        .ToList();
+                });
+                if (!projections.Any())
+                    return false;
+                projections = projections
+                    .OrderBy(projection => $"{projection.Year:0000}-{projection.Month:00}")
+                    .ToList();
+
+                Assert.AreEqual(p0,projections.First().FutureFunds);
+                return true;
+            }, "Account projection failed.");
+        }
+
 
         [Then(@"calculated levy credit value should be the amount declared for the single linked PAYE scheme")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSingleLinkedPAYEScheme()
