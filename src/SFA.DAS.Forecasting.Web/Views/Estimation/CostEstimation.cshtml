@@ -223,7 +223,7 @@
                                 }
 
                                 <tr class="@tableRowClass">
-                                    <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                    <td>@costEstimate.Date.ToGdsFormatShortMonthWithoutDay()</td>
                                     <td class="financial">@costEstimate.ActualCost.FormatCost()</td>
                                     <td class="financial">@costEstimate.EstimatedCost.FormatCost()</td>
                                     <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
@@ -285,7 +285,7 @@
                             <tr>
                                 <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
                                 <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
-                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
+                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatShortMonthWithoutDay() </td>
                                 <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
                                 <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
                                 <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
