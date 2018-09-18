@@ -121,7 +121,7 @@ this.FeatureBackground();
                         "Test Course 1",
                         "1",
                         "Test Provider 1",
-                        "Yesterday",
+                        "Last Month",
                         "666.66",
                         "2000",
                         "12",
@@ -131,9 +131,9 @@ this.FeatureBackground();
                         "Test Course 2",
                         "1",
                         "Test Provider 2",
-                        "Yesterday",
+                        "Last Month",
                         "444.44",
-                        "2000",
+                        "1000",
                         "18",
                         "Transfer"});
 #line 18
@@ -154,8 +154,8 @@ this.FeatureBackground();
                         "FutureFunds"});
             table4.AddRow(new string[] {
                         "0",
-                        "0.00",
-                        "0.00",
+                        "666.66",
+                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
@@ -262,22 +262,22 @@ this.FeatureBackground();
                         "28777.90"});
             table4.AddRow(new string[] {
                         "12",
-                        "666.66",
-                        "444.44",
-                        "0.00",
-                        "0.00",
-                        "0.00",
-                        "0.00",
-                        "30666.80"});
-            table4.AddRow(new string[] {
-                        "13",
                         "0.00",
                         "444.44",
                         "0.00",
                         "0.00",
                         "2000.00",
                         "0.00",
-                        "31222.36"});
+                        "29333.46"});
+            table4.AddRow(new string[] {
+                        "13",
+                        "0.00",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "31889.02"});
             table4.AddRow(new string[] {
                         "14",
                         "0.00",
@@ -286,7 +286,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "33777.92"});
+                        "34444.58"});
             table4.AddRow(new string[] {
                         "15",
                         "0.00",
@@ -295,7 +295,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "36333.48"});
+                        "37000.14"});
             table4.AddRow(new string[] {
                         "16",
                         "0.00",
@@ -304,7 +304,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "38889.04"});
+                        "39555.70"});
             table4.AddRow(new string[] {
                         "17",
                         "0.00",
@@ -313,16 +313,16 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "41444.60"});
+                        "42111.26"});
             table4.AddRow(new string[] {
                         "18",
                         "0.00",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "44000.16"});
+                        "1000.00",
+                        "44111.26"});
             table4.AddRow(new string[] {
                         "19",
                         "0.00",
@@ -330,8 +330,8 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "2000.00",
-                        "45000.16"});
+                        "0.00",
+                        "47111.26"});
             table4.AddRow(new string[] {
                         "20",
                         "0.00",
@@ -340,7 +340,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "48000.16"});
+                        "50111.26"});
 #line 24
  testRunner.And("should have the following projected values", ((string)(null)), table4, "And ");
 #line hidden
