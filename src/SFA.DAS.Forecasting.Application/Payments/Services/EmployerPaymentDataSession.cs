@@ -49,7 +49,16 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task SaveChanges()
+	    public async Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId)
+	    {
+			return await _dataContext
+				.Payments.Where(payment => payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
+				.OrderByDescending(payment => payment.ReceivedTime)
+				.Select(payment => payment.ReceivedTime)
+				.FirstOrDefaultAsync();
+		}
+
+	    public async Task SaveChanges()
         {
             var stopwatch = new Stopwatch();
             var startTime = DateTime.UtcNow;
