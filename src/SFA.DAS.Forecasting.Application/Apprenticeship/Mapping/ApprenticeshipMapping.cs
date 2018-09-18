@@ -1,4 +1,6 @@
-﻿using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+
+using System;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Application.Apprenticeship.Mapping
@@ -25,6 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Apprenticeship.Mapping
                 CourseLevel = message.CourseLevel,
                 SendingEmployerAccountId = message.SendingEmployerAccountId ?? message.EmployerAccountId,
                 FundingSource = message.FundingSource,
+                UpdatedDateTime = DateTime.UtcNow,
                 HasHadPayment = false
             };
 

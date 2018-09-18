@@ -34,6 +34,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship.Steps
             var model = new TestApprenticehsipSearchModel(TestApprenticeships);
 
             var data = JsonConvert.SerializeObject(model);
+
             var response = HttpClient.PostAsync(url, new StringContent(data, Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
@@ -41,6 +42,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship.Steps
         [When(@"I trigger load of apprenticeships")]
         public void WhenITriggerLoadOfApprenticeships()
         {
+
             var response = HttpClient.PostAsync(Config.GetApprenticeshipHttpTriggerUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Thread.Sleep(1000);
