@@ -40,11 +40,11 @@ Scenario: Sending employer with transfer out after payment run
 	Then the account projection should be generated
 	And should have the following projected values
 	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds |
-	| 0             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 400         |
-	| 1             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 300         |
-	| 2             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 200         |
-	| 3             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 100         |
-	| 4             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 0           |
+	| 0             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 500         |
+	| 1             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 400         |
+	| 2             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 300         |
+	| 3             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 200         |
+	| 4             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 100           |
 	| 5             | 0.00                | 100                            | 0.00                          | 0.00                         | 0.00               | 00.0                          | 0           |
 	| 6             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 2000.00                       | 0           |
 	| 7             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 0           |

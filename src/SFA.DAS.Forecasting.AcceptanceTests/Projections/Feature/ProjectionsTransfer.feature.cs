@@ -276,7 +276,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "400"});
+                        "500"});
             table6.AddRow(new string[] {
                         "1",
                         "0.00",
@@ -285,7 +285,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "300"});
+                        "400"});
             table6.AddRow(new string[] {
                         "2",
                         "0.00",
@@ -294,7 +294,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "200"});
+                        "300"});
             table6.AddRow(new string[] {
                         "3",
                         "0.00",
@@ -303,7 +303,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "100"});
+                        "200"});
             table6.AddRow(new string[] {
                         "4",
                         "0.00",
@@ -312,7 +312,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "0"});
+                        "100"});
             table6.AddRow(new string[] {
                         "5",
                         "0.00",
