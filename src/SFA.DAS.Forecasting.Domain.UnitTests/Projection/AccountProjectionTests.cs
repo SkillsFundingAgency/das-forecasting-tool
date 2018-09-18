@@ -431,6 +431,79 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         }
 
         [Test]
+        public void Then_When_You_Are_A_Sending_Employer_Your_Balance_First_Month_Does_not_Include_Transfer_Out_Payments_For_First_Month_For_Payment_Run()
+        {
+            //Arrange
+            _account = new Account(1, 2000, 100, 0, 0);
+            Moqer.SetInstance(_account);
+            _commitments.LevyFundedCommitments = new List<CommitmentModel>();
+            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
+            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
+            {
+                new CommitmentModel
+                {
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 999,
+                    ApprenticeshipId = 23,
+                    LearnerId = 33,
+                    StartDate = DateTime.Today.AddMonths(-1),
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
+                    MonthlyInstallment = 100,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 400,
+                    FundingSource = Models.Payments.FundingSource.Transfer
+                }
+            };
+
+            var employerCommitments = new EmployerCommitments(1, _commitments);
+            Moqer.SetInstance(employerCommitments);
+
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
+
+            //Assert
+            Assert.AreEqual(2100m, accountProjection.Projections[0].FutureFunds);
+        }
+
+
+        [Test]
+        public void Then_When_You_Are_A_Sending_Employer_Your_Balance_First_Month_Does_not_Include_Transfer_Out_Payments_For_First_Month_For_Levy_Run()
+        {
+            //Arrange
+            _account = new Account(1, 2000, 100, 0, 0);
+            Moqer.SetInstance(_account);
+            _commitments.LevyFundedCommitments = new List<CommitmentModel>();
+            _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
+            _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
+            {
+                new CommitmentModel
+                {
+                    EmployerAccountId = 1,
+                    SendingEmployerAccountId = 999,
+                    ApprenticeshipId = 23,
+                    LearnerId = 33,
+                    StartDate = DateTime.Today.AddMonths(-1),
+                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
+                    MonthlyInstallment = 100,
+                    NumberOfInstallments = 6,
+                    CompletionAmount = 400,
+                    FundingSource = Models.Payments.FundingSource.Transfer
+                }
+            };
+
+            var employerCommitments = new EmployerCommitments(1, _commitments);
+            Moqer.SetInstance(employerCommitments);
+
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
+
+            //Assert
+            Assert.AreEqual(2000m, accountProjection.Projections[0].FutureFunds);
+        }
+
+        [Test]
         public void Then_When_You_Are_A_Sending_Employer_Your_FutureFunds_Are_Updated()
         {
             //Arrange

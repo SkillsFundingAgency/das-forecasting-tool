@@ -102,15 +102,10 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
 	    public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal trainingCostTransferOut,  ProjectionGenerationType projectionGenerationType, bool isFirstMonth)
 	    {
-		    if (!_employerCommitments.IsSendingEmployer())
+		    if (!_employerCommitments.IsSendingEmployer() || isFirstMonth)
 		    {
 			    return lastBalance;
 		    }
-
-	        if (projectionGenerationType == ProjectionGenerationType.LevyDeclaration && isFirstMonth)
-	        {
-	            return lastBalance;
-	        }
 
             var transferCosts = completionPaymentsTransferOut + trainingCostTransferOut;
 		    var currentBalance = lastBalance;
