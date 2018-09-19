@@ -11,6 +11,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
         public static IDictionary<string, IEnumerable<LevyDeclarationViewModel>> LevyData { get; set; }
             = new Dictionary<string, IEnumerable<LevyDeclarationViewModel>>();
 
+
         public static IDictionary<string, string> Apprenticeships { get; set; }
             = new Dictionary<string,string>();
 

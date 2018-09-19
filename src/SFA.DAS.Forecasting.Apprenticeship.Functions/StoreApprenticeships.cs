@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                 {
                     logger.Debug($"Storing apprenticeship. Account: {message.EmployerAccountId}, apprenticeship id: {message.ApprenticeshipId}");
                     var handler = container.GetInstance<StoreCommitmentHandler>();
-                    await handler.Handle(message);
+                    await handler.Handle(message,QueueNames.AllowProjection);
                     logger.Info($"Stored commitment. Apprenticeship id: {message.ApprenticeshipId}");   
                 });
         }

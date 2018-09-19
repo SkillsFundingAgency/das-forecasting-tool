@@ -188,6 +188,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Generate Training Cost Projections.feature</DependentUpon>
     </Compile>
+    <Compile Include="Projections\Feature\ProjectionsTransfer.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectionsTransfer.feature</DependentUpon>
+    </Compile>
     <Compile Include="Projections\Steps\CalculateCo_InvestmentAmountsCI_570Steps.cs" />
     <Compile Include="Projections\Steps\CoInvestmentFundedPayments.cs" />
     <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
@@ -292,6 +297,10 @@
     <None Include="Projections\Feature\Generate Training Cost Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Generate Training Cost Projections.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\ProjectionsTransfer.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ProjectionsTransfer.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
