@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -13,31 +14,39 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     {
         [FunctionName("PaymentEventAllowProjectionFunction")]
         [return: Queue(QueueNames.GenerateProjections)]
-        public static async Task<GenerateAccountProjectionCommand> Run(
+        public static async Task Run(
             [QueueTrigger(QueueNames.AllowProjection)]PaymentCreatedMessage paymentCreatedMessage,
             ExecutionContext executionContext,
-            TraceWriter writer)
+			ICollector<GenerateAccountProjectionCommand> collector, 
+			TraceWriter writer)
         {
-            return await FunctionRunner.Run<PaymentEventStorePaymentFunction, GenerateAccountProjectionCommand>(writer, executionContext,
+            await FunctionRunner.Run<PaymentEventStorePaymentFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
                     logger.Debug("Getting payment declaration handler from container.");
                     var handler = container.GetInstance<AllowAccountProjectionsHandler>();
                     if (handler == null)
                         throw new InvalidOperationException($"Failed to get payment handler from container.");
-                    var allowProjections = await handler.Allow(paymentCreatedMessage);
-                    if (!allowProjections)
-                    {
-                        logger.Debug($"Cannot generate the projections, still handling payment events. Employer: {paymentCreatedMessage.EmployerAccountId}");
-                        return null;
-                    }
 
-                    logger.Info($"Now sending message to trigger the account projections for employer '{paymentCreatedMessage.EmployerAccountId}', period: {paymentCreatedMessage.CollectionPeriod?.Id}, {paymentCreatedMessage.CollectionPeriod?.Month}");
-                    return new GenerateAccountProjectionCommand
-                    {
-                        EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
-                        ProjectionSource = ProjectionSource.PaymentPeriodEnd,
-                    };
+	                var allowedEmployerAccounts = await handler.AllowedEmployerAccountIds(paymentCreatedMessage);
+
+	                if (allowedEmployerAccounts.Any())
+	                {
+		                foreach (var allowedEmployerAccount in allowedEmployerAccounts)
+		                {
+			                logger.Info($"Now sending message to trigger the account projections for employer '{allowedEmployerAccount}', period: {paymentCreatedMessage.CollectionPeriod?.Id}, {paymentCreatedMessage.CollectionPeriod?.Month}");
+
+							collector.Add(new GenerateAccountProjectionCommand
+			                {
+				                EmployerAccountId = allowedEmployerAccount,
+				                ProjectionSource = ProjectionSource.PaymentPeriodEnd,
+			                });
+		                }
+	                }
+	                else
+	                {
+		                logger.Debug($"Cannot generate the projections, still handling payment events. Employer: {paymentCreatedMessage.EmployerAccountId}");
+					}
                 });
         }
     }
