@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    foreach (var employerId in request.EmployerAccountIds)
                    {
                        var levyDeclarations = await levyDataService.LevyForPeriod(employerId, request.PeriodYear, request.PeriodMonth);
-                       if (levyDeclarations.Count < 1)
+                       if (!levyDeclarations.Any())
                        {
                            logger.Info($"No levy declarations found for employer: {employerId}");
                            continue;
