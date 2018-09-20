@@ -13,11 +13,10 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     public class PaymentEventAllowProjectionFunction : IFunction
     {
         [FunctionName("PaymentEventAllowProjectionFunction")]
-        [return: Queue(QueueNames.GenerateProjections)]
         public static async Task Run(
             [QueueTrigger(QueueNames.AllowProjection)]PaymentCreatedMessage paymentCreatedMessage,
-            ExecutionContext executionContext,
-			ICollector<GenerateAccountProjectionCommand> collector, 
+            [Queue(QueueNames.GenerateProjections)] ICollector<GenerateAccountProjectionCommand> collector,
+            ExecutionContext executionContext, 
 			TraceWriter writer)
         {
             await FunctionRunner.Run<PaymentEventStorePaymentFunction>(writer, executionContext,
@@ -28,7 +27,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     if (handler == null)
                         throw new InvalidOperationException($"Failed to get payment handler from container.");
 
-	                var allowedEmployerAccounts = await handler.AllowedEmployerAccountIds(paymentCreatedMessage);
+	                var allowedEmployerAccounts = (await handler.AllowedEmployerAccountIds(paymentCreatedMessage)).ToList();
 
 	                if (allowedEmployerAccounts.Any())
 	                {
