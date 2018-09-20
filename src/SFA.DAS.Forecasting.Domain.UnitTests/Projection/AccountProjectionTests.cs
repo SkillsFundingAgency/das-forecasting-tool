@@ -694,7 +694,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Act
             var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut,
-                trainingCostTransferOut, ProjectionGenerationType.PayrollPeriodEnd, false);
+                trainingCostTransferOut, false);
 
             //Assert
             Assert.AreEqual(expected, balance);
@@ -721,7 +721,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn,
-                ProjectionGenerationType.PayrollPeriodEnd, false);
+                ProjectionGenerationType.PayrollPeriodEnd, false, 22);
 
             Assert.AreEqual(expected, monthEndBalance);
         }

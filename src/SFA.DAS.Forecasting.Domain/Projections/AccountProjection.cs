@@ -63,14 +63,12 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining, int periodStartDay)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool isFirstMonth, int periodStartDay)
         {
 	        var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
 	        var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
 
-			var currentBalance = GetCurrentBalance(lastBalance,
-			    completionPayments.TransferOutCompletionPayment, 
-			    totalCostOfTraning.TransferOut, projectionGenerationType, isFirstMonth);
+			var currentBalance = GetCurrentBalance(lastBalance,completionPayments.TransferOutCompletionPayment, totalCostOfTraning.TransferOut, isFirstMonth);
 
             var trainingCosts = totalCostOfTraning.LevyFunded + completionPayments.LevyFundedCompletionPayment;
             
@@ -81,7 +79,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var moneyIn = isFirstMonth && projectionGenerationType == ProjectionGenerationType.LevyDeclaration ? 0: 
                 levyFundsIn;
 
-			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, ignoreCostOfTraining, periodStartDay);
+			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, isFirstMonth, periodStartDay);
 
 
             var projection = new AccountProjectionModel
@@ -113,7 +111,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             return projectionGenerationType == ProjectionGenerationType.LevyDeclaration && periodStart.Day < 19;
         }
 
-        public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer)
+        public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal trainingCostTransferOut, bool isFirstMonth)
 	    {
 		    if (!_employerCommitments.IsSendingEmployer() || isFirstMonth)
 		    {
