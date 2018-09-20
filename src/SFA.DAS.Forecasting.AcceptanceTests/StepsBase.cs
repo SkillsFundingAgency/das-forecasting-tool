@@ -65,9 +65,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }
         protected List<Models.Commitments.CommitmentModel> RecordedCommitments { get => Get<List<Models.Commitments.CommitmentModel>>(); set => Set(value); }
-        protected CalendarPeriod ProjectionsStartPeriod
+        protected Messages.Projections.CalendarPeriod ProjectionsStartPeriod
         {
-            get => Get<CalendarPeriod>("projections_start_period");
+            get => Get<Messages.Projections.CalendarPeriod>("projections_start_period");
             set => Set(value, "projections_start_period");
         }
         protected decimal Balance

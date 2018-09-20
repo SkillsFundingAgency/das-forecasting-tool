@@ -1,5 +1,4 @@
 ﻿using System;
-using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Messages.Projections
 {

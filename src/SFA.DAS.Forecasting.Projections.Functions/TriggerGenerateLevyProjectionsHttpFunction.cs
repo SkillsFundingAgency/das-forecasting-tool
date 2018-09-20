@@ -4,7 +4,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Messages.Projections;
-using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Projections.Functions
 {

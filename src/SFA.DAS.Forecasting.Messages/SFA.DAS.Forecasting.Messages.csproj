@@ -42,15 +42,10 @@
   <ItemGroup>
     <Compile Include="ApprenticeshipCourses\CourseType.cs" />
     <Compile Include="ApprenticeshipCourses\RefreshCourses.cs" />
+    <Compile Include="Projections\CalendarPeriod.cs" />
     <Compile Include="Projections\GenerateAccountProjectionCommand.cs" />
     <Compile Include="Projections\ProjectionSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
-      <Project>{97049CCE-774A-4377-B682-1C01B95C2CF3}</Project>
-      <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
