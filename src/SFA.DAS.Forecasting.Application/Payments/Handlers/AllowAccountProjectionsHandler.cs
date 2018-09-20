@@ -51,7 +51,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 			    employerAccountIds.Add(paymentCreatedMessage.EmployerAccountId);
 		    }
 			
-		    if (paymentCreatedMessage.EmployerAccountId != paymentCreatedMessage.SendingEmployerAccountId)
+		    if (paymentCreatedMessage.SendingEmployerAccountId != 0 && paymentCreatedMessage.EmployerAccountId != paymentCreatedMessage.SendingEmployerAccountId)
 		    {
 			    if (await IsSendingEmployerAccountIdAllowed(paymentCreatedMessage.SendingEmployerAccountId))
 			    {
