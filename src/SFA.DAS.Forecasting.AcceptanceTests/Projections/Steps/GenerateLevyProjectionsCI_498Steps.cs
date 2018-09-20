@@ -65,13 +65,13 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [Given(@"the start month should be last month rather than this month")]
         public void GivenTheStartMonthShouldBeThisMonthRatherThanNextMonth()
         {
-            ProjectionsStartPeriod = new CalendarPeriod { Month = DateTime.Today.Month - 1, Year = DateTime.Today.Year };
+            ProjectionsStartPeriod = new Messages.Projections.CalendarPeriod { Month = DateTime.Today.Month - 1, Year = DateTime.Today.Year };
         }
 
         [When(@"the account projection is triggered after levy has been declared")]
         public void WhenTheAccountProjectionIsGenerated()
         {
-            var defaultCalendarPeriod = new CalendarPeriod
+            var defaultCalendarPeriod = new Messages.Projections.CalendarPeriod
             {
                 Year = DateTime.Today.Year,
                 Month = DateTime.Today.Month,
@@ -84,7 +84,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [When(@"the account projection is triggered before levy has been declared")]
         public void WhenTheAccountProjectionIsTriggeredBeforeLevyHasBeenDeclared()
         {
-            var defaultCalendarPeriod = new CalendarPeriod
+            var defaultCalendarPeriod = new Messages.Projections.CalendarPeriod
             {
                 Year = DateTime.Today.Year,
                 Month = DateTime.Today.Month,
@@ -93,7 +93,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             TriggerProjectionForAccount(defaultCalendarPeriod);
         }
 
-        private void TriggerProjectionForAccount(CalendarPeriod defaultCalendarPeriod)
+        private void TriggerProjectionForAccount(Messages.Projections.CalendarPeriod defaultCalendarPeriod)
         {
             var startPeriodJson = ScenarioContext.Current.ContainsKey("projections_start_period")
                 ? ProjectionsStartPeriod.ToJson()
