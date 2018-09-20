@@ -34,8 +34,11 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
             Logger.Debug($"Now storing the levy period. Employer: {levySchemeDeclaration.AccountId}, year: {levySchemeDeclaration.PayrollYear}, month: {levySchemeDeclaration.PayrollMonth}");
             await Repository.Store(levyDeclaration);
             Logger.Info($"Finished adding the levy declaration to the levy period. Levy declaration: {levyDeclaration.Id}");
-            _queueService.SendMessageWithVisibilityDelay(levySchemeDeclaration, allowProjectionsEndpoint);
 
-        }
+			if (!string.IsNullOrWhiteSpace(allowProjectionsEndpoint))
+	        {
+		        _queueService.SendMessageWithVisibilityDelay(levySchemeDeclaration, allowProjectionsEndpoint);
+			}
+		}
     }
 }
