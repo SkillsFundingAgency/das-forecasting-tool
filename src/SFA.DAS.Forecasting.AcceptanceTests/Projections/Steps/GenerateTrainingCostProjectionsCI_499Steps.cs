@@ -56,11 +56,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
                 var date = DateTime.Today.AddMonths(p.MonthsFromNow);
                 var projection = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
                 if (table.ContainsColumn("Transfer In Total Cost Of Training"))
-                    projection.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining,
-                        $"Date: {date.Month}-{date.Year},  Expected transfer in cost of training to be {p.TransferInTotalCostOfTraining} but was {projection.TransferInCostOfTraining}.");
+                    projection.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining);
                 if (table.ContainsColumn("Transfer Out Total Cost Of Training"))
-                    projection.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining,
-                        $"Date: {date.Month}-{date.Year},  Expected transfer out cost of training to be {p.TransferOutTotalCostOfTraining} but was {projection.TransferOutCostOfTraining}.");
+                    projection.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining);
             }
         }
     }

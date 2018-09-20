@@ -48,7 +48,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             Commitments = table.CreateSet<TestCommitment>().ToList();
             DeleteCommitments(EmployerAccountId);
             DeleteCommitments(54321);
-
             InsertCommitments(Commitments);
         }
 

@@ -10,6 +10,8 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Services
         Task<PaymentModel> Get(long employerAccountId, string paymentId);
         void Store(PaymentModel payment);
         Task<DateTime?> GetLastReceivedTime(long employerAccountId);
-        Task SaveChanges();
+	    Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId);
+
+		Task SaveChanges();
     }
 }

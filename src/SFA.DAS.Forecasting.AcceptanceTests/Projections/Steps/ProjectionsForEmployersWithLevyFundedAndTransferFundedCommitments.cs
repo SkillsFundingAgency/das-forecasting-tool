@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
     {
 
         [Scope(Feature = "Projections For Employers With Levy Funded And Transfer Funded Commitments")]
+        [Scope(Feature = "Projections For Employers With Transfer")]
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunctionFundsInReceiving()
         {
@@ -26,25 +27,33 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 
             foreach (var p in expectedProjections)
             {
+
                 var date = DateTime.Today.AddMonths(p.MonthsFromNow);
                 var projection = AccountProjections.Single(m => m.Month == date.Month && m.Year == date.Year);
 
-                
-                projection.LevyFundedCostOfTraining.Should().Be(p.TotalCostOfTraining,
-                    $"Date: {date.Month}-{date.Year},  Expected levy funded cost of training to be {p.TotalCostOfTraining} but was {projection.LevyFundedCostOfTraining}.");
+                string becauseMessage(string propName, object expected, object actual) { return $"Date: {date.Month}-{date.Year}, " +
+                        $"Expected {propName} to be {expected} but was {actual}."; };
+
+                projection.LevyFundedCostOfTraining.Should().Be(p.TotalCostOfTraining, 
+                    becauseMessage(nameof(p.TotalCostOfTraining), p.TotalCostOfTraining, projection.LevyFundedCostOfTraining));
+
                 projection.TransferInCostOfTraining.Should().Be(p.TransferInTotalCostOfTraining,
-                    $"Date: {date.Month}-{date.Year},  Expected transfer in cost of training to be {p.TransferInTotalCostOfTraining} but was {projection.TransferInCostOfTraining}.");
+                    becauseMessage(nameof(p.TransferInTotalCostOfTraining), p.TransferInTotalCostOfTraining, projection.TransferInCostOfTraining));
+
                 projection.TransferOutCostOfTraining.Should().Be(p.TransferOutTotalCostOfTraining,
-                    $"Date: {date.Month}-{date.Year},  Expected transfer out cost of training to be {p.TransferOutTotalCostOfTraining} but was {projection.TransferOutCostOfTraining}.");
+                    becauseMessage(nameof(p.TransferOutTotalCostOfTraining), p.TransferOutTotalCostOfTraining, projection.TransferOutCostOfTraining));
 
                 projection.LevyFundedCompletionPayments.Should().Be(p.CompletionPayments,
-                    $"Date: {date.Month}-{date.Year}, expected levy funded completion payments to be {p.CompletionPayments} but was {projection.LevyFundedCompletionPayments}.");
+                    becauseMessage(nameof(p.CompletionPayments), p.CompletionPayments, projection.LevyFundedCompletionPayments));
+                
                 projection.TransferInCompletionPayments.Should().Be(p.TransferInCompletionPayments,
-                    $"Date: {date.Month}-{date.Year}, expected transfer in completion payments to be {p.TransferInCompletionPayments} but was {projection.TransferInCompletionPayments}.");
+                    becauseMessage(nameof(p.TransferInCompletionPayments), p.TransferInCompletionPayments, projection.TransferInCompletionPayments));
+                
                 projection.TransferOutCompletionPayments.Should().Be(p.TransferOutCompletionPayments,
-                    $"Date: {date.Month}-{date.Year}, expected transfer out completion payments to be {p.TransferOutCompletionPayments} but was {projection.TransferOutCompletionPayments}.");
+                    becauseMessage(nameof(p.TransferOutCompletionPayments), p.TransferOutCompletionPayments, projection.TransferOutCompletionPayments));
+
                 projection.FutureFunds.Should().Be(p.FutureFunds,
-                    $"Date: {date.Month}-{date.Year}, expected future funds to be {p.FutureFunds} but was {projection.FutureFunds}.");
+                    becauseMessage(nameof(p.FutureFunds), p.FutureFunds, projection.FutureFunds));
             }
         }
     }
