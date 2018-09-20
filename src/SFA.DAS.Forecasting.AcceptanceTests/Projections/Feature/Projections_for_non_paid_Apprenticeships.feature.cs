@@ -509,7 +509,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "3400"});
+                        "3000"});
             table6.AddRow(new string[] {
                         "11",
                         "3500",
@@ -518,7 +518,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "3400"});
+                        "3000"});
             table6.AddRow(new string[] {
                         "12",
                         "3500",
@@ -527,7 +527,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "3400"});
+                        "3000"});
             table6.AddRow(new string[] {
                         "13",
                         "0.00",
@@ -536,7 +536,7 @@ this.FeatureBackground();
                         "0.00",
                         "2000.00",
                         "0.00",
-                        "4400"});
+                        "4000"});
             table6.AddRow(new string[] {
                         "14",
                         "0.00",
@@ -545,7 +545,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "7400"});
+                        "7000"});
             table6.AddRow(new string[] {
                         "15",
                         "0.00",
@@ -554,7 +554,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "10400"});
+                        "10000"});
             table6.AddRow(new string[] {
                         "16",
                         "0.00",
@@ -563,7 +563,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "13400"});
+                        "13000"});
             table6.AddRow(new string[] {
                         "17",
                         "0.00",
@@ -572,7 +572,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "16400"});
+                        "16000"});
             table6.AddRow(new string[] {
                         "18",
                         "0.00",
@@ -581,7 +581,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "19400"});
+                        "19000"});
             table6.AddRow(new string[] {
                         "19",
                         "0.00",
@@ -590,7 +590,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "22400"});
+                        "22000"});
             table6.AddRow(new string[] {
                         "20",
                         "0.00",
@@ -599,7 +599,7 @@ this.FeatureBackground();
                         "2000.00",
                         "0.00",
                         "2000.00",
-                        "25400"});
+                        "25000"});
 #line 56
  testRunner.And("should have the following projected values", ((string)(null)), table6, "And ");
 #line hidden
