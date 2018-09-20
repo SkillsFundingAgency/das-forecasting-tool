@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                 _logger.Debug($"Cannot allow projections for employer {paymentCreatedMessage.EmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
             }
 
-            if (paymentCreatedMessage.EmployerAccountId != paymentCreatedMessage.SendingEmployerAccountId)
+            if (paymentCreatedMessage.SendingEmployerAccountId != 0 && paymentCreatedMessage.EmployerAccountId != paymentCreatedMessage.SendingEmployerAccountId)
             {
                 if (await IsSendingEmployerAccountIdAllowed(paymentCreatedMessage.SendingEmployerAccountId))
                 {
@@ -75,11 +75,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                         employerAccountIds.Add(paymentCreatedMessage.SendingEmployerAccountId);
                     }
                 }
+                else
+                {
+                    _logger.Debug($"Cannot allow projections for employer {paymentCreatedMessage.SendingEmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
+                }
             }
-            else
-            {
-                _logger.Debug($"Cannot allow projections for employer {paymentCreatedMessage.SendingEmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
-            }
+            
 
             return employerAccountIds;
         }
