@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "SFA.DAS.Forecasting.Apprenticeship.Functions": {
-      "commandName": "Project",
-      "commandLineArgs": "host start"
-    }
-  }
-}
