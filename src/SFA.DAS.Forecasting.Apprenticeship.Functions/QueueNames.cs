@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Apprenticeship.Functions
+﻿namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     internal class QueueNames
     {

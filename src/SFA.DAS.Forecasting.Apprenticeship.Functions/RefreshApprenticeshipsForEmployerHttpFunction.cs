@@ -5,7 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Functions.Framework;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions
+namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     [StorageAccount("StorageConnectionString")]
     public class RefreshApprenticeshipsForEmployerHttpFunction : IFunction

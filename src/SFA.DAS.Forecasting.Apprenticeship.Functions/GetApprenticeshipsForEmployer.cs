@@ -9,10 +9,10 @@ using SFA.DAS.Commitments.Api.Types.Apprenticeship;
 using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
-using SFA.DAS.Forecasting.Apprenticeship.Functions.Application;
+using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Functions.Framework;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions
+namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     public class GetApprenticeshipsForEmployer : IFunction
     {
@@ -52,7 +52,7 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions
                });
         }
 
-        private static async Task<List<Commitments.Api.Types.Apprenticeship.Apprenticeship>> GetApprenticeshipsForAccount(long employerAccountId, IEmployerCommitmentApi employerCommitmentsApi)
+        private static async Task<List<DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship>> GetApprenticeshipsForAccount(long employerAccountId, IEmployerCommitmentApi employerCommitmentsApi)
         {
             var apiApprenticeships =
                 await employerCommitmentsApi.GetEmployerApprenticeships(

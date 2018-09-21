@@ -5,7 +5,7 @@ using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Functions.Framework;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions
+namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     public class RefreshEmployersForApprenticeshipUpdate : IFunction
     {

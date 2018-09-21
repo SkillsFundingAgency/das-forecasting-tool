@@ -1,7 +1,7 @@
 ﻿using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions
+namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     [StorageAccount("StorageConnectionString")]
     public class RefreshApprenticeshipsForEmployer

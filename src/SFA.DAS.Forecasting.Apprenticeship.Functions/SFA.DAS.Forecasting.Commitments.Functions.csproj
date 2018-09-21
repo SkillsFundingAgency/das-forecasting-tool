@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
     <AzureFunctionsVersion>v1</AzureFunctionsVersion>
+    <AssemblyName>SFA.DAS.Forecasting.Commitments.Functions</AssemblyName>
+    <RootNamespace>SFA.DAS.Forecasting.Commitments.Functions</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />

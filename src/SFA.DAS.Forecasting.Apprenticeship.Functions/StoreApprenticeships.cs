@@ -1,11 +1,11 @@
+using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.Commitments.Handlers;
 using SFA.DAS.Forecasting.Functions.Framework;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions
+namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     public class StoreApprenticeships : IFunction
     {

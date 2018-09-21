@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions.Application
+namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
     internal class ApprenticeshipValidation
     {
@@ -15,7 +14,7 @@ namespace SFA.DAS.Forecasting.Apprenticeship.Functions.Application
                 .Where(m => !m.HasHadDataLockSuccess)
                 .Where(m => m.StopDate == null)
                 .Where(m => m.PauseDate == null)
-                .Where(m => m.PaymentStatus == Commitments.Api.Types.Apprenticeship.Types.PaymentStatus.Active).ToList();
+                .Where(m => m.PaymentStatus == DAS.Commitments.Api.Types.Apprenticeship.Types.PaymentStatus.Active).ToList();
 
             return CreateResult(filteredApprenticeships, apprenticeships);
         }

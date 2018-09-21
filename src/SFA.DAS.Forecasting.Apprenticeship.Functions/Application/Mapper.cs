@@ -1,12 +1,10 @@
-﻿using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+﻿using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Models.Payments;
-using System;
-using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Models.Estimation;
 using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
 
-namespace SFA.DAS.Forecasting.Apprenticeship.Functions.Application
+namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
     internal class Mapper
     {
