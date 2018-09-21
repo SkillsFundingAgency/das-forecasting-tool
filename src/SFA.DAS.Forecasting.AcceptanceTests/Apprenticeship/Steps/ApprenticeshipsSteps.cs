@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship.Steps
         [BeforeFeature(Order = 1)]
         public static void StartLevyFunction()
         {
-            StartFunction("SFA.DAS.Forecasting.Apprenticeship.Functions");
+            StartFunction("SFA.DAS.Forecasting.Commitments.Functions");
             StartFunction("SFA.DAS.Forecasting.StubApi.Functions");
         }
 
