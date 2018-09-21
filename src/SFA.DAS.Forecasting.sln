@@ -57,7 +57,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.Uni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Data", "SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj", "{97D35DA3-C286-40BC-82FC-408084233B46}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Commitments.Functions", "SFA.DAS.Forecasting.Apprenticeship.Functions\SFA.DAS.Forecasting.Commitments.Functions.csproj", "{D71E18F4-FEF4-4761-85FB-8E53AD5F11C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Commitments.Functions", "SFA.DAS.Forecasting.Commitments.Functions\SFA.DAS.Forecasting.Commitments.Functions.csproj", "{D71E18F4-FEF4-4761-85FB-8E53AD5F11C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.PerformanceTests", "SFA.DAS.Forecasting.PerformanceTests\SFA.DAS.Forecasting.PerformanceTests.csproj", "{E4779500-AC49-4444-AD12-A673E293383F}"
 EndProject
