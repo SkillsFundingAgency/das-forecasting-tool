@@ -152,7 +152,7 @@
                                     }
 
                                     <tr class="@tableRowClass">
-                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndYearWithoutDay()</td>
                                         <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
                                         <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
                                         <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
@@ -222,7 +222,7 @@
                                 }
 
                                 <tr class="@tableRowClass">
-                                    <td>@costEstimate.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                                    <td>@costEstimate.Date.ToGdsFormatShortMonthAndYearWithoutDay()</td>
                                     <td class="financial">@costEstimate.ActualCost.FormatCost()</td>
                                     <td class="financial">@costEstimate.EstimatedCost.FormatCost()</td>
                                     <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
@@ -284,7 +284,7 @@
                             <tr>
                                 <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
                                 <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
-                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatShortMonthWithoutDay() </td>
+                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatShortMonthAndYearWithoutDay() </td>
                                 <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
                                 <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
                                 <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
