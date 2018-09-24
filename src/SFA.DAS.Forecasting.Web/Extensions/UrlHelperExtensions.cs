@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
 {
     public static class UrlHelperExtensions
     {
-        public static string ExternalUrlAction(this UrlHelper helper, string controllerName, string actionName = "", bool ignoreAccountId = false)
+        public static string ExternalUrlAction(this UrlHelper helper, string controllerName, string actionName = "", bool ignoreAccountId = false, string folderPath="")
         {
 
             var baseUrl = GetBaseUrl();
@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
 
             return ignoreAccountId ? $"{baseUrl}{controllerName}/{actionName}"
-                                    : $"{baseUrl}accounts/{accountId}/{controllerName}/{actionName}";
+                                    : $"{baseUrl}{folderPath}accounts/{accountId}/{controllerName}/{actionName}";
 
         }
 

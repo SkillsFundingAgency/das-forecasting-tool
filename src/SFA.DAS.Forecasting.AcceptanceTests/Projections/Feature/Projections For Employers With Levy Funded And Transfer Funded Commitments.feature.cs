@@ -95,10 +95,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Sending employer account has transfers in")]
-        public virtual void SendingEmployerAccountHasTransfersIn()
+        [NUnit.Framework.DescriptionAttribute("Sending employer account has transfers in payment run")]
+        public virtual void SendingEmployerAccountHasTransfersInPaymentRun()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Sending employer account has transfers in", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Sending employer account has transfers in payment run", ((string[])(null)));
 #line 16
 this.ScenarioSetup(scenarioInfo);
 #line 6
@@ -121,7 +121,7 @@ this.FeatureBackground();
                         "Test Course 1",
                         "1",
                         "Test Provider 1",
-                        "Yesterday",
+                        "Last Month",
                         "666.66",
                         "2000",
                         "12",
@@ -131,9 +131,9 @@ this.FeatureBackground();
                         "Test Course 2",
                         "1",
                         "Test Provider 2",
-                        "Yesterday",
+                        "Last Month",
                         "444.44",
-                        "2000",
+                        "1000",
                         "18",
                         "Transfer"});
 #line 18
@@ -154,8 +154,8 @@ this.FeatureBackground();
                         "FutureFunds"});
             table4.AddRow(new string[] {
                         "0",
-                        "0.00",
-                        "0.00",
+                        "666.66",
+                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
@@ -262,22 +262,22 @@ this.FeatureBackground();
                         "28777.90"});
             table4.AddRow(new string[] {
                         "12",
-                        "666.66",
-                        "444.44",
-                        "0.00",
-                        "0.00",
-                        "0.00",
-                        "0.00",
-                        "30666.80"});
-            table4.AddRow(new string[] {
-                        "13",
                         "0.00",
                         "444.44",
                         "0.00",
                         "0.00",
                         "2000.00",
                         "0.00",
-                        "31222.36"});
+                        "29333.46"});
+            table4.AddRow(new string[] {
+                        "13",
+                        "0.00",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "31889.02"});
             table4.AddRow(new string[] {
                         "14",
                         "0.00",
@@ -286,7 +286,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "33777.92"});
+                        "34444.58"});
             table4.AddRow(new string[] {
                         "15",
                         "0.00",
@@ -295,7 +295,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "36333.48"});
+                        "37000.14"});
             table4.AddRow(new string[] {
                         "16",
                         "0.00",
@@ -304,7 +304,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "38889.04"});
+                        "39555.70"});
             table4.AddRow(new string[] {
                         "17",
                         "0.00",
@@ -313,16 +313,16 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "41444.60"});
+                        "42111.26"});
             table4.AddRow(new string[] {
                         "18",
                         "0.00",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "44000.16"});
+                        "1000.00",
+                        "44111.26"});
             table4.AddRow(new string[] {
                         "19",
                         "0.00",
@@ -330,8 +330,8 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "2000.00",
-                        "45000.16"});
+                        "0.00",
+                        "47111.26"});
             table4.AddRow(new string[] {
                         "20",
                         "0.00",
@@ -340,7 +340,7 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "48000.16"});
+                        "50111.26"});
 #line 24
  testRunner.And("should have the following projected values", ((string)(null)), table4, "And ");
 #line hidden
@@ -348,16 +348,16 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Receiving employer account has transfers in")]
-        public virtual void ReceivingEmployerAccountHasTransfersIn()
+        [NUnit.Framework.DescriptionAttribute("Sending employer account has transfers in levy run")]
+        public virtual void SendingEmployerAccountHasTransfersInLevyRun()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Receiving employer account has transfers in", ((string[])(null)));
-#line 50
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Sending employer account has transfers in levy run", ((string[])(null)));
+#line 48
  this.ScenarioSetup(scenarioInfo);
 #line 6
 this.FeatureBackground();
-#line 51
- testRunner.Given("I am a receiving employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 49
+ testRunner.Given("I am a sending employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
             TechTalk.SpecFlow.Table table5 = new TechTalk.SpecFlow.Table(new string[] {
                         "Apprentice Name",
@@ -374,7 +374,7 @@ this.FeatureBackground();
                         "Test Course 1",
                         "1",
                         "Test Provider 1",
-                        "Yesterday",
+                        "Last Month",
                         "666.66",
                         "2000",
                         "12",
@@ -384,16 +384,16 @@ this.FeatureBackground();
                         "Test Course 2",
                         "1",
                         "Test Provider 2",
-                        "Yesterday",
+                        "Last Month",
                         "444.44",
-                        "2000",
+                        "1000",
                         "18",
                         "Transfer"});
-#line 52
+#line 50
  testRunner.And("the following commitments have been recorded", ((string)(null)), table5, "And ");
-#line 56
- testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 57
+#line 54
+ testRunner.When("the account projection is triggered after a levy run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 55
  testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
@@ -407,184 +407,184 @@ this.FeatureBackground();
                         "FutureFunds"});
             table6.AddRow(new string[] {
                         "0",
+                        "666.66",
+                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "0.00",
-                        "0.00",
-                        "8000.00"});
+                        "5000.00"});
             table6.AddRow(new string[] {
                         "1",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "10333.34"});
+                        "0.00",
+                        "6888.90"});
             table6.AddRow(new string[] {
                         "2",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "12666.68"});
+                        "0.00",
+                        "8777.80"});
             table6.AddRow(new string[] {
                         "3",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "15000.02"});
+                        "0.00",
+                        "10666.70"});
             table6.AddRow(new string[] {
                         "4",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "17333.36"});
+                        "0.00",
+                        "12555.60"});
             table6.AddRow(new string[] {
                         "5",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "19666.70"});
+                        "0.00",
+                        "14444.50"});
             table6.AddRow(new string[] {
                         "6",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "22000.04"});
+                        "0.00",
+                        "16333.40"});
             table6.AddRow(new string[] {
                         "7",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "24333.38"});
+                        "0.00",
+                        "18222.30"});
             table6.AddRow(new string[] {
                         "8",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "26666.72"});
+                        "0.00",
+                        "20111.20"});
             table6.AddRow(new string[] {
                         "9",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "29000.06"});
+                        "0.00",
+                        "22000.1"});
             table6.AddRow(new string[] {
                         "10",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "31333.40"});
+                        "0.00",
+                        "23889.00"});
             table6.AddRow(new string[] {
                         "11",
                         "666.66",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "33666.74"});
+                        "0.00",
+                        "25777.90"});
             table6.AddRow(new string[] {
                         "12",
-                        "666.66",
+                        "0.00",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
+                        "2000.00",
                         "0.00",
-                        "36000.08"});
+                        "26333.46"});
             table6.AddRow(new string[] {
                         "13",
                         "0.00",
                         "444.44",
-                        "444.44",
                         "0.00",
-                        "2000.00",
                         "0.00",
-                        "37000.08"});
+                        "0.00",
+                        "0.00",
+                        "28889.02"});
             table6.AddRow(new string[] {
                         "14",
                         "0.00",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "40000.08"});
+                        "0.00",
+                        "31444.58"});
             table6.AddRow(new string[] {
                         "15",
                         "0.00",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "43000.08"});
+                        "0.00",
+                        "34000.14"});
             table6.AddRow(new string[] {
                         "16",
                         "0.00",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "46000.08"});
+                        "0.00",
+                        "36555.70"});
             table6.AddRow(new string[] {
                         "17",
                         "0.00",
                         "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "49000.08"});
+                        "0.00",
+                        "39111.26"});
             table6.AddRow(new string[] {
                         "18",
                         "0.00",
-                        "444.44",
-                        "444.44",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "52000.08"});
+                        "0.00",
+                        "1000.00",
+                        "41111.26"});
             table6.AddRow(new string[] {
                         "19",
                         "0.00",
                         "0.00",
                         "0.00",
-                        "2000.00",
                         "0.00",
-                        "2000.00",
-                        "55000.08"});
+                        "0.00",
+                        "0.00",
+                        "44111.26"});
             table6.AddRow(new string[] {
                         "20",
                         "0.00",
@@ -593,9 +593,262 @@ this.FeatureBackground();
                         "0.00",
                         "0.00",
                         "0.00",
-                        "58000.08"});
-#line 58
+                        "47111.26"});
+#line 56
  testRunner.And("should have the following projected values", ((string)(null)), table6, "And ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Receiving employer account has transfers in")]
+        public virtual void ReceivingEmployerAccountHasTransfersIn()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Receiving employer account has transfers in", ((string[])(null)));
+#line 81
+ this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line 82
+ testRunner.Given("I am a receiving employer", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments",
+                        "FundingSource"});
+            table7.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course 1",
+                        "1",
+                        "Test Provider 1",
+                        "Yesterday",
+                        "666.66",
+                        "2000",
+                        "12",
+                        "Levy"});
+            table7.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course 2",
+                        "1",
+                        "Test Provider 2",
+                        "Last Month",
+                        "444.44",
+                        "2000",
+                        "18",
+                        "Transfer"});
+#line 83
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table7, "And ");
+#line 87
+ testRunner.When("the account projection is triggered after a payment run", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 88
+ testRunner.Then("the account projection should be generated", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "MonthsFromNow",
+                        "TotalCostOfTraining",
+                        "TransferOutTotalCostOfTraining",
+                        "TransferInTotalCostOfTraining",
+                        "TransferInCompletionPayments",
+                        "CompletionPayments",
+                        "TransferOutCompletionPayments",
+                        "FutureFunds"});
+            table8.AddRow(new string[] {
+                        "0",
+                        "0.00",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "8000.00"});
+            table8.AddRow(new string[] {
+                        "1",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "10333.34"});
+            table8.AddRow(new string[] {
+                        "2",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "12666.68"});
+            table8.AddRow(new string[] {
+                        "3",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "15000.02"});
+            table8.AddRow(new string[] {
+                        "4",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "17333.36"});
+            table8.AddRow(new string[] {
+                        "5",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "19666.70"});
+            table8.AddRow(new string[] {
+                        "6",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "22000.04"});
+            table8.AddRow(new string[] {
+                        "7",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "24333.38"});
+            table8.AddRow(new string[] {
+                        "8",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "26666.72"});
+            table8.AddRow(new string[] {
+                        "9",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "29000.06"});
+            table8.AddRow(new string[] {
+                        "10",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "31333.40"});
+            table8.AddRow(new string[] {
+                        "11",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "33666.74"});
+            table8.AddRow(new string[] {
+                        "12",
+                        "666.66",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "36000.08"});
+            table8.AddRow(new string[] {
+                        "13",
+                        "0.00",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "2000.00",
+                        "0.00",
+                        "37000.08"});
+            table8.AddRow(new string[] {
+                        "14",
+                        "0.00",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "40000.08"});
+            table8.AddRow(new string[] {
+                        "15",
+                        "0.00",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "43000.08"});
+            table8.AddRow(new string[] {
+                        "16",
+                        "0.00",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "46000.08"});
+            table8.AddRow(new string[] {
+                        "17",
+                        "0.00",
+                        "444.44",
+                        "444.44",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "49000.08"});
+            table8.AddRow(new string[] {
+                        "18",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "2000.00",
+                        "0.00",
+                        "2000.00",
+                        "52000.08"});
+            table8.AddRow(new string[] {
+                        "19",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "55000.08"});
+            table8.AddRow(new string[] {
+                        "20",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "0.00",
+                        "58000.08"});
+#line 89
+ testRunner.And("should have the following projected values", ((string)(null)), table8, "And ");
 #line hidden
             this.ScenarioCleanup();
         }

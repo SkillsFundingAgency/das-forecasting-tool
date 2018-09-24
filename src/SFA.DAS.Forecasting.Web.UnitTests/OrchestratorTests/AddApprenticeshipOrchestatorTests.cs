@@ -74,7 +74,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         public async Task TestingCommasAddedToTotalCostAsStringSetsExcpectedTotalCostValues(string totalCostAsStringInput, string totalCostAsStringOutput)
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-            var vm = new AddApprenticeshipViewModel()
+            var vm = new AddEditApprenticeshipsViewModel()
             {
                 NumberOfApprentices = 1,
                 TotalCostAsString = totalCostAsStringInput,
@@ -87,23 +87,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             // Assert
             AssertionExtensions.Should((string) res.TotalCostAsString).Be(totalCostAsStringOutput);      
         }
-
-        [Test]
-        public void TestingAddApprenticeSetupReturnsExpectedDefaultSetup()
-        {
-            var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-            var res = orchestrator.GetApprenticeshipAddSetup(true);
-            res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
-            AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
-        }
-
+        
         [Test]
         public void TestingAddApprenticeSetupReturnsDefaultSetupWithAvailableApprenticeshipsOrderedAsExpected()
         {
             var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
             var res = orchestrator.GetApprenticeshipAddSetup(true);
-            res.ValidationResults.Should().BeEquivalentTo(new List<ValidationResult>());
-            AssertionExtensions.Should((int) res.ApprenticeshipCourses.Count()).Be(2);
+           
+            AssertionExtensions.Should((int)res.ApprenticeshipCourses.Count()).Be(2);
 
             var courseCarpentry = res.ApprenticeshipCourses.First();
             var courseElectrician = res.ApprenticeshipCourses.ElementAt(1);
