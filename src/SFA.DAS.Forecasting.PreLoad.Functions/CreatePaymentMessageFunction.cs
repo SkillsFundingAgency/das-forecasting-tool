@@ -19,7 +19,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static PreLoadPaymentMessage Run(
             [QueueTrigger(QueueNames.CreatePaymentMessage)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
-            ExecutionContext executionContext,
+            [Queue(QueueNames.PaymentValidatorNoCommitment)] ICollector<PaymentCreatedMessage> noCommitmentOutputQueueMessage,
+			ExecutionContext executionContext,
             TraceWriter writer)
         {
             return FunctionRunner.Run<CreatePaymentMessageFunction, PreLoadPaymentMessage>(writer, executionContext,
@@ -53,8 +54,38 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         outputQueueMessage.Add(p);
                     }
-                    logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
-                    return message;
+
+
+	                var paymentNoCommitmentCreatedMessage = new List<PaymentCreatedMessage>();
+
+					var paymentsNoCommitments = dataService.GetPaymentsNoCommitment(message.EmployerAccountId).ToList();
+	                var earningDetailsNocommitments = dataService.GetEarningDetailsNoCommitment(message.EmployerAccountId).ToList();
+
+	                if (message.SubstitutionId != null)
+	                {
+		                paymentNoCommitmentCreatedMessage =
+							paymentsNoCommitments
+								.Select(p => CreatePaymentSubstituteData(logger, p, earningDetailsNocommitments, message.SubstitutionId.Value))
+				                .Where(p => p != null)
+				                .ToList();
+	                }
+	                else
+	                {
+		                paymentNoCommitmentCreatedMessage =
+							paymentsNoCommitments
+								.Select(p => CreatePayment(logger, p, earningDetailsNocommitments))
+				                .Where(p => p != null)
+				                .ToList();
+	                }
+
+	                foreach (var p in paymentNoCommitmentCreatedMessage)
+	                {
+		                noCommitmentOutputQueueMessage.Add(p);
+	                }
+
+	                logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}, Past payments created: {paymentNoCommitmentCreatedMessage.Count}");
+
+					return message;
                 });
         }
 

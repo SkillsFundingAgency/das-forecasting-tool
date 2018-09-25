@@ -15,41 +15,63 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         private readonly CloudTable _paymentTable;
         private readonly CloudTable _paymentTableNoCommitment;
 		private readonly CloudTable _earningTable;
+		private readonly CloudTable _earningTableNoCommitment;
 
-        public PreLoadPaymentDataService(IApplicationConfiguration settings)
+		public PreLoadPaymentDataService(IApplicationConfiguration settings)
         {
             var storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
             _paymentTable = tableClient.GetTableReference("PaymentTable");
             _paymentTableNoCommitment = tableClient.GetTableReference("PaymentTableNoCommitment");
 			_earningTable = tableClient.GetTableReference("EarningsTable");
-        }
+			_earningTableNoCommitment = tableClient.GetTableReference("EarningsTableNoCommitment");
+		}
 
-        public IEnumerable<EmployerPayment> GetPayments(long employerId)
-        {
-            EnsureExists(_paymentTable);
+		public IEnumerable<EmployerPayment> GetPayments(long employerId)
+		{
+			return GetPayments(_paymentTable, employerId);
+		}
 
-            var entities = _paymentTable
-                .ExecuteQuery(new TableQuery<TableEntry>()
-                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+	    public IEnumerable<EmployerPayment> GetPaymentsNoCommitment(long employerId)
+	    {
+		    return GetPayments(_paymentTableNoCommitment, employerId);
+	    }
 
-            return entities
-                .Select(tableEntry => JsonConvert.DeserializeObject<EmployerPayment>(tableEntry.Data))
-                .ToList();
-        }
+	    private IEnumerable<EmployerPayment> GetPayments(CloudTable cloudTable, long employerId)
+	    {
+		    EnsureExists(cloudTable);
 
-        public IEnumerable<EarningDetails> GetEarningDetails(long employerId)
-        {
-            EnsureExists(_earningTable);
+		    var entities = cloudTable
+				.ExecuteQuery(new TableQuery<TableEntry>()
+				    .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
 
-            var entities = _earningTable.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+		    return entities
+			    .Select(tableEntry => JsonConvert.DeserializeObject<EmployerPayment>(tableEntry.Data))
+			    .ToList();
+	    }
 
-            return entities
-                .Select(tableEntry => JsonConvert.DeserializeObject<EarningDetails>(tableEntry.Data))
-                .ToList();
-        }
+	    public IEnumerable<EarningDetails> GetEarningDetails(long employerId)
+		{
+			return GetEarningDetails(_earningTable, employerId);
+		}
 
-        public async Task StoreEarningDetails(long employerAccountId, EarningDetails earningDetails)
+		public IEnumerable<EarningDetails> GetEarningDetailsNoCommitment(long employerId)
+		{
+			return GetEarningDetails(_earningTableNoCommitment, employerId);
+		}
+
+	    private IEnumerable<EarningDetails> GetEarningDetails(CloudTable cloudTable, long employerId)
+	    {
+		    EnsureExists(cloudTable);
+
+		    var entities = cloudTable.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+
+		    return entities
+			    .Select(tableEntry => JsonConvert.DeserializeObject<EarningDetails>(tableEntry.Data))
+			    .ToList();
+	    }
+
+		public async Task StoreEarningDetails(long employerAccountId, EarningDetails earningDetails)
         {
             EnsureExists(_earningTable);
 

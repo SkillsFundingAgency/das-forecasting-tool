@@ -12,5 +12,6 @@
         public const string CreatePaymentMessage = "forecasting-payment-create-payment-message";
         public const string RemovePreLoadData = "forecasting-payment-remove-preload-data";
         public const string PaymentValidator = "forecasting-payment-validate-payment";
-    }
+        public const string PaymentValidatorNoCommitment = "forecasting-payment-validate-payment-no-commitment";
+	}
 }
