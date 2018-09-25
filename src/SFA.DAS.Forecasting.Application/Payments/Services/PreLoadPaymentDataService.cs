@@ -13,14 +13,16 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
     public class PreLoadPaymentDataService
     {
         private readonly CloudTable _paymentTable;
-        private readonly CloudTable _earningTable;
+        private readonly CloudTable _paymentTableNoCommitment;
+		private readonly CloudTable _earningTable;
 
         public PreLoadPaymentDataService(IApplicationConfiguration settings)
         {
             var storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
             _paymentTable = tableClient.GetTableReference("PaymentTable");
-            _earningTable = tableClient.GetTableReference("EarningsTable");
+            _paymentTableNoCommitment = tableClient.GetTableReference("PaymentTableNoCommitment");
+			_earningTable = tableClient.GetTableReference("EarningsTable");
         }
 
         public IEnumerable<EmployerPayment> GetPayments(long employerId)
@@ -65,21 +67,31 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task StorePayment(EmployerPayment payment)
         {
-            EnsureExists(_paymentTable);
+	        await StorePayment(_paymentTable, payment);
+		}
 
-            var tableModel = new TableEntry
-            {
-                PartitionKey = payment.AccountId.ToString(),
-                RowKey = payment.PaymentId.ToString().ToLower(),
-                Data = JsonConvert.SerializeObject(payment)
-            };
+		public async Task StorePaymentNoCommitment(EmployerPayment payment)
+		{
+			await StorePayment(_paymentTableNoCommitment, payment);
+		}
 
-            var op = TableOperation.InsertOrReplace(tableModel);
+	    public async Task StorePayment(CloudTable cloudTable, EmployerPayment payment)
+	    {
+			EnsureExists(cloudTable);
 
-            await _paymentTable.ExecuteAsync(op);
-        }
+		    var tableModel = new TableEntry
+		    {
+			    PartitionKey = payment.AccountId.ToString(),
+			    RowKey = payment.PaymentId.ToString().ToLower(),
+			    Data = JsonConvert.SerializeObject(payment)
+		    };
 
-        public async Task DeleteEarningDetails(long employerAccountId)
+		    var op = TableOperation.InsertOrReplace(tableModel);
+
+		    await cloudTable.ExecuteAsync(op);
+		}
+
+		public async Task DeleteEarningDetails(long employerAccountId)
         {
             await DeleteEmployerData(_earningTable, employerAccountId);
         }

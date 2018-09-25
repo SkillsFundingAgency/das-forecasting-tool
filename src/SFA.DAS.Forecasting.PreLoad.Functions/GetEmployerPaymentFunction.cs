@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -7,6 +9,7 @@ using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -44,7 +47,39 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
                    }
 
-                   return message;
+	               var year = 17;
+	               var month = 6;
+
+	               var paymentsNoCommitmentTable = new List<EmployerPayment>();
+
+				   while (year < DateTime.Today.Year % 100 || month < DateTime.Today.Month)
+	               {
+					   paymentsNoCommitmentTable.AddRange(await employerData.GetEmployerPayments(message.EmployerAccountId, year, month));
+
+		               month++;
+		               if (month > 12)
+		               {
+			               month = 1;
+			               year++;
+		               }
+	               }
+
+	               if (!paymentsNoCommitmentTable.Any())
+	               {
+		               logger.Info($"No past payments found for employer: {message.EmployerAccountId}");
+	               }
+
+	               foreach (var payment in paymentsNoCommitmentTable)
+	               {
+		               var dataService = container.GetInstance<PreLoadPaymentDataService>();
+		               await dataService.StorePaymentNoCommitment(payment);
+
+		               logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
+	               }
+
+	               logger.Info($"Sending message {nameof(message)} to {QueueNames.PreLoadEarningDetailsPayment}");
+
+				   return message;
                });
         }
     }
