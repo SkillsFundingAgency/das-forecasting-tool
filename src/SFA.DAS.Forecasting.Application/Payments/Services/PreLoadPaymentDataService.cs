@@ -75,7 +75,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 			await StorePayment(_paymentTableNoCommitment, payment);
 		}
 
-	    public async Task StorePayment(CloudTable cloudTable, EmployerPayment payment)
+	    private async Task StorePayment(CloudTable cloudTable, EmployerPayment payment)
 	    {
 			EnsureExists(cloudTable);
 
