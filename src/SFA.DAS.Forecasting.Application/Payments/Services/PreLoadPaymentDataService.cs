@@ -116,14 +116,24 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 		public async Task DeleteEarningDetails(long employerAccountId)
         {
             await DeleteEmployerData(_earningTable, employerAccountId);
-        }
+		}
 
-        public async Task DeletePayment(long employerAccountId)
+	    public async Task DeleteEarningDetailsNoCommitment(long employerAccountId)
+	    {
+			await DeleteEmployerData(_earningTableNoCommitment, employerAccountId);
+		}
+
+		public async Task DeletePayment(long employerAccountId)
         {
             await DeleteEmployerData(_paymentTable, employerAccountId);
-        }
+		}
 
-        private static async Task DeleteEmployerData(CloudTable cloudTable, long employerAccountId)
+	    public async Task DeletePaymentNoCommitment(long employerAccountId)
+	    {
+			await DeleteEmployerData(_paymentTableNoCommitment, employerAccountId);
+		}
+
+		private static async Task DeleteEmployerData(CloudTable cloudTable, long employerAccountId)
         {
             if (!await cloudTable.ExistsAsync())
                 return;

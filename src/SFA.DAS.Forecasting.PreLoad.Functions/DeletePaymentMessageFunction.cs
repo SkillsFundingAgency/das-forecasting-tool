@@ -23,9 +23,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
                     
                     await dataService.DeletePayment(message.EmployerAccountId);
-                    await dataService.DeleteEarningDetails(message.EmployerAccountId);
+                    await dataService.DeletePaymentNoCommitment(message.EmployerAccountId);
+					await dataService.DeleteEarningDetails(message.EmployerAccountId);
+					await dataService.DeleteEarningDetailsNoCommitment(message.EmployerAccountId);
 
-                    logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.HashedEmployerAccountId}.");
+					logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.HashedEmployerAccountId}.");
                 });
         }
     }
