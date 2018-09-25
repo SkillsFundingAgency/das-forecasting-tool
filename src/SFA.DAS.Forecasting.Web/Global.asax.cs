@@ -27,6 +27,7 @@ namespace SFA.DAS.Forecasting.Web
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 
             AntiForgeryConfig.SuppressXFrameOptionsHeader = true;
+            AntiForgeryConfig.CookieName = "__ForecastingRequestVerification";
 
             _logger = DependencyResolver.Current.GetService<ILog>();
         }

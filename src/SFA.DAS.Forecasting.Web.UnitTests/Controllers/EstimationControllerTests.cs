@@ -61,10 +61,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
         {
             var vm = new AddEditApprenticeshipsViewModel
             {
-                Course = new ApprenticeshipCourse()
-                {
-                    Id = "123",
-                },
+                Course = null,
                 TotalCostAsString = "10"
             };
 
