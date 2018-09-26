@@ -1,6 +1,5 @@
 ﻿using AutoMoq;
 using FluentAssertions;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Controllers;
@@ -60,9 +59,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
         [Test]
         public async Task Apprenticeship_Must_Have_Course()
         {
-            var vm = new AddApprenticeshipViewModel
+            var vm = new AddEditApprenticeshipsViewModel
             {
-                CourseId = "123",
                 Course = null,
                 TotalCostAsString = "10"
             };
@@ -73,7 +71,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
 
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
                 .Setup(x => x.GetApprenticeshipAddSetup(false))
-                .Returns(new AddApprenticeshipViewModel { Courses = new List<ApprenticeshipCourse>() } );
+                .Returns(new AddEditApprenticeshipsViewModel { Courses = new List<ApprenticeshipCourse>() });
 
             await _controller.Save(vm, "ABBA12", "default");
             _controller.ViewData.ModelState.Count
@@ -92,10 +90,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 new FundingPeriod{ EffectiveFrom = DateTime.MinValue, EffectiveTo = DateTime.MaxValue, FundingCap = 20 * 1000 }
             };
 
-            var vm = new AddApprenticeshipViewModel
+            var vm = new AddEditApprenticeshipsViewModel
             {
-                CourseId = "123",
-                Course = new ApprenticeshipCourse { FundingPeriods = fundingPeriods },
+                Course = new ApprenticeshipCourse { Id = "123", FundingPeriods = fundingPeriods },
                 TotalCostAsString = costAsString,
                 NumberOfApprentices = 2
             };
@@ -106,7 +103,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
 
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
                 .Setup(x => x.GetApprenticeshipAddSetup(false))
-                .Returns(new AddApprenticeshipViewModel { Courses = new List<ApprenticeshipCourse>() });
+                .Returns(new AddEditApprenticeshipsViewModel { Courses = new List<ApprenticeshipCourse>() });
 
             await _controller.Save(vm, "ABBA12", "default");
             _controller.ViewData.ModelState.Count

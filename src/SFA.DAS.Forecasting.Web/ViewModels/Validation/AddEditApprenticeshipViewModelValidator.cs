@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentValidation;
 using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 {
-    public class AddEditApprenticeshipViewModelValidator<T> : AbstractValidator<T> where T : AddEditApprenticeshipsViewModel
+    public class AddEditApprenticeshipViewModelValidator : AbstractValidator<AddEditApprenticeshipsViewModel>
     {
         public AddEditApprenticeshipViewModelValidator()
         {
@@ -41,6 +42,27 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
             RuleFor(m => m.TotalCostAsString)
                 .Must(s => s.ToDecimal() > 0)
                 .WithMessage("You must enter a number that is above zero");
+        }
+        public Dictionary<string, string> ValidateAdd(AddEditApprenticeshipsViewModel vm)
+        {
+            var dict = new Dictionary<string, string>();
+
+            if (vm.TotalCostAsString.ToDecimal() <= 0)
+            {
+                dict.Add($"{nameof(vm.TotalCostAsString)}", "You must enter a number that is above zero");
+            }
+
+            if (vm.Course == null)
+            {
+                dict.Add($"{nameof(vm.Course)}", "You must choose 1 apprenticeship");
+            }
+            else
+            {
+                if (vm.IsTransferFunded == "on" && vm.Course.CourseType == Models.Estimation.ApprenticeshipCourseType.Framework)
+                    dict.Add($"{nameof(vm.IsTransferFunded)}", "You can only fund Standards with your transfer allowance");
+            }
+
+            return dict;
         }
     }
 }

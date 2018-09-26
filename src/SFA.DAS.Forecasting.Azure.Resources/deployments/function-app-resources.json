@@ -29,8 +29,14 @@
     "storageConnectionString": {
       "type": "string"
     },
-    "appServicePlanId" : {
+    "appServicePlanId": {
       "type": "string"
+    },
+    "CommitmentsBaseUrl": {
+      "type": "string"
+    },
+    "CommitmentsClientToken": {
+      "type": "securestring"
     }
   },
   "resources": [
@@ -94,6 +100,14 @@
             {
               "name": "AppName",
               "value": "[parameters('funAppName')]"
+            },
+            {
+              "name": "Commitments-BaseUrl",
+              "value": "[parameters('CommitmentsBaseUrl')]"
+            },
+            {
+              "name": "Commitments-ClientToken",
+              "value": "[parameters('CommitmentsClientToken')]"
             }
           ],
           "alwaysOn": true
