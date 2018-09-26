@@ -31,9 +31,12 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), apprenticeship.Apprenticeship);
                 addApprenticeshipPage.PageHeader.ClickThisElement();
                 addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement(apprenticeship.NumberOfApprentices);
+                addApprenticeshipPage.NumberOfMonthsInput.Clear();
                 addApprenticeshipPage.NumberOfMonthsInput.EnterTextInThisElement(apprenticeship.NumberOfMonths);
                 addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement(apprenticeship.StartDateMonth);
                 addApprenticeshipPage.StartDateYearInput.EnterTextInThisElement(apprenticeship.StartDateYear);
+                addApprenticeshipPage.TotalCostInput.Clear();
+                addApprenticeshipPage.TotalCostInput.EnterTextInThisElement(apprenticeship.TotalCost);
                 addApprenticeshipPage.ContinueButton.ClickThisElement();
             }
         }
@@ -58,10 +61,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 "Total Cost",
                 "Number of monthly payments",
                 "Monthly payment",
-                "Completion payment"
+                "Completion payment",
+                "Transfer estimate\r\ninfo"
             };
             Assert.AreEqual(expectedHeaders, tableHeaders);
-
         }
 
         [Then(@"each added apprenticeship is displayed in a separate row")]
@@ -75,13 +78,19 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the apprenticeship with the earliest start date is shown first")]
         public void ThenTheApprenticeshipWithTheEarliestStartDateIsShownFirst()
         {
-            //ScenarioContext.Current.Pending();
+            var estimateCostsPage = Get<EstimateCostsPage>();
+            var resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
+            //there is a bug in the logic, need to clarify it
+            ScenarioContext.Current.Pending();
+            Assert.IsTrue(DateTime.Parse(resultRows[0].StartDate) < DateTime.Parse(resultRows[1].StartDate), "The apprenticeship with the earliest start date is not shown first");
         }
         
         [Then(@"the other apprenticeships are in order of start date")]
         public void ThenTheOtherApprenticeshipsAreInOrderOfStartDate()
         {
-            //ScenarioContext.Current.Pending();
+            var estimateCostsPage = Get<EstimateCostsPage>();
+            var resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
+            Assert.IsTrue(DateTime.Parse(resultRows[1].StartDate) < DateTime.Parse(resultRows[2].StartDate), "The other apprenticeships are not in order of start date");
         }
         
         [Then(@"the details against each apprenticeship match what was entered")]
