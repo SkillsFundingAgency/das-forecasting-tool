@@ -72,22 +72,32 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 	    }
 
 		public async Task StoreEarningDetails(long employerAccountId, EarningDetails earningDetails)
-        {
-            EnsureExists(_earningTable);
+		{
+			await StoreEarningDetails(_earningTable, employerAccountId, earningDetails);
+		}
 
-            var tableModel = new TableEntry
-            {
-                PartitionKey = employerAccountId.ToString(),
-                RowKey = earningDetails.PaymentId.ToLower(),
-                Data = JsonConvert.SerializeObject(earningDetails)
-            };
+	    public async Task StoreEarningDetailsNoCommitment(long employerAccountId, EarningDetails earningDetails)
+	    {
+		    await StoreEarningDetails(_earningTableNoCommitment, employerAccountId, earningDetails);
+	    }
 
-            var op = TableOperation.InsertOrReplace(tableModel);
+		private async Task StoreEarningDetails(CloudTable cloudTable, long employerAccountId, EarningDetails earningDetails)
+	    {
+		    EnsureExists(cloudTable);
 
-            await _earningTable.ExecuteAsync(op);
-        }
+		    var tableModel = new TableEntry
+		    {
+			    PartitionKey = employerAccountId.ToString(),
+			    RowKey = earningDetails.PaymentId.ToLower(),
+			    Data = JsonConvert.SerializeObject(earningDetails)
+		    };
 
-        public async Task StorePayment(EmployerPayment payment)
+		    var op = TableOperation.InsertOrReplace(tableModel);
+
+		    await cloudTable.ExecuteAsync(op);
+	    }
+
+		public async Task StorePayment(EmployerPayment payment)
         {
 	        await StorePayment(_paymentTable, payment);
 		}
