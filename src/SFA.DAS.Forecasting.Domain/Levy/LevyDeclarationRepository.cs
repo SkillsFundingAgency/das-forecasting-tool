@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Shared;
@@ -11,6 +13,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy
         Task<LevyDeclaration> Get(long employerAccountId, string scheme, string payrollYear,
             byte payrollMonth);
 
+        Task<IEnumerable<LevyDeclaration>> GetNetValue(long employerAccountId);
         Task Store(LevyDeclaration model);
     }
 
@@ -37,6 +40,14 @@ namespace SFA.DAS.Forecasting.Domain.Levy
                             PayrollYear = payrollYear
                         };
             return new LevyDeclaration(_payrollDateService, model);
+        }
+
+        public async Task<IEnumerable<LevyDeclaration>> GetNetValue(long employerAccountId)
+        {
+            var model = await _dataSession.GetNetLevyDeclarations(employerAccountId);
+
+            return model.Select(s => new LevyDeclaration(_payrollDateService, s));
+            
         }
 
         public async Task Store(LevyDeclaration levyDeclaration)

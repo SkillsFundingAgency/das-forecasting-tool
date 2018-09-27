@@ -1,11 +1,11 @@
-﻿using System;
+﻿using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Domain.Levy.Services;
+using SFA.DAS.Forecasting.Models.Levy;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Data;
-using SFA.DAS.Forecasting.Domain.Levy.Services;
-using SFA.DAS.Forecasting.Models.Levy;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Services
 {
@@ -48,6 +48,22 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 levy.EmployerAccountId == employerAccountId && levy.Scheme == scheme &&
                 levy.PayrollMonth == payrollMonth && levy.PayrollYear == payrollYear);
         }
+
+        public async Task<IEnumerable<LevyDeclarationModel>> GetNetLevyDeclarations(long employerAccountId)
+        {
+            return await _dataContext.LevyDeclarations
+                       .Where(w => w.EmployerAccountId == employerAccountId)
+                .GroupBy(g => new {g.EmployerAccountId, g.PayrollYear, g.PayrollMonth })
+                .Select(s => new LevyDeclarationModel()
+                    {
+                        EmployerAccountId = s.Key.EmployerAccountId,
+                        PayrollMonth = s.Key.PayrollMonth,
+                        PayrollYear = s.Key.PayrollYear,
+                        LevyAmountDeclared = s.Sum(v => v.LevyAmountDeclared)
+                    }
+                ).ToListAsync();
+        }
+
 
         public async Task SaveChanges()
         {
