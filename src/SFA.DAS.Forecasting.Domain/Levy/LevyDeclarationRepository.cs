@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy
         Task<LevyDeclaration> Get(long employerAccountId, string scheme, string payrollYear,
             byte payrollMonth);
 
-        Task<IEnumerable<LevyDeclaration>> GetNetValue(long employerAccountId);
+        Task<IEnumerable<LevyPeriod>> GetNetTotals(long employerAccountId);
         Task Store(LevyDeclaration model);
     }
 
@@ -42,12 +42,11 @@ namespace SFA.DAS.Forecasting.Domain.Levy
             return new LevyDeclaration(_payrollDateService, model);
         }
 
-        public async Task<IEnumerable<LevyDeclaration>> GetNetValue(long employerAccountId)
+        public async Task<IEnumerable<LevyPeriod>> GetNetTotals(long employerAccountId)
         {
-            var model = await _dataSession.GetNetLevyDeclarations(employerAccountId);
+            var model = await _dataSession.GetAllNetTotals(employerAccountId);
 
-            return model.Select(s => new LevyDeclaration(_payrollDateService, s));
-            
+            return model;
         }
 
         public async Task Store(LevyDeclaration levyDeclaration)

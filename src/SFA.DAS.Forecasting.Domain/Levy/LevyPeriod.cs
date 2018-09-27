@@ -10,24 +10,34 @@ namespace SFA.DAS.Forecasting.Domain.Levy
 {
     public class LevyPeriod
     {
-        private readonly List<LevyDeclarationModel> _levyDeclarations;
-        public ReadOnlyCollection<LevyDeclarationModel> LevyDeclarations => _levyDeclarations.AsReadOnly();
-        
-        public LevyPeriod(List<LevyDeclarationModel> levyDeclarations)
+        public long EmployerAccountId { get; set; }
+        private DateTime? _lastReceieved { get; set; }
+        public string PayrollYear { get; set; }
+        public byte PayrollMonth { get; set; }
+        private decimal _totalNetLevyDeclared { get;}
+        public decimal TotalNetLevyDeclared => _totalNetLevyDeclared;
+
+        public LevyPeriod()
         {
-            _levyDeclarations = levyDeclarations ?? throw new ArgumentNullException(nameof(levyDeclarations));
+
+        }
+        public LevyPeriod(long employerAccountId, string payrollYear, byte payrollMonth,
+            decimal netTotal, DateTime? lastReceived)
+        {
+            EmployerAccountId = employerAccountId;
+            PayrollYear = payrollYear;
+            PayrollMonth = payrollMonth;
+            _totalNetLevyDeclared = netTotal;
         }
 
         public decimal GetPeriodAmount()
         {
-            return _levyDeclarations.Sum(levyDeclaration => levyDeclaration.LevyAmountDeclared);
+            return _totalNetLevyDeclared;
         }
 
         public DateTime? GetLastTimeReceivedLevy()
         {
-            return _levyDeclarations.OrderByDescending(levy => levy.DateReceived)
-                .FirstOrDefault()
-                ?.DateReceived;
+            return _lastReceieved;
         }
     }
 }

@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Domain.Levy;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Services
 {
@@ -49,19 +51,25 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 levy.PayrollMonth == payrollMonth && levy.PayrollYear == payrollYear);
         }
 
-        public async Task<IEnumerable<LevyDeclarationModel>> GetNetLevyDeclarations(long employerAccountId)
+        public async Task<LevyPeriod> GetNetTotals(long employerAccountId, string payrollYear, byte payrollMonth)
         {
-            return await _dataContext.LevyDeclarations
-                       .Where(w => w.EmployerAccountId == employerAccountId)
+            return await GetLevyDeclarationTotals(w =>
+                w.EmployerAccountId == employerAccountId && w.PayrollYear == payrollYear &&
+                w.PayrollMonth == payrollMonth).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<LevyPeriod>> GetAllNetTotals(long employerAccountId)
+        {
+            return await GetLevyDeclarationTotals(w => w.EmployerAccountId == employerAccountId)
+                .ToListAsync();
+        }
+
+        private IQueryable<LevyPeriod> GetLevyDeclarationTotals(Expression<Func<LevyDeclarationModel,bool>> wherePredicate)
+        {
+            return _dataContext.LevyDeclarations
+                .Where(wherePredicate)
                 .GroupBy(g => new {g.EmployerAccountId, g.PayrollYear, g.PayrollMonth })
-                .Select(s => new LevyDeclarationModel()
-                    {
-                        EmployerAccountId = s.Key.EmployerAccountId,
-                        PayrollMonth = s.Key.PayrollMonth,
-                        PayrollYear = s.Key.PayrollYear,
-                        LevyAmountDeclared = s.Sum(v => v.LevyAmountDeclared)
-                    }
-                ).ToListAsync();
+                .Select(s => new LevyPeriod(s.Key.EmployerAccountId, s.Key.PayrollYear, s.Key.PayrollMonth,s.Sum(v => v.LevyAmountDeclared), s.Max(v => v.DateReceived)));
         }
 
 
