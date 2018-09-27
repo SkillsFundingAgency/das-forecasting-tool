@@ -19,7 +19,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static async Task Run(
             [QueueTrigger(QueueNames.LevyPreLoadRequest)]PreLoadRequest request,
             [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
-            [Queue(QueueNames.ValidateLevyDeclarationNoProjection)] ICollector<LevySchemeDeclarationUpdatedMessage> outputNoProjectionQueueMessage,
 			ExecutionContext executionContext,
             TraceWriter writer)
         {
@@ -45,7 +44,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    var levyDataService = container.GetInstance<IEmployerDataService>();
                    logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", request.EmployerAccountIds)}, {request.PeriodYear}, {request.PeriodMonth}");
                    var messageCount = 0;
-	               var messageNoProjectionCount = 0;
 				   var schemes = new Dictionary<string, string>();
                    foreach (var employerId in request.EmployerAccountIds)
                    {
@@ -66,46 +64,9 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                            }
                            outputQueueMessage.Add(ld);
                        });
-
-	                   var year = 17;
-	                   var month = 5;
-
-	                   var pastLevyDeclarations = new List<LevySchemeDeclarationUpdatedMessage>();
-
-					   while (year < DateTime.Today.Year % 100 || month < DateTime.Today.Month)
-	                   {
-						   pastLevyDeclarations.AddRange(await levyDataService.LevyForPeriod(employerId, $"{year}-{year + 1}", (short)month));
-
-		                   month++;
-						   if (month > 12)
-		                   {
-			                   month = 1;
-			                   year++;
-		                   }
-	                   }
-
-	                   if (!pastLevyDeclarations.Any())
-	                   {
-		                   logger.Info($"No past levy declarations found for employer: {employerId}");
-		                   continue;
-	                   }
-
-	                   pastLevyDeclarations.ForEach(pld =>
-	                   {
-		                   messageNoProjectionCount++;
-		                   if (request.SubstitutionId.HasValue)
-		                   {
-			                   pld.AccountId = request.SubstitutionId.Value;
-			                   if (!schemes.ContainsKey(pld.EmpRef))
-				                   schemes.Add(pld.EmpRef, Guid.NewGuid().ToString("N"));
-			                   pld.EmpRef = schemes[pld.EmpRef];
-		                   }
-		                   outputNoProjectionQueueMessage.Add(pld);
-	                   });
 				   }
 
                    logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
-                   logger.Info($"Added {messageNoProjectionCount} past levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
 
 				   if (request.SubstitutionId.HasValue)
                    {
