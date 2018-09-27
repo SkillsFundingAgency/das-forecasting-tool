@@ -22,6 +22,18 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Given(@"that I'm on the estimator start page")]
         public void GivenThatIMOnTheEstimatorStartPage()
         {
+            EmployerHash = "M6PKPG";
+            EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
+            EmployeePassword = "Dell1507";
+            WebSite.SetEmployeeHash(EmployerHash);
+            Console.WriteLine("Employer hash: M6PKPG");
+
+            if (!WebSite.IsLocalhost && !WebSite.DoesPageTextContain("Your accounts"))
+            {
+                var loginPage = WebSite.NavigateToLoginPage();
+                loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
+            }
+
             if (!WebSite.IsLocalhost)
             {
                 var accountHomepage = WebSite.NavigateToAccountHomePage();
@@ -56,10 +68,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             }
             var startPage = WebSite.NavigateToEstimateFundsStartPage();
             var addApprenticeshipPage = startPage.ClickStartForAccountWithoutApprenticeships();
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary");
+            addApprenticeshipPage.UseTransferAllowance.Click();
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
-            addApprenticeshipPage.NumberOfMonthsInput.EnterTextInThisElement("12");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
             addApprenticeshipPage.StartDateYearInput.EnterTextInThisElement("2019");
             addApprenticeshipPage.ContinueButton.ClickThisElement();

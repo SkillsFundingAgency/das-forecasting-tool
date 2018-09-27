@@ -20,6 +20,8 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public bool IsLocalhost => BaseUrl.Host.Contains("localhost");
 
+        public bool DoesPageTextContain(string text) => WebBrowserDriver.PageSource.Contains(text);
+
         public void SetEmployeeHash(string hash)
         {
             EmployerHash = hash;

@@ -28,6 +28,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
     {
         [FindsBy(How = How.CssSelector, Using = ".heading-xlarge")] public IWebElement Heading { get; set; }
 
+        [FindsBy(How = How.Id, Using = "IsTransferFunded")] public IWebElement UseTransferAllowance { get; set; }
         [FindsBy(How = How.Id, Using = "no-of-app")] public IWebElement NumberOfApprenticesInput { get; set; }
         [FindsBy(How = How.Id, Using = "apprenticeship-length")] public IWebElement NumberOfMonthsInput { get; set; }
         [FindsBy(How = How.Id, Using = "startDateMonth")] public IWebElement StartDateMonthInput { get; set; }

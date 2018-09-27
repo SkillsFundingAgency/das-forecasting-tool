@@ -96,21 +96,21 @@ this.FeatureBackground();
                         "Start Date Year",
                         "Total Cost"});
             table1.AddRow(new string[] {
-                        "Advanced butcher",
+                        "Advanced butcher, Level: 3 (Standard)",
                         "1",
                         "12",
                         "3",
                         "2019",
                         "12000"});
             table1.AddRow(new string[] {
-                        "Baker",
+                        "Baker, Level: 2 (Standard)",
                         "3",
                         "15",
-                        "7",
+                        "12",
                         "2018",
                         "27000"});
             table1.AddRow(new string[] {
-                        "Network engineer",
+                        "Network engineer, Level: 4 (Standard)",
                         "2",
                         "24",
                         "12",
