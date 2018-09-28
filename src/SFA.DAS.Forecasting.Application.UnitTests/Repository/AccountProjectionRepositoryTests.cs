@@ -33,13 +33,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
             var mockBalance = _moqer.GetMock<CurrentBalance>();
 
 
-            //_moqer.SetInstance(new Models.Balance.BalanceModel
-            //{
-            //    EmployerAccountId = 12345,
-            //    ReceivedDate = DateTime.Today.AddMonths(-1),
-            //    BalancePeriod = DateTime.Today.AddMonths(-1),
-            //    TransferAllowance = 1
-            //});
             var balance = new BalanceModel
             {
                 EmployerAccountId = 12345,
