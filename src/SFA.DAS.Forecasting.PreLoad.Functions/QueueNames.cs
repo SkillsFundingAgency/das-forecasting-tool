@@ -8,10 +8,15 @@
 
         // Payment
         public const string PreLoadPayment = "forecasting-payment-create-preload";
-        public const string PreLoadEarningDetailsPayment = "forecasting-payment-load-earning-details";
-        public const string CreatePaymentMessage = "forecasting-payment-create-payment-message";
-        public const string RemovePreLoadData = "forecasting-payment-remove-preload-data";
-        public const string PaymentValidator = "forecasting-payment-validate-payment";
+	    public const string PreLoadPaymentNoCommitment = "forecasting-payment-create-preload-no-commitment";
+		public const string PreLoadEarningDetailsPayment = "forecasting-payment-load-earning-details";
+	    public const string PreLoadEarningDetailsPaymentNoCommitment = "forecasting-payment-load-earning-details-no-commitment";
+		public const string CreatePaymentMessage = "forecasting-payment-create-payment-message";
+	    public const string CreatePaymentMessageNoCommitment = "forecasting-payment-create-payment-message-no-commitment";
+		public const string RemovePreLoadData = "forecasting-payment-remove-preload-data";
+	    public const string RemovePreLoadDataNoCommitment = "forecasting-payment-remove-preload-data-no-commitment";
+		public const string PaymentValidator = "forecasting-payment-validate-payment";
         public const string PaymentValidatorNoCommitment = "forecasting-payment-validate-payment-no-commitment";
-	}
+	    
+    }
 }

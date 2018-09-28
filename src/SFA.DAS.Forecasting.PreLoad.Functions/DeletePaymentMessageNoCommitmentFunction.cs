@@ -7,24 +7,24 @@ using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
-    public class DeletePaymentMessageFunction : IFunction
+    public class DeletePaymentMessageNoCommitmentFunction : IFunction
     {
-        [FunctionName("DeletePaymentMessageFunction")]
+        [FunctionName("DeletePaymentMessageNoCommitmentFunction")]
         public static async Task Run(
             [QueueTrigger(QueueNames.RemovePreLoadData)]PreLoadPaymentMessage message,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<DeletePaymentMessageFunction>(writer, executionContext,
+            await FunctionRunner.Run<DeletePaymentMessageNoCommitmentFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Info($"{nameof(DeletePaymentMessageFunction)} started for account: {message.HashedEmployerAccountId}");
+                    logger.Info($"{nameof(DeletePaymentMessageNoCommitmentFunction)} started for account: {message.HashedEmployerAccountId}");
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
                     
-                    await dataService.DeletePayment(message.EmployerAccountId);
-					await dataService.DeleteEarningDetails(message.EmployerAccountId);
+                    await dataService.DeletePaymentNoCommitment(message.EmployerAccountId);
+					await dataService.DeleteEarningDetailsNoCommitment(message.EmployerAccountId);
 
-					logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.HashedEmployerAccountId}.");
+					logger.Info($"{nameof(DeletePaymentMessageNoCommitmentFunction)} finished for account: {message.HashedEmployerAccountId}.");
                 });
         }
     }
