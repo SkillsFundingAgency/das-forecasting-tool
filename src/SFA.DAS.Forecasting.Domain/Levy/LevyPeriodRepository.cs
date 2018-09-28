@@ -23,10 +23,9 @@ namespace SFA.DAS.Forecasting.Domain.Levy
 
         public async Task<LevyPeriod> Get(long employerAccountId, string payrollYear, short payrollMonth)
         {
-            var levyDeclarations =
-                await LevyDataSession.GetLevyDeclarationsForPeriod(employerAccountId, payrollYear, (byte)payrollMonth);
-            var levyPeriod = new LevyPeriod(levyDeclarations);
-            return levyPeriod;
+
+
+            return await LevyDataSession.GetNetTotals(employerAccountId, payrollYear, (byte)payrollMonth) ?? new LevyPeriod(); 
         }
     }
 }
