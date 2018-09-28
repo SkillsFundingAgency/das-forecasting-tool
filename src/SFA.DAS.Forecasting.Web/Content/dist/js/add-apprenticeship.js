@@ -8,7 +8,7 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         var formModel = GetAddApprenticeshipForm();
         showFundingCapMessage(formModel.TotalFundingCap !== undefined && formModel.TotalFundingCap !== "0")
 
-        if ($("#choose-apprenticeship")) {
+        if ($("#choose-apprenticeship").length) {
             $("#choose-apprenticeship").select2();
 
             // Storing courses for future use when updating the drowdown. 
@@ -119,10 +119,10 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
     function calculateTotalCost() {
 
         var model = GetAddApprenticeshipForm();
-        
+       
         $.ajax({
             type: "POST",
-            url: 'course',
+            url: getCourseApiUrl($('#choose-apprenticeship').length),
             data: JSON.stringify(model),
             contentType: "application/json; charset=utf-8",
             success: function (result) {
@@ -135,6 +135,21 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
         });
 
         showFundingCapMessage(model.CourseId !== "" && model.NumberOfApprentices > 0);
+    }
+
+    function getCourseApiUrl(addApprenticeship) {
+
+        var pathArray = window.location.pathname.split("/");
+
+        var indexMax = pathArray.length - (addApprenticeship ? 1 : 2); 
+       
+        var newPathname = "";
+        for (i = 1; i < indexMax; i++) {
+            newPathname += "/";
+            newPathname += pathArray[i];
+        }
+
+        return window.location.origin + newPathname + "/course";
     }
 
     function refreshCalculation(formModel, course) {
@@ -151,7 +166,7 @@ sfa.AddApprenticeship = sfa.AddApprenticeship || {};
 
     function GetAddApprenticeshipForm() {
         return {
-            CourseId: $('#choose-apprenticeship').val(),
+            CourseId: $('#choose-apprenticeship').length ? $('#choose-apprenticeship').val() : $('#Course_Id').val(),
             NumberOfApprentices: parseInt($('#no-of-app').val()),
             LevyValue: parseFloat($('#total-funding-cost').val()),
             StartDate: new Date($('#startDateYear').val(), $('#startDateMonth').val() - 1, 1),

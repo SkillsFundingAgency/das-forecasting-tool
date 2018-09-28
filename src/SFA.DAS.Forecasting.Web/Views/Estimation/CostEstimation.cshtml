@@ -112,10 +112,10 @@
                             {
                                 newFinancialYearAccountFunds = false;
                                 var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
+                                <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
 
                                 if (accountFund.Date > new DateTime(2019, 3, 1))
                                 {
-                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
                                     <div class="panel-warning2">
                                         <span class="icon"></span>
                                         <p>
@@ -123,7 +123,6 @@
                                         </p>
                                     </div>
                                 }
-                                <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
                                 @:<table class="small errorTable responsive">
                                     <thead>
                                         <tr>
@@ -153,7 +152,7 @@
                                     }
 
                                     <tr class="@tableRowClass">
-                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
                                         <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
                                         <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
                                         <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
@@ -208,7 +207,7 @@
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
-                                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated allowance you have left at the end of the month">
                                             Remaining transfer allowance
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
@@ -223,7 +222,7 @@
                                 }
 
                                 <tr class="@tableRowClass">
-                                    <td>@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                    <td>@costEstimate.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
                                     <td class="financial">@costEstimate.ActualCost.FormatCost()</td>
                                     <td class="financial">@costEstimate.EstimatedCost.FormatCost()</td>
                                     <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
@@ -246,10 +245,10 @@
                             <summary role="button" aria-controls="details-content-0" aria-expanded="false">What does this table show</summary>
                             <div class="panel panel-width-thin" id="details-content-0" aria-hidden="true">
                                 <p class="text">
-                                    The ‘remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
+                                    The ‘Remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
                                 </p>
                                 <p class="text">
-                                    The ‘Actual transfer costs’ column shows the cost of the apprenticeships that you’ve already agreed to fund with your transfer funds.
+                                    The ‘Your current transfer costs’ column shows the cost of the apprenticeships that you’ve already agreed to fund with your transfer funds.
                                 </p>
                             </div>
                         </details>
@@ -285,7 +284,7 @@
                             <tr>
                                 <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
                                 <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
-                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
+                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatShortMonthAndFullYearWithoutDay() </td>
                                 <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
                                 <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
                                 <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>

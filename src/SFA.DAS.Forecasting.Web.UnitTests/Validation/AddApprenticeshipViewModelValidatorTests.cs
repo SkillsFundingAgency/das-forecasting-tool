@@ -13,13 +13,13 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
     [TestFixture]
     public class AddApprenticeshipViewModelValidatorTests
     {
-        private AddApprenticeshipViewModel _validViewModel;
-        private AddApprenticeshipViewModelValidator _validator;
+        private AddEditApprenticeshipsViewModel _validViewModel;
+        private AddEditApprenticeshipViewModelValidator _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validViewModel = new AddApprenticeshipViewModel
+            _validViewModel = new AddEditApprenticeshipsViewModel
             {
                 NumberOfApprentices = 2,
                 TotalInstallments = 24,
@@ -46,7 +46,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
                     }
                 }
         };
-            _validator = new AddApprenticeshipViewModelValidator();
+            _validator = new AddEditApprenticeshipViewModelValidator();
         }
 
         [Test]

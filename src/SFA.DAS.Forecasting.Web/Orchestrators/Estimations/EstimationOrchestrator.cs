@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+﻿using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -24,7 +23,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
-            IHashingService hashingService, 
+            IHashingService hashingService,
             ICurrentBalanceRepository currentBalanceRepository,
             IApprenticeshipCourseDataService apprenticeshipCourseService)
         {
@@ -114,46 +113,27 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return accountFunds.ToList();
         }
 
-        public async Task<EditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
+        public async Task<AddEditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var estimations = await _estimationRepository.Get(accountId);
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
-
-            var fundingPeriods = course.FundingPeriods.Select(m =>
-                        new FundingPeriodViewModel
-                        {
-                            FromDate = m.EffectiveFrom,
-                            ToDate = m.EffectiveTo,
-                            FundingCap = m.FundingCap
-                        });
-
-            return new EditApprenticeshipsViewModel
+            
+            return new AddEditApprenticeshipsViewModel
             {
-                CourseId = course.Id,
-                CourseTitle = model.CourseTitle,
+                Course = course,
                 ApprenticeshipsId = apprenticeshipsId,
                 EstimationName = estimationName,
-                Level = model.Level,
+                
                 NumberOfApprentices = model.ApprenticesCount,
                 TotalInstallments = model.TotalInstallments,
                 TotalCostAsString = model.TotalCost.FormatValue(),
                 StartDateMonth = model.StartDate.Month,
                 StartDateYear = model.StartDate.Year,
-                HashedAccountId = hashedAccountId,
-                FundingPeriodsJson = JsonConvert.SerializeObject(fundingPeriods),
+                HashedAccountId = hashedAccountId
             };
-        }
-
-        public async Task UpdateApprenticeshipModel(EditApprenticeshipsViewModel model)
-        {
-            var accountId = _hashingService.DecodeValue(model.HashedAccountId);
-            var estimations = await _estimationRepository.Get(accountId);
-
-            estimations.UpdateApprenticeship(model.ApprenticeshipsId, model.StartDateMonth, model.StartDateYear, model.NumberOfApprentices, model.TotalInstallments, model.TotalCostAsString.ToDecimal());
-            await _estimationRepository.Store(estimations);
         }
     }
 }
