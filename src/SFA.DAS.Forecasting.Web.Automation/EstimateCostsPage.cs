@@ -195,7 +195,6 @@ namespace SFA.DAS.Forecasting.Web.Automation
                 .Text;
         }
 
-
         public List<ApprenticeshipsTableRow> GetApprenticeshipsTableContent()
         {
             var rowSelector = "#apprenticeships-added>table>tbody>tr";

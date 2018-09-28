@@ -147,7 +147,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditEstimationApprenticeships.feature</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />
+=======
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
     <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />
     <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>

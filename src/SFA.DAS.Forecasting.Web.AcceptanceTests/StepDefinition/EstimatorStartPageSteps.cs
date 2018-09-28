@@ -28,7 +28,11 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             WebSite.SetEmployeeHash(EmployerHash);
             Console.WriteLine("Employer hash: M6PKPG");
 
+<<<<<<< HEAD
             if (!WebSite.IsLocalhost && !WebSite.DoesPageTextContain("Your accounts"))
+=======
+            if (!WebSite.IsLocalhost)
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
             {
                 var loginPage = WebSite.NavigateToLoginPage();
                 loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
