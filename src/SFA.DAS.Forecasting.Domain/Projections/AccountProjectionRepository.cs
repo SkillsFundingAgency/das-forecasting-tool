@@ -34,6 +34,12 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         public async Task<AccountProjection> Get(long employerAccountId)
         {
             var levy = await _levyDataSession.GetLatestLevyAmount(employerAccountId);
+
+            if (levy < 0)
+            {
+                levy = await _levyDataSession.GetLatestPositiveLevyAmount(employerAccountId);
+            }
+
             var balance = await _currentBalanceRepository.Get(employerAccountId);
             var commitments = balance.EmployerCommitments;
 
