@@ -41,9 +41,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             }
 
             var balance = await _currentBalanceRepository.Get(employerAccountId);
-            var commitments = balance.EmployerCommitments;
 
-            return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), commitments);
+            return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), balance.EmployerCommitments);
         }
 
         public async Task Store(AccountProjection accountProjection)
