@@ -224,9 +224,10 @@ this.FeatureBackground();
         [NUnit.Framework.DescriptionAttribute("Levy Declaration doesn\'t trigger build of projections")]
         public virtual void LevyDeclarationDoesntTriggerBuildOfProjections()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Levy Declaration doesn\'t trigger build of projections", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Levy Declaration doesn\'t trigger build of projections", null, ((string[])(null)));
 #line 39
-this.ScenarioSetup(scenarioInfo);
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
 #line 6
 this.FeatureBackground();
 #line hidden

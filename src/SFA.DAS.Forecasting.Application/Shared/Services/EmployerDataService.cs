@@ -14,6 +14,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string employerId, string payrollYear, short periodMonth);
 
         Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth);
+
+	    Task<List<PeriodInformation>> GetPeriodIds();
+
     }
 
     public class LevyDeclarations : List<LevyDeclarationViewModel>, IAccountResource { }
@@ -87,5 +90,10 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             return accountIds.ToList();
         }
+
+	    public async Task<List<PeriodInformation>> GetPeriodIds()
+	    {
+		    return await _databaseService.GetPeriodIds();
+	    }
     }
 }

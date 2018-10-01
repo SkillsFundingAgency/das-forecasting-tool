@@ -240,6 +240,7 @@
     <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Services\PeriodInformation.cs" />
     <Compile Include="Shared\Services\LevyDeclaration.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />
     <Compile Include="Shared\Services\QueueService.cs" />

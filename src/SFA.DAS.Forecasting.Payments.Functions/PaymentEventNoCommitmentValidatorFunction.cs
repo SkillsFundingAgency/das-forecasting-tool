@@ -8,16 +8,16 @@ using SFA.DAS.Forecasting.Application.Payments.Validation;
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class PaymentEventValidatorFunction: IFunction
+    public class PaymentEventNoCommitmentValidatorFunction: IFunction
     {
-        [FunctionName("PaymentEventValidatorFunction")]
-        [return:Queue(QueueNames.PaymentProcessor)]
+        [FunctionName("PaymentEventNoCommitmentValidatorFunction")]
+        [return:Queue(QueueNames.PaymentNoCommitmentProcessor)]
         public static PaymentCreatedMessage Run(
-            [QueueTrigger(QueueNames.PaymentValidator)]PaymentCreatedMessage paymentCreatedMessage,
+            [QueueTrigger(QueueNames.PaymentValidatorNoCommitment)]PaymentCreatedMessage paymentCreatedMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return FunctionRunner.Run<PaymentEventValidatorFunction, PaymentCreatedMessage>(writer, executionContext, (container, logger) =>
+            return FunctionRunner.Run<PaymentEventNoCommitmentValidatorFunction, PaymentCreatedMessage>(writer, executionContext, (container, logger) =>
                 {
                     var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
                         .Validate(paymentCreatedMessage);

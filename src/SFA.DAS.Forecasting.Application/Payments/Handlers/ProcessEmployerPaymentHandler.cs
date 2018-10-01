@@ -43,7 +43,13 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             payment.RegisterPayment(employerPayment);
             await _repository.StorePayment(payment);
             _logger.Info($"Finished adding the employer payment. Employer: {employerPayment.EmployerAccountId}, Payment Id: {employerPayment.ExternalPaymentId}, Collection period: {employerPayment.CollectionPeriod.Year} - {employerPayment.CollectionPeriod.Month}, Delivery period: {employerPayment.DeliveryPeriod.Year} - {employerPayment.DeliveryPeriod.Month}");
-            _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint);
+
+            if (!string.IsNullOrEmpty(allowProjectionsEndpoint))
+            {
+                _queueService.SendMessageWithVisibilityDelay(paymentCreatedMessage, allowProjectionsEndpoint);
+            }
+            
+
             stopwatch.Stop();
             _telemetry.TrackDuration("Store Payment", stopwatch.Elapsed);
             _telemetry.TrackEvent("Stored Payment");
