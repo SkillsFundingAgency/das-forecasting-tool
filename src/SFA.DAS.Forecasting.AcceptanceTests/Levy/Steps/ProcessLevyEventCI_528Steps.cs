@@ -89,31 +89,55 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
             };
         }
 
-        [When(@"the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations")]
-        public void WhenTheSFAEmployerHMRCLevyServiceNotifiesTheForecastingServiceOfTheLevyDeclarations()
-        {
-            LevySubmissions.Select(levySubmission => new LevySchemeDeclarationUpdatedMessage
-            {
-                Id = 123456,
-                AccountId = Config.EmployerAccountId,
-                LevyDeclaredInMonth = levySubmission.Amount,
-                PayrollMonth = PayrollPeriod.PayrollMonth,
-                PayrollYear = PayrollPeriod.PayrollYear,
-                CreatedDate = levySubmission.CreatedDateValue,
-                EmpRef = levySubmission.Scheme
-            })
-            .ToList()
-            .ForEach(levyEvent =>
-            {
-                var payload = levyEvent.ToJson();
-                var url = Config.LevyFunctionUrl;
-                Console.WriteLine($"Sending levy event to levy function: {url}, Payload: {payload}");
-                var response = HttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            });
-        }
+		[When(@"the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations")]
+		public void WhenTheSFAEmployerHMRCLevyServiceNotifiesTheForecastingServiceOfTheLevyDeclarations()
+		{
+			LevySubmissions.Select(levySubmission => new LevySchemeDeclarationUpdatedMessage
+				{
+					Id = 123456,
+					AccountId = Config.EmployerAccountId,
+					LevyDeclaredInMonth = levySubmission.Amount,
+					PayrollMonth = PayrollPeriod.PayrollMonth,
+					PayrollYear = PayrollPeriod.PayrollYear,
+					CreatedDate = levySubmission.CreatedDateValue,
+					EmpRef = levySubmission.Scheme
+				})
+				.ToList()
+				.ForEach(levyEvent =>
+				{
+					var payload = levyEvent.ToJson();
+					var url = Config.LevyFunctionUrl;
+					Console.WriteLine($"Sending levy event to levy function: {url}, Payload: {payload}");
+					var response = HttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
+					Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+				});
+		}
 
-        [When(@"the employer service notifies the Forecasting service of the invalid Levy Credits")]
+	    [When(@"the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations not requiring projections")]
+	    public void WhenTheSFAEmployerHMRCLevyServiceNotifiesTheForecastingServiceOfTheLevyDeclarationsNotRequiringProjections()
+	    {
+		    LevySubmissions.Select(levySubmission => new LevySchemeDeclarationUpdatedMessage
+			    {
+				    Id = 123456,
+				    AccountId = Config.EmployerAccountId,
+				    LevyDeclaredInMonth = levySubmission.Amount,
+				    PayrollMonth = PayrollPeriod.PayrollMonth,
+				    PayrollYear = PayrollPeriod.PayrollYear,
+				    CreatedDate = levySubmission.CreatedDateValue,
+				    EmpRef = levySubmission.Scheme
+			    })
+			    .ToList()
+			    .ForEach(levyEvent =>
+			    {
+				    var payload = levyEvent.ToJson();
+				    var url = Config.LevyFunctionNoProjectionUrl;
+				    Console.WriteLine($"Sending levy event to levy function: {url}, Payload: {payload}");
+				    var response = HttpClient.PostAsync(url, new StringContent(payload, Encoding.UTF8, "application/json")).Result;
+				    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+			    });
+	    }
+
+		[When(@"the employer service notifies the Forecasting service of the invalid Levy Credits")]
         public void WhenThereIsMissingEventData()
         {
             ScenarioContext.Current.Pending();

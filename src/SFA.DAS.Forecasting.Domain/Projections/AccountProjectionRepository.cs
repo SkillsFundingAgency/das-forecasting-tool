@@ -34,10 +34,15 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         public async Task<AccountProjection> Get(long employerAccountId)
         {
             var levy = await _levyDataSession.GetLatestLevyAmount(employerAccountId);
-            var balance = await _currentBalanceRepository.Get(employerAccountId);
-            var commitments = balance.EmployerCommitments;
 
-            return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), commitments);
+            if (levy < 0)
+            {
+                levy = await _levyDataSession.GetLatestPositiveLevyAmount(employerAccountId);
+            }
+
+            var balance = await _currentBalanceRepository.Get(employerAccountId);
+
+            return new AccountProjection(new Account(employerAccountId, balance.Amount, levy, balance.TransferAllowance, balance.TransferAllowance), balance.EmployerCommitments);
         }
 
         public async Task Store(AccountProjection accountProjection)
