@@ -7,12 +7,14 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Balance;
+using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
 {
     public interface IAccountProjectionRepository
     {
+        Task<IList<AccountProjectionModel>> Get(long employerAccountId);
         Task<AccountProjection> InitialiseProjection(long employerAccountId);
         Task Store(AccountProjection accountProjection);
     }
@@ -29,6 +31,12 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
             _levyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
             _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
+        }
+
+        public async Task<IList<AccountProjectionModel>> Get(long employerAccountId)
+        {
+           return await _accountProjectionDataSession.Get(employerAccountId);
+            
         }
 
         public async Task<AccountProjection> InitialiseProjection(long employerAccountId)

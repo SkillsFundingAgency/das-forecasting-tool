@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             _telemetry.AddEmployerAccountId(message.EmployerAccountId);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var projections = await _accountProjectionRepository.Get(message.EmployerAccountId);
+            var projections = await _accountProjectionRepository.InitialiseProjection(message.EmployerAccountId);
             var startDate = new DateTime(
                 GetValue(message.StartPeriod?.Year, DateTime.Today.Year),
                 GetValue(message.StartPeriod?.Month, DateTime.Today.Month),
