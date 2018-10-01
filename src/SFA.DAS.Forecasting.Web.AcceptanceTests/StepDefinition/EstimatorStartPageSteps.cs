@@ -37,6 +37,12 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 
             if (!WebSite.IsLocalhost)
             {
+                var loginPage = WebSite.NavigateToLoginPage();
+                loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
+            }
+
+            if (!WebSite.IsLocalhost)
+            {
                 var accountHomepage = WebSite.NavigateToAccountHomePage();
                 var financePage = accountHomepage.OpenFinance();
                 financePage.OpenFundingProjection();

@@ -154,14 +154,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditEstimationApprenticeships.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\Estimation\EditModelledApprenticeship.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>EditModelledApprenticeship.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />
-    <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />
-    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
+    <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DownloadForecastBalanceSheet.feature</DependentUpon>

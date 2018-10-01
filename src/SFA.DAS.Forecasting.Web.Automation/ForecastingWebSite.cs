@@ -27,9 +27,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
         public void ClickOnElement(string locator)
         {
             WebBrowserDriver.FindElement(By.CssSelector(locator)).Click();
-        }
-
-        public void SetEmployeeHash(string hash)
+        }        public void SetEmployeeHash(string hash)
         {
             EmployerHash = hash;
         }
