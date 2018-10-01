@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Performance Test Results</title>
+    <style>
+        body {
+            font-family: monospace;
+        }
+
+        .rTable {
+            display: table;
+        }
+
+        .rTableRow {
+            display: table-row;
+        }
+
+        .rTableHeading {
+            display: table-header-group;
+            background-color: #ddd;
+        }
+
+        .rTableCell, .rTableHead {
+            display: table-cell;
+            padding: 3px 10px;
+            border: 1px solid #999999;
+        }
+
+        .rTableHeading {
+            display: table-header-group;
+            background-color: #ddd;
+            font-weight: bold;
+        }
+
+        .rTableFoot {
+            display: table-footer-group;
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .rTableBody {
+            display: table-row-group;
+        }
+    </style>
+
+</head>
+<body>
+<h2>%ReportName%</h2>
+	<div class="rTable">
+		<div class="rTableRow rTableHeading">
+			<div class="rTableHead">Total number of users</div>
+			<div class="rTableHead">Throughput</div>
+			<div class="rTableHead">Errors count</div>
+		</div>
+		<div class="rTableRow">
+			<div class="rTableCell">%numberOfThreads%</div>
+			<div class="rTableCell">%throughput%</div>
+			<div class="rTableCell">%errorsCount%</div>
+		</div>
+	</div>
+	<br />
+    <div class="rTable">
+        <div class="rTableRow rTableHeading">
+            <div class="rTableHead">Average Time To Load Home Page</div>
+            <div class="rTableHead">Average Time To Load Used This Service Before Page</div>
+            <div class="rTableHead">Average Time To Load Login Page</div>
+	        <div class="rTableHead">Average Time To Load Your Accounts Page</div>
+	        <div class="rTableHead">Average Time To Load Sainsbury Page</div>
+	        <div class="rTableHead">Average Time To Load Finance Page</div>
+	        <div class="rTableHead">Average Time To Load Projections Page</div>
+        </div>
+        <div class="rTableRow">
+            <div class="rTableCell">%1% seconds</div>
+	        <div class="rTableCell">%2% seconds</div>
+	        <div class="rTableCell">%3% seconds</div>
+	        <div class="rTableCell">%4% seconds</div>
+	        <div class="rTableCell">%5% seconds</div>
+	        <div class="rTableCell">%6% seconds</div>
+	        <div class="rTableCell">%7% seconds</div>
+        </div>
+    </div>
+</body>
+</html>

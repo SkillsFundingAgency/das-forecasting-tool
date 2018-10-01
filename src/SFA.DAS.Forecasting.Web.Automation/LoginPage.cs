@@ -3,6 +3,7 @@ using OpenQA.Selenium.Support.PageObjects;
 using Sfa.Automation.Framework.Selenium;
 using System;
 using System.Linq;
+using Sfa.Automation.Framework.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.Automation
 {
@@ -10,7 +11,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
     {
         [FindsBy(How = How.Id, Using = "EmailAddress")] private IWebElement EmailAddress { get; set; }
         [FindsBy(How = How.Id, Using = "Password")] private IWebElement Password { get; set; }
-        [FindsBy(How = How.ClassName, Using = "button")] private IWebElement LoginBtn { get; set; }
+        [FindsBy(How = How.Id, Using = "button-signin")] private IWebElement LoginBtn { get; set; }
 
         public LoginPage(IWebDriver webDriver) : base(webDriver)
         {
@@ -34,7 +35,8 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         private void ClickLoginButton()
         {
-            LoginBtn.ClickThisElement();
+            LoginBtn.WaitForElementIsVisible();
+            LoginBtn.Click();
         }
     } 
 }

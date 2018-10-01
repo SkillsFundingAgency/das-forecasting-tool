@@ -112,15 +112,15 @@
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.3.0-preview1-24530-04\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TechTalk.SpecFlow, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
-      <HintPath>..\packages\SpecFlow.2.3.0-preview20180201\lib\net45\TechTalk.SpecFlow.dll</HintPath>
+    <Reference Include="TechTalk.SpecFlow, Version=2.4.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
+      <HintPath>..\packages\SpecFlow.2.4.0\lib\net45\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
     <Reference Include="WebDriver, Version=3.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Selenium.WebDriver.3.8.0\lib\net45\WebDriver.dll</HintPath>
@@ -130,8 +130,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddApprenticeshipPageSteps.cs" />
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="EditModelledApprenticeshipSteps.cs" />
+    <Compile Include="Features\Estimation\AddApprenticeshipPage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AddApprenticeshipPage.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\Estimation\AddEstimationApprenticeships.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -147,6 +154,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditEstimationApprenticeships.feature</DependentUpon>
     </Compile>
+    <Compile Include="Features\Estimation\EditModelledApprenticeship.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditModelledApprenticeship.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />
+    <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />
     <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -192,6 +206,8 @@
     <Compile Include="StepDefinition\Estimation\AddApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\AddEditApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\EditApprenticehipSteps.cs" />
+    <Compile Include="StepDefinition\Estimation\EstimateCostsPageSteps.cs" />
+    <Compile Include="StepDefinition\Estimation\RemoveModelledApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Security\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DisplayModelledApprenticeshipsSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />
@@ -202,6 +218,10 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Features\Estimation\AddApprenticeshipPage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AddApprenticeshipPage.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\Estimation\AddEstimationApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -214,6 +234,10 @@
     <None Include="Features\Estimation\EditEstimationApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>EditEstimationApprenticeships.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\Estimation\EditModelledApprenticeship.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EditModelledApprenticeship.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\Projection\DownloadForecastBalanceSheet.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -269,18 +293,24 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Templates\html.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\html2.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
-    <Error Condition="!Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets'))" />
     <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets'))" />
     <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets'))" />
+    <Error Condition="!Exists('..\packages\SpecFlow.2.4.0\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.4.0\build\SpecFlow.targets'))" />
   </Target>
-  <Import Project="..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.3.0-preview20180201\build\SpecFlow.targets')" />
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
   <Import Project="..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets')" />
+  <Import Project="..\packages\SpecFlow.2.4.0\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.4.0\build\SpecFlow.targets')" />
 </Project>
