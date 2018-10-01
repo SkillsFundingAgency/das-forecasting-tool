@@ -19,13 +19,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
-        private readonly AddApprenticeshipViewModelValidator _validator;
+        private readonly AddEditApprenticeshipViewModelValidator _validator;
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
             IMembershipService membershipService,
-            AddApprenticeshipViewModelValidator validator)
+            AddEditApprenticeshipViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService; 
@@ -73,6 +73,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false);
             vm.IsTransferFunded = "";
+            vm.HashedAccountId = hashedAccountId;
+            vm.EstimationName = estimationName;
 
             return View(vm);
         }
@@ -83,44 +85,29 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var model = await _estimationOrchestrator.EditApprenticeshipModel(hashedAccountId, apprenticeshipsId, estimationName);
             
-            return View(model);
+            return View("AddApprenticeships",model);
         }
 
-        [HttpPost]
-        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/edit", Name = "PostEditApprenticeships")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PostEditApprenticeships(EditApprenticeshipsViewModel editmodel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("EditApprenticeships", editmodel);
-            }
-
-            await _estimationOrchestrator.UpdateApprenticeshipModel(editmodel);
-
-
-            return RedirectToAction(nameof(CostEstimation),
-                   new
-                   {
-                       hashedaccountId = editmodel.HashedAccountId,
-                       estimateName = editmodel.EstimationName
-                   });   
-        }
+       
         
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Save(AddApprenticeshipViewModel vm, string hashedAccountId, string estimationName)
+        public async Task<ActionResult> Save(AddEditApprenticeshipsViewModel vm, string hashedAccountId, string estimationName)
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-            var result = _validator.ValidateAdd(vm);
-
-            foreach(var r in result)
+            if (vm.ApprenticeshipsId == null)
             {
-                ModelState.AddModelError(r.Key, r.Value);
+                var result = _validator.ValidateAdd(vm);
+
+                foreach (var r in result)
+                {
+                    ModelState.AddModelError(r.Key, r.Value);
+                }
             }
+           
 
             if (!ModelState.IsValid)
             {
