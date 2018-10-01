@@ -65,19 +65,28 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Estimation
             testRunner.OnScenarioStart();
         }
         
+<<<<<<< HEAD
         public virtual void ScenarioCleanup()
         {
             testRunner.CollectScenarioErrors();
         }
         
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC1: no current modelled apprenticeships")]
         public virtual void AC1NoCurrentModelledApprenticeships()
         {
+<<<<<<< HEAD
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: no current modelled apprenticeships", null, ((string[])(null)));
 #line 6
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
+=======
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: no current modelled apprenticeships", ((string[])(null)));
+#line 6
+this.ScenarioSetup(scenarioInfo);
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 #line 7
  testRunner.Given("that I\'m on the estimator start page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
@@ -92,10 +101,16 @@ this.ScenarioInitialize(scenarioInfo);
         [NUnit.Framework.DescriptionAttribute("AC2: current modelled apprenticeships")]
         public virtual void AC2CurrentModelledApprenticeships()
         {
+<<<<<<< HEAD
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: current modelled apprenticeships", null, ((string[])(null)));
 #line 11
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
+=======
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: current modelled apprenticeships", ((string[])(null)));
+#line 11
+this.ScenarioSetup(scenarioInfo);
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 #line 12
  testRunner.Given("that I\'m on the estimator start page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 13

@@ -80,7 +80,17 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             var estimateCostsPage = Get<EstimateCostsPage>();
             var resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
+<<<<<<< HEAD
             Assert.IsTrue(DateTime.Parse(resultRows[0].StartDate) > DateTime.Parse(resultRows[1].StartDate), "The apprenticeships in incorrect order");
+=======
+<<<<<<< HEAD
+            Assert.IsTrue(DateTime.Parse(resultRows[0].StartDate) > DateTime.Parse(resultRows[1].StartDate), "The apprenticeships in incorrect order");
+=======
+            //there is a bug in the logic, need to clarify it
+            ScenarioContext.Current.Pending();
+            Assert.IsTrue(DateTime.Parse(resultRows[0].StartDate) < DateTime.Parse(resultRows[1].StartDate), "The apprenticeship with the earliest start date is not shown first");
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         }
         
         [Then(@"the other apprenticeships are in order of start date")]

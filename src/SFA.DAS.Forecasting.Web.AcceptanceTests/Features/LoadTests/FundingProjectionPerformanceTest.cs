@@ -1,9 +1,21 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+=======
+<<<<<<< HEAD
+﻿using System;
+using System.Collections.Generic;
+=======
+﻿using System.Collections.Generic;
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 using System.Text;
 using System.Threading;
 using NUnit.Framework;
@@ -16,14 +28,29 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
 {
     public class FundingProjectionPerformanceTest : StepsBase
     {
+<<<<<<< HEAD
         private static int _numerOfThreadsNotYetCompleted = 10;
         private static int numberOfThreads = 10;
+=======
+<<<<<<< HEAD
+        private static int _numerOfThreadsNotYetCompleted = 10;
+        private static int numberOfThreads = 10;
+=======
+        private static int _numerOfThreadsNotYetCompleted = 20;
+        private static int numberOfThreads = 20;
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         private static ManualResetEvent _doneEvent = new ManualResetEvent(false);
         private int emailIndex = 001;
         private string siteUrl = "https://pp-eas.apprenticeships.sfa.bis.gov.uk/";
         StringBuilder csv = new StringBuilder();
+<<<<<<< HEAD
         private string path = "C:/mySrc/FundingProjectionPerformanceTestResults.csv";
         private string htmlPath = "C:/mySrc/FundingProjectionPerformanceTestResults.html";
+=======
+<<<<<<< HEAD
+        private string path = "C:/mySrc/FundingProjectionPerformanceTestResults.csv";
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         private float errorsCount = 0;
         private int throughput = 6;
 
@@ -50,18 +77,36 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
         private float averageTimeToLoadSainsburyPage = 0;
         private float averageTimeToLoadFinancePage = 0;
         private float averageTimeToLoadProjectionsPage = 0;
+<<<<<<< HEAD
+=======
+=======
+        private string path = "C:/mySrc/FundingProjectionCsvLinksResults.csv";
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 
         [Test]
         public void VerifyFundingProjectionCsvLinks()
         {
             ThreadPool.SetMinThreads(1, 0);
+<<<<<<< HEAD
             ThreadPool.SetMaxThreads(throughput, 0);
+=======
+<<<<<<< HEAD
+            ThreadPool.SetMaxThreads(throughput, 0);
+=======
+            ThreadPool.SetMaxThreads(11, 0);
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
             for (int threadNumber = 0; threadNumber < numberOfThreads; threadNumber++)
                 ThreadPool.QueueUserWorkItem(new WaitCallback(MeasureResponseTimeForFundingProjection),
                     (object)threadNumber);
 
             _doneEvent.WaitOne();
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
             foreach (var time in timeToLoadHomePages)
             {
                 averageTimeToLoadHomePage = averageTimeToLoadHomePage + float.Parse(time.ToString());
@@ -117,6 +162,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
             csv.AppendLine($"Average Time To Load Finance Page - {averageTimeToLoadFinancePage} seconds");
             csv.AppendLine($"Average Time To Load Projections Page - {averageTimeToLoadProjectionsPage} seconds");
 
+<<<<<<< HEAD
             new FileInfo(path).Directory.Create();
             File.WriteAllText(path, csv.ToString());
 
@@ -139,6 +185,12 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
 
             new FileInfo(htmlPath).Directory.Create();
             File.WriteAllText(htmlPath, report);
+=======
+=======
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+            new FileInfo(path).Directory.Create();
+            File.WriteAllText(path, csv.ToString());
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         }
 
         private void MeasureResponseTimeForFundingProjection(object o)
@@ -149,6 +201,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
 
             try
             {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
                 driver.Manage().Window.Maximize();
 
                 Stopwatch timer = new Stopwatch();
@@ -204,10 +260,37 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
                 timer.Stop();
                 timeToLoadProjectionsPage = decimal.Parse($"{timer.Elapsed.TotalSeconds}");
                 timeToLoadProjectionsPage = decimal.Round(timeToLoadProjectionsPage, 2);
+<<<<<<< HEAD
+=======
+=======
+                Stopwatch timer = new Stopwatch();
+                timer.Start();
+
+                driver.Manage().Window.Maximize();
+                driver.Navigate().GoToUrl(siteUrl);
+                var homePage = new HomePage(driver);
+                homePage.StartButton.ClickThisElement();
+                homePage.UsedServiceBefore.CheckThisRadioButton();
+                homePage.Continue.ClickThisElement();
+
+                var loginPage = new LoginPage(driver);
+                loginPage.LoginAsUser($"perfUser{emailString}@loadtest.local", "Pa55word");
+
+                driver.FindElement(By.CssSelector("[title*='SAINSBURY']")).Click();
+
+                driver.FindElement(By.CssSelector("h2>a[href*='finance']")).Click();
+
+                driver.FindElement(By.CssSelector("h2>a[href*='projections']")).Click();
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 
                 Assert.IsTrue(driver.FindElement(By.Id("apprenticeship_csvdownload")).Displayed);
                 Assert.IsTrue(driver.FindElement(By.Id("projections_csvdownload")).Displayed);
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
                 timeToLoadHomePages.Add(timeToLoadHomePage);
                 timeToLoadUsedThisServiceBeforePages.Add(timeToLoadUsedThisServiceBeforePage);
                 timeToLoadLoginPages.Add(timeToLoadLoginPage);
@@ -220,6 +303,15 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
             {
                 Console.WriteLine(e);
                 errorsCount++;
+<<<<<<< HEAD
+=======
+=======
+                timer.Stop();
+                decimal time = decimal.Parse($"{timer.Elapsed.TotalSeconds}");
+                time = decimal.Round(time, 2);
+                csv.AppendLine($"perfUser{emailString}@loadtest.local, {time}");
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
             }
             finally
             {

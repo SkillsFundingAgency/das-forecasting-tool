@@ -16,14 +16,22 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
 {
     public class EstimatorToolPerformanceTest : StepsBase
     {
+<<<<<<< HEAD
         private static int _numerOfThreadsNotYetCompleted = 1;
         private static int numberOfThreads = 1;
+=======
+        private static int _numerOfThreadsNotYetCompleted = 10;
+        private static int numberOfThreads = 10;
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         private static ManualResetEvent _doneEvent = new ManualResetEvent(false);
         private int emailIndex = 001;
         private string siteUrl = "https://pp-eas.apprenticeships.sfa.bis.gov.uk/";
         StringBuilder csv = new StringBuilder();
         private string path = "C:/mySrc/EstimatorToolPerformanceTestResults.csv";
+<<<<<<< HEAD
         private string htmlPath = "C:/mySrc/EstimatorToolPerformanceTestResults.html";
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         private float errorsCount = 0;
         private int throughput = 6;
 
@@ -62,7 +70,11 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
         private float averageTimeToLoadStartTransfersPage = 0;
         private float averageTimeToLoadAddApprenticeshipsPage = 0;
         private float averageTimeToLoadEstimateCostsPage = 0;
+<<<<<<< HEAD
         private float averageTimeToLoadEditApprenticeshipsPage = 0;
+=======
+        private float averagetimeToLoadEditApprenticeshipsPage = 0;
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 
         [Test]
         public void VerifyAddAndRemoveApprenticeships()
@@ -137,9 +149,15 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
 
             foreach (var time in timeToLoadEditApprenticeshipsPages)
             {
+<<<<<<< HEAD
                 averageTimeToLoadEditApprenticeshipsPage = averageTimeToLoadEditApprenticeshipsPage + float.Parse(time.ToString());
             }
             averageTimeToLoadEditApprenticeshipsPage = averageTimeToLoadEditApprenticeshipsPage / (numberOfThreads - errorsCount);
+=======
+                averagetimeToLoadEditApprenticeshipsPage = averagetimeToLoadEditApprenticeshipsPage + float.Parse(time.ToString());
+            }
+            averagetimeToLoadEditApprenticeshipsPage = averagetimeToLoadEditApprenticeshipsPage / (numberOfThreads - errorsCount);
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 
             csv.AppendLine("Funding Projection Performance Test Results");
             csv.AppendLine($"Total number of users - {numberOfThreads}");
@@ -155,6 +173,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
             csv.AppendLine($"Average Time To Load Start Transfers Page - {averageTimeToLoadStartTransfersPage} seconds");
             csv.AppendLine($"Average Time To Load Add Apprenticeships Page - {averageTimeToLoadAddApprenticeshipsPage} seconds");
             csv.AppendLine($"Average Time To Load Estimate Costs Page - {averageTimeToLoadEstimateCostsPage} seconds");
+<<<<<<< HEAD
             csv.AppendLine($"Average Time To Load Edit Apprenticeships - {averageTimeToLoadEditApprenticeshipsPage} seconds");
 
             new FileInfo(path).Directory.Create();
@@ -183,6 +202,12 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
 
         new FileInfo(htmlPath).Directory.Create();
             File.WriteAllText(htmlPath, report);
+=======
+            csv.AppendLine($"Average Time To Load Edit Apprenticeships - {averagetimeToLoadEditApprenticeshipsPage} seconds");
+
+            new FileInfo(path).Directory.Create();
+            File.WriteAllText(path, csv.ToString());
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         }
 
         private void MeasureResponseTimeForAddingApprenticeships(object o)
@@ -260,6 +285,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
                 timeToLoadAddApprenticeshipsPage = decimal.Parse($"{timer.Elapsed.TotalSeconds}");
                 timeToLoadAddApprenticeshipsPage = decimal.Round(timeToLoadAddApprenticeshipsPage, 2);
 
+<<<<<<< HEAD
                 if (!driver.Url.Contains("apprenticeship/add"))
                 {
                     var secondEstimateCostsPage = new EstimateCostsPage(driver);
@@ -275,6 +301,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.LoadTests
                     driver.FindElement(By.CssSelector("a[href*='apprenticeship/add']")).Click();
                 }
                 
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
                 var addApprenticeshipPage = new AddApprenticeshipsToEstimateCostPage(driver);
                 addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(driver,
                     "Actuary, Level: 7 (Standard)");

@@ -29,7 +29,15 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             WebSite.SetEmployeeHash(EmployerHash);
             Console.WriteLine("Employer hash: M6PKPG");
 
+<<<<<<< HEAD
             if (!WebSite.IsLocalhost && !WebSite.DoesPageTextContain("Your accounts"))
+=======
+<<<<<<< HEAD
+            if (!WebSite.IsLocalhost && !WebSite.DoesPageTextContain("Your accounts"))
+=======
+            if (!WebSite.IsLocalhost)
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
             {
                 var loginPage = WebSite.NavigateToLoginPage();
                 loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
@@ -71,6 +79,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
                 EstimateFundsStartPage fundsStartPage1 = new EstimateFundsStartPage(WebSite.getDriver());
                 fundsStartPage1.ClickStartForAccountWithApprenticeships();
             }
+<<<<<<< HEAD
             if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
             {
                 EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
@@ -88,6 +97,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             }
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
                 new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+=======
+            var startPage = WebSite.NavigateToEstimateFundsStartPage();
+            var addApprenticeshipPage = startPage.ClickStartForAccountWithoutApprenticeships();
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
             addApprenticeshipPage.UseTransferAllowance.Click();
             addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();

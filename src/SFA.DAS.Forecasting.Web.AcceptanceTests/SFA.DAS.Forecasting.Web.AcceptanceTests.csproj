@@ -154,12 +154,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditEstimationApprenticeships.feature</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Features\Estimation\EditModelledApprenticeship.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EditModelledApprenticeship.feature</DependentUpon>
     </Compile>
     <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />
+=======
+<<<<<<< HEAD
+    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />
+=======
+>>>>>>> e53db1e22edd86dc2964aebe726d6566c7e021a5
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
     <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />
     <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
@@ -207,7 +214,10 @@
     <Compile Include="StepDefinition\Estimation\AddEditApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\EditApprenticehipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\EstimateCostsPageSteps.cs" />
+<<<<<<< HEAD
     <Compile Include="StepDefinition\Estimation\RemoveModelledApprenticeshipSteps.cs" />
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
     <Compile Include="StepDefinition\Security\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DisplayModelledApprenticeshipsSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />

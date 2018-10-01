@@ -11,7 +11,11 @@ namespace SFA.DAS.Forecasting.Web.Automation
 {
     public class EstimateCostsPage : BasePage
     {
+<<<<<<< HEAD
         [FindsBy(How = How.CssSelector, Using = "h1")]
+=======
+        [FindsBy(How = How.XPath, Using = "//h1[text()='Estimated costs']")]
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         public IWebElement PageHeader { get; set; }
 
         [FindsBy(How = How.XPath, Using = "//*[text()='Remove']")]
@@ -46,9 +50,12 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         [FindsBy(How = How.CssSelector, Using = ".panel.panel-width-thin>p")]
         private IWebElement _youHaveNotSelectedAnyApprenticeshipsMessage;
+<<<<<<< HEAD
 
         [FindsBy(How = How.CssSelector, Using = "h3")]
         private IWebElement _removedApprenticeshipBanner;
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
 
         public EstimateCostsPage(IWebDriver webDriver) : base(webDriver)
         {
@@ -106,10 +113,13 @@ namespace SFA.DAS.Forecasting.Web.Automation
             }
         }
 
+<<<<<<< HEAD
         public bool IsRemovedApprenticeshipBannerDisplayed => _removedApprenticeshipBanner.Displayed;
 
         public string RemovedApprenticeshipBannerText => _removedApprenticeshipBanner.Text;
 
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         public IList<string> WhatDoesThisTableShowText
         {
             get
@@ -182,8 +192,11 @@ namespace SFA.DAS.Forecasting.Web.Automation
             }
         }
 
+<<<<<<< HEAD
         public bool IsPageLoaded => PageHeader.Displayed;
 
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         public RemainingTransferAllowanceRow[] GetRemainingTransferAllowanceTableContent()
         {
             var rowSelector = "#remaining-transfer-allowance>table:first-of-type>tbody>tr";
@@ -209,7 +222,10 @@ namespace SFA.DAS.Forecasting.Web.Automation
                 .Text;
         }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         public List<ApprenticeshipsTableRow> GetApprenticeshipsTableContent()
         {
             var rowSelector = "#apprenticeships-added>table>tbody>tr";

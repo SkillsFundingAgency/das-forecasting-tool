@@ -22,6 +22,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public bool DoesPageTextContain(string text) => WebBrowserDriver.PageSource.Contains(text);
 
+<<<<<<< HEAD
         public string CurrentUrl => WebBrowserDriver.Url;
 
         public void ClickOnElement(string locator)
@@ -29,6 +30,8 @@ namespace SFA.DAS.Forecasting.Web.Automation
             WebBrowserDriver.FindElement(By.CssSelector(locator)).Click();
         }
 
+=======
+>>>>>>> 91bc7306d1caed700cafd29a268f3d5b3b1da673
         public void SetEmployeeHash(string hash)
         {
             EmployerHash = hash;
