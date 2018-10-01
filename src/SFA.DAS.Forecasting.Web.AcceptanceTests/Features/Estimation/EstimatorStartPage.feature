@@ -3,10 +3,6 @@
 	I want the solution to know if I already have modelled apprenticeships
 	So that it routes me to the most relevant page
 
-Background:	
-	Given that I am an employer with predefined projections
-	And I have logged into my Apprenticeship Account
-
 Scenario: AC1: no current modelled apprenticeships
 	Given that I'm on the estimator start page
 	When I have no current modelled apprenticeships
