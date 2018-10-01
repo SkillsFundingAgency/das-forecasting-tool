@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 {
     public interface IAccountProjectionRepository
     {
-        Task<AccountProjection> Get(long employerAccountId);
+        Task<AccountProjection> InitialiseProjection(long employerAccountId);
         Task Store(AccountProjection accountProjection);
     }
 
@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             _accountProjectionDataSession = accountProjectionDataSession ?? throw new ArgumentNullException(nameof(accountProjectionDataSession));
         }
 
-        public async Task<AccountProjection> Get(long employerAccountId)
+        public async Task<AccountProjection> InitialiseProjection(long employerAccountId)
         {
             var levy = await _levyDataSession.GetLatestLevyAmount(employerAccountId);
 
