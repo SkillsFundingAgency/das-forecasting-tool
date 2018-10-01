@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
     [StorageAccount("StorageConnectionString")]
     public class LevyDeclarationEventNoProjectionStoreFunction : IFunction
     {
-        [FunctionName("LevyDeclarationEventStoreFunction")]
+        [FunctionName("LevyDeclarationEventNoProjectionStoreFunction")]
         public static async Task Run(
             [QueueTrigger(QueueNames.StoreLevyDeclarationNoProjection)]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedMessage, ExecutionContext executionContext,
             TraceWriter writer)
