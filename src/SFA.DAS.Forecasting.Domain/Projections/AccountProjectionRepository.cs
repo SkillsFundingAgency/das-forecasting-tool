@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Domain.Balance;
-using SFA.DAS.Forecasting.Domain.Commitments;
+﻿using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Balance;
-using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Domain.Projections
 {
@@ -24,6 +22,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly ILevyDataSession _levyDataSession;
         private readonly IAccountProjectionDataSession _accountProjectionDataSession;
+ 
 
         public AccountProjectionRepository(ICurrentBalanceRepository currentBalanceRepository,
             ILevyDataSession levyDataSession, IAccountProjectionDataSession accountProjectionDataSession)
@@ -35,8 +34,14 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
         public async Task<IList<AccountProjectionModel>> Get(long employerAccountId)
         {
-           return await _accountProjectionDataSession.Get(employerAccountId);
-            
+            var projections = await _accountProjectionDataSession.Get(employerAccountId);
+
+            if (!projections.Any()) return null;
+
+            var firstProjection = projections.OrderBy(o => new { o.Year, o.Month }).First();
+            firstProjection.IsFirstMonth = true;
+
+            return projections;
         }
 
         public async Task<AccountProjection> InitialiseProjection(long employerAccountId)

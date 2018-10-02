@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -20,6 +21,13 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
             _projections = new List<AccountProjectionModel>(49);
+        }
+
+        public AccountProjection(Account account, EmployerCommitments employerCommitments, IList<AccountProjectionModel> accountProjectionModels)
+        {
+            _account = account ?? throw new ArgumentNullException(nameof(account));
+            _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
+            _projections = accountProjectionModels != null ? accountProjectionModels.ToList() :  throw new ArgumentNullException(nameof(accountProjectionModels));
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
@@ -153,5 +161,23 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
 		    return currentBalance + levyFundsIn;
 		}
+
+
+        public void UpdateProjectionsWithExpiredFunds(Dictionary<CalendarPeriod,decimal> expiringFunds)
+        {
+            foreach (var projectionModel in _projections)
+            {
+                var projectionCalendarPeriod = new CalendarPeriod(projectionModel.Year, projectionModel.Month);
+
+                if (!expiringFunds.ContainsKey(projectionCalendarPeriod))
+                {
+                  throw new NullReferenceException("Expired funds dictionary must include all Calendar Periods in projections");
+                }
+
+                projectionModel.ExpiredFunds = expiringFunds[projectionCalendarPeriod];
+                projectionModel.FutureFunds = projectionModel.CalculateFutureFunds();
+            }
+        }
+
 	}
 }
