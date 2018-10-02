@@ -20,7 +20,14 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public bool IsLocalhost => BaseUrl.Host.Contains("localhost");
 
-        public void SetEmployeeHash(string hash)
+        public bool DoesPageTextContain(string text) => WebBrowserDriver.PageSource.Contains(text);
+
+        public string CurrentUrl => WebBrowserDriver.Url;
+
+        public void ClickOnElement(string locator)
+        {
+            WebBrowserDriver.FindElement(By.CssSelector(locator)).Click();
+        }        public void SetEmployeeHash(string hash)
         {
             EmployerHash = hash;
         }
@@ -42,26 +49,31 @@ namespace SFA.DAS.Forecasting.Web.Automation
 
         public EstimateFundsStartPage NavigateToEstimateFundsStartPage()
         {
-            var currentUrl = new Uri(WebBrowserDriver.Url);
-            // TODO its a workaround to move on the page until estimations link implemented on employer
-            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
-            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/forecasting/estimations/start-transfer");
+            string currentUrl = new Uri(WebBrowserDriver.Url).ToString();
+            if (currentUrl.Contains("forecasting/projections"))
+            {
+                WebBrowserDriver.FindElement(By.CssSelector("a[href*='estimations/start']")).Click();
+            }
+            if(currentUrl.Contains(""))
+            {
+                
+            }
+            else
+            {
+                throw new Exception();
+            }
             return new EstimateFundsStartPage(WebBrowserDriver);
         }
 
         public EstimateCostsPage NavigateToEstimageCostsPage()
         {
-            var currentUrl = new Uri(WebBrowserDriver.Url);
-            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
-            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/forecasting/estimations/default");
+            WebBrowserDriver.FindElement(By.CssSelector(".button-start")).Click();
             return new EstimateCostsPage(WebBrowserDriver);
         }
 
         public AccountHomePage NavigateToAccountHomePage()
         {
-            var currentUrl = new Uri(WebBrowserDriver.Url);
-            var baseUrl = currentUrl.GetLeftPart(UriPartial.Authority);
-            WebBrowserDriver.Navigate().GoToUrl($"{baseUrl}/accounts/{EmployerHash}/teams");
+            WebBrowserDriver.FindElement(By.CssSelector("[title*='SAINSBURY']")).Click();
             return new AccountHomePage(WebBrowserDriver);
         }
 
