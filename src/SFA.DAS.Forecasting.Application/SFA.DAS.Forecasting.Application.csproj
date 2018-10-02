@@ -122,6 +122,12 @@
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.3.32\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
+    <Reference Include="SFA.DAS.EmployerFinance.Domain, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerFinance.ExpiredFunds.1.0.0\lib\netstandard2.0\SFA.DAS.EmployerFinance.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="SFA.DAS.EmployerFinance.ExpiredFunds, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerFinance.ExpiredFunds.1.0.0\lib\netstandard2.0\SFA.DAS.EmployerFinance.ExpiredFunds.dll</HintPath>
+    </Reference>
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.57835, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
     </Reference>
@@ -190,6 +196,8 @@
     <Compile Include="Converters\FundingSourceConverter.cs" />
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="ExpiredFunds\Handlers\CalculateExpiringFundsHandler.cs" />
+    <Compile Include="ExpiredFunds\Service\ExpiredFundsService.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
