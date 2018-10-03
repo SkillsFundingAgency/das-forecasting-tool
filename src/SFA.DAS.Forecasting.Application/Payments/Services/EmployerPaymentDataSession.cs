@@ -1,12 +1,15 @@
-﻿using System;
-using System.Data.Entity;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
+﻿using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Payments;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Domain.ExpiredFunds.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
@@ -49,16 +52,40 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 .FirstOrDefaultAsync();
         }
 
-	    public async Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId)
-	    {
-			return await _dataContext
-				.Payments.Where(payment => payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
-				.OrderByDescending(payment => payment.ReceivedTime)
-				.Select(payment => payment.ReceivedTime)
-				.FirstOrDefaultAsync();
-		}
+        public async Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId)
+        {
+            return await _dataContext
+                .Payments.Where(payment => payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
+                .OrderByDescending(payment => payment.ReceivedTime)
+                .Select(payment => payment.ReceivedTime)
+                .FirstOrDefaultAsync();
+        }
 
-	    public async Task SaveChanges()
+        public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)
+        {
+            var paymentSubTotals = GetPaymentTotals(w => w.FundingSource == FundingSource.Levy && w.EmployerAccountId == employerAccountId);
+
+            var transferPaymentSubtotals = GetPaymentTotals(w =>
+                w.FundingSource == FundingSource.Transfer && w.EmployerAccountId == employerAccountId &&
+                w.SendingEmployerAccountId == employerAccountId);
+
+            var paymentTotals = (from payment in paymentSubTotals
+                                 join transferPayment in transferPaymentSubtotals on payment.Key equals transferPayment.Key
+                                 select new { payment.Key, Value = payment.Value + transferPayment.Value })
+                                .ToDictionaryAsync(k => k.Key,k => k.Value);
+
+            return await paymentTotals;
+        }
+
+        private IQueryable<KeyValuePair<CalendarPeriod, decimal>> GetPaymentTotals(Expression<Func<PaymentModel, bool>> wherePredicate)
+        {
+            return _dataContext.Payments
+                .Where(wherePredicate)
+                .GroupBy(g => new { g.EmployerAccountId, g.CollectionPeriod.Year, g.CollectionPeriod.Month })
+                .Select(s => new { Year = s.Key.Year, Month = s.Key.Month, EmployerAccountId = s.Key.EmployerAccountId, Total = s.Sum(v => v.Amount) })
+                .ToDictionary(k => new CalendarPeriod(k.Year, k.Month), k => k.Total).AsQueryable();
+        }
+        public async Task SaveChanges()
         {
             var stopwatch = new Stopwatch();
             var startTime = DateTime.UtcNow;

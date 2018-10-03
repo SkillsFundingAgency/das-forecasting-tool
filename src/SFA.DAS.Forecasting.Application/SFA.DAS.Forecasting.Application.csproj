@@ -196,7 +196,6 @@
     <Compile Include="Converters\FundingSourceConverter.cs" />
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
-    <Compile Include="ExpiredFunds\Handlers\CalculateExpiringFundsHandler.cs" />
     <Compile Include="ExpiredFunds\Service\ExpiredFundsService.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
@@ -281,7 +280,9 @@
       <Name>SFA.DAS.Forecasting.Models</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="ExpiredFunds\Handlers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Azure.Services.AppAuthentication.1.1.0-preview\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\packages\Microsoft.Azure.Services.AppAuthentication.1.1.0-preview\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

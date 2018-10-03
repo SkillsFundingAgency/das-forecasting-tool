@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Models.Payments;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Domain.ExpiredFunds.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Domain.Payments.Services
 {
@@ -11,7 +12,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Services
         void Store(PaymentModel payment);
         Task<DateTime?> GetLastReceivedTime(long employerAccountId);
 	    Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId);
-
+        Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId);
 		Task SaveChanges();
     }
 }
