@@ -59,24 +59,24 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                     .ConnectionStrings["EmployerDatabaseConnectionString"]
                     .ConnectionString))
                 {
-                    connection.Execute("delete from [employer_financial].[TransactionLine]", commandType: CommandType.Text);
-                    connection.Execute("delete from [employer_financial].[LevyDeclaration];", commandType: CommandType.Text);
+                    connection.Execute("delete from [employer_financial].[TransactionLine] where accountId in (497, 8509)", commandType: CommandType.Text);
+                    connection.Execute("delete from [employer_financial].[LevyDeclaration] where accountId in (497, 8509);", commandType: CommandType.Text);
 
                     foreach (var id in new long[] { 497, 8509 })
                     {
                         var parameters = new DynamicParameters();
                         parameters.Add("@accountId", id);
 
-                        var sql = @"
+                        var sql = $@"
                                 INSERT INTO [employer_financial].[TransactionLine]
                                            ([AccountId],[DateCreated],[SubmissionId],[TransactionDate],[TransactionType],[LevyDeclared],[Amount],[EmpRef],[PeriodEnd],[UkPrn],[SfaCoInvestmentAmount],[EmployerCoInvestmentAmount],[EnglishFraction],[TransferSenderAccountId],[TransferSenderAccountName],[TransferReceiverAccountId],[TransferReceiverAccountName])
-                                VALUES (@accountId,'2018-01-23 00:00:00.000',3410000815,'2018-01-18 07:12:28.060',1,10000.0000,8811.0000,'001/MP00056',null,null,0,0,0.80100,null,null ,null,null)"
+                                VALUES (@accountId,'2018-01-23 00:00:00.000',34{id}815,'2018-01-18 07:12:28.060',1,10000.0000,8811.0000,'001/MP00056',null,null,0,0,0.80100,null,null ,null,null)"
                             ;
                         connection.Execute(sql, parameters);
 
-                        var sql2 = @"INSERT INTO [employer_financial].[LevyDeclaration]
+                        var sql2 = $@"INSERT INTO [employer_financial].[LevyDeclaration]
                                    ([AccountId] ,[empRef] ,[LevyDueYTD] ,[LevyAllowanceForYear] ,[SubmissionDate],[SubmissionId] ,[PayrollYear] ,[PayrollMonth] ,[CreatedDate] ,[EndOfYearAdjustment],[EndOfYearAdjustmentAmount],[DateCeased],[InactiveFrom] ,[InactiveTo] ,[HmrcSubmissionId] ,[NoPaymentForPeriod])
-                             VALUES (@accountId, '001/MP00056', 50.0000, 15000.0000, '2017-05-15 12:00:00.000', 3410000815, '17-18', 11, GETDATE(), 0, 0, null,  null, null, 0, null)";
+                             VALUES (@accountId, '001/MP00056', 50.0000, 15000.0000, '2017-05-15 12:00:00.000', 34{id}815, '17-18', 11, GETDATE(), 0, 0, null,  null, null, 0, null)";
 
                         connection.Execute(sql2, parameters);
                     }
