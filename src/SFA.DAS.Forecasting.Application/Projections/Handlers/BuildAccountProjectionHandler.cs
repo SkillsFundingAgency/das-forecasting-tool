@@ -44,12 +44,14 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
                 projections.BuildLevyTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
             else
                 projections.BuildPayrollPeriodEndTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
-            
-            var expiringFunds = _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId);
 
-           projections.UpdateProjectionsWithExpiredFunds(await expiringFunds);
-            
+            if (_config.FeatureExpiredFunds)
+            {
+                var expiringFunds = _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId);
 
+                projections.UpdateProjectionsWithExpiredFunds(await expiringFunds);
+            }
+            
             await _accountProjectionRepository.Store(projections);
             
             stopwatch.Stop();
