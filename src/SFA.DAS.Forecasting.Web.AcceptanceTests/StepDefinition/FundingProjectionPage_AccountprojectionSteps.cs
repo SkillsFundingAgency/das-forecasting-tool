@@ -9,12 +9,28 @@ using System.Globalization;
 using System.Transactions;
 using SFA.DAS.Forecasting.Data;
 using System.Linq;
+using OpenQA.Selenium;
+using StructureMap;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
     [Binding]
-    public class FundingProjectionPage_AccountprojectionSteps : StepsBase
+    public class FundingProjectionPage_AccountprojectionSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+        protected IContainer NestedContainer { get; set; }
+
+        public FundingProjectionPage_AccountprojectionSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         private string[] expectedHeaders = {
             "Date",
             "Cost of training",
@@ -52,7 +68,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [When(@"the Account projection is displayed")]
         public void WhenTheAccountProjectionIsDisplayed()
         {
-            var page = Get<FundingProjectionPage>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
 
             var firstProjectionTable = page.AccountProjectionTables.FirstOrDefault();
             Assert.IsTrue(page.AccountProjectionHeader.Displayed, "ERROR:The account projection header is not visible");
@@ -69,8 +85,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the Account projection has the correct columns")]
         public void ThenTheAccountProjectionHasTheCorrectColumns()
         {
-            var page = Get<FundingProjectionPage>();
-            var table = Get<List<TestAccountProjection>>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
+            List<TestAccountProjection> table = new List<TestAccountProjection>();
             var pageHeaders = page.GetAccountProjectionHeaders();
             Assert.AreEqual(expectedHeaders.Length, pageHeaders.Length);
             foreach (var header in pageHeaders)
@@ -82,8 +98,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the Account projection has the correct columns without Co-Investment")]
         public void ThenTheAccountProjectionHasTheCorrectColumnsWithoutCoInvestment()
         {
-            var page = Get<FundingProjectionPage>();
-            var table = Get<List<TestAccountProjection>>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
+            List<TestAccountProjection> table = new List<TestAccountProjection>();
             var pageHeaders = page.GetAccountProjectionHeaders();
             Assert.AreEqual(expectedHeadersWithoutCoInvestment.Length, pageHeaders.Length);
             foreach (var header in pageHeaders)
@@ -99,7 +115,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 
             var nextMonthDate = DateTime.Now.AddMonths(1);
             var nextMonth = DateHelper.GetMonthString(nextMonthDate.Month);
-            var page = Get<FundingProjectionPage>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
             var datePageValues = page.GetHeaderValues("Date");
             var firstDate = datePageValues[0];
             StringAssert.Contains(nextMonth, firstDate, "ERROR:The first month displayed is not the next calender month");
@@ -108,10 +124,10 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"there are months up to '(.*)' displayed in the forecast")]
         public void ThenThereAreMonthsUpToAprilDisplayedInTheForecast(string p0)
         {
-            var page = Get<FundingProjectionPage>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
             var datePageValues = page.GetHeaderValues("Date");
 
-            var table = Get<List<TestAccountProjection>>();
+            List<TestAccountProjection> table = new List<TestAccountProjection>();
             var startDate = table[1].Date;
             var endDate = p0;
             var requiredDateRange = DateHelper.BuildDateRange(datePageValues.FirstOrDefault(), endDate);
@@ -124,8 +140,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the data is displayed correctly in each column")]
         public void ThenTheDataIsDisplayedCorrectlyInEachColumn()
         {
-            var table = Get<List<TestAccountProjection>>();
-            var page = Get<FundingProjectionPage>();
+            List<TestAccountProjection> table = new List<TestAccountProjection>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             foreach (var headerName in expectedHeaders)
             {
@@ -183,13 +199,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"I see Pending completion payments with the amount of £ (.*)")]
         public void ThenISeePendingCompletionPaymentsWithTheAmountOf(string overdueCompletionPayments)
         {
-            var page = Get<FundingProjectionPage>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
             Assert.AreEqual($"£{overdueCompletionPayments}", page.PendingCompletionPayments.Text);
         }
 
         private void StoreUnallocatedCompletionPayments(int v)
         {
-            var employerAccountId = long.Parse(Config.EmployerAccountID);
+            Config config = new Config();
+            var employerAccountId = long.Parse(config.EmployerAccountID);
             var balance = ForecastingDataContext.Balances.FirstOrDefault(m => m.EmployerAccountId == employerAccountId);
 
             if (balance == null)

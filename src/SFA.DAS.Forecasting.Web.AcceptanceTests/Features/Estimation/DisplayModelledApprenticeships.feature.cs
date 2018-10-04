@@ -84,11 +84,11 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Estimation
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC2: Check costs of modelled apprenticeships")]
-        [NUnit.Framework.CategoryAttribute("mytag")]
+        [NUnit.Framework.CategoryAttribute("DisplayModelledApprenticeships")]
         public virtual void AC2CheckCostsOfModelledApprenticeships()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: Check costs of modelled apprenticeships", null, new string[] {
-                        "mytag"});
+                        "DisplayModelledApprenticeships"});
 #line 13
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();

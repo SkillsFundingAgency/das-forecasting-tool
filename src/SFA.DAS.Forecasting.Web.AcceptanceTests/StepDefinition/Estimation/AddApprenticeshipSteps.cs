@@ -1,36 +1,46 @@
 ﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using Sfa.Automation.Framework.Extensions;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
 {
-    public class AddApprenticeshipSteps : StepsBase
+    [Binding]
+    public class AddApprenticeshipSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+
+        public AddApprenticeshipSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         [When(@"I click on the Add link")]
         public void WhenIClickOnTheLink()
         {
-            var page = Get<EstimateCostsPage>();
-            var addPage = page.AddApprenticeships();
-            Set(addPage);
+            EstimateCostsPage page = new EstimateCostsPage(_driver);
+            page.AddApprenticeships();
         }
 
         [Then(@"I am on the add apprenticeship page")]
         public void ThenIAmOnTheAddApprenticeshipPage()
         {
-            var page = Get<AddApprenticeshipsToEstimateCostPage>();
+            AddApprenticeshipsToEstimateCostPage page = new AddApprenticeshipsToEstimateCostPage(_driver);
             Assert.IsTrue(page.PageHeader.Displayed);
-            Set(page as AddEditApprenticeshipPage);
         }
-
 
         [When(@"I select '(.*)' from drop down")]
         public void WhenISelectFromdropdown(string standardName)
         {
-            var page = Get<AddEditApprenticeshipPage>() as AddApprenticeshipsToEstimateCostPage;
-            page.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), standardName);
-            Set(page as AddEditApprenticeshipPage);
-            
+            AddApprenticeshipsToEstimateCostPage page = new AddApprenticeshipsToEstimateCostPage(_driver);
+            page.SelectApprenticeshipDropdown.SelectDropDown(_driver, standardName);
         }
     }
 }

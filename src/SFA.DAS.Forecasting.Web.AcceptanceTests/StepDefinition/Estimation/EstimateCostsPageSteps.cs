@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Sfa.Automation.Framework.Extensions;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
@@ -9,44 +10,55 @@ using TechTalk.SpecFlow;
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
 {
     [Binding]
-    public class EstimateCostsPageSteps : StepsBase
+    public class EstimateCostsPageSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+
+        public EstimateCostsPageSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         [Given(@"that I'm on the Estimated Costs page")]
         public void GivenThatImOnTheEstimatedCostsPage()
         {
-            EmployerHash = "M6PKPG";
-            EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
-            EmployeePassword = "Dell1507";
-            WebSite.SetEmployeeHash(EmployerHash);
-            Console.WriteLine($"Employer hash: {EmployerHash}");
+            //EmployerHash = "M6PKPG";
+            string EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
+            string EmployeePassword = "Dell1507";
+            //WebSite.SetEmployeeHash(EmployerHash);
+            //Console.WriteLine($"Employer hash: {EmployerHash}");
 
-            if (!WebSite.IsLocalhost)
+            if (!IsLocalhost)
             {
-                var loginPage = WebSite.NavigateToLoginPage();
+                var loginPage = NavigateToLoginPage(_driver);
                 loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
             }
 
-            if (!WebSite.IsLocalhost)
+            if (!IsLocalhost)
             {
-                var accountHomepage = WebSite.NavigateToAccountHomePage();
+                var accountHomepage = NavigateToAccountHomePage(_driver);
                 var financePage = accountHomepage.OpenFinance();
                 financePage.OpenFundingProjection();
             }
 
-            var startPage = WebSite.NavigateToEstimateFundsStartPage();
+            var startPage = NavigateToEstimateFundsStartPage(_driver);
 
             var addApprenticeshipPage = startPage.ClickStartForAccountWithApprenticeships();
-            Set(addApprenticeshipPage);
         }
 
         [When(@"I click on the '(.*)' link")]
         public void WhenIClickOnTheLink(string p0)
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             if (p0 == "Add more apprenticeships...")
             {
                 var addPage = estimateCostsPage.AddApprenticeships();
-                Set(addPage);
             }
             if (p0 == "Apprenticeships added")
             {
@@ -57,22 +69,22 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"I am taken to the Add Apprenticeships page")]
         public void ThenIAmTakenToTheAddApprenticeshipsPage()
         {
-            var page = Get<AddApprenticeshipsToEstimateCostPage>();
+            AddApprenticeshipsToEstimateCostPage page = new AddApprenticeshipsToEstimateCostPage(_driver);
             Assert.IsTrue(page.PageHeader.Displayed);
         }
 
         [Then(@"I am taken to the Apprenticeships added tab")]
         public void ThenIAmTakenToTheApprenticeshipsAddedTab()
         {
-            var page = Get<EstimateCostsPage>();
+            EstimateCostsPage page = new EstimateCostsPage(_driver);
             Assert.IsTrue(page.IsApprenticeshipsAddedTabActive);
         }
 
         [When(@"I view the remaining transfer allowance tab")]
         public void WhenIViewTheRemainingTransferAllowanceTab()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 while (isAnyapprenticeshipExist)
@@ -81,13 +93,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                     isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 }
 
-                WebSite.ClickOnElement("a[href*='apprenticeship/add']");
+                ClickOnElement(_driver, "a[href*='apprenticeship/add']");
             }
 
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+                new AddApprenticeshipsToEstimateCostPage(_driver);
             addApprenticeshipPage.UseTransferAllowance.Click();
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -99,7 +111,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the first month in the table is the earliest month in which a modelled apprenticeship payment is made \(the month after the earliest start date\)")]
         public void ThenTheFirstMonthInTheTableIsTheEarliestMonthInWhichAModelledApprenticeshipPaymentIsMadeTheMonthAfterTheEarliestStartDate()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var remainingTransferAllowanceTable = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             foreach (var row in remainingTransferAllowanceTable)
             {
@@ -110,15 +122,15 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the first month's transfer allowance value is correct")]
         public void ThenTheFirstMonthsTransferAllowanceValueIsCorrect()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var remainingTransferAllowanceTable = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
-            Assert.AreEqual(remainingTransferAllowanceTable[0].RemainingTransferAllowance, "£0");
+            Assert.AreEqual(remainingTransferAllowanceTable[0].RemainingTransferAllowance, "-£400");
         }
 
         [Then(@"the first month's modelled costs is correct")]
         public void ThenTheFirstMonthsModelledCostsIsCorrect()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var remainingTransferAllowanceTable = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             Assert.AreEqual(remainingTransferAllowanceTable[0].YourCurrentTransferCosts, "£0");
         }
@@ -126,28 +138,25 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"each subsequent month's transfer allowance is correct")]
         public void ThenEachSubsequentMonthsTransferAllowanceIsCorrect()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var remainingTransferAllowanceTable = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             for (int i = 0; i < 6; i++)
             {
                 switch (i)
                 {
                     case 0:
-                        Assert.AreEqual(remainingTransferAllowanceTable[i].RemainingTransferAllowance, "£0");
-                        break;
-                    case 1:
                         Assert.AreEqual(remainingTransferAllowanceTable[i].RemainingTransferAllowance, "-£400");
                         break;
-                    case 2:
+                    case 1:
                         Assert.AreEqual(remainingTransferAllowanceTable[i].RemainingTransferAllowance, "-£800");
                         break;
-                    case 3:
+                    case 2:
                         Assert.AreEqual(remainingTransferAllowanceTable[i].RemainingTransferAllowance, "-£1,200");
                         break;
-                    case 4:
+                    case 3:
                         Assert.AreEqual(remainingTransferAllowanceTable[i].RemainingTransferAllowance, "-£1,600");
                         break;
-                    case 5:
+                    case 4:
                         Assert.AreEqual(remainingTransferAllowanceTable[i].RemainingTransferAllowance, "-£2,000");
                         break;
                 }
@@ -157,7 +166,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"each subsequent month's modelled costs is correct")]
         public void ThenEachSubsequentMonthsModelledCostsIsCorrect()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var remainingTransferAllowanceTable = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             for (int i = 0; i < 6; i++)
             {
@@ -176,9 +185,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                         Assert.AreEqual(remainingTransferAllowanceTable[i].YourCurrentTransferCosts, "£0");
                         break;
                     case 4:
-                        Assert.AreEqual(remainingTransferAllowanceTable[i].YourCurrentTransferCosts, "£0");
-                        break;
-                    case 5:
                         Assert.AreEqual(remainingTransferAllowanceTable[i].YourCurrentTransferCosts, "£0");
                         break;
                 }
@@ -194,7 +200,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the last month is the month in which the last completion payment for a modelled apprenticeship will be made")]
         public void ThenTheLastMonthIsTheMonthInWhichTheLastCompletionPaymentForAModelledApprenticeshipWillBeMade()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var remainingTransferAllowanceTable = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             Assert.AreEqual(remainingTransferAllowanceTable.Last().Date, "Mar 2019");
 
@@ -205,8 +211,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         {
             if (p0 == "What does the table show")
             {
-                var estimateCostsPage = Get<EstimateCostsPage>();
-                if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+                EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+                if (!_driver.Url.Contains("apprenticeship/add"))
                 {
                     var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                     while (isAnyapprenticeshipExist)
@@ -215,12 +221,12 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                         isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                     }
 
-                    WebSite.ClickOnElement("a[href*='apprenticeship/add']");
+                    ClickOnElement(_driver, "a[href*='apprenticeship/add']");
                 }
 
-                AddApprenticeshipsToEstimateCostPage addApprenticeshipPage = new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+                AddApprenticeshipsToEstimateCostPage addApprenticeshipPage = new AddApprenticeshipsToEstimateCostPage(_driver);
                 addApprenticeshipPage.UseTransferAllowance.Click();
-                addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
                 addApprenticeshipPage.PageHeader.ClickThisElement();
                 addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
                 addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -234,14 +240,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the relevant text is displayed")]
         public void ThenTheRelevantTextIsDisplayed()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsTrue(estimateCostsPage.IsTextWhatDoesThisTableShowDisplayed);
         }
 
         [Then(@"the text matches the design")]
         public void ThenTheTextMatchesTheDesign()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             IList<string> textFromPage = estimateCostsPage.WhatDoesThisTableShowText;
             IList<string> expectedText = new List<string>();
             expectedText.Add("The ‘Remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.");
@@ -252,8 +258,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I have modelled apprenticeships")]
         public void WhenIHaveModelledApprenticeships()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 while (isAnyapprenticeshipExist)
@@ -262,13 +268,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                     isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 }
 
-                WebSite.ClickOnElement("a[href*='apprenticeship/add']");
+                ClickOnElement(_driver, "a[href*='apprenticeship/add']");
                 //driver.FindElement(By.CssSelector("a[href*='apprenticeship/add']")).Click();
             }
 
-            AddApprenticeshipsToEstimateCostPage addApprenticeshipPage = new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+            AddApprenticeshipsToEstimateCostPage addApprenticeshipPage = new AddApprenticeshipsToEstimateCostPage(_driver);
             addApprenticeshipPage.UseTransferAllowance.Click();
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -279,7 +285,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I can afford those apprenticeships from my transfer allowance")]
         public void WhenICanAffordThoseApprenticeshipsFromMyTransferAllowance()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             estimateCostsPage.SwitchToRemainingTransferAllowanceTab();
             //Data needs to be inserted into db
             ScenarioContext.Current.Pending();
@@ -312,7 +318,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"there is highlighting of any rows in the remaining transfer allowance table")]
         public void ThenThereIsHighlightingOfAnyRowsInTheRemainingTransferAllowanceTable()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             estimateCostsPage.SwitchToRemainingTransferAllowanceTab();
             Assert.IsTrue(estimateCostsPage.VerifyThatThereIsHighlightingOfAnyRow);
         }
@@ -320,8 +326,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I have removed my last modelled apprenticeships")]
         public void WhenIHaveRemovedMyLastModelledApprenticeships()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 while (isAnyapprenticeshipExist)
@@ -335,7 +341,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the table is not displayed")]
         public void ThenTheTableIsNotDisplayed()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsTrue(estimateCostsPage.IsRemainingTransferAllowanceTableDisplayed);
         }
 
@@ -344,7 +350,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         {
             if (p0 == "You have not selected any apprenticeships...")
             {
-                var estimateCostsPage = Get<EstimateCostsPage>();
+                EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
                 Assert.IsTrue(estimateCostsPage.IsYouHaveNotSelectedAnyApprenticeshipsMessageDisplayed);
             }
         }
@@ -354,7 +360,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         {
             if (p0 == "What does this table show")
             {
-                var estimateCostsPage = Get<EstimateCostsPage>();
+                EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
                 Assert.IsTrue(estimateCostsPage.IsTextWhatDoesThisTableShowDisplayed);
             }
         }

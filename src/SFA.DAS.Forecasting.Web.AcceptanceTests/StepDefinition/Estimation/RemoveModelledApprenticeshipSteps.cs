@@ -1,33 +1,48 @@
 ﻿using System;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Sfa.Automation.Framework.Extensions;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
 {
-    public class RemoveModelledApprenticeshipSteps : StepsBase
+    [Binding]
+    public class RemoveModelledApprenticeshipSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+
+        public RemoveModelledApprenticeshipSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         [Given(@"that I'm on the modelled apprenticeships tab")]
         public void GivenThatImOnTheModelledApprenticeshipsTab()
         {
-            EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
-            EmployeePassword = "Dell1507";
+            string EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
+            string EmployeePassword = "Dell1507";
 
-            var loginPage = WebSite.NavigateToLoginPage();
+            var loginPage = NavigateToLoginPage(_driver);
             loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
+            var accountHomepage = NavigateToAccountHomePage(_driver);
             var financePage = accountHomepage.OpenFinance();
             financePage.OpenFundingProjection();
 
-            WebSite.NavigateToEstimateFundsStartPage();
+            NavigateToEstimateFundsStartPage(_driver);
 
             EstimateFundsStartPage page =
-                new EstimateFundsStartPage(WebSite.getDriver());
+                new EstimateFundsStartPage(_driver);
             page.ClickStartForAccountWithoutApprenticeships();
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 while (isAnyapprenticeshipExist)
@@ -37,15 +52,15 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                 }
             }
 
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
-                EstimateCostsPage fundsStartPage = new EstimateCostsPage(WebSite.getDriver());
+                EstimateCostsPage fundsStartPage = new EstimateCostsPage(_driver);
                 fundsStartPage.AddApprenticeshipsButton.Click();
             }
 
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -56,37 +71,37 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I select remove for one apprenticeship")]
         public void WhenISelectRemoveForOneApprenticeship()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             estimateCostsPage.ClickRemoveApprenticeshipButton();
         }
 
         [Then(@"the remove apprenticeship page is displayed")]
         public void ThenTheRemoveApprenticeshipPageIsDisplayed()
         {
-            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(WebSite.getDriver());
+            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(_driver);
             Assert.IsTrue(removeApprenticeshipPage.IsPageLoaded);
         }
 
         [Given(@"that I'm on the remove apprenticeship page")]
         public void GivenThatImOnTheRemoveApprenticeshipPage()
         {
-            EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
-            EmployeePassword = "Dell1507";
+            string EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
+            string EmployeePassword = "Dell1507";
 
-            var loginPage = WebSite.NavigateToLoginPage();
+            var loginPage = NavigateToLoginPage(_driver);
             loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
+            var accountHomepage = NavigateToAccountHomePage(_driver);
             var financePage = accountHomepage.OpenFinance();
             financePage.OpenFundingProjection();
 
-            WebSite.NavigateToEstimateFundsStartPage();
+            NavigateToEstimateFundsStartPage(_driver);
 
             EstimateFundsStartPage page =
-                new EstimateFundsStartPage(WebSite.getDriver());
+                new EstimateFundsStartPage(_driver);
             page.ClickStartForAccountWithoutApprenticeships();
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 while (isAnyapprenticeshipExist)
@@ -96,15 +111,15 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                 }
             }
 
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
-                EstimateCostsPage fundsStartPage = new EstimateCostsPage(WebSite.getDriver());
+                EstimateCostsPage fundsStartPage = new EstimateCostsPage(_driver);
                 fundsStartPage.AddApprenticeshipsButton.Click();
             }
 
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -117,14 +132,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I confirm remove for the apprenticeship")]
         public void WhenIConfirmRemoveForTheApprenticeship()
         {
-            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(WebSite.getDriver());
+            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(_driver);
             removeApprenticeshipPage.ConfirmRemoval();
         }
 
         [Then(@"the Estimated Costs page is displayed")]
         public void ThenTheEstimatedCostsPageIsDisplayed()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsTrue(estimateCostsPage.IsPageLoaded);
         }
 
@@ -137,7 +152,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the removed apprenticeship is not in the list")]
         public void ThenTheRemovedApprenticeshipIsNotInTheList()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsFalse(estimateCostsPage.IsApprenticeshipsTableVisible());
         }
 
@@ -150,7 +165,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the banner message '(.*)' is displayed")]
         public void ThenTheBannerMessageIsDisplayed(string p0)
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsTrue(estimateCostsPage.IsRemovedApprenticeshipBannerDisplayed);
             Assert.AreEqual(estimateCostsPage.RemovedApprenticeshipBannerText, "Apprenticeship removed");
         }
@@ -158,23 +173,23 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Given(@"that I have removed an apprenticeship")]
         public void GivenThatIHaveRemovedAnApprenticeship()
         {
-            EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
-            EmployeePassword = "Dell1507";
+            string EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
+            string EmployeePassword = "Dell1507";
 
-            var loginPage = WebSite.NavigateToLoginPage();
+            var loginPage = NavigateToLoginPage(_driver);
             loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
+            var accountHomepage = NavigateToAccountHomePage(_driver);
             var financePage = accountHomepage.OpenFinance();
             financePage.OpenFundingProjection();
 
-            WebSite.NavigateToEstimateFundsStartPage();
+            NavigateToEstimateFundsStartPage(_driver);
 
             EstimateFundsStartPage page =
-                new EstimateFundsStartPage(WebSite.getDriver());
+                new EstimateFundsStartPage(_driver);
             page.ClickStartForAccountWithoutApprenticeships();
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 while (isAnyapprenticeshipExist)
@@ -184,9 +199,9 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
                 }
             }
 
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
-                EstimateCostsPage fundsStartPage = new EstimateCostsPage(WebSite.getDriver());
+                EstimateCostsPage fundsStartPage = new EstimateCostsPage(_driver);
                 fundsStartPage.AddApprenticeshipsButton.Click();
             }
 
@@ -195,20 +210,20 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
             string year = DateTime.UtcNow.Year.ToString();
 
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+                new AddApprenticeshipsToEstimateCostPage(_driver);
             addApprenticeshipPage.UseTransferAllowance.Click();
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement(month);
             addApprenticeshipPage.StartDateYearInput.EnterTextInThisElement(year);
             addApprenticeshipPage.ContinueButton.ClickThisElement();
 
-            EstimateCostsPage secondFundsStartPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage secondFundsStartPage = new EstimateCostsPage(_driver);
             secondFundsStartPage.AddApprenticeshipsButton.Click();
 
             addApprenticeshipPage.UseTransferAllowance.Click();
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.ClickThisElement();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement(nextMonth);
@@ -217,14 +232,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
 
             estimateCostsPage.ClickRemoveApprenticeshipButton();
 
-            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(WebSite.getDriver());
+            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(_driver);
             removeApprenticeshipPage.ConfirmRemoval();
         }
 
         [When(@"I'm on the Estimated costs page")]
         public void WhenImOnTheEstimatedCostsPage()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
         }
 
         [When(@"the '(.*)' tab")]
@@ -232,7 +247,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         {
             if (p0 == "Remaining transfer allowance")
             {
-                EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+                EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
                 estimateCostsPage.SwitchToRemainingTransferAllowanceTab();
             }
         }
@@ -240,7 +255,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the monthly costs of the removed apprenticeships have been deducted from the correct months")]
         public void ThenTheMonthlyCostsOfTheRemovedApprenticeshipsHaveBeenDeductedFromTheCorrectMonths()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             EstimateCostsPage.RemainingTransferAllowanceRow[] remainingTransferAllowanceRows = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             Assert.IsTrue(remainingTransferAllowanceRows[0].RemainingTransferAllowance.Equals("£0"));
         }
@@ -248,7 +263,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Then(@"the completion costs of the removed apprenticeships have been removed from the correct month")]
         public void ThenTheCompletionCostsOfTheRemovedApprenticeshipsHaveBeenRemovedFromTheCorrectMonth()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             EstimateCostsPage.RemainingTransferAllowanceRow[] remainingTransferAllowanceRows = estimateCostsPage.GetRemainingTransferAllowanceTableContent();
             Assert.IsTrue(remainingTransferAllowanceRows[0].CostOfEstimatedApprenticeships.Equals("£0"));
         }
@@ -256,21 +271,21 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [Given(@"the No radio button is defaulted as selected")]
         public void GivenTheNoRadioButtonIsDefaultedAsSelected()
         {
-            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(WebSite.getDriver());
+            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(_driver);
             Assert.IsTrue(removeApprenticeshipPage.IsNoRadioButtonSelected);
         }
 
         [When(@"I click continue")]
         public void WhenIClickContinue()
         {
-            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(WebSite.getDriver());
+            RemoveApprenticeshipPage removeApprenticeshipPage = new RemoveApprenticeshipPage(_driver);
             removeApprenticeshipPage.ClickContinueButton();
         }
 
         [Then(@"the Estimated Costs is displayed")]
         public void ThenTheEstimatedCostsIsDisplayed()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsTrue(estimateCostsPage.IsPageLoaded);
         }
     }

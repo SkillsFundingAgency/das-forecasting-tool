@@ -9,7 +9,7 @@ Background:
 	And I have logged into my Apprenticeship Account
 	And that I'm on the estimator start page
 
-@mytag
+@DisplayModelledApprenticeships
 Scenario: AC2: Check costs of modelled apprenticeships
 	Given that I have added the following apprenticeships
 	 | Apprenticeship						 | Number Of Apprentices | Number Of Months | Start Date Month | Start Date Year | Total Cost |

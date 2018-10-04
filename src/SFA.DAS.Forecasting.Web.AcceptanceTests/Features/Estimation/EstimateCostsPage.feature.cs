@@ -73,17 +73,19 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Estimation
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC1: add more apprenticeships link")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC1AddMoreApprenticeshipsLink()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: add more apprenticeships link", null, ((string[])(null)));
-#line 6
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: add more apprenticeships link", null, new string[] {
+                        "EstimateCostsPage"});
+#line 7
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 7
-testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 8
-testRunner.When("I click on the \'Add more apprenticeships...\' link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 9
+testRunner.When("I click on the \'Add more apprenticeships...\' link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 10
 testRunner.Then("I am taken to the Add Apprenticeships page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -91,17 +93,19 @@ testRunner.Then("I am taken to the Add Apprenticeships page", ((string)(null)), 
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC2: tab to modelled apprenticeships")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC2TabToModelledApprenticeships()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: tab to modelled apprenticeships", null, ((string[])(null)));
-#line 11
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: tab to modelled apprenticeships", null, new string[] {
+                        "EstimateCostsPage"});
+#line 13
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 12
-testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 13
-testRunner.When("I click on the \'Apprenticeships added\' link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 14
+testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 15
+testRunner.When("I click on the \'Apprenticeships added\' link", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 16
 testRunner.Then("I am taken to the Apprenticeships added tab", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -109,30 +113,32 @@ testRunner.Then("I am taken to the Apprenticeships added tab", ((string)(null)),
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC3: check costs for modelled apprenticeships")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC3CheckCostsForModelledApprenticeships()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: check costs for modelled apprenticeships", null, ((string[])(null)));
-#line 16
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: check costs for modelled apprenticeships", null, new string[] {
+                        "EstimateCostsPage"});
+#line 19
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 17
+#line 20
 testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 18
+#line 21
 testRunner.When("I view the remaining transfer allowance tab", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 19
+#line 22
 testRunner.Then("the first month in the table is the earliest month in which a modelled apprentice" +
                     "ship payment is made (the month after the earliest start date)", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 20
-testRunner.And("the first month\'s transfer allowance value is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 21
-testRunner.And("the first month\'s modelled costs is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 22
-testRunner.And("each subsequent month\'s transfer allowance is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 23
-testRunner.And("each subsequent month\'s modelled costs is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("the first month\'s transfer allowance value is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 24
-testRunner.And("in the each April the transfer allowance value resets to its original value", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("the first month\'s modelled costs is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 25
+testRunner.And("each subsequent month\'s transfer allowance is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 26
+testRunner.And("each subsequent month\'s modelled costs is correct", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 27
+testRunner.And("in the each April the transfer allowance value resets to its original value", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
 testRunner.And("the last month is the month in which the last completion payment for a modelled a" +
                     "pprenticeship will be made", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -141,19 +147,21 @@ testRunner.And("the last month is the month in which the last completion payment
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC4: what does the table show")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC4WhatDoesTheTableShow()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC4: what does the table show", null, ((string[])(null)));
-#line 29
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC4: what does the table show", null, new string[] {
+                        "EstimateCostsPage"});
+#line 33
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 30
+#line 34
 testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 31
+#line 35
 testRunner.When("I click on \'What does the table show\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 32
+#line 36
 testRunner.Then("the relevant text is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 33
+#line 37
 testRunner.And("the text matches the design", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -161,21 +169,23 @@ testRunner.And("the text matches the design", ((string)(null)), ((TechTalk.SpecF
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC5: can fund apprenticeships")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC5CanFundApprenticeships()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC5: can fund apprenticeships", null, ((string[])(null)));
-#line 35
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC5: can fund apprenticeships", null, new string[] {
+                        "EstimateCostsPage"});
+#line 40
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 36
+#line 41
 testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 37
+#line 42
 testRunner.When("I have modelled apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 38
+#line 43
 testRunner.And("I can afford those apprenticeships from my transfer allowance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 39
+#line 44
 testRunner.Then("the banner message says that I can fund the apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 40
+#line 45
 testRunner.And("there is no highlighting of any rows in the remaining transfer allowance table", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -183,21 +193,23 @@ testRunner.And("there is no highlighting of any rows in the remaining transfer a
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC6: cannot fund apprenticeships")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC6CannotFundApprenticeships()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC6: cannot fund apprenticeships", null, ((string[])(null)));
-#line 42
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC6: cannot fund apprenticeships", null, new string[] {
+                        "EstimateCostsPage"});
+#line 48
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 43
+#line 49
 testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 44
+#line 50
 testRunner.When("I have modelled apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 45
+#line 51
 testRunner.And("I cannot afford those apprenticeships from my transfer allowance", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 46
+#line 52
 testRunner.Then("the banner message says that I can\'t fund the apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 47
+#line 53
 testRunner.And("there is highlighting of any rows in the remaining transfer allowance table", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -205,22 +217,24 @@ testRunner.And("there is highlighting of any rows in the remaining transfer allo
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC7: no modelled apprenticeships")]
+        [NUnit.Framework.CategoryAttribute("EstimateCostsPage")]
         public virtual void AC7NoModelledApprenticeships()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC7: no modelled apprenticeships", null, ((string[])(null)));
-#line 49
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC7: no modelled apprenticeships", null, new string[] {
+                        "EstimateCostsPage"});
+#line 56
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 50
+#line 57
 testRunner.Given("that I\'m on the Estimated Costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 51
+#line 58
 testRunner.When("I have removed my last modelled apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 52
+#line 59
 testRunner.Then("the table is not displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 53
+#line 60
 testRunner.And("the message \'You have not selected any apprenticeships...\' is displayed in their " +
                     "place", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 54
+#line 61
 testRunner.And("the \'What does this table show\' text is not displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

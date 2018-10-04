@@ -1,49 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using Sfa.Automation.Framework.Extensions;
-using SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition;
 using SFA.DAS.Forecasting.Web.Automation;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 {
     [Binding]
-    public class AddApprenticeshipPageSteps : StepsBase
-
+    public class AddApprenticeshipPageSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+
+        public AddApprenticeshipPageSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         [Given(@"that I'm on the Add Apprenticeship page")]
         public void GivenThatIMOnTheAddApprenticeshipPage()
         {
-            EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
-            EmployeePassword = "Dell1507";
+            string EmployeeLogin = "dele.odusanya@lynkmiigroup.com";
+            string EmployeePassword = "Dell1507";
 
-            var loginPage = WebSite.NavigateToLoginPage();
+            var loginPage = NavigateToLoginPage(_driver);
             loginPage.LoginAsUser(EmployeeLogin, EmployeePassword);
 
-            var accountHomepage = WebSite.NavigateToAccountHomePage();
+            var accountHomepage = NavigateToAccountHomePage(_driver);
             var financePage = accountHomepage.OpenFinance();
             financePage.OpenFundingProjection();
 
-            WebSite.NavigateToEstimateFundsStartPage();
+            NavigateToEstimateFundsStartPage(_driver);
 
             EstimateFundsStartPage page =
-                new EstimateFundsStartPage(WebSite.getDriver());
+                new EstimateFundsStartPage(_driver);
             page.ClickStartForAccountWithoutApprenticeships();
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
                 var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
-                while (isAnyapprenticeshipExist)
                 {
                     estimateCostsPage.RemoveFirstApprenticeship();
                     isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
                 }
             }
 
-            if (!WebSite.CurrentUrl.Contains("apprenticeship/add"))
+            if (!_driver.Url.Contains("apprenticeship/add"))
             {
-                EstimateCostsPage fundsStartPage = new EstimateCostsPage(WebSite.getDriver());
+                EstimateCostsPage fundsStartPage = new EstimateCostsPage(_driver);
                 fundsStartPage.AddApprenticeshipsButton.Click();
             }
         }
@@ -54,7 +65,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
             if (p0 == "Check if I can fund these")
             {
                 AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                    new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+                    new AddApprenticeshipsToEstimateCostPage(_driver);
                 addApprenticeshipPage.ContinueButton.ClickThisElement();
             }
         }
@@ -63,7 +74,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIDoNotSelectAnApprenticeship()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+                new AddApprenticeshipsToEstimateCostPage(_driver);
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
             addApprenticeshipPage.StartDateYearInput.EnterTextInThisElement("2019");
@@ -76,7 +87,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void ThenTheErrorIsDisplayedInLineAndAtTheTopOfThePage(string p0)
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
+                new AddApprenticeshipsToEstimateCostPage(_driver);
 
             if (p0 == "You must choose 1 apprenticeship")
             {
@@ -119,8 +130,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIDoNotEnterTheNumberOfApprenticeship()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
             addApprenticeshipPage.StartDateYearInput.EnterTextInThisElement("2019");
@@ -132,8 +143,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIEnterAStartDateBeforeTheCurrentMonth()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             string month = (DateTime.Now.Month - 1).ToString();
@@ -148,8 +159,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIDoNotEnterAStartDateMonth()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.Clear();
@@ -162,8 +173,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIDoNotEnterAStartDateYear()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -176,8 +187,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIDoNotEnterATotalCost()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -189,8 +200,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIChooseAStandardApprenticeship()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Actuary, Level: 7 (Standard)");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Actuary, Level: 7 (Standard)");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -203,8 +214,8 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public void WhenIChooseAFrameworkApprenticeship()
         {
             AddApprenticeshipsToEstimateCostPage addApprenticeshipPage =
-                new AddApprenticeshipsToEstimateCostPage(WebSite.getDriver());
-            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), "Accounting: Accounting, Level: 4");
+                new AddApprenticeshipsToEstimateCostPage(_driver);
+            addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, "Accounting: Accounting, Level: 4");
             addApprenticeshipPage.PageHeader.Click();
             addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement("1");
             addApprenticeshipPage.StartDateMonthInput.EnterTextInThisElement("10");
@@ -216,7 +227,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         [Then(@"the apprenticeship is added")]
         public void ThenTheApprenticeshipIsAdded()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             List<EstimateCostsPage.ApprenticeshipsTableRow> apprenticeshipsTable =
                 estimateCostsPage.GetApprenticeshipsTableContent();
             Assert.IsNotEmpty(apprenticeshipsTable);

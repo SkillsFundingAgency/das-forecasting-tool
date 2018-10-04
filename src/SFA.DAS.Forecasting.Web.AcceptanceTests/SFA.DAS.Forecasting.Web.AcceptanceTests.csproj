@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <ConfigTransformPath>ConfigTransform</ConfigTransformPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BrowserStackLocal, Version=1.4.0.0, Culture=neutral, PublicKeyToken=0941226e876e334f, processorArchitecture=MSIL">
+      <HintPath>..\packages\BrowserStackLocal.1.4.0\lib\net20\BrowserStackLocal.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
     </Reference>
@@ -114,6 +118,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -132,6 +137,9 @@
   <ItemGroup>
     <Compile Include="AddApprenticeshipPageSteps.cs" />
     <Compile Include="BindingBootstrapper.cs" />
+    <Compile Include="BrowserStack.cs" />
+    <Compile Include="BrowserStackDriver.cs" />
+    <Compile Include="BrowserStackTestsBase.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="EditModelledApprenticeshipSteps.cs" />
     <Compile Include="Features\Estimation\AddApprenticeshipPage.feature.cs">
@@ -154,7 +162,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditEstimationApprenticeships.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
+    <Compile Include="Features\Estimation\EditModelledApprenticeship.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditModelledApprenticeship.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />
+    <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />
+    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DownloadForecastBalanceSheet.feature</DependentUpon>
@@ -212,6 +227,31 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="App.Debug.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Release.config">
+      <DependentUpon>App.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ConfigTransform\CollectFiles\Microsoft.Web.Publishing.AllFilesInProjectFolder.targets" />
+    <None Include="ConfigTransform\CollectFiles\Microsoft.Web.Publishing.AllFilesInTheProject.targets" />
+    <None Include="ConfigTransform\CollectFiles\Microsoft.Web.Publishing.OnlyFilesToRunTheApp.targets" />
+    <None Include="ConfigTransform\Deploy\Microsoft.Web.Publishing.Deploy.FileSystem.targets" />
+    <None Include="ConfigTransform\Deploy\Microsoft.Web.Publishing.Deploy.FPSE.targets" />
+    <None Include="ConfigTransform\Deploy\Microsoft.Web.Publishing.Deploy.FTP.targets" />
+    <None Include="ConfigTransform\Deploy\Microsoft.Web.Publishing.Deploy.MsDeploy.targets" />
+    <None Include="ConfigTransform\Deploy\Microsoft.Web.Publishing.Deploy.Package.targets" />
+    <None Include="ConfigTransform\Deploy\Microsoft.Web.Publishing.MsDeploy.Common.targets" />
+    <None Include="ConfigTransform\Microsoft.DNX.Publishing.targets" />
+    <None Include="ConfigTransform\Microsoft.Web.Publishing.targets" />
+    <None Include="ConfigTransform\Microsoft.Web.Publishing\ImportAfter\Microsoft.Web.AzureAD.Publishing.targets" />
+    <None Include="ConfigTransform\Microsoft.WebSite.Publishing.targets" />
+    <None Include="ConfigTransform\Powershell\1.0.1\default-publish.ps1" />
+    <None Include="ConfigTransform\Powershell\1.0.1\filesystem.pubxml" />
+    <None Include="ConfigTransform\Powershell\1.0.1\package.pubxml" />
+    <None Include="ConfigTransform\Powershell\1.0.1\publish-module.psm1" />
+    <None Include="ConfigTransform\Transform\Microsoft.Web.Publishing.AspNetCompileMerge.targets" />
     <None Include="Features\Estimation\AddApprenticeshipPage.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>AddApprenticeshipPage.feature.cs</LastGenOutput>
@@ -287,6 +327,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="ConfigTransform\Microsoft.Web.Publishing.Tasks.dll" />
+    <Content Include="ConfigTransform\Microsoft.Web.XmlTransform.dll" />
     <Content Include="Templates\html.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -306,4 +348,24 @@
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.2.38.0\build\Selenium.WebDriver.ChromeDriver.targets')" />
   <Import Project="..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets')" />
   <Import Project="..\packages\SpecFlow.2.4.0\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.4.0\build\SpecFlow.targets')" />
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(ConfigTransformPath)\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="App_config_AfterCompile" AfterTargets="AfterCompile" Condition="Exists('App.$(Configuration).config')">
+    <!--Generate transformed app config in the intermediate directory-->
+    <TransformXml Source="App.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="App.$(Configuration).config" />
+    <!--Force build process to use the transformed configuration file from now on.-->
+    <ItemGroup>
+      <AppConfigWithTargetPath Remove="App.config" />
+      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
+        <TargetPath>$(TargetFileName).config</TargetPath>
+      </AppConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
+  <!--Override After Publish to support ClickOnce AfterPublish. Target replaces the untransformed config file copied to the deployment directory with the transformed one.-->
+  <Target Name="App_config_AfterPublish" AfterTargets="AfterPublish" Condition="Exists('App.$(Configuration).config')">
+    <PropertyGroup>
+      <DeployedConfig>$(_DeploymentApplicationDir)$(TargetName)$(TargetExt).config$(_DeploymentFileMappingExtension)</DeployedConfig>
+    </PropertyGroup>
+    <!--Publish copies the untransformed App.config to deployment directory so overwrite it-->
+    <Copy Condition="Exists('$(DeployedConfig)')" SourceFiles="$(IntermediateOutputPath)$(TargetFileName).config" DestinationFiles="$(DeployedConfig)" />
+  </Target>
 </Project>

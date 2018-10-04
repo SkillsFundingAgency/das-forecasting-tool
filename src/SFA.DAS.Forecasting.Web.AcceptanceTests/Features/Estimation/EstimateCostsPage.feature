@@ -3,16 +3,19 @@
 	I want to see how my modelled costs compare against my transfer allowance projection
 	So that I can make a decision on whether to proceed with a transfer
 
+@EstimateCostsPage
 Scenario: AC1: add more apprenticeships link
 Given that I'm on the Estimated Costs page
 When I click on the 'Add more apprenticeships...' link
 Then I am taken to the Add Apprenticeships page
 
+@EstimateCostsPage
 Scenario: AC2: tab to modelled apprenticeships
 Given that I'm on the Estimated Costs page
 When I click on the 'Apprenticeships added' link
 Then I am taken to the Apprenticeships added tab
 
+@EstimateCostsPage
 Scenario: AC3: check costs for modelled apprenticeships
 Given that I'm on the Estimated Costs page
 When I view the remaining transfer allowance tab
@@ -26,12 +29,14 @@ And the last month is the month in which the last completion payment for a model
 
 #Repeat AC3 with several modelled apprenticeships each with different start dates
 
+@EstimateCostsPage
 Scenario: AC4: what does the table show
 Given that I'm on the Estimated Costs page
 When I click on 'What does the table show'
 Then the relevant text is displayed
 And the text matches the design
 
+@EstimateCostsPage
 Scenario: AC5: can fund apprenticeships
 Given that I'm on the Estimated Costs page
 When I have modelled apprenticeships
@@ -39,6 +44,7 @@ And I can afford those apprenticeships from my transfer allowance
 Then the banner message says that I can fund the apprenticeships
 And there is no highlighting of any rows in the remaining transfer allowance table
 
+@EstimateCostsPage
 Scenario: AC6: cannot fund apprenticeships
 Given that I'm on the Estimated Costs page
 When I have modelled apprenticeships
@@ -46,6 +52,7 @@ And I cannot afford those apprenticeships from my transfer allowance
 Then the banner message says that I can't fund the apprenticeships
 And there is highlighting of any rows in the remaining transfer allowance table
 
+@EstimateCostsPage
 Scenario: AC7: no modelled apprenticeships
 Given that I'm on the Estimated Costs page
 When I have removed my last modelled apprenticeships

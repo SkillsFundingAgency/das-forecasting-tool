@@ -4,21 +4,34 @@ using SFA.DAS.Forecasting.Web.Automation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
     [Binding]
-    public class DisplayModelledApprenticeshipsSteps: StepsBase
+    public class DisplayModelledApprenticeshipsSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+
+        public DisplayModelledApprenticeshipsSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         [Given(@"that I have added the following apprenticeships")]
         public void GivenThatIHaveAddedTheFollowingApprenticeships(Table table)
         {
             var apprenticeships = table.CreateSet<TestApprenticeship>().ToList();
-            Set(apprenticeships);
 
-            var estimateCostsPage = WebSite.NavigateToEstimageCostsPage();
+            var estimateCostsPage = NavigateToEstimageCostsPage(_driver);
             var isAnyapprenticeshipExist = estimateCostsPage.IsApprenticeshipsTableVisible();
             while (isAnyapprenticeshipExist)
             {
@@ -27,8 +40,13 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             }
             foreach(var apprenticeship in apprenticeships)
             {
-                var addApprenticeshipPage = estimateCostsPage.AddApprenticeships();
-                addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(WebSite.getDriver(), apprenticeship.Apprenticeship);
+                AddApprenticeshipsToEstimateCostPage addApprenticeshipPage = new AddApprenticeshipsToEstimateCostPage(_driver);
+                if (!_driver.Url.Contains("forecasting/estimations/default/apprenticeship/add"))
+                {
+                    addApprenticeshipPage = estimateCostsPage.AddApprenticeships();
+                }
+                
+                addApprenticeshipPage.SelectApprenticeshipDropdown.SelectDropDown(_driver, apprenticeship.Apprenticeship);
                 addApprenticeshipPage.PageHeader.ClickThisElement();
                 addApprenticeshipPage.NumberOfApprenticesInput.EnterTextInThisElement(apprenticeship.NumberOfApprentices);
                 addApprenticeshipPage.NumberOfMonthsInput.Clear();
@@ -44,15 +62,14 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [When(@"the modelled apprenticeships page is displayed")]
         public void WhenTheModelledApprenticeshipsPageIsDisplayed()
         {
-            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(WebSite.getDriver());
-            Set(estimateCostsPage);
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             Assert.IsTrue(estimateCostsPage.PageHeader.Displayed);
         }
         
         [Then(@"the column headings are displayed")]
         public void ThenTheColumnHeadingsAreDisplayed()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var tableHeaders = estimateCostsPage.GetApprenticeshipsAddedTableHeaders();
             var expectedHeaders = new String[] {
                 "Apprenticeship\r\nLevel",
@@ -70,7 +87,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"each added apprenticeship is displayed in a separate row")]
         public void ThenEachAddedApprenticeshipIsDisplayedInASeparateRow()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
             Assert.AreEqual(3, resultRows.Count);
         }
@@ -78,7 +95,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the apprenticeship with the earliest start date is shown first")]
         public void ThenTheApprenticeshipWithTheEarliestStartDateIsShownFirst()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
             Assert.IsTrue(DateTime.Parse(resultRows[0].StartDate) > DateTime.Parse(resultRows[1].StartDate), "The apprenticeships in incorrect order");
         }
@@ -86,7 +103,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the other apprenticeships are in order of start date")]
         public void ThenTheOtherApprenticeshipsAreInOrderOfStartDate()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             var resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
             Assert.IsTrue(DateTime.Parse(resultRows[1].StartDate) < DateTime.Parse(resultRows[2].StartDate), "The other apprenticeships are not in order of start date");
         }
@@ -94,7 +111,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         [Then(@"the details against each apprenticeship match what was entered")]
         public void ThenTheDetailsAgainstEachApprenticeshipMatchWhatWasEntered()
         {
-            var estimateCostsPage = Get<EstimateCostsPage>();
+            EstimateCostsPage estimateCostsPage = new EstimateCostsPage(_driver);
             List<EstimateCostsPage.ApprenticeshipsTableRow> resultRows = estimateCostsPage.GetApprenticeshipsTableContent();
             List<EstimateCostsPage.ApprenticeshipsTableRow> expectedResultRows = new List<EstimateCostsPage.ApprenticeshipsTableRow>();
             var resultRow = new EstimateCostsPage.ApprenticeshipsTableRow();

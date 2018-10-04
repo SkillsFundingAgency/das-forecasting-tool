@@ -9,14 +9,32 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Transactions;
+using OpenQA.Selenium;
+using StructureMap;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
 {
     [Binding]
-    public class DownloadForecastBalanceSheetSteps : StepsBase 
+    public class DownloadForecastBalanceSheetSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+        protected IContainer NestedContainer { get; set; }
+        protected static IContainer ParentContainer { get; set; }
+        protected static Config Config => ParentContainer.GetInstance<Config>();
+
+        public DownloadForecastBalanceSheetSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
+
         private string[] downloadedFilesBefore;
         private string targetFilename;
         private string newFilePath;
@@ -27,24 +45,22 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
         {
             downloadedFilesBefore = FileManager.getCurrentDownloadFiles();
 
-            if (!WebSite.IsLocalhost)
+            if (!IsLocalhost)
             {
-                var accountHomepage = WebSite.NavigateToAccountHomePage();
+                var accountHomepage = NavigateToAccountHomePage(_driver);
                 var financePage = accountHomepage.OpenFinance();
                 var page = financePage.OpenFundingProjection();
-                Set(page);
             }
             else
             {
-                var page = WebSite.NavigateToFundingProjectionPage();
-                Set(page);
+                var page = NavigateToFundingProjectionPage();
             }
         }
 
         [When(@"I select download as csv")]
         public void WhenISelectDownloadAsCsv()
         {
-            var page = Get<FundingProjectionPage>();
+            FundingProjectionPage page = new FundingProjectionPage(_driver);
             page.DownloadProjectionsCSVButton.Click();
         }
 
@@ -93,7 +109,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition
             Assert.AreEqual(Projections.Count, lineCount);
         }
 
-        protected List<TestAccountProjection> Projections { get { return Get<List<TestAccountProjection>>(); } set { Set(value); } }
+        protected List<TestAccountProjection> Projections { get; set; } 
         protected void DeleteAccountProjections()
         {
             var parameters = new DynamicParameters();

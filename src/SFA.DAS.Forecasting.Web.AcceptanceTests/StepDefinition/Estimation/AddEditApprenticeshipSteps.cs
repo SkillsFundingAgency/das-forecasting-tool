@@ -9,12 +9,25 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading;
 using System.Threading.Tasks;
+using OpenQA.Selenium;
 using TechTalk.SpecFlow;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
 {
-    public class AddEditApprenticeshipSteps : StepsBase
+    public class AddEditApprenticeshipSteps : BrowserStackTestsBase
     {
+        private IWebDriver _driver;
+        readonly BrowserStackDriver _bsDriver;
+
+        public AddEditApprenticeshipSteps()
+        {
+            _bsDriver = (BrowserStackDriver)ScenarioContext.Current["bsDriver"];
+            _driver = _bsDriver.GetExisting();
+            if (_driver == null)
+            {
+                _driver = _bsDriver.Init("single", "bs");
+            }
+        }
 
         [Given(@"I have a standard with multiple funding periods")]
         public async Task GivenIHaveAStandardWithMultipleFundingPeriods()
@@ -31,7 +44,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I add start date for April next year")]
         public void WhenIAddStartDateForJulyNextYear()
         {
-            var page = Get<AddEditApprenticeshipPage>();
+            AddEditApprenticeshipPage page = new AddEditApprenticeshipPage(_driver);
             page.StartDateMonthInput.Clear();
             page.StartDateYearInput.Clear();
 
@@ -42,7 +55,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I edit number of apprenticeship to be (.*)")]
         public void WhenIEditNumberOfApprenticeshipToBe(int noOfApprenticeships)
         {
-            var page = Get<AddEditApprenticeshipPage>();
+            AddEditApprenticeshipPage page = new AddEditApprenticeshipPage(_driver);
             page.NumberOfApprenticesInput.Clear();
             page.NumberOfApprenticesInput.EnterTextInThisElement(noOfApprenticeships.ToString());
             page.Heading.Click();
@@ -53,7 +66,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         {
             Thread.Sleep(400);
 
-            var page = Get<AddEditApprenticeshipPage>();
+            AddEditApprenticeshipPage page = new AddEditApprenticeshipPage(_driver);
             var totalCostText = page.TotalCostInput.GetAttribute("value");
 
             Assert.AreEqual(p0, totalCostText);
@@ -62,7 +75,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition.Estimation
         [When(@"I change the start date to be one year later")]
         public void WhenIChangeTheStartDateToBeOneYearLater()
         {
-            var page = Get<AddEditApprenticeshipPage>();
+            AddEditApprenticeshipPage page = new AddEditApprenticeshipPage(_driver);
             if (int.TryParse(page.StartDateYearInput.GetAttribute("value"), out int y))
             {
                 page.StartDateYearInput.Clear();

@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Web.Automation
         [FindsBy(How = How.Id, Using = "startDateYear")] public IWebElement StartDateYearInput { get; set; }
         [FindsBy(How = How.Id, Using = "total-funding-cost")] public IWebElement TotalCostInput { get; set; }
 
-        protected AddEditApprenticeshipPage(IWebDriver webDriver) : base(webDriver)
+        public AddEditApprenticeshipPage(IWebDriver webDriver) : base(webDriver)
         {
         }
     }

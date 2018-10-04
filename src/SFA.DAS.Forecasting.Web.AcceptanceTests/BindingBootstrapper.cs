@@ -7,10 +7,11 @@ using SFA.DAS.Forecasting.Web.AcceptanceTests.StepDefinition;
 
 namespace SFA.DAS.Forecasting.Web.AcceptanceTests
 {
-    [Binding]
-    public class BindingBootstrapper: StepsBase
+    //[Binding]
+    //public class BindingBootstrapper: StepsBase
+    public class BindingBootstrapper
     {
-        [BeforeTestRun(Order = 0)]
+        /*[BeforeTestRun(Order = 0)]
         public static void SetUpContainer()
         {
             ParentContainer = new Container(new DefaultRegistry());
@@ -40,6 +41,6 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         {
             WebSite?.Close();
             NestedContainer?.Dispose();
-        }
+        }*/
     }
 }
