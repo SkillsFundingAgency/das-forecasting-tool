@@ -46,7 +46,7 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projectionModels, long employerAccountId)
         {
-            _telemetry.AddEmployerAccountId(employerAccountId);
+            
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             

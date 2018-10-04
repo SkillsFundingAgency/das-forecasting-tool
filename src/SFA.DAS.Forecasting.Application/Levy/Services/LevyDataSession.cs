@@ -69,23 +69,26 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task<LevyPeriod> GetNetTotals(long employerAccountId, string payrollYear, byte payrollMonth)
         {
-            return await GetLevyDeclarationTotals(w =>
+            var netTotals = GetLevyDeclarationTotals(w =>
                 w.EmployerAccountId == employerAccountId && w.PayrollYear == payrollYear &&
-                w.PayrollMonth == payrollMonth).FirstOrDefaultAsync();
+                w.PayrollMonth == payrollMonth).FirstOrDefault();
+
+            return netTotals;
         }
 
         public async Task<IEnumerable<LevyPeriod>> GetAllNetTotals(long employerAccountId)
         {
-            return await GetLevyDeclarationTotals(w => w.EmployerAccountId == employerAccountId)
-                .ToListAsync();
+            var netTotals = GetLevyDeclarationTotals(w => w.EmployerAccountId == employerAccountId);
+
+            return netTotals;
         }
 
-        private IQueryable<LevyPeriod> GetLevyDeclarationTotals(Expression<Func<LevyDeclarationModel,bool>> wherePredicate)
+        private IEnumerable<LevyPeriod> GetLevyDeclarationTotals(Expression<Func<LevyDeclarationModel,bool>> wherePredicate)
         {
             return _dataContext.LevyDeclarations
                 .Where(wherePredicate)
-                .GroupBy(g => new {g.EmployerAccountId, g.PayrollYear, g.PayrollMonth })
-                .Select(s => new LevyPeriod(s.Key.EmployerAccountId, s.Key.PayrollYear, s.Key.PayrollMonth,s.Sum(v => v.LevyAmountDeclared), s.Max(v => v.DateReceived)));
+                .GroupBy(g => new { g.EmployerAccountId, g.PayrollYear, g.PayrollMonth }).ToList()
+                .Select(s => new LevyPeriod(s.Key.EmployerAccountId, s.Key.PayrollYear, s.Key.PayrollMonth, s.Sum(v => v.LevyAmountDeclared), s.Max(v => v.DateReceived)));
         }
 
 

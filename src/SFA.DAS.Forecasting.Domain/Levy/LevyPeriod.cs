@@ -28,6 +28,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy
             PayrollYear = payrollYear;
             PayrollMonth = payrollMonth;
             _totalNetLevyDeclared = netTotal;
+            _lastReceieved = lastReceived;
         }
 
         public decimal GetPeriodAmount()

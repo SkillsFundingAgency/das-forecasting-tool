@@ -171,7 +171,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
                 if (!expiringFunds.ContainsKey(projectionCalendarPeriod))
                 {
-                  throw new NullReferenceException("Expired funds dictionary must include all Calendar Periods in projections");
+                  continue;
                 }
 
                 projectionModel.ExpiredFunds = expiringFunds[projectionCalendarPeriod];

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
@@ -47,9 +48,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 
             if (_config.FeatureExpiredFunds)
             {
-                var expiringFunds = _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId);
+                var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId);
 
-                projections.UpdateProjectionsWithExpiredFunds(await expiringFunds);
+                if (expiringFunds.Any())
+                {
+                    projections.UpdateProjectionsWithExpiredFunds(expiringFunds);
+                }
             }
             
             await _accountProjectionRepository.Store(projections);
