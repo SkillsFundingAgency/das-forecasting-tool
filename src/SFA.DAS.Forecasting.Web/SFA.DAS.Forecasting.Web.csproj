@@ -370,6 +370,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AddEditApprenticeshipsViewModel.cs" />
     <Compile Include="ViewModels\ApprenticeshipCsvItemViewModel.cs" />
+    <Compile Include="ViewModels\EstimationTransferAllowance.cs" />
     <Compile Include="ViewModels\FinancialYear.cs" />
     <Compile Include="ViewModels\EqualityComparer\FinancialYearIEqualityComparer.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
