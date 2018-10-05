@@ -90,7 +90,7 @@
             <div id="account-funds" class="tab-content" style="display: none;">
                 <div class="grid-row">
                     <div class="column-full">
-                        <h2 class="heading-medium">This table shows your estimated costs against your account projection</h2>
+                        <p>This table shows your estimated costs against your account projection</p>
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
                 {
                     <div class="grid-row">
                         <div class="column-full">
-                            <h2 class="heading-medium">This table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.</h2>
+                            <p>This table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.</p>
                             <p><b>Annual transfer allowance: </b>@Model.TransferAllowances.AnnualTransferAllowance.FormatCost()</p>
                         </div>
                     </div>
