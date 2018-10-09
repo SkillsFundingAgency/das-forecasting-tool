@@ -1,4 +1,5 @@
 ﻿using System;
+using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Application.Apprenticeship.Messages
@@ -21,5 +22,6 @@ namespace SFA.DAS.Forecasting.Application.Apprenticeship.Messages
         public decimal MonthlyInstallment { get; set; }
         public int NumberOfInstallments { get; set; }
         public FundingSource FundingSource { get; set; }
+        public ProjectionSource ProjectionSource { get; set; }
     }
 }

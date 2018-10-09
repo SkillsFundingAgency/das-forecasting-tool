@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.Commitments.Handlers;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
@@ -20,6 +21,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                 {
                     logger.Debug($"Storing apprenticeship. Account: {message.EmployerAccountId}, apprenticeship id: {message.ApprenticeshipId}");
                     var handler = container.GetInstance<StoreCommitmentHandler>();
+                    message.ProjectionSource = ProjectionSource.Commitment;
                     await handler.Handle(message,QueueNames.AllowProjection);
                     logger.Info($"Stored commitment. Apprenticeship id: {message.ApprenticeshipId}");   
                 });
