@@ -72,18 +72,18 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
             var paymentTotals = (from payment in paymentSubTotals
                                  join transferPayment in transferPaymentSubtotals on payment.Key equals transferPayment.Key
                                  select new { payment.Key, Value = payment.Value + transferPayment.Value })
-                                .ToDictionaryAsync(k => k.Key,k => k.Value);
+                                .ToDictionary(k => k.Key,k => k.Value);
 
-            return await paymentTotals;
+            return paymentTotals;
         }
 
-        private IQueryable<KeyValuePair<CalendarPeriod, decimal>> GetPaymentTotals(Expression<Func<PaymentModel, bool>> wherePredicate)
+        private Dictionary<CalendarPeriod, decimal> GetPaymentTotals(Expression<Func<PaymentModel, bool>> wherePredicate)
         {
             return _dataContext.Payments
                 .Where(wherePredicate)
                 .GroupBy(g => new { g.EmployerAccountId, g.CollectionPeriod.Year, g.CollectionPeriod.Month })
-                .Select(s => new { Year = s.Key.Year, Month = s.Key.Month, EmployerAccountId = s.Key.EmployerAccountId, Total = s.Sum(v => v.Amount) })
-                .ToDictionary(k => new CalendarPeriod(k.Year, k.Month), k => k.Total).AsQueryable();
+                .Select(s => new { Year = s.Key.Year, Month = s.Key.Month, EmployerAccountId = s.Key.EmployerAccountId, Total = s.Sum(v => v.Amount) }).ToList()
+                .ToDictionary(k => new CalendarPeriod(k.Year, k.Month), k => k.Total);
         }
         public async Task SaveChanges()
         {

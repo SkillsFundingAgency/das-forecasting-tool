@@ -35,7 +35,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
         public void GetPeriodAmount_Returns_Correct_Amount()
         {
 
-            var levyPeriod = new LevyPeriod(12345,"18-19",1,30,DateTime.Now);
+            var levyPeriod = new LevyPeriod(12345,"18-19",1,DateTime.Parse("2018-04-01"), 30,DateTime.Now);
             Assert.AreEqual(levyPeriod.GetPeriodAmount(), 30);
         }
 

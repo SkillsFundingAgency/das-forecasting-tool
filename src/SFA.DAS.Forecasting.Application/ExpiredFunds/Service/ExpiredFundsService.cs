@@ -15,6 +15,9 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
     public interface IExpiredFundsService
     {
         Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projections, long employerAccountId);
+
+        Dictionary<CalendarPeriod, decimal> GetExpiringFunds(IList<AccountProjectionModel> projections,
+            IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals);
     }
     public class ExpiredFundsService : IExpiredFundsService
     {
@@ -31,10 +34,10 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             _employerPaymentDataSession = employerPaymentDataSession;
         }
 
-        private Dictionary<CalendarPeriod, decimal> GetExpiringFunds(IList<AccountProjectionModel> projections, IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod,decimal> paymentsTotals)
+        public Dictionary<CalendarPeriod, decimal> GetExpiringFunds(IList<AccountProjectionModel> projections, IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod,decimal> paymentsTotals)
         {
             var previousLevyTotals =
-                levyPeriodTotals.ToDictionary(k => new CalendarPeriod(k.PayrollMonth, k.PayrollMonth),
+                levyPeriodTotals.ToDictionary(k => new CalendarPeriod(k.CalendarYear, k.CalendarMonth),
                     v => v.TotalNetLevyDeclared);
 
 
@@ -47,7 +50,7 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 
             fundsOut = fundsOut.Concat(paymentsTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
 
-            return _expiredFunds.GetExpiringFunds(fundsIn, fundsOut);
+            return _expiredFunds.GetExpiringFunds(fundsIn, fundsOut,null,24);
         }
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projectionModels, long employerAccountId)
@@ -57,7 +60,7 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             stopwatch.Start();
             
             var netLevyTotal = await _levyDataSession.GetAllNetTotals(employerAccountId);
-            var paymentsTotal = _employerPaymentDataSession.GetPaymentTotals(employerAccountId);
+            var paymentsTotal = await _employerPaymentDataSession.GetPaymentTotals(employerAccountId);
             var expiringFunds = GetExpiringFunds(projectionModels, netLevyTotal, paymentsTotal);
             
             stopwatch.Stop();

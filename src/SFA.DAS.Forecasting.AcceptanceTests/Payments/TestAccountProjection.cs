@@ -15,5 +15,6 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments
         public decimal CompletionPayments { get; set; }
 
         public decimal FutureFunds { get; set; }
+        public decimal ExpiredFunds { get; set; }
     }
 }
