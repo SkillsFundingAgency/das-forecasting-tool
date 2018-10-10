@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
             {
                 EmployerAccountId = 12345,
                 ProjectionSource = ProjectionSource.PaymentPeriodEnd,
-                StartPeriod = new CalendarPeriod { Month = 1, Year = 2018 }
+                StartPeriod = new Messages.Projections.CalendarPeriod { Month = 1, Year = 2018 }
             }).Wait();
 
         }

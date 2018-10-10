@@ -30,6 +30,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.CompletionAmount).HasColumnName(@"CompletionAmount").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.MonthlyInstallment).HasColumnName(@"MonthlyInstallment").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
             Property(x => x.NumberOfInstallments).HasColumnName(@"NumberOfInstallments").HasColumnType("smallint").IsRequired();
+            Property(x => x.HasHadPayment).HasColumnName(@"HasHadPayment").HasColumnType("bit").IsRequired();
             InitializePartial();
         }
         partial void InitializePartial();
