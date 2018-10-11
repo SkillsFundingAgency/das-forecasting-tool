@@ -43,13 +43,15 @@
     <Compile Include="ApprenticeshipCourses\CourseType.cs" />
     <Compile Include="ApprenticeshipCourses\RefreshCourses.cs" />
     <Compile Include="Projections\CalendarPeriod.cs" />
-    <Compile Include="ExpiredFunds\GenerateExpiringFundsCommand.cs" />
     <Compile Include="Projections\GenerateAccountProjectionCommand.cs" />
     <Compile Include="Projections\ProjectionSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ExpiredFunds\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

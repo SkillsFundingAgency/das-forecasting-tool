@@ -15,7 +15,6 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         Task<IList<AccountProjectionModel>> Get(long employerAccountId);
         Task<AccountProjection> InitialiseProjection(long employerAccountId);
         Task Store(AccountProjection accountProjection);
-        Task<IList<AccountProjectionModel>> Get(long employerAccountId);
     }
 
     public class AccountProjectionRepository : IAccountProjectionRepository
