@@ -162,6 +162,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
     </Compile>
+    <Compile Include="Projections\Feature\ExpiredFunds - Levy.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ExpiredFunds - Levy.feature</DependentUpon>
+    </Compile>
     <Compile Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -178,6 +183,7 @@
       <DependentUpon>ProjectionsTransfer.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Steps\CalculateCo_InvestmentAmountsCI_570Steps.cs" />
+    <Compile Include="Projections\Steps\ExpiredFundsSteps.cs" />
     <Compile Include="Projections\Steps\CoInvestmentFundedPayments.cs" />
     <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
     <Compile Include="Infrastructure\Config.cs" />
@@ -261,6 +267,10 @@
     <None Include="Projections\Feature\Calculate co-investment amounts.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\ExpiredFunds - Levy.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ExpiredFunds - Levy.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>

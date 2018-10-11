@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
         public async Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration)
         {
             _logger.Debug($"Now generating account projections for id: {levySchemeDeclaration.AccountId} in response to Levy event.");
-            var accountProjections = await _accountProjectionRepository.Get(levySchemeDeclaration.AccountId);
+            var accountProjections = await _accountProjectionRepository.InitialiseProjection(levySchemeDeclaration.AccountId);
             accountProjections.BuildLevyTriggeredProjections(DateTime.Today, _applicationConfiguration.NumberOfMonthsToProject);
             foreach (var accountProjectionReadModel in accountProjections.Projections)
             {

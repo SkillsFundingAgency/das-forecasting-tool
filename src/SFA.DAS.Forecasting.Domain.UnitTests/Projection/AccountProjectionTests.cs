@@ -4,8 +4,10 @@ using System.Linq;
 using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -684,6 +686,22 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 ProjectionGenerationType.PayrollPeriodEnd, false);
 
             Assert.AreEqual(expected, monthEndBalance);
+        }
+
+        [Test]
+        public void ShouldCalculateExpiredFunds()
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            var expiredFunds = new Dictionary<CalendarPeriod,decimal>()
+            {
+                {new CalendarPeriod(DateTime.UtcNow.Year,DateTime.UtcNow.Month+1),15000  }
+            };
+            accountProjection.BuildLevyTriggeredProjections(DateTime.UtcNow, 24);
+
+            accountProjection.UpdateProjectionsWithExpiredFunds(expiredFunds);
+
+            Assert.IsTrue(accountProjection.Projections.Sum(s => s.ExpiredFunds) > 0);
         }
     }
 }

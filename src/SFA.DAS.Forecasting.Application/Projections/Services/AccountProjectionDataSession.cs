@@ -53,7 +53,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 "	[TransferOutCompletionPayments] DECIMAL(18,5) NOT NULL default(0)," +
                 "   [FutureFunds] DECIMAL(18,5) NOT NULL," +
                 "	[CoInvestmentEmployer] DECIMAL(18,5) NOT NULL default(0)," +
-                "	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0)" +
+                "	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0)," +
+                "	[ExpiredFunds] DECIMAL(18,5) NOT NULL default(0)" +
                 ") ";
 
 
@@ -76,7 +77,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                                         $"{accountProjectionModel.TransferOutCompletionPayments}," +
                                         $"{accountProjectionModel.FutureFunds}," +
                                         $"{accountProjectionModel.CoInvestmentEmployer}," +
-                                        $"{accountProjectionModel.CoInvestmentGovernment}" +
+                                        $"{accountProjectionModel.CoInvestmentGovernment}," +
+                                        $"{accountProjectionModel.ExpiredFunds}" +
                                         "),");
             }
 
@@ -95,16 +97,16 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                                     " WHEN NOT MATCHED THEN " +
                                     "     INSERT (EmployerAccountId, ProjectionCreationDate, ProjectionGenerationType, [Month], [Year], FundsIn, TotalCostOfTraining, " +
                                     " 			TransferOutTotalCostOfTraining, TransferInTotalCostOfTraining, TransferInCompletionPayments, CompletionPayments, " +
-                                    " 			TransferOutCompletionPayments,FutureFunds,CoinvestmentEmployer, CoInvestmentGovernment) " +
+                                    " 			TransferOutCompletionPayments,FutureFunds,CoinvestmentEmployer, CoInvestmentGovernment, ExpiredFunds) " +
                                     "     VALUES (s.EmployerAccountId,s.ProjectionCreationDate,s.ProjectionGenerationType,s.[Month], " +
                                     " 			s.[Year],s.fundsIn,s.TotalCostOfTraining,s.TransferOutTotalCostOfTraining,s.TransferInTotalCostOfTraining, s.TransferInCompletionPayments, " +
-                                    " 			s.CompletionPayments, s.TransferOutCompletionPayments, s.FutureFunds, s.CoInvestmentEmployer, s.CoInvestmentGovernment) " +
+                                    " 			s.CompletionPayments, s.TransferOutCompletionPayments, s.FutureFunds, s.CoInvestmentEmployer, s.CoInvestmentGovernment, s.ExpiredFunds) " +
                                     " WHEN MATCHED THEN " +
                                     " 	UPDATE SET ProjectionCreationDate = s.ProjectionCreationDate, FundsIn = s.FundsIn, TotalCostOfTraining = s.TotalCostOfTraining, " +
                                     " 				TransferOutTotalCostOfTraining = s.TransferOutTotalCostOfTraining,TransferInTotalCostOfTraining = s.TransferInTotalCostOfTraining, " +
                                     " 				TransferInCompletionPayments = s.TransferInCompletionPayments, CompletionPayments = s.CompletionPayments, " +
                                     " 				TransferOutCompletionPayments = s.TransferOutCompletionPayments, FutureFunds = s.FutureFunds, " +
-                                    " 				CoinvestmentEmployer = s.CoinvestmentEmployer, CoInvestmentGovernment = s.CoInvestmentGovernment;");
+                                    " 				CoinvestmentEmployer = s.CoinvestmentEmployer, CoInvestmentGovernment = s.CoInvestmentGovernment, ExpiredFunds = s.ExpiredFunds;");
 
             await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString());
             stopwatch.Stop();

@@ -15,7 +15,8 @@
 	[TransferOutCompletionPayments] DECIMAL(18,5) NOT NULL default(0),
     [FutureFunds] DECIMAL(18,5) NOT NULL,
 	[CoInvestmentEmployer] DECIMAL(18,5) NOT NULL default(0),
-	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0)
+	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0), 
+    [ExpiredFunds] DECIMAL(18, 5) NOT NULL DEFAULT (0)
 )
 GO
 

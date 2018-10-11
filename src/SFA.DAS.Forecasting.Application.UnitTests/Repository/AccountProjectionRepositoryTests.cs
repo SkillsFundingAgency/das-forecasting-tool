@@ -81,7 +81,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
 
             var sut = _moqer.Resolve<AccountProjectionRepository>();
            
-            var projection = await sut.Get(12345);
+            var projection = await sut.InitialiseProjection(12345);
 
             projection.Should().BeOfType<AccountProjection>();
             projection.EmployerAccountId.Should().Be(12345);
@@ -99,7 +99,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
 
             var sut = _moqer.Resolve<AccountProjectionRepository>();
 
-            var projection = await sut.Get(12345);
+            var projection = await sut.InitialiseProjection(12345);
 
             projection.Should().BeOfType<AccountProjection>();
             projection.EmployerAccountId.Should().Be(12345);

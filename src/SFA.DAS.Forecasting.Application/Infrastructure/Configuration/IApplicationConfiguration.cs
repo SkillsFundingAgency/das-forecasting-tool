@@ -18,5 +18,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         bool AllowTriggerProjections { get; }
         string ApprenticeshipsApiBaseUri { get; }
         string AppInsightsInstrumentationKey  { get; }
+        bool FeatureExpiredFunds { get; set; }
     }
 }
