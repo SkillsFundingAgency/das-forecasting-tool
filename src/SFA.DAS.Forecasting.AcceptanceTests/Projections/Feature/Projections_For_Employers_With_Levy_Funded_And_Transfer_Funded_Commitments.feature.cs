@@ -24,7 +24,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Feature
         
         private TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Projections For Employers With Levy Funded And Transfer Funded Commitments.feature"
+#line 1 "Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature"
 #line hidden
         
         [NUnit.Framework.OneTimeSetUpAttribute()]

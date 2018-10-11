@@ -178,10 +178,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ExpiredFunds - Levy.feature</DependentUpon>
     </Compile>
-    <Compile Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs">
-      <DependentUpon>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature</DependentUpon>
+    <Compile Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature.cs">
       <AutoGen>True</AutoGen>

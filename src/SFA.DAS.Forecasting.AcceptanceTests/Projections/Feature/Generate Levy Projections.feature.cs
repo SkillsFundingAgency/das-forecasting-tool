@@ -237,9 +237,10 @@ this.FeatureBackground();
         public virtual void BalanceIsCorrectlyCalculatedWhenProjectionIsCalculatedAtBeginningOfMonth()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Balance is correctly calculated when projection is calculated at beginning of mon" +
-                    "th", ((string[])(null)));
+                    "th", null, ((string[])(null)));
 #line 47
-this.ScenarioSetup(scenarioInfo);
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
 #line 6
 this.FeatureBackground();
 #line hidden
@@ -297,9 +298,10 @@ this.FeatureBackground();
         [NUnit.Framework.DescriptionAttribute("Balance is correctly calculated based on date of projection for levy")]
         public virtual void BalanceIsCorrectlyCalculatedBasedOnDateOfProjectionForLevy()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Balance is correctly calculated based on date of projection for levy", ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Balance is correctly calculated based on date of projection for levy", null, ((string[])(null)));
 #line 59
-this.ScenarioSetup(scenarioInfo);
+this.ScenarioInitialize(scenarioInfo);
+            this.ScenarioStart();
 #line 6
 this.FeatureBackground();
 #line hidden
