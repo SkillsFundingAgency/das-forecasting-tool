@@ -8,9 +8,7 @@
     "LogDir": "C:\\Logs\\SFA\\Forecasting",
     "MinLogLevel": "Trace",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "f0ca1c02-2018-4445-b2e8-001e322bf0e8",
-    "StubData": true,
-    "AccountStubLimit": 10,
-    "NumberOfCommitments": 10
+    "StubData": true
   },
   "Host": {
     "LocalHttpPort": 7090,
