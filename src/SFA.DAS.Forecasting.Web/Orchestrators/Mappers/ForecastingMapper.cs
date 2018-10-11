@@ -51,10 +51,11 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 
         public ApprenticeshipCsvItemViewModel ToCsvApprenticeship(CommitmentModel commitment, long accountId)
         {
-            return new ApprenticeshipCsvItemViewModel
+            var model = new ApprenticeshipCsvItemViewModel
             {
-                StartDate = commitment.StartDate.ToString("MMM-yy"),
-                PlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy"),
+                DasStartDate = commitment.StartDate.ToString("MMM-yy"),
+                DasPlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy"),
+
                 Apprenticeship = commitment.CourseName,
                 ApprenticeshipLevel = commitment.CourseLevel,
                 TransferToEmployer = commitment.FundingSource == FundingSource.Transfer ? "Y" : "N",
@@ -66,6 +67,22 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 MonthlyTrainingCost = Convert.ToInt32(commitment.MonthlyInstallment),
                 CompletionAmount = Convert.ToInt32(commitment.CompletionAmount)
             };
+
+            if (commitment.HasHadPayment){
+                model.StartDate = commitment.StartDate.ToString("MMM-yy");
+                model.PlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy");
+                model.Status = "Live and paid";
+            }
+            else {
+                model.DasStartDate = commitment.StartDate.ToString("MMM-yy");
+                model.DasPlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy");
+                model.Status =
+                    commitment.StartDate > DateTime.Today
+                    ? "Waiting to start"
+                    : "Live and not paid";
+            }
+
+            return model;
         }
 
         private static bool IsTransferCommitment(CommitmentModel commitmentModel, long accountId)

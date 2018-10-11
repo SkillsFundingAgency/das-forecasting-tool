@@ -47,6 +47,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             config.AccountApi = ConfigurationHelper.GetAccountApiConfiguration();
             config.PaymentEventsApi = ConfigurationHelper.GetPaymentsEventsApiConfiguration();
+            config.CommitmentsApi = ConfigurationHelper.GetCommitmentsApiConfiguration();
         }
     }
 }

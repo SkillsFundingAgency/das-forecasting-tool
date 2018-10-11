@@ -230,6 +230,128 @@ this.FeatureBackground();
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Balance is correctly calculated when projection is calculated at beginning of mon" +
+            "th")]
+        public virtual void BalanceIsCorrectlyCalculatedWhenProjectionIsCalculatedAtBeginningOfMonth()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Balance is correctly calculated when projection is calculated at beginning of mon" +
+                    "th", ((string[])(null)));
+#line 47
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table6 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table6.AddRow(new string[] {
+                        "ABC-12345",
+                        "1000",
+                        "Today"});
+#line 48
+ testRunner.Given("the following levy declarations have been recorded", ((string)(null)), table6, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table7 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table7.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Last month",
+                        "500",
+                        "3000",
+                        "24"});
+            table7.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Last year",
+                        "250",
+                        "1500",
+                        "48"});
+#line 51
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table7, "And ");
+#line 55
+ testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 56
+ testRunner.When("the account projection is triggered before levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 57
+ testRunner.Then("the first month projected balance is 5250", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Balance is correctly calculated based on date of projection for levy")]
+        public virtual void BalanceIsCorrectlyCalculatedBasedOnDateOfProjectionForLevy()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Balance is correctly calculated based on date of projection for levy", ((string[])(null)));
+#line 59
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
+#line hidden
+            TechTalk.SpecFlow.Table table8 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Scheme",
+                        "Amount",
+                        "Created Date"});
+            table8.AddRow(new string[] {
+                        "ABC-12345",
+                        "1000",
+                        "Today"});
+#line 60
+ testRunner.Given("the following levy declarations have been recorded", ((string)(null)), table8, "Given ");
+#line hidden
+            TechTalk.SpecFlow.Table table9 = new TechTalk.SpecFlow.Table(new string[] {
+                        "Apprentice Name",
+                        "Course Name",
+                        "Course Level",
+                        "Provider Name",
+                        "Start Date",
+                        "Installment Amount",
+                        "Completion Amount",
+                        "Number Of Installments"});
+            table9.AddRow(new string[] {
+                        "Test Apprentice 1",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Last month",
+                        "500",
+                        "3000",
+                        "24"});
+            table9.AddRow(new string[] {
+                        "Test Apprentice 2",
+                        "Test Course",
+                        "1",
+                        "Test Provider",
+                        "Last year",
+                        "250",
+                        "1500",
+                        "48"});
+#line 63
+ testRunner.And("the following commitments have been recorded", ((string)(null)), table9, "And ");
+#line 67
+ testRunner.And("the current balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 68
+ testRunner.When("the account projection is triggered after levy has been declared", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 69
+ testRunner.Then("the first month projected balance is 5000", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

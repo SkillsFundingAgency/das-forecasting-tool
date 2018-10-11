@@ -72,9 +72,11 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Estimation
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC1: remove modelled apprenticeship")]
+        [NUnit.Framework.CategoryAttribute("RemoveModelledApprenticeship")]
         public virtual void AC1RemoveModelledApprenticeship()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: remove modelled apprenticeship", null, ((string[])(null)));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: remove modelled apprenticeship", null, new string[] {
+                        "RemoveModelledApprenticeship"});
 #line 7
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
@@ -90,25 +92,27 @@ testRunner.Then("the remove apprenticeship page is displayed", ((string)(null)),
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC2: confirm remove modelled apprenticeship")]
+        [NUnit.Framework.CategoryAttribute("RemoveModelledApprenticeship")]
         public virtual void AC2ConfirmRemoveModelledApprenticeship()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: confirm remove modelled apprenticeship", null, ((string[])(null)));
-#line 12
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: confirm remove modelled apprenticeship", null, new string[] {
+                        "RemoveModelledApprenticeship"});
+#line 13
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 13
-testRunner.Given("that I\'m on the remove apprenticeship page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 14
-testRunner.When("I confirm remove for the apprenticeship", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+testRunner.Given("that I\'m on the remove apprenticeship page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 15
-testRunner.Then("the Estimated Costs page is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+testRunner.When("I confirm remove for the apprenticeship", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 16
-testRunner.And("the Remaining Transfer Allowance tab is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.Then("the Estimated Costs page is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line 17
-testRunner.And("the removed apprenticeship is not in the list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("the Remaining Transfer Allowance tab is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 18
-testRunner.And("the list of apprenticeships is in start date order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.And("the removed apprenticeship is not in the list", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 19
+testRunner.And("the list of apprenticeships is in start date order", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 20
 testRunner.And("the banner message \'Apprenticeship removed\' is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();
@@ -116,22 +120,24 @@ testRunner.And("the banner message \'Apprenticeship removed\' is displayed", ((s
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC3: confirm costs deducted for removed modelled apprenticeship")]
+        [NUnit.Framework.CategoryAttribute("RemoveModelledApprenticeship")]
         public virtual void AC3ConfirmCostsDeductedForRemovedModelledApprenticeship()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: confirm costs deducted for removed modelled apprenticeship", null, ((string[])(null)));
-#line 21
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3: confirm costs deducted for removed modelled apprenticeship", null, new string[] {
+                        "RemoveModelledApprenticeship"});
+#line 23
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 22
-testRunner.Given("that I have removed an apprenticeship", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 23
-testRunner.When("I\'m on the Estimated costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 24
-testRunner.And("the \'Remaining transfer allowance\' tab", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+testRunner.Given("that I have removed an apprenticeship", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 25
+testRunner.When("I\'m on the Estimated costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 26
+testRunner.And("the \'Remaining transfer allowance\' tab", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 27
 testRunner.Then("the monthly costs of the removed apprenticeships have been deducted from the corr" +
                     "ect months", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 26
+#line 28
 testRunner.And("the completion costs of the removed apprenticeships have been removed from the co" +
                     "rrect month", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
@@ -140,19 +146,21 @@ testRunner.And("the completion costs of the removed apprenticeships have been re
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC4: continue with default radio button selected")]
+        [NUnit.Framework.CategoryAttribute("RemoveModelledApprenticeship")]
         public virtual void AC4ContinueWithDefaultRadioButtonSelected()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC4: continue with default radio button selected", null, ((string[])(null)));
-#line 28
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC4: continue with default radio button selected", null, new string[] {
+                        "RemoveModelledApprenticeship"});
+#line 31
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 29
-testRunner.Given("that I\'m on the remove apprenticeship page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 30
-testRunner.And("the No radio button is defaulted as selected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 31
-testRunner.When("I click continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line 32
+testRunner.Given("that I\'m on the remove apprenticeship page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 33
+testRunner.And("the No radio button is defaulted as selected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 34
+testRunner.When("I click continue", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 35
 testRunner.Then("the Estimated Costs is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

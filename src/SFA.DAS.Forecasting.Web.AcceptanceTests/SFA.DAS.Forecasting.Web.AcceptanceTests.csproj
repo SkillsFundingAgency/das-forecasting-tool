@@ -130,8 +130,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddApprenticeshipPageSteps.cs" />
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="EditModelledApprenticeshipSteps.cs" />
+    <Compile Include="Features\Estimation\AddApprenticeshipPage.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AddApprenticeshipPage.feature</DependentUpon>
+    </Compile>
     <Compile Include="Features\Estimation\AddEstimationApprenticeships.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -147,7 +154,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditEstimationApprenticeships.feature</DependentUpon>
     </Compile>
-    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
+    <Compile Include="Features\LoadTests\FundingProjectionPerformanceTest.cs" />    <Compile Include="Features\LoadTests\EstimatorToolPerformanceTest.cs" />    <Compile Include="Features\Projection\DownloadForecastBalanceSheet.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DownloadForecastBalanceSheet.feature</DependentUpon>
@@ -192,6 +199,8 @@
     <Compile Include="StepDefinition\Estimation\AddApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\AddEditApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Estimation\EditApprenticehipSteps.cs" />
+    <Compile Include="StepDefinition\Estimation\EstimateCostsPageSteps.cs" />
+    <Compile Include="StepDefinition\Estimation\RemoveModelledApprenticeshipSteps.cs" />
     <Compile Include="StepDefinition\Security\RedirectToLoginPageSteps.cs" />
     <Compile Include="StepDefinition\DisplayModelledApprenticeshipsSteps.cs" />
     <Compile Include="StepDefinition\DownloadForecastBalanceSheetSteps.cs" />
@@ -202,6 +211,10 @@
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Features\Estimation\AddApprenticeshipPage.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>AddApprenticeshipPage.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\Estimation\AddEstimationApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -214,6 +227,10 @@
     <None Include="Features\Estimation\EditEstimationApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>EditEstimationApprenticeships.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Features\Estimation\EditModelledApprenticeship.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>EditModelledApprenticeship.feature.cs</LastGenOutput>
     </None>
     <None Include="Features\Projection\DownloadForecastBalanceSheet.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -269,6 +286,12 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Templates\html.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\html2.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

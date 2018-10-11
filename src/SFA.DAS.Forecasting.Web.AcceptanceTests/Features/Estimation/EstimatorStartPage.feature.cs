@@ -70,31 +70,19 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests.Features.Estimation
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void FeatureBackground()
-        {
-#line 6
-#line 7
- testRunner.Given("that I am an employer with predefined projections", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 8
- testRunner.And("I have logged into my Apprenticeship Account", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-        }
-        
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("AC1: no current modelled apprenticeships")]
         public virtual void AC1NoCurrentModelledApprenticeships()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC1: no current modelled apprenticeships", null, ((string[])(null)));
-#line 10
+#line 6
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 6
-this.FeatureBackground();
-#line 11
+#line 7
  testRunner.Given("that I\'m on the estimator start page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 12
+#line 8
  testRunner.When("I have no current modelled apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 13
+#line 9
  testRunner.Then("by clicking the Start button I am taken to the Add apprenticeship page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -105,20 +93,18 @@ this.FeatureBackground();
         public virtual void AC2CurrentModelledApprenticeships()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2: current modelled apprenticeships", null, ((string[])(null)));
-#line 15
+#line 11
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
-#line 6
-this.FeatureBackground();
-#line 16
+#line 12
  testRunner.Given("that I\'m on the estimator start page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line 17
+#line 13
  testRunner.When("I have current modelled apprenticeships", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 18
+#line 14
  testRunner.Then("by clicking the Start button I am taken to the Estimated costs page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 19
+#line 15
  testRunner.And("the Remaining transfers allowance tab is displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line 20
+#line 16
  testRunner.And("the previously modelled apprenticeships costs are displayed", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             this.ScenarioCleanup();

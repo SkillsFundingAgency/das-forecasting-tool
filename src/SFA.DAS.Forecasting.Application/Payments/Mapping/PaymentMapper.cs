@@ -60,8 +60,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				CourseName = paymentCreatedMessage.CourseName,
 				CourseLevel = paymentCreatedMessage.CourseLevel,
                 SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
-                FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource)
-			};
+                FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource),
+                HasHadPayment = true,
+                UpdatedDateTime = DateTime.UtcNow
+			      };
 
             if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
                 model.ActualEndDate = null;

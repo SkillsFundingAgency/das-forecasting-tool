@@ -1,4 +1,9 @@
-﻿using SFA.DAS.Apprenticeships.Api.Client;
+﻿using System;
+using System.Net.Http;
+using SFA.DAS.Apprenticeships.Api.Client;
+using SFA.DAS.Commitments.Api.Client;
+using SFA.DAS.Commitments.Api.Client.Configuration;
+using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
 using SFA.DAS.Forecasting.Application.Balance.Services;
@@ -10,6 +15,8 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
+using SFA.DAS.Http;
+using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
@@ -78,6 +85,25 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IExpiredFunds>()
                 .Use<EmployerFinance.ExpiredFunds.ExpiredFunds>();
+            SetUpCommitmentsApi();
+        }
+
+        private void SetUpCommitmentsApi()
+        {
+            var apiConfig = ConfigurationHelper.GetCommitmentsApiConfiguration();
+            var bearerToken = (IGenerateBearerToken)new JwtBearerTokenGenerator(apiConfig);
+
+            var httpClient = new HttpClientBuilder()
+                .WithDefaultHeaders()
+                .WithBearerAuthorisationHeader(bearerToken)
+                .Build();
+
+            For<IEmployerCommitmentApi>().Use<EmployerCommitmentApi>()
+                .Ctor<ICommitmentsApiClientConfiguration>("configuration")
+                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().CommitmentsApi)
+                .Ctor<HttpClient>("client")
+                .Is(ctx => httpClient )
+                ;
         }
     }
 }
