@@ -104,7 +104,7 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "sslState": "SniEnabled",
-        "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', parameters('keyvaultCertificateName')), '2016-03-01').Thumbprint]"
+        "thumbprint": "[reference('SSLCert').outputs.certificateThumbprint.value]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', parameters('name'))]",
@@ -151,7 +151,7 @@
             },
             {
               "name": "WEBSITE_LOAD_CERTIFICATES",
-              "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
+              "value": "[if(equals(parameters('certificateName'), parameters('keyvaultCertificateName')), reference('SSLCert').outputs.certificateThumbprint.value, reference('SigningCert').outputs.certificateThumbprint.value)]"
             },
             {
               "name": "BaseAddress",
@@ -215,7 +215,7 @@
                 },
                 {
                   "name": "WEBSITE_LOAD_CERTIFICATES",
-                  "value": "[reference(resourceId('Microsoft.Web/certificates', parameters('certificateName')), '2016-03-01').Thumbprint]"
+                  "value": "[if(equals(parameters('certificateName'), parameters('keyvaultCertificateName')), reference('SSLCert').outputs.certificateThumbprint.value, reference('SigningCert').outputs.certificateThumbprint.value)]"
                 },
                 {
                   "name": "BaseAddress",
