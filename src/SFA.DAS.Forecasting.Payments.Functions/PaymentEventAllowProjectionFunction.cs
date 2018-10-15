@@ -35,10 +35,13 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 		                {
 			                logger.Info($"Now sending message to trigger the account projections for employer '{allowedEmployerAccount}', period: {paymentCreatedMessage.CollectionPeriod?.Id}, {paymentCreatedMessage.CollectionPeriod?.Month}");
 
-							collector.Add(new GenerateAccountProjectionCommand
+		                    var projectionSource = paymentCreatedMessage.ProjectionSource == ProjectionSource.Commitment 
+		                                            ? paymentCreatedMessage.ProjectionSource : ProjectionSource.PaymentPeriodEnd;
+
+		                    collector.Add(new GenerateAccountProjectionCommand
 			                {
 				                EmployerAccountId = allowedEmployerAccount,
-				                ProjectionSource = ProjectionSource.PaymentPeriodEnd,
+				                ProjectionSource = projectionSource,
 			                });
 		                }
 	                }

@@ -43,6 +43,17 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
 
+        public static CommitmentsApiConfig GetCommitmentsApiConfiguration()
+        {
+            return IsDevOrAtEnvironment
+                ? new CommitmentsApiConfig
+                {
+                    BaseUrl = CloudConfigurationManager.GetSetting("Commitments-BaseUrl"),
+                    ClientToken = CloudConfigurationManager.GetSetting("Commitments-ClientToken"),
+                }
+                : GetConfiguration<CommitmentsApiConfig>("SFA.DAS.CommitmentsAPI");
+        }
+
         private static T GetConfiguration<T>(string serviceName)
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");

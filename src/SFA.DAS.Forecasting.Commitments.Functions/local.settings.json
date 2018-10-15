@@ -1,7 +1,7 @@
 ﻿{
   "IsEncrypted": false,
   "Values": {
-    "AppName": "das-forecasting-apprenticeships",
+    "AppName": "das-forecasting-commitments",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
     "StorageConnectionString": "UseDevelopmentStorage=true",
@@ -20,7 +20,7 @@
     "NLog-Localdir": "c:/temp/FAT",
     "LogDir": "c:/temp/FAT",
     "LoggingRedisConnectionString": "localhost",
-    "ApprenticeshipsApiBaseUri": "https://at-fatapi.apprenticeships.sfa.bis.gov.uk",
+    "ApprenticeshipsApiBaseUri": "https://findapprenticeshiptraining-api.sfa.bis.gov.uk/",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "f0ca1c02-2018-4445-b2e8-001e322bf0e8",
     "Commitments-BaseUrl": "http://localhost:7090/",
     "Commitments-ClientToken": "Whatever I think"

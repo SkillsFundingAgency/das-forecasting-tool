@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Messages.Projections;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 {
@@ -27,17 +29,29 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             _telemetry.AddEmployerAccountId(message.EmployerAccountId);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var projections = await _accountProjectionRepository.Get(message.EmployerAccountId);
+            var projections = await _accountProjectionRepository.InitialiseProjection(message.EmployerAccountId);
             var startDate = new DateTime(
                 GetValue(message.StartPeriod?.Year, DateTime.Today.Year),
                 GetValue(message.StartPeriod?.Month, DateTime.Today.Month),
-                1);
+                GetValue(message.StartPeriod?.Day, DateTime.Today.Day));
 
-            if (message.ProjectionSource == ProjectionSource.LevyDeclaration)
+            var messageProjectionSource = message.ProjectionSource;
+            if (messageProjectionSource == ProjectionSource.Commitment)
+            {
+                var previousProjection = await _accountProjectionRepository.Get(message.EmployerAccountId);
+                var projectionGenerationType = previousProjection?.FirstOrDefault()?.ProjectionGenerationType;
+                if (projectionGenerationType != null)
+                {
+                    messageProjectionSource = projectionGenerationType == ProjectionGenerationType.LevyDeclaration 
+                        ? ProjectionSource.LevyDeclaration : ProjectionSource.PaymentPeriodEnd;
+                }
+            }
+
+            if (messageProjectionSource == ProjectionSource.LevyDeclaration)
                 projections.BuildLevyTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
             else
                 projections.BuildPayrollPeriodEndTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
-
+        
             await _accountProjectionRepository.Store(projections);
             stopwatch.Stop();
             _telemetry.TrackDuration("BuildAccountProjection", stopwatch.Elapsed);
