@@ -3,6 +3,7 @@
     public enum ProjectionSource
     {
         PaymentPeriodEnd,
-        LevyDeclaration
+        LevyDeclaration,
+        Commitment
     }
 }

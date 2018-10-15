@@ -25,6 +25,14 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
+        public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
+        {
+            return await _dataContext
+                .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId)
+                .OrderByDescending(commitment => commitment.UpdatedDateTime)
+                .Select(commitment => commitment.UpdatedDateTime)
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
@@ -46,7 +54,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
+            int listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
             stopwatch.Stop();
             _telemetry.TrackDuration("Get Commitment Count: " + queryName, stopwatch.Elapsed);
             var model = new List<CommitmentModel>(listSize);
@@ -109,7 +117,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         public async Task Upsert(CommitmentModel commitment)
         {
-            var sql = UpserSqlString();
+            var sql = UpsertSqlString();
             var parameters = new object[]
             {
                 new SqlParameter("@employerAccountId", commitment.EmployerAccountId),
@@ -140,14 +148,19 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 new SqlParameter("@completionAmount", commitment.CompletionAmount),
                 new SqlParameter("@monthlyInstallment", commitment.MonthlyInstallment),
                 new SqlParameter("@numberOfInstallments", commitment.NumberOfInstallments),
-                new SqlParameter("@fundingSource", commitment.FundingSource)
+                new SqlParameter("@fundingSource", commitment.FundingSource),
+                new SqlParameter("@updatedDateTime", commitment.UpdatedDateTime)
+                {
+                    SqlDbType = SqlDbType.DateTime
+                },
+                new SqlParameter("@hasHadPayment", commitment.HasHadPayment)
             };
 
             await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
 
         }
 
-        private string UpserSqlString()
+        private string UpsertSqlString()
         {
             return @"
                     MERGE INTO Commitment
@@ -168,7 +181,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 		                       @completionAmount         as CompletionAmount,
 		                       @monthlyInstallment       as MonthlyInstallment,
 		                       @numberOfInstallments     as NumberOfInstallments,
-		                       @fundingSource            as FundingSource
+		                       @fundingSource            as FundingSource,
+                               @updatedDateTime          as UpdatedDateTime,
+                               @hasHadPayment            as HasHadPayment
                     ) AS entity
                     ON  Commitment.EmployerAccountId = entity.EmployerAccountId 
                         AND Commitment.learnerId = entity.LearnerId
@@ -178,11 +193,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                         SET 
 		                    ApprenticeshipId = entity.ApprenticeshipId,
 		                    ApprenticeName = entity.ApprenticeName,
-		                    ActualEndDate = entity.ActualEndDate
+		                    ActualEndDate = entity.ActualEndDate,
+                            HasHadPayment = entity.HasHadPayment,
+                            UpdatedDateTime = entity.UpdatedDateTime
                     WHEN NOT MATCHED 
                         AND entity.ActualEndDate is null 
                         THEN 
-                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource)
+                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource, UpdatedDateTime,HasHadPayment)
 	                    VALUES (
                                 entity.EmployerAccountId,
                                 entity.SendingEmployerAccountId,
@@ -199,7 +216,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                 entity.CompletionAmount, 
                                 entity.MonthlyInstallment, 
                                 entity.NumberOfInstallments, 
-                                entity.FundingSource);
+                                entity.FundingSource,
+                                entity.UpdatedDateTime,
+                                entity.HasHadPayment);
                     ";
 
         }

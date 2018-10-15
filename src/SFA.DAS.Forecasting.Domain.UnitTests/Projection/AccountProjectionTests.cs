@@ -80,7 +80,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Does_Not_Include_Levy_In_First_Month_For_Levy_Triggered_Projection()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 2);
 
             accountProjection.Projections.First().FutureFunds.Should().Be(_account.Balance);
         }
@@ -114,7 +114,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Includes_Installments()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 2);
 
             accountProjection.Projections.First().FutureFunds
                 .ShouldBeEquivalentTo(_account.Balance, because: "First month should be the same as current balance");
@@ -129,7 +129,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 7);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 7);
+
             accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(0);
             accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
             accountProjection.Projections[6].FutureFunds.Should().Be(1200);
@@ -295,7 +296,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
             //Act
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018,10,20), 2);
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
@@ -326,7 +327,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
             //Act
-            accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month,20), 2);
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
@@ -616,6 +617,45 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             Assert.IsTrue(accountProjection.Projections.All(c => c.CoInvestmentGovernment.Equals(0m)));
         }
 
+        [Test]
+        public void Then_If_I_Am_Calculating_The_First_Month_After_A_Levy_Run_It_Is_Calculated_Correctly_As_The_Accounts_Balance()
+        {
+            //Arrange
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 12);
+
+            //Assert
+            Assert.AreEqual(12000m, accountProjection.Projections.First().FutureFunds);
+        }
+
+        [Test]
+        public void Then_If_I_Am_Calculating_The_First_Month_After_A_Payment_Run_It_Is_Calculated_As_The_Account_Balance_Plus_Levy()
+        {
+            //Arrange
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildPayrollPeriodEndTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 18), 12);
+
+            //Assert
+            Assert.AreEqual(12300m, accountProjection.Projections.First().FutureFunds);
+        }
+
+        [Test]
+        public void Then_If_I_Am_Calculating_The_First_Month_Following_A_Previous_Levy_Run_In_The_Next_Month_It_Is_Calculated_As_Balance_Plus_Levy_Minus_All_Costs()
+        {
+            //Arrange
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            //Act
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 18), 12);
+
+            //Assert
+            Assert.AreEqual(10200m, accountProjection.Projections.First().FutureFunds);
+        }
+
 
         [TestCase(800, 200, 400, true, 200)]
         [TestCase(400, 200, 400, true, 0)]
@@ -654,7 +694,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Act
             var balance = accountProjection.GetCurrentBalance(lastBalance, completionPaymentsTransferOut,
-                trainingCostTransferOut, ProjectionGenerationType.PayrollPeriodEnd, false);
+                trainingCostTransferOut, false);
 
             //Assert
             Assert.AreEqual(expected, balance);
@@ -681,7 +721,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             var monthEndBalance = accountProjection.GetMonthEndBalance(currentBalance, moneyOut, fundsIn,
-                ProjectionGenerationType.PayrollPeriodEnd, false);
+                ProjectionGenerationType.PayrollPeriodEnd, false, 22);
 
             Assert.AreEqual(expected, monthEndBalance);
         }
