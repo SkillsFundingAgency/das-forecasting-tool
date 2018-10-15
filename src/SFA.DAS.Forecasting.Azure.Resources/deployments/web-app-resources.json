@@ -52,6 +52,7 @@
   "resources": [
     {
       "type": "Microsoft.Web/certificates",
+      "condition": "[not(equals(parameters('certificateName'), parameters('keyvaultCertificateName')))]",
       "name": "[parameters('certificateName')]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-03-01",
