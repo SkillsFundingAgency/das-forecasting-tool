@@ -51,24 +51,50 @@
   },
   "resources": [
     {
-      "type": "Microsoft.Web/certificates",
-      "condition": "[not(equals(parameters('certificateName'), parameters('keyvaultCertificateName')))]",
+      "apiVersion": "2017-05-10",
       "name": "[parameters('certificateName')]",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-01",
+      "type": "Microsoft.Resources/deployments",
+      "condition": "[not(equals(parameters('certificateName'), parameters('keyvaultCertificateName')))]",
       "properties": {
-        "keyVaultId": "[resourceId(parameters('certKeyVaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('certKeyVaultName'))]",
-        "keyVaultSecretName": "[parameters('certificateName')]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/app-service-certificate.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultCertificateName": {
+            "value": "[parameters('certificateName')]"
+          },
+          "keyVaultName": {
+            "value": "[parameters('certKeyVaultName')]"
+          },
+          "keyVaultResourceGroup": {
+            "value": "[parameters('certKeyVaultResourceGroup')]"
+          }
+        }
       }
     },
     {
-      "type": "Microsoft.Web/certificates",
+      "apiVersion": "2017-05-10",
       "name": "[parameters('keyvaultCertificateName')]",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-01",
+      "type": "Microsoft.Resources/deployments",
       "properties": {
-        "keyVaultId": "[resourceId(parameters('certKeyVaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('certKeyVaultName'))]",
-        "keyVaultSecretName": "[parameters('keyvaultCertificateName')]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/app-service-certificate.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "keyVaultCertificateName": {
+            "value": "[parameters('keyvaultCertificateName')]"
+          },
+          "keyVaultName": {
+            "value": "[parameters('certKeyVaultName')]"
+          },
+          "keyVaultResourceGroup": {
+            "value": "[parameters('certKeyVaultResourceGroup')]"
+          }
+        }
       }
     },
     {
