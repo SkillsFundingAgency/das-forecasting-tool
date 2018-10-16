@@ -222,6 +222,7 @@
     <Compile Include="Infrastructure\Persistence\DocumentSessionConnectionString.cs" />
     <Compile Include="Infrastructure\Registries\ConfigurationHelper.cs" />
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
+    <Compile Include="Infrastructure\Registries\DefaultWebRegistry.cs" />
     <Compile Include="Infrastructure\Registries\DocumentRegistry.cs" />
     <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
     <Compile Include="Infrastructure\Registries\TelemetryRegistry.cs" />
