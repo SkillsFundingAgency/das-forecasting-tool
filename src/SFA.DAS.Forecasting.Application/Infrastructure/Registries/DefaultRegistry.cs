@@ -77,14 +77,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>())
                 .ContainerScoped();
 
-            For<IEmployerDatabaseService>()
-                .Use<EmployerDatabaseService>();
-
             For<IExpiredFundsService>()
                 .Use<ExpiredFundsService>();
 
             For<IExpiredFunds>()
                 .Use<EmployerFinance.ExpiredFunds.ExpiredFunds>();
+           
             SetUpCommitmentsApi();
         }
 
