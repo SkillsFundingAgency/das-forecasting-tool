@@ -108,7 +108,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', parameters('name'))]",
-        "[parameters('keyvaultCertificateName')]"
+        "SSLCert"
       ]
     },
     {
@@ -116,7 +116,7 @@
       "type": "Microsoft.Web/sites",
       "dependsOn": [
         "[resourceId('microsoft.insights/components/', parameters('name'))]",
-        "[parameters('certificateName')]"
+        "SigningCert"
       ],
       "properties": {
         "siteConfig": {
