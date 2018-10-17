@@ -13,6 +13,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Infrastructure
         public string StorageConnectionString => GetConnectionString("StorageConnectionString");
         public string EmployerConnectionString => GetConnectionString("EmployerConnectionString");
         public string CosmosDbConnectionString => GetConnectionString("CosmosDBConnectionString");
+        public string NServiceBusConnectionString => GetConnectionString("NServiceBusConnectionString");
 
         public bool IsDevEnvironment => (Environment?.Equals("DEVELOPMENT", StringComparison.OrdinalIgnoreCase) ?? false) ||
                                         (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);
