@@ -12,19 +12,21 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     public class BuildProjectionsFunction : IFunction
     {
         [FunctionName("BuildProjectionsFunction")]
+        [return: Queue(QueueNames.PublishAccountProjections)]
         public static async Task Run(
             [QueueTrigger(QueueNames.BuildProjections)]GenerateAccountProjectionCommand message,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<GenerateProjectionsFunction>(writer, executionContext, async (container, logger) =>
+            await FunctionRunner.Run<GenerateProjectionsFunction,AccountProjectionCreatedEvent>(writer, executionContext, async (container, logger) =>
                 {
                     logger.Debug("Resolving BuildAccountProjectionHandler from container.");
                     var handler = container.GetInstance<BuildAccountProjectionHandler>();
                     if (handler == null)
                         throw new InvalidOperationException("Failed to resolve BuildAccountProjectionHandler from container.");
-                    await handler.Handle(message);
+                   var projectionEvent = await handler.Handle(message);
                     logger.Info($"Finished building the account projection for employer: {message.EmployerAccountId}");
+                    return projectionEvent;
                 });
         }
     }

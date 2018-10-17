@@ -32,6 +32,7 @@ using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
 using StructureMap;
 using TechTalk.SpecFlow;
+using AccountProjectionModel = SFA.DAS.Forecasting.Models.Projections.AccountProjectionModel;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests
 {

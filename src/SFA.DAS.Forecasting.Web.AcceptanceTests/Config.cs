@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Web.AcceptanceTests
         public string DatabaseConnectionString => ConfigurationManager.ConnectionStrings["DatabaseConnectionString"].ConnectionString;
 
         public string CosmosDbConnectionString => ConfigurationManager.ConnectionStrings["CosmosDbConnectionString"].ConnectionString;
+        public string NServiceBusConnectionString => ConfigurationManager.ConnectionStrings["NServiceBusConnectionString"].ConnectionString;
 
         public string StorageConnectionString => throw new NotImplementedException();
 

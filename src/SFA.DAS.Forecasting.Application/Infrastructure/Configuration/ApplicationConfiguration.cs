@@ -6,6 +6,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
     {
         public string DatabaseConnectionString { get; set; }
         public string StorageConnectionString { get; set; }
+        public string NServiceBusConnectionString { get; set; }
         public string BackLink { get; set; }
         public string AllowedHashStringCharacters { get; set; }
         public string HashString { get; set; }
@@ -21,5 +22,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public bool AllowTriggerProjections { get; set; }
         public string ApprenticeshipsApiBaseUri { get; set; }
         public string AppInsightsInstrumentationKey { get; set; }
+
+        public EventsConfig Events { get; set; }
     }
 }

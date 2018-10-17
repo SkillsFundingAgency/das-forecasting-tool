@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public string DatabaseConnectionString => GetConnectionString("DatabaseConnectionString");
         public string StorageConnectionString => GetConnectionString("StorageConnectionString");
         public string EmployerConnectionString => GetConnectionString("EmployerConnectionString");
+        public string NServiceBusConnectionString => GetConnectionString("NServiceBusConnectionString");
 
         public bool IsDevEnvironment => (Environment?.Equals("DEVELOPMENT", StringComparison.OrdinalIgnoreCase) ?? false) ||
                                         (Environment?.Equals("LOCAL", StringComparison.OrdinalIgnoreCase) ?? false);

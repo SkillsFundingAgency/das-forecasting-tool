@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 DatabaseConnectionString = ConfigurationHelper.GetConnectionString("DatabaseConnectionString"),
                 EmployerConnectionString = ConfigurationHelper.GetConnectionString("EmployerConnectionString"),
                 StorageConnectionString = ConfigurationHelper.GetConnectionString("StorageConnectionString"),
+                NServiceBusConnectionString = ConfigurationHelper.GetConnectionString("NServiceBusConnectionString"),
 
                 HashString = ConfigurationHelper.GetAppSetting("HashString", true),
                 AllowedHashStringCharacters = ConfigurationHelper.GetAppSetting("AllowedHashStringCharacters", true),
@@ -41,6 +42,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             };
 
             SetApiConfiguration(configuration);
+
+            configuration.Events = ConfigurationHelper.GetEventsConfig();
             return configuration;
         }
 

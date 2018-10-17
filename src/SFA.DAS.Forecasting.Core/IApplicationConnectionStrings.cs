@@ -5,5 +5,6 @@
         string DatabaseConnectionString { get; }
         string StorageConnectionString { get; }
         string EmployerConnectionString { get; }
+        string NServiceBusConnectionString { get; }
     }
 }

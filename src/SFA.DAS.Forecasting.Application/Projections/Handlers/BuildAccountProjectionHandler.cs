@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
+using SFA.DAS.Forecasting.Application.Shared;
+using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -24,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
         }
 
-        public async Task Handle(GenerateAccountProjectionCommand message)
+        public async Task<AccountProjectionCreatedEvent> Handle(GenerateAccountProjectionCommand message)
         {
             _telemetry.AddEmployerAccountId(message.EmployerAccountId);
             var stopwatch = new Stopwatch();
@@ -55,6 +57,10 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             await _accountProjectionRepository.Store(projections);
             stopwatch.Stop();
             _telemetry.TrackDuration("BuildAccountProjection", stopwatch.Elapsed);
+            
+            
+
+            return projections.MapToEvent();
         }
 
         private int GetValue(int? value, int defaultValue)

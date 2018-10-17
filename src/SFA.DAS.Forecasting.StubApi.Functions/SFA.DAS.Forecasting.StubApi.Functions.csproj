@@ -4,6 +4,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Bogus" Version="22.0.8" />
+    <PackageReference Include="Microsoft.Azure.WebJobs" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.Http" Version="1.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.3.32" />
     <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.3.32" />

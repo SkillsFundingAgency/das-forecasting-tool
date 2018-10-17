@@ -54,6 +54,18 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 : GetConfiguration<CommitmentsApiConfig>("SFA.DAS.CommitmentsAPI");
         }
 
+        public static EventsConfig GetEventsConfig()
+        {
+            return IsDevEnvironment
+                ? new EventsConfig
+                {
+                    NServiceBusEndpointName = CloudConfigurationManager.GetSetting("Events-NServiceBus-Transport"),
+                    NServiceBusUseDevTransport = Boolean.Parse(CloudConfigurationManager.GetSetting("Events-NServiceBus-UseDevTransport")),
+                    NServiceBusLicense = CloudConfigurationManager.GetSetting("Events-NServiceBus-Licence")
+                }
+                : GetConfiguration<EventsConfig>("SFA.DAS.Events");
+        }
+
         private static T GetConfiguration<T>(string serviceName)
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
