@@ -179,18 +179,15 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
         public void UpdateProjectionsWithExpiredFunds(Dictionary<CalendarPeriod,decimal> expiringFunds)
         {
-            foreach (var expiringFund in expiringFunds)
+            foreach (var projection in _projections)
             {
-                var projection = _projections.FirstOrDefault(w => w.Year == expiringFund.Key.Year && w.Month == expiringFund.Key.Month);
+                var expiredFund = expiringFunds.FirstOrDefault(w => w.Key.Year == projection.Year && w.Key.Month == projection.Month).Value;
                 var expiredFundsTotal = _projections.Sum(c => c.ExpiredFunds);
-                if (projection != null)
-                {
-                    projection.ExpiredFunds = expiringFund.Value;
 
-                    projection.FutureFunds = projection.CalculateFutureFunds(expiredFundsTotal);
-
-                }
+                projection.ExpiredFunds = expiredFund;
+                projection.FutureFunds = projection.CalculateFutureFunds(expiredFundsTotal);
             }
+            
         }
 	}
 }

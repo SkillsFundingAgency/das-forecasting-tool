@@ -90,14 +90,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
         }
 
         [Test]
-        public void Expired_funds_should_be_0()
-        {
-            var result = _mapper.MapProjections(_models);
-
-            result.First().ExpiredFunds.Should().Be(0);
-        }
-
-        [Test]
         public void Should_be_first_of_month()
         {
             _projectionModel.Month = 12;
