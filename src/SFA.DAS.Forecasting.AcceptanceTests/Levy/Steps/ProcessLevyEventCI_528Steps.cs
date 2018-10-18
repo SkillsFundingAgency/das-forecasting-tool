@@ -79,13 +79,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
                     CreatedDate = DateTime.Today.ToString(),
                     Amount = 1000,
                     Scheme = string.Empty
-                },
-                new LevySubmission
-                {
-                    CreatedDate = DateTime.Today.ToString(),
-                    Amount = -1,
-                    Scheme = "ABCD-001"
-                },
+                }
             };
         }
 

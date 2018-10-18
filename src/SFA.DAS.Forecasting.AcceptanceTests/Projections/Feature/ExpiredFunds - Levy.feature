@@ -33,14 +33,14 @@ And At least one levy declaration which has expired
 When the account projection is triggered after a levy run
 Then the account projection should be generated
 And should have the following projected values
-	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments	| CompletionPayments | TransferOutCompletionPayments | FutureFunds | ExpiredFunds		|
-	| 0             | 0.00                | 0.00                            | 0.00                          | 0.00						    | 0.00				 | 0.00                          | 5000.00     | 0					|
-	| 1             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 19700.00    | 0	  			    |
-	| 8             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 109700.00   | 12900.00           |
-	| 9             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 122600.00   | 14700.00          |
-	| 10             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 137300.00   | 14700.00          |
-	| 11             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 152000.00   | 14700.00          |
-	| 12             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 181400.00   | 0.00	          |
+	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds | ExpiredFunds |
+	| 0             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 5000.00     | 0            |
+	| 1             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 19700.00    | 0            |
+	| 8             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 109700.00   | 12900.00     |
+	| 9             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 122600.00   | 14700.00     |
+	| 10            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 137300.00   | 14700.00     |
+	| 11            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 152000.00   | 14700.00     |
+	| 12            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 181400.00   | 0.00         |
 
 Scenario: expired funds in any month - Before Payment
 Given the following levy declarations have been recorded
@@ -53,14 +53,14 @@ And At least one levy declaration which has expired
 When the account projection is triggered after levy has been declared
 Then the account projection should be generated
 And should have the following projected values
-	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds | ExpiredFunds		|
-	| 0             | 0.00                | 0.00                            | 0.00                          | 0.00						    | 0.00				 | 0.00                          | 5000.00     | 0					|
-	| 1             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 19700.00    | 0	  			    |
-	| 8             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 109700.00   | 12900.00           |
-	| 9             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 122600.00   | 14700.00          |
-	| 10             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 137300.00   | 14700.00          |
-	| 11             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 152000.00   | 14700.00          |
-	| 12             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 181400.00   | 0.00	          |
+	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds | ExpiredFunds |
+	| 0             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 5000.00     | 0            |
+	| 1             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 19700.00    | 0            |
+	| 8             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 109700.00   | 12900.00     |
+	| 9             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 122600.00   | 14700.00     |
+	| 10            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 137300.00   | 14700.00     |
+	| 11            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 152000.00   | 14700.00     |
+	| 12            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 181400.00   | 0.00         |
 
 
 Scenario: expired funds in any month - After Payment
@@ -74,12 +74,12 @@ And At least one levy declaration which has expired
 When the account projection is triggered after a payment run
 Then the account projection should be generated
 And should have the following projected values
-	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds | ExpiredFunds		|
-	| 0             | 0.00                | 0.00                            | 0.00                          | 0.00						    | 0.00				 | 0.00                          | 20000.00     | 0					|
-	| 1             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 34700.00    | 0	  			    |
-	| 8             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 124700.00   | 12900.00           |
-	| 9             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 137600.00   | 14700.00          |
-	| 10             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 152300.00   | 14700.00          |
-	| 11             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 167000.00   | 14700.00          |
-	| 12             | 300.00               | 0.00                            | 0.00                          | 0.00                         | 0.00               | 0.00                          | 196400.00   | 0.00	          |
+	| MonthsFromNow | TotalCostOfTraining | TransferOutTotalCostOfTraining | TransferInTotalCostOfTraining | TransferInCompletionPayments | CompletionPayments | TransferOutCompletionPayments | FutureFunds | ExpiredFunds |
+	| 0             | 0.00                | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 20000.00    | 0            |
+	| 1             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 34700.00    | 0            |
+	| 8             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 124700.00   | 12900.00     |
+	| 9             | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 137600.00   | 14700.00     |
+	| 10            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 152300.00   | 14700.00     |
+	| 11            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 167000.00   | 14700.00     |
+	| 12            | 300.00              | 0.00                           | 0.00                          | 0.00                         | 0.00               | 0.00                          | 196400.00   | 0.00         |
 

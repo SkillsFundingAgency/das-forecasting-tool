@@ -38,7 +38,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     var months = int.Parse("-" + value?.Split(' ')[0]);
                     return DateTime.Today.AddMonths(months);
                 default:
-                    return DateTime.ParseExact(value, new [] { "dd/MM/yyyy", "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm" }, new CultureInfo("en-GB"), DateTimeStyles.AllowWhiteSpaces);
+                    if (DateTime.TryParseExact(value,
+                        new[] {"dd/MM/yyyy", "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm"}, new CultureInfo("en-GB"),
+                        DateTimeStyles.AllowWhiteSpaces, out var result))
+                    {
+                        return result;
+                    }
+
+                    return result;
+                    
             }
         }
     }
