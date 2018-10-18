@@ -320,7 +320,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
                     FundingSource = GetFundingSource(commitment),
-                    UpdatedDateTime = DateTime.UtcNow
+                    UpdatedDateTime = DateTime.UtcNow,
+                    HasHadPayment = true
                 };
                 CommitmentsDataService.Upsert(commitmentModel).Wait();
             }

@@ -46,38 +46,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
                    }
 
-	               var year = 17;
-	               var month = 6;
-
-	               var paymentsNoCommitmentTable = new List<EmployerPayment>();
-
-				   while (year < DateTime.Today.Year % 100 || month < DateTime.Today.Month)
-	               {
-					   paymentsNoCommitmentTable.AddRange(await employerData.GetEmployerPayments(message.EmployerAccountId, year, month));
-
-		               month++;
-		               if (month > 12)
-		               {
-			               month = 1;
-			               year++;
-		               }
-	               }
-
-	               if (!paymentsNoCommitmentTable.Any())
-	               {
-		               logger.Info($"No past payments found for employer: {message.EmployerAccountId}");
-	               }
-
-	               foreach (var payment in paymentsNoCommitmentTable)
-	               {
-		               var dataService = container.GetInstance<PreLoadPaymentDataService>();
-		               await dataService.StorePaymentNoCommitment(payment);
-
-		               logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
-	               }
-
-	               logger.Info($"Sending message {nameof(message)} to {QueueNames.PreLoadEarningDetailsPayment}");
-
 				   return message;
                });
         }

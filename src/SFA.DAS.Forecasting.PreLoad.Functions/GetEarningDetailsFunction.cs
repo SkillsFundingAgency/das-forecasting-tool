@@ -30,8 +30,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
                     var paymentDataService = container.GetInstance<PaymentApiDataService>();
                     var hashingService = container.GetInstance<IHashingService>();
-                    var employerDataService = container.GetInstance<IEmployerDataService>();
-					var dataService = container.GetInstance<PreLoadPaymentDataService>();
+                    var dataService = container.GetInstance<PreLoadPaymentDataService>();
 
 					var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
 
@@ -42,40 +41,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         await dataService.StoreEarningDetails(message.EmployerAccountId, item);
                     }
-
-	                var year = 17;
-	                var month = 6;
-
-	                var periodIds = await employerDataService.GetPeriodIds();
-
-	                while (year < DateTime.Today.Year % 100 || month < DateTime.Today.Month)
-	                {
-		                var periodId = periodIds.Where(x => x.CalendarPeriodMonth == month && x.CalendarPeriodYear == year)
-			                .Select(x => x.PeriodEndId).FirstOrDefault();
-
-						earningDetails = new List<EarningDetails>();
-
-		                if (!string.IsNullOrWhiteSpace(periodId))
-		                {
-							earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
-						}
-
-						foreach (var earningDetail in earningDetails)
-						{
-							await dataService.StoreEarningDetailsNoCommitment(message.EmployerAccountId, earningDetail);
-
-							logger.Info($"Stored new {nameof(earningDetail)} for {message.EmployerAccountId}");
-						}
-
-						month++;
-		                if (month > 12)
-		                {
-			                month = 1;
-			                year++;
-		                }
-	                }
-
-
+                    
 					logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
                     return message;
                 });
