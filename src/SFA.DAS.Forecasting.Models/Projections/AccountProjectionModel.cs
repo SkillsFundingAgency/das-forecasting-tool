@@ -39,17 +39,15 @@ namespace SFA.DAS.Forecasting.Models.Projections
             CoInvestmentGovernment = 0m;
         }
 
-        public decimal CalculateFutureFunds()
+        public decimal CalculateFutureFunds(decimal expiredFundsTotal)
         {
-            if (this.IsFirstMonth && this.ExpiredFunds < 0 &&
-                this.ProjectionGenerationType == ProjectionGenerationType.LevyDeclaration)
+            if (IsFirstMonth && ExpiredFunds < 0 &&
+                ProjectionGenerationType == ProjectionGenerationType.LevyDeclaration)
             {
-                return this.FutureFunds;
+                return FutureFunds;
             }
-            else
-            {
-                return this.FutureFunds - this.ExpiredFunds;
-            }
+
+            return FutureFunds - ExpiredFunds - expiredFundsTotal;
         }
     }
 }

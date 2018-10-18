@@ -182,11 +182,12 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             foreach (var expiringFund in expiringFunds)
             {
                 var projection = _projections.FirstOrDefault(w => w.Year == expiringFund.Key.Year && w.Month == expiringFund.Key.Month);
-
+                var expiredFundsTotal = _projections.Sum(c => c.ExpiredFunds);
                 if (projection != null)
                 {
                     projection.ExpiredFunds = expiringFund.Value;
-                    projection.FutureFunds = projection.CalculateFutureFunds();
+
+                    projection.FutureFunds = projection.CalculateFutureFunds(expiredFundsTotal);
 
                 }
             }
