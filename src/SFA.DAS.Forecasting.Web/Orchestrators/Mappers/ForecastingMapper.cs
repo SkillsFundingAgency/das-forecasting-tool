@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                     FundsIn = x.LevyFundsIn + x.TransferInCostOfTraining + x.TransferInCompletionPayments,
                     CostOfTraining = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining,
                     CompletionPayments = x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments,
-                    ExpiredFunds = 0,
+                    ExpiredFunds = x.ExpiredFunds,
                     Balance = x.FutureFunds,
                     CoInvestmentEmployer = x.CoInvestmentEmployer,
                     CoInvestmentGovernment = x.CoInvestmentGovernment

@@ -45,6 +45,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
                     FutureFunds = 100,
                     CoInvestmentEmployer = 100,
                     CoInvestmentGovernment = 100,
+                    ExpiredFunds = 10
                 };
 
             _models = new List<AccountProjectionModel>
@@ -63,6 +64,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
             result.First().Balance.Should().Be(_projectionModel.FutureFunds);
             result.First().CoInvestmentEmployer.Should().Be(_projectionModel.CoInvestmentEmployer);
             result.First().CoInvestmentGovernment.Should().Be(_projectionModel.CoInvestmentGovernment);
+            result.First().ExpiredFunds.Should().Be(_projectionModel.ExpiredFunds);
         }
 
         [Test]
