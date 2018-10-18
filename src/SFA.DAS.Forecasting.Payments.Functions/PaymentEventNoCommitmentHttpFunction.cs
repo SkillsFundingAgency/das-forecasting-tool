@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         [FunctionName("PaymentEventNoCommitmentHttpFunction")]
         [return: Queue(QueueNames.PaymentValidatorNoCommitment)]
         public static async Task<PaymentCreatedMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "EmployerPaymentEventHttpFunction")]HttpRequestMessage req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "EmployerPaymentEventNoCommitmentHttpFunction")]HttpRequestMessage req,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
