@@ -246,7 +246,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "122600.00",
+                        "109700.00",
                         "14700.00"});
             table5.AddRow(new string[] {
                         "10",
@@ -256,7 +256,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "137300.00",
+                        "109700.00",
                         "14700.00"});
             table5.AddRow(new string[] {
                         "11",
@@ -266,7 +266,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "152000.00",
+                        "109700.00",
                         "14700.00"});
             table5.AddRow(new string[] {
                         "12",
@@ -276,7 +276,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "181400.00",
+                        "124400.00",
                         "0.00"});
 #line 35
 testRunner.And("should have the following projected values", ((string)(null)), table5, "And ");
@@ -377,7 +377,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "122600.00",
+                        "109700.00",
                         "14700.00"});
             table7.AddRow(new string[] {
                         "10",
@@ -387,7 +387,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "137300.00",
+                        "109700.00",
                         "14700.00"});
             table7.AddRow(new string[] {
                         "11",
@@ -397,7 +397,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "152000.00",
+                        "109700.00",
                         "14700.00"});
             table7.AddRow(new string[] {
                         "12",
@@ -407,7 +407,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "181400.00",
+                        "124400.00",
                         "0.00"});
 #line 55
 testRunner.And("should have the following projected values", ((string)(null)), table7, "And ");
@@ -508,7 +508,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "137600.00",
+                        "124700.00",
                         "14700.00"});
             table9.AddRow(new string[] {
                         "10",
@@ -518,7 +518,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "152300.00",
+                        "124700.00",
                         "14700.00"});
             table9.AddRow(new string[] {
                         "11",
@@ -528,7 +528,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "167000.00",
+                        "124700.00",
                         "14700.00"});
             table9.AddRow(new string[] {
                         "12",
@@ -538,7 +538,7 @@ testRunner.Then("the account projection should be generated", ((string)(null)), 
                         "0.00",
                         "0.00",
                         "0.00",
-                        "196400.00",
+                        "139400.00",
                         "0.00"});
 #line 76
 testRunner.And("should have the following projected values", ((string)(null)), table9, "And ");
