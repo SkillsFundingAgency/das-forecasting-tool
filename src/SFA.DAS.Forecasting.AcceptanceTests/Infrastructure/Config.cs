@@ -32,6 +32,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure
         public string ApiInsertLevyUrl => GetAppSetting("ApiInsertLevyUrl");
         public string ApiInsertApprenticeshipsUrl => GetAppSetting("ApiInsertApprenticeshipsUrl");
         public string GetApprenticeshipHttpTriggerUrl => GetAppSetting("GetApprenticeshipHttpTriggerUrl");
+        public bool EventsNServiceBusUseDevTransport => bool.Parse(GetAppSetting("Events-NServiceBus-UseDevTransport"));
+        public string EventsNServiceBusEndpoint => GetAppSetting("Events-NServiceBus-Endpoint");
+
 
         protected string GetAppSetting(string keyName) => ConfigurationManager.AppSettings[keyName] ?? throw new InvalidOperationException($"{keyName} not found in app settings.");
         protected string GetConnectionString(string name) => ConfigurationManager.ConnectionStrings[name].ConnectionString ?? throw new InvalidOperationException($"{name} not found in connection strings.");

@@ -13,6 +13,7 @@ using Dapper;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
+using NServiceBus;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
@@ -47,6 +48,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected static readonly string FunctionsCliRootPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Azure.Functions.Cli");
         protected static string FunctionsCliPath => Path.Combine(FunctionsCliRootPath, GetAzureFunctionsCliVersion(), "func.exe");
         protected static string FunctionsPath => Directory.Exists(FunctionsToolsRootPath) ? FunctionsToolsPath : FunctionsCliPath;
+        public static IMessageSession MessageSession { get; protected set; }
 
         protected IContainer NestedContainer { get => Get<IContainer>(); set => Set(value); }
         protected IDbConnection Connection => NestedContainer.GetInstance<IDbConnection>();
