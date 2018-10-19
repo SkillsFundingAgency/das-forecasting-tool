@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     {
         [FunctionName("DeletePaymentMessageNoCommitmentFunction")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.RemovePreLoadData)]PreLoadPaymentMessage message,
+            [QueueTrigger(QueueNames.RemovePreLoadDataNoCommitment)]PreLoadPaymentMessage message,
             ExecutionContext executionContext,
             TraceWriter writer)
         {

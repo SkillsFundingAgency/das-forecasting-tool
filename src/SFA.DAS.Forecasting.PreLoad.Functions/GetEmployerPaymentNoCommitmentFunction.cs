@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     public class GetEmployerPaymentNoCommitmentFunction : IFunction
     {
         [FunctionName("GetEmployerPaymentNoCommitmentFunction")]
-        [return: Queue(QueueNames.PreLoadEarningDetailsPayment)]
+        [return: Queue(QueueNames.PreLoadEarningDetailsPaymentNoCommitment)]
         public static async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.PreLoadPaymentNoCommitment)]PreLoadPaymentMessage message,
             ExecutionContext executionContext,

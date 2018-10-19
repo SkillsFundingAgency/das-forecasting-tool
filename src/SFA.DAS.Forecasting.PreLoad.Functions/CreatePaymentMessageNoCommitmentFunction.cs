@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         [FunctionName("CreatePaymentMessageNoCommitmentFunction")]
         [return: Queue(QueueNames.RemovePreLoadDataNoCommitment)]
         public static PreLoadPaymentMessage Run(
-            [QueueTrigger(QueueNames.CreatePaymentMessage)]PreLoadPaymentMessage message,
+            [QueueTrigger(QueueNames.CreatePaymentMessageNoCommitment)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidatorNoCommitment)] ICollector<PaymentCreatedMessage> noCommitmentOutputQueueMessage,
 			ExecutionContext executionContext,
             TraceWriter writer)
