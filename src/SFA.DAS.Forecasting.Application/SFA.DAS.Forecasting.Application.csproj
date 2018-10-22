@@ -223,13 +223,17 @@
     <Compile Include="Infrastructure\Telemetry\ITelemetry.cs" />
     <Compile Include="Infrastructure\Telemetry\TelemetryExtensions.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadAllEmployersRequest.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />
     <Compile Include="Apprenticeship\Messages\RefreshApprenticeshipForAccountMessage.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadLevyMessage.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadLevyRequestMessage.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentMessage.cs" />
+    <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequestMessage.cs" />
     <Compile Include="Payments\Services\DevPaymentsEventsApiClient.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataSession.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
