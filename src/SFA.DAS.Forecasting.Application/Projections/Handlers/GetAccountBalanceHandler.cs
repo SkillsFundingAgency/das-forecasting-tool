@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NLog;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
+using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Messages.Projections;
@@ -17,9 +18,11 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly ILog _logger;
         private readonly ITelemetry _telemetry;
+        private readonly IAccountProjectionService _accountProjectionService;
 
-        public GetAccountBalanceHandler(IAccountBalanceService accountBalanceService, ICurrentBalanceRepository currentBalanceRepository, ILog logger, ITelemetry telemetry)
+        public GetAccountBalanceHandler(IAccountProjectionService accountProjectionService, ICurrentBalanceRepository currentBalanceRepository, ILog logger, ITelemetry telemetry)
         {
+            _accountProjectionService = accountProjectionService;
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
@@ -30,7 +33,12 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             _logger.Debug($"Getting balances for account: {message.EmployerAccountId}");
             _telemetry.AddEmployerAccountId(message.EmployerAccountId);
             var currentBalance = await _currentBalanceRepository.Get(message.EmployerAccountId);
-            if (!await currentBalance.RefreshBalance(true))
+
+            
+            var refreshBalance = await _accountProjectionService.GetOriginalProjectionSource(message.EmployerAccountId,
+                                     message.ProjectionSource) == ProjectionSource.PaymentPeriodEnd ? currentBalance.RefreshBalance(true, true) : currentBalance.RefreshBalance(true);
+
+            if (!await refreshBalance)
             {
                 _telemetry.TrackEvent("Account Balance Already Refreshed");
                 _logger.Warn($"Failed to refresh the account balance for account {message.EmployerAccountId}.  It's possible the account has been refreshed recently.");

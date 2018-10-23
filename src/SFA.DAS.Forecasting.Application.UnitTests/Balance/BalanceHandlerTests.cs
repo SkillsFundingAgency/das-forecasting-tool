@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
             var mockBalance = _moqer.GetMock<CurrentBalance>();
             mockBalance.Setup(x => x.EmployerAccountId).Returns(12345);
             mockBalance.Setup(x => x.Amount).Returns(10000);
-            mockBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>()))
+            mockBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns(Task.FromResult<bool>(true));
             var repo = _moqer.GetMock<ICurrentBalanceRepository>();
             repo.Setup(x => x.Get(It.IsAny<long>()))
@@ -42,13 +42,13 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
             repo.Setup(x => x.Store(It.IsAny<CurrentBalance>())).Returns(Task.CompletedTask);
         }
 
-        private void HandleGenerateAccountBalance()
+        private void HandleGenerateAccountBalance(ProjectionSource projection = ProjectionSource.LevyDeclaration)
         {
             var handler = _moqer.Resolve<GetAccountBalanceHandler>();
             handler.Handle(new GenerateAccountProjectionCommand
             {
                 EmployerAccountId = 12345,
-                ProjectionSource = ProjectionSource.PaymentPeriodEnd,
+                ProjectionSource = projection,
                 StartPeriod = new Messages.Projections.CalendarPeriod { Month = 1, Year = 2018 }
             }).Wait();
 
@@ -59,7 +59,15 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
         {
             HandleGenerateAccountBalance();
             _moqer.GetMock<CurrentBalance>()
-                .Verify(x => x.RefreshBalance(It.IsAny<bool>()), Times.Once());
+                .Verify(x => x.RefreshBalance(It.IsAny<bool>(), It.IsAny<bool>()), Times.Once());
+        }
+
+        [Test]
+        public void Refreshes_Account_Balance_After_Payment()
+        {
+            HandleGenerateAccountBalance(ProjectionSource.PaymentPeriodEnd);
+            _moqer.GetMock<CurrentBalance>()
+                .Verify(x => x.RefreshBalance(true, true), Times.Once());
         }
 
         [Test]
@@ -74,7 +82,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
         public void Does_Not_Store_Account_Balance_If_Refresh_Failed()
         {
             _moqer.GetMock<CurrentBalance>()
-                .Setup(x => x.RefreshBalance(It.IsAny<bool>()))
+                .Setup(x => x.RefreshBalance(It.IsAny<bool>(), It.IsAny<bool>()))
                 .Returns(Task.FromResult<bool>(false));
             HandleGenerateAccountBalance();
             _moqer.GetMock<ICurrentBalanceRepository>()

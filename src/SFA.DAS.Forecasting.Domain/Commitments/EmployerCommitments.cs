@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Models.Commitments;
+using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Models.Projections;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Forecasting.Models.Commitments;
-using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
@@ -28,7 +29,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             _levyFundedCommitments = _employerCommitmentsModel.LevyFundedCommitments.AsReadOnly();
 
             _receivingEmployerTransferCommitments = _employerCommitmentsModel.ReceivingEmployerTransferCommitments.AsReadOnly();
-                
+
             _sendingEmployerTransferCommitments = _employerCommitmentsModel.SendingEmployerTransferCommitments.AsReadOnly();
 
             _coInvestmentCommitments = _employerCommitmentsModel.CoInvestmentCommitments.AsReadOnly();
@@ -57,21 +58,21 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment) + coInvestmentCommitments.Sum(m => m.MonthlyInstallment),
                 TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
                 TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
-				CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
+                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
             };
         }
 
         public virtual CompletionPayments GetTotalCompletionPayments(DateTime date, bool isVirtual = false)
         {
-            bool FilterCurrent(CommitmentModel c) => c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth() 
-                                                     && (!isVirtual || c.FundingSource == FundingSource.Transfer);
+            bool FilterCurrent(CommitmentModel c) =>
+                c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth() && (!isVirtual || c.FundingSource == FundingSource.Transfer );
 
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
             var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
             var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
-	        var coInvestmentCommitments = _coInvestmentCommitments.Where(FilterCurrent).ToList();
-			
-			var includedCommitments = new List<CommitmentModel>();
+            var coInvestmentCommitments = _coInvestmentCommitments.Where(FilterCurrent).ToList();
+
+            var includedCommitments = new List<CommitmentModel>();
             includedCommitments.AddRange(levyFundedCommitments);
             includedCommitments.AddRange(sendingEmployerCommitments);
             includedCommitments.AddRange(receivingEmployerCommitments);
@@ -108,30 +109,30 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             return dateList.OrderByDescending(c => c.Date).FirstOrDefault();
         }
 
-        public virtual decimal GetUnallocatedCompletionAmount()
+        public virtual decimal GetUnallocatedCompletionAmount(bool includeUnpaidCompletionPayments = false)
         {
             var limitEndDate = DateTime.Today.GetStartOfMonth();
-            bool Filter(CommitmentModel commitment) => commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) < limitEndDate;
+            bool Filter(CommitmentModel commitment) => (commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) < limitEndDate || (includeUnpaidCompletionPayments && commitment.ActualEndDate == null && commitment.PlannedEndDate.GetStartOfMonth() == limitEndDate.AddMonths(-1)));
             var levyUnallocatedCompletions = _levyFundedCommitments
-                .Where((Func<CommitmentModel, bool>) Filter)
+                .Where((Func<CommitmentModel, bool>)Filter)
                 .Sum(commitment => commitment.CompletionAmount);
             var senderUnallocatedCompletions = _sendingEmployerTransferCommitments
-                .Where((Func<CommitmentModel, bool>) Filter)
+                .Where((Func<CommitmentModel, bool>)Filter)
                 .Sum(commitment => commitment.CompletionAmount);
             return levyUnallocatedCompletions + senderUnallocatedCompletions;
         }
 
         public bool Any()
         {
-            return _employerCommitmentsModel.LevyFundedCommitments.Any() 
+            return _employerCommitmentsModel.LevyFundedCommitments.Any()
                 || _employerCommitmentsModel.ReceivingEmployerTransferCommitments.Any()
                 || _employerCommitmentsModel.SendingEmployerTransferCommitments.Any();
         }
 
-	    public bool IsSendingEmployer()
-	    {
-		    return _sendingEmployerTransferCommitments.Any();
-	    }
-        
+        public bool IsSendingEmployer()
+        {
+            return _sendingEmployerTransferCommitments.Any();
+        }
+
     }
 }

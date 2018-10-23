@@ -243,6 +243,7 @@
     <Compile Include="Levy\Messages\LevySchemeDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Messages\LevyDeclarationUpdatedMessage.cs" />
     <Compile Include="Levy\Services\LevyDataSession.cs" />
+    <Compile Include="Projections\Services\AccountProjectionService.cs" />
     <Compile Include="Projections\Services\EmployerProjectionAuditService.cs" />
     <Compile Include="Shared\Services\DevHashingService.cs" />
     <Compile Include="Shared\Services\EmployerDatabaseService.cs" />

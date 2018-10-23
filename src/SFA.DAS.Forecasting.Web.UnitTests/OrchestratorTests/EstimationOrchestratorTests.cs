@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 				.Returns(ExpectedAccountId);
 
 			_mocker.GetMock<CurrentBalance>()
-                .Setup(x => x.RefreshBalance(It.IsAny<bool>())).ReturnsAsync(true);
+                .Setup(x => x.RefreshBalance(It.IsAny<bool>(), It.IsAny<bool>())).ReturnsAsync(true);
 
 			_mocker.GetMock<ICurrentBalanceRepository>()
 		        .Setup(x => x.Get(ExpectedAccountId))

@@ -48,8 +48,19 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                     CompletionAmount = 1000,
                     MonthlyInstallment = 80,
                     FundingSource = FundingSource.Levy
+                },
+                new CommitmentModel
+                {
+                    EmployerAccountId = 12345,
+                    PlannedEndDate = DateTime.Today.AddMonths(-1),
+                    StartDate = DateTime.Today.AddMonths(-3),
+                    NumberOfInstallments = 1,
+                    CompletionAmount = 1000,
+                    MonthlyInstallment = 80,
+                    FundingSource = FundingSource.Levy
                 }
-            }}));
+            }
+            }));
             _moqer.SetInstance(_previousAccountBalance);
             _moqer.GetMock<IAccountBalanceService>()
                 .Setup(svc => svc.GetAccountBalance(It.IsAny<long>()))
@@ -113,6 +124,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
 
             Assert.IsTrue(await balance.RefreshBalance(true), "Failed to update the current employer balance.");
             Assert.AreEqual(1000, balance.UnallocatedCompletionPayments);
+        }
+
+        [Test]
+        public async Task Refresh_Balance_Refreshes_unallocated_completion_payments_include_unpaid_when_rebuilding_projection()
+        {
+            var balance = _moqer.Resolve<CurrentBalance>();
+
+            Assert.IsTrue(await balance.RefreshBalance(true,true), "Failed to update the current employer balance.");
+            Assert.AreEqual(2000, balance.UnallocatedCompletionPayments);
         }
 
 

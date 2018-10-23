@@ -31,7 +31,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             EmployerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
         }
 
-        public virtual async Task<bool> RefreshBalance(bool refreshUnallocatedCompletionPayments = false)
+        public virtual async Task<bool> RefreshBalance(bool refreshUnallocatedCompletionPayments = false, bool includeUnpaidCompletionPayments = false)
         {
             if (Period >= DateTime.UtcNow.AddDays(-1))
                 return false;
@@ -46,7 +46,7 @@ namespace SFA.DAS.Forecasting.Domain.Balance
             Model.BalancePeriod = DateTime.UtcNow;
             Model.ReceivedDate = DateTime.UtcNow;
             if (!refreshUnallocatedCompletionPayments) return true;
-            var unallocatedCompletionPayments = EmployerCommitments.GetUnallocatedCompletionAmount();
+            var unallocatedCompletionPayments = EmployerCommitments.GetUnallocatedCompletionAmount(includeUnpaidCompletionPayments);
             Model.UnallocatedCompletionPayments = unallocatedCompletionPayments;
             return true;
         }
