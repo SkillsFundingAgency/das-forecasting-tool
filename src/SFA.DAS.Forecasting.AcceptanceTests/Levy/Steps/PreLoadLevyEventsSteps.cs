@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
     [Binding]
     public class PreLoadLevyEventsSteps : StepsBase
     {
-        private string _hashedEmployerAccountId = "MN4YKL";
+        private const long _employerAccountId = 12345;
 
         [BeforeFeature(Order = 1)]
         public static void StartPreLoadLevyEvent()
@@ -36,11 +36,11 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         {
             ClearDatabase();
             var levyUrl =
-                Config.ApiInsertLevyUrl.Replace("{employerAccountId}", _hashedEmployerAccountId);
+                Config.ApiInsertLevyUrl.Replace("{employerAccountId}", _employerAccountId.ToString());
 
             var client = new HttpClient();
-            var levy = JsonConvert.SerializeObject(GetLevy(_hashedEmployerAccountId));
-            await client.PostAsync(levyUrl, new StringContent(levy));
+            //var levy = JsonConvert.SerializeObject(GetLevy(_employerAccountId));
+            //await client.PostAsync(levyUrl, new StringContent(levy));
             Thread.Sleep(500);
         }
 
@@ -98,7 +98,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Given(@"I trigger function for 3 employers to have their data loaded.")]
         public async Task ITriggerFunction()
         {           
-            var item = "{\"EmployerAccountIds\":[\"" + _hashedEmployerAccountId + "\"],\"PeriodYear\":\"17-18\",\"PeriodMonth\":11}";
+            var item = "{\"EmployerAccountIds\":[\"" + _employerAccountId + "\"],\"PeriodYear\":\"17-18\",\"PeriodMonth\":11}";
             Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
             var client = new HttpClient();
             await client.PostAsync(Config.LevyPreLoadFunctionUrl, new StringContent(item));
@@ -107,7 +107,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
         [Given(@"I trigger PreLoadEvent function for some employers with a substitution id (.*)")]
         public async Task ITriggerFunctionWithSubstitutionId(long substitutionId)
         {
-            var item = "{\"EmployerAccountIds\":[\"" + _hashedEmployerAccountId + "\"],\"PeriodYear\":\"17-18\",\"PeriodMonth\":11, \"SubstitutionId\": " + substitutionId + "}";
+            var item = "{\"EmployerAccountIds\":[\"" + _employerAccountId + "\"],\"PeriodYear\":\"17-18\",\"PeriodMonth\":11, \"SubstitutionId\": " + substitutionId + "}";
 
             Console.WriteLine($"Triggering Levy preload. Uri: {Config.LevyPreLoadFunctionUrl}, payload: {item}");
             var client = new HttpClient();
