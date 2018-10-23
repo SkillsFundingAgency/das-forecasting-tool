@@ -5,7 +5,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Levy.Messages.PreLoad;
-using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
@@ -23,14 +22,18 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                async (container, logger) =>
                {
                    var body = await req.Content.ReadAsStringAsync();
-                   var preLoadRequest = JsonConvert.DeserializeObject<PreLoadLevyRequestMessage>(body);
+                   var preLoadRequest = JsonConvert.DeserializeObject<PreLoadLevyRequest>(body);
 
-                   outputQueueMessage.Add(new PreLoadLevyMessage
+                   foreach (var accountId in preLoadRequest.EmployerAccountIds)
                    {
-                       EmployerAccountId = preLoadRequest.AccountId,
-                       PeriodMonth = preLoadRequest.PeriodMonth,
-                       PeriodYear = preLoadRequest.PeriodYear
-                   });
+                       outputQueueMessage.Add(new PreLoadLevyMessage
+                       {
+                           EmployerAccountId = accountId,
+                           PeriodMonth = preLoadRequest.PeriodMonth,
+                           PeriodYear = preLoadRequest.PeriodYear,
+                           SubstitutionId = preLoadRequest.SubstitutionId
+                       });
+                   }
 
                    var msg = $"Added {nameof(PreLoadLevyMessage)} for levy declaration";
                    logger.Info(msg);
