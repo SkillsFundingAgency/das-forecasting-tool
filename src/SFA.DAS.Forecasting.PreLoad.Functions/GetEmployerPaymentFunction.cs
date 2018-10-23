@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    var employerData = container.GetInstance<IEmployerDatabaseService>();
                    logger.Info($"Storing data for EmployerAcount: {message.EmployerAccountId}");
 
-                   var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
+                   var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodId);
 
                    if (!payments?.Any() ?? false)
                    {

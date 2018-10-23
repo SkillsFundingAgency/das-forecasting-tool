@@ -4,8 +4,9 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Levy.Messages.PreLoad;
+using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -13,9 +14,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     {
         [FunctionName("LevyDeclarationPreLoadHttpFunction")]
         public static async Task<string> Run(
-            [HttpTrigger(AuthorizationLevel.Function,
-            "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.LevyPreLoadRequest)] ICollector<PreLoadRequest> outputQueueMessage,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
+            [Queue(QueueNames.LevyPreLoadRequest)] ICollector<PreLoadLevyMessage> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
@@ -23,11 +23,16 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                async (container, logger) =>
                {
                    var body = await req.Content.ReadAsStringAsync();
-                   var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
+                   var preLoadRequest = JsonConvert.DeserializeObject<PreLoadLevyRequestMessage>(body);
 
-                   outputQueueMessage.Add(preLoadRequest);
+                   outputQueueMessage.Add(new PreLoadLevyMessage
+                   {
+                       EmployerAccountId = preLoadRequest.AccountId,
+                       PeriodMonth = preLoadRequest.PeriodMonth,
+                       PeriodYear = preLoadRequest.PeriodYear
+                   });
 
-                   var msg = $"Added {nameof(PreLoadRequest)} for levy declaration";
+                   var msg = $"Added {nameof(PreLoadLevyMessage)} for levy declaration";
                    logger.Info(msg);
                    return msg;
                });
