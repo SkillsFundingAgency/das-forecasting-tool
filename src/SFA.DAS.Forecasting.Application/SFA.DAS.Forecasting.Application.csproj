@@ -224,6 +224,7 @@
     <Compile Include="Infrastructure\Telemetry\TelemetryExtensions.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
     <Compile Include="Levy\Messages\PreLoad\PreLoadAllEmployersRequest.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadLevyRequest.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />
     <Compile Include="Apprenticeship\Messages\RefreshApprenticeshipForAccountMessage.cs" />
