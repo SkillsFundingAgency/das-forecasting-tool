@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         [FunctionName("LevyPreLoadServiceBusFunction")]
         [return: Queue(QueueNames.LevyPreLoadRequest)]
         public static async Task<PreLoadLevyMessage> Run(
-            [ServiceBusTrigger("LevyPeriod", "Forecasting", AccessRights.Listen)]PreLoadLevyRequestMessage preLoadLevyRequestMessage,
+            [ServiceBusTrigger("levydataimport_completed", "Forecasting", AccessRights.Listen)]PreLoadLevyRequestMessage preLoadLevyRequestMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
