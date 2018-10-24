@@ -77,9 +77,15 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             if (message.CourseLevel <= 0)
                 throw new InvalidOperationException("Apprenticeship requires CourseLevel");
 
+            var commitment = await _repository.Get(message.EmployerAccountId, message.ApprenticeshipId);
             var commitmentModel = _apprenticeshipMapping.MapToCommitment(message);
+            if (!commitment.RegisterCommitment(commitmentModel))
+            {
+                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId} ");
+                return;
+            }
 
-            await _repository.Upsert(commitmentModel);
+            await _repository.Store(commitment);
 
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}");
             _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);

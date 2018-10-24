@@ -123,7 +123,6 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
-            var sql = UpserSqlString();
             var startTime = DateTime.UtcNow;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -153,9 +152,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             }
 
             stopwatch.Stop();
-           
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime,
-        
+
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime, stopwatch.Elapsed, true);
+
         }
 
     }

@@ -80,7 +80,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
         public async Task Then_The_Commtiemtn_Is_Retrieved_From_The_Repository()
         {
             //Act
-            await _handler.Handle(_message);
+            await _handler.Handle(_message, _allowProjectionQueueName);
 
             //Assert
             _employerCommitmentRepostiory.Verify(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId));
@@ -103,11 +103,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             await _handler.Handle(_message, _allowProjectionQueueName);
 
             //Assert
-            _employerCommitmentRepostiory.Verify(x =>
-                x.Store(It.Is<EmployerCommitment>(c => c.EmployerAccountId.Equals(ExpectedEmployerAccountId))));
+            _queueServiceMock.Verify(v => v.SendMessageWithVisibilityDelay(It.Is<PaymentCreatedMessage>(m => m == _message), It.Is<string>(s => s ==_allowProjectionQueueName)));
+            _employerCommitmentRepostiory.Verify(x => x.Store(It.IsAny<EmployerCommitment>()), Times.Once());
         }
 
         [Test]
+        public async Task Then_The_Commitment_Is_Not_Stored_If_The_Registration_Check_Fails()
         {
             //Arrange
             _commitmentModel = new CommitmentModel
@@ -125,14 +126,13 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _employerCommitment = new EmployerCommitment(_commitmentModel);
             _employerCommitmentRepostiory.Setup(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId))
                 .ReturnsAsync(_employerCommitment);
-            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object,
-                _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object);
+            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object, _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object, new Apprenticeship.Mapping.ApprenticeshipMapping(), _queueServiceMock.Object);
 
             //Act
-			await _handler.Handle(_message, _allowProjectionQueueName);
+            await _handler.Handle(_message, _allowProjectionQueueName);
 
             //Assert
-            _queueServiceMock.Verify(v => v.SendMessageWithVisibilityDelay(It.Is<PaymentCreatedMessage>(m => m == _message), It.Is<string>(s => s ==_allowProjectionQueueName)));
+            _queueServiceMock.Verify(v => v.SendMessageWithVisibilityDelay(It.Is<PaymentCreatedMessage>(m => m == _message), It.Is<string>(s => s == _allowProjectionQueueName)), Times.Never);
             _employerCommitmentRepostiory.Verify(x => x.Store(It.IsAny<EmployerCommitment>()), Times.Never());
         }
 
