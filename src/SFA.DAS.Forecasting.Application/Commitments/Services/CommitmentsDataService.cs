@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -26,6 +26,14 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+        }
+        public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
+        {
+            return await _dataContext
+                .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId)
+                .OrderByDescending(commitment => commitment.UpdatedDateTime)
+                .Select(commitment => commitment.UpdatedDateTime)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
@@ -115,6 +123,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
+            var sql = UpserSqlString();
             var startTime = DateTime.UtcNow;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -144,12 +153,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             }
 
             stopwatch.Stop();
-            if (commitment.Id != 0)
-            {
-                _telemetry.AddProperty("Commitment Id", commitment.Id.ToString());
-            }
+           
             _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime,
-                stopwatch.Elapsed, true);
+        
         }
 
     }

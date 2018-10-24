@@ -6,12 +6,14 @@
     ViewBag.Title = "Estimated Cost";
 }
 
+<div id="js-breadcrumbs"></div>
+
 <div class="grid-row">
     <div class="column-two-thirds">
         @if (Model.ApprenticeshipRemoved)
         {
             <div class="success-summary">
-                <h3 class="heading-medium">Apprenticeship Removed</h3>
+                <h3 class="heading-medium">Apprenticeship removed</h3>
             </div>
         }
 
@@ -83,8 +85,8 @@
                 {
                     <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
                 }
-                </ul>
-            
+            </ul>
+
             <div id="account-funds" class="tab-content" style="display: none;">
                 <div class="grid-row">
                     <div class="column-full">
@@ -92,78 +94,80 @@
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
                 </div>
-                
+
                 <div class="grid-row">
                     <div class="column-full" id="AccountFunds-Tables">
-                        
-                            @{
-                                var newFinancialYearAccountFunds = true;
-                                var startDateOfAccountFundsYear = Model.AccountFunds.Records.First().Date;
-                            }
 
-                            @foreach (var accountFund in Model.AccountFunds.Records)
+                        @{
+                            var newFinancialYearAccountFunds = true;
+                            var startDateOfAccountFundsYear = Model.AccountFunds.Records.First().Date;
+                        }
+
+                        @foreach (var accountFund in Model.AccountFunds.Records)
+                        {
+                            var tableRowClass = accountFund.Balance <= 0 ? "error-row" : "";
+                            var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
+
+                            if (newFinancialYearAccountFunds)
                             {
-                                var tableRowClass = accountFund.Balance <=0 ? "error-row" : "";
-                                var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
+                                newFinancialYearAccountFunds = false;
+                                var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
+                                <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
 
-                                if (newFinancialYearAccountFunds)
+                                if (accountFund.Date > new DateTime(2019, 3, 1))
                                 {
-                                    newFinancialYearAccountFunds = false;
-                                    var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
-
-                                    if(accountFund.Date > new DateTime(2019, 3, 1))
-                                    {
-                                        <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-                                        <div class="panel-warning2">
-                                            <span class="icon"></span>
-                                            <p>
-                                                The estimate for the account balance projection does not yet show funds that are due to expire. You need to be aware that unused funds will expire after 24 months, which may affect the funds available to spend.
-                                            </p>
-                                        </div>
-                                    }
-                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-                                    @:<table class="small errorTable">
+                                    <div class="panel-warning2">
+                                        <span class="icon"></span>
+                                        <p>
+                                            The estimate for the account balance projection does not yet show funds that are due to expire. You need to be aware that unused funds will expire after 24 months, which may affect the funds available to spend.
+                                        </p>
+                                    </div>
+                                }
+                                @:<table class="small errorTable responsive">
                                     <thead>
-                                    <tr>
-                                        <th class="nowrap">Date</th>
-                                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that have already started and currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
-                                            Your current costs
-                                            <br />
-                                            <span class="tip-info"><span class="info-title">info</span></span>
-                                        </th>
-                                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool" >Cost of estimated apprenticeships
-                                            <br />
-                                            <span class="tip-info"><span class="info-title">info</span></span>
-                                        </th>
-                                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
-                                            Balance
-                                            <br />
-                                            <span class="tip-info"><span class="info-title">info</span></span>
-                                        </th>
-                                    </tr>
+                                        <tr>
+                                            <th class="nowrap tw-10">Date</th>
+                                            <th class="financial tippy tw-30" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
+                                                Your current costs
+                                                <br />
+                                                <span class="tip-info"><span class="info-title">info</span></span>
+                                            </th>
+                                            <th class="financial tippy tw-35" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
+                                                Cost of estimated apprenticeships
+                                                <br />
+                                                <span class="tip-info"><span class="info-title">info</span></span>
+                                            </th>
+                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                                Balance
+                                                <br />
+                                                <span class="tip-info"><span class="info-title">info</span></span>
+                                            </th>
+                                        </tr>
                                     </thead>
                                     @:<tbody>
 
 
-                                }
 
-                                <tr class="@tableRowClass">
-                                    <td class="nowrap">@accountFund.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                                    <td class="financial">@accountFund.ActualCost.FormatCost()</td>
-                                    <td class="financial">@accountFund.EstimatedCost.FormatCost()</td>
-                                    <td class="financial @tableCellClass">@accountFund.FormattedBalance</td>
-                                </tr>
 
-                                if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
-                                {
-                                    newFinancialYearAccountFunds = true;
-                                    startDateOfAccountFundsYear = accountFund.Date;
+                                    }
+
+                                    <tr class="@tableRowClass">
+                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
+                                        <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
+                                        <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
+                                        <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
+                                    </tr>
+
+                                    if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
+                                    {
+                                        newFinancialYearAccountFunds = true;
+                                        startDateOfAccountFundsYear = accountFund.Date;
                                     @:</tbody>
-                                    @:</table>
-                                }
-                               
+                                @:</table>
                             }
-                            
+
+                        }
+
                     </div>
                 </div>
 
@@ -174,7 +178,7 @@
 
                 @if (Model.TransferAllowances != null)
                 {
-                    var tableBodyClass =Model.CanFund ? "" : "errorTable";
+                    var tableBodyClass = Model.CanFund ? "" : "errorTable";
                     var newFinancialYear = true;
                     var startDateOfEstimationYear = Model.TransferAllowances.First().Date;
 
@@ -193,7 +197,7 @@
                                 <thead>
                                     <tr>
                                         <th class="nowrap">Date</th>
-                                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of transfer funded apprenticeships that have already started and are currently being paid for. Apprenticeships that have not started or been paid for are not included in this column">
+                                        <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that you have agreed to fund with a transfer">
                                             Your current transfer costs
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
@@ -203,7 +207,7 @@
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
                                         </th>
-                                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                        <th class="financial tippy" data-tippy-trigger="click" title="The estimated allowance you have left at the end of the month">
                                             Remaining transfer allowance
                                             <br />
                                             <span class="tip-info"><span class="info-title">info</span></span>
@@ -213,10 +217,12 @@
                                 @:<tbody class="@tableBodyClass">
 
 
+
+
                                 }
 
                                 <tr class="@tableRowClass">
-                                    <td >@costEstimate.Date.ToGdsFormatWithoutDay()</td>
+                                    <td>@costEstimate.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
                                     <td class="financial">@costEstimate.ActualCost.FormatCost()</td>
                                     <td class="financial">@costEstimate.EstimatedCost.FormatCost()</td>
                                     <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
@@ -239,10 +245,10 @@
                             <summary role="button" aria-controls="details-content-0" aria-expanded="false">What does this table show</summary>
                             <div class="panel panel-width-thin" id="details-content-0" aria-hidden="true">
                                 <p class="text">
-                                    The ‘remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
+                                    The ‘Remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
                                 </p>
                                 <p class="text">
-                                    The ‘Actual transfer costs’ column shows the cost of the apprenticeships that you’ve already agreed to fund with your transfer funds.
+                                    The ‘Your current transfer costs’ column shows the cost of the apprenticeships that you’ve already agreed to fund with your transfer funds.
                                 </p>
                             </div>
                         </details>
@@ -275,29 +281,29 @@
 
                         @foreach (var apprenticeship in Model.Apprenticeships.VirtualApprenticeships)
                         {
-                        <tr>
-                            <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
-                            <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
-                            <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatWithoutDay() </td>
-                            <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
-                            <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
-                            <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
-                            <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
-                            <td data-label="Completion payment">@apprenticeship.FundingSourceText </td>
-                            <td>
-                                @Html.RouteLink("Edit", "EditApprenticeships", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, apprenticeshipsId = apprenticeship.Id })
-                            </td>
-                            <td>
-                                @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id })
-                            </td>
-                        </tr>
+                            <tr>
+                                <td data-label="Apprenticeship">@apprenticeship.CourseTitle <span class="form-hint"> @apprenticeship.Level</span></td>
+                                <td data-label="Number of apprentices">@apprenticeship.ApprenticesCount</td>
+                                <td data-label="Start Date">@apprenticeship.StartDate.ToGdsFormatShortMonthAndFullYearWithoutDay() </td>
+                                <td data-label="Total Cost">@apprenticeship.TotalCost.FormatCost() </td>
+                                <td data-label="Number of monthly payments"> @apprenticeship.MonthlyPaymentCount</td>
+                                <td data-label="Monthly payment">@apprenticeship.MonthlyPayment.FormatCost()</td>
+                                <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
+                                <td data-label="Completion payment">@apprenticeship.FundingSourceText </td>
+                                <td>
+                                    @Html.RouteLink("Edit", "EditApprenticeships", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, apprenticeshipsId = apprenticeship.Id })
+                                </td>
+                                <td>
+                                    @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id })
+                                </td>
+                            </tr>
                         }
                     </tbody>
 
 
-                    <tfoot class="total">                      
+                    <tfoot class="total">
                         <tr class="total">
-                            <th scope="row" class="hidden">Totals</th> 
+                            <th scope="row" class="hidden">Totals</th>
                             <td data-label="Number of apprentices">
                                 <span class="bold-xsmall"> @Model.Apprenticeships.TotalApprenticeshipCount </span>
                             </td>
@@ -313,7 +319,7 @@
                             <td class="hidden">Not applicable</td>
                             <td class="hidden">Not applicable</td>
                         </tr>
-                    </tfoot> 
+                    </tfoot>
                 </table>
             </div>
         </div>

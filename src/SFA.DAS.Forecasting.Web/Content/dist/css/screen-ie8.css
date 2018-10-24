@@ -3160,15 +3160,11 @@ table.responsive tr th:first-child, table.responsive tr td:first-child {
   padding-left: 0;
 }
 
-table.responsive tr th:last-child, table.responsive tr td:last-child {
-  padding-right: 0;
-}
-
 table.responsive tr th:before, table.responsive tr td:before {
   display: none;
 }
 
-table.responsive tr th.numeric, table.responsive tr td.numeric {
+table.responsive tr th.numeric, table.responsive tr th.financial, table.responsive tr td.numeric, table.responsive tr td.financial {
   text-align: right;
 }
 
@@ -3184,10 +3180,12 @@ table.responsive tr.total {
   border: none;
 }
 
+table.responsive tr.total th,
 table.responsive tr.total td {
   border-bottom: none;
 }
 
+table.responsive tr.total th.total,
 table.responsive tr.total td.total {
   border-bottom: 2px solid #000;
 }

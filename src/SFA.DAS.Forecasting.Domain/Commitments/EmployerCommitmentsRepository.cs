@@ -8,6 +8,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
     public interface IEmployerCommitmentsRepository
     {
         Task<EmployerCommitments> Get(long employerAccountId);
+        Task<DateTime?> GetLastTimeRecieved(long employerAccountId);
     }
 
     public class EmployerCommitmentsRepository : IEmployerCommitmentsRepository
@@ -26,6 +27,11 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             var commitments = await _dataService.GetCurrentCommitments(employerAccountId);
 
             return new EmployerCommitments(employerAccountId, commitments);
+        }
+
+        public async Task<DateTime?> GetLastTimeRecieved(long employerAccountId)
+        {
+            return await _dataService.GetLastReceivedTime(employerAccountId);
         }
     }
 }

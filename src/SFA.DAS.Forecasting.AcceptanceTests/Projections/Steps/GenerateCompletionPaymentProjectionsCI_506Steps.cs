@@ -3,8 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
+using SFA.DAS.Forecasting.Messages.Projections;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 
@@ -37,22 +39,35 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
         [When(@"the account projection is triggered after a payment run")]
         public void WhenTheAccountProjectionIsGeneratedAfterAPaymentRun()
         {
-            GenerateProjections(Config.EmployerAccountId);
+            GenerateProjections(Config.EmployerAccountId, Config.ProjectionPaymentFunctionUrl, 8);
+        }
+
+        [When(@"the account projection is triggered after a levy run")]
+        public void WhenTheAccountProjectionIsGeneratedAfterALevyRun()
+        {
+            GenerateProjections(Config.EmployerAccountId, Config.ProjectionLevyFunctionUrl,23);
         }
 
         [When(@"the account projection is triggered for (.*) after a payment run")]
         public void WhenTheAccountProjectionIsGeneratedForIdAfterAPaymentRun(long employerId)
         {
-            GenerateProjections(employerId);
+            GenerateProjections(employerId, Config.ProjectionPaymentFunctionUrl,8);
         }
 
-        private void GenerateProjections(long id)
+        private void GenerateProjections(long id, string url, int dayOfMonth)
         {
             DeleteAccountProjections(id);
-            var projectionUrl =
-                Config.ProjectionPaymentFunctionUrl.Replace("{employerAccountId}", id.ToString());
+            var projectionUrl = url.Replace("{employerAccountId}", id.ToString());
             Console.WriteLine($"Sending payment event to payment projection function: {projectionUrl}");
-            var response = HttpClient.PostAsync(projectionUrl, new StringContent("", Encoding.UTF8, "application/json")).Result;
+
+            var calendarPeriod = new CalendarPeriod
+            {
+                Year = DateTime.Today.Year,
+                Month = DateTime.Today.Month,
+                Day = dayOfMonth
+            };
+
+            var response = HttpClient.PostAsync(projectionUrl, new StringContent(JsonConvert.SerializeObject(calendarPeriod), Encoding.UTF8, "application/json")).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 

@@ -106,6 +106,12 @@
     },
     "cosmosDbThroughput": {
       "type": "string"
+    },
+    "CommitmentsBaseUrl": {
+      "type": "string"
+    },
+    "CommitmentsClientToken": {
+      "type": "securestring"
     }
   },
   "variables": {
@@ -268,6 +274,12 @@
           },
           "appServicePlanId": {
             "value": "[reference('app-service-plan-resources-deployment').outputs.ASPResourceId.value]"
+          },
+          "CommitmentsBaseUrl": {
+            "value": "[parameters('CommitmentsBaseUrl')]"
+          },
+          "CommitmentsClientToken": {
+            "value": "[parameters('CommitmentsClientToken')]"
           }
         }
       }

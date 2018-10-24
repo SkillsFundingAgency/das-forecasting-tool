@@ -42,47 +42,45 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             {
                 var levyFundsIn = projectionGenerationType == ProjectionGenerationType.LevyDeclaration && month == startMonth
                         ? 0 : _account.LevyDeclared;
-                var ignoreCostOfTraining = month == startMonth;
+                var ignoreCostOfTraining = month == startMonth; 
+                                           
+                if (IsProjectionTypeLevyBeingRanBeforeLevyRun(periodStart, projectionGenerationType))
+                {
+                    ignoreCostOfTraining = false;
+                    levyFundsIn = _account.LevyDeclared;
+                }
 
                 var projection = CreateProjection(
                     periodStart.AddMonths(month),
                     levyFundsIn,
                     lastBalance, 
                     projectionGenerationType,
-                    ignoreCostOfTraining);
+                    ignoreCostOfTraining,
+                    periodStart.Day);
 
                 _projections.Add(projection);
                 lastBalance = projection.FutureFunds;
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool ignoreCostOfTraining)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool isFirstMonth, int periodStartDay)
         {
 	        var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
 	        var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
 
-			var isSendingEmployer = _employerCommitments.IsSendingEmployer();
+			var currentBalance = GetCurrentBalance(lastBalance,completionPayments.TransferOutCompletionPayment, totalCostOfTraning.TransferOut, isFirstMonth);
 
-			var currentBalance = GetCurrentBalance(lastBalance,
-			    completionPayments.TransferOutCompletionPayment, completionPayments.TransferInCompletionPayment,
-			    totalCostOfTraning.TransferOut, totalCostOfTraning.TransferIn, isSendingEmployer);
-
-			var costOfTraining = totalCostOfTraning.LevyFunded;
-	        var complPayment = completionPayments.LevyFundedCompletionPayment;
-
-	        var transferPayments = !isSendingEmployer
-		        ? totalCostOfTraning.TransferOut + completionPayments.TransferOutCompletionPayment
-		        : 0;
-
-            var trainingCosts = costOfTraining + complPayment + transferPayments;
+            var trainingCosts = totalCostOfTraning.LevyFunded + completionPayments.LevyFundedCompletionPayment;
             
 	        var coInvestmentAmount = GetCoInvestmentAmountBasedOnCurrentBalanceAndTrainingCosts(currentBalance, trainingCosts);
 
-            var moneyOut = ignoreCostOfTraining ? coInvestmentAmount : trainingCosts - coInvestmentAmount;
+            var moneyOut = isFirstMonth ? coInvestmentAmount : trainingCosts - coInvestmentAmount;
 
-            var moneyIn = levyFundsIn + totalCostOfTraning.TransferIn + completionPayments.TransferInCompletionPayment;
+            var moneyIn = isFirstMonth && projectionGenerationType == ProjectionGenerationType.LevyDeclaration ? 0: 
+                levyFundsIn;
 
-			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, ignoreCostOfTraining);
+			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, isFirstMonth, periodStartDay);
+
 
             var projection = new AccountProjectionModel
             {
@@ -108,14 +106,19 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             return projection;
         }
 
-	    public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal completionPaymentsTransferIn, decimal trainingCostTransferOut, decimal trainingCostTransferIn, bool isSendingEmployer)
+        private static bool IsProjectionTypeLevyBeingRanBeforeLevyRun(DateTime periodStart, ProjectionGenerationType projectionGenerationType)
+        {
+            return projectionGenerationType == ProjectionGenerationType.LevyDeclaration && periodStart.Day < 19;
+        }
+
+        public decimal GetCurrentBalance(decimal lastBalance, decimal completionPaymentsTransferOut, decimal trainingCostTransferOut, bool isFirstMonth)
 	    {
-		    if (!isSendingEmployer)
+		    if (!_employerCommitments.IsSendingEmployer() || isFirstMonth)
 		    {
 			    return lastBalance;
 		    }
 
-		    var transferCosts = completionPaymentsTransferOut + trainingCostTransferOut;
+            var transferCosts = completionPaymentsTransferOut + trainingCostTransferOut;
 		    var currentBalance = lastBalance;
 
 		    if (lastBalance > 0)
@@ -142,11 +145,14 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 		    return trainingCosts;
 		}
 
-	    public decimal GetMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal levyFundsIn, ProjectionGenerationType projectionGenerationType, bool isFirstMonth)
+	    public decimal GetMonthEndBalance(decimal currentBalance, decimal moneyOut, decimal levyFundsIn, ProjectionGenerationType projectionGenerationType, bool isFirstMonth, int periodStartDay)
 	    {
 	        if (projectionGenerationType == ProjectionGenerationType.LevyDeclaration && isFirstMonth)
 	        {
-	            return currentBalance;
+	            if (periodStartDay > 19)
+	            {
+	                return currentBalance;
+                }
 	        }
 
 			if (currentBalance > 0 && currentBalance >= moneyOut)

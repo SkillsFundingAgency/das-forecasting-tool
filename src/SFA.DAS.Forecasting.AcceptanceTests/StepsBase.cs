@@ -14,6 +14,7 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.AcceptanceTests.Apprenticeship;
 using SFA.DAS.Forecasting.AcceptanceTests.Infrastructure;
 using SFA.DAS.Forecasting.AcceptanceTests.Levy;
 using SFA.DAS.Forecasting.AcceptanceTests.Payments;
@@ -59,13 +60,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
         protected List<TestPayment> Payments { get => Get<List<TestPayment>>(); set => Set(value); }
         protected PayrollPeriod PayrollPeriod { get => Get<PayrollPeriod>(); set => Set(value); }
         protected List<LevySubmission> LevySubmissions { get => Get<List<LevySubmission>>(); set => Set(value); }
+        protected List<TestApprenticeship> TestApprenticeships { get => Get<List<TestApprenticeship>>(); set => Set(value); }
+
         protected List<TestCommitment> Commitments { get => Get<List<TestCommitment>>(); set => Set(value); }
         protected List<AccountProjectionModel> AccountProjections { get => Get<List<AccountProjectionModel>>(); set => Set(value); }
         protected List<Models.Payments.PaymentModel> RecordedPayments { get => Get<List<Models.Payments.PaymentModel>>(); set => Set(value); }
         protected List<Models.Commitments.CommitmentModel> RecordedCommitments { get => Get<List<Models.Commitments.CommitmentModel>>(); set => Set(value); }
-        protected CalendarPeriod ProjectionsStartPeriod
+        protected Messages.Projections.CalendarPeriod ProjectionsStartPeriod
         {
-            get => Get<CalendarPeriod>("projections_start_period");
+            get => Get<Messages.Projections.CalendarPeriod>("projections_start_period");
             set => Set(value, "projections_start_period");
         }
         protected decimal Balance
@@ -308,7 +311,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     CompletionAmount = commitment.CompletionAmount,
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
-                    FundingSource = GetFundingSource(commitment)
+                    FundingSource = GetFundingSource(commitment),
+                    UpdatedDateTime = DateTime.UtcNow
                 };
                 var commitmentRepo = CommitmentsDataService.Get(commitmentModel.EmployerAccountId, commitmentModel.ApprenticeshipId).Result ??
                                      new CommitmentModel();

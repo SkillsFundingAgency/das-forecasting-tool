@@ -134,6 +134,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Apprenticeship\Feature\LoadApprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>LoadApprenticeships.feature.cs</LastGenOutput>
+    </None>
+    <Compile Include="Apprenticeship\Feature\LoadApprenticeships.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoadApprenticeships.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Apprenticeship\Steps\ApprenticeshipsSteps.cs" />
+    <Compile Include="Apprenticeship\TestApprenticeship.cs" />
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="CommitmentType.cs" />
     <Compile Include="Extensions.cs" />
@@ -162,15 +173,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
     </Compile>
-    <Compile Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs">
+    <Compile Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs">
+      <DependentUpon>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Projections For Employers With Levy Funded And Transfer Funded Commitments.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Projections_for_non_paid_Apprenticeships.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Feature\Generate Training Cost Projections.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Generate Training Cost Projections.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Projections\Feature\ProjectionsTransfer.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProjectionsTransfer.feature</DependentUpon>
     </Compile>
     <Compile Include="Projections\Steps\CalculateCo_InvestmentAmountsCI_570Steps.cs" />
     <Compile Include="Projections\Steps\CoInvestmentFundedPayments.cs" />
@@ -216,18 +237,12 @@
     <Compile Include="TableStorageService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <TransformOnBuild>true</TransformOnBuild>
+    <Content Include="App.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="App.Debug.config">
+    </Content>
+    <Content Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
-      <IsTransformFile>True</IsTransformFile>
-    </None>
-    <None Include="App.Release.config">
-      <DependentUpon>App.config</DependentUpon>
-      <IsTransformFile>True</IsTransformFile>
-    </None>
+    </Content>
     <None Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>BuildProjectionsFromLevyDeclarations.feature.cs</LastGenOutput>
@@ -257,9 +272,13 @@
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
     </None>
-    <None Include="Projections\Feature\Projections For Employers With Levy Funded And Transfer Funded Commitments.feature">
+    <None Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Projections For Employers With Levy Funded And Transfer Funded Commitments.feature.cs</LastGenOutput>
+      <LastGenOutput>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>Projections_for_non_paid_Apprenticeships.feature.cs</LastGenOutput>
     </None>
     <None Include="Projections\Feature\Generate Levy Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
@@ -272,6 +291,10 @@
     <None Include="Projections\Feature\Generate Training Cost Projections.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Generate Training Cost Projections.feature.cs</LastGenOutput>
+    </None>
+    <None Include="Projections\Feature\ProjectionsTransfer.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ProjectionsTransfer.feature.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -306,6 +329,18 @@
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" />
+  <Target Name="AfterCompile" Condition="exists('App.$(Configuration).config')">
+    <!-- Generate transformed app config in the intermediate directory -->
+    <TransformXml Source="App.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="App.$(Configuration).config" />
+    <!-- Force build process to use the transformed configuration file from now on. -->
+    <ItemGroup>
+      <AppConfigWithTargetPath Remove="App.config" />
+      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
+        <TargetPath>$(TargetFileName).config</TargetPath>
+      </AppConfigWithTargetPath>
+    </ItemGroup>
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
