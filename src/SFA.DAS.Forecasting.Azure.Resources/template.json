@@ -112,6 +112,9 @@
     },
     "CommitmentsClientToken": {
       "type": "securestring"
+    },
+    "AzureWebJobsServiceBus": {
+      "type": "securestring"
     }
   },
   "variables": {
@@ -280,6 +283,9 @@
           },
           "CommitmentsClientToken": {
             "value": "[parameters('CommitmentsClientToken')]"
+          },
+          "AzureWebJobsServiceBus": {
+            "value": "[parameters('AzureWebJobsServiceBus')]"
           }
         }
       }

@@ -37,6 +37,9 @@
     },
     "CommitmentsClientToken": {
       "type": "securestring"
+    },
+    "AzureWebJobsServiceBus": {
+      "type": "securestring"
     }
   },
   "resources": [
@@ -108,6 +111,10 @@
             {
               "name": "Commitments-ClientToken",
               "value": "[parameters('CommitmentsClientToken')]"
+            },
+            {
+              "name": "AzureWebJobsServiceBus",
+              "value": "[parameters('AzureWebJobsServiceBus')]"
             }
           ],
           "alwaysOn": true
