@@ -67,7 +67,7 @@
             public string ProviderRef { get; set; }
             public bool CanBeApproved { get; set; }
             public Originator? PendingUpdateOriginator { get; set; }
-            public string ProviderName { get; set; }
+            public string ProviderName { get; set; } = "Test Provider";
             public string LegalEntityId { get; set; }
             public string LegalEntityName { get; set; }
             public bool DataLockPrice { get; set; } = false;

@@ -57,7 +57,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.PlannedEndDate != Commitment.PlannedEndDate
                     || model.MonthlyInstallment != Commitment.MonthlyInstallment
                     || model.CompletionAmount != Commitment.CompletionAmount
-                    || model.NumberOfInstallments != Commitment.NumberOfInstallments))
+                    || model.NumberOfInstallments != Commitment.NumberOfInstallments
+                    || model.HasHadPayment != Commitment.HasHadPayment))
             {
                 Commitment.ActualEndDate = model.ActualEndDate;
                 Commitment.ApprenticeName = model.ApprenticeName;
@@ -67,6 +68,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 Commitment.MonthlyInstallment = model.MonthlyInstallment;
                 Commitment.CompletionAmount = model.CompletionAmount;
                 Commitment.NumberOfInstallments = model.NumberOfInstallments;
+                Commitment.UpdatedDateTime = model.UpdatedDateTime;
+                Commitment.HasHadPayment = model.HasHadPayment;
                 return true;
             }
 
