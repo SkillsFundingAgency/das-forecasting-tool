@@ -91,7 +91,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.SendingEmployerAccountId = model.SendingEmployerAccountId;
             Commitment.FundingSource = model.FundingSource;
             Commitment.EmployerAccountId = model.EmployerAccountId;
-
+            Commitment.UpdatedDateTime = model.UpdatedDateTime;
+            Commitment.HasHadPayment = model.HasHadPayment;
             return true;
         }
     }
