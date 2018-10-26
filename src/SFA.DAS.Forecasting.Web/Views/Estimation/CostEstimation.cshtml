@@ -137,6 +137,11 @@
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
                                             </th>
+                                            <th class="financial tippy tw-35" data-tippy-trigger="click" title="???">
+                                                Expired Funds
+                                                <br />
+                                                <span class="tip-info"><span class="info-title">info</span></span>
+                                            </th>
                                             <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
                                                 Balance
                                                 <br />
@@ -151,12 +156,13 @@
 
                                     }
 
-                                    <tr class="@tableRowClass">
-                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
-                                        <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
-                                        <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
-                                        <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
-                                    </tr>
+                                          <tr class="@tableRowClass">
+                                              <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
+                                              <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
+                                              <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
+                                              <td class="financial" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
+                                              <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
+                                          </tr>
 
                                     if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
                                     {

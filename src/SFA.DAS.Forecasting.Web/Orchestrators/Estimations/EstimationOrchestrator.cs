@@ -117,7 +117,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 ActualCost = estimation.ActualCosts.FundsOut,
                 EstimatedCost = estimation.AllModelledCosts.FundsOut,
                 ExpiredFunds =  estimation.AllModelledCosts.ExpiredFunds,
-                Balance = estimation.EstimatedProjectionBalance - estimation.AllModelledCosts.ExpiredFunds,
+                Balance = estimation.EstimatedProjectionBalance,
                 FormattedBalance = estimation.EstimatedProjectionBalance > 0 ? estimation.EstimatedProjectionBalance.FormatCost() : "-"
             });
 
