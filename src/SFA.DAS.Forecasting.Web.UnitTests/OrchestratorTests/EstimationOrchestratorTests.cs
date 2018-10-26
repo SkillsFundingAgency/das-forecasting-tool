@@ -1,25 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMoq;
+﻿using AutoMoq;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
+using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.HashingService;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 {
     public class EstimationOrchestratorTests
     {
         private EstimationOrchestrator _orchestrator;
-	    private AutoMoqer _mocker;
-	    private IAccountEstimationProjection _accountEstimationProjection;
-		private const long ExpectedAccountId = 654311;
+        private AutoMoqer _mocker;
+        private IAccountEstimationProjection _accountEstimationProjection;
+        private const long ExpectedAccountId = 654311;
         private DateTime _dateFrom = DateTime.Now.AddYears(1);
 
         [SetUp]
@@ -27,27 +29,27 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         {
             _mocker = new AutoMoqer();
 
-			_mocker.GetMock<IHashingService>()
-				.Setup(x => x.DecodeValue(It.IsAny<string>()))
-				.Returns(ExpectedAccountId);
+            _mocker.GetMock<IHashingService>()
+                .Setup(x => x.DecodeValue(It.IsAny<string>()))
+                .Returns(ExpectedAccountId);
 
-			_mocker.GetMock<CurrentBalance>()
+            _mocker.GetMock<CurrentBalance>()
                 .Setup(x => x.RefreshBalance(It.IsAny<bool>())).ReturnsAsync(true);
 
-			_mocker.GetMock<ICurrentBalanceRepository>()
-		        .Setup(x => x.Get(ExpectedAccountId))
-		        .ReturnsAsync(_mocker.Resolve<CurrentBalance>());
+            _mocker.GetMock<ICurrentBalanceRepository>()
+                .Setup(x => x.Get(ExpectedAccountId))
+                .ReturnsAsync(_mocker.Resolve<CurrentBalance>());
 
-			_mocker.GetMock<IAccountEstimationProjection>()
-		        .Setup(x => x.Projections)
-		        .Returns((new List<AccountEstimationProjectionModel>()).AsReadOnly);
-	        _accountEstimationProjection = _mocker.Resolve<IAccountEstimationProjection>();
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns((new List<AccountEstimationProjectionModel>()).AsReadOnly);
+            _accountEstimationProjection = _mocker.Resolve<IAccountEstimationProjection>();
 
-	        _mocker.GetMock<IAccountEstimationProjectionRepository>()
-		        .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
-		        .ReturnsAsync(_accountEstimationProjection);
+            _mocker.GetMock<IAccountEstimationProjectionRepository>()
+                .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+                .ReturnsAsync(_accountEstimationProjection);
 
-			_orchestrator = _mocker.Resolve<EstimationOrchestrator>();
+            _orchestrator = _mocker.Resolve<EstimationOrchestrator>();
         }
 
         [TestCase(100, 100, 100, 100)]
@@ -66,15 +68,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 new AccountEstimationProjectionModel
                 {
                     Year = (short) _dateFrom.Year,
-                    Month = (short) _dateFrom .Month,
+                    Month = (short) _dateFrom.Month,
                     ActualCosts = new AccountEstimationProjectionModel.Cost
                     {
-                        TransferOutCostOfTraining =  50,
+                        TransferOutCostOfTraining = 50,
                         TransferOutCompletionPayments = 50,
                     },
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
-                        TransferOutCostOfTraining =  50,
+                        TransferOutCostOfTraining = 50,
                         TransferOutCompletionPayments = 50,
                     }
                 },
@@ -84,25 +86,27 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Month = (short) _dateFrom.AddMonths(1).Month,
                     ActualCosts = new AccountEstimationProjectionModel.Cost
                     {
-                        TransferOutCostOfTraining =  actualTotalCostOfTraining,
+                        TransferOutCostOfTraining = actualTotalCostOfTraining,
                         TransferOutCompletionPayments = actualCommittedCompletionPayments,
                     },
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
-                        TransferOutCostOfTraining =  transferOutTotalCostOfTraining,
+                        TransferOutCostOfTraining = transferOutTotalCostOfTraining,
                         TransferOutCompletionPayments = transferOutCompletionPayment,
                     }
                 }
             };
 
-			_mocker.GetMock<IAccountEstimationProjection>()
-				.Setup(x => x.Projections)
-				.Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.First().ActualCost);
-            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.First().EstimatedCost);
+            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments,
+                actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment,
+                actual.TransferAllowances.First().EstimatedCost);
         }
 
         [Test]
@@ -118,7 +122,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     {
                         LevyCostOfTraining = 50M,
                         LevyCompletionPayments = 50M,
-                        TransferOutCostOfTraining =  25m,
+                        TransferOutCostOfTraining = 25m,
                         TransferOutCompletionPayments = 25m
                     }
                 },
@@ -130,19 +134,19 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     {
                         LevyCostOfTraining = 100m,
                         LevyCompletionPayments = 100m,
-                        TransferOutCostOfTraining =  50m,
+                        TransferOutCostOfTraining = 50m,
                         TransferOutCompletionPayments = 50m
                     }
                 }
             };
 
-			_mocker.GetMock<IAccountEstimationProjection>()
-				.Setup(x => x.Projections)
-				.Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(100m,actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(100m, actual.TransferAllowances.First().ActualCost);
 
         }
 
@@ -159,21 +163,21 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     {
                         LevyCostOfTraining = 50m,
                         LevyCompletionPayments = 50m,
-                        TransferOutCostOfTraining =  25M,
+                        TransferOutCostOfTraining = 25M,
                         TransferOutCompletionPayments = 25M
                     },
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 200M,
                         LevyCompletionPayments = 200M,
-                        TransferOutCostOfTraining =  20M,
+                        TransferOutCostOfTraining = 20M,
                         TransferOutCompletionPayments = 20m
                     },
                     AllModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 400m,
                         LevyCompletionPayments = 400m,
-                        TransferOutCostOfTraining =  40m,
+                        TransferOutCostOfTraining = 40m,
                         TransferOutCompletionPayments = 40m
                     }
                 },
@@ -185,21 +189,21 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     {
                         LevyCostOfTraining = 100m,
                         LevyCompletionPayments = 100m,
-                        TransferOutCostOfTraining =  50m,
+                        TransferOutCostOfTraining = 50m,
                         TransferOutCompletionPayments = 50m
                     },
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 400m,
                         LevyCompletionPayments = 400m,
-                        TransferOutCostOfTraining =  40m,
+                        TransferOutCostOfTraining = 40m,
                         TransferOutCompletionPayments = 40m
                     },
                     AllModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 800m,
                         LevyCompletionPayments = 800m,
-                        TransferOutCostOfTraining =  80m,
+                        TransferOutCostOfTraining = 80m,
                         TransferOutCompletionPayments = 80m
                     }
                 }
@@ -232,21 +236,21 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     {
                         LevyCostOfTraining = 50m,
                         LevyCompletionPayments = 50m,
-                        TransferOutCostOfTraining =  25M,
+                        TransferOutCostOfTraining = 25M,
                         TransferOutCompletionPayments = 25M
                     },
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 200M,
                         LevyCompletionPayments = 200M,
-                        TransferOutCostOfTraining =  20M,
+                        TransferOutCostOfTraining = 20M,
                         TransferOutCompletionPayments = 20m
                     },
                     AllModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 400m,
                         LevyCompletionPayments = 400m,
-                        TransferOutCostOfTraining =  40m,
+                        TransferOutCostOfTraining = 40m,
                         TransferOutCompletionPayments = 40m
                     }
                 },
@@ -258,21 +262,21 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     {
                         LevyCostOfTraining = 100m,
                         LevyCompletionPayments = 100m,
-                        TransferOutCostOfTraining =  50m,
+                        TransferOutCostOfTraining = 50m,
                         TransferOutCompletionPayments = 50m
                     },
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 400m,
                         LevyCompletionPayments = 400m,
-                        TransferOutCostOfTraining =  40m,
+                        TransferOutCostOfTraining = 40m,
                         TransferOutCompletionPayments = 40m
                     },
                     AllModelledCosts = new AccountEstimationProjectionModel.Cost
                     {
                         LevyCostOfTraining = 800m,
                         LevyCompletionPayments = 800m,
-                        TransferOutCostOfTraining =  80m,
+                        TransferOutCostOfTraining = 80m,
                         TransferOutCompletionPayments = 80m
                     }
                 }
@@ -300,7 +304,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Year = (short) _dateFrom.Year,
                     Month = (short) _dateFrom.Month,
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
-                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 50},
                     AvailableTransferFundsBalance = -100
                 },
                 new AccountEstimationProjectionModel
@@ -308,14 +312,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Year = (short) _dateFrom.AddMonths(1).Year,
                     Month = (short) _dateFrom.AddMonths(1).Month,
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
-                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 50},
                     AvailableTransferFundsBalance = -100
                 }
             };
 
-			_mocker.GetMock<IAccountEstimationProjection>()
-				.Setup(x => x.Projections)
-				.Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
@@ -332,7 +336,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Year = (short) _dateFrom.Year,
                     Month = (short) _dateFrom.Month,
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 30},
-                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 25},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 25},
                     AvailableTransferFundsBalance = 50
                 },
                 new AccountEstimationProjectionModel
@@ -340,14 +344,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Year = (short) _dateFrom.Year,
                     Month = (short) _dateFrom.Month,
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
-                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 50},
                     AvailableTransferFundsBalance = 100
                 }
             };
 
-			_mocker.GetMock<IAccountEstimationProjection>()
-				.Setup(x => x.Projections)
-				.Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
@@ -364,7 +368,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Year = (short) _dateFrom.Year,
                     Month = (short) _dateFrom.Month,
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 30},
-                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 25},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 25},
                     AvailableTransferFundsBalance = 0
                 },
                 new AccountEstimationProjectionModel
@@ -372,14 +376,14 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                     Year = (short) _dateFrom.AddMonths(1).Year,
                     Month = (short) _dateFrom.AddMonths(1).Month,
                     TransferModelledCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 60},
-                    ActualCosts = new AccountEstimationProjectionModel.Cost{ TransferOutCostOfTraining = 50},
+                    ActualCosts = new AccountEstimationProjectionModel.Cost {TransferOutCostOfTraining = 50},
                     AvailableTransferFundsBalance = 0
                 }
             };
 
-			_mocker.GetMock<IAccountEstimationProjection>()
-				.Setup(x => x.Projections)
-				.Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
@@ -438,6 +442,86 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             Assert.AreEqual("-", actual.AccountFunds.Records[1].FormattedBalance);
             Assert.AreEqual("-", actual.AccountFunds.Records[2].FormattedBalance);
             Assert.AreEqual("-", actual.AccountFunds.Records[3].FormattedBalance);
+        }
+
+        [Test]
+        public async Task Then_ExpiredFunds_Are_Calculated()
+        {
+
+            var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>()
+            {
+                new AccountEstimationProjectionModel()
+                {
+                    Month = 1,
+                    Year = 2018,
+                    EstimatedProjectionBalance = 100,
+                    FundsIn = 1000,
+                    ActualCosts = new AccountEstimationProjectionModel.Cost()
+                    {
+                        LevyCompletionPayments = 0,
+                        LevyCostOfTraining = 800
+                    },
+                    AllModelledCosts = new AccountEstimationProjectionModel.Cost()
+                    {
+                        LevyCostOfTraining = 100,
+                        LevyCompletionPayments = 0
+                    }
+                },
+                new AccountEstimationProjectionModel()
+                {
+                    Month = 2,
+                    Year = 2018,
+                    EstimatedProjectionBalance = 400,
+                    FundsIn = 1000,
+                    ActualCosts = new AccountEstimationProjectionModel.Cost()
+                    {
+                        LevyCompletionPayments = 0,
+                        LevyCostOfTraining = 500
+                    },
+                    AllModelledCosts = new AccountEstimationProjectionModel.Cost()
+                    {
+                        LevyCostOfTraining = 200,
+                        LevyCompletionPayments = 0
+                    }
+                },
+                new AccountEstimationProjectionModel()
+                {
+                    Month = 3,
+                    Year = 2018,
+                    EstimatedProjectionBalance = -1700,
+                    FundsIn = 1000,
+                    ActualCosts = new AccountEstimationProjectionModel.Cost()
+                    {
+                        LevyCompletionPayments = 1000,
+                        LevyCostOfTraining = 800
+                    },
+                    AllModelledCosts = new AccountEstimationProjectionModel.Cost()
+                    {
+                        LevyCostOfTraining = 300,
+                        LevyCompletionPayments = 1000
+                    }
+                },
+            };
+
+            var expiredFunds = new Dictionary<CalendarPeriod, decimal>()
+            {
+                { new CalendarPeriod(2018,2),100m}
+            };
+
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.Projections)
+                .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
+
+            _mocker.GetMock<IExpiredFundsService>()
+                .Setup(s => s.GetExpiringFunds(It.IsAny<ReadOnlyCollection<AccountEstimationProjectionModel>>(),
+                                               It.IsAny<long>()))
+                                .ReturnsAsync(expiredFunds);
+
+            var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
+
+
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Verify(v => v.ApplyExpiredFunds(expiredFunds),Times.Once);
         }
     }
 }

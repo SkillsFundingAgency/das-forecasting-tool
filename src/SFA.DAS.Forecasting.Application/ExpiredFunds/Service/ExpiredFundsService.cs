@@ -3,12 +3,14 @@ using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
 using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Models.Projections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
+using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 {
@@ -18,6 +20,8 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 
         Dictionary<CalendarPeriod, decimal> GetExpiringFunds(IList<AccountProjectionModel> projections,
             IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals);
+
+        Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, long employerAccountId);
     }
     public class ExpiredFundsService : IExpiredFundsService
     {
@@ -53,6 +57,40 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             return _expiredFunds.GetExpiringFunds(fundsIn, fundsOut,null,24);
         }
 
+        public Dictionary<CalendarPeriod, decimal> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals)
+        {
+            var previousLevyTotals =
+                levyPeriodTotals.ToDictionary(k => new CalendarPeriod(k.CalendarYear, k.CalendarMonth),
+                    v => v.TotalNetLevyDeclared);
+
+
+            var fundsIn = estimationProjectorProjections.ToDictionary(d => new CalendarPeriod(d.Year, d.Month), v => v.FundsIn);
+
+            var fundsOut = estimationProjectorProjections.ToDictionary(d => new CalendarPeriod(d.Year, d.Month),
+                v => v.AllModelledCosts.LevyCostOfTraining + v.AllModelledCosts.LevyCompletionPayments + v.ActualCosts.LevyCostOfTraining + v.ActualCosts.LevyCompletionPayments);
+
+            fundsIn = fundsIn.Concat(previousLevyTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
+
+            fundsOut = fundsOut.Concat(paymentsTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
+
+            return _expiredFunds.GetExpiringFunds(fundsIn, fundsOut, null, 24);
+        }
+
+        public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, long employerAccountId)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var netLevyTotal = await _levyDataSession.GetAllNetTotals(employerAccountId);
+            var paymentsTotal = await _employerPaymentDataSession.GetPaymentTotals(employerAccountId);
+            var expiringFunds = GetExpiringFunds(estimationProjectorProjections, netLevyTotal, paymentsTotal);
+
+            stopwatch.Stop();
+            _telemetry.TrackDuration("GenerateEstimatedExpiringFunds", stopwatch.Elapsed);
+
+            return expiringFunds;
+        }
+
         public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projectionModels, long employerAccountId)
         {
             
@@ -69,5 +107,6 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             return expiringFunds;
         }
 
+       
     }
 }

@@ -1,5 +1,4 @@
-﻿using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.Forecasting.Models.Projections;
+﻿using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Models.Estimation
 {
@@ -15,8 +14,9 @@ namespace SFA.DAS.Forecasting.Models.Estimation
             public decimal TransferOutCompletionPayments { get; set; }
             public decimal TransferFundsIn => TransferInCostOfTraining + TransferInCompletionPayments;
             public decimal TransferFundsOut => TransferOutCostOfTraining + TransferOutCompletionPayments;
+            public decimal ExpiredFunds { get; set; }
             public decimal FundsOut => LevyCostOfTraining + LevyCompletionPayments + TransferOutCostOfTraining +
-                                       TransferOutCompletionPayments - TransferInCostOfTraining - TransferInCompletionPayments;
+                                           TransferOutCompletionPayments - TransferInCostOfTraining - TransferInCompletionPayments;
         }
 
         public short Month { get; set; }
@@ -35,6 +35,7 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public ProjectionGenerationType ProjectionGenerationType { get; set; }
         public decimal AvailableTransferFundsBalance { get; set; }
         public decimal EstimatedProjectionBalance { get; set; }
+        public decimal FundsIn { get; set; }
         public Cost AllModelledCosts { get; set; }
     }
 }
