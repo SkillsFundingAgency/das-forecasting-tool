@@ -49,6 +49,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
                 .ReturnsAsync(_accountEstimationProjection);
 
+            _mocker.GetMock<IExpiredFundsService>()
+                .Setup(s => s.GetExpiringFunds(It.IsAny<ReadOnlyCollection<AccountEstimationProjectionModel>>(),
+                    It.IsAny<long>())).ReturnsAsync(new Dictionary<CalendarPeriod, decimal>());
+
             _orchestrator = _mocker.Resolve<EstimationOrchestrator>();
         }
 
