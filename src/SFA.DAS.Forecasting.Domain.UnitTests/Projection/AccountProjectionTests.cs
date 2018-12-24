@@ -114,7 +114,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Includes_Installments()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
 
             accountProjection.Projections.First().FutureFunds
                 .ShouldBeEquivalentTo(_account.Balance, because: "First month should be the same as current balance");
@@ -129,7 +129,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 7);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 7);
 
             accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(0);
             accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
@@ -296,7 +296,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
             //Act
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018,10,20), 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
