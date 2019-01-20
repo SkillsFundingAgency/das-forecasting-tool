@@ -34,8 +34,8 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
             return new Models.Balance.BalanceModel
             {
                 EmployerAccountId = accountId,
-                RemainingTransferBalance = account.TransferAllowance,
-                TransferAllowance = account.TransferAllowance,
+                RemainingTransferBalance = account.RemainingTransferAllowance,
+                TransferAllowance = account.StartingTransferAllowance,
                 Amount = account.Balance
             };
         }

@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     {
         ReadOnlyCollection<AccountEstimationProjectionModel> Projections { get; }
         decimal MonthlyInstallmentAmount { get; }
-
+        decimal TransferAllowance { get; set; }
         void BuildProjections();
     }
 
