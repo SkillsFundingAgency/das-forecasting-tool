@@ -50,7 +50,8 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 
             fundsOut = fundsOut.Concat(paymentsTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
 
-            return _expiredFunds.GetExpiringFunds(fundsIn, fundsOut,null,24);
+            var expiringFunds = _expiredFunds.GetExpiringFunds(fundsIn, fundsOut,null,24);
+            return (Dictionary<CalendarPeriod, decimal>) expiringFunds;
         }
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projectionModels, long employerAccountId)
