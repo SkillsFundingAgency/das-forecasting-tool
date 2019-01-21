@@ -51,10 +51,10 @@
       <HintPath>..\packages\NLog.4.4.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EmployerFinance.Domain, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerFinance.Domain.0.2.1\lib\netstandard2.0\SFA.DAS.EmployerFinance.Domain.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.EmployerFinance.Domain.0.2.3\lib\netstandard2.0\SFA.DAS.EmployerFinance.Domain.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EmployerFinance.ExpiredFunds, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerFinance.ExpiredFunds.0.2.1\lib\netstandard2.0\SFA.DAS.EmployerFinance.ExpiredFunds.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.EmployerFinance.ExpiredFunds.0.2.3\lib\netstandard2.0\SFA.DAS.EmployerFinance.ExpiredFunds.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
