@@ -88,20 +88,19 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 parameters.Add("@payrollYear", payrollYear, DbType.String);
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
                 var sql = @"Select 
-	                    ldt.Id,
 	                    ldt.AccountId,
 	                    ldt.EmpRef,
-	                    ldt.CreatedDate,
-	                    ldt.SubmissionDate,
-	                    ldt.SubmissionId,
+	                    max(ldt.CreatedDate) CreatedDate,
+	                    max(ldt.SubmissionDate) SubmissionDate,
 	                    ldt.PayrollYear,
 	                    ldt.PayrollMonth,
-	                    tl.Amount
+	                    sum(tl.Amount) Amount
                         from [employer_financial].[TransactionLine] tl
                         join [employer_financial].LevyDeclaration ldt on tl.SubmissionId = ldt.SubmissionId
 	                    where tl.AccountId = @accountId 
 	                    and ldt.PayrollMonth = @payrollMonth
-	                    and ldt.PayrollYear = @payrollYear";
+	                    and ldt.PayrollYear = @payrollYear
+                        Group by ldt.EmpRef,ldt.AccountId,ldt.PayrollYear, ldt.PayrollMonth";
                 return await c.QueryAsync<LevyDeclaration>(
                     sql,
                     parameters,
