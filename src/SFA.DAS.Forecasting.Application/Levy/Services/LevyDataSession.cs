@@ -87,8 +87,8 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
         {
             return _dataContext.LevyDeclarations
                 .Where(wherePredicate)
-                .GroupBy(g => new { g.EmployerAccountId, g.PayrollYear, g.PayrollMonth }).ToList()
-                .Select(s => new LevyPeriod(s.Key.EmployerAccountId, s.Key.PayrollYear, s.Key.PayrollMonth,s.Max(v => v.PayrollDate), s.Sum(v => v.LevyAmountDeclared), s.Max(v => v.DateReceived)));
+                .GroupBy(g => new { g.EmployerAccountId, g.TransactionDate.Year, g.TransactionDate.Month }).ToList()
+                .Select(s => new LevyPeriod(s.Key.EmployerAccountId, s.Key.Year.ToString(), (byte)s.Key.Month,s.Max(v => v.PayrollDate), s.Sum(v => v.LevyAmountDeclared), s.Max(v => v.DateReceived)));
         }
 
 
