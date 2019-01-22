@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CalendarPeriod = SFA.DAS.EmployerFinance.Domain.ExpiredFunds.CalendarPeriod;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {

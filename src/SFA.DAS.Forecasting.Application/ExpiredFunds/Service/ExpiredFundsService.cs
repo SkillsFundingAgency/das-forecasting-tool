@@ -1,5 +1,5 @@
 ﻿using System;
-using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Models.Projections;
 using System.Collections.Generic;

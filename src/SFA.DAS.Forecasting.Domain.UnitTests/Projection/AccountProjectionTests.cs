@@ -4,7 +4,7 @@ using System.Linq;
 using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Projections;

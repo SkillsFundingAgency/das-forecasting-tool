@@ -131,11 +131,8 @@
     <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.3.1331\lib\net45\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.EmployerFinance.Domain, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerFinance.Domain.0.2.3\lib\netstandard2.0\SFA.DAS.EmployerFinance.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.EmployerFinance.ExpiredFunds, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerFinance.ExpiredFunds.0.2.3\lib\netstandard2.0\SFA.DAS.EmployerFinance.ExpiredFunds.dll</HintPath>
+    <Reference Include="SFA.DAS.EmployerFinance.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.EmployerFinance.Types.0.2.3\lib\netstandard2.0\SFA.DAS.EmployerFinance.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.57835, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
