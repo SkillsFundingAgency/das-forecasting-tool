@@ -6,7 +6,7 @@
         public const string ValidateLevyDeclaration = "forecasting-levy-validate-declaration";
 		public const string ValidateLevyDeclarationNoProjection = "forecasting-levy-validate-declaration-no-projection";
 		public const string LevyPreLoadRequest = "forecasting-levy-preload-request";
-	    public const string LevyPreLoadRequestNoProjection = "forecasting-levy-preload-request";
+	    public const string LevyPreLoadRequestNoProjection = "forecasting-levy-preload-request-no-projection";
 
 		// Payment
 		public const string PreLoadPayment = "forecasting-payment-create-preload";
