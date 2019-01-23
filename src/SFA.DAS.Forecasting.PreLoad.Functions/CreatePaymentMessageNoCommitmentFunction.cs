@@ -29,29 +29,18 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
 
-	                var paymentNoCommitmentCreatedMessage = new List<PaymentCreatedMessage>();
-
-					var paymentsNoCommitments = dataService.GetPaymentsNoCommitment(message.EmployerAccountId).ToList();
+                    var paymentsNoCommitments = dataService.GetPaymentsNoCommitment(message.EmployerAccountId).ToList();
 	                var earningDetailsNocommitments = dataService.GetEarningDetailsNoCommitment(message.EmployerAccountId).ToList();
 
 					logger.Info($"Got {paymentsNoCommitments.Count()} payments to match against {earningDetailsNocommitments.Count} earning details for employer '{message.EmployerAccountId}'");
 
-					if (message.SubstitutionId != null)
-	                {
-		                paymentNoCommitmentCreatedMessage =
-							paymentsNoCommitments
-								.Select(p => CreatePaymentSubstituteData(logger, p, earningDetailsNocommitments, message.SubstitutionId.Value))
-				                .Where(p => p != null)
-				                .ToList();
-	                }
-	                else
-	                {
-		                paymentNoCommitmentCreatedMessage =
-							paymentsNoCommitments
-								.Select(p => CreatePayment(logger, p, earningDetailsNocommitments))
-				                .Where(p => p != null)
-				                .ToList();
-	                }
+					
+		            var paymentNoCommitmentCreatedMessage =
+						paymentsNoCommitments
+							.Select(p => CreatePayment(logger, p, earningDetailsNocommitments))
+				            .Where(p => p != null)
+				            .ToList();
+	            
 
 	                foreach (var p in paymentNoCommitmentCreatedMessage)
 	                {
@@ -63,67 +52,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 					return message;
                 });
         }
-
-        private static readonly Dictionary<long, long> Apprenticeships = new Dictionary<long, long>();
-        private static readonly Dictionary<long, long> Employers = new Dictionary<long, long>();
-        private static readonly object LockObject = new object();
-
-        private static long GetApprenticeshipId(long originalApprenticeshipId)
-        {
-            lock (LockObject)
-            {
-                if (Apprenticeships.ContainsKey(originalApprenticeshipId))
-                    return Apprenticeships[originalApprenticeshipId];
-                var random = new Random(Guid.NewGuid().GetHashCode());
-                var id = random.Next(1, 9999999);
-                var cnt = 0;
-                while (Apprenticeships.ContainsValue(id) && cnt++ < 1000)
-                    id = random.Next(1, 9999999);
-                Apprenticeships[originalApprenticeshipId] = id;
-                return Apprenticeships[originalApprenticeshipId];
-            }
-        }
-
-        private static PaymentCreatedMessage CreatePaymentSubstituteData(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails, long substitutionId)
-        {
-            if (payment == null)
-            {
-                logger.Warn("No payment passed to CreatePaymentSubstituteData");
-                return null;
-            }
-
-            var earningDetail = earningDetails.FirstOrDefault(ed => Guid.TryParse(ed.PaymentId, out Guid paymentGuid) && paymentGuid == payment.PaymentId);
-            if (earningDetail == null)
-            {
-                logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
-                return null;
-            }
-
-            var apprenticeshipId = GetApprenticeshipId(payment.ApprenticeshipId);
-            logger.Info($"Creating payment event for apprenticeship: {apprenticeshipId}, delivery period: {payment.DeliveryPeriodYear}-{payment.DeliveryPeriodMonth}, collection period: {payment.CollectionPeriodYear}-{payment.CollectionPeriodMonth}");
-            earningDetail.RequiredPaymentId = Guid.NewGuid();
-
-            return new PaymentCreatedMessage
-            {
-                Id = Guid.NewGuid().ToString(),
-                EmployerAccountId = substitutionId,
-                Ukprn = 1,
-                ApprenticeshipId = apprenticeshipId,
-                Amount = payment.Amount,
-                ProviderName = "Provider Name",
-                ApprenticeName = "Apprentice Name",
-                CourseName = payment.ApprenticeshipCourseName,
-                CourseLevel = payment.ApprenticeshipCourseLevel,
-                Uln = new Random(Guid.NewGuid().GetHashCode()).Next(10000, 9999999),
-                CourseStartDate = payment.ApprenticeshipCourseStartDate,
-                CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
-                DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
-                EarningDetails = earningDetail,
-                FundingSource = payment.FundingSource,
-                SendingEmployerAccountId = payment.SenderAccountId.HasValue ? 54321 : substitutionId //TODO: need to generate or pass in a valid substitute sender account for transfers
-            };
-        }
-
+        
         public static PaymentCreatedMessage CreatePayment(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)
         {
             if (payment == null)
