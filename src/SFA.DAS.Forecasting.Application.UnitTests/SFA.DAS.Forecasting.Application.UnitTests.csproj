@@ -178,6 +178,7 @@
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
     <Compile Include="Payments\CollectionPeriodValidatorTests.cs" />
     <Compile Include="Payments\EarningDetailsValidatorTests.cs" />
+    <Compile Include="Payments\PastPaymentEventSuperficialValidatorTests.cs" />
     <Compile Include="Payments\PaymentEventSuperficialValidatorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AccountProjectionRepositoryTests.cs" />

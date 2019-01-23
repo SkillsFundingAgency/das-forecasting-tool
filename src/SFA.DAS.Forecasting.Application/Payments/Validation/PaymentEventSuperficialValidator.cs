@@ -16,15 +16,13 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
             RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
             RuleFor(m => m.FundingSource)
 				.Must(v => v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy)) 
-						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)) 
-						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
+						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
+				        || v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedEmployer))
+                        || v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
             When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
                 RuleFor(m => m.Ukprn).GreaterThan(0);
                 RuleFor(m => m.ProviderName).NotNull().NotEmpty();
                 RuleFor(m => m.ApprenticeName).NotNull().NotEmpty();
-
-                //TODO: Until the Expired Funds story is ready there is no point in validating the payment amount.
-                //RuleFor(m => m.Amount).GreaterThan(1);
 
                 RuleFor(m => m.CourseName).NotNull().NotEmpty();
 

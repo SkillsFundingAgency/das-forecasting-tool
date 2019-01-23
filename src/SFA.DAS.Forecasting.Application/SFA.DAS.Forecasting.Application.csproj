@@ -222,6 +222,7 @@
     <Compile Include="Payments\Services\DevPaymentsEventsApiClient.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataSession.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
+    <Compile Include="Payments\Validation\PastPaymentEventSuperficialValidator.cs" />
     <Compile Include="Projections\Handlers\BuildAccountProjectionHandler.cs" />
     <Compile Include="Projections\Handlers\GetAccountBalanceHandler.cs" />
     <Compile Include="Projections\Services\AccountProjectionDataSession.cs" />
