@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
-using SFA.DAS.Forecasting.Application.Payments.Services;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.NLog.Logger;
@@ -16,28 +15,27 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     {
         [FunctionName("CreatePaymentMessageNoCommitmentFunction")]
         [return: Queue(QueueNames.RemovePreLoadDataNoCommitment)]
-        public static PreLoadPaymentMessage Run(
+        public static async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.CreatePaymentMessageNoCommitment)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidatorNoCommitment)] ICollector<PaymentCreatedMessage> noCommitmentOutputQueueMessage,
 			ExecutionContext executionContext,
             TraceWriter writer)
         {
-            return FunctionRunner.Run<CreatePaymentMessageNoCommitmentFunction, PreLoadPaymentMessage>(writer, executionContext,
-                (container, logger) =>
+            return await FunctionRunner.Run<CreatePaymentMessageNoCommitmentFunction, PreLoadPaymentMessage>(writer, executionContext,
+                async (container, logger) =>
                 {
                     logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
 
-                    var dataService = container.GetInstance<PreLoadPaymentDataService>();
+                    var dataService = container.GetInstance<IEmployerDatabaseService>();
 
-                    var paymentsNoCommitments = dataService.GetPaymentsNoCommitment(message.EmployerAccountId).ToList();
-	                var earningDetailsNocommitments = dataService.GetEarningDetailsNoCommitment(message.EmployerAccountId).ToList();
+                    var payments = await dataService.GetPastEmployerPayments(message.EmployerAccountId,message.PeriodYear, message.PeriodMonth);
 
-					logger.Info($"Got {paymentsNoCommitments.Count()} payments to match against {earningDetailsNocommitments.Count} earning details for employer '{message.EmployerAccountId}'");
+                    logger.Info($"Got {payments.Count} payments for employer '{message.EmployerAccountId}'");
 
 					
 		            var paymentNoCommitmentCreatedMessage =
-						paymentsNoCommitments
-							.Select(p => CreatePayment(logger, p, earningDetailsNocommitments))
+		                payments
+                            .Select(p => CreatePayment(logger, p))
 				            .Where(p => p != null)
 				            .ToList();
 	            
@@ -53,17 +51,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 });
         }
         
-        public static PaymentCreatedMessage CreatePayment(ILog logger, EmployerPayment payment, IEnumerable<EarningDetails> earningDetails)
+        public static PaymentCreatedMessage CreatePayment(ILog logger, EmployerPayment payment)
         {
             if (payment == null)
             {
-                logger.Warn("No payment passed to CreatePaymentSubstituteData");
-                return null;
-            }
-            var earningDetail = earningDetails.FirstOrDefault(ed => Guid.TryParse(ed.PaymentId, out Guid paymentGuid) && paymentGuid == payment.PaymentId);
-            if (earningDetail == null)
-            {
-                logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");
+                logger.Warn("No payment passed to PaymentCreatedMessage");
                 return null;
             }
 
@@ -82,7 +74,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 CourseStartDate = payment.ApprenticeshipCourseStartDate,
                 CollectionPeriod = new Application.Payments.Messages.NamedCalendarPeriod { Id = payment.CollectionPeriodId, Year = payment.CollectionPeriodYear, Month = payment.CollectionPeriodMonth },
                 DeliveryPeriod = new Application.Payments.Messages.CalendarPeriod { Month = payment.DeliveryPeriodMonth, Year = payment.DeliveryPeriodYear },
-                EarningDetails = earningDetail,
                 FundingSource = payment.FundingSource,
                 SendingEmployerAccountId = payment.SenderAccountId ?? payment.AccountId
             };

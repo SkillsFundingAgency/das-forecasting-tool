@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static async Task<string> Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "AllEmployersPaymentPreLoadNoCommitmentHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.PreLoadPaymentNoCommitment)] ICollector<PreLoadPaymentMessage> outputQueueMessage,
+            [Queue(QueueNames.CreatePaymentMessageNoCommitment)] ICollector<PreLoadPaymentMessage> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
