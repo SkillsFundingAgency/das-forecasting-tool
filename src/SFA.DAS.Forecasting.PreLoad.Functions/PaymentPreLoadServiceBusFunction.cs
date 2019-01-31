@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         [FunctionName("PaymentPreLoadServiceBusFunction")]
         [return: Queue(QueueNames.PreLoadPayment)]
         public static async Task<PreLoadPaymentMessage> Run(
-            [ServiceBusTrigger("RefreshPaymentDataCompletedEvent", "Forecasting", AccessRights.Listen)]PreLoadPaymentRequestMessage preLoadPaymentRequestMessage,
+            [ServiceBusTrigger("paymentdataimport_completed", "Forecasting", AccessRights.Listen)]PreLoadPaymentRequestMessage preLoadPaymentRequestMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
