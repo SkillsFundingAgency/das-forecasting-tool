@@ -14,5 +14,3 @@
 GO
 CREATE NONCLUSTERED INDEX [idx_commitment_employerAccountId] ON [dbo].[LevyDeclaration] ([EmployerAccountId]) INCLUDE ([scheme], [PayrollYear], [PayrollMonth], [PayrollDate], [LevyAmountDeclared], [TransactionDate], [DateReceived]) WITH (ONLINE = ON)
 GO
-CREATE NONCLUSTERED INDEX [idx_LevyDeclaration_EmployerAccountId_PayrollYear_PayrollMonth_PayrollDate] ON [dbo].[LevyDeclaration] ([EmployerAccountId],[PayrollYear],[PayrollMonth],[PayrollDate]) WITH (ONLINE = ON)
-GO
