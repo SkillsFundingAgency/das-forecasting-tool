@@ -16,9 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
             RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
             RuleFor(m => m.FundingSource)
 				.Must(v => v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy)) 
-						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
-				        || v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedEmployer))
-                        || v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
+						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)));
             When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
                 RuleFor(m => m.Ukprn).GreaterThan(0);
                 RuleFor(m => m.ProviderName).NotNull().NotEmpty();
@@ -50,9 +48,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
                     .SetValidator(new CollectionPeriodSuperficialValidator());
 
                 RuleFor(m => m.FundingSource).Must(v => v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy))
-                                                     || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
-													 || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedEmployer))
-                                                     || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
+                                                     || v.HasFlag(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)));
 
                 RuleFor(m => m.SendingEmployerAccountId)
                     .NotEqual(m => m.EmployerAccountId)
