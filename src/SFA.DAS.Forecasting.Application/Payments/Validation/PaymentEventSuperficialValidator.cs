@@ -16,7 +16,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Validation
             RuleFor(m => m.ApprenticeshipId).GreaterThan(0);
             RuleFor(m => m.FundingSource)
 				.Must(v => v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Levy)) 
-						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer)));
+						|| v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer))
+                        || v.Equals(FundingSourceConverter.ConvertToApiFundingSource(FundingSource.CoInvestedSfa)));
             When(payment => (payment.EarningDetails?.ActualEndDate ?? DateTime.MinValue) == DateTime.MinValue, () => {
                 RuleFor(m => m.Ukprn).GreaterThan(0);
                 RuleFor(m => m.ProviderName).NotNull().NotEmpty();
