@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.PayrollYear).HasColumnName(@"PayrollYear").HasColumnType("nvarchar").IsRequired().HasMaxLength(10);
             Property(x => x.PayrollMonth).HasColumnName(@"PayrollMonth").HasColumnType("tinyint").IsRequired();
             Property(x => x.PayrollDate).HasColumnName(@"PayrollDate").HasColumnType("datetime").IsRequired();
-            Property(x => x.LevyAmountDeclared).HasColumnName(@"LevyAmountDeclared").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Property(x => x.LevyAmountDeclared).HasColumnName(@"LevyAmountDeclared").HasColumnType("decimal").IsRequired().HasPrecision(18,5);
             Property(x => x.TransactionDate).HasColumnName(@"TransactionDate").HasColumnType("datetime").IsRequired();
             Property(x => x.DateReceived).HasColumnName(@"DateReceived").HasColumnType("datetime").IsRequired();
             InitializePartial();
