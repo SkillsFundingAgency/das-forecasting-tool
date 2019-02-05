@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMoq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Shared;
@@ -77,7 +78,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 50,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 500
+                    FutureFunds = 500,
+                    FutureFundsNoExpiry = 100
                 },
                 new AccountProjectionModel
                 {
@@ -89,7 +91,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 540
+                    FutureFunds = 540,
+                    FutureFundsNoExpiry = 140
                 },
                 new AccountProjectionModel
                 {
@@ -101,7 +104,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 580
+                    FutureFunds = 580,
+                    FutureFundsNoExpiry = 180
                 },
                 new AccountProjectionModel
                 {
@@ -113,7 +117,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 620
+                    FutureFunds = 620,
+                    FutureFundsNoExpiry = 220
                 },
                 new AccountProjectionModel
                 {
@@ -125,7 +130,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 660
+                    FutureFunds = 660,
+                    FutureFundsNoExpiry = 260
                 },
                 new AccountProjectionModel
                 {
@@ -137,7 +143,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 20,
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 690
+                    FutureFunds = 690,
+                    FutureFundsNoExpiry = 290
                 }
             };
 
@@ -216,9 +223,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         }
 
         [Test]
-        public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance()
+        public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance_If_Expired_Funds_Is_Enabled()
         {
             //Arrange
+            _moqer.GetMock<IApplicationConfiguration>().Setup(
+                x => x.FeatureExpiredFunds).Returns(true);
             _moqer.GetMock<IDateTimeService>()
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
             var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
@@ -230,6 +239,26 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var actual = estimationProjection.Projections.OrderBy(c=>c.Year).ThenBy(c=>c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
             Assert.AreEqual(_accountProjection.First().FutureFunds, actual.EstimatedProjectionBalance);
+        }
+
+
+        [Test]
+        public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance_With_No_Expiry_If_Expired_Funds_Is_Disabled()
+        {
+            //Arrange
+            _moqer.GetMock<IApplicationConfiguration>().Setup(
+                x => x.FeatureExpiredFunds).Returns(false);
+            _moqer.GetMock<IDateTimeService>()
+                .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
+            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+
+            //Act
+            estimationProjection.BuildProjections();
+
+            //Assert
+            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
+            Assert.IsNotNull(actual);
+            Assert.AreEqual(_accountProjection.First().FutureFundsNoExpiry, actual.EstimatedProjectionBalance);
         }
 
         [Test]
@@ -315,6 +344,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     FutureFunds = 540
                 }
             };
+            _moqer.GetMock<IApplicationConfiguration>().Setup(
+                x => x.FeatureExpiredFunds).Returns(true);
             _moqer.GetMock<IDateTimeService>()
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
             var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);

@@ -185,6 +185,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 var expiredFundsTotal = _projections.Sum(c => c.ExpiredFunds);
 
                 projection.ExpiredFunds = expiredFund;
+                projection.FutureFundsNoExpiry = projection.FutureFunds;
                 projection.FutureFunds = projection.CalculateFutureFunds(expiredFundsTotal);
             }
             

@@ -16,8 +16,7 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
     {
         Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projections, long employerAccountId);
 
-        Dictionary<CalendarPeriod, decimal> GetExpiringFunds(IList<AccountProjectionModel> projections,
-            IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals);
+        Dictionary<CalendarPeriod, decimal> GetExpiringFunds(IList<AccountProjectionModel> projections, IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals);
     }
     public class ExpiredFundsService : IExpiredFundsService
     {

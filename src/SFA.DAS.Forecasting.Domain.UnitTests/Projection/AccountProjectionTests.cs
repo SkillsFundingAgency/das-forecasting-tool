@@ -729,7 +729,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         }
 
         [Test]
-        public void ShouldCalculateExpiredFunds()
+        public void ShouldCalculateExpiredFunds_And_The_Original_Projection_Value_Is_Stored()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
@@ -741,7 +741,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             accountProjection.UpdateProjectionsWithExpiredFunds(expiredFunds);
 
+            Assert.IsTrue(accountProjection.Projections.Sum(s => s.FutureFundsNoExpiry) != 0);
+            Assert.IsTrue(accountProjection.Projections.Sum(s=>s.FutureFundsNoExpiry) != accountProjection.Projections.Sum(s=>s.FutureFunds));
             Assert.IsTrue(accountProjection.Projections.Sum(s => s.ExpiredFunds) > 0);
         }
+
     }
 }

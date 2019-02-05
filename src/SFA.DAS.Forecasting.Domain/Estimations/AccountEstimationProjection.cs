@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Shared;
@@ -22,6 +23,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     public class AccountEstimationProjection : IAccountEstimationProjection
     {
         private readonly IDateTimeService _dateTimeService;
+        private readonly IApplicationConfiguration _config;
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;
         private readonly List<AccountEstimationProjectionModel> _estimatedProjections;
@@ -29,9 +31,10 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _estimatedProjections.AsReadOnly();
         public decimal MonthlyInstallmentAmount { get; internal set; }
         public decimal TransferAllowance { get; set; }
-        public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService)
+        public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService, IApplicationConfiguration config)
         {
             _dateTimeService = dateTimeService;
+            _config = config;
             _account = account ?? throw new ArgumentNullException(nameof(account));
             if (accountEstimationProjectionCommitments == null)
             {
@@ -56,7 +59,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 throw new InvalidOperationException($"The start date for the earliest commitment is after the last planned end date. Account: {_account.EmployerAccountId}, Start date: {startDate}, End date: {endDate}");
 
             var projectionDate = startDate;
-            var lastProjectedBalance = _actualAccountProjections.FirstOrDefault(c => c.Month == startDate.Month && c.Year == startDate.Year)?.FutureFunds ?? 0;
+            var lastProjectedBalance = GetLastProjectedBalance(startDate);
             while (projectionDate <= endDate)
             {
                 if (projectionDate.Month == 5)
@@ -70,6 +73,16 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
             TransferAllowance = _account.TransferAllowance;
             MonthlyInstallmentAmount = _account.LevyDeclared;
+        }
+
+        private decimal GetLastProjectedBalance(DateTime startDate)
+        {
+            if (_config.FeatureExpiredFunds)
+            {
+                return _actualAccountProjections.FirstOrDefault(c => c.Month == startDate.Month && c.Year == startDate.Year)?.FutureFunds ?? 0;
+            }
+
+            return _actualAccountProjections.FirstOrDefault(c => c.Month == startDate.Month && c.Year == startDate.Year)?.FutureFundsNoExpiry ?? 0;
         }
 
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal accountRemainingTransferBalance, decimal lastProjectedBalance)
