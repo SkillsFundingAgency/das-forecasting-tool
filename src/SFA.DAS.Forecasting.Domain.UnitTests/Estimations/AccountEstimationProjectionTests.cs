@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         private EmployerCommitmentsModel _commitments;
         private List<AccountProjectionModel> _accountProjection;
         private Account _account;
+        private AccountEstimationProjection _estimationProjection;
 
         [SetUp]
         public void SetUp()
@@ -158,16 +159,17 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             _account = new Account(EmployerAccountId, 10000, 0, TransferAllowance, 10000);
             _moqer.SetInstance(_account);
+            
+            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(),_moqer.Resolve<AccountEstimationProjectionCommitments>(),_moqer.Resolve<IDateTimeService>(),false);
         }
 
         [Test]
         public void Then_The_Projections_Are_Assigned_To_The_AccountEstimationProjectionModel()
         {
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
 
-            Assert.IsNotNull(estimationProjection);
-            Assert.IsAssignableFrom<ReadOnlyCollection<AccountEstimationProjectionModel>>(estimationProjection
+            Assert.IsNotNull(_estimationProjection);
+            Assert.IsAssignableFrom<ReadOnlyCollection<AccountEstimationProjectionModel>>(_estimationProjection
                 .Projections);
         }
 
@@ -175,10 +177,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void First_Month_Is_Current_Month()
         {
             _moqer.SetInstance<IDateTimeService>(new DateTimeService());
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), false);
 
-            estimationProjection.BuildProjections();
-            var projection = estimationProjection.Projections.FirstOrDefault();
+            _estimationProjection.BuildProjections();
+            var projection = _estimationProjection.Projections.FirstOrDefault();
 
             Assert.IsNotNull(projection);
             Assert.IsTrue(projection.Month == DateTime.Now.Month && projection.Year == DateTime.Now.Year);
@@ -187,9 +189,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         [Test]
         public void Last_Month_Should_Be_Last_Commitment_Date()
         {
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
-            estimationProjection.BuildProjections();
-            var projection = estimationProjection.Projections.LastOrDefault();
+            _estimationProjection.BuildProjections();
+            var projection = _estimationProjection.Projections.LastOrDefault();
             Assert.IsNotNull(projection);
             Assert.AreEqual(9, projection.Month, $"Expected to end in month 9 but last month was {projection.Month}");
         }
@@ -197,9 +198,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         [Test]
         public void Transfer_Balance_Should_Be_Reset_To_Transfer_Allowance_Each_May()
         {
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
-            estimationProjection.BuildProjections();
-            estimationProjection.Projections.Where(p => p.Month == 5).ToList()
+
+            _estimationProjection.BuildProjections();
+            _estimationProjection.Projections.Where(p => p.Month == 5).ToList()
                 .ForEach(p => Assert.AreEqual(_account.TransferAllowance + p.TransferFundsIn - p.TransferFundsOut,
                     p.AvailableTransferFundsBalance,
                     $"Invalid transfer projection month. Year: {p.Year}, Expected balance: {_account.TransferAllowance + p.TransferFundsIn - p.TransferModelledCosts.FundsOut}, actual: {p.AvailableTransferFundsBalance}"));
@@ -208,11 +209,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         [Test]
         public void Ensure_Correct_Future_Funds()
         {
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
-
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
             var lastBalance = _account.RemainingTransferBalance;
-            foreach (var estimation in estimationProjection.Projections)
+            foreach (var estimation in _estimationProjection.Projections)
             {
                 Assert.IsNotNull(estimation);
                 Assert.AreEqual(
@@ -226,17 +225,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance_If_Expired_Funds_Is_Enabled()
         {
             //Arrange
-            _moqer.GetMock<IApplicationConfiguration>().Setup(
-                x => x.FeatureExpiredFunds).Returns(true);
             _moqer.GetMock<IDateTimeService>()
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), true);
 
             //Act
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
 
             //Assert
-            var actual = estimationProjection.Projections.OrderBy(c=>c.Year).ThenBy(c=>c.Month).FirstOrDefault();
+            var actual = _estimationProjection.Projections.OrderBy(c=>c.Year).ThenBy(c=>c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
             Assert.AreEqual(_accountProjection.First().FutureFunds, actual.EstimatedProjectionBalance);
         }
@@ -246,17 +243,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance_With_No_Expiry_If_Expired_Funds_Is_Disabled()
         {
             //Arrange
-            _moqer.GetMock<IApplicationConfiguration>().Setup(
-                x => x.FeatureExpiredFunds).Returns(false);
             _moqer.GetMock<IDateTimeService>()
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), false);
 
             //Act
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
 
             //Assert
-            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
+            var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
             Assert.AreEqual(_accountProjection.First().FutureFundsNoExpiry, actual.EstimatedProjectionBalance);
         }
@@ -264,14 +259,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         [Test]
         public void Then_The_Estimation_Uses_Actual_And_Modelled_Costs_Against_My_Transfer_Allowance()
         {
-            //Arrange
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
-
             //Act
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
 
             //Assert
-            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
+            var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
             Assert.AreEqual(9940 , actual.AvailableTransferFundsBalance);
         }
@@ -300,13 +292,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var accountEstimationProjectionCommitments =
                 new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
             _moqer.SetInstance(accountEstimationProjectionCommitments);
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), false);
 
             //Act
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
 
             //Assert
-            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
+            var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
             Assert.AreEqual(9990, actual.AvailableTransferFundsBalance);
         }
@@ -328,7 +320,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 50,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 500
+                    FutureFunds = 500,
+                    FutureFundsNoExpiry = 550,
                 },
                 new AccountProjectionModel
                 {
@@ -341,7 +334,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     TransferOutCompletionPayments = 0,
                     LevyFundedCompletionPayments = 0,
                     LevyFundedCostOfTraining = 50,
-                    FutureFunds = 540
+                    FutureFunds = 540,
+                    FutureFundsNoExpiry = 590
                 }
             };
             _moqer.GetMock<IApplicationConfiguration>().Setup(
@@ -352,15 +346,15 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             var accountEstimationProjectionCommitments =
                 new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
             _moqer.SetInstance(accountEstimationProjectionCommitments);
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), false);
 
             //Act
-            estimationProjection.BuildProjections();
+            _estimationProjection.BuildProjections();
 
             //Assert
-            var actual = estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).Skip(1).FirstOrDefault();
+            var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).Skip(1).FirstOrDefault();
             Assert.IsNotNull(actual);
-            Assert.AreEqual(350, actual.EstimatedProjectionBalance);
+            Assert.AreEqual(400, actual.EstimatedProjectionBalance);
         }
     }
 }

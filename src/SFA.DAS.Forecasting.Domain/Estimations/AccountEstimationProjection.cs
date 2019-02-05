@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Shared;
@@ -23,18 +22,18 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     public class AccountEstimationProjection : IAccountEstimationProjection
     {
         private readonly IDateTimeService _dateTimeService;
-        private readonly IApplicationConfiguration _config;
         private readonly Account _account;
         private readonly EmployerCommitments _virtualEmployerCommitments;
         private readonly List<AccountEstimationProjectionModel> _estimatedProjections;
         private readonly IList<AccountProjectionModel> _actualAccountProjections;
+        private readonly bool _showExpiredFunds;
         public ReadOnlyCollection<AccountEstimationProjectionModel> Projections => _estimatedProjections.AsReadOnly();
         public decimal MonthlyInstallmentAmount { get; internal set; }
         public decimal TransferAllowance { get; set; }
-        public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService, IApplicationConfiguration config)
+        public AccountEstimationProjection(Account account, AccountEstimationProjectionCommitments accountEstimationProjectionCommitments, IDateTimeService dateTimeService, bool showExpiredFunds)
         {
             _dateTimeService = dateTimeService;
-            _config = config;
+            _showExpiredFunds = showExpiredFunds;
             _account = account ?? throw new ArgumentNullException(nameof(account));
             if (accountEstimationProjectionCommitments == null)
             {
@@ -77,7 +76,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
         private decimal GetLastProjectedBalance(DateTime startDate)
         {
-            if (_config.FeatureExpiredFunds)
+            if (_showExpiredFunds)
             {
                 return _actualAccountProjections.FirstOrDefault(c => c.Month == startDate.Month && c.Year == startDate.Year)?.FutureFunds ?? 0;
             }
