@@ -747,6 +747,7 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Estimation\_addApprenticeshipContent.cshtml" />
     <Content Include="Views\Estimation\_editApprenticeshipContent.cshtml" />
+    <Content Include="Views\Forecasting\ExpiredFundsGuidance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

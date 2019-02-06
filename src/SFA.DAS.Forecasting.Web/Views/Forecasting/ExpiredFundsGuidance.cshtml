@@ -1,0 +1,325 @@
+﻿@using SFA.DAS.Forecasting.Web.Extensions
+
+@{
+    ViewBag.Title = "Expired Funds Guidance";
+}
+
+<div class="breadcrumbs">
+    <ol role="navigation">
+        <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
+        <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li>
+        <li><a href="@Url.Action("Balance","Forecasting")">Funding Projection</a></li>
+        <li>Expired Funds</li>
+    </ol>
+</div>
+
+<div class="govuk-grid-row funding-projection">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Expired funds
+        </h1>
+        <p>
+            Apprenticeship funds will expire 24 months after they enter your account unless you:
+        </p>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>
+                spend them on apprenticeship training and assessment
+            </li>
+            <li>
+                fund an apprenticeship with another employer through transfers
+            </li>
+        </ul>
+
+        <p>
+            Funds will start to expire in May 2019.
+        </p>
+
+        <h2 class="govuk-heading-l">
+            How to work out how much will expire
+        </h2>
+
+        <p>
+            For each month expired funds will be calculated as follows:
+        </p>
+
+        <ol class="govuk-list govuk-list--number">
+            <li>The sum of all funds that entered your account 24 months or more ago (unless reduced by negative levy adjustments)</li>
+            <li>Minus the total payments for training and assessment to date. </li>
+            <li>Minus the total of funds expired to date.</li>
+            <li>Equals expired funds due for this month.</li>
+        </ol>
+
+        <div class="govuk-inset-text">
+            <h3 class="govuk-heading-s">
+                Example
+            </h3>
+            <p>
+                You have paid £1,000 levy into your account every month starting in May 2017. You have no negative adjustments.
+            </p>
+            <p>
+                Your training costs are £100 per month and you started to pay these in December 2018.
+            </p>
+            <h4 class="govuk-heading-xs">
+                In the first month that your funds could expire - May 2019:
+            </h4>
+            <ol class="govuk-list govuk-list--number">
+                <li>
+                    total levy funds paid into your account in May 2017 is £1,000.
+                </li>
+                <li>
+                    total payments to date are £600 (6 months from Dec 2018 to May 2019)
+                </li>
+                <li>
+                    no funds have expired to date
+                </li>
+                <li>
+                    amount that will expire in May 2019 is £400 (£1,000-£600)
+                </li>
+            </ol>
+
+            <h4 class="govuk-heading-xs">
+                In the second month that your funds could expire - June 2019
+            </h4>
+
+            <ol class="govuk-list govuk-list--number">
+                <li>
+                    total funds paid into your account up until June 2017 is £2,000
+                </li>
+                <li>
+                    total payments to date are £700 (7 months from Dec 2018 to June 2019)
+                </li>
+                <li>
+                    funds that have already expired to date are £400 (expired in May 2019)
+                </li>
+                <li>
+                    amount that will expire in June 2019 is £900 (£2,000-£700-£400)
+                </li>
+            </ol>
+
+        </div>
+
+
+        <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+
+        <h2 class="govuk-heading-l">
+            Levy adjustments
+        </h2>
+
+        <p>
+            If you’ve declared an incorrect levy amount in any month, you should correct this in a future monthly levy declaration. Under HMRC rules, you may make these adjustments up to 6 years retrospectively. For the Apprenticeship Service account, we can only accept adjustments that affect the previous tax year because expiry will already have taken effect for earlier years.
+        </p>
+
+        <p>
+            If your last declaration was too low and you’re increasing it in this month’s declaration, the funds owing to you will be added to your current monthly funds, and you will have 24 months to spend them.
+        </p>
+
+        <p>
+            If you adjust your levy funds declared so that it reduces the ‘total to date’ figure this may lead to a negative figure appearing in your account, and you will see this in your account transactions labelled as a ‘levy adjustment’.
+        </p>
+
+        <p>
+            In the case of negative adjustments, the total sum in your account will be reduced and we will reduce the amount expiring in 24 months accordingly.
+        </p>
+
+        <p>
+            Where the adjustment is more than the total for any one month the expiry will be reduced for previous months until the full reduction is accounted for.
+        </p>
+
+
+
+        <div class="govuk-inset-text">
+
+            <h3 class="govuk-heading-s">
+                Example of reduced expiry due to negative levy adjustments
+            </h3>
+
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    £1000 was paid into your account in each of May, June and July 2017.
+                </li>
+                <li>
+                    In August 2017 a levy adjustment of -£1500 was made
+                </li>
+                <li>
+                    The -£1500 adjustment reduces the expiry of the previous two month’s levy, as shown in table below.
+                </li>
+                <li>
+                    This results in a reduced levy value of £500 for June 2017, £0 for July 2017 and £0 for August 2017.
+                </li>
+            </ul>
+
+
+
+            <table class="govuk-table govuk-table--font-small">
+
+                <caption class="govuk-table__caption">Dates and amounts</caption>
+
+
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+
+                        <th class="govuk-table__header" scope="col">Month</th>
+
+                        <th class="govuk-table__header" scope="col">Levy paid into account</th>
+
+                        <th class="govuk-table__header" scope="col">Reduced Levy value to be used for expiry</th>
+
+                    </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+
+                    <tr class="govuk-table__row">
+
+
+                        <th class="govuk-table__header" scope="row">May 2017</th>
+
+
+
+                        <td class="govuk-table__cell ">£1,000</td>
+
+
+
+                        <td class="govuk-table__cell ">£1,000</td>
+
+
+                    </tr>
+
+                    <tr class="govuk-table__row">
+
+
+                        <th class="govuk-table__header" scope="row">June 2017</th>
+
+
+
+                        <td class="govuk-table__cell ">£1,000</td>
+
+
+
+                        <td class="govuk-table__cell ">£500</td>
+
+
+                    </tr>
+
+                    <tr class="govuk-table__row">
+
+
+                        <th class="govuk-table__header" scope="row">July 2017</th>
+
+
+
+                        <td class="govuk-table__cell ">£1,000</td>
+
+
+
+                        <td class="govuk-table__cell ">£0</td>
+
+
+                    </tr>
+
+                    <tr class="govuk-table__row">
+
+
+                        <th class="govuk-table__header" scope="row">August 2017</th>
+
+
+
+                        <td class="govuk-table__cell ">£-1,500</td>
+
+
+
+                        <td class="govuk-table__cell ">£0</td>
+
+
+                    </tr>
+
+                    <tr class="govuk-table__row">
+
+
+                        <th class="govuk-table__header" scope="row">September 2017</th>
+
+
+
+                        <td class="govuk-table__cell ">£1,000</td>
+
+
+
+                        <td class="govuk-table__cell ">£1,000</td>
+
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+
+
+        <h2 class="govuk-heading-m">
+            Using the reduced levy value to calculate expiry
+        </h2>
+
+        <p>
+            Using the reduced levy values shown in the table above and assuming that your training costs are £100 per month and you started to pay these in December 2018.
+        </p>
+
+        <h4 class="govuk-heading-s">
+            In the first month that your funds could expire - May 2019:
+        </h4>
+
+        <ol class="govuk-list govuk-list--number">
+            <li>
+                total of reduced levy in May 2017 is £1,000.
+            </li>
+            <li>
+                total payments to date are £600 (6 months from Dec 2018 to May 2019)
+            </li>
+            <li>
+                no funds have expired to date
+            </li>
+            <li>
+                amount that will expire in May 2019 is £400 (£1,000-£600)
+            </li>
+        </ol>
+
+        <h4 class="govuk-heading-s">
+            In the second month that your funds could expire - June 2019:
+        </h4>
+
+        <ol class="govuk-list govuk-list--number">
+            <li>
+                total of reduced levy up until June 2017 is £1,500
+            </li>
+            <li>
+                total payments to date are £700 (7 months from Dec 2018 to June 2019)
+            </li>
+            <li>
+                funds that have already expired to date are £400 (expired in May 2019)
+            </li>
+            <li>
+                amount that will expire in June 2019 is £400 (£1,500-£700-£400)
+            </li>
+        </ol>
+
+        <h4 class="govuk-heading-s">
+            In the third month that your funds could expire - July 2019:
+        </h4>
+
+        <p>
+            The negative adjustment in August reduces the levy paid in July 2017 to £0, so no funds will expire in July 2019.
+        </p>
+
+        <div class="govuk-inset-text">
+            Note that the impact of large negative levy adjustments within your account may be subject to investigation by the ESFA and result in manual adjustments to your account if required.
+        </div>
+
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        <!-- <div class="app-related-items">
+
+        </div> -->
+    </div>
+</div>
