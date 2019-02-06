@@ -11,6 +11,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             {
                 case 497: return "MJK9XV";
                 case 8509: return "MN4YKL";
+                case 54321: return "RF45KJ";
             }
 
             return "MDDP87";
@@ -27,6 +28,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             {
                 case "497": return "MJK9XV";
                 case "8509": return "MN4YKL";
+                case "54321": return "RF45KJ";
             }
 
             return "MDDP87";
@@ -38,6 +40,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             {
                 case "MJK9XV": return 497;
                 case "MN4YKL": return 8509;
+                case "RF45KJ": return 54321;
             }
 
             return 12345;

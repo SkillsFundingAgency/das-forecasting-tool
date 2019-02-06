@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _accountEstimationProjection = _mocker.Resolve<IAccountEstimationProjection>();
             
             _mocker.GetMock<IAccountEstimationProjectionRepository>()
-		        .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+		        .Setup(x => x.Get(It.IsAny<AccountEstimation>(),false))
 		        .ReturnsAsync(_accountEstimationProjection);
 
 			_orchestrator = _mocker.Resolve<EstimationOrchestrator>();
@@ -432,7 +432,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .Setup(x => x.Projections)
                 .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
             _mocker.GetMock<IAccountEstimationProjectionRepository>()
-                .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+                .Setup(x => x.Get(It.IsAny<AccountEstimation>(), It.IsAny<bool>()))
                 .ReturnsAsync(_accountEstimationProjection);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);

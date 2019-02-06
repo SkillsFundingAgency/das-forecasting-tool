@@ -19,11 +19,13 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
             short payrollMonth);
 
+	    Task<List<PeriodInformation>> GetPeriodIds();
 
-        Task<List<long>> GetEmployersWithPayments(int year, int month);
+		Task<List<long>> GetEmployersWithPayments(int year, int month);
 
         Task<IList<long>> GetAccountIds(string payrollYear, short payrollMonth);
 
+        Task<List<EmployerPayment>> GetPastEmployerPayments(long accountId, int year, int month);
     }
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
@@ -38,30 +40,47 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             _logger = logger;
         }
 
-        public async Task<IList<long>> GetAccountIds(string payrollYear, short payrollMonth)
-        {
-            var result = await WithConnection(async c =>
-            {
-                var parameters = new DynamicParameters();
-                parameters.Add("@payrollYear", payrollYear, DbType.String);
-                parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
-                var sql = @"Select distinct
+		public async Task<IList<long>> GetAccountIds(string payrollYear, short payrollMonth)
+		{
+			var result = await WithConnection(async c =>
+			{
+				var parameters = new DynamicParameters();
+				parameters.Add("@payrollYear", payrollYear, DbType.String);
+				parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
+				var sql = @"Select distinct
 	                    ldt.AccountId
                         from [employer_financial].[TransactionLine] tl
                         join [employer_financial].[LevyDeclaration] ldt on tl.SubmissionId = ldt.SubmissionId
 	                    where ldt.PayrollMonth = @payrollMonth
 	                    and ldt.PayrollYear = @payrollYear";
 
-                return await c.QueryAsync<long>(
-                    sql,
-                    parameters,
-                    commandType: CommandType.Text);
-            });
+				return await c.QueryAsync<long>(
+					sql,
+					parameters,
+					commandType: CommandType.Text);
+			});
 
-            return result.ToList();
-        }
+			return result.ToList();
+		}
 
-        public async Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
+	    public async Task<List<PeriodInformation>> GetPeriodIds()
+	    {
+		    var result = await WithConnection(async c =>
+		    {
+			    var sql = @"SELECT TOP (1000) [PeriodEndId]
+							  ,[CalendarPeriodMonth]
+							  ,[CalendarPeriodYear]
+						  FROM [employer_financial].[PeriodEnd]";
+
+			    return await c.QueryAsync<PeriodInformation>(
+				    sql,
+				    commandType: CommandType.Text);
+		    });
+
+		    return result.ToList();
+	    }
+
+		public async Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
         {
             var result = await WithConnection(async c =>
             {
@@ -70,20 +89,19 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 parameters.Add("@payrollYear", payrollYear, DbType.String);
                 parameters.Add("@payrollMonth", payrollMonth, DbType.Int16);
                 var sql = @"Select 
-	                    ldt.Id,
 	                    ldt.AccountId,
 	                    ldt.EmpRef,
-	                    ldt.CreatedDate,
-	                    ldt.SubmissionDate,
-	                    ldt.SubmissionId,
+	                    max(ldt.CreatedDate) CreatedDate,
+	                    max(ldt.SubmissionDate) SubmissionDate,
 	                    ldt.PayrollYear,
 	                    ldt.PayrollMonth,
-	                    tl.Amount
+	                    sum(tl.Amount) Amount
                         from [employer_financial].[TransactionLine] tl
                         join [employer_financial].LevyDeclaration ldt on tl.SubmissionId = ldt.SubmissionId
 	                    where tl.AccountId = @accountId 
 	                    and ldt.PayrollMonth = @payrollMonth
-	                    and ldt.PayrollYear = @payrollYear";
+	                    and ldt.PayrollYear = @payrollYear
+                        Group by ldt.EmpRef,ldt.AccountId,ldt.PayrollYear, ldt.PayrollMonth";
                 return await c.QueryAsync<LevyDeclaration>(
                     sql,
                     parameters,
@@ -95,17 +113,17 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
         {
-            const string sql = "SELECT" +
-                               "[PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] " +
-                               ",[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],p.[Amount] " +
-                               ",[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] " +
-                               ",[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] " +
-                               "from [employer_financial].[Payment] p " +
-                               "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
-                               "join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
-                               "where p.AccountId = @employerAccountId " +
-                               "and CollectionPeriodYear = @year " +
-                               "and CollectionPeriodMonth = @month";
+            const string sql = @"SELECT
+                               [PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] 
+                               ,[CollectionPeriodId],[CollectionPeriodMonth],[CollectionPeriodYear],[DeliveryPeriodMonth],[DeliveryPeriodYear],p.[Amount] 
+                               ,[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] 
+                               ,[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] 
+                               from [employer_financial].[Payment] p 
+                               left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd 
+                               join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id 
+                               where p.AccountId = @employerAccountId 
+                               and CollectionPeriodYear = @year 
+                               and CollectionPeriodMonth = @month";
 
             try
             {
@@ -131,13 +149,62 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
         }
 
+        public async Task<List<EmployerPayment>> GetPastEmployerPayments(long accountId, int year, int month)
+        {
+            const string sql = @"SELECT
+	                            [PaymentId], 
+	                            tl.AccountId,
+                                tl.TransactionDate,
+	                            acct.[SenderAccountId] ,
+	                            tl.Ukprn,
+	                            p.[ApprenticeshipId] ,
+	                            p.Amount,
+	                            [Uln],  
+	                            [CollectionPeriodId],
+	                            [CollectionPeriodMonth],[CollectionPeriodYear],
+	                            [DeliveryPeriodMonth],
+	                            [DeliveryPeriodYear]
+	                            ,[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] 
+	                            ,[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] 
+                            from [employer_financial].[Payment] p 
+                            left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd 
+                            inner join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id 
+                            inner join [employer_financial].TransactionLine tl on tl.PeriodEnd = p.PeriodEnd and tl.AccountId = p.AccountId
+                             where p.AccountId = @employerAccountId 
+                               and CollectionPeriodYear = @year 
+                               and CollectionPeriodMonth = @month";
+
+            try
+            {
+                return await WithConnection(async cnn =>
+                {
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@employerAccountId", accountId, DbType.Int64);
+                    parameters.Add("@year", year, DbType.Int32);
+                    parameters.Add("@month", month, DbType.Int32);
+
+                    var payments = (await cnn.QueryAsync<EmployerPayment>(
+                        sql,
+                        parameters,
+                        commandType: CommandType.Text)).ToList();
+                    payments.ForEach(payment => payment.FundingSource = (int)payment.FundingSource == (int)FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer) ? FundingSourceConverter.ConvertToApiFundingSource(FundingSource.Transfer) : payment.FundingSource);
+                    return payments;
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Failed to get past employer payments");
+                throw;
+            }
+        }
+
         public async Task<List<long>> GetEmployersWithPayments(int year, int month)
         {
             const string sql = "SELECT distinct" +
                                "[AccountId]" +
                                "from [employer_financial].[Payment] p " +
                                "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
-                               "join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
+                               "inner join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id " +
                                "and CollectionPeriodYear = @year " +
                                "and CollectionPeriodMonth = @month";
 

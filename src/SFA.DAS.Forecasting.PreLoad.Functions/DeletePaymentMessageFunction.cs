@@ -4,7 +4,6 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -23,9 +22,9 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
                     
                     await dataService.DeletePayment(message.EmployerAccountId);
-                    await dataService.DeleteEarningDetails(message.EmployerAccountId);
+					await dataService.DeleteEarningDetails(message.EmployerAccountId);
 
-                    logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.HashedEmployerAccountId}.");
+					logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.HashedEmployerAccountId}.");
                 });
         }
     }

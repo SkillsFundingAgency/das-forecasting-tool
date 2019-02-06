@@ -14,8 +14,7 @@ Post-Deployment Script Template
 MERGE INTO FundingSource AS Target 
 USING (VALUES 
 	  (1, N'Levy'), 
-	  (2, N'Transfer'),
-	  (3, 'CoInvestedSfa')
+	  (2, N'Transfer')
 	) 
 AS Source (Id, Name) 
 ON Target.Id = Source.Id 

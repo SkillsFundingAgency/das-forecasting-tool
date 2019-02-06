@@ -55,6 +55,9 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
 
                 projection.FutureFunds.Should().Be(p.FutureFunds,
                     becauseMessage(nameof(p.FutureFunds), p.FutureFunds, projection.FutureFunds));
+
+                projection.ExpiredFunds.Should().Be(p.ExpiredFunds,
+                    becauseMessage(nameof(p.ExpiredFunds), p.ExpiredFunds, projection.ExpiredFunds));
             }
         }
     }
