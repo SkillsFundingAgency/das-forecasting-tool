@@ -169,7 +169,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                             from [employer_financial].[Payment] p 
                             left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd 
                             inner join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id 
-                            inner join [employer_financial].TransactionLine tl on tl.PeriodEnd = p.PeriodEnd and tl.AccountId = p.AccountId
+                            inner join [employer_financial].TransactionLine tl on tl.PeriodEnd = p.PeriodEnd and tl.AccountId = p.AccountId and tl.Ukprn = p.Ukprn
                              where p.AccountId = @employerAccountId 
                                and CollectionPeriodYear = @year 
                                and CollectionPeriodMonth = @month";
