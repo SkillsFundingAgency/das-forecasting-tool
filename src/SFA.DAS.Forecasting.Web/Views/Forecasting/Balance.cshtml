@@ -129,15 +129,6 @@
     </div>
 </div>
 
-<div class="info-summary">
-    <h3 class="heading-medium">
-        We have changed how your account projection is calculated
-    </h3>
-    <p>
-        The projection now includes expired funds.
-        <a href="@Url.Action("ExpiredFundsGuidance","Forecasting")">Expired funds guidance</a>
-    </p>
-</div>
 
 <div class="grid-row">
     <div class="column-full" id="BalanceSheet-Tables">
@@ -169,9 +160,9 @@
                         Completion payments<br />
                         <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
                     </th>
-                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Funds you don’t use will expire 24 months after they enter your account. The first funds to expire will be from May 2019">
+                        <th scope="col" class="financial" title="Expired Funds">
                             Expired funds<br />
-                            <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span> 
+                            <span class="tip-info"><a href="@Url.Action("ExpiredFundsGuidance","Forecasting")"class="info-title" target="_blank">info</a></span>
                         </th>
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">Funds in<br />
                         <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
