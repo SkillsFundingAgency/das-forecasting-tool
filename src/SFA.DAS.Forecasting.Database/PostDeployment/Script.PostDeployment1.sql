@@ -14,7 +14,8 @@ Post-Deployment Script Template
 MERGE INTO FundingSource AS Target 
 USING (VALUES 
 	  (1, N'Levy'), 
-	  (2, N'Transfer')
+	  (2, N'Transfer'),
+	  (3, 'CoInvestedSfa')
 	) 
 AS Source (Id, Name) 
 ON Target.Id = Source.Id 
@@ -44,3 +45,6 @@ where SendingEmployerAccountId = 0
 update Commitment
 set SendingEmployerAccountId = EmployerAccountId
 where SendingEmployerAccountId = 0
+
+
+UPDATE AccountProjection set FutureFundsNoExpiry = FutureFunds
