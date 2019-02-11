@@ -63,7 +63,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)
         {
-            return GetPaymentTotals(w => w.FundingSource == FundingSource.Levy && w.EmployerAccountId == employerAccountId);
+            return GetPaymentTotals(w => (w.FundingSource == FundingSource.Levy || w.FundingSource == FundingSource.Transfer) 
+                                                         && (w.EmployerAccountId == employerAccountId || w.SendingEmployerAccountId == employerAccountId));
+
         }
 
         private Dictionary<CalendarPeriod, decimal> GetPaymentTotals(Expression<Func<PaymentModel, bool>> wherePredicate)
