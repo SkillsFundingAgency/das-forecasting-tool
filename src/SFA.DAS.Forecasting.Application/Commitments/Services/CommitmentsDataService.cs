@@ -30,7 +30,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
             return await _dataContext
-                .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId || commitment.SendingEmployerAccountId == employerAccountId)
+
+                .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId 
+                                                 || commitment.SendingEmployerAccountId == employerAccountId)
                 .OrderByDescending(commitment => commitment.UpdatedDateTime)
                 .Select(commitment => commitment.UpdatedDateTime)
                 .FirstOrDefaultAsync();

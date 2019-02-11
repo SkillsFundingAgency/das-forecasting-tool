@@ -5,7 +5,9 @@ using SFA.DAS.Commitments.Api.Client;
 using SFA.DAS.Commitments.Api.Client.Configuration;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Application.Balance.Services;
+using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
@@ -71,6 +73,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>())
                 .ContainerScoped();
 
+            For<IExpiredFundsService>()
+                .Use<ExpiredFundsService>();
+
+            For<IExpiredFunds>()
+                .Use<EmployerFinance.Types.Models.ExpiredFunds>();
+           
             SetUpCommitmentsApi();
         }
 

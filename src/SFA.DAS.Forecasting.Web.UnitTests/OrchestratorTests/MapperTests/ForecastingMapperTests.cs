@@ -5,6 +5,8 @@ using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moq;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
 {
@@ -14,11 +16,15 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
         private ForecastingMapper _mapper;
         private AccountProjectionModel _projectionModel;
         private IEnumerable<AccountProjectionModel> _models;
+        private Mock<IApplicationConfiguration> _config;
 
         [SetUp]
         public void SetUp()
         {
-            _mapper = new ForecastingMapper();
+            _config = new Mock<IApplicationConfiguration>();
+            _config.Setup(x => x.FeatureExpiredFunds).Returns(true);
+
+            _mapper = new ForecastingMapper(_config.Object);
             _projectionModel =
                 new AccountProjectionModel
                 {
@@ -45,6 +51,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
                     FutureFunds = 100,
                     CoInvestmentEmployer = 100,
                     CoInvestmentGovernment = 100,
+                    ExpiredFunds = 10
                 };
 
             _models = new List<AccountProjectionModel>
@@ -63,6 +70,17 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
             result.First().Balance.Should().Be(_projectionModel.FutureFunds);
             result.First().CoInvestmentEmployer.Should().Be(_projectionModel.CoInvestmentEmployer);
             result.First().CoInvestmentGovernment.Should().Be(_projectionModel.CoInvestmentGovernment);
+            result.First().ExpiredFunds.Should().Be(_projectionModel.ExpiredFunds);
+        }
+
+        [Test]
+        public void Then_The_Expired_Funds_Value_Is_Zero_If_The_Config_Is_Set_Not_To_Show_Expired_Funds()
+        {
+            _config.Setup(x => x.FeatureExpiredFunds).Returns(false);
+
+            var result = _mapper.MapProjections(_models);
+            
+            result.All(c=>c.ExpiredFunds.Equals(0)).Should().BeTrue();
         }
 
         [Test]
@@ -85,14 +103,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
             var result = _mapper.MapProjections(_models);
 
             result.First().CompletionPayments.Should().Be(_projectionModel.LevyFundedCompletionPayments+ _projectionModel.TransferOutCompletionPayments);
-        }
-
-        [Test]
-        public void Expired_funds_should_be_0()
-        {
-            var result = _mapper.MapProjections(_models);
-
-            result.First().ExpiredFunds.Should().Be(0);
         }
 
         [Test]

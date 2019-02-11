@@ -8,12 +8,16 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         public DateTime GetPayrollDate(string payrollYear, short payrollMonth)
         {
-            var yearText = payrollYear.Split('-').FirstOrDefault();
-            yearText = $"{DateTime.Today.Year / 100}{yearText}";
+            var yearTextSplit = payrollYear.Split('-');
+            var yearText = payrollMonth <= 9 ? yearTextSplit[0] : yearTextSplit[1];
+
+            yearText = $"20{yearText}";
             if (string.IsNullOrEmpty(yearText) || !int.TryParse(yearText, out int year))
                 throw new InvalidOperationException($"Invalid payroll year '{payrollYear}'. Cannot parse start year.");
 
-            return new DateTime(year, payrollMonth <= 9 ? payrollMonth + 3 : payrollMonth - 9, 1);
+            var month = payrollMonth <= 9 ? payrollMonth + 3 : payrollMonth - 9;
+
+            return new DateTime(year, month, 1);
         }
     }
 }

@@ -9,7 +9,6 @@
     "MinLogLevel": "Trace",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "",
     "StubData":  "false" 
-
   },
   "Host": {
     "LocalHttpPort": 7090,

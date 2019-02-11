@@ -168,9 +168,9 @@
                         Completion payments<br />
                         <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
                     </th>
-                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="These figures are not currently shown in the projection tool, but will be soon. Funds will start to expire from May 2019">
+                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Funds you don’t use will expire 24 months after they enter your account. The first funds to expire will be from May 2019">
                             Expired funds<br />
-                            <span class="tip-info"><a href="javascript:void();" class="info-title">available soon</a></span> 
+                            <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span> 
                         </th>
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">Funds in<br />
                         <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
@@ -200,9 +200,7 @@
                             <td>@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
                             <td class="financial">@item.CostOfTraining.FormatCost()</td>
                             <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                            <td class="financial">
-                                <span>–</span>
-                            </td>
+                            <td class="financial">@item.ExpiredFunds.FormatCost()</td>
                             <td class="financial">@item.FundsIn.FormatCost()</td>
                             @if (Model.DisplayCoInvestment)
                             {

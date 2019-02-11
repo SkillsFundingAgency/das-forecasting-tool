@@ -35,9 +35,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 StubEmployerPaymentTable = ConfigurationHelper.GetAppSetting("Stub-EmployerPaymentTable", false),
                 AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true"),
                 ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false),
-                AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false)
-
-            
+                AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false),
+                FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds",false) ?? "true")
             };
 
             SetApiConfiguration(configuration);

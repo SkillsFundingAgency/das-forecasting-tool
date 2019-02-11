@@ -56,12 +56,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
 
 
         [Test]
-        public void Fails_If_Amount_Is_Negative()
+        public void Passes_If_Amount_Is_Negative()
         {
             var validator = new LevyDeclarationEventValidator();
             LevySchemeDeclarationUpdatedMessage.LevyDeclaredInMonth = -1;
             var result = validator.Validate(LevySchemeDeclarationUpdatedMessage);
-            result.IsValid.Should().BeFalse();
+            result.IsValid.Should().BeTrue();
         }
 
         [Test]

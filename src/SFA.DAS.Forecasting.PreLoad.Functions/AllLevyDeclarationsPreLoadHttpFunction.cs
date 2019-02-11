@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                         outputQueueMessage.Add(
                             new PreLoadRequest
                             {
-                                EmployerAccountIds = new string[] { hashingService.HashValue(id) },
+                                EmployerAccountIds = new[] { hashingService.HashValue(id) },
                                 PeriodYear = preLoadRequest.PeriodYear,
                                 PeriodMonth = preLoadRequest.PeriodMonth,
                             });

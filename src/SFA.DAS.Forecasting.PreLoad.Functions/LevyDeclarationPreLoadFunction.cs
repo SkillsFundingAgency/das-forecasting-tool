@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static async Task Run(
             [QueueTrigger(QueueNames.LevyPreLoadRequest)]PreLoadRequest request,
             [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
-            ExecutionContext executionContext,
+			ExecutionContext executionContext,
             TraceWriter writer)
         {
             await FunctionRunner.Run<LevyDeclarationPreLoadFunction>(writer, executionContext,
@@ -44,14 +44,13 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    var levyDataService = container.GetInstance<IEmployerDataService>();
                    logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", request.EmployerAccountIds)}, {request.PeriodYear}, {request.PeriodMonth}");
                    var messageCount = 0;
-                   var schemes = new Dictionary<string, string>();
+				   var schemes = new Dictionary<string, string>();
                    foreach (var employerId in request.EmployerAccountIds)
                    {
                        var levyDeclarations = await levyDataService.LevyForPeriod(employerId, request.PeriodYear, request.PeriodMonth);
-                       if (levyDeclarations.Count < 1)
+                       if (!levyDeclarations.Any())
                        {
-                           logger.Info($"No levy declarations found for employer: {employerId}");
-                           continue;
+                           logger.Info($"No levy declarations found for employer {employerId} at the requested period");
                        }
                        levyDeclarations.ForEach(ld =>
                        {
@@ -65,11 +64,11 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                            }
                            outputQueueMessage.Add(ld);
                        });
-                   }
+				   }
 
                    logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
 
-                   if (request.SubstitutionId.HasValue)
+				   if (request.SubstitutionId.HasValue)
                    {
                        logger.Info($"Added message with SubstitutionID: {hashingService.HashValue(request.SubstitutionId.Value)}");
                    }

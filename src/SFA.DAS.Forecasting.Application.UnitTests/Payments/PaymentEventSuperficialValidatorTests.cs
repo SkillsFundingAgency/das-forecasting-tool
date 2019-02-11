@@ -84,15 +84,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             result.IsValid.Should().BeFalse();
         }
 
-        [Test, Ignore("Until the Expired Funds story is ready there is no point in validating the payment amount.")]
-        public void Fails_If_Amount_Is_Negative()
-        {
-            var validator = new PaymentEventSuperficialValidator();
-            PaymentCreatedMessage.Amount = -1;
-            var result = validator.Validate(PaymentCreatedMessage);
-            result.IsValid.Should().BeFalse();
-        }
-
         [Test]
         public void Fails_If_Funding_Source_Is_LessThan_0()
         {
@@ -102,7 +93,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Payments
             result.IsValid.Should().BeFalse();
         }
 
-        [TestCase(FundingSource.CoInvestedEmployer)]
         [TestCase(FundingSource.FullyFundedSfa)]
         public void Fails_If_Funding_Source_Is_CoInvestedEmployer_Or_FullyFundedSfa(FundingSource fundingSource)
         {

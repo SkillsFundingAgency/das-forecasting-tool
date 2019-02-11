@@ -4,8 +4,10 @@ using System.Linq;
 using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -114,7 +116,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Includes_Installments()
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
 
             accountProjection.Projections.First().FutureFunds
                 .ShouldBeEquivalentTo(_account.Balance, because: "First month should be the same as current balance");
@@ -129,7 +131,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 7);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 7);
 
             accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(0);
             accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
@@ -296,7 +298,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
             //Act
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(2018,10,20), 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
@@ -725,5 +727,24 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             Assert.AreEqual(expected, monthEndBalance);
         }
+
+        [Test]
+        public void ShouldCalculateExpiredFunds_And_The_Original_Projection_Value_Is_Stored()
+        {
+            var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
+
+            var expiredFunds = new Dictionary<CalendarPeriod,decimal>()
+            {
+                {new CalendarPeriod(DateTime.UtcNow.Year,DateTime.UtcNow.Month+1),15000  }
+            };
+            accountProjection.BuildLevyTriggeredProjections(DateTime.UtcNow, 24);
+
+            accountProjection.UpdateProjectionsWithExpiredFunds(expiredFunds);
+
+            Assert.IsTrue(accountProjection.Projections.Sum(s => s.FutureFundsNoExpiry) != 0);
+            Assert.IsTrue(accountProjection.Projections.Sum(s=>s.FutureFundsNoExpiry) != accountProjection.Projections.Sum(s=>s.FutureFunds));
+            Assert.IsTrue(accountProjection.Projections.Sum(s => s.ExpiredFunds) > 0);
+        }
+
     }
 }

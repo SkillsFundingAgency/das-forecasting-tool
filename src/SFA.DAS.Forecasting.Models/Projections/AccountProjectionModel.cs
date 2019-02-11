@@ -11,6 +11,8 @@ namespace SFA.DAS.Forecasting.Models.Projections
         public ProjectionGenerationType ProjectionGenerationType { get; set; } // ProjectionGenerationType
         public short Month { get; set; } // Month
         public int Year { get; set; } // Year
+        public bool IsFirstMonth { get; set; }
+
 
         public decimal LevyFundsIn { get; set; }
         public decimal LevyFundedCostOfTraining { get; set; }
@@ -25,16 +27,28 @@ namespace SFA.DAS.Forecasting.Models.Projections
 
         public decimal CommittedTransferCost { get; set; }
         public decimal CommittedTransferCompletionCost { get; set; }
+        public decimal ExpiredFunds { get; set; }
         public decimal FutureFunds { get; set; } // FutureFunds
         public decimal CoInvestmentEmployer { get; set; } // CoInvestmentEmployer
         public decimal CoInvestmentGovernment { get; set; } // CoInvestmentGovernment
+        public decimal FutureFundsNoExpiry { get; set; }
 
-        
+
         public AccountProjectionModel()
         {
             CoInvestmentEmployer = 0m;
             CoInvestmentGovernment = 0m;
         }
 
+        public decimal CalculateFutureFunds(decimal expiredFundsTotal)
+        {
+            if (IsFirstMonth && ExpiredFunds < 0 &&
+                ProjectionGenerationType == ProjectionGenerationType.LevyDeclaration)
+            {
+                return FutureFunds;
+            }
+
+            return FutureFunds - ExpiredFunds - expiredFundsTotal;
+        }
     }
 }

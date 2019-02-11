@@ -45,3 +45,6 @@ where SendingEmployerAccountId = 0
 update Commitment
 set SendingEmployerAccountId = EmployerAccountId
 where SendingEmployerAccountId = 0
+
+
+UPDATE AccountProjection set FutureFundsNoExpiry = FutureFunds

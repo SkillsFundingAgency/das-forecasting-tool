@@ -137,7 +137,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .Setup(x => x.Get(It.IsAny<long>()))
                 .ReturnsAsync(currentBalance);
 
-            _moqer.SetInstance<IForecastingMapper>(new ForecastingMapper());
+            _moqer.SetInstance<IForecastingMapper>(new ForecastingMapper(Mock.Of<IApplicationConfiguration>()));
         }
 
         [Test]

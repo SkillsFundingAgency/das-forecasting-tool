@@ -226,6 +226,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             DataContext.LevyDeclarations.RemoveRange(levyDeclarations);
             DataContext.SaveChanges();
         }
+        protected void DeleteAllLevyDeclarations()
+        {
+            var levyDeclarations = DataContext.LevyDeclarations
+                .Where(levy => levy.EmployerAccountId == Config.EmployerAccountId)
+                .ToList();
+            DataContext.LevyDeclarations.RemoveRange(levyDeclarations);
+            DataContext.SaveChanges();
+        }
 
         protected void DeleteCommitments(long employerId)
         {
@@ -266,14 +274,15 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
             var payrollDate = new PayrollDateService().GetPayrollDate(period.PayrollYear, period.PayrollMonth);
             foreach (var levySubmission in levySubmissions)
             {
+                var levyPayroll = levySubmission.UseCreatedDateAsPayrollDate ? new PayrollDateService().GetPayrollDate(levySubmission.PayrollYear,levySubmission.PayrollMonth) : payrollDate;
                 DataContext.LevyDeclarations.Add(new LevyDeclarationModel
                 {
                     EmployerAccountId = Config.EmployerAccountId,
                     DateReceived = DateTime.Now,
                     LevyAmountDeclared = levySubmission.Amount,
-                    PayrollDate = payrollDate,
-                    PayrollMonth = (byte)period.PayrollMonth,
-                    PayrollYear = period.PayrollYear,
+                    PayrollDate = levyPayroll,
+                    PayrollMonth = (byte)(levySubmission.UseCreatedDateAsPayrollDate? levySubmission.PayrollMonth : period.PayrollMonth),
+                    PayrollYear = levySubmission.UseCreatedDateAsPayrollDate ? levySubmission.PayrollYear : period.PayrollYear,
                     Scheme = levySubmission.Scheme,
                     TransactionDate = levySubmission.CreatedDateValue
                 });
@@ -312,7 +321,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     MonthlyInstallment = commitment.InstallmentAmount,
                     NumberOfInstallments = (short)commitment.NumberOfInstallments,
                     FundingSource = GetFundingSource(commitment),
-                    UpdatedDateTime = DateTime.UtcNow
+                    UpdatedDateTime = DateTime.UtcNow,
+                    HasHadPayment = true
                 };
                 var commitmentRepo = CommitmentsDataService.Get(commitmentModel.EmployerAccountId, commitmentModel.ApprenticeshipId).Result ??
                                      new CommitmentModel();

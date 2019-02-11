@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
@@ -30,7 +32,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var hashingService = container.GetInstance<IHashingService>();
                     var dataService = container.GetInstance<PreLoadPaymentDataService>();
 
-                    var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
+					var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
 
                     var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
                     logger.Info($"Found {earningDetails.Count} for Account: {hashedAccountId}");
@@ -39,8 +41,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         await dataService.StoreEarningDetails(message.EmployerAccountId, item);
                     }
-
-                    logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
+                    
+					logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
                     return message;
                 });
         }
