@@ -8,9 +8,12 @@
 	PayrollDate DATETIME NOT NULL,
 	LevyAmountDeclared DECIMAL(18,5) NOT NULL,
 	TransactionDate DATETIME NOT NULL,
-	DateReceived DATETIME NOT NULL constraint DF_LevyDeclaration__DateReceived default(getdate())
+	DateReceived DATETIME NOT NULL constraint DF_LevyDeclaration__DateReceived default(getdate()), 
+    [SubmissionId] BIGINT NULL
 )
 
 GO
 CREATE NONCLUSTERED INDEX [idx_commitment_employerAccountId] ON [dbo].[LevyDeclaration] ([EmployerAccountId]) INCLUDE ([scheme], [PayrollYear], [PayrollMonth], [PayrollDate], [LevyAmountDeclared], [TransactionDate], [DateReceived]) WITH (ONLINE = ON)
+GO
+CREATE NONCLUSTERED INDEX [idx_commitment_submissionId] ON [dbo].[LevyDeclaration] ([SubmissionId]) INCLUDE ([EmployerAccountId],[scheme], [PayrollYear], [PayrollMonth], [PayrollDate], [LevyAmountDeclared], [TransactionDate], [DateReceived]) WITH (ONLINE = ON)
 GO

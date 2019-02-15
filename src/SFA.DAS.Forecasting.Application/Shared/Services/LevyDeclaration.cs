@@ -4,6 +4,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public class LevyDeclaration
     {
+        public long SubmissionId { get; set; }
         public string EmpRef { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime SubmissionDate { get; set; }
