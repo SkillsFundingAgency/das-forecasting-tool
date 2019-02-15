@@ -113,12 +113,16 @@ this.FeatureBackground();
                         "DEF-5678",
                         "3000",
                         "Today"});
+            table2.AddRow(new string[] {
+                        "REF-5678",
+                        "-3000",
+                        "Today"});
 #line 14
  testRunner.Given("I have made the following levy declarations", ((string)(null)), table2, "Given ");
-#line 18
+#line 19
  testRunner.When("the SFA Employer HMRC Levy service notifies the Forecasting service of the levy d" +
                     "eclarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 19
+#line 20
  testRunner.Then("the Forecasting Levy service should store the levy declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -129,17 +133,17 @@ this.FeatureBackground();
         public virtual void AC2_DoNotStoreInvalidLevyCreditEventData()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC2 - Do not store invalid levy credit event data", null, ((string[])(null)));
-#line 21
+#line 22
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 6
 this.FeatureBackground();
-#line 22
- testRunner.Given("I made some invalid levy declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 23
+ testRunner.Given("I made some invalid levy declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 24
  testRunner.When("the SFA Employer HMRC Levy service notifies the Forecasting service of the levy d" +
                     "eclarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 24
+#line 25
  testRunner.Then("the Forecasting Levy service should not store the levy declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
@@ -150,7 +154,7 @@ this.FeatureBackground();
         public virtual void AC3_StoreLevyDeclarationsWith0Amount()
         {
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("AC3 - Store levy declarations with 0 amount", null, ((string[])(null)));
-#line 26
+#line 27
 this.ScenarioInitialize(scenarioInfo);
             this.ScenarioStart();
 #line 6
@@ -164,12 +168,12 @@ this.FeatureBackground();
                         "ABC-1234",
                         "0",
                         "Today"});
-#line 27
+#line 28
  testRunner.Given("I have made the following levy declarations", ((string)(null)), table3, "Given ");
-#line 30
+#line 31
  testRunner.When("the SFA Employer HMRC Levy service notifies the Forecasting service of the levy d" +
                     "eclarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 31
+#line 32
  testRunner.Then("the Forecasting Levy service should store the levy declarations", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

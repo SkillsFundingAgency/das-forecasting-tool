@@ -5,6 +5,14 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy
 {
     public class LevySubmission
     {
+        public long SubmissionId
+        {
+            get
+            {
+                var random = new Random();
+                return random.Next(int.MaxValue);
+            }
+        }
         public string Scheme { get; set; }
         public decimal Amount { get; set; }
         public string CreatedDate { get; set; }

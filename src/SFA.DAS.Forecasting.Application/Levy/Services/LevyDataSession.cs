@@ -60,6 +60,12 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<LevyDeclarationModel> GetBySubmissionId(long submissionId)
+        {
+            return await _dataContext.LevyDeclarations.FirstOrDefaultAsync(levy =>
+                levy.SubmissionId.Equals(submissionId));
+        }
+
         public async Task<LevyDeclarationModel> Get(long employerAccountId, string scheme, string payrollYear, byte payrollMonth)
         {
             return await _dataContext.LevyDeclarations.FirstOrDefaultAsync(levy =>

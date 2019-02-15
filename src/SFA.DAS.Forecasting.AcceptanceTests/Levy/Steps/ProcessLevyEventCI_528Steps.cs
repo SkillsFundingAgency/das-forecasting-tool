@@ -88,6 +88,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 		{
 			LevySubmissions.Select(levySubmission => new LevySchemeDeclarationUpdatedMessage
 				{
+                    SubmissionId = levySubmission.SubmissionId,
 					AccountId = Config.EmployerAccountId,
 					LevyDeclaredInMonth = levySubmission.Amount,
 					PayrollMonth = PayrollPeriod.PayrollMonth,
@@ -111,7 +112,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 	    {
 		    LevySubmissions.Select(levySubmission => new LevySchemeDeclarationUpdatedMessage
 			    {
-				    AccountId = Config.EmployerAccountId,
+			        SubmissionId = levySubmission.SubmissionId,
+                    AccountId = Config.EmployerAccountId,
 				    LevyDeclaredInMonth = levySubmission.Amount,
 				    PayrollMonth = PayrollPeriod.PayrollMonth,
 				    PayrollYear = PayrollPeriod.PayrollYear,
