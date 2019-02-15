@@ -31,8 +31,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var levyDataService = container.GetInstance<IEmployerDataService>();
                     var hashingService = container.GetInstance<IHashingService>();
 
-                    //TODO: Change to get all accounts
-                    var employerIds = await levyDataService.EmployersForPeriod();
+                    var employerIds = await levyDataService.GetAllAccounts();
 
                     logger.Info($"Found {employerIds.Count} employer(s) for period; Year: {preLoadRequest.PeriodYear} Month: {preLoadRequest.PeriodMonth}");
 

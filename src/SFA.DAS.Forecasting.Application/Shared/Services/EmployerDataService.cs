@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string employerId, string payrollYear, short periodMonth);
 
-        Task<List<long>> EmployersForPeriod();
+        Task<List<long>> GetAllAccounts();
 
 	    Task<List<PeriodInformation>> GetPeriodIds();
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return accountIds.ToList();
         }
 
-        public async Task<List<long>> EmployersForPeriod()
+        public async Task<List<long>> GetAllAccounts()
         {
             var accountIds = await _databaseService.GetAccountIds();
 

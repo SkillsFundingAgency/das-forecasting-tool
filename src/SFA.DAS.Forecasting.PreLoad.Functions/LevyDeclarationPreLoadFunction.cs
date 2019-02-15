@@ -7,6 +7,7 @@ using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 using SFA.DAS.HashingService;
 
@@ -16,13 +17,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     public class LevyDeclarationPreLoadFunction : IFunction
     {
         [FunctionName("LevyDeclarationPreLoadFunction")]
-        public static async Task Run(
+        [return: Queue(QueueNames.GenerateProjections)]
+        public static async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.LevyPreLoadRequest)]PreLoadRequest request,
             [Queue(QueueNames.ValidateLevyDeclaration)] ICollector<LevySchemeDeclarationUpdatedMessage> outputQueueMessage,
 			ExecutionContext executionContext,
             TraceWriter writer)
         {
-            await FunctionRunner.Run<LevyDeclarationPreLoadFunction>(writer, executionContext,
+            return await FunctionRunner.Run<LevyDeclarationPreLoadFunction, GenerateAccountProjectionCommand>(writer, executionContext,
                async (container, logger) =>
                {
                    var hashingService = container.GetInstance<IHashingService>();
@@ -31,14 +33,14 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    {
                        var msg = $"{nameof(PreLoadRequest)} not valid. Function will exit.";
                        logger.Warn(msg);
-                       return;
+                       return null;
                    }
 
                    if (request.SubstitutionId.HasValue && request.EmployerAccountIds.Count() != 1)
                    {
                        var msg = $"If {nameof(request.SubstitutionId)} is provided there must be exactly 1 EmployerAccountId";
                        logger.Warn(msg);
-                       return;
+                       return null;
                    }
 
                    var levyDataService = container.GetInstance<IEmployerDataService>();
@@ -50,7 +52,12 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        var levyDeclarations = await levyDataService.LevyForPeriod(employerId, request.PeriodYear, request.PeriodMonth);
                        if (!levyDeclarations.Any())
                        {
-                           logger.Info($"No levy declarations found for employer {employerId} at the requested period");
+                           logger.Info($"No levy declarations found for employer {employerId} at the requested period - projection will be re-generated using last totals");
+                           return new GenerateAccountProjectionCommand
+                           {
+                               EmployerAccountId = hashingService.DecodeValue(employerId),
+                               ProjectionSource = ProjectionSource.LevyDeclaration
+                           };
                        }
                        levyDeclarations.ForEach(ld =>
                        {
@@ -73,6 +80,8 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                        logger.Info($"Added message with SubstitutionID: {hashingService.HashValue(request.SubstitutionId.Value)}");
                    }
                    logger.Info($"Added {messageCount} levy declarations");
+
+                   return null;
                });
         }
     }
