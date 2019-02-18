@@ -5,6 +5,7 @@ namespace SFA.DAS.Forecasting.Models.Levy
     public class LevyDeclarationModel
     {
         public long Id { get; set; }
+        public long SubmissionId { get; set; }
         public long EmployerAccountId { get; set; }
         public string Scheme { get; set; }
         public string PayrollYear { get; set; }

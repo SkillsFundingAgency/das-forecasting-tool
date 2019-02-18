@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.HashingService;
 using SFA.DAS.NLog.Logger;
@@ -13,29 +12,26 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string employerId, string payrollYear, short periodMonth);
 
-        Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth);
+        Task<List<long>> GetAllAccounts();
 
 	    Task<List<PeriodInformation>> GetPeriodIds();
 
+        Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth);
     }
 
     public class LevyDeclarations : List<LevyDeclarationViewModel>, IAccountResource { }
 
     public class EmployerDataService : IEmployerDataService
     {
-        private readonly IAccountApiClient _accountApiClient;
         private readonly IHashingService _hashingService;
         private readonly ILog _logger;
         private readonly IEmployerDatabaseService _databaseService;
 
-        public EmployerDataService(
-            IAccountApiClient accountApiClient,
-            IHashingService hashingService,
+        public EmployerDataService(IHashingService hashingService,
             ILog logger,
             IEmployerDatabaseService databaseService
             )
         {
-            _accountApiClient = accountApiClient;
             _hashingService = hashingService;
             _logger = logger;
             _databaseService = databaseService;
@@ -55,14 +51,13 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             _logger.Info($"Got {levydeclarations.Count} levy declarations for employer {hashedAccountId}.");
             var validLevyDeclarations = levydeclarations
-                .GroupBy(ld => ld.EmpRef)
-                .Select(g => g.OrderByDescending(ld => ld.SubmissionDate)
-                .FirstOrDefault())
+                .OrderByDescending(ld => ld.SubmissionDate)
                 .ToList();
             _logger.Info($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {hashedAccountId}.");
             
             return validLevyDeclarations.Select(levy => new LevySchemeDeclarationUpdatedMessage
             {
+                SubmissionId= levy.SubmissionId,
                 AccountId = accountId,
                 CreatedAt = levy.CreatedDate,
                 CreatedDate = levy.CreatedDate,
@@ -76,16 +71,29 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         public async Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth)
         {
-            var accountIds = await _databaseService
-                .GetAccountIds(payrollYear, payrollMonth);
-
+            var accountIds = await _databaseService.GetAccountIdsForPeriod(payrollYear, payrollMonth);
             if (accountIds == null || !accountIds.Any())
             {
-                _logger.Info($"Not able to find any EmployerAccountIds, Year: {payrollYear}, Month: {payrollMonth}");
+                _logger.Info("Not able to find any EmployerAccountIds");
                 return new List<long>();
             }
 
-            _logger.Info($"Got {accountIds.Count} for Year: {payrollYear} Month: {payrollMonth}.");
+            _logger.Info($"Got {accountIds.Count}.");
+
+            return accountIds.ToList();
+        }
+
+        public async Task<List<long>> GetAllAccounts()
+        {
+            var accountIds = await _databaseService.GetAccountIds();
+
+            if (accountIds == null || !accountIds.Any())
+            {
+                _logger.Info("Not able to find any EmployerAccountIds");
+                return new List<long>();
+            }
+
+            _logger.Info($"Got {accountIds.Count}.");
 
             return accountIds.ToList();
         }
