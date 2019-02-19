@@ -43,7 +43,7 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             var fundsIn = projections.ToDictionary(d => new CalendarPeriod(d.Year, d.Month), v => v.LevyFundsIn);
             
             var fundsOut = projections.ToDictionary(d => new CalendarPeriod(d.Year, d.Month),
-                v => v.LevyFundedCostOfTraining + v.LevyFundedCompletionPayments);
+                v => v.LevyFundedCostOfTraining + v.LevyFundedCompletionPayments + v.TransferOutCostOfTraining + v.TransferOutCompletionPayments);
 
             fundsIn = fundsIn.Concat(previousLevyTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
 
