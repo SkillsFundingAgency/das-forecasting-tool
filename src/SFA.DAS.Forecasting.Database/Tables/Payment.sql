@@ -26,5 +26,7 @@ CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId_SendingEmployerAccountI
 GO
 CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId_ApprenticeshipId] ON [dbo].[Payment] ([EmployerAccountId], [ApprenticeshipId]) WITH (ONLINE = ON)
 GO
+CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId_LearnerId] ON [dbo].[Payment] ([EmployerAccountId], [LearnerId]) WITH (ONLINE = ON)
+GO
 CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId_ExternalPaymentId] ON [dbo].[Payment] ([EmployerAccountId], [ExternalPaymentId]) WITH (ONLINE = ON)
 GO
