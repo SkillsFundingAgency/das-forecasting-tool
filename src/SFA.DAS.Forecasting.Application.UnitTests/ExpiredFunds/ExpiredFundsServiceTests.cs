@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SFA.DAS.Forecasting.Messages.Projections;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
 {
@@ -130,7 +132,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
             var employerPaymentDataSession = _moqer.GetMock<IEmployerPaymentDataSession>();
             employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
 
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId);
+            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018,10,21));
 
             var levyDataSession = _moqer.GetMock<ILevyDataSession>();
             levyDataSession.Verify(v => v.GetAllNetTotals(employerAccountId));
@@ -143,7 +145,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
             employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
             var sut = _moqer.Resolve<ExpiredFundsService>();
             
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId);
+            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
             employerPaymentDataSession.Verify(v => v.GetPaymentTotals(employerAccountId));
         }
@@ -157,7 +159,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
 
             var sut = _moqer.Resolve<ExpiredFundsService>();
 
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId);
+            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
             var expiredFunds = _moqer.GetMock<IExpiredFunds>();
             expiredFunds.Verify(v => v.GetExpiringFunds(It.IsAny<Dictionary<CalendarPeriod, decimal>>(), It.IsAny<Dictionary<CalendarPeriod, decimal>>(), null, 24));
@@ -184,11 +186,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
                                                             calledMonths = months;
                                                         });
 
-            sut.GetExpiringFunds(_accountProjectionModels, _netLevyTotals, _paymentTotals);
+            sut.GetExpiringFunds(_accountProjectionModels, _netLevyTotals, _paymentTotals, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
 
             calledFundIn.ShouldAllBeEquivalentTo(_expiredFundsIn);    
-            calledFundOut.ShouldAllBeEquivalentTo(_expiredFundsOut);
+            calledFundOut.ShouldAllBeEquivalentTo(_expiredFundsOut.Skip(1));
             calledExpired.ShouldAllBeEquivalentTo(calledExpired);
             calledMonths.Should().Be(24);
 
@@ -204,9 +206,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
 
             var sut = _moqer.Resolve<ExpiredFundsService>();
 
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId);
+            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
-            expiredFunds.Verify(x=>x.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(),It.Is<IDictionary<CalendarPeriod, decimal>>(c=>c.Values.Sum().Equals(5715m)),null,24));
+            expiredFunds.Verify(x=>x.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(),It.Is<IDictionary<CalendarPeriod, decimal>>(c=>c.Values.Sum().Equals(4900m)),null,24));
         }
 
     }

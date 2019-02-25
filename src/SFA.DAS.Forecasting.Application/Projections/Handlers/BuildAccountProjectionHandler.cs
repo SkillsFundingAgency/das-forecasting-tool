@@ -59,7 +59,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             else
                 projections.BuildPayrollPeriodEndTriggeredProjections(startDate, _config.NumberOfMonthsToProject);
     
-            var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId);
+            var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId, messageProjectionSource, startDate);
 
             if (expiringFunds.Any())
             {
