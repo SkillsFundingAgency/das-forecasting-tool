@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Models.Payments;
-using CalendarPeriod = SFA.DAS.EmployerFinance.Domain.ExpiredFunds.CalendarPeriod;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Domain.Payments.Services
 {

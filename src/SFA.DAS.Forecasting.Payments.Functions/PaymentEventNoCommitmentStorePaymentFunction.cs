@@ -10,9 +10,8 @@ namespace SFA.DAS.Forecasting.Payments.Functions
     public class PaymentEventNoCommitmentStorePaymentFunction : IFunction
     {
         [FunctionName("PaymentEventNoCommitmentStorePaymentFunction")]
-        [return: Queue(QueueNames.CommitmentProcessor)]
         public static async Task Run(
-            [QueueTrigger(QueueNames.PaymentProcessor)]PaymentCreatedMessage paymentCreatedMessage,
+            [QueueTrigger(QueueNames.PaymentNoCommitmentProcessor)]PaymentCreatedMessage paymentCreatedMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {

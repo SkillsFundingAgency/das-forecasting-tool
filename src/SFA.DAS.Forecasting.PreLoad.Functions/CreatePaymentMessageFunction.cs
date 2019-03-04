@@ -19,7 +19,6 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static PreLoadPaymentMessage Run(
             [QueueTrigger(QueueNames.CreatePaymentMessage)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
-            [Queue(QueueNames.PaymentValidatorNoCommitment)] ICollector<PaymentCreatedMessage> noCommitmentOutputQueueMessage,
 			ExecutionContext executionContext,
             TraceWriter writer)
         {

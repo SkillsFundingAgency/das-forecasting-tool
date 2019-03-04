@@ -16,14 +16,15 @@
     [FutureFunds] DECIMAL(18,5) NOT NULL,
 	[CoInvestmentEmployer] DECIMAL(18,5) NOT NULL default(0),
 	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0), 
-    [ExpiredFunds] DECIMAL(18, 5) NOT NULL DEFAULT (0)
+    [ExpiredFunds] DECIMAL(18, 5) NOT NULL DEFAULT (0), 
+    [FutureFundsNoExpiry] DECIMAL(18, 5) NOT NULL DEFAULT 0
 )
 GO
 
 CREATE NONCLUSTERED INDEX [idx_account_projection] ON [dbo].[AccountProjection] ([EmployerAccountId]) 
-	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [Month], [ProjectionCreationDate], [ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining], [Year]) 
+	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [Month], [ProjectionCreationDate], [ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining], [Year], [FutureFundsNoExpiry]) 
 WITH (ONLINE = ON)
 GO
 CREATE NONCLUSTERED INDEX [idx_account_projection_account_date] ON [dbo].[AccountProjection] ([EmployerAccountId],[Month],[Year]) 
-	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [ProjectionCreationDate],[ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining]) 
+	INCLUDE ([CoInvestmentEmployer], [CoInvestmentGovernment], [CompletionPayments], [FundsIn], [FutureFunds], [ProjectionCreationDate],[ProjectionGenerationType], [TotalCostOfTraining], [TransferInCompletionPayments], [TransferInTotalCostOfTraining], [TransferOutCompletionPayments], [TransferOutTotalCostOfTraining], [FutureFundsNoExpiry]) 
 WITH (ONLINE = ON)

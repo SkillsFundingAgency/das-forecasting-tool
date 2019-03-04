@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
             if (!projections.Any()) return null;
 
-            var firstProjection = projections.OrderBy(o => new { o.Year, o.Month }).First();
+            var firstProjection = projections.OrderBy(o=>o.Year).ThenBy(m=>m.Month).First();
             firstProjection.IsFirstMonth = true;
 
             return projections;

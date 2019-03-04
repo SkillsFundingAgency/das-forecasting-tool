@@ -5,7 +5,7 @@ using SFA.DAS.Commitments.Api.Client;
 using SFA.DAS.Commitments.Api.Client.Configuration;
 using SFA.DAS.Commitments.Api.Client.Interfaces;
 using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
@@ -81,7 +81,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Use<ExpiredFundsService>();
 
             For<IExpiredFunds>()
-                .Use<EmployerFinance.ExpiredFunds.ExpiredFunds>();
+                .Use<EmployerFinance.Types.Models.ExpiredFunds>();
            
             SetUpCommitmentsApi();
         }

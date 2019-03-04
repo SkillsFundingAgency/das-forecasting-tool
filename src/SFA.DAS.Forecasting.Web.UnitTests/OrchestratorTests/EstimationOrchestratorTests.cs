@@ -2,7 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
-using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -42,11 +42,16 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             _mocker.GetMock<IAccountEstimationProjection>()
                 .Setup(x => x.Projections)
-                .Returns((new List<AccountEstimationProjectionModel>()).AsReadOnly);
-            _accountEstimationProjection = _mocker.Resolve<IAccountEstimationProjection>();
+                .Returns(new List<AccountEstimationProjectionModel>().AsReadOnly);
 
+            _mocker.GetMock<IAccountEstimationProjection>()
+                .Setup(x => x.TransferAllowance)
+                .Returns(400m);
+
+            _accountEstimationProjection = _mocker.Resolve<IAccountEstimationProjection>();
+            
             _mocker.GetMock<IAccountEstimationProjectionRepository>()
-                .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+		        .Setup(x => x.Get(It.IsAny<AccountEstimation>(),false))
                 .ReturnsAsync(_accountEstimationProjection);
 
             _mocker.GetMock<IExpiredFundsService>()
@@ -107,9 +112,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments,
+            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.First().ActualCost);
                 actual.TransferAllowances.First().ActualCost);
-            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment,
+            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.First().EstimatedCost);
                 actual.TransferAllowances.First().EstimatedCost);
         }
 
@@ -150,7 +155,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(100m, actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(100m,actual.TransferAllowances.Records.First().ActualCost);
 
         }
 
@@ -294,8 +299,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
             //Assert
-            Assert.AreEqual(80m, actual.TransferAllowances.First().EstimatedCost);
-            Assert.AreEqual(100m, actual.TransferAllowances.First().ActualCost);
+            Assert.AreEqual(80m, actual.TransferAllowances.Records.First().EstimatedCost);
+            Assert.AreEqual(100m, actual.TransferAllowances.Records.First().ActualCost);
         }
 
         [Test]
@@ -327,7 +332,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.IsTrue(actual.TransferAllowances.First().IsLessThanCost);
+            Assert.IsTrue(actual.TransferAllowances.Records.First().IsLessThanCost);
         }
 
         [Test]
@@ -359,7 +364,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
+            Assert.IsFalse(actual.TransferAllowances.Records.First().IsLessThanCost);
         }
 
         [Test]
@@ -391,7 +396,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.IsFalse(actual.TransferAllowances.First().IsLessThanCost);
+            Assert.IsFalse(actual.TransferAllowances.Records.First().IsLessThanCost);
         }
 
         [Test]
@@ -436,7 +441,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                 .Setup(x => x.Projections)
                 .Returns(expectedAccountEstimationProjectionList.AsReadOnly);
             _mocker.GetMock<IAccountEstimationProjectionRepository>()
-                .Setup(x => x.Get(It.IsAny<AccountEstimation>()))
+                .Setup(x => x.Get(It.IsAny<AccountEstimation>(), It.IsAny<bool>()))
                 .ReturnsAsync(_accountEstimationProjection);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
@@ -449,9 +454,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         }
 
         [Test]
-        public async Task Then_ExpiredFunds_Are_Calculated()
         {
-
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>()
             {
                 new AccountEstimationProjectionModel()
@@ -523,8 +526,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-
-            _mocker.GetMock<IAccountEstimationProjection>()
                 .Verify(v => v.ApplyExpiredFunds(expiredFunds),Times.Once);
         }
     }

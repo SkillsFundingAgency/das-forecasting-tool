@@ -6,7 +6,7 @@
         public const string ValidateLevyDeclaration = "forecasting-levy-validate-declaration";
 		public const string ValidateLevyDeclarationNoProjection = "forecasting-levy-validate-declaration-no-projection";
 		public const string LevyPreLoadRequest = "forecasting-levy-preload-request";
-	    public const string LevyPreLoadRequestNoProjection = "forecasting-levy-preload-request";
+	    public const string LevyPreLoadRequestNoProjection = "forecasting-levy-preload-request-no-projection";
 
 		// Payment
 		public const string PreLoadPayment = "forecasting-payment-create-preload";
@@ -19,6 +19,8 @@
 	    public const string RemovePreLoadDataNoCommitment = "forecasting-payment-remove-preload-data-no-commitment";
 		public const string PaymentValidator = "forecasting-payment-validate-payment";
         public const string PaymentValidatorNoCommitment = "forecasting-payment-validate-payment-no-commitment";
-	    
+
+        //
+        public const string GenerateProjections = "forecasting-projections-generate-projections";
     }
 }

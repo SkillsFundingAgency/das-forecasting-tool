@@ -29,7 +29,6 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Levy
         {
             var accountIds = new[] { 9912345, 9923451, 9934512, 9945123, 9951234, 9954321 };
             var levyFaker = new Faker<LevySchemeDeclarationUpdatedMessage>()
-                .RuleFor(levy => levy.Id, faker => faker.IndexFaker)
                 .RuleFor(levy => levy.AccountId,
                     faker => faker.PickRandom(accountIds))
                 .RuleFor(levy => levy.CreatedAt, faker => DateTime.Now)

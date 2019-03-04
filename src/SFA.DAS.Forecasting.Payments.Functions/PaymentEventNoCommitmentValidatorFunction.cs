@@ -19,16 +19,15 @@ namespace SFA.DAS.Forecasting.Payments.Functions
         {
             return FunctionRunner.Run<PaymentEventNoCommitmentValidatorFunction, PaymentCreatedMessage>(writer, executionContext, (container, logger) =>
                 {
-                    var validationResults = container.GetInstance<PaymentEventSuperficialValidator>()
-                        .Validate(paymentCreatedMessage);
+                    var validationResults = container.GetInstance<PastPaymentEventSuperficialValidator>().Validate(paymentCreatedMessage);
 
                     if (!validationResults.IsValid)
                     {
-                        logger.Warn($"Payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
+                        logger.Warn($"Past payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
                         return null;
                     }
 
-                    logger.Info($"Validated {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
+                    logger.Info($"Validated past {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
                     
                     return paymentCreatedMessage;
                 });

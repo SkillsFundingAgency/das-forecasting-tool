@@ -9,7 +9,7 @@
     <PackageReference Include="FluentValidation" Version="7.3.4" />
     <PackageReference Include="Microsoft.Azure.WebJobs" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.2.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.16.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.18.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="SFA.DAS.HashingService" Version="1.0.0.43004" />

@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 {
     public interface IAccountEstimationProjectionRepository
     {
-        Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation);
+        Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation, bool showExpiredFunds = false);
     }
 
     public class AccountEstimationProjectionRepository : IAccountEstimationProjectionRepository
@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
         }
 
-        public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation)
+        public async Task<IAccountEstimationProjection> Get(AccountEstimation accountEstimation, bool showExpiredFunds = false)
         {
             var balance = await _currentBalanceRepository.Get(accountEstimation.EmployerAccountId);
             var commitments = _commitmentModelListBuilder.Build(accountEstimation.EmployerAccountId, accountEstimation.Apprenticeships);
@@ -54,7 +54,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             var employerCommitments = new EmployerCommitments(accountEstimation.EmployerAccountId, employerCommitmentsModel);
             var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, actualProjections);
 
-            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, levyFundsIn, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService);
+            return new AccountEstimationProjection(new Account(accountEstimation.EmployerAccountId, balance.Amount, levyFundsIn, balance.TransferAllowance, balance.RemainingTransferBalance), accountEstimationProjectionCommitments, _dateTimeService, showExpiredFunds);
         }
     }
 }

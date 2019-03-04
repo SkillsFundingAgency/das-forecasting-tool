@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -185,6 +185,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 var expiredFundsTotal = _projections.Sum(c => c.ExpiredFunds);
 
                 projection.ExpiredFunds = expiredFund;
+                projection.FutureFundsNoExpiry = projection.FutureFunds;
                 projection.FutureFunds = projection.CalculateFutureFunds(expiredFundsTotal);
             }
             
