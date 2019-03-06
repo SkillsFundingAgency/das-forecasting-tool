@@ -15,6 +15,7 @@ Scenario: AC1 - Store valid levy declarations
 	| Scheme   | Amount | Created Date |
 	| ABC-1234 | 7000   | Today        |
 	| DEF-5678 | 3000   | Today        |
+	| REF-5678 | -3000  | Today        |
 	When the SFA Employer HMRC Levy service notifies the Forecasting service of the levy declarations
 	Then the Forecasting Levy service should store the levy declarations	
 

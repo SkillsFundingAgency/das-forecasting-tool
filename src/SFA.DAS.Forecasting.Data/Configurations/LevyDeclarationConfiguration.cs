@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             HasKey(x => x.Id);
 
             Property(x => x.Id).HasColumnName(@"Id").HasColumnType("bigint").IsRequired().HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
+            Property(x => x.SubmissionId).HasColumnName(@"SubmissionId").HasColumnType("bigint").IsRequired();
             Property(x => x.EmployerAccountId).HasColumnName(@"EmployerAccountId").HasColumnType("bigint").IsRequired();
             Property(x => x.Scheme).HasColumnName(@"Scheme").HasColumnType("nvarchar").IsRequired().HasMaxLength(50);
             Property(x => x.PayrollYear).HasColumnName(@"PayrollYear").HasColumnType("nvarchar").IsRequired().HasMaxLength(10);

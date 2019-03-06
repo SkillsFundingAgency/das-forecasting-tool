@@ -15,6 +15,7 @@ namespace SFA.DAS.Forecasting.Domain.Levy
 
         Task<IEnumerable<LevyPeriod>> GetNetTotals(long employerAccountId);
         Task Store(LevyDeclaration model);
+        Task<LevyDeclaration> Get(LevyDeclarationModel updateModel);
     }
 
     public class LevyDeclarationRepository : ILevyDeclarationRepository
@@ -26,6 +27,14 @@ namespace SFA.DAS.Forecasting.Domain.Levy
         {
             _payrollDateService = payrollDateService ?? throw new ArgumentNullException(nameof(payrollDateService));
             _dataSession = dataSession ?? throw new ArgumentNullException(nameof(dataSession));
+        }
+
+        public async Task<LevyDeclaration> Get(LevyDeclarationModel updateModel)
+        {
+            var model = await _dataSession.GetBySubmissionId(updateModel.SubmissionId) ??
+                        updateModel;
+
+            return new LevyDeclaration(_payrollDateService, model);
         }
 
         public async Task<LevyDeclaration> Get(long employerAccountId, string scheme, string payrollYear,

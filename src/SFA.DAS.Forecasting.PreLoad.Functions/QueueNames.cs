@@ -19,6 +19,8 @@
 	    public const string RemovePreLoadDataNoCommitment = "forecasting-payment-remove-preload-data-no-commitment";
 		public const string PaymentValidator = "forecasting-payment-validate-payment";
         public const string PaymentValidatorNoCommitment = "forecasting-payment-validate-payment-no-commitment";
-	    
+
+        //
+        public const string GenerateProjections = "forecasting-projections-generate-projections";
     }
 }

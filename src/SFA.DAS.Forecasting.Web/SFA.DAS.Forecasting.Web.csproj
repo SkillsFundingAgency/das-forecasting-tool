@@ -747,6 +747,7 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Estimation\_addApprenticeshipContent.cshtml" />
     <Content Include="Views\Estimation\_editApprenticeshipContent.cshtml" />
+    <Content Include="Views\Forecasting\ExpiredFundsGuidance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -760,6 +761,7 @@
     <Content Include="Content\src\sass\forms\_form-multiple-choice.scss" />
     <Content Include="Content\src\sass\forms\_form-validation.scss" />
     <Content Include="Content\spec\support\jasmine.json" />
+    <Content Include="Content\src\sass\_publication.scss" />
     <None Include="Project_Readme.html" />
     <Content Include="Views\Forecasting\Apprenticeships.cshtml" />
   </ItemGroup>

@@ -97,7 +97,7 @@ window.onload = function () {
             theme: 'forecasting'
         });
 
-    $('#BalanceSheet-Tables table.balancesheet a').click(function (e) {
+    $('#BalanceSheet-Tables table.balancesheet th.tippy a').click(function (e) {
         e.preventDefault();
     });
 };

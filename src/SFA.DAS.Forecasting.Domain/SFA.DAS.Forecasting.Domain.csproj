@@ -51,7 +51,7 @@
       <HintPath>..\packages\NLog.4.4.0\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.EmployerFinance.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerFinance.Types.0.2.3\lib\netstandard2.0\SFA.DAS.EmployerFinance.Types.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.EmployerFinance.Types.0.2.24\lib\netstandard2.0\SFA.DAS.EmployerFinance.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>

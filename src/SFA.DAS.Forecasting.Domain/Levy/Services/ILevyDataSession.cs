@@ -14,5 +14,6 @@ namespace SFA.DAS.Forecasting.Domain.Levy.Services
         Task<LevyPeriod> GetNetTotals(long employerAccountId, string payrollYear, byte payrollMonth);
         void Store(LevyDeclarationModel model);
         Task SaveChanges();
+        Task<LevyDeclarationModel> GetBySubmissionId(long submissionId);
     }
 }

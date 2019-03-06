@@ -7,6 +7,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Messages
     /// </summary>
     public class LevySchemeDeclarationUpdatedMessage
     {
+        public long SubmissionId { get; set; }
         public long AccountId { get; set; }
         public DateTime CreatedAt { get; set; }
         public long Id { get; set; }
