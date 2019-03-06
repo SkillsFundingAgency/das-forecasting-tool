@@ -61,7 +61,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
 
             mockBalance.Setup(x => x.EmployerAccountId).Returns(12345);
             mockBalance.Setup(x => x.Amount).Returns(10000);
-            mockBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>()))
+            mockBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>(), false))
                 .ReturnsAsync(true);
            
             currentBalanceRepo.Setup(x => x.Get(It.IsAny<long>()))
