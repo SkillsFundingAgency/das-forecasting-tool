@@ -1,8 +1,6 @@
 ﻿using AutoMoq;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EmployerFinance.Domain.ExpiredFunds;
-using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -13,6 +11,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 {
@@ -112,10 +112,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
 
-            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.First().ActualCost);
-                actual.TransferAllowances.First().ActualCost);
-            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.First().EstimatedCost);
-                actual.TransferAllowances.First().EstimatedCost);
+            Assert.AreEqual(actualTotalCostOfTraining + actualCommittedCompletionPayments, actual.TransferAllowances.Records.First().ActualCost);
+            Assert.AreEqual(transferOutTotalCostOfTraining + transferOutCompletionPayment, actual.TransferAllowances.Records.First().EstimatedCost);
         }
 
         [Test]
@@ -454,6 +452,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         }
 
         [Test]
+        public async Task Then_ExpiredFunds_Are_Calculated()
         {
             var expectedAccountEstimationProjectionList = new List<AccountEstimationProjectionModel>()
             {
@@ -525,8 +524,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                                 .ReturnsAsync(expiredFunds);
 
             var actual = await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);
-
-                .Verify(v => v.ApplyExpiredFunds(expiredFunds),Times.Once);
+            _mocker.GetMock<IAccountEstimationProjection>().Verify(v => v.ApplyExpiredFunds(expiredFunds),Times.Once);
         }
     }
 }

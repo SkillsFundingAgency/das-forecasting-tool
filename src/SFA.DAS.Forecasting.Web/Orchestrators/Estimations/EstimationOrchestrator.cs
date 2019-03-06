@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -20,12 +22,16 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
+        private readonly IExpiredFundsService _expiredFundsService;
+        private readonly IApplicationConfiguration _config;
 
         public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService,
             ICurrentBalanceRepository currentBalanceRepository,
-            IApprenticeshipCourseDataService apprenticeshipCourseService)
+            IApprenticeshipCourseDataService apprenticeshipCourseService,
+            IExpiredFundsService expiredFundsService,
+            IApplicationConfiguration config)
         {
             _estimationProjectionRepository = estimationProjectionRepository ??
                                               throw new ArgumentNullException(nameof(estimationProjectionRepository));
@@ -35,6 +41,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             _currentBalanceRepository = currentBalanceRepository ??
                                         throw new ArgumentNullException(nameof(currentBalanceRepository));
             _apprenticeshipCourseService = apprenticeshipCourseService;
+            _expiredFundsService = expiredFundsService;
+            _config = config;
         }
 
         public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName,

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using AutoMoq;
 using NUnit.Framework;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -362,9 +363,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Then_The_AccountFunds_Estimation_Applys_Etimated_Funds()
         {
             //Arrange
+            _moqer.GetMock<IApplicationConfiguration>().Setup(
+                x => x.FeatureExpiredFunds).Returns(true);
             _moqer.GetMock<IDateTimeService>()
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(2018, 1, 1));
-            var estimationProjection = _moqer.Resolve<AccountEstimationProjection>();
+            var estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), false);
 
             var expiredFunds = new Dictionary<CalendarPeriod, decimal>()
             {

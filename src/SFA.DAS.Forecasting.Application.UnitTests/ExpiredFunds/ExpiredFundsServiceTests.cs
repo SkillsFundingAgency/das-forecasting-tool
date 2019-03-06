@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using SFA.DAS.Forecasting.Messages.Projections;
+using SFA.DAS.Forecasting.Models.Estimation;
 using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
@@ -29,6 +30,9 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
 
         private Dictionary<CalendarPeriod, decimal> _expiredFundsIn;
         private Dictionary<CalendarPeriod, decimal> _expiredFundsOut;
+        private List<AccountEstimationProjectionModel> _accountEstimationProjectionModels;
+        private Dictionary<CalendarPeriod, decimal> _estimatedExpiredFundsIn;
+        private Dictionary<CalendarPeriod, decimal> _estimatedExpiredFundsOut;
 
         [SetUp]
         public void SetUp()
@@ -188,7 +192,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
 
 
            
-            estimatedExpiredFundsIn = new Dictionary<CalendarPeriod, decimal>
+            _estimatedExpiredFundsIn = new Dictionary<CalendarPeriod, decimal>
             {
                 {new CalendarPeriod(2018,1), 1000m  },
                 {new CalendarPeriod(2018,2), 1000m  },
@@ -200,7 +204,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
 
             };
 
-            estimatedExpiredFundsOut = new Dictionary<CalendarPeriod, decimal>
+            _estimatedExpiredFundsOut = new Dictionary<CalendarPeriod, decimal>
             {
                 {new CalendarPeriod(2018,1), 900m  },
                 {new CalendarPeriod(2018,2), 700m  },
@@ -286,18 +290,18 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
         }
 
         [Test]
-        public async Task Get_Estiamted_Expired_Funds_Calculates_ExpiredFunds()
+        public async Task Get_Estimated_Expired_Funds_Calculates_ExpiredFunds()
         {
             var sut = _moqer.Resolve<ExpiredFundsService>();
-            var ExpiredFunds = _moqer.GetMock<IExpiredFunds>();
+            var expiredFunds = _moqer.GetMock<IExpiredFunds>();
 
-            Dictionary<CalendarPeriod, decimal> calledFundIn = null;
-            Dictionary<CalendarPeriod, decimal> calledFundOut = null;
-            Dictionary<CalendarPeriod, decimal> calledExpired = null;
+            IDictionary<CalendarPeriod, decimal> calledFundIn = null;
+            IDictionary<CalendarPeriod, decimal> calledFundOut = null;
+            IDictionary<CalendarPeriod, decimal> calledExpired = null;
             int calledMonths = 0;
 
-            ExpiredFunds.Setup(s => s.GetExpiringFunds(It.IsAny<Dictionary<CalendarPeriod, decimal>>(), It.IsAny<Dictionary<CalendarPeriod, decimal>>(), null, 24))
-                .Callback<Dictionary<CalendarPeriod, decimal>, Dictionary<CalendarPeriod, decimal>, Dictionary<CalendarPeriod, decimal>, int>(
+            expiredFunds.Setup(s => s.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(), It.IsAny<IDictionary<CalendarPeriod, decimal>>(), null, 24))
+                .Callback<IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, int>(
                     (fundsIn, fundsOut, expired, months) =>
                     {
                         calledFundIn = fundsIn;
@@ -306,13 +310,13 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
                         calledMonths = months;
                     });
 
-            var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.ToList().AsReadOnly(), netLevyTotals, paymentTotals);
+            var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.ToList().AsReadOnly(), _netLevyTotals, _paymentTotals);
 
 
-            calledFundIn.ShouldAllBeEquivalentTo(estimatedExpiredFundsIn);
-            calledFundOut.ShouldAllBeEquivalentTo(estimatedExpiredFundsOut);
-            calledExpired.ShouldAllBeEquivalentTo(calledExpired);
-            calledMonths.Should().Equals(24);
+            calledFundIn.ShouldAllBeEquivalentTo(_estimatedExpiredFundsIn);
+            calledFundOut.ShouldAllBeEquivalentTo(_estimatedExpiredFundsOut);
+            calledExpired.ShouldAllBeEquivalentTo(expiringFunds);
+            calledMonths.Should().Be(24);
 
         }
 
