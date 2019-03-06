@@ -1819,6 +1819,10 @@ input[type=number] {
   margin-top: 1.25em;
 }
 
+.heading--no-top-margin {
+  margin-top: 0;
+}
+
 .list-bullet {
   margin-bottom: 40px;
   list-style: disc;
@@ -3014,6 +3018,10 @@ table {
 
 table td.numeric {
   font-size: inherit;
+}
+
+table caption {
+  text-align: left;
 }
 
 td.link-right {
@@ -4464,4 +4472,32 @@ tr.error-row {
 
 .tippy-popper .tippy-content {
   text-align: center;
+}
+
+.publication-header {
+  background: #005ea5;
+  padding: 30px;
+  color: white;
+  margin-top: 15px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+
+.publication-header__publication-type {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  font-size: 24px;
+}
+
+.publication-header__heading {
+  margin: 0;
+}
+
+.publication-header__last-changed {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 19px;
 }

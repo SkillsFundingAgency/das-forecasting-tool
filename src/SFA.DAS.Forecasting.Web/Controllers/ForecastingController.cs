@@ -50,6 +50,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return CreateCsvStream(results, "esfa_apprenticeships");
         }
 
+        [HttpGet]
+        [Route("expired-funds-guidance")]
+        public ActionResult ExpiredFundsGuidance()
+        {
+            return View();
+        }
+
         private ActionResult CreateCsvStream<T>(IEnumerable<T> results, string fileNamePreFix)
         {
             using (var memoryStream = new MemoryStream())

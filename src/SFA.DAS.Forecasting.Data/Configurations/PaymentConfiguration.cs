@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.EmployerAccountId).HasColumnName(@"EmployerAccountId").HasColumnType("bigint").IsRequired();
             Property(x => x.ProviderId).HasColumnName(@"ProviderId").HasColumnType("bigint").IsRequired();
             Property(x => x.ApprenticeshipId).HasColumnName(@"ApprenticeshipId").HasColumnType("bigint").IsRequired();
-            Property(x => x.Amount).HasColumnName(@"Amount").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            Property(x => x.Amount).HasColumnName(@"Amount").HasColumnType("decimal").IsRequired().HasPrecision(18,5);
             Property(x => x.ReceivedTime).HasColumnName(@"ReceivedTime").HasColumnType("datetime").IsRequired();
             Property(x => x.LearnerId).HasColumnName(@"LearnerId").HasColumnType("bigint").IsRequired();
             Property(x => x.CollectionPeriod.Month).HasColumnName(@"CollectionPeriodMonth").HasColumnType("int").IsRequired();

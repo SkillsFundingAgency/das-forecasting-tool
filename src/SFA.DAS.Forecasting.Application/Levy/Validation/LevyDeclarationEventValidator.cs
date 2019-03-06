@@ -7,8 +7,8 @@ namespace SFA.DAS.Forecasting.Application.Levy.Validation
     {
         public LevyDeclarationEventValidator()
         {
+            RuleFor(e => e.SubmissionId).GreaterThan(0);
             RuleFor(e => e.AccountId).GreaterThan(0);
-            RuleFor(e => e.LevyDeclaredInMonth).GreaterThanOrEqualTo(0);
             RuleFor(e => e.EmpRef).NotNull().NotEmpty();
 
             RuleFor(e => e.PayrollYear).NotNull().NotEmpty();

@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Domain.Payments
 
         public void RegisterPayment(PaymentModel payment)
         {
-            if (payment.ExternalPaymentId != ExternalPaymentId)
+            if (!payment.ExternalPaymentId.Equals(ExternalPaymentId, StringComparison.CurrentCultureIgnoreCase))
                 throw new InvalidOperationException($"Invalid payment id.  Does not match original payment id. Id: {payment.ExternalPaymentId}, Current id: {ExternalPaymentId}");
             Model.Amount = payment.Amount;
             Model.CollectionPeriod = payment.CollectionPeriod;

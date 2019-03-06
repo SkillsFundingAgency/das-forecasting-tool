@@ -22,6 +22,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         [Name("Government contribution")]
         public decimal CoInvestmentGovernment { get; set; }
 
+        [Name("Expired Funds")]
+        public decimal ExpiredFunds { get; set; }
+
         [Name("Balance")]
         public decimal Balance { get; set; }
     }

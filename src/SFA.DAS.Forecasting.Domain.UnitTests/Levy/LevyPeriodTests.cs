@@ -21,50 +21,28 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
             _moqer.GetMock<IPayrollDateService>()
                 .Setup(svc => svc.GetPayrollDate(It.IsAny<string>(), It.IsAny<short>()))
                 .Returns(DateTime.Today);
-            _levyDeclarations = new List<LevyDeclarationModel>();
-            _moqer.SetInstance(_levyDeclarations);
+
         }
 
         [Test]
         public void GetPeriodAmount_Returns_0_If_No_Levy_Declared()
         {
-            var levyPeriod = _moqer.Resolve<LevyPeriod>();
+            var levyPeriod = new LevyPeriod();
             Assert.AreEqual(levyPeriod.GetPeriodAmount(), 0);
         }
 
         [Test]
         public void GetPeriodAmount_Returns_Correct_Amount()
         {
-            _levyDeclarations.Add(new LevyDeclarationModel
-            {
-                EmployerAccountId = 12345,
-                Id = 1,
-                PayrollMonth = 1,
-                PayrollYear = "18-19",
-                LevyAmountDeclared = 10,
-                TransactionDate = DateTime.Today,
-                DateReceived = DateTime.Now,
-                Scheme = "ABC/123"
-            });
-            _levyDeclarations.Add(new LevyDeclarationModel
-            {
-                EmployerAccountId = 12345,
-                Id = 1,
-                PayrollMonth = 1,
-                PayrollYear = "18-19",
-                LevyAmountDeclared = 20,
-                TransactionDate = DateTime.Today,
-                DateReceived = DateTime.Now,
-                Scheme = "ABC/123"
-            });
-            var levyPeriod = _moqer.Resolve<LevyPeriod>();
+
+            var levyPeriod = new LevyPeriod(12345,"18-19",1,DateTime.Parse("2018-04-01"), 30,DateTime.Now);
             Assert.AreEqual(levyPeriod.GetPeriodAmount(), 30);
         }
 
         [Test]
         public void GetLastTimeReceived_Returns_Null_If_No_Levy_Declared()
         {
-            var levyPeriod = _moqer.Resolve<LevyPeriod>();
+            var levyPeriod = new LevyPeriod();
             Assert.IsNull(levyPeriod.GetLastTimeReceivedLevy());
         }
     }
