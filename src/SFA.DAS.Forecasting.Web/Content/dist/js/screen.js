@@ -56,19 +56,27 @@ var chart = (function () {
 
 var tabs = (function () {
 
-    $(".tabs-menu a").click(function (e) {
+    $(".tabs-menu a").on('click touchstart', function (e) {
         e.preventDefault();
         $(this).parent().addClass("current");
         $(this).parent().siblings().removeClass("current");
         var tab = $(this).attr("href");
         $(".tab-content").not(tab).css("display", "none");
-        $(tab).fadeIn();
+        $(tab).show();
 
         if (history.replaceState)
             history.replaceState(null, null, tab);
         else
             location.hash = tab;
     });
+
+    var activeTab = $('.tabs-menu a[href="' + location.hash + '"]');
+
+    if (activeTab.length > 0) {
+        activeTab.click();
+    } else {
+        $(".tabs-menu a").eq(0).click();
+    }
 });
 
 window.onload = function () {
@@ -89,7 +97,7 @@ window.onload = function () {
             theme: 'forecasting'
         });
 
-    $('#BalanceSheet-Tables table.balancesheet a').click(function (e) {
+    $('#BalanceSheet-Tables table.balancesheet th.tippy a').click(function (e) {
         e.preventDefault();
     });
 };

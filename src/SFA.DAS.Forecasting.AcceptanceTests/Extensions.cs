@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests
@@ -14,6 +15,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                 case "now":
                     return DateTime.Now;
                 case "yesterday":
+                    return DateTime.Now.AddDays(-1);
                 case "this month":
                     return new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                 case "last week":
@@ -32,8 +34,19 @@ namespace SFA.DAS.Forecasting.AcceptanceTests
                     return DateTime.Today.AddYears(1);
                 case "minvalue":
                     return DateTime.MinValue;
+                case string s when s.Contains("months ago"):
+                    var months = int.Parse("-" + value?.Split(' ')[0]);
+                    return DateTime.Today.AddMonths(months);
                 default:
-                    return DateTime.ParseExact(value, new [] { "dd/MM/yyyy", "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm" }, new CultureInfo("en-GB"), DateTimeStyles.AllowWhiteSpaces);
+                    if (DateTime.TryParseExact(value,
+                        new[] {"dd/MM/yyyy", "d/M/yyyy HH:mm", "dd/MM/yyyy HH:mm"}, new CultureInfo("en-GB"),
+                        DateTimeStyles.AllowWhiteSpaces, out var result))
+                    {
+                        return result;
+                    }
+
+                    return result;
+                    
             }
         }
     }

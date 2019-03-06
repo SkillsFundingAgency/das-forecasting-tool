@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    var body = await req.Content.ReadAsStringAsync();
                    var preLoadRequest = JsonConvert.DeserializeObject<AllEmployersPreLoadPaymentRequest>(body);
 
-                   var employerIds = await employerData.GetEmployersWithPayments(preLoadRequest.PeriodYear, preLoadRequest.PeriodMonth);
+                   var employerIds = await employerData.GetAccountIds();
 
                    var messageCount = 0;
                    foreach (var accountId in employerIds)

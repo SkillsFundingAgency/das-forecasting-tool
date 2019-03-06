@@ -90,7 +90,7 @@
             <div id="account-funds" class="tab-content" style="display: none;">
                 <div class="grid-row">
                     <div class="column-full">
-                        <h2 class="heading-medium">This table shows your estimated costs against your account projection</h2>
+                        <p>This table shows your estimated costs against your account projection</p>
                         <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
                     </div>
                 </div>
@@ -178,11 +178,18 @@
 
                 @if (Model.TransferAllowances != null)
                 {
+                    <div class="grid-row">
+                        <div class="column-full">
+                            <p>This table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.</p>
+                            <p><b>Annual transfer allowance: </b>@Model.TransferAllowances.AnnualTransferAllowance.FormatCost()</p>
+                        </div>
+                    </div>
+
                     var tableBodyClass = Model.CanFund ? "" : "errorTable";
                     var newFinancialYear = true;
-                    var startDateOfEstimationYear = Model.TransferAllowances.First().Date;
+                    var startDateOfEstimationYear = Model.TransferAllowances.Records.First().Date;
 
-                    foreach (var costEstimate in Model.TransferAllowances)
+                    foreach (var costEstimate in Model.TransferAllowances.Records)
                     {
                         var tableRowClass = costEstimate.IsLessThanCost ? "error-row" : "";
                         var tableCellClass = costEstimate.IsLessThanCost ? "error-messsage" : "";
@@ -228,7 +235,7 @@
                                     <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
                                 </tr>
 
-                                if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Last().Equals(costEstimate))
+                                if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Records.Last().Equals(costEstimate))
                                 {
                                     newFinancialYear = true;
                                     startDateOfEstimationYear = costEstimate.Date;
@@ -237,24 +244,7 @@
                         }
                     }
                 }
-                <div class="grid-row">
-
-                    <div class="column-full">
-
-                        <details role="group">
-                            <summary role="button" aria-controls="details-content-0" aria-expanded="false">What does this table show</summary>
-                            <div class="panel panel-width-thin" id="details-content-0" aria-hidden="true">
-                                <p class="text">
-                                    The ‘Remaining transfer allowance’ table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.
-                                </p>
-                                <p class="text">
-                                    The ‘Your current transfer costs’ column shows the cost of the apprenticeships that you’ve already agreed to fund with your transfer funds.
-                                </p>
-                            </div>
-                        </details>
-
-                    </div>
-                </div>
+                
             </div>
 
             <div id="apprenticeships-added" class="tab-content">

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -20,6 +21,13 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
             _projections = new List<AccountProjectionModel>(49);
+        }
+
+        public AccountProjection(Account account, EmployerCommitments employerCommitments, IList<AccountProjectionModel> accountProjectionModels)
+        {
+            _account = account ?? throw new ArgumentNullException(nameof(account));
+            _employerCommitments = employerCommitments ?? throw new ArgumentNullException(nameof(employerCommitments));
+            _projections = accountProjectionModels != null ? accountProjectionModels.ToList() :  throw new ArgumentNullException(nameof(accountProjectionModels));
         }
 
         public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
@@ -167,5 +175,20 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
 		    return currentBalance + levyFundsIn;
 		}
+
+
+        public void UpdateProjectionsWithExpiredFunds(Dictionary<CalendarPeriod,decimal> expiringFunds)
+        {
+            foreach (var projection in _projections)
+            {
+                var expiredFund = expiringFunds.FirstOrDefault(w => w.Key.Year == projection.Year && w.Key.Month == projection.Month).Value;
+                var expiredFundsTotal = _projections.Sum(c => c.ExpiredFunds);
+
+                projection.ExpiredFunds = expiredFund;
+                projection.FutureFundsNoExpiry = projection.FutureFunds;
+                projection.FutureFunds = projection.CalculateFutureFunds(expiredFundsTotal);
+            }
+            
+        }
 	}
 }

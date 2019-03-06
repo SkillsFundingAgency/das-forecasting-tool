@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static PreLoadPaymentMessage Run(
             [QueueTrigger(QueueNames.CreatePaymentMessage)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidator)] ICollector<PaymentCreatedMessage> outputQueueMessage,
-            ExecutionContext executionContext,
+			ExecutionContext executionContext,
             TraceWriter writer)
         {
             return FunctionRunner.Run<CreatePaymentMessageFunction, PreLoadPaymentMessage>(writer, executionContext,
@@ -53,8 +53,10 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     {
                         outputQueueMessage.Add(p);
                     }
-                    logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
-                    return message;
+
+	                logger.Info($"{nameof(CreatePaymentMessageFunction)} finished, Payments created: {paymentCreatedMessage.Count}");
+
+					return message;
                 });
         }
 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -20,26 +21,32 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
+        private readonly IApplicationConfiguration _config;
 
         public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService,
             ICurrentBalanceRepository currentBalanceRepository,
-            IApprenticeshipCourseDataService apprenticeshipCourseService)
+            IApprenticeshipCourseDataService apprenticeshipCourseService, IApplicationConfiguration config)
         {
-            _estimationProjectionRepository = estimationProjectionRepository ?? throw new ArgumentNullException(nameof(estimationProjectionRepository));
-            _estimationRepository = estimationRepository ?? throw new ArgumentNullException(nameof(estimationRepository));
+            _estimationProjectionRepository = estimationProjectionRepository ??
+                                              throw new ArgumentNullException(nameof(estimationProjectionRepository));
+            _estimationRepository =
+                estimationRepository ?? throw new ArgumentNullException(nameof(estimationRepository));
             _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
-            _currentBalanceRepository = currentBalanceRepository ?? throw new ArgumentNullException(nameof(currentBalanceRepository));
+            _currentBalanceRepository = currentBalanceRepository ??
+                                        throw new ArgumentNullException(nameof(currentBalanceRepository));
             _apprenticeshipCourseService = apprenticeshipCourseService;
+            _config = config;
         }
 
-        public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
+        public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName,
+            bool? apprenticeshipRemoved)
         {
             var accountId = GetAccountId(hashedAccountId);
             await RefreshCurrentBalance(accountId);
             var accountEstimation = await _estimationRepository.Get(accountId);
-            var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation);
+            var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation, _config.FeatureExpiredFunds);
             estimationProjector.BuildProjections();
 
             var viewModel = new EstimationPageViewModel
@@ -64,14 +71,18 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             FundingSource = o.FundingSource
                         }).ToList(),
                 },
-                TransferAllowances = estimationProjector?.Projections?.Skip(1)
-                    .Select(o => new EstimationTransferAllowanceVewModel
-                    {
-                        Date = new DateTime(o.Year, o.Month, 1),
-                        ActualCost = o.ActualCosts.TransferFundsOut,
-                        EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
-                        RemainingAllowance = o.AvailableTransferFundsBalance
-                    }).ToList(),
+                TransferAllowances = new EstimationTransferAllowanceVewModel
+                {
+                    AnnualTransferAllowance = estimationProjector.TransferAllowance,
+                    Records = estimationProjector?.Projections?.Skip(1)
+                        .Select(o => new EstimationTransferAllowance
+                        {
+                            Date = new DateTime(o.Year, o.Month, 1),
+                            ActualCost = o.ActualCosts.TransferFundsOut,
+                            EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
+                            RemainingAllowance = o.AvailableTransferFundsBalance
+                        }).ToList(),
+                },
                 AccountFunds =
                     new AccountFundsViewModel
                     {
@@ -99,7 +110,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await _currentBalanceRepository.Store(currentBalance);
         }
 
-        private IReadOnlyList<AccountFundsItem> GetAccountFunds(IEnumerable<AccountEstimationProjectionModel> estimations)
+        private IReadOnlyList<AccountFundsItem> GetAccountFunds(
+            IEnumerable<AccountEstimationProjectionModel> estimations)
         {
             var accountFunds = estimations.Select(estimation => new AccountFundsItem
             {
@@ -107,26 +119,29 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 ActualCost = estimation.ActualCosts.FundsOut,
                 EstimatedCost = estimation.AllModelledCosts.FundsOut,
                 Balance = estimation.EstimatedProjectionBalance,
-                FormattedBalance = estimation.EstimatedProjectionBalance > 0 ? estimation.EstimatedProjectionBalance.FormatCost() : "-"
+                FormattedBalance = estimation.EstimatedProjectionBalance > 0
+                    ? estimation.EstimatedProjectionBalance.FormatCost()
+                    : "-"
             });
 
             return accountFunds.ToList();
         }
 
-        public async Task<AddEditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId, string apprenticeshipsId, string estimationName)
+        public async Task<AddEditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId,
+            string apprenticeshipsId, string estimationName)
         {
             var accountId = _hashingService.DecodeValue(hashedAccountId);
             var estimations = await _estimationRepository.Get(accountId);
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);
             var course = await _apprenticeshipCourseService.GetApprenticeshipCourse(model.CourseId);
-            
+
             return new AddEditApprenticeshipsViewModel
             {
                 Course = course,
                 ApprenticeshipsId = apprenticeshipsId,
                 EstimationName = estimationName,
-                
+
                 NumberOfApprentices = model.ApprenticesCount,
                 TotalInstallments = model.TotalInstallments,
                 TotalCostAsString = model.TotalCost.FormatValue(),

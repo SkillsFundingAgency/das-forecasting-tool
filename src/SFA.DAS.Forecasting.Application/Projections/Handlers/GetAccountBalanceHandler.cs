@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using NLog;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Projections.Services;

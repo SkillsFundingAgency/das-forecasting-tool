@@ -178,8 +178,23 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Projections.Steps
             }, "Account projection failed.");
         }
 
+	    [Then(@"the account projection should not be generated")]
+	    public void ThenTheAccountProjectionShouldNotBeGenerated()
+	    {
+		    WaitForIt(() =>
+		    {
+			    var projections = new List<AccountProjectionModel>();
+			    ExecuteSql(() =>
+			    {
+				    projections = DataContext.AccountProjections.Where(projection =>
+						    projection.EmployerAccountId == Config.EmployerAccountId)
+					    .ToList();
+			    });
+			    return !projections.Any();
+		    }, "Account projection created.");
+	    }
 
-        [Then(@"calculated levy credit value should be the amount declared for the single linked PAYE scheme")]
+		[Then(@"calculated levy credit value should be the amount declared for the single linked PAYE scheme")]
         public void ThenCalculatedLevyCreditValueShouldBeTheAmountDeclaredForTheSingleLinkedPAYEScheme()
         {
             AccountProjections.ForEach(projection => Assert.AreEqual(projection.LevyFundsIn, LevySubmissions.FirstOrDefault()?.Amount, $"Expected the account projections to be {LevySubmissions.FirstOrDefault()?.Amount} but was {projection.LevyFundsIn}"));

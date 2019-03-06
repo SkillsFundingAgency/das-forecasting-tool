@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
             Moqer = new AutoMoqer();
             LevySchemeDeclarationUpdatedMessage = new LevySchemeDeclarationUpdatedMessage
             {
+                SubmissionId = 123,
                 LevyDeclaredInMonth = 1000,
                 AccountId = 123456,
                 PayrollYear = "18/19",
@@ -56,12 +57,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
 
 
         [Test]
-        public void Fails_If_Amount_Is_Negative()
+        public void Passes_If_Amount_Is_Negative()
         {
             var validator = new LevyDeclarationEventValidator();
             LevySchemeDeclarationUpdatedMessage.LevyDeclaredInMonth = -1;
             var result = validator.Validate(LevySchemeDeclarationUpdatedMessage);
-            result.IsValid.Should().BeFalse();
+            result.IsValid.Should().BeTrue();
         }
 
         [Test]
@@ -71,6 +72,15 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
             LevySchemeDeclarationUpdatedMessage.LevyDeclaredInMonth = 0;
             var result = validator.Validate(LevySchemeDeclarationUpdatedMessage);
             result.IsValid.Should().BeTrue();
+        }
+
+        [Test]
+        public void Fails_If_SubmissionId_Has_Not_Been_Set()
+        {
+            var validator = new LevyDeclarationEventValidator();
+            LevySchemeDeclarationUpdatedMessage.SubmissionId = 0;
+            var result = validator.Validate(LevySchemeDeclarationUpdatedMessage);
+            result.IsValid.Should().BeFalse();
         }
 
         [Test]
