@@ -46,7 +46,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
             return await _dataContext
-                .Payments.Where(payment => payment.EmployerAccountId == employerAccountId)
+                .Payments.Where(payment => payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync();

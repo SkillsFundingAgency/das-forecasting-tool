@@ -13,6 +13,9 @@
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Bogus">
       <HintPath>..\packages\Bogus.22.0.8\lib\net40\Bogus.dll</HintPath>
     </Reference>
