@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Shared;
@@ -17,6 +18,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         decimal MonthlyInstallmentAmount { get; }
         decimal TransferAllowance { get; set; }
         void BuildProjections();
+		void ApplyExpiredFunds(Dictionary<CalendarPeriod, decimal> expiredFunds);
     }
 
     public class AccountEstimationProjection : IAccountEstimationProjection
@@ -84,6 +86,19 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
             return _actualAccountProjections.FirstOrDefault(c => c.Month == startDate.Month && c.Year == startDate.Year)?.FutureFundsNoExpiry ?? 0;
         }
 
+        public void ApplyExpiredFunds(Dictionary<CalendarPeriod, decimal> expiredFunds)
+        {
+            foreach (var estimatedProjection in _estimatedProjections)
+            {
+                var expiredFund = expiredFunds.FirstOrDefault(w =>
+                    w.Key.Year == estimatedProjection.Year && w.Key.Month == estimatedProjection.Month).Value;
+
+                estimatedProjection.AllModelledCosts.ExpiredFunds = expiredFund;
+                estimatedProjection.EstimatedProjectionBalance =
+                    estimatedProjection.EstimatedProjectionBalance - expiredFund;
+            }
+        }
+
         private AccountEstimationProjectionModel CreateProjection(DateTime period, decimal accountRemainingTransferBalance, decimal lastProjectedBalance)
         {
             var transferModelledCostOfTraining = _virtualEmployerCommitments.GetTotalCostOfTraining(period, true);
@@ -98,6 +113,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 Month = (short)period.Month,
                 Year = (short)period.Year,
                 ProjectionGenerationType = actualAccountProjection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration,
+                FundsIn = actualAccountProjection?.LevyFundsIn ?? 0m,
                 TransferModelledCosts = new AccountEstimationProjectionModel.Cost
                 {
                     LevyCostOfTraining = transferModelledCostOfTraining.LevyFunded,
@@ -123,7 +139,9 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                     TransferInCostOfTraining = actualAccountProjection?.TransferInCostOfTraining ?? 0m,
                     TransferInCompletionPayments = actualAccountProjection?.TransferInCompletionPayments ?? 0m,
                     TransferOutCostOfTraining = actualAccountProjection?.TransferOutCostOfTraining ?? 0m,
-                    TransferOutCompletionPayments = actualAccountProjection?.TransferOutCompletionPayments ?? 0m
+                    TransferOutCompletionPayments = actualAccountProjection?.TransferOutCompletionPayments ?? 0m,
+                    ExpiredFunds = actualAccountProjection?.ExpiredFunds ?? 0m,
+                                   
                 }
             };
 
