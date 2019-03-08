@@ -695,7 +695,6 @@ this.FeatureBackground();
             TechTalk.SpecFlow.Table table10 = new TechTalk.SpecFlow.Table(new string[] {
                         "Payment Amount",
                         "Apprentice Name",
-                        "Provider Name",
                         "Course Name",
                         "Course Level",
                         "Start Date",
@@ -706,7 +705,6 @@ this.FeatureBackground();
             table10.AddRow(new string[] {
                         "0",
                         "Test Apprentice 1",
-                        "Test Provider",
                         "Test Course",
                         "1",
                         "Yesterday",
