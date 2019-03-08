@@ -415,7 +415,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
            
             var employerCommitments = GetEmployerCommitments();
-            Assert.AreEqual(300m, employerCommitments.GetUnallocatedCompletionAmount(true));
+            Assert.AreEqual(100m, employerCommitments.GetUnallocatedCompletionAmount(true));
         }
         [Test]
         public void Get_Unallocated_Completion_Amount_Includes_Completions_That_Have_Ended_A_Month_Or_More_Before_The_Start_Of_The_Projection()

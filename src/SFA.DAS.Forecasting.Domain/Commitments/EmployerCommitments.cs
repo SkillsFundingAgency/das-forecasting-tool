@@ -111,15 +111,28 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public virtual decimal GetUnallocatedCompletionAmount(bool includeUnpaidCompletionPayments = false)
         {
-            var limitEndDate = DateTime.Today.GetStartOfMonth();
-            bool Filter(CommitmentModel commitment) => (commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) < limitEndDate || (includeUnpaidCompletionPayments && commitment.ActualEndDate == null && commitment.PlannedEndDate.GetStartOfMonth() == limitEndDate.AddMonths(-1)));
+            bool Filter(CommitmentModel commitment) => includeUnpaidCompletionPayments ? GetFilterUnpaid(commitment) : GetFilter(commitment);
+
             var levyUnallocatedCompletions = _levyFundedCommitments
-                .Where((Func<CommitmentModel, bool>)Filter)
+                .Where(Filter)
                 .Sum(commitment => commitment.CompletionAmount);
             var senderUnallocatedCompletions = _sendingEmployerTransferCommitments
-                .Where((Func<CommitmentModel, bool>)Filter)
+                .Where(Filter)
                 .Sum(commitment => commitment.CompletionAmount);
             return levyUnallocatedCompletions + senderUnallocatedCompletions;
+        }
+
+        private static bool GetFilter(CommitmentModel commitment)
+        {
+            var limitEndDate = DateTime.Today.GetStartOfMonth();
+            return commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) < limitEndDate;
+        }
+
+        private static bool GetFilterUnpaid(CommitmentModel commitment)
+        {
+            var limitEndDate = DateTime.Today.GetStartOfMonth();
+            return  commitment.ActualEndDate == null
+                   && commitment.PlannedEndDate.GetStartOfMonth() >= limitEndDate.AddMonths(-1);
         }
 
         public bool Any()

@@ -38,14 +38,19 @@ namespace SFA.DAS.Forecasting.Domain.Balance
 
             var currentBalance = await _accountBalanceService.GetAccountBalance(EmployerAccountId);
             if (currentBalance == null)
+            {
                 throw new InvalidOperationException($"Failed to get the account balances for account: {EmployerAccountId}");
+            }
 
             Model.Amount = currentBalance.Amount;
             Model.TransferAllowance = currentBalance.TransferAllowance;
             Model.RemainingTransferBalance = currentBalance.RemainingTransferBalance;
             Model.BalancePeriod = DateTime.UtcNow;
             Model.ReceivedDate = DateTime.UtcNow;
-            if (!refreshUnallocatedCompletionPayments) return true;
+            if (!refreshUnallocatedCompletionPayments)
+            {
+                return true;
+            }
             var unallocatedCompletionPayments = EmployerCommitments.GetUnallocatedCompletionAmount(includeUnpaidCompletionPayments);
             Model.UnallocatedCompletionPayments = unallocatedCompletionPayments;
             return true;

@@ -41,6 +41,22 @@ Scenario: AC3: Commitments with end dates after end of forecast period
 	Then the account projection should be generated
 	And the completion payments should not be included in the projection
 
+Scenario: Completion Payment Missed this month
+	Given the following commitments have been recorded
+	| Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| Test Apprentice 1 | Test Course | 1            | Test Provider | last Year  | 1000               | 6000              | 11                     |
+	When the account projection is triggered after a payment run
+	Then the account projection should be generated
+	And the unallocated completion amount is 6000
+
+Scenario: Completion Payment Missed in previous month 
+	Given the following commitments have been recorded
+	| Apprentice Name   | Course Name | Course Level | Provider Name | Start Date | Installment Amount | Completion Amount | Number Of Installments |
+	| Test Apprentice 1 | Test Course | 1            | Test Provider | last Year  | 1000               | 6000              | 9                     |
+	When the account projection is triggered after a payment run
+	Then the account projection should be generated
+	And the unallocated completion amount is 0
+
 Scenario: Transfer completion payments for a sending employer
 	Given I am a sending employer
 	And the following commitments have been recorded
