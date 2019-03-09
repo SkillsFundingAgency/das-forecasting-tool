@@ -310,11 +310,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
                         calledMonths = months;
                     });
 
-            var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.ToList().AsReadOnly(), _netLevyTotals, _paymentTotals);
+            var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.AsReadOnly(), _netLevyTotals, _paymentTotals,ProjectionGenerationType.LevyDeclaration,new DateTime(2018,09,24));
 
 
             calledFundIn.ShouldAllBeEquivalentTo(_estimatedExpiredFundsIn);
-            calledFundOut.ShouldAllBeEquivalentTo(_estimatedExpiredFundsOut);
+            calledFundOut.ShouldAllBeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
             calledExpired.ShouldAllBeEquivalentTo(expiringFunds);
             calledMonths.Should().Be(24);
 

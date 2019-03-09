@@ -21,7 +21,8 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
         Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(IList<AccountProjectionModel> projections,
             long employerAccountId, ProjectionSource messageProjectionSource, DateTime projectionDate);
 
-       	Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, long employerAccountId);
+       	Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, 
+	           long employerAccountId, ProjectionGenerationType messageProjectionSource, DateTime projectionDate);
 
     }
     public class ExpiredFundsService : IExpiredFundsService
@@ -53,7 +54,8 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
                 .ThenBy(c => c.Month)
                 .Skip(ShouldSkipFirstMonthPaymentValue(projectionDate, messageProjectionSource))
                 .ToDictionary(d => new CalendarPeriod(d.Year, d.Month),
-                    v => v.LevyFundedCostOfTraining + v.LevyFundedCompletionPayments + v.TransferOutCostOfTraining + v.TransferOutCompletionPayments);
+                    v => v.LevyFundedCostOfTraining + v.LevyFundedCompletionPayments 
+                        + v.TransferOutCostOfTraining + v.TransferOutCompletionPayments);
 
             fundsIn = fundsIn.Concat(previousLevyTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
             
@@ -63,7 +65,7 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             return (Dictionary<CalendarPeriod, decimal>) expiringFunds;
         }
 
-        public Dictionary<CalendarPeriod, decimal> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals)
+        public Dictionary<CalendarPeriod, decimal> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, IEnumerable<LevyPeriod> levyPeriodTotals, Dictionary<CalendarPeriod, decimal> paymentsTotals, ProjectionGenerationType messageProjectionSource, DateTime projectionDate)
         {
             var previousLevyTotals =
                 levyPeriodTotals.ToDictionary(k => new CalendarPeriod(k.CalendarYear, k.CalendarMonth),
@@ -72,9 +74,12 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 
             var fundsIn = estimationProjectorProjections.ToDictionary(d => new CalendarPeriod(d.Year, d.Month), v => v.FundsIn);
 
-            var fundsOut = estimationProjectorProjections.ToDictionary(d => new CalendarPeriod(d.Year, d.Month),
-                v => v.AllModelledCosts.LevyCostOfTraining + v.AllModelledCosts.LevyCompletionPayments + v.ActualCosts.LevyCostOfTraining + v.ActualCosts.LevyCompletionPayments);
-
+            var fundsOut = estimationProjectorProjections.OrderBy(c => c.Year)
+                .ThenBy(c => c.Month)
+                .Skip(ShouldSkipFirstMonthPaymentValue(projectionDate,(ProjectionSource) messageProjectionSource))
+                .ToDictionary(d => new CalendarPeriod(d.Year, d.Month),
+                v => v.AllModelledCosts.FundsOut + v.ActualCosts.FundsOut);
+            
             fundsIn = fundsIn.Concat(previousLevyTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
 
             fundsOut = fundsOut.Concat(paymentsTotals).GroupBy(g => g.Key).ToDictionary(t => t.Key, t => t.Last().Value);
@@ -84,14 +89,15 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             return (Dictionary<CalendarPeriod, decimal>)expiringFunds;
         }
 
-        public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, long employerAccountId)
+        public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, long employerAccountId, ProjectionGenerationType messageProjectionSource, DateTime projectionDate)
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             var netLevyTotal = await _levyDataSession.GetAllNetTotals(employerAccountId);
             var paymentsTotal = await _employerPaymentDataSession.GetPaymentTotals(employerAccountId);
-            var expiringFunds = GetExpiringFunds(estimationProjectorProjections, netLevyTotal, paymentsTotal);
+            
+            var expiringFunds = GetExpiringFunds(estimationProjectorProjections, netLevyTotal, paymentsTotal,messageProjectionSource,projectionDate);
 
             stopwatch.Stop();
             _telemetry.TrackDuration("GenerateEstimatedExpiringFunds", stopwatch.Elapsed);

@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
+using SFA.DAS.Forecasting.Models.Projections;
 using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
@@ -56,7 +57,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             _mocker.GetMock<IExpiredFundsService>()
                 .Setup(s => s.GetExpiringFunds(It.IsAny<ReadOnlyCollection<AccountEstimationProjectionModel>>(),
-                    It.IsAny<long>())).ReturnsAsync(new Dictionary<CalendarPeriod, decimal>());
+                    It.IsAny<long>(),It.IsAny<ProjectionGenerationType>(), It.IsAny<DateTime>())).ReturnsAsync(new Dictionary<CalendarPeriod, decimal>());
 
             _orchestrator = _mocker.Resolve<EstimationOrchestrator>();
         }
@@ -531,7 +532,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             _mocker.GetMock<IExpiredFundsService>()
                 .Setup(s => s.GetExpiringFunds(It.IsAny<ReadOnlyCollection<AccountEstimationProjectionModel>>(),
-                                               It.IsAny<long>()))
+                                               It.IsAny<long>(),It.IsAny<ProjectionGenerationType>(), It.IsAny<DateTime>()))
                                 .ReturnsAsync(expiredFunds);
 
             await _orchestrator.CostEstimation("ABC123", "Test-Estimation", false);

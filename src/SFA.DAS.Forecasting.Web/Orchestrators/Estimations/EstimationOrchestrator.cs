@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -53,8 +54,9 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountEstimation = await _estimationRepository.Get(accountId);
             var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation, _config.FeatureExpiredFunds);
             estimationProjector.BuildProjections();
-
-           var expiredFunds = await _expiredFundsService.GetExpiringFunds(estimationProjector.Projections, accountId);
+            var projection = estimationProjector.Projections.FirstOrDefault();
+            var projectionType = projection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration;
+            var expiredFunds = await _expiredFundsService.GetExpiringFunds(estimationProjector.Projections, accountId, projectionType, DateTime.UtcNow);
 
             if (expiredFunds.Any())
             {
