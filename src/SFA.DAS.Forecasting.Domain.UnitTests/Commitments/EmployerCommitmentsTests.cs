@@ -380,6 +380,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
+                HasHadPayment = false,
                 StartDate = DateTime.Today.AddMonths(-10),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
                 MonthlyInstallment = 10,
@@ -391,8 +392,52 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             {
                 Id = 2,
                 EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                ActualEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 2,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 3,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 4,
+                EmployerAccountId = 1,
                 ApprenticeshipId = 3,
                 LearnerId = 4,
+                HasHadPayment = true,
                 StartDate = DateTime.Today.AddMonths(-10),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-2),
                 MonthlyInstallment = 10,
@@ -402,10 +447,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             });
             Commitments.LevyFundedCommitments.Add(new CommitmentModel
             {
-                Id = 3,
+                Id = 5,
                 EmployerAccountId = 1,
                 ApprenticeshipId = 3,
                 LearnerId = 4,
+                HasHadPayment = true,
                 StartDate = DateTime.Today.AddMonths(-10),
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-3),
                 MonthlyInstallment = 10,

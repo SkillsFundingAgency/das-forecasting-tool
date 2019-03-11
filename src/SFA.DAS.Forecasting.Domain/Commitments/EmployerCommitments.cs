@@ -132,7 +132,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         {
             var limitEndDate = DateTime.Today.GetStartOfMonth();
             return  commitment.ActualEndDate == null
-                   && commitment.PlannedEndDate.GetStartOfMonth() >= limitEndDate.AddMonths(-1);
+                   && commitment.HasHadPayment
+                   && commitment.PlannedEndDate.GetStartOfMonth().AddMonths(1) == limitEndDate;
         }
 
         public bool Any()
