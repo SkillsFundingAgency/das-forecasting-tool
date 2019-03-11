@@ -47,6 +47,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                     NumberOfInstallments = 1,
                     CompletionAmount = 1000,
                     MonthlyInstallment = 80,
+                    HasHadPayment = true,
                     FundingSource = FundingSource.Levy
                 },
                 new CommitmentModel
@@ -57,6 +58,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                     NumberOfInstallments = 1,
                     CompletionAmount = 1000,
                     MonthlyInstallment = 80,
+                    HasHadPayment = true,
                     FundingSource = FundingSource.Levy
                 }
             }
