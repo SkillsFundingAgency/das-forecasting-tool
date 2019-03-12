@@ -18,7 +18,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Telemetry
 
         public void AddProperty(string propertyName, string value)
         {
-            _properties.Add(propertyName, value);
+            if(!_properties.ContainsKey(propertyName))
+                _properties.Add(propertyName, value);
         }
 
         public void TrackEvent(string eventName, Dictionary<string, string> properties)

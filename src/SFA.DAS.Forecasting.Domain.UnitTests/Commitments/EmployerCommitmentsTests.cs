@@ -372,6 +372,98 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
         }
 
         [Test]
+        public void Get_Unallocated_Completion_Amount_Includes_Completions_That_Have_Ended_A_Month_Or_More_Before_The_Start_Of_The_Projection_And_Unpaid_Last_Month()
+        {
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 1,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = false,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 2,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                ActualEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 2,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 3,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 2,
+                LearnerId = 3,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(1),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 2,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 4,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 3,
+                LearnerId = 4,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-2),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 5,
+                FundingSource = FundingSource.Levy,
+                CompletionAmount = 100
+            });
+            Commitments.LevyFundedCommitments.Add(new CommitmentModel
+            {
+                Id = 5,
+                EmployerAccountId = 1,
+                ApprenticeshipId = 3,
+                LearnerId = 4,
+                HasHadPayment = true,
+                StartDate = DateTime.Today.AddMonths(-10),
+                PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-3),
+                MonthlyInstallment = 10,
+                NumberOfInstallments = 5,
+                CompletionAmount = 100, 
+                FundingSource = FundingSource.Levy
+            });
+           
+            var employerCommitments = GetEmployerCommitments();
+            Assert.AreEqual(100m, employerCommitments.GetUnallocatedCompletionAmount(true));
+        }
+        [Test]
         public void Get_Unallocated_Completion_Amount_Includes_Completions_That_Have_Ended_A_Month_Or_More_Before_The_Start_Of_The_Projection()
         {
             Commitments.LevyFundedCommitments.Add(new CommitmentModel
@@ -410,7 +502,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(-3),
                 MonthlyInstallment = 10,
                 NumberOfInstallments = 5,
-                CompletionAmount = 100, 
+                CompletionAmount = 100,
                 FundingSource = FundingSource.Levy
             });
             var employerCommitments = GetEmployerCommitments();

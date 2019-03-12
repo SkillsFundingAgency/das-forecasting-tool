@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
@@ -128,6 +129,13 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                 return null;
             }
             var earningDetail = earningDetails.FirstOrDefault(ed => Guid.TryParse(ed.PaymentId, out Guid paymentGuid) && paymentGuid == payment.PaymentId);
+
+            if (ConfigurationHelper.IsDevOrAtEnvironment && earningDetail == null)
+            {
+                var random = new Random();
+                earningDetail = earningDetails.Skip(random.Next(0, earningDetails.Count() - 1)).FirstOrDefault();
+            }
+            
             if (earningDetail == null)
             {
                 logger.Warn($"No earning details found for payment: {payment.PaymentId}, apprenticeship: {payment.ApprenticeshipId}");

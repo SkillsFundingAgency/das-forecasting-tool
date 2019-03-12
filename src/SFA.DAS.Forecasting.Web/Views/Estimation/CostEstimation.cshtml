@@ -114,30 +114,29 @@
                                 var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
                                 <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
 
-                                if (accountFund.Date > new DateTime(2019, 3, 1))
-                                {
-                                    <div class="panel-warning2">
-                                        <span class="icon"></span>
-                                        <p>
-                                            The estimate for the account balance projection does not yet show funds that are due to expire. You need to be aware that unused funds will expire after 24 months, which may affect the funds available to spend.
-                                        </p>
-                                    </div>
-                                }
+                                
+                     
+
                                 @:<table class="small errorTable responsive">
                                     <thead>
                                         <tr>
                                             <th class="nowrap tw-10">Date</th>
-                                            <th class="financial tippy tw-30" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
+                                            <th class="financial tippy tw-20" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
                                                 Your current costs
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
                                             </th>
-                                            <th class="financial tippy tw-35" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
-                                                Cost of estimated apprenticeships
+                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
+                                                Estimated costs
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
                                             </th>
-                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds that could expire">
+                                                Expired funds
+                                                <br />
+                                                <span class="tip-info"><span class="info-title">info</span></span>
+                                            </th>
+                                            <th class="financial tippy tw-20" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
                                                 Balance
                                                 <br />
                                                 <span class="tip-info"><span class="info-title">info</span></span>
@@ -149,12 +148,17 @@
 
 
 
+
+
+
+
                                     }
 
                                     <tr class="@tableRowClass">
                                         <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
                                         <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
                                         <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
+                                        <td class="financial" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
                                         <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
                                     </tr>
 

@@ -7,11 +7,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using System.Transactions;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
+using IsolationLevel = System.Data.IsolationLevel;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Services
 {
@@ -28,6 +30,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
             return await _dataContext
+
                 .Commitments.Where(commitment => commitment.EmployerAccountId == employerAccountId 
                                                  || commitment.SendingEmployerAccountId == employerAccountId)
                 .OrderByDescending(commitment => commitment.UpdatedDateTime)
@@ -42,9 +45,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             var model = new EmployerCommitmentsModel
             {
                 LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate), "Levy Funded Commitments"),
-                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate), "Receiving Employer Transfer Commitments"),
-                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate), "Sending Employer Transfer Commitments"),
-                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId), "Co-Investment Commitments")
+                ReceivingEmployerTransferCommitments = await GetCommitments(GetReceivingEmployerTransferCommitments(employerAccountId, forecastLimitDate),"Receiving Employer Transfer Commitments"),
+                SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate),"Sending Employer Transfer Commitments"),
+                CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId),"Co-Investment Commitments")
             };
             stopwatch.Stop();
             _telemetry.TrackDuration("Get Current Commitments", stopwatch.Elapsed);
@@ -55,7 +58,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            int listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
+            var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
             stopwatch.Stop();
             _telemetry.TrackDuration("Get Commitment Count: " + queryName, stopwatch.Elapsed);
             var model = new List<CommitmentModel>(listSize);
@@ -64,6 +67,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             {
                 return model;
             }
+
             var moreData = true;
             var skip = 0;
             stopwatch.Restart();
@@ -81,6 +85,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                     model.AddRange(commitments);
                 }
             }
+
             stopwatch.Stop();
             _telemetry.TrackDuration($"Get {queryName}", stopwatch.Elapsed);
             return model;
@@ -109,119 +114,50 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && commitment.ActualEndDate == null;
         }
+
         private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
         {
             return commitment => commitment.EmployerAccountId == employerAccountId
-                                 && (commitment.FundingSource == FundingSource.CoInvestedEmployer || commitment.FundingSource == FundingSource.CoInvestedSfa)
+                                 && (commitment.FundingSource == FundingSource.CoInvestedEmployer ||
+                                     commitment.FundingSource == FundingSource.CoInvestedSfa)
                                  && commitment.ActualEndDate == null;
         }
 
-        public async Task Upsert(CommitmentModel commitment)
+        public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
-            var sql = UpsertSqlString();
-            var parameters = new object[]
+            var startTime = DateTime.UtcNow;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var commitmentModel = await _dataContext.Commitments.FirstOrDefaultAsync(commitment =>
+                commitment.EmployerAccountId == employerAccountId &&
+                commitment.ApprenticeshipId == apprenticeshipId);
+            stopwatch.Stop();
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Commitment", startTime, stopwatch.Elapsed,
+                commitmentModel != null);
+            return commitmentModel;
+        }
+
+        public async Task Store(CommitmentModel commitment)
+        {
+            var startTime = DateTime.UtcNow;
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (commitment.Id <= 0)
+                _dataContext.Commitments.Add(commitment);
+
+            using (var scope = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions() ,
+                TransactionScopeAsyncFlowOption.Enabled))
             {
-                new SqlParameter("@employerAccountId", commitment.EmployerAccountId),
-                new SqlParameter("@sendingEmployerAccountId", commitment.SendingEmployerAccountId),
-                new SqlParameter("@learnerId", commitment.LearnerId),
-                new SqlParameter("@providerId", commitment.ProviderId),
+                await _dataContext.SaveChangesAsync();
+                scope.Complete();
+            }
 
-                new SqlParameter("@providerName", string.IsNullOrEmpty(commitment.ProviderName) ? "No Name Provided" : commitment.ProviderName),
-                new SqlParameter("@apprenticeshipId", commitment.ApprenticeshipId),
-                new SqlParameter("@apprenticeName", commitment.ApprenticeName),
+            stopwatch.Stop();
 
-                new SqlParameter("@courseName", commitment.CourseName),
-                new SqlParameter("@courseLevel", commitment.CourseLevel),
-                new SqlParameter("@startDate", commitment.StartDate)
-                {
-                    SqlDbType = SqlDbType.DateTime
-                },
-                new SqlParameter("@plannedEndDate", commitment.PlannedEndDate)
-                {
-                    SqlDbType = SqlDbType.DateTime
-                },
-                new SqlParameter("@actualEndDate", commitment.ActualEndDate ?? (object) DBNull.Value)
-                    {
-                        IsNullable = true,
-                        SqlDbType = System.Data.SqlDbType.DateTime,
-                        Direction = System.Data.ParameterDirection.Input
-                    },
-                new SqlParameter("@completionAmount", commitment.CompletionAmount),
-                new SqlParameter("@monthlyInstallment", commitment.MonthlyInstallment),
-                new SqlParameter("@numberOfInstallments", commitment.NumberOfInstallments),
-                new SqlParameter("@fundingSource", commitment.FundingSource),
-                new SqlParameter("@updatedDateTime", commitment.UpdatedDateTime)
-                {
-                    SqlDbType = SqlDbType.DateTime
-                },
-                new SqlParameter("@hasHadPayment", commitment.HasHadPayment)
-            };
-
-            await _dataContext.Database.ExecuteSqlCommandAsync(sql, parameters);
+            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime, stopwatch.Elapsed, true);
 
         }
 
-        private string UpsertSqlString()
-        {
-            return @"
-                    MERGE INTO Commitment
-                    USING 
-                    (
-                        SELECT @employerAccountId        as EmployerAccountId,
-		                       @sendingEmployerAccountId as SendingEmployerAccountId,
-		                       @learnerId                as LearnerId,
-		                       @providerId               as ProviderId,
-		                       @providerName             as ProviderName,
-		                       @apprenticeshipId         as ApprenticeshipId,
-		                       @apprenticeName           as ApprenticeName,
-		                       @courseName               as CourseName,
-		                       @courseLevel              as CourseLevel,
-		                       @startDate                as StartDate,
-		                       @plannedEndDate           as PlannedEndDate,
-		                       @actualEndDate            as ActualEndDate,
-		                       @completionAmount         as CompletionAmount,
-		                       @monthlyInstallment       as MonthlyInstallment,
-		                       @numberOfInstallments     as NumberOfInstallments,
-		                       @fundingSource            as FundingSource,
-                               @updatedDateTime          as UpdatedDateTime,
-                               @hasHadPayment            as HasHadPayment
-                    ) AS entity
-                    ON  Commitment.EmployerAccountId = entity.EmployerAccountId 
-                        AND Commitment.learnerId = entity.LearnerId
-                    WHEN MATCHED 
-	                    THEN
-                        UPDATE 
-                        SET 
-		                    ApprenticeshipId = entity.ApprenticeshipId,
-		                    ApprenticeName = entity.ApprenticeName,
-		                    ActualEndDate = entity.ActualEndDate,
-                            HasHadPayment = entity.HasHadPayment,
-                            UpdatedDateTime = entity.UpdatedDateTime
-                    WHEN NOT MATCHED 
-                        AND entity.ActualEndDate is null 
-                        THEN 
-                        INSERT (EmployerAccountId,SendingEmployerAccountId,LearnerId,ProviderId,ProviderName,ApprenticeshipId,ApprenticeName,CourseName,CourseLevel,StartDate,PlannedEndDate,ActualEndDate,CompletionAmount,MonthlyInstallment,NumberOfInstallments,FundingSource, UpdatedDateTime,HasHadPayment)
-	                    VALUES (
-                                entity.EmployerAccountId,
-                                entity.SendingEmployerAccountId,
-                                entity.LearnerId, 
-                                entity.ProviderId, 
-                                entity.ProviderName,
-                                entity.ApprenticeshipId, 
-                                entity.ApprenticeName, 
-                                entity.CourseName, 
-                                entity.CourseLevel, 
-                                entity.StartDate, 
-                                entity.PlannedEndDate, 
-                                entity.ActualEndDate, 
-                                entity.CompletionAmount, 
-                                entity.MonthlyInstallment, 
-                                entity.NumberOfInstallments, 
-                                entity.FundingSource,
-                                entity.UpdatedDateTime,
-                                entity.HasHadPayment);
-                    ";
-
-        }
     }
 }

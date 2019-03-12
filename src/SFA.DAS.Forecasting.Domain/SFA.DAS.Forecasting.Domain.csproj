@@ -70,6 +70,7 @@
     <Compile Include="Balance\CurrentBalanceRepository.cs" />
     <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Balance\Services\IBalanceDataService.cs" />
+    <Compile Include="Commitments\EmployerCommitment.cs" />
     <Compile Include="Commitments\EmployerCommitmentRepository.cs" />
     <Compile Include="Commitments\EmployerCommitments.cs" />
     <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />

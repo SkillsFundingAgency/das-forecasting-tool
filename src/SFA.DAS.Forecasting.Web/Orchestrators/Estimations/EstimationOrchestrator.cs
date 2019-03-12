@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
@@ -21,13 +23,16 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly IHashingService _hashingService;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
+        private readonly IExpiredFundsService _expiredFundsService;
         private readonly IApplicationConfiguration _config;
 
         public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService,
             ICurrentBalanceRepository currentBalanceRepository,
-            IApprenticeshipCourseDataService apprenticeshipCourseService, IApplicationConfiguration config)
+            IApprenticeshipCourseDataService apprenticeshipCourseService,
+            IExpiredFundsService expiredFundsService,
+            IApplicationConfiguration config)
         {
             _estimationProjectionRepository = estimationProjectionRepository ??
                                               throw new ArgumentNullException(nameof(estimationProjectionRepository));
@@ -37,6 +42,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             _currentBalanceRepository = currentBalanceRepository ??
                                         throw new ArgumentNullException(nameof(currentBalanceRepository));
             _apprenticeshipCourseService = apprenticeshipCourseService;
+            _expiredFundsService = expiredFundsService;
             _config = config;
         }
 
@@ -48,6 +54,14 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountEstimation = await _estimationRepository.Get(accountId);
             var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation, _config.FeatureExpiredFunds);
             estimationProjector.BuildProjections();
+            var projection = estimationProjector.Projections.FirstOrDefault();
+            var projectionType = projection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration;
+            var expiredFunds = await _expiredFundsService.GetExpiringFunds(estimationProjector.Projections, accountId, projectionType, DateTime.UtcNow);
+
+            if (expiredFunds.Any())
+            {
+                estimationProjector.ApplyExpiredFunds(expiredFunds);
+            }
 
             var viewModel = new EstimationPageViewModel
             {
@@ -118,6 +132,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 Date = new DateTime(estimation.Year, estimation.Month, 1),
                 ActualCost = estimation.ActualCosts.FundsOut,
                 EstimatedCost = estimation.AllModelledCosts.FundsOut,
+                ExpiredFunds =  estimation.AllModelledCosts.ExpiredFunds,
                 Balance = estimation.EstimatedProjectionBalance,
                 FormattedBalance = estimation.EstimatedProjectionBalance > 0
                     ? estimation.EstimatedProjectionBalance.FormatCost()
