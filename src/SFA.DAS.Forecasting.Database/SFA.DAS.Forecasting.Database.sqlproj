@@ -70,6 +70,7 @@
     <Build Include="Tables\AccountProjectionCommitment.sql" />
     <Build Include="Tables\FundingSource.sql" />
     <PostDeploy Include="PostDeployment\Script.PostDeployment1.sql" />
+    <Build Include="Tables\PaymentAggregation.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Database.publish.xml" />

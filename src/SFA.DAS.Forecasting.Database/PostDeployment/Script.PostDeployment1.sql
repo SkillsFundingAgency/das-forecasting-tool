@@ -46,3 +46,36 @@ update Commitment
 set SendingEmployerAccountId = EmployerAccountId
 where SendingEmployerAccountId = 0
 
+
+
+
+DECLARE @paymentAcc as TABLE (
+id BIGINT identity (1,1) not null,
+employeraccountid BIGINT  not null
+)
+
+insert into @paymentAcc
+select distinct employerAccountid from Payment
+
+DECLARE @rowCount AS BIGINT 
+select @rowCount = Count(1) from @paymentAcc
+
+DECLARE @count as bigint = 1
+WHILE(@count <= @rowCount)
+BEGIN
+	DECLARE @employerAccountid as BIGINT
+	SELECT @employerAccountid = employerAccountid from @paymentAcc where id = @count
+
+	insert into PaymentAggregation 
+	SELECT 
+			@employerAccountid as EmployerAccountId,
+			[Extent1].[CollectionPeriodMonth] AS CollectionPeriodYear, 
+			[Extent1].[CollectionPeriodYear] AS CollectionPeriodMonth, 
+			SUM([Extent1].[Amount]) AS Amount
+			FROM [dbo].[Payment] AS [Extent1]
+			WHERE ((1 = [Extent1].[FundingSource]) AND ([Extent1].[EmployerAccountId] = @employerAccountid)) OR ((2 = [Extent1].[FundingSource]) AND ([Extent1].[SendingEmployerAccountId] = @employerAccountid))
+			GROUP BY [Extent1].[CollectionPeriodMonth], [Extent1].[CollectionPeriodYear]
+		
+
+	SET @count = @count + 1
+END

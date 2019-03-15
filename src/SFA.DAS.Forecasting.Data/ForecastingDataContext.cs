@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Data
         System.Data.Entity.Infrastructure.DbChangeTracker ChangeTracker { get; }
         System.Data.Entity.Infrastructure.DbContextConfiguration Configuration { get; }
         System.Data.Entity.Database Database { get; }
+        System.Data.Entity.DbSet<PaymentAggregationModel> PaymentAggregation { get; set; } // Payment
         System.Data.Entity.Infrastructure.DbEntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
         System.Data.Entity.Infrastructure.DbEntityEntry Entry(object entity);
         System.Collections.Generic.IEnumerable<System.Data.Entity.Validation.DbEntityValidationResult> GetValidationErrors();
@@ -41,6 +42,7 @@ namespace SFA.DAS.Forecasting.Data
         //public System.Data.Entity.DbSet<FundingSource> FundingSources { get; set; } // FundingSource
         public System.Data.Entity.DbSet<LevyDeclarationModel> LevyDeclarations { get; set; } // LevyDeclaration
         public System.Data.Entity.DbSet<PaymentModel> Payments { get; set; } // Payment
+        public System.Data.Entity.DbSet<PaymentAggregationModel> PaymentAggregation { get; set; } // Payment
 
         static ForecastingDataContext()
         {
@@ -103,7 +105,7 @@ namespace SFA.DAS.Forecasting.Data
             //modelBuilder.Configurations.Add(new FundingSourceConfiguration());
             modelBuilder.Configurations.Add(new LevyDeclarationConfiguration());
             modelBuilder.Configurations.Add(new PaymentConfiguration());
-
+            modelBuilder.Configurations.Add(new PaymentAggregationConfiguration());
             OnModelCreatingPartial(modelBuilder);
         }
 
@@ -116,6 +118,7 @@ namespace SFA.DAS.Forecasting.Data
             //modelBuilder.Configurations.Add(new FundingSourceConfiguration(schema));
             modelBuilder.Configurations.Add(new LevyDeclarationConfiguration(schema));
             modelBuilder.Configurations.Add(new PaymentConfiguration(schema));
+            modelBuilder.Configurations.Add(new PaymentAggregationConfiguration(schema));
             return modelBuilder;
         }
 
