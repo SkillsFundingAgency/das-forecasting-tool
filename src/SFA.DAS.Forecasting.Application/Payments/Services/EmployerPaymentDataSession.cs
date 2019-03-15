@@ -63,21 +63,12 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)
         {
-            return GetPaymentTotals(w =>
-                (w.FundingSource == FundingSource.Levy && w.EmployerAccountId == employerAccountId) ||
-                (w.FundingSource == FundingSource.Transfer && w.SendingEmployerAccountId == employerAccountId));
-
-
+            var periods = await _dataContext.PaymentAggregation.Where(c => c.EmployerAccountId == employerAccountId)
+                .ToDictionaryAsync(k => new CalendarPeriod(k.CollectionPeriod.Year, k.CollectionPeriod.Month),
+                    k => k.Amount);
+            return periods;
         }
-
-        private Dictionary<CalendarPeriod, decimal> GetPaymentTotals(Expression<Func<PaymentModel, bool>> wherePredicate)
-        {
-            return _dataContext.Payments
-                .Where(wherePredicate)
-                .GroupBy(g => new { g.CollectionPeriod.Year, g.CollectionPeriod.Month })
-                .Select(s => new { s.Key.Year, s.Key.Month, Total = s.Sum(v => v.Amount) }).ToList()
-                .ToDictionary(k => new CalendarPeriod(k.Year, k.Month), k => k.Total);
-        }
+        
         public async Task SaveChanges()
         {
             var stopwatch = new Stopwatch();
