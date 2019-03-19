@@ -86,7 +86,10 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@accountId", Config.EmployerAccountId);
-                    connection.Execute("delete from [employer_financial].[AccountTransfers] where ReceiverAccountId = @accountId; delete from [employer_financial].[LevyDeclaration] where AccountId = @accountId; delete from [employer_financial].[Payment] where AccountId = @accountId;", parameters, commandType: CommandType.Text);
+                    connection.Execute("delete from [employer_financial].[AccountTransfers] where ReceiverAccountId = @accountId; " +
+                                       "delete from [employer_financial].[LevyDeclaration] where AccountId = @accountId; " +
+                                       "delete from [employer_financial].[Payment] where AccountId = @accountId;" +
+                                       "delete from [employer_financial].[TransactionLine] where AccountId= @accountId ", parameters, commandType: CommandType.Text);
                 }
             });
         }
@@ -350,11 +353,41 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     var parameters = new DynamicParameters();
                     parameters.Add("@payments", ToPaymentsDataTable(Payments).AsTableValuedParameter("[employer_financial].[PaymentsTable]"));
                     connection.Execute("[employer_financial].[CreatePayments]", parameters, commandType: CommandType.StoredProcedure);
+
+                    parameters = new DynamicParameters();
+                    parameters.Add("@PeriodEndId", CollectionPeriod.Id);
+                    connection.ExecuteScalar("Delete from [employer_financial].[PeriodEnd] where PeriodEndId= @PeriodEndId",parameters, commandType: CommandType.Text);
+
+                    parameters.Add("@CalendarPeriodMonth", CollectionPeriod.Month);
+                    parameters.Add("@CalendarPeriodYear", CollectionPeriod.Year);
+                    parameters.Add("@AccountDataValidAt", DateTime.UtcNow);
+                    parameters.Add("@CommitmentDataValidAt", DateTime.UtcNow);
+                    parameters.Add("@CompletionDateTime", DateTime.UtcNow);
+                    parameters.Add("@PaymentsForPeriod", "https://pp-payments.apprenticeships.sfa.bis.gov.uk/api/payments?periodId=1819-R01");
+                    connection.Execute("[employer_financial].[CreatePeriodEnd]", parameters, commandType: CommandType.StoredProcedure);
+
                     if (FundingSource == FundingSource.LevyTransfer)
                     {
                         parameters = new DynamicParameters();
                         parameters.Add("@transfers", ToTransferDataTable(Payments).AsTableValuedParameter("[employer_financial].[AccountTransferTable]"));
                         connection.Execute("[employer_financial].[CreateAccountTransfers]", parameters, commandType: CommandType.StoredProcedure);
+                    }
+
+                }
+            });
+
+            ExecuteSql(() =>
+            {
+                using (var connection = new SqlConnection(ConfigurationManager
+                    .ConnectionStrings["EmployerDatabaseConnectionString"]
+                    .ConnectionString))
+                {
+                    foreach (var payment in Payments)
+                    {
+                        var parameters = new DynamicParameters();
+                        parameters.Add("@AccountId", payment.EmployerAccountId ?? Config.EmployerAccountId);
+                        connection.Execute("[employer_financial].[ProcessPaymentDataTransactions]", parameters,
+                            commandType: CommandType.StoredProcedure);
                     }
                 }
             });

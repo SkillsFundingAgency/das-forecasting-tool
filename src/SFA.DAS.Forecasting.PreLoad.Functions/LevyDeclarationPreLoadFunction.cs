@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -32,9 +33,10 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    {
                        var msg = $"{nameof(PreLoadLevyMessage)} not valid. Function will exit.";
                        logger.Warn(msg);
-                       return;
+                       return null;
                    }
-                   else if (request.SubstitutionId ==0  && request.EmployerAccountId == 0)
+
+                   if (request.SubstitutionId ==0  && request.EmployerAccountId == 0)
                    {
                        var msg = $"If {nameof(request.SubstitutionId)} is provided there must be exactly 1 EmployerAccountId";
                        logger.Warn(msg);
@@ -42,43 +44,42 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                    }
 
                    var levyDataService = container.GetInstance<IEmployerDataService>();
-                   logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {string.Join("|", request.EmployerAccountIds)}, {request.PeriodYear}, {request.PeriodMonth}");
+                   logger.Info($"LevyDeclarationPreLoadHttpFunction started. Data: {request.EmployerAccountId}, {request.PeriodYear}, {request.PeriodMonth}");
                    var messageCount = 0;
 				   var schemes = new Dictionary<string, string>();
-                   foreach (var employerId in request.EmployerAccountIds)
+                   
+                   var levyDeclarations = await levyDataService.LevyForPeriod(request.EmployerAccountId, request.PeriodYear, request.PeriodMonth);
+                   if (!levyDeclarations.Any())
                    {
-                       var levyDeclarations = await levyDataService.LevyForPeriod(employerId, request.PeriodYear, request.PeriodMonth);
-                       if (!levyDeclarations.Any())
+                       logger.Info($"No levy declarations found for employer {request.EmployerAccountId} at the requested period - projection will be re-generated using last totals");
+                       return new GenerateAccountProjectionCommand
                        {
-                           logger.Info($"No levy declarations found for employer {employerId} at the requested period - projection will be re-generated using last totals");
-                           return new GenerateAccountProjectionCommand
-                           {
-                               EmployerAccountId = hashingService.DecodeValue(employerId),
-                               ProjectionSource = ProjectionSource.LevyDeclaration
-                           };
-                       }
-                       levyDeclarations.ForEach(ld =>
-                       {
-                           messageCount++;
-                           if (request.SubstitutionId != 0)
-                           {
-                               ld.AccountId = request.SubstitutionId;
-                               if (!schemes.ContainsKey(ld.EmpRef))
-                                   schemes.Add(ld.EmpRef, Guid.NewGuid().ToString("N"));
-                               ld.EmpRef = schemes[ld.EmpRef];
-                           }
-                           outputQueueMessage.Add(ld);
-                       });
-
-
-                       logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
-
-                       if (request.SubstitutionId != 0)
-                       {
-                           logger.Info($"Added message with SubstitutionID: {hashingService.HashValue(request.SubstitutionId)}");
-                       }
-                       logger.Info($"Added {messageCount} levy declarations");
+                           EmployerAccountId = request.EmployerAccountId,
+                           ProjectionSource = ProjectionSource.LevyDeclaration
+                       };
                    }
+                   levyDeclarations.ForEach(ld =>
+                   {
+                       messageCount++;
+                       if (request.SubstitutionId.HasValue)
+                       {
+                           ld.AccountId = request.SubstitutionId.Value;
+                           if (!schemes.ContainsKey(ld.EmpRef))
+                               schemes.Add(ld.EmpRef, Guid.NewGuid().ToString("N"));
+                           ld.EmpRef = schemes[ld.EmpRef];
+                       }
+                       outputQueueMessage.Add(ld);
+                   });
+
+
+                   logger.Info($"Added {messageCount} levy declarations to  {QueueNames.ValidateLevyDeclaration} queue.");
+
+                   if (request.SubstitutionId.HasValue)
+                   {
+                       logger.Info($"Added message with SubstitutionID: {hashingService.HashValue(request.SubstitutionId.Value)}");
+                   }
+                   logger.Info($"Added {messageCount} levy declarations");
+               
                    return null;
                });
         }

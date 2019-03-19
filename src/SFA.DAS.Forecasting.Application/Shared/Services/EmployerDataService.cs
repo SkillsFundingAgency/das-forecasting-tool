@@ -24,8 +24,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     {
         private readonly ILog _logger;
         private readonly IEmployerDatabaseService _databaseService;
-
-            IHashingService hashingService,
+        
         public EmployerDataService(ILog logger, IEmployerDatabaseService databaseService)
         {
             _logger = logger;
@@ -44,10 +43,10 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
 
             _logger.Info($"Got {levyDeclarations.Count} levy declarations for employer {employerAccountId}.");
-            var validLevyDeclarations = levydeclarations.Where(levy => levy.PayrollYear == payrollYear && levy.PayrollMonth == payrollMonth).ToList();
-            var validLevyDeclarations = levydeclarations
-                .OrderByDescending(ld => ld.SubmissionDate)
-                .ToList();
+            var validLevyDeclarations = levyDeclarations
+                    .Where(levy => levy.PayrollYear == payrollYear && levy.PayrollMonth == payrollMonth)
+                    .OrderByDescending(ld => ld.SubmissionDate)
+                    .ToList();
             _logger.Info($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {employerAccountId}.");
             
             return validLevyDeclarations.Select(levy => new LevySchemeDeclarationUpdatedMessage

@@ -130,11 +130,10 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                                ,[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] 
                                ,[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] 
                                from [employer_financial].[Payment] p 
-                               "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
+                               left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd 
                                join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id 
                                where p.AccountId = @employerAccountId 
-                               "and CollectionPeriodYear = @year " +
-                               "and CollectionPeriodMonth = @month";
+                               and CollectionPeriodId = @periodEnd";
 
             try
             {

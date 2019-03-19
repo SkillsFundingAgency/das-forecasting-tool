@@ -5,6 +5,6 @@
         public long[] EmployerAccountIds { get; set; }
         public string PeriodYear { get; set; }
         public short PeriodMonth { get; set; }
-        public long SubstitutionId { get; set; }
+        public long? SubstitutionId { get; set; }
     }
 }

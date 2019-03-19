@@ -8,7 +8,7 @@
     "LogDir": "C:\\Logs\\SFA\\Forecasting",
     "MinLogLevel": "Trace",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "",
-    "StubData": true
+    "StubData": false
   },
   "Host": {
     "LocalHttpPort": 7090,
