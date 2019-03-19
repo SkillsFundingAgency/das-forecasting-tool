@@ -14,10 +14,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
-        Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
+        Task<List<EmployerPayment>> GetEmployerPayments(long accountId, string periodId);
 
-        Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
-            short payrollMonth);
+        Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,short payrollMonth);
 
 	    Task<List<PeriodInformation>> GetPeriodIds();
 
@@ -123,7 +122,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return result.ToList();
         }
 
-        public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
+        public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, string periodId)
         {
             const string sql = @"SELECT
                                [PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] 
@@ -131,11 +130,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                                ,[ProviderName] ,[StandardCode],[FrameworkCode],[ProgrammeType],[PathwayCode],[PathwayName] 
                                ,[ApprenticeshipCourseName],[ApprenticeshipCourseStartDate],[ApprenticeshipCourseLevel],[ApprenticeName], [FundingSource], acct.[SenderAccountId] 
                                from [employer_financial].[Payment] p 
-                               left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd 
+                               "left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd " +
                                join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id 
                                where p.AccountId = @employerAccountId 
-                               and CollectionPeriodYear = @year 
-                               and CollectionPeriodMonth = @month";
+                               "and CollectionPeriodYear = @year " +
+                               "and CollectionPeriodMonth = @month";
 
             try
             {
@@ -143,9 +142,8 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    parameters.Add("@year", year, DbType.Int32);
-                    parameters.Add("@month", month, DbType.Int32);
-
+                    parameters.Add("@periodEnd", periodId, DbType.String);
+                    
                     var payments = (await cnn.QueryAsync<EmployerPayment>(
                             sql,
                                 parameters,

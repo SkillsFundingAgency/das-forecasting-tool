@@ -4,10 +4,9 @@ using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.PreLoad.Functions.Models;
-using SFA.DAS.HashingService;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Application.Levy.Messages.PreLoad;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -17,7 +16,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         public static async Task<string> Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "AllLevyDeclarationsPreLoadHttpFunction")]HttpRequestMessage req,
-            [Queue(QueueNames.LevyPreLoadRequest)] ICollector<PreLoadRequest> outputQueueMessage,
+            [Queue(QueueNames.LevyPreLoadRequest)] ICollector<PreLoadLevyMessage> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer
             )
@@ -29,8 +28,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     var preLoadRequest = JsonConvert.DeserializeObject<PreLoadAllEmployersRequest>(body);
 
                     var levyDataService = container.GetInstance<IEmployerDataService>();
-                    var hashingService = container.GetInstance<IHashingService>();
-
+                    
                     var employerIds = await levyDataService.GetAllAccounts();
 
                     logger.Info($"Found {employerIds.Count} employer(s) for period; Year: {preLoadRequest.PeriodYear} Month: {preLoadRequest.PeriodMonth}");
@@ -38,15 +36,15 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                     foreach(var id in employerIds)
                     {
                         outputQueueMessage.Add(
-                            new PreLoadRequest
+                            new PreLoadLevyMessage
                             {
-                                EmployerAccountIds = new[] { hashingService.HashValue(id) },
+                                EmployerAccountId = id,
                                 PeriodYear = preLoadRequest.PeriodYear,
                                 PeriodMonth = preLoadRequest.PeriodMonth,
                             });
                     }
 
-                    return $"Created {employerIds.Count} {nameof(PreLoadRequest)} messages";
+                    return $"Created {employerIds.Count} {nameof(PreLoadLevyMessage)} messages";
                 });
         }
     }
