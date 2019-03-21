@@ -20,7 +20,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                 {
                     logger.Debug($"Storing commitment. Account: {paymentCreatedMessage.EmployerAccountId}, apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
 	                var handler = container.GetInstance<StoreCommitmentHandler>();
-					await handler.Handle(paymentCreatedMessage, QueueNames.AllowProjection);
+					await handler.Handle(paymentCreatedMessage, QueueNames.AllowPaymentAggregation);
                     logger.Info($"Stored commitment. Apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
                 });
         }

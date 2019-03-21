@@ -182,6 +182,7 @@
     <Compile Include="ExpiredFunds\ExpiredFundsServiceTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
+    <Compile Include="Payments\AggregatePaymentDataHandlerTests.cs" />
     <Compile Include="Payments\CollectionPeriodValidatorTests.cs" />
     <Compile Include="Payments\EarningDetailsValidatorTests.cs" />
     <Compile Include="Payments\PastPaymentEventSuperficialValidatorTests.cs" />

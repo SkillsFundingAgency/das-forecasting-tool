@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Levy.Functions
                     var handler = container.GetInstance<StoreLevyDeclarationHandler>();
                     if (handler == null)
                         throw new InvalidOperationException($"Failed to get levy handler from container.");
-                    await handler.Handle(levySchemeUpdatedMessage, string.Empty);
+                    await handler.Handle(levySchemeUpdatedMessage);
                     logger.Info($"Finished handling past levy declaration for EmployerAccountId: {levySchemeUpdatedMessage.AccountId}, PayrollYear: {levySchemeUpdatedMessage.PayrollYear}, month: {levySchemeUpdatedMessage.PayrollMonth}, scheme: {levySchemeUpdatedMessage.EmpRef}");
                 });
         }

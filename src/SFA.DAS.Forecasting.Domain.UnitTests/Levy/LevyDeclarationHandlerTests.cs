@@ -48,7 +48,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
         public async Task Uses_Repository_To_Get_Levy_Period()
         {
             var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
-            await handler.Handle(LevySchemeDeclaration, "forecasting-levy-allow-projection");
+            await handler.Handle(LevySchemeDeclaration);
             Moqer.GetMock<ILevyDeclarationRepository>()
                 .Verify(x => x.Get(It.Is<LevyDeclarationModel>(c=>c.SubmissionId.Equals(LevySchemeDeclaration.SubmissionId))), Times.Once());
         }
@@ -57,7 +57,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
         public async Task Stores_Levy_Period()
         {
             var handler = Moqer.Resolve<StoreLevyDeclarationHandler>();
-            await handler.Handle(LevySchemeDeclaration, "forecasting-levy-allow-projection");
+            await handler.Handle(LevySchemeDeclaration);
             Moqer.GetMock<ILevyDeclarationRepository>()
                 .Verify(x => x.Store(It.IsAny<LevyDeclaration>()), Times.Once());
         }

@@ -4,7 +4,9 @@ using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -77,6 +79,41 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
             await _dataContext.SaveChangesAsync();
             stopwatch.Stop();
             _telemetry.TrackDependency(DependencyType.SqlDatabaseInsert, "Store Payment", startTime, stopwatch.Elapsed, true);
+        }
+
+        public async Task CalculatePaymentTotals(long employerAccountId, int collectionPeriodYear, int collectionPeriodMonth)
+        {
+             var paymentTotal = _dataContext.Payments
+                .Where(w =>
+                    (w.FundingSource == FundingSource.Levy && w.EmployerAccountId == employerAccountId) ||
+                    (w.FundingSource == FundingSource.Transfer && w.SendingEmployerAccountId == employerAccountId))
+                .Where(c=>c.CollectionPeriod.Year.Equals(collectionPeriodYear) && c.CollectionPeriod.Month.Equals(collectionPeriodMonth))
+                 .Select(c=>c.Amount).Sum();
+
+          
+            await _dataContext.Database.ExecuteSqlCommandAsync(@"
+                        MERGE PaymentAggregation pa
+                            USING
+                            (
+	                            SELECT
+		                            @EmployerAccountId as EmployerAccountId,
+		                            @CollectionPeriodYear as CollectionPeriodYear,
+		                            @CollectionPeriodMonth as CollectionPeriodMonth,
+		                            @Amount as Amount
+                            ) s
+                            ON pa.EmployerAccountId = s.EmployerAccountId 
+	                            AND pa.CollectionPeriodYear = s.CollectionPeriodYear
+	                            AND pa.CollectionPeriodMonth = s.CollectionPeriodMonth
+                            WHEN NOT MATCHED THEN
+	                            INSERT (EmployerAccountId, CollectionPeriodYear, CollectionPeriodMonth, Amount)
+	                            VALUES (s.EmployerAccountId, s.CollectionPeriodYear, s.CollectionPeriodMonth, s.Amount)
+                            WHEN MATCHED THEN
+	                            UPDATE SET Amount = s.Amount;"
+                , new SqlParameter("@EmployerAccountId",employerAccountId)
+                , new SqlParameter("@CollectionPeriodYear", collectionPeriodYear)
+                , new SqlParameter("@CollectionPeriodMonth", collectionPeriodMonth)
+                , new SqlParameter("@Amount", paymentTotal));
+            
         }
     }
 }

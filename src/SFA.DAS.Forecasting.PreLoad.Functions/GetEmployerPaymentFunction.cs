@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
@@ -9,7 +7,6 @@ using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.Projections;
-using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -30,18 +27,13 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
                async (container, logger) =>
                {
                    var employerData = container.GetInstance<IEmployerDatabaseService>();
-                   logger.Info($"Storing data for EmployerAcount: {message.EmployerAccountId}");
+                   logger.Info($"Storing data for EmployerAccount: {message.EmployerAccountId}");
 
                    var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodId);
 
                    if (!payments?.Any() ?? false)
                    {
-                       logger.Info($"No data found for {message.EmployerAccountId} add message to queue to build projection from last data set");
-                       outputQueueMessage.Add(new GenerateAccountProjectionCommand
-                       {
-                           EmployerAccountId = message.EmployerAccountId,
-                           ProjectionSource = ProjectionSource.PaymentPeriodEnd
-                       });
+                       logger.Info($"No data found for {message.EmployerAccountId}");
                        return null;
                    }
 

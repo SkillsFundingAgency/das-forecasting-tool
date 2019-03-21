@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 	    Task<List<PeriodInformation>> GetPeriodIds();
 
         Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth);
+        Task<LevyPeriod> GetLatestLevyPeriod();
     }
 
     public class LevyDeclarations : List<LevyDeclarationViewModel>, IAccountResource { }
@@ -96,5 +97,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 	    {
 		    return await _databaseService.GetPeriodIds();
 	    }
+
+        public async Task<LevyPeriod> GetLatestLevyPeriod()
+        {
+            return await _databaseService.GetLatestLevyPeriod()
+                ;
+        }
     }
 }

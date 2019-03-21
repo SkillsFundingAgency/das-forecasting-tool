@@ -3,6 +3,10 @@
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="LevyPreLoadServiceBusFunction.cs" />
+    <Compile Remove="PaymentPreLoadServiceBusFunction.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.3.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.22" />
