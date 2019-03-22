@@ -148,17 +148,7 @@
     <Compile Include="BindingBootstrapper.cs" />
     <Compile Include="CommitmentType.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BuildProjectionsFromLevyDeclarations.feature</DependentUpon>
-    </Compile>
     <Compile Include="Levy\Steps\BuildProjectionsFromLevyDeclarations.cs" />
-    <Compile Include="Payments\Feature\Build Projections From Payment Run.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Build Projections From Payment Run.feature</DependentUpon>
-    </Compile>
     <Compile Include="Payments\Steps\Pre_LoadPaymentsSteps.cs" />
     <Compile Include="Payments\Steps\BuildProjectionsFromPaymentRun.cs" />
     <Compile Include="Payments\TestAccountProjection.cs" />
@@ -249,10 +239,6 @@
     <Content Include="App.Release.config">
       <DependentUpon>App.config</DependentUpon>
     </Content>
-    <None Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>BuildProjectionsFromLevyDeclarations.feature.cs</LastGenOutput>
-    </None>
     <None Include="Levy\Feature\PreLoadLevyEvents.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadLevyEvents.feature.cs</LastGenOutput>
@@ -262,10 +248,6 @@
       <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="Payments\Feature\Build Projections From Payment Run.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Build Projections From Payment Run.feature.cs</LastGenOutput>
-    </None>
     <None Include="Payments\Feature\PreLoadPayments.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadPayments.feature.cs</LastGenOutput>
