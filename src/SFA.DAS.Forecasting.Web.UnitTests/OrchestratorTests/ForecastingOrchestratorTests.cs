@@ -238,41 +238,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         }
 
         [Test]
-        public async Task Should_not_Take_months_after_2019_05_01()
-        {
-            var balanceMaxDate = new DateTime(2019, 05, 01);
-
-            SetUpProjections(48 + 10);
-            _moqer.GetMock<IApplicationConfiguration>().Setup(m => m.LimitForecast)
-                .Returns(true);
-
-            var balance = await _moqer.Resolve<ForecastingOrchestrator>().Projection("ABBA12");
-
-            balance.BalanceItemViewModels.All(m => m.Date < balanceMaxDate).Should().BeTrue();
-            balance.BalanceItemViewModels.Count().Should().BeGreaterOrEqualTo(1);
-            if (DateTime.Today >= balanceMaxDate)
-                Assert.IsTrue(false,
-                    $"balanceMaxDate is out of date ({balanceMaxDate.ToString()}) and test can be removed");
-        }
-
-        [Test]
-        public async Task Should_not_Take_months_after_2019_05_01_csv()
-        {
-            var balanceMaxDate = new DateTime(2019, 05, 01);
-            SetUpProjections(48 + 10);
-            _moqer.GetMock<IApplicationConfiguration>().Setup(m => m.LimitForecast)
-                .Returns(true);
-
-            var balanceCsv = await _moqer.Resolve<ForecastingOrchestrator>().BalanceCsv("ABBA12");
-
-            balanceCsv.All(m => (DateTime.Parse(m.Date)) < balanceMaxDate).Should().BeTrue();
-            balanceCsv.Count().Should().BeGreaterOrEqualTo(1);
-            if (DateTime.Today >= balanceMaxDate)
-                Assert.IsTrue(false,
-                    $"balanceMaxDate is out of date ({balanceMaxDate.ToString()}) and test can be removed");
-        }
-
-        [Test]
         public async Task ShouldTake_48_months_csv_file()
         {
             var expectedProjections = 48;
