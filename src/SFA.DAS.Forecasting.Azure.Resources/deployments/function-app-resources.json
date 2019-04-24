@@ -40,7 +40,11 @@
     },
     "AzureWebJobsServiceBus": {
       "type": "securestring"
-    }
+    },
+	"ApprenticeshipsApiBaseUri" :{
+		"type":"string",
+		"defaultValue":"https://findapprenticeshiptraining-api.apprenticeships.education.gov.uk/"
+	}
   },
   "resources": [
     {
@@ -115,7 +119,11 @@
             {
               "name": "AzureWebJobsServiceBus",
               "value": "[parameters('AzureWebJobsServiceBus')]"
-            }
+            },
+			{
+				"name":"ApprenticeshipsApiBaseUri",
+				"value":"[parameters('ApprenticeshipsApiBaseUri')]"
+			}
           ],
           "alwaysOn": true
         },
