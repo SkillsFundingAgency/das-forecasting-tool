@@ -48,7 +48,6 @@ where SendingEmployerAccountId = 0
 
 
 
-
 DECLARE @paymentAcc as TABLE (
 id BIGINT identity (1,1) not null,
 employeraccountid BIGINT  not null
@@ -66,11 +65,11 @@ BEGIN
 	DECLARE @employerAccountid as BIGINT
 	SELECT @employerAccountid = employerAccountid from @paymentAcc where id = @count
 
-	insert into PaymentAggregation 
+	insert into PaymentAggregation (EmployerAccountId,CollectionPeriodMonth,CollectionPeriodYear,Amount)
 	SELECT 
 			@employerAccountid as EmployerAccountId,
-			[Extent1].[CollectionPeriodMonth] AS CollectionPeriodYear, 
-			[Extent1].[CollectionPeriodYear] AS CollectionPeriodMonth, 
+			[Extent1].[CollectionPeriodMonth] AS CollectionPeriodMonth, 
+			[Extent1].[CollectionPeriodYear] AS CollectionPeriodYear, 
 			SUM([Extent1].[Amount]) AS Amount
 			FROM [dbo].[Payment] AS [Extent1]
 			WHERE ((1 = [Extent1].[FundingSource]) AND ([Extent1].[EmployerAccountId] = @employerAccountid)) OR ((2 = [Extent1].[FundingSource]) AND ([Extent1].[SendingEmployerAccountId] = @employerAccountid))
