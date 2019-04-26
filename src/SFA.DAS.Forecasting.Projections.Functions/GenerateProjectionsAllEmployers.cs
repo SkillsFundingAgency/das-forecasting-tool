@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
@@ -12,7 +13,7 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     {
         [FunctionName("GenerateProjectionsAllEmployers")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.GenerateProjectionForAllAccounts)]ProjectionSource message,
+            [QueueTrigger(QueueNames.GenerateProjectionForAllAccounts)]string message,
             [Queue(QueueNames.GenerateProjections)] ICollector<GenerateAccountProjectionCommand> outputQueueMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
@@ -21,6 +22,12 @@ namespace SFA.DAS.Forecasting.Projections.Functions
             await FunctionRunner.Run<GenerateProjectionsAllEmployers>(writer, executionContext,
                 async (container, logger) =>
                 {
+                    if (!Enum.TryParse<ProjectionSource>(message, true, out var result))
+                    {
+                        logger.Info($"Unable to Parse message {message}");
+                        return;
+                    }
+
                     var levyDataService = container.GetInstance<IEmployerDataService>();
 
                     var employerIds = await levyDataService.GetAllAccounts();
@@ -32,7 +39,7 @@ namespace SFA.DAS.Forecasting.Projections.Functions
                         outputQueueMessage.Add(new GenerateAccountProjectionCommand
                         {
                             EmployerAccountId = id,
-                            ProjectionSource = message
+                            ProjectionSource = result
                         });
                     }
 

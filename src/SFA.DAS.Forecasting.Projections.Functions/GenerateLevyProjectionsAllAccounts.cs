@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Functions.Framework;
@@ -9,9 +10,9 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     {
         [FunctionName("GenerateLevyProjectionsAllAccounts")]
         [return: Queue(QueueNames.GenerateProjectionForAllAccounts)]
-        public static ProjectionSource Run([TimerTrigger("0 0 0 25 * *")]TimerInfo myTimer, TraceWriter log)
+        public static string Run([TimerTrigger("0 0 0 25 * *")]TimerInfo myTimer, TraceWriter log)
         {
-            return ProjectionSource.LevyDeclaration;
+            return Enum.GetName(typeof(ProjectionSource), ProjectionSource.LevyDeclaration);
         }
     }
 }
