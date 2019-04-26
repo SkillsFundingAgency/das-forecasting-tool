@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration, string allowProjectionsEndpoint)
+        public async Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration)
         {
             Logger.Debug($"Now handling the levy declaration event: {levySchemeDeclaration.AccountId}, {levySchemeDeclaration.EmpRef}");
             if (levySchemeDeclaration.PayrollMonth == null)
@@ -37,11 +37,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
             Logger.Debug($"Now storing the levy period. Employer: {levySchemeDeclaration.AccountId}, year: {levySchemeDeclaration.PayrollYear}, month: {levySchemeDeclaration.PayrollMonth}");
             await Repository.Store(levyDeclaration);
             Logger.Info($"Finished adding the levy declaration to the levy period. Levy declaration: {levyDeclaration.Id}");
-
-			if (!string.IsNullOrWhiteSpace(allowProjectionsEndpoint))
-	        {
-		        _queueService.SendMessageWithVisibilityDelay(levySchemeDeclaration, allowProjectionsEndpoint);
-			}
+            
 		}
 
         private static LevyDeclarationModel MapLevySchemeDeclarationUpdatedMessageToLevyDeclarationModel(

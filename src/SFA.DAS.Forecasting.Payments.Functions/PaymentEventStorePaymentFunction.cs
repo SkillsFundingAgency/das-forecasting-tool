@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
                     logger.Debug($"Storing the payment.  Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.");
                     var handler = container.GetInstance<ProcessEmployerPaymentHandler>();
                     logger.Debug("Resolved handler");
-                    await handler.Handle(paymentCreatedMessage, QueueNames.AllowProjection);
+                    await handler.Handle(paymentCreatedMessage,QueueNames.AllowPaymentAggregation);
                     logger.Info($"Finished storing payment. Employer: {paymentCreatedMessage.EmployerAccountId}, apprenticeship: {paymentCreatedMessage.ApprenticeshipId}.");
                     return paymentCreatedMessage;
                 });

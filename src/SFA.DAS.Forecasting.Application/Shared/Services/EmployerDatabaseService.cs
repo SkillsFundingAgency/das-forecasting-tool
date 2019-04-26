@@ -14,10 +14,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDatabaseService
     {
-        Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month);
+        Task<List<EmployerPayment>> GetEmployerPayments(long accountId, string periodId);
 
-        Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,
-            short payrollMonth);
+        Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear,short payrollMonth);
 
 	    Task<List<PeriodInformation>> GetPeriodIds();
 
@@ -27,6 +26,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         Task<List<EmployerPayment>> GetPastEmployerPayments(long accountId, int year, int month);
         Task<IList<long>> GetAccountIds();
+        Task<LevyPeriod> GetLatestLevyPeriod();
     }
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
@@ -92,6 +92,24 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 		    return result.ToList();
 	    }
 
+        public async Task<LevyPeriod> GetLatestLevyPeriod()
+        {
+            var result = await WithConnection(async c =>
+            {
+                var sql =
+                    @"select distinct top 1 ld.Payrollyear, ld.Payrollmonth from employer_financial.transactionline tl
+                            inner join employer_financial.levydeclaration ld on ld.submissionid = tl.submissionid
+                            where transactiontype = 1
+                            order by ld.payrollyear desc, ld.payrollmonth desc";
+
+                return await c.QueryAsync<LevyPeriod>(
+                    sql,
+                    commandType: CommandType.Text);
+            });
+
+            return result.FirstOrDefault();
+        }
+
 		public async Task<List<LevyDeclaration>> GetAccountLevyDeclarations(long accountId, string payrollYear, short payrollMonth)
         {
             var result = await WithConnection(async c =>
@@ -123,7 +141,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return result.ToList();
         }
 
-        public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, int year, int month)
+        public async Task<List<EmployerPayment>> GetEmployerPayments(long accountId, string periodId)
         {
             const string sql = @"SELECT
                                [PaymentId], [Ukprn], [Uln], [AccountId], p.[ApprenticeshipId] 
@@ -134,8 +152,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                                left join [employer_financial].[Accounttransfers] acct on p.AccountId = acct.ReceiverAccountId and p.ApprenticeshipId = acct.ApprenticeshipId and p.PeriodEnd = acct.PeriodEnd 
                                join [employer_financial].[PaymentMetaData] pmd on p.PaymentMetaDataId = pmd.Id 
                                where p.AccountId = @employerAccountId 
-                               and CollectionPeriodYear = @year 
-                               and CollectionPeriodMonth = @month";
+                               and CollectionPeriodId = @periodEnd";
 
             try
             {
@@ -143,9 +160,8 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@employerAccountId", accountId, DbType.Int64);
-                    parameters.Add("@year", year, DbType.Int32);
-                    parameters.Add("@month", month, DbType.Int32);
-
+                    parameters.Add("@periodEnd", periodId, DbType.String);
+                    
                     var payments = (await cnn.QueryAsync<EmployerPayment>(
                             sql,
                                 parameters,

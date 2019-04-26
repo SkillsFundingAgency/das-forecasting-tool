@@ -69,6 +69,7 @@
     <Compile Include="Payments\EmployerPayment.cs" />
     <Compile Include="Payments\EmployerTotalCostOfTraining.cs" />
     <Compile Include="Payments\FundingSource.cs" />
+    <Compile Include="Payments\PaymentAggregationModel.cs" />
     <Compile Include="Payments\PaymentModel.cs" />
     <Compile Include="Balance\Account.cs" />
     <Compile Include="Projections\AccountProjectionCommitment.cs" />

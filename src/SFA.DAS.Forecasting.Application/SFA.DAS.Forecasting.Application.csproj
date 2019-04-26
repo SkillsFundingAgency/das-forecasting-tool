@@ -161,6 +161,8 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
@@ -170,6 +172,7 @@
     <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.8.2\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Transactions" />
@@ -213,13 +216,19 @@
     <Compile Include="Infrastructure\Telemetry\ITelemetry.cs" />
     <Compile Include="Infrastructure\Telemetry\TelemetryExtensions.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadAllEmployersRequest.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadLevyRequest.cs" />
+    <Compile Include="Payments\Handlers\AggregatePaymentDataHandler.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />
     <Compile Include="Apprenticeship\Messages\RefreshApprenticeshipForAccountMessage.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadLevyMessage.cs" />
+    <Compile Include="Levy\Messages\PreLoad\PreLoadLevyRequestMessage.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequest.cs" />
     <Compile Include="Payments\Handlers\AllowAccountProjectionsHandler.cs" />
     <Compile Include="Payments\Handlers\ProcessEmployerPaymentHandler.cs" />
     <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentMessage.cs" />
+    <Compile Include="Payments\Messages\PreLoad\PreLoadPaymentRequestMessage.cs" />
     <Compile Include="Payments\Services\DevPaymentsEventsApiClient.cs" />
     <Compile Include="Payments\Services\EmployerPaymentDataSession.cs" />
     <Compile Include="Payments\Services\PreLoadPaymentDataService.cs" />
@@ -248,6 +257,7 @@
     <Compile Include="Payments\Validation\EarningDetailsSuperficialValidator.cs" />
     <Compile Include="Payments\Validation\PaymentEventSuperficialValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Services\LevyPeriod.cs" />
     <Compile Include="Shared\Services\PeriodInformation.cs" />
     <Compile Include="Shared\Services\LevyDeclaration.cs" />
     <Compile Include="Shared\Services\PayrollDateService.cs" />

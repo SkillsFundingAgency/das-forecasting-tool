@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.PreLoad.Functions.Models
+﻿namespace SFA.DAS.Forecasting.Application.Levy.Messages.PreLoad
 {
     public class PreLoadAllEmployersRequest
     {

@@ -14,5 +14,6 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Services
 	    Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId);
         Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId);
 		Task SaveChanges();
+        Task CalculatePaymentTotals(long employerAccountId, int collectionPeriodYear, int collectionPeriodMonth);
     }
 }

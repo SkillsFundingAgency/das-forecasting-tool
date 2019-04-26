@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
+using SFA.DAS.Forecasting.Application.Levy.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 using SFA.DAS.HashingService;
+using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
@@ -17,7 +18,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
     {
         [FunctionName("LevyDeclarationNoProjectionPreLoadFunction")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.LevyPreLoadRequestNoProjection)]PreLoadRequest request,
+            [QueueTrigger(QueueNames.LevyPreLoadRequestNoProjection)]PreLoadLevyRequest request,
             [Queue(QueueNames.ValidateLevyDeclarationNoProjection)] ICollector<LevySchemeDeclarationUpdatedMessage> outputNoProjectionQueueMessage,
 			ExecutionContext executionContext,
             TraceWriter writer)
@@ -29,7 +30,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
 
 				   if (request == null)
 				   {
-					   var msg = $"{nameof(PreLoadRequest)} not valid. Function will exit.";
+					   var msg = $"{nameof(PreLoadLevyRequest)} not valid. Function will exit.";
 					   logger.Warn(msg);
 					   return;
 				   }

@@ -65,7 +65,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             {
                 if (await IsSendingEmployerAccountIdAllowed(paymentCreatedMessage.SendingEmployerAccountId))
                 {
-                    employerAccountIds.Add(paymentCreatedMessage.SendingEmployerAccountId);
                     if (!await _auditService.RecordRunOfProjections(paymentCreatedMessage.SendingEmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
                     {
                         _logger.Debug($"Triggering of payment projections for employer {paymentCreatedMessage.SendingEmployerAccountId} has already been started.");
@@ -124,5 +123,4 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             return allowPaymentProjections && allowCommitmentProjections;
         }
     }
-
 }

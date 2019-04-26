@@ -20,7 +20,12 @@
 		public const string PaymentValidator = "forecasting-payment-validate-payment";
         public const string PaymentValidatorNoCommitment = "forecasting-payment-validate-payment-no-commitment";
 
+        public const string PreLoadAllPaymentRequest = "forecasting-payment-create-preload-all";
+        public const string PreLoadAllLevyRequest = "forecasting-levy-create-preload";
+
         //
         public const string GenerateProjections = "forecasting-projections-generate-projections";
+
+        
     }
 }

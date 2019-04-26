@@ -96,4 +96,4 @@ Scenario: Unallocated Completion Payments
     | Test Apprentice 3 | Test Course 3 | 1            | Test Provider 2 | last year  |               | 666.66             | 3000              | 11                     | Levy		    |
     When the account projection is triggered after a payment run
     Then the account projection should be generated   
-	And the unallocated completion amount is 1000
+	And the unallocated completion amount is 3000

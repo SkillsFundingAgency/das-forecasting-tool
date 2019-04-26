@@ -144,15 +144,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             stopwatch.Start();
             if (commitment.Id <= 0)
                 _dataContext.Commitments.Add(commitment);
-
-            using (var scope = new TransactionScope(TransactionScopeOption.Required,
-                new TransactionOptions() ,
-                TransactionScopeAsyncFlowOption.Enabled))
-            {
-                await _dataContext.SaveChangesAsync();
-                scope.Complete();
-            }
-
+    
+            await _dataContext.SaveChangesAsync();
+        
             stopwatch.Stop();
 
             _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime, stopwatch.Elapsed, true);

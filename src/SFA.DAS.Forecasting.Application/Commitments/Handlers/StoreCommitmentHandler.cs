@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Mapping;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
@@ -41,7 +40,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _paymentMapper = paymentMapper;
         }
 
-        public async Task Handle(PaymentCreatedMessage message, string allowProjectionsEndpoint)
+        public async Task Handle(PaymentCreatedMessage message, string aggregatePaymentDataEndpoint)
         {
             if (message.EarningDetails == null)
                 throw new InvalidOperationException($"Invalid payment created message. Earning details is null so cannot create commitment data. Employer account: {message.EmployerAccountId}, payment id: {message.Id}");
@@ -63,13 +62,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
             await _repository.Store(commitment);
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
-            _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
+            _queueService.SendMessageWithVisibilityDelay(message, aggregatePaymentDataEndpoint);
             stopwatch.Stop();
 
             _telemetry.TrackDuration("Stored Commitment", stopwatch.Elapsed);
         }
 
-        public async Task Handle(ApprenticeshipMessage message, string allowProjectionsEndpoint)
+        public async Task Handle(ApprenticeshipMessage message, string aggregatePaymentDataEndpoint)
 
         {
             if (message.LearnerId <= 0)
@@ -88,7 +87,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             await _repository.Store(commitment);
 
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}");
-            _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
+            _queueService.SendMessageWithVisibilityDelay(message, aggregatePaymentDataEndpoint);
         }
     }
 }
