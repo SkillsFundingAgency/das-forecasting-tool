@@ -115,6 +115,10 @@
     },
     "AzureWebJobsServiceBus": {
       "type": "securestring"
+    },
+    "cosmosDbIpRangeFilter": {
+      "type": "string",
+      "defaultValue": ""
     }
   },
   "variables": {
@@ -385,6 +389,9 @@
           },
           "throughput": {
             "value": "[parameters('cosmosDbThroughput')]"
+          },
+          "cosmosDbIpRangeFilter": {
+            "value": "[parameters('cosmosDbIpRangeFilter')]"
           }
         }
       }
