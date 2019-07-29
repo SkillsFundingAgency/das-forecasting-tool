@@ -13,6 +13,10 @@
         },
         "throughput": {
             "type": "string"
+        },
+        "cosmosDbIpRangeFilter": {
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
@@ -29,7 +33,8 @@
                 "consistencyPolicy": {
                     "defaultConsistencyLevel": "Session"
                 },
-                "databaseAccountOfferType": "Standard"
+                "databaseAccountOfferType": "Standard",
+                "ipRangeFilter": "[parameters('cosmosDbIpRangeFilter')]"
             }
         }
     ],
