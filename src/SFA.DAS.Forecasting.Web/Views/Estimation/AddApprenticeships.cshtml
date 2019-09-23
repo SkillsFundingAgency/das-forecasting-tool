@@ -13,10 +13,13 @@
         ViewBag.Title = "Edit Apprenticeships";
         ViewBag.Description = "Edit Apprenticeships on your Estimation";
     }
- 
+
 }
 
-<div id="js-breadcrumbs"></div>
+@section breadcrumb
+{
+    <div id="js-breadcrumbs"></div>
+}
 
 <div id="estimate-add-apprenticeship">
 
@@ -29,11 +32,11 @@
                 @if (Model.ApprenticeshipsId == null)
                 {
                     @Html.Partial("_addApprenticeshipContent")
-            }
-            else
-            {
-                @Html.Partial("_editApprenticeshipContent")
-            }
+                }
+                else
+                {
+                    @Html.Partial("_editApprenticeshipContent")
+                }
 
             </div>
         </div>
@@ -47,7 +50,7 @@
             <div class="column-two-thirds">
                 @Html.HiddenFor(m => m.FundingPeriodsJson)
                 @Html.HiddenFor(m => m.CalculatedTotalCap)
-                
+
                 @if (Model.ApprenticeshipsId == null)
                 {
                     <div class="form-group @Html.AddErrorClass(m => m.IsTransferFunded)">
@@ -84,7 +87,7 @@
                     </div>
                 }
 
-        
+
 
 
 
@@ -178,8 +181,8 @@
 
             <div class="column-full">
                 <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
-                <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })" 
-                   aria-label="Cancel" 
+                <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })"
+                   aria-label="Cancel"
                    class="button text-link">
                     Cancel
                 </a>
