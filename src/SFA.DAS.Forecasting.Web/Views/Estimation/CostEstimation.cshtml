@@ -6,7 +6,10 @@
     ViewBag.Title = "Estimated Cost";
 }
 
-<div id="js-breadcrumbs"></div>
+@section breadcrumb
+{
+    <div id="js-breadcrumbs"></div>
+}
 
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -114,8 +117,8 @@
                                 var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
                                 <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
 
-                                
-                     
+
+
 
                                 @:<table class="small errorTable responsive">
                                     <thead>
@@ -144,14 +147,6 @@
                                         </tr>
                                     </thead>
                                     @:<tbody>
-
-
-
-
-
-
-
-
                                     }
 
                                     <tr class="@tableRowClass">
@@ -226,10 +221,6 @@
                                     </tr>
                                 </thead>
                                 @:<tbody class="@tableBodyClass">
-
-
-
-
                                 }
 
                                 <tr class="@tableRowClass">
@@ -248,7 +239,7 @@
                         }
                     }
                 }
-                
+
             </div>
 
             <div id="apprenticeships-added" class="tab-content">

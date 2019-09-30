@@ -4,6 +4,12 @@
     ViewBag.Title = Model.CourseTitle;
     ViewBag.Description = "Remove Apprenticeships from your Estimation";
 }
+
+@section breadcrumb
+{
+    <div id="js-breadcrumbs"></div>
+}
+
 <a href="@Url.RouteUrl("EstimatedCost", new { hashedaccountId = Model.HashedAccountId, estimateName = Model.EstimationName, apprenticeshipRemoved = false })" class="link-back">Back</a>
 
 

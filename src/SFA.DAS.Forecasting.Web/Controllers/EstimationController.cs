@@ -1,9 +1,7 @@
-﻿using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using SFA.DAS.Forecasting.Web.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -87,9 +85,6 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             
             return View("AddApprenticeships",model);
         }
-
-       
-        
 
         [HttpPost]
         [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]

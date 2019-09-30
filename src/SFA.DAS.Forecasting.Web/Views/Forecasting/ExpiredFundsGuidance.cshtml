@@ -4,14 +4,17 @@
     ViewBag.Title = "Expired Funds Guidance";
 }
 
-<div class="breadcrumbs">
-    <ol role="navigation">
-        <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
-        <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li>
-        <li><a href="@Url.Action("Balance","Forecasting")">Funding projection</a></li>
-        <li>Expired funds</li>
-    </ol>
-</div>
+@section breadcrumb
+{
+    <div class="breadcrumbs">
+        <ol role="navigation">
+            <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
+            <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li>
+            <li><a href="@Url.Action("Balance","Forecasting")">Funding projection</a></li>
+            <li>Expired funds</li>
+        </ol>
+    </div>
+}
 
 <header class="publication-header">
     <p class="publication-header__publication-type">
@@ -58,7 +61,7 @@
             </li>
             <li>
                 <a href="#heading-7">
-                   Very large levy adjustments
+                    Very large levy adjustments
                 </a>
             </li>
         </ol>
@@ -202,8 +205,8 @@
         </ol>
 
         <p>Therefore the amount of funds that will be taken out of your account in June 2019 is £400. (£1,500 - £700 - £400 = £400)</p>
-        
-        <h3 class="heading-medium">6.3 Third example of expired funds calculation for a negative levy adjustment </h3>   
+
+        <h3 class="heading-medium">6.3 Third example of expired funds calculation for a negative levy adjustment </h3>
         <p>This is how to calculate the amount of funds to expire in July 2019.  </p>
         <ol class="list list-number">
             <li>The total amount of levy paid, including negative adjustments, until July 2017 is £1,500.</li>
