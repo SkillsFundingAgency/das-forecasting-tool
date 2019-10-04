@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                         CompletionAmount = 100,
                         EmployerAccountId = EmployerAccountId,
                         MonthlyInstallment = 50,
-                        PlannedEndDate = new DateTime(2019, 7, 1),
+                        PlannedEndDate = new DateTime(2019, 9, 1),
                         StartDate = new DateTime(2019, 3, 1),
                         NumberOfInstallments = 5,
                         FundingSource = Models.Payments.FundingSource.Levy
