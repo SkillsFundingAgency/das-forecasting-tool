@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                         CompletionAmount = 100,
                         EmployerAccountId = EmployerAccountId,
                         MonthlyInstallment = 50,
-                        PlannedEndDate = new DateTime(2019, 7, 1),
+                        PlannedEndDate = new DateTime(2019, 9, 1),
                         StartDate = new DateTime(2019, 3, 1),
                         NumberOfInstallments = 5,
                         FundingSource = Models.Payments.FundingSource.Levy
@@ -193,7 +193,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _estimationProjection.BuildProjections();
             var projection = _estimationProjection.Projections.LastOrDefault();
             Assert.IsNotNull(projection);
-            Assert.AreEqual(9, projection.Month, $"Expected to end in month 9 but last month was {projection.Month}");
+            Assert.AreEqual(11, projection.Month, $"Expected to end in month 9 but last month was {projection.Month}");
         }
 
         [Test]
