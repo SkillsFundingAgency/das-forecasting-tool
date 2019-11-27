@@ -50,6 +50,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 {
                     BaseUrl = CloudConfigurationManager.GetSetting("Commitments-BaseUrl"),
                     ClientToken = CloudConfigurationManager.GetSetting("Commitments-ClientToken"),
+                    ApiBaseUrl = CloudConfigurationManager.GetSetting("Commitments-ApiBaseUrl"),
+                    Tenant = CloudConfigurationManager.GetSetting("Commitments-Tenant"),
+                    ClientId = CloudConfigurationManager.GetSetting("Commitments-ClientId"),
+                    ClientSecret = CloudConfigurationManager.GetSetting("Commitments-ClientSecret"),
+                    IdentifierUri = CloudConfigurationManager.GetSetting("Commitments-IdentifierUri"),
                 }
                 : GetConfiguration<CommitmentsApiConfig>("SFA.DAS.CommitmentsAPI");
         }
