@@ -48,13 +48,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             return IsDevOrAtEnvironment
                 ? new CommitmentsApiConfig
                 {
-                    BaseUrl = CloudConfigurationManager.GetSetting("Commitments-BaseUrl"),
-                    ClientToken = CloudConfigurationManager.GetSetting("Commitments-ClientToken"),
-                    ApiBaseUrl = CloudConfigurationManager.GetSetting("Commitments-ApiBaseUrl"),
-                    Tenant = CloudConfigurationManager.GetSetting("Commitments-Tenant"),
-                    ClientId = CloudConfigurationManager.GetSetting("Commitments-ClientId"),
-                    ClientSecret = CloudConfigurationManager.GetSetting("Commitments-ClientSecret"),
-                    IdentifierUri = CloudConfigurationManager.GetSetting("Commitments-IdentifierUri"),
+                    BaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV1BaseUrl"),
+                    ClientToken = CloudConfigurationManager.GetSetting("CommitmentsV1ClientToken"),
+                    ApiBaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV1ApiBaseUrl"),
+                    Tenant = CloudConfigurationManager.GetSetting("CommitmentsV1Tenant"),
+                    ClientId = CloudConfigurationManager.GetSetting("CommitmentsV1ClientId"),
+                    ClientSecret = CloudConfigurationManager.GetSetting("CommitmentsV1ClientSecret"),
+                    IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV1IdentifierUri"),
                 }
                 : GetConfiguration<CommitmentsApiConfig>("SFA.DAS.CommitmentsAPI");
         }

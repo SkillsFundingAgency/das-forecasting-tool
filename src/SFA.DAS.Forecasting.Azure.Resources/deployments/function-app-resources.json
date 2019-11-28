@@ -32,10 +32,10 @@
     "appServicePlanId": {
       "type": "string"
     },
-    "CommitmentsBaseUrl": {
+    "CommitmentsV1BaseUrl": {
       "type": "string"
     },
-    "CommitmentsClientToken": {
+    "CommitmentsV1ClientToken": {
       "type": "securestring"
     },
     "CommitmentsV1ApiBaseUrl": {
@@ -124,31 +124,31 @@
               "value": "[parameters('funAppName')]"
             },
             {
-              "name": "Commitments-BaseUrl",
-              "value": "[parameters('CommitmentsBaseUrl')]"
+              "name": "CommitmentsV1ClientToken",
+              "value": "[parameters('CommitmentsV1ClientToken')]"
             },
             {
-              "name": "Commitments-ClientToken",
-              "value": "[parameters('CommitmentsClientToken')]"
+              "name": "CommitmentsV1ClientToken",
+              "value": "[parameters('CommitmentsV1ClientToken')]"
             },
             {
-              "name": "Commitments-ApiBaseUrl",
+              "name": "CommitmentsV1ApiBaseUrl",
               "value": "[parameters('CommitmentsV1ApiBaseUrl')]"
             },
             {
-              "name": "Commitments-Tenant",
+              "name": "CommitmentsV1Tenant",
               "value": "[parameters('CommitmentsV1Tenant')]"
             },
             {
-              "name": "Commitments-ClientId",
+              "name": "CommitmentsV1ClientId",
               "value": "[parameters('CommitmentsV1ClientId')]"
             },
             {
-              "name": "Commitments-ClientSecret",
+              "name": "CommitmentsV1ClientSecret",
               "value": "[parameters('CommitmentsV1ClientSecret')]"
             },
             {
-              "name": "Commitments-IdentifierUri",
+              "name": "CommitmentsV1IdentifierUri",
               "value": "[parameters('CommitmentsV1IdentifierUri')]"
             },
             {
