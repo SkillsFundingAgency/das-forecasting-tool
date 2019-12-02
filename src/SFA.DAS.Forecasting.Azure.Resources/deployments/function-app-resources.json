@@ -124,8 +124,8 @@
               "value": "[parameters('funAppName')]"
             },
             {
-              "name": "CommitmentsV1ClientToken",
-              "value": "[parameters('CommitmentsV1ClientToken')]"
+              "name": "CommitmentsV1BaseUrl",
+              "value": "[parameters('CommitmentsV1BaseUrl')]"
             },
             {
               "name": "CommitmentsV1ClientToken",
