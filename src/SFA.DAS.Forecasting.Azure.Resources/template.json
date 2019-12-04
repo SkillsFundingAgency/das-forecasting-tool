@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
@@ -107,10 +107,10 @@
     "cosmosDbThroughput": {
       "type": "string"
     },
-    "CommitmentsBaseUrl": {
+    "CommitmentsV1BaseUrl": {
       "type": "string"
     },
-    "CommitmentsClientToken": {
+    "CommitmentsV1ClientToken": {
       "type": "securestring"
     },
     "AzureWebJobsServiceBus": {
@@ -119,6 +119,21 @@
     "cosmosDbIpRangeFilter": {
       "type": "string",
       "defaultValue": ""
+    },   
+    "CommitmentsV1ApiBaseUrl": {
+      "type": "string"
+    },
+    "CommitmentsV1Tenant": {
+      "type": "string"
+    },
+    "CommitmentsV1ClientId": {
+      "type": "string"
+    },
+    "CommitmentsV1ClientSecret": {
+      "type": "securestring"
+    },
+    "CommitmentsV1IdentifierUri": {
+      "type": "string"
     }
   },
   "variables": {
@@ -282,12 +297,27 @@
           "appServicePlanId": {
             "value": "[reference('app-service-plan-resources-deployment').outputs.ASPResourceId.value]"
           },
-          "CommitmentsBaseUrl": {
-            "value": "[parameters('CommitmentsBaseUrl')]"
+          "CommitmentsV1BaseUrl": {
+            "value": "[parameters('CommitmentsV1BaseUrl')]"
           },
-          "CommitmentsClientToken": {
-            "value": "[parameters('CommitmentsClientToken')]"
+          "CommitmentsV1ClientToken": {
+            "value": "[parameters('CommitmentsV1ClientToken')]"
           },
+          "CommitmentsV1ApiBaseUrl": {
+            "value": "[parameters('CommitmentsV1ApiBaseUrl')]"
+          },
+          "CommitmentsV1Tenant": {
+            "value": "[parameters('CommitmentsV1Tenant')]"
+          },
+          "CommitmentsV1ClientId": {
+            "value": "[parameters('CommitmentsV1ClientId')]"
+          },
+          "CommitmentsV1ClientSecret": {
+            "value": "[parameters('CommitmentsV1ClientSecret')]"
+          },
+          "CommitmentsV1IdentifierUri": {
+            "value": "[parameters('CommitmentsV1IdentifierUri')]"
+          },   
           "AzureWebJobsServiceBus": {
             "value": "[parameters('AzureWebJobsServiceBus')]"
           }
