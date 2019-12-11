@@ -735,7 +735,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             var expiredFunds = new Dictionary<CalendarPeriod,decimal>()
             {
-                {new CalendarPeriod(DateTime.UtcNow.Year,DateTime.UtcNow.Month+1),15000  }
+                {new CalendarPeriod(DateTime.UtcNow.AddMonths(1).Year ,DateTime.UtcNow.AddMonths(1).Month), 15000  }
             };
             accountProjection.BuildLevyTriggeredProjections(DateTime.UtcNow, 24);
 
