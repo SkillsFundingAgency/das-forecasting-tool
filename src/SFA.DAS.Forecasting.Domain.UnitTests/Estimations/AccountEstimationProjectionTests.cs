@@ -59,8 +59,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                         CompletionAmount = 100,
                         EmployerAccountId = EmployerAccountId,
                         MonthlyInstallment = 50,
-                        PlannedEndDate = new DateTime(2018, 5, 1),
-                        StartDate = new DateTime(2018, 1, 1),
+                        PlannedEndDate = new DateTime(DateTime.Now.Year - 1, 5, 1),
+                        StartDate = new DateTime(DateTime.Now.Year - 1, 1, 1),
                         NumberOfInstallments = 5,
                         FundingSource = Models.Payments.FundingSource.Transfer
                     },
