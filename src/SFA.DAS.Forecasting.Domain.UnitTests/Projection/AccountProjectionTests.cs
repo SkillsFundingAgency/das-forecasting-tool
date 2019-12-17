@@ -57,7 +57,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
             accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 1);
 
-            accountProjection.Projections.First().Month.Should().Be((short) DateTime.Today.Month);
+            accountProjection.Projections.First().Month.Should().Be((short)DateTime.Today.Month);
         }
 
         [Test]
@@ -329,7 +329,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
             //Act
-            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month,20), 2);
+            accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
 
             //Assert
             var expectedMonth1 = accountProjection.Projections.FirstOrDefault();
@@ -733,16 +733,16 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             var accountProjection = Moqer.Resolve<Projections.AccountProjection>();
 
-            var expiredFunds = new Dictionary<CalendarPeriod,decimal>()
+            var expiredFunds = new Dictionary<CalendarPeriod, decimal>()
             {
-                {new CalendarPeriod(DateTime.UtcNow.AddMonths(1).Year ,DateTime.UtcNow.AddMonths(1).Month), 15000  }
+                { new CalendarPeriod(DateTime.UtcNow.AddMonths(1).Year ,DateTime.UtcNow.AddMonths(1).Month), 15000  }
             };
             accountProjection.BuildLevyTriggeredProjections(DateTime.UtcNow, 24);
 
             accountProjection.UpdateProjectionsWithExpiredFunds(expiredFunds);
 
             Assert.IsTrue(accountProjection.Projections.Sum(s => s.FutureFundsNoExpiry) != 0);
-            Assert.IsTrue(accountProjection.Projections.Sum(s=>s.FutureFundsNoExpiry) != accountProjection.Projections.Sum(s=>s.FutureFunds));
+            Assert.IsTrue(accountProjection.Projections.Sum(s => s.FutureFundsNoExpiry) != accountProjection.Projections.Sum(s => s.FutureFunds));
             Assert.IsTrue(accountProjection.Projections.Sum(s => s.ExpiredFunds) > 0);
         }
 
