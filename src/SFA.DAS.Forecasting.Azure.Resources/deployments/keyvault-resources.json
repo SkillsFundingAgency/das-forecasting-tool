@@ -62,8 +62,20 @@
     "employerConnectionString": {
       "type": "securestring"
     },
-    "cosmosDbConnectionString" : {
+    "cosmosDbConnectionString": {
       "type": "string"
+    },
+    "ZenDeskSectionId": {
+      "type": "string",
+      "metadata": {
+        "description": "The SectionId for the ZenDesk widget"
+      }
+    },
+    "ZenDeskSnippetKey": {
+      "type": "string",
+      "metadata": {
+        "description": "The SnippetKey for the ZenDesk widget"
+      }
     }
   },
   "variables": {
