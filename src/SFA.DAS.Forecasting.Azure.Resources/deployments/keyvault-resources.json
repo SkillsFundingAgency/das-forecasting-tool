@@ -64,18 +64,6 @@
     },
     "cosmosDbConnectionString": {
       "type": "string"
-    },
-    "zenDeskSectionId": {
-      "type": "string",
-      "metadata": {
-        "description": "The SectionId for the ZenDesk widget"
-      }
-    },
-    "zenDeskSnippetKey": {
-      "type": "string",
-      "metadata": {
-        "description": "The SnippetKey for the ZenDesk widget"
-      }
     }
   },
   "variables": {
@@ -223,28 +211,6 @@
           "apiVersion": "2015-06-01",
           "properties": {
             "value": "[parameters('cosmosDbConnectionString')]"
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
-          ]
-        },
-        {
-          "type": "secrets",
-          "name": "ZenDeskSectionId",
-          "apiVersion": "2015-06-01",
-          "properties": {
-            "value": "[parameters('zenDeskSectionId')]"
-          },
-          "dependsOn": [
-            "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
-          ]
-        },
-        {
-          "type": "secrets",
-          "name": "ZenDeskSnippetKey",
-          "apiVersion": "2015-06-01",
-          "properties": {
-            "value": "[parameters('zenDeskSnippetKey')]"
           },
           "dependsOn": [
             "[resourceId('Microsoft.KeyVault/vaults/', parameters('name'))]"
