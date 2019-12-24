@@ -119,7 +119,7 @@
     "cosmosDbIpRangeFilter": {
       "type": "string",
       "defaultValue": ""
-    },   
+    },
     "CommitmentsV1ApiBaseUrl": {
       "type": "string"
     },
@@ -133,6 +133,12 @@
       "type": "securestring"
     },
     "CommitmentsV1IdentifierUri": {
+      "type": "string"
+    },
+    "zenDeskSectionId": {
+      "type": "string"
+    },
+    "ZenDeskSnippetKey": {
       "type": "string"
     }
   },
@@ -392,6 +398,12 @@
           },
           "cosmosDbConnectionString": {
             "value": "[reference('cosmos-db-resources-deployment').outputs.CustomConnectionString.value]"
+          },
+          "zenDeskSectionId": {
+            "value": "[parameters('zenDeskSectionId')]"
+          },
+          "zenDeskSnippetKey": {
+            "value": "[parameters('zenDeskSnippetKey')]"
           }
         }
       }
