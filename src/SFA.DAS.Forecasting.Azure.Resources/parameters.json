@@ -97,6 +97,12 @@
     },
     "cosmosDbIpRangeFilter": {
       "value": ""
+    },
+    "zenDeskSectionId": {
+      "value": ""
+    },
+    "zenDeskSnippetKey": {
+      "value": ""
     }
   }
 }

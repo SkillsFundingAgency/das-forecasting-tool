@@ -62,7 +62,7 @@
     "employerConnectionString": {
       "type": "securestring"
     },
-    "cosmosDbConnectionString" : {
+    "cosmosDbConnectionString": {
       "type": "string"
     }
   },

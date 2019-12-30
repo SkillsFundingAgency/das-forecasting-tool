@@ -47,6 +47,12 @@
     },
     "appServicePlanId": {
       "type": "string"
+    },
+    "zenDeskSectionId": {
+      "type": "string"
+    },
+    "zenDeskSnippetKey": {
+      "type": "string"
     }
   },
   "resources": [
@@ -163,6 +169,14 @@
             {
               "name": "MyaBaseUrl",
               "value": "[parameters('myaBaseUrl')]"
+            },
+            {
+              "name": "ZenDeskSectionId",
+              "value": "[parameters('zenDeskSectionId')]"
+            },
+            {
+              "name": "ZenDeskSnippetKey",
+              "value": "[parameters('zenDeskSnippetKey')]"
             }
           ],
           "alwaysOn": true,
@@ -227,6 +241,14 @@
                 {
                   "name": "MyaBaseUrl",
                   "value": "[parameters('myaBaseUrl')]"
+                },
+                {
+                  "name": "ZenDeskSectionId",
+                  "value": "[parameters('zenDeskSectionId')]"
+                },
+                {
+                  "name": "ZenDeskSnippetKey",
+                  "value": "[parameters('zenDeskSnippetKey')]"
                 }
               ]
             }
