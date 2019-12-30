@@ -29,13 +29,16 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             var apiCallString =
                 "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
 
-            var first = true;
+            var isFirstLabel = true;
             foreach (var label in labels)
             {
-                if (!string.IsNullOrEmpty(label))
+                if (!string.IsNullOrWhiteSpace(label))
                 {
-                    if (!first) apiCallString += ",";
-                    first = false;
+                    if (!isFirstLabel) 
+                    { 
+                        apiCallString += ","; 
+                    }
+                    isFirstLabel = false;
 
                     apiCallString += $"'{ EscapeApostrophes(label) }'";
                 }

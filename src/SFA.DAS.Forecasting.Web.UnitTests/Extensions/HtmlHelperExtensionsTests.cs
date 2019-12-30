@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.Forecasting.Web.Extensions;
 using System.Collections;
-using System;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.Extensions
 {
@@ -29,27 +28,30 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Extensions
         public void WhenICallSetZenDeskLabelsWithLabels_ThenTheOutputIsCorrect(string[] labels)
         {
             //Arrange
-            var actualOutput = "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
+            var expectedOutput = "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
 
-            var first = true;
+            var isFirstLabel = true;
             foreach (var label in labels)
             {
                 if (!string.IsNullOrEmpty(label))
                 {
-                    if (!first) actualOutput += ",";
-                    first = false;
+                    if (!isFirstLabel)
+                    {
+                        expectedOutput += ",";
+                    }
+                    isFirstLabel = false;
 
-                    actualOutput += $"'{ EscapeApostrophes(label) }'";
+                    expectedOutput += $"'{ EscapeApostrophes(label) }'";
                 }
             }
 
-            actualOutput += "] });</script>";
+            expectedOutput += "] });</script>";
 
             //Act
-            this.actualOutput = HtmlHelperExtensions.SetZenDeskLabels(null, labels).ToString();
+            actualOutput = HtmlHelperExtensions.SetZenDeskLabels(null, labels).ToString();
 
             //Assert
-            Assert.AreEqual(actualOutput, this.actualOutput);
+            Assert.AreEqual(expectedOutput, actualOutput);
         }
 
         private static string EscapeApostrophes(string input)
