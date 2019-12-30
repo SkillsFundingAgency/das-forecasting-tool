@@ -250,6 +250,12 @@
           },
           "appServicePlanId": {
             "value": "[reference('app-service-plan-resources-deployment').outputs.ASPResourceId.value]"
+          },
+          "zenDeskSectionId": {
+            "value": "[parameters('zenDeskSectionId')]"
+          },
+          "zenDeskSnippetKey": {
+            "value": "[parameters('zenDeskSnippetKey')]"
           }
         }
       }
@@ -398,12 +404,6 @@
           },
           "cosmosDbConnectionString": {
             "value": "[reference('cosmos-db-resources-deployment').outputs.CustomConnectionString.value]"
-          },
-          "zenDeskSectionId": {
-            "value": "[parameters('zenDeskSectionId')]"
-          },
-          "zenDeskSnippetKey": {
-            "value": "[parameters('zenDeskSnippetKey')]"
           }
         }
       }
