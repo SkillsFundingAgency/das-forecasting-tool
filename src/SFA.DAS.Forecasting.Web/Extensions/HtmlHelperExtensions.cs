@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 
@@ -20,6 +21,47 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             }
 
             return new MvcHtmlString("error");
-        }   
+        }
+
+
+        public static MvcHtmlString SetZenDeskLabels(this HtmlHelper html, params string[] labels)
+        {
+            var apiCallString =
+                "<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', { labels: [";
+
+            var isFirstLabel = true;
+            foreach (var label in labels)
+            {
+                if (!string.IsNullOrWhiteSpace(label))
+                {
+                    if (!isFirstLabel) 
+                    { 
+                        apiCallString += ","; 
+                    }
+                    isFirstLabel = false;
+
+                    apiCallString += $"'{ EscapeApostrophes(label) }'";
+                }
+            }
+
+            apiCallString += "] });</script>";
+
+            return MvcHtmlString.Create(apiCallString);
+        }
+
+        private static string EscapeApostrophes(string input)
+        {
+            return input.Replace("'", @"\'");
+        }
+
+        public static string GetZenDeskSnippetKey(this HtmlHelper html)
+        {
+            return ConfigurationManager.AppSettings["ZenDeskSnippetKey"];
+        }
+
+        public static string GetZenDeskSnippetSectionId(this HtmlHelper html)
+        {
+            return ConfigurationManager.AppSettings["ZenDeskSectionId"];            
+        }
     }
 }

@@ -751,6 +751,7 @@
     <Content Include="Views\Estimation\_addApprenticeshipContent.cshtml" />
     <Content Include="Views\Estimation\_editApprenticeshipContent.cshtml" />
     <Content Include="Views\Forecasting\ExpiredFundsGuidance.cshtml" />
+    <Content Include="Views\Shared\_ZenDeskWidget.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
