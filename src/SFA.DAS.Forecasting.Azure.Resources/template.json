@@ -134,6 +134,12 @@
     },
     "CommitmentsV1IdentifierUri": {
       "type": "string"
+    },
+    "zenDeskSectionId": {
+      "type": "string"
+    },
+    "ZenDeskSnippetKey": {
+      "type": "string"
     }
   },
   "variables": {
@@ -244,6 +250,12 @@
           },
           "appServicePlanId": {
             "value": "[reference('app-service-plan-resources-deployment').outputs.ASPResourceId.value]"
+          },
+          "zenDeskSectionId": {
+            "value": "[parameters('zenDeskSectionId')]"
+          },
+          "zenDeskSnippetKey": {
+            "value": "[parameters('zenDeskSnippetKey')]"
           }
         }
       }
