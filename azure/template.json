@@ -696,7 +696,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "[concat(variables('secrets')[copyIndex()], '-secret')]",
+            "name": "[concat(variables('secrets')[copyIndex()].name, '-secret')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-copy",
@@ -726,7 +726,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "[concat(variables('secrets')[copyIndex()], '-secret-storage')]",
+            "name": "[concat(variables('secrets')[copyIndex()].name, '-secret-storage')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-storage-copy",
@@ -756,7 +756,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "[concat(variables('secrets')[copyIndex()], '-secret-cosmos')]",
+            "name": "[concat(variables('secrets')[copyIndex()].name, '-secret-cosmos')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-cosmos-copy",
