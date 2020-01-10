@@ -410,6 +410,7 @@
     <Content Include="Content\dist\images\govuk-crest-2x.png" />
     <Content Include="Content\dist\images\info-blue.png" />
     <Content Include="Content\dist\js\add-apprenticeship.js" />
+    <Content Include="Content\dist\js\cookiebanner.js" />
     <Content Include="Content\dist\js\edit-apprenticeship.js" />
     <Content Include="Content\dist\js\add-edit-functions.js" />
     <Content Include="Content\dist\js\jquery-1.10.2.min.js" />
@@ -752,6 +753,7 @@
     <Content Include="Views\Estimation\_editApprenticeshipContent.cshtml" />
     <Content Include="Views\Forecasting\ExpiredFundsGuidance.cshtml" />
     <Content Include="Views\Shared\_ZenDeskWidget.cshtml" />
+    <Content Include="Views\Shared\_CookieBanner.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -768,6 +770,7 @@
     <Content Include="Content\src\sass\forms\_form-validation.scss" />
     <Content Include="Content\spec\support\jasmine.json" />
     <Content Include="Content\src\sass\_publication.scss" />
+    <Content Include="Content\src\sass\_cookiebanner.scss" />
     <None Include="Project_Readme.html" />
     <Content Include="Views\Forecasting\Apprenticeships.cshtml" />
   </ItemGroup>
