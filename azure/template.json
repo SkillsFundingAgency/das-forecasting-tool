@@ -326,7 +326,7 @@
                         "value": [
                             {
                                 "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference('function-app-insights').outputs.InstrumentationKey.value]"
+                                "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.InstrumentationKey.value]"
                             },
                             {
                                 "name": "AppName",
