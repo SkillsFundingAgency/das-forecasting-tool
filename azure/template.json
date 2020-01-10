@@ -696,7 +696,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "keyvault-secrets",
+            "name": "[concat(variables('secrets')[copyIndex()], '-secret')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-copy",
@@ -726,7 +726,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "keyvault-secret-storage",
+            "name": "[concat(variables('secrets')[copyIndex()], '-secret-storage')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-storage-copy",
@@ -756,7 +756,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "keyvault-secret-cosmos",
+            "name": "[concat(variables('secrets')[copyIndex()], '-secret-cosmos')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-cosmos-copy",
