@@ -637,7 +637,7 @@
                                     "name": "FunctionAppKeyVaultAccessPolicies",
                                     "count": "[length(variables('functionAppNames'))]",
                                     "input": {
-                                        "objectId": "[reference( concat( variables('functionAppNames')[copyIndex()], '-function') ).outputs.managedServiceIdentityId.value]",
+                                        "objectId": "[reference( concat( variables('functionAppNames')[copyIndex('FunctionAppKeyVaultAccessPolicies')], '-function') ).outputs.managedServiceIdentityId.value]",
                                         "tenantId": "[subscription().tenantId]",
                                         "permissions": {
                                             "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
