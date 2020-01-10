@@ -729,13 +729,13 @@
             "name": "keyvault-secret-storage",
             "type": "Microsoft.Resources/deployments",
             "copy": {
-                "name": "secrets-copy",
+                "name": "secrets-storage-copy",
                 "count": "[length(variables('secrets'))]"
             },
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault.json')]",
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -759,13 +759,13 @@
             "name": "keyvault-secret-cosmos",
             "type": "Microsoft.Resources/deployments",
             "copy": {
-                "name": "secrets-copy",
+                "name": "secrets-cosmos-copy",
                 "count": "[length(variables('secrets'))]"
             },
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault.json')]",
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
