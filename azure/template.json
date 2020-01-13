@@ -628,19 +628,54 @@
                                 }
                             },
                             {
-                                "copy": [
-                                    {
-                                        "name": "keyvaultfunctionaccesspoliciescopy",
-                                        "count": "[length(variables('functionAppNames'))]",
-                                        "input": {
-                                            "objectId": "[reference( concat( variables('functionAppNames')[copyIndex()], '-function') ).outputs.managedServiceIdentityId.value]",
-                                            "tenantId": "[subscription().tenantId]",
-                                            "permissions": {
-                                                "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
-                                            }
-                                        }
-                                    }
-                                ]}
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[0], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[1], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[2], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[3], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[4], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[5], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[6], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            }
                         ]
                     },
                     "enabledForTemplateDeployment": {
