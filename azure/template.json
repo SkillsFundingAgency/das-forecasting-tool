@@ -155,6 +155,9 @@
         },
         "kv_EmployerConnectionString": {
             "type": "securestring"
+        },
+        "microsoftAzureWebsitesObjectId": {
+            "type": "string"
         }
     },
     "variables": {
@@ -605,6 +608,44 @@
                     "keyVaultName": {
                         "value": "[variables('appSettingsKeyVaultName')]"
                     },
+                    "keyVaultAccessPolicies": {
+                        "value": [
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[parameters('microsoftAzureWebsitesObjectId')]",
+                                "permissions": {
+                                    "secrets": [
+                                        "Get"
+                                    ],
+                                    "keys": [
+                                    ],
+                                    "certificates": [
+                                    ]
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference('app-service').outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "copy": [
+                                    {
+                                        "name": "keyvaultfunctionaccesspoliciescopy",
+                                        "count": "[length(variables('functionAppNames'))]",
+                                        "input": {
+                                            "objectId": "[reference( concat( variables('functionAppNames')[copyIndex()], '-function') ).outputs.managedServiceIdentityId.value]",
+                                            "tenantId": "[subscription().tenantId]",
+                                            "permissions": {
+                                                "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                            }
+                                        }
+                                    }
+                                ]}
+                        ]
+                    },
                     "enabledForTemplateDeployment": {
                         "value": true
                     },
@@ -613,82 +654,6 @@
                     }
                 }
             }
-        },
-        {
-            "apiVersion": "2019-05-01",
-            "name": "[concat(variables('functionAppNames')[copyIndex()], '-keyvault-function-access-policy')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-accesspolicies.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "keyVaultName": {
-                        "value": "[variables('appSettingsKeyVaultName')]"
-                    },
-                    "accessPolicies": {
-                        "value": [
-                            {
-                                "objectId": "[reference( concat( variables('functionAppNames')[copyIndex()], '-function') ).outputs.managedServiceIdentityId.value]",
-                                "tenantId": "[subscription().tenantId]",
-                                "permissions": {
-                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "copy": {
-                "name": "keyvaultfunctionaccesspoliciescopy",
-                "count": "[length(variables('functionAppNames'))]",
-                "mode": "serial"
-            },
-            "dependsOn": [
-                "keyvault"
-            ]
-        },
-        {
-            "apiVersion": "2019-05-01",
-            "name": "keyvault-app-service-access-policies",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-accesspolicies.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "keyVaultName": {
-                        "value": "[variables('appSettingsKeyVaultName')]"
-                    },
-                    "accessPolicies": {
-                        "value": [
-                            {
-                                "objectId": "[reference('app-service').outputs.managedServiceIdentityId.value]",
-                                "tenantId": "[subscription().tenantId]",
-                                "permissions": {
-                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
-                                }
-                            },
-                            {
-                                "objectId": "[parameters('mAWObjectId')]",
-                                "tenantId": "[subscription().tenantId]",
-                                "permissions": {
-                                    "secrets": [
-                                        "Get"
-                                    ]
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            "dependsOn": [
-                "keyvault"
-            ]
         },
         {
             "apiVersion": "2019-05-01",
