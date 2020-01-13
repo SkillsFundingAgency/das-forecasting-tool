@@ -463,9 +463,6 @@
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
                     },
-                    "deployStagingSlot": {
-                        "value": false
-                    },
                     "appServiceAppSettings": {
                         "value": [
                             {
