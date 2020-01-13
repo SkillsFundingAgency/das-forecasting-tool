@@ -646,7 +646,8 @@
             },
             "copy": {
                 "name": "keyvaultfunctionaccesspoliciescopy",
-                "count": "[length(variables('functionAppNames'))]"
+                "count": "[length(variables('functionAppNames'))]",
+                "mode": "serial"
             },
             "dependsOn": [
                 "keyvault"
