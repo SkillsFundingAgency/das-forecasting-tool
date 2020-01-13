@@ -155,9 +155,6 @@
         },
         "kv_EmployerConnectionString": {
             "type": "securestring"
-        },
-        "microsoftAzureWebsitesObjectId": {
-            "type": "string"
         }
     },
     "variables": {
@@ -612,7 +609,7 @@
                         "value": [
                             {
                                 "tenantId": "[subscription().tenantId]",
-                                "objectId": "[parameters('microsoftAzureWebsitesObjectId')]",
+                                "objectId": "[parameters('mAWObjectId')]",
                                 "permissions": {
                                     "secrets": [
                                         "Get"
