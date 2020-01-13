@@ -617,7 +617,7 @@
         },
         {
             "apiVersion": "2019-05-01",
-            "name": "keyvault-function-access-policies",
+            "name": "[concat(variables('functionAppNames')[copyIndex()], '-keyvault-function-access-policy')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -632,24 +632,19 @@
                     "accessPolicies": {
                         "value": [
                             {
-                                "copy": [
-                                    {
-                                        "name": "FunctionAppKeyVaultAccessPolicies",
-                                        "count": "[length(variables('functionAppNames'))]",
-                                        "input": {
-                                            "objectId": "[reference( concat( variables('functionAppNames')[copyIndex('FunctionAppKeyVaultAccessPolicies')], '-function') ).outputs.managedServiceIdentityId.value]",
-                                            "tenantId": "[subscription().tenantId]",
-                                            "permissions": {
-                                                "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
-
-                                            }
-                                        }
-                                    }
-                                ]
+                                "objectId": "[reference( concat( variables('functionAppNames')[copyIndex()], '-function') ).outputs.managedServiceIdentityId.value]",
+                                "tenantId": "[subscription().tenantId]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
                             }
                         ]
                     }
                 }
+            },
+            "copy": {
+                "name": "keyvaultfunctionaccesspoliciescopy",
+                "count": "[length(variables('functionAppNames'))]"
             },
             "dependsOn": [
                 "keyvault"
