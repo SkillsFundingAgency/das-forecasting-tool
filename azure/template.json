@@ -813,6 +813,10 @@
         "DatabaseName": {
             "type": "string",
             "value": "[variables('databaseName')]"
+        },
+        "CosmosDbName": {
+            "type": "string",
+            "value": "[variables('cosmosDbName')]"
         }
     }
 }
