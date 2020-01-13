@@ -161,7 +161,7 @@
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[concat('das-',toLower(parameters('resourceEnvironmentName')),'-' , parameters('serviceName'))]",
         "appServiceName": "[concat(variables('resourceNamePrefix'),'ui-as')]",
-        "workerAppServicePlanName": "[concat(variables('resourceNamePrefix'),'wkr-asp')]",
+        "workerAppServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
         "appSettingsKeyVaultName": "[concat(variables('resourceNamePrefix'),'-kv')]",
         "appSettingsKeyVaultSecretPermissions": [
             "Get",
