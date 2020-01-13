@@ -224,7 +224,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "name": {
+                    "storageAccountName": {
                         "value": "[variables('storageAccountName')]"
                     }
                 }
@@ -288,10 +288,10 @@
                     "appServicePlanName": {
                         "value": "[variables('workerAppServicePlanName')]"
                     },
-                    "appServicePlanSize": {
+                    "aspSize": {
                         "value": "[parameters('workerAppServicePlanSize')]"
                     },
-                    "appServicePlanInstances": {
+                    "aspInstances": {
                         "value": "[parameters('workerAppServicePlanInstances')]"
                     }
                 }
