@@ -466,56 +466,58 @@
                     "deployStagingSlot": {
                         "value": false
                     },
-                    "appServiceAppSettings": [
-                        {
-                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
-                        },
-                        {
-                            "name": "BaseAddress",
-                            "value": "[parameters('baseAddress')]"
-                        },
-                        {
-                            "name": "EnvironmentName",
-                            "value": "[parameters('environmentName')]"
-                        },
-                        {
-                            "name": "ForecastingRoutePrefix",
-                            "value": "forecasting"
-                        },
-                        {
-                            "name": "KeyVaultName",
-                            "value": "[variables('appSettingsKeyVaultName')]"
-                        },
-                        {
-                            "name": "LimitForecast",
-                            "value": "[parameters('limitForecast')]"
-                        },
-                        {
-                            "name": "LoggingRedisConnectionString",
-                            "value": "[parameters('loggingRedisConnectionString')]"
-                        },
-                        {
-                            "name": "LoggingRedisKey",
-                            "value": "[parameters('loggingRedisKey')]"
-                        },
-                        {
-                            "name": "MyaBaseUrl",
-                            "value": "[parameters('myaBaseUrl')]"
-                        },
-                        {
-                            "name": "WEBSITE_LOAD_CERTIFICATES",
-                            "value": "[parameters('certificateThumbprintsToLoad')]"
-                        },
-                        {
-                            "name": "ZenDeskSectionId",
-                            "value": "[parameters('zenDeskSectionId')]"
-                        },
-                        {
-                            "name": "ZenDeskSnippetKey",
-                            "value": "[parameters('zenDeskSnippetKey')]"
-                        }
-                    ],
+                    "appServiceAppSettings": {
+                        "value": [
+                            {
+                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
+                            },
+                            {
+                                "name": "BaseAddress",
+                                "value": "[parameters('baseAddress')]"
+                            },
+                            {
+                                "name": "EnvironmentName",
+                                "value": "[parameters('environmentName')]"
+                            },
+                            {
+                                "name": "ForecastingRoutePrefix",
+                                "value": "forecasting"
+                            },
+                            {
+                                "name": "KeyVaultName",
+                                "value": "[variables('appSettingsKeyVaultName')]"
+                            },
+                            {
+                                "name": "LimitForecast",
+                                "value": "[parameters('limitForecast')]"
+                            },
+                            {
+                                "name": "LoggingRedisConnectionString",
+                                "value": "[parameters('loggingRedisConnectionString')]"
+                            },
+                            {
+                                "name": "LoggingRedisKey",
+                                "value": "[parameters('loggingRedisKey')]"
+                            },
+                            {
+                                "name": "MyaBaseUrl",
+                                "value": "[parameters('myaBaseUrl')]"
+                            },
+                            {
+                                "name": "WEBSITE_LOAD_CERTIFICATES",
+                                "value": "[parameters('certificateThumbprintsToLoad')]"
+                            },
+                            {
+                                "name": "ZenDeskSectionId",
+                                "value": "[parameters('zenDeskSectionId')]"
+                            },
+                            {
+                                "name": "ZenDeskSnippetKey",
+                                "value": "[parameters('zenDeskSnippetKey')]"
+                            }
+                        ]
+                    },
                     "customHostName": {
                         "value": "[parameters('customHostname')]"
                     },
