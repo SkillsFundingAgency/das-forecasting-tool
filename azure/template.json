@@ -288,11 +288,10 @@
                     "appServicePlanName": {
                         "value": "[variables('workerAppServicePlanName')]"
                     },
-
                     "appServicePlanSize": {
                         "value": "[parameters('workerAppServicePlanSize')]"
                     },
-                    "appServucePlanInstances": {
+                    "appServicePlanInstances": {
                         "value": "[parameters('workerAppServicePlanInstances')]"
                     }
                 }
@@ -696,6 +695,32 @@
         },
         {
             "apiVersion": "2019-05-01",
+            "name": "storage-connectionstring-secret",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('appSettingsKeyVaultName')]"
+                    },
+                    "secretName": {
+                        "value": "StorageConnectionString"
+                    },
+                    "secretValue": {
+                        "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "keyvault"
+            ]
+        },
+        {
+            "apiVersion": "2019-05-01",
             "name": "[concat(variables('secrets')[copyIndex()].name, '-secret')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
@@ -717,36 +742,6 @@
                     },
                     "secretValue": {
                         "value": "[variables('secrets')[copyIndex()].value]"
-                    }
-                }
-            },
-            "dependsOn": [
-                "keyvault"
-            ]
-        },
-        {
-            "apiVersion": "2019-05-01",
-            "name": "[concat(variables('secrets')[copyIndex()].name, '-secret-storage')]",
-            "type": "Microsoft.Resources/deployments",
-            "copy": {
-                "name": "secrets-storage-copy",
-                "count": "[length(variables('secrets'))]"
-            },
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "keyVaultName": {
-                        "value": "[variables('appSettingsKeyVaultName')]"
-                    },
-                    "secretName": {
-                        "value": "StorageConnectionString"
-                    },
-                    "secretValue": {
-                        "value": "[reference('storage-account').outputs.storageConnectionString.value]"
                     }
                 }
             },
