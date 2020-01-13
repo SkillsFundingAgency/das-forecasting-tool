@@ -781,39 +781,39 @@
         }
     ],
     "outputs": {
-        "functionAppNameStandards": {
+        "FunctionAppNameStandards": {
             "type": "string",
             "value": "[variables('functionAppNames')[0]]"
         },
-        "functionAppNameCommitments": {
+        "FunctionAppNameCommitments": {
             "type": "string",
             "value": "[variables('functionAppNames')[1]]"
         },
-        "functionAppNameLevy": {
+        "FunctionAppNameLevy": {
             "type": "string",
             "value": "[variables('functionAppNames')[2]]"
         },
-        "functionAppNamePayments": {
+        "FunctionAppNamePayments": {
             "type": "string",
             "value": "[variables('functionAppNames')[3]]"
         },
-        "functionAppNamePreload": {
+        "FunctionAppNamePreload": {
             "type": "string",
             "value": "[variables('functionAppNames')[4]]"
         },
-        "functionAppNameProjection": {
+        "FunctionAppNameProjection": {
             "type": "string",
             "value": "[variables('functionAppNames')[5]]"
         },
-        "functionAppNameStub": {
+        "FunctionAppNameStub": {
             "type": "string",
             "value": "[variables('functionAppNames')[6]]"
         },
-        "appServiceName": {
+        "AppServiceName": {
             "type": "string",
             "value": "[variables('appServiceName')]"
         },
-        "databaseName": {
+        "DatabaseName": {
             "type": "string",
             "value": "[variables('databaseName')]"
         }
