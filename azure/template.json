@@ -38,6 +38,10 @@
             "type": "int",
             "defaultValue": 1
         },
+        "functionsAppServicePlanTier": {
+            "type": "string",
+            "defaultValue": "Basic"
+        },
         "cosmosThroughputOffer": {
             "type": "string",
             "defaultValue": "400"
@@ -293,6 +297,9 @@
                     },
                     "aspInstances": {
                         "value": "[parameters('functionsAppServicePlanInstances')]"
+                    },
+                    "nonASETier": {
+                        "value": "[parameters('functionsAppServicePlanTier')]"
                     }
                 }
             }
