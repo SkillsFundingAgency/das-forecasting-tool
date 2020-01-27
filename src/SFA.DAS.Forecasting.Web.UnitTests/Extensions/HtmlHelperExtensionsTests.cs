@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.Forecasting.Web.Extensions;
 
-namespace SFA.DAS.AssessorService.Web.UnitTests.Helpers
+namespace SFA.DAS.Forecasting.Web.UnitTests.Extensions
 {
     [TestFixture]
     public class HtmlHelperExtensionsTests
