@@ -7,11 +7,8 @@
 
 @section breadcrumb
 {
-    <div id="js-breadcrumbs"></div>
+    <a href="@Url.RouteUrl("EstimatedCost", new { hashedaccountId = Model.HashedAccountId, estimateName = Model.EstimationName, apprenticeshipRemoved = false })" class="link-back">Back</a>
 }
-
-<a href="@Url.RouteUrl("EstimatedCost", new { hashedaccountId = Model.HashedAccountId, estimateName = Model.EstimationName, apprenticeshipRemoved = false })" class="link-back">Back</a>
-
 
 <div class="grid-row">
     <div class="column-two-thirds">
