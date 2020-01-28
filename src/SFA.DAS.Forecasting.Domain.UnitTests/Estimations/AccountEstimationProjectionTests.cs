@@ -283,7 +283,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             //Assert
             var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
-            Assert.AreEqual(9990 , actual.AvailableTransferFundsBalance);
+            Assert.AreEqual(9940 , actual.AvailableTransferFundsBalance);
         }
 
         [Test]
@@ -378,7 +378,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             //Assert
             var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).Skip(1).FirstOrDefault();
             Assert.IsNotNull(actual);
-            Assert.AreEqual(500, actual.EstimatedProjectionBalance);
+            Assert.AreEqual(400, actual.EstimatedProjectionBalance);
         }
 
 
