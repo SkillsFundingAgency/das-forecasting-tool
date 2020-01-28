@@ -1,0 +1,824 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceName": {
+            "type": "string"
+        },
+        "resourceEnvironmentName": {
+            "type": "string"
+        },
+        "environmentName": {
+            "type": "string"
+        },
+        "appServiceAllowedIPs": {
+            "type": "array",
+            "defaultValue": [
+            ]
+        },
+        "sharedSQLServerName": {
+            "type": "string"
+        },
+        "sharedEnvResourceGroup": {
+            "type": "string"
+        },
+        "sharedAppServicePlanName": {
+            "type": "string"
+        },
+        "functionsAppServicePlanSize": {
+            "type": "string",
+            "allowedValues": [
+                "1",
+                "2",
+                "3"
+            ],
+            "defaultValue": "1"
+        },
+        "functionsAppServicePlanInstances": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "functionsAppServicePlanTier": {
+            "type": "string",
+            "defaultValue": "Basic"
+        },
+        "cosmosThroughputOffer": {
+            "type": "string",
+            "defaultValue": "400"
+        },
+        "cosmosDbIpRangeFilter": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "databaseName": {
+            "type": "string"
+        },
+        "databaseSkuName": {
+            "type": "string",
+            "defaultValue": "S0"
+        },
+        "databaseTier": {
+            "type": "string",
+            "defaultValue": "Standard"
+        },
+        "logAnalyticsSubscriptionId": {
+            "type": "string",
+            "defaultValue": "[subscription().subscriptionId]"
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string"
+        },
+        "mAWObjectId": {
+            "type": "securestring"
+        },
+        "certificateThumbprintsToLoad": {
+            "type": "string"
+        },
+        "sharedKeyVaultName": {
+            "type": "securestring"
+        },
+        "sharedManagementResourceGroup": {
+            "type": "securestring"
+        },
+        "loggingRedisConnectionString": {
+            "type": "securestring"
+        },
+        "loggingRedisKey": {
+            "type": "string",
+            "defaultValue": "logstash"
+        },
+        "numberOfMonthsToProject": {
+            "type": "string"
+        },
+        "limitForecast": {
+            "type": "bool"
+        },
+        "secondsToWaitToAllowProjections": {
+            "type": "string"
+        },
+        "keyVaultCertificateName": {
+            "type": "string"
+        },
+        "baseAddress": {
+            "type": "string"
+        },
+        "customHostname": {
+            "type": "string"
+        },
+        "myaBaseUrl": {
+            "type": "string"
+        },
+        "commitmentsV1BaseUrl": {
+            "type": "string"
+        },
+        "commitmentsV1ClientToken": {
+            "type": "securestring"
+        },
+        "azureWebJobsServiceBus": {
+            "type": "securestring"
+        },
+        "commitmentsV1ApiBaseUrl": {
+            "type": "string"
+        },
+        "commitmentsV1Tenant": {
+            "type": "string"
+        },
+        "commitmentsV1ClientId": {
+            "type": "string"
+        },
+        "commitmentsV1ClientSecret": {
+            "type": "securestring"
+        },
+        "commitmentsV1IdentifierUri": {
+            "type": "string"
+        },
+        "apprenticeshipsApiBaseUri": {
+            "type": "string",
+            "defaultValue": "https://findapprenticeshiptraining-api.apprenticeships.education.gov.uk/"
+        },
+        "zenDeskSectionId": {
+            "type": "string"
+        },
+        "zenDeskSnippetKey": {
+            "type": "string"
+        },
+        "kv_configurationStorageConnectionString": {
+            "type": "securestring"
+        },
+        "kv_DatabaseConnectionString": {
+            "type": "securestring"
+        },
+        "kv_HashString": {
+            "type": "securestring"
+        },
+        "kv_AllowedHashstringCharacters": {
+            "type": "securestring"
+        },
+        "kv_ClientId": {
+            "type": "securestring"
+        },
+        "kv_ClientSecret": {
+            "type": "securestring"
+        },
+        "kv_EmployerConnectionString": {
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+        "resourceNamePrefix": "[concat('das-',toLower(parameters('resourceEnvironmentName')),'-' , parameters('serviceName'))]",
+        "appServiceName": "[concat(variables('resourceNamePrefix'),'ui-as')]",
+        "functionsAppServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
+        "appSettingsKeyVaultName": "[concat(variables('resourceNamePrefix'),'-kv')]",
+        "appSettingsKeyVaultSecretPermissions": [
+            "Get",
+            "Set"
+        ],
+        "storageAccountName": "[concat('das',toLower(parameters('resourceEnvironmentName')),parameters('serviceName'),'str')]",
+        "cosmosDbName": "[concat(variables('resourceNamePrefix'), '-cdb')]",
+        "functionAppNames": [
+            "[concat(variables('resourceNamePrefix'),'-apc-fa')]",
+            "[concat(variables('resourceNamePrefix'),'-comt-fa')]",
+            "[concat(variables('resourceNamePrefix'),'-lev-fa')]",
+            "[concat(variables('resourceNamePrefix'),'-pay-fa')]",
+            "[concat(variables('resourceNamePrefix'),'-pld-fa')]",
+            "[concat(variables('resourceNamePrefix'),'-prj-fa')]",
+            "[concat(variables('resourceNamePrefix'),'-stb-fa')]"
+        ],
+        "secrets": [
+            {
+                "name": "DatabaseConnectionString",
+                "value": "[parameters('kv_DatabaseConnectionString')]"
+            },
+            {
+                "name": "HashString",
+                "value": "[parameters('kv_HashString')]"
+            },
+            {
+                "name": "AllowedHashstringCharacters",
+                "value": "[parameters('kv_AllowedHashstringCharacters')]"
+            },
+            {
+                "name": "ConfigurationStorageConnectionString",
+                "value": "[parameters('kv_ConfigurationStorageConnectionString')]"
+            },
+            {
+                "name": "ClientId",
+                "value": "[parameters('kv_ClientId')]"
+            },
+            {
+                "name": "ClientSecret",
+                "value": "[parameters('kv_ClientSecret')]"
+            },
+            {
+                "name": "EmployerConnectionString",
+                "value": "[parameters('kv_EmployerConnectionString')]"
+            }
+        ]
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-05-01",
+            "name": "storage-account",
+            "dependsOn": [
+            ],
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'storage-account-arm.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "storageAccountName": {
+                        "value": "[variables('storageAccountName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('functionAppNames')[copyIndex()], '-insights')]",
+            "type": "Microsoft.Resources/deployments",
+            "copy": {
+                "name": "app-insights-copy",
+                "count": "[length(variables('functionAppNames'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appInsightsName": {
+                        "value": "[concat(variables('functionAppNames')[copyIndex()])]"
+                    },
+                    "attachedService": {
+                        "value": "[concat(variables('functionAppNames')[copyIndex()])]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "app-service-app-insights",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appInsightsName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "attachedService": {
+                        "value": "[variables('appServiceName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "functions-app-service-plan",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('functionsAppServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('functionsAppServicePlanSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('functionsAppServicePlanInstances')]"
+                    },
+                    "nonASETier": {
+                        "value": "[parameters('functionsAppServicePlanTier')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('functionAppNames')[copyIndex()], '-function')]",
+            "type": "Microsoft.Resources/deployments",
+            "copy": {
+                "name": "function-app-copy",
+                "count": "[length(variables('functionAppNames'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'function-app.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "functionAppName": {
+                        "value": "[concat(variables('functionAppNames')[copyIndex()])]"
+                    },
+                    "appServicePlanName": {
+                        "value": "[variables('functionsAppServicePlanName')]"
+                    },
+                    "appServicePlanResourceGroup": {
+                        "value": "[resourceGroup().name]"
+                    },
+                    "functionAppAppSettings": {
+                        "value": [
+                            {
+                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.InstrumentationKey.value]"
+                            },
+                            {
+                                "name": "AppName",
+                                "value": "[concat(variables('functionAppNames')[copyIndex()])]"
+                            },
+                            {
+                                "name": "ApprenticeshipsApiBaseUri",
+                                "value": "[parameters('apprenticeshipsApiBaseUri')]"
+                            },
+                            {
+                                "name": "AzureWebJobsDashboard",
+                                "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                            },
+                            {
+                                "name": "AzureWebJobsServiceBus",
+                                "value": "[parameters('AzureWebJobsServiceBus')]"
+                            },
+                            {
+                                "name": "AzureWebJobsStorage",
+                                "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                            },
+                            {
+                                "name": "CommitmentsV1ApiBaseUrl",
+                                "value": "[parameters('commitmentsV1ApiBaseUrl')]"
+                            },
+                            {
+                                "name": "CommitmentsV1BaseUrl",
+                                "value": "[parameters('commitmentsV1BaseUrl')]"
+                            },
+                            {
+                                "name": "CommitmentsV1ClientId",
+                                "value": "[parameters('CommitmentsV1ClientId')]"
+                            },
+                            {
+                                "name": "CommitmentsV1ClientSecret",
+                                "value": "[parameters('CommitmentsV1ClientSecret')]"
+                            },
+                            {
+                                "name": "CommitmentsV1ClientToken",
+                                "value": "[parameters('commitmentsV1ClientToken')]"
+                            },
+                            {
+                                "name": "CommitmentsV1IdentifierUri",
+                                "value": "[parameters('CommitmentsV1IdentifierUri')]"
+                            },
+                            {
+                                "name": "CommitmentsV1Tenant",
+                                "value": "[parameters('CommitmentsV1Tenant')]"
+                            },
+                            {
+                                "name": "EnvironmentName",
+                                "value": "[parameters('environmentName')]"
+                            },
+                            {
+                                "name": "FUNCTIONS_EXTENSION_VERSION",
+                                "value": "~1"
+                            },
+                            {
+                                "name": "KeyVaultName",
+                                "value": "[variables('appSettingsKeyVaultName')]"
+                            },
+                            {
+                                "name": "LoggingRedisConnectionString",
+                                "value": "[parameters('loggingRedisConnectionString')]"
+                            },
+                            {
+                                "name": "LoggingRedisKey",
+                                "value": "[parameters('loggingRedisKey')]"
+                            },
+                            {
+                                "name": "NumberOfMonthsToProject",
+                                "value": "[parameters('numberOfMonthsToProject')]"
+                            },
+                            {
+                                "name": "SecondsToWaitToAllowProjections",
+                                "value": "[parameters('secondsToWaitToAllowProjections')]"
+                            },
+                            {
+                                "name": "StorageConnectionString",
+                                "value": "[reference('storage-account').outputs.StorageConnectionString.value]"
+                            },
+                            {
+                                "name": "WEBSITE_LOAD_CERTIFICATES",
+                                "value": "[parameters('certificateThumbprintsToLoad')]"
+                            }
+                        ]
+                    }
+                }
+            },
+            "dependsOn": [
+                "functions-app-service-plan"
+            ]
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "app-service-certificate",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-certificate.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultCertificateName": {
+                        "value": "[parameters('keyVaultCertificateName')]"
+                    },
+                    "keyVaultName": {
+                        "value": "[parameters('sharedKeyVaultName')]"
+                    },
+                    "keyVaultResourceGroup": {
+                        "value": "[parameters('sharedManagementResourceGroup')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "app-service",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServiceName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "appServicePlanName": {
+                        "value": "[parameters('sharedAppServicePlanName')]"
+                    },
+                    "appServicePlanResourceGroup": {
+                        "value": "[parameters('sharedEnvResourceGroup')]"
+                    },
+                    "appServiceAppSettings": {
+                        "value": [
+                            {
+                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
+                            },
+                            {
+                                "name": "BaseAddress",
+                                "value": "[parameters('baseAddress')]"
+                            },
+                            {
+                                "name": "EnvironmentName",
+                                "value": "[parameters('environmentName')]"
+                            },
+                            {
+                                "name": "ForecastingRoutePrefix",
+                                "value": "forecasting"
+                            },
+                            {
+                                "name": "KeyVaultName",
+                                "value": "[variables('appSettingsKeyVaultName')]"
+                            },
+                            {
+                                "name": "LimitForecast",
+                                "value": "[parameters('limitForecast')]"
+                            },
+                            {
+                                "name": "LoggingRedisConnectionString",
+                                "value": "[parameters('loggingRedisConnectionString')]"
+                            },
+                            {
+                                "name": "LoggingRedisKey",
+                                "value": "[parameters('loggingRedisKey')]"
+                            },
+                            {
+                                "name": "MyaBaseUrl",
+                                "value": "[parameters('myaBaseUrl')]"
+                            },
+                            {
+                                "name": "WEBSITE_LOAD_CERTIFICATES",
+                                "value": "[parameters('certificateThumbprintsToLoad')]"
+                            },
+                            {
+                                "name": "ZenDeskSectionId",
+                                "value": "[parameters('zenDeskSectionId')]"
+                            },
+                            {
+                                "name": "ZenDeskSnippetKey",
+                                "value": "[parameters('zenDeskSnippetKey')]"
+                            }
+                        ]
+                    },
+                    "customHostName": {
+                        "value": "[parameters('customHostname')]"
+                    },
+                    "certificateThumbprint": {
+                        "value": "[reference('app-service-certificate').outputs.certificateThumbprint.value]"
+                    },
+                    "ipSecurityRestrictions": {
+                        "value": "[parameters('appServiceAllowedIPs')]"
+                    }
+                }
+            },
+            "dependsOn": [
+            ]
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "sql-database",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'sql-database.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "databaseName": {
+                        "value": "[parameters('databaseName')]"
+                    },
+                    "sqlServerName": {
+                        "value": "[parameters('sharedSQLServerName')]"
+                    },
+                    "databaseSkuName": {
+                        "value": "[parameters('databaseSkuName')]"
+                    },
+                    "databaseTier": {
+                        "value": "[parameters('databaseTier')]"
+                    },
+                    "logAnalyticsSubscriptionId": {
+                        "value": "[parameters('logAnalyticsSubscriptionId')]"
+                    },
+                    "logAnalyticsResourceGroup": {
+                        "value": "[parameters('sharedManagementResourceGroup')]"
+                    },
+                    "logAnalyticsWorkspaceName": {
+                        "value": "[parameters('logAnalyticsWorkspaceName')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "cosmos-db",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'cosmos-db.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "cosmosDbName": {
+                        "value": "[variables('cosmosDbName')]"
+                    },
+                    "cosmosDbType": {
+                        "value": "GlobalDocumentDB"
+                    },
+                    "defaultConsistencyLevel": {
+                        "value": "Strong"
+                    },
+                    "ipRangeFilter": {
+                        "value": "[parameters('cosmosDbIpRangeFilter')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "keyvault",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('appSettingsKeyVaultName')]"
+                    },
+                    "keyVaultAccessPolicies": {
+                        "value": [
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[parameters('mAWObjectId')]",
+                                "permissions": {
+                                    "secrets": [
+                                        "Get"
+                                    ],
+                                    "keys": [
+                                    ],
+                                    "certificates": [
+                                    ]
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference('app-service').outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[0], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[1], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[2], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[3], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[4], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[5], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference(concat(variables('functionAppNames')[6], '-function')).outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            }
+                        ]
+                    },
+                    "enabledForTemplateDeployment": {
+                        "value": true
+                    },
+                    "enableSoftDelete": {
+                        "value": true
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "storage-connectionstring-secret",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('appSettingsKeyVaultName')]"
+                    },
+                    "secretName": {
+                        "value": "StorageConnectionString"
+                    },
+                    "secretValue": {
+                        "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "keyvault"
+            ]
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('secrets')[copyIndex()].name, '-secret')]",
+            "type": "Microsoft.Resources/deployments",
+            "copy": {
+                "name": "secrets-copy",
+                "count": "[length(variables('secrets'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('appSettingsKeyVaultName')]"
+                    },
+                    "secretName": {
+                        "value": "[variables('secrets')[copyIndex()].name]"
+                    },
+                    "secretValue": {
+                        "value": "[variables('secrets')[copyIndex()].value]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "keyvault"
+            ]
+        },
+        {
+            "apiVersion": "2019-05-01",
+            "name": "[concat(variables('secrets')[copyIndex()].name, '-secret-cosmos')]",
+            "type": "Microsoft.Resources/deployments",
+            "copy": {
+                "name": "secrets-cosmos-copy",
+                "count": "[length(variables('secrets'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'keyvault-secret.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "keyVaultName": {
+                        "value": "[variables('appSettingsKeyVaultName')]"
+                    },
+                    "secretName": {
+                        "value": "CosmosDbConnectionString"
+                    },
+                    "secretValue": {
+                        "value": "[concat('AccountEndpoint=https://', variables('cosmosDbName'), '.documents.azure.com:443/;AccountKey=', reference('cosmos-db').outputs.PrimaryMasterKey.value, ';Database=Forecasting; Collection=Forecasting; ThroughputOffer=', parameters('cosmosThroughputOffer'))]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "keyvault"
+            ]
+        }
+    ],
+    "outputs": {
+        "FunctionAppNameStandards": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[0]]"
+        },
+        "FunctionAppNameCommitments": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[1]]"
+        },
+        "FunctionAppNameLevy": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[2]]"
+        },
+        "FunctionAppNamePayments": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[3]]"
+        },
+        "FunctionAppNamePreload": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[4]]"
+        },
+        "FunctionAppNameProjection": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[5]]"
+        },
+        "FunctionAppNameStub": {
+            "type": "string",
+            "value": "[variables('functionAppNames')[6]]"
+        },
+        "AppServiceName": {
+            "type": "string",
+            "value": "[variables('appServiceName')]"
+        },
+        "CosmosDbName": {
+            "type": "string",
+            "value": "[variables('cosmosDbName')]"
+        }
+    }
+}
