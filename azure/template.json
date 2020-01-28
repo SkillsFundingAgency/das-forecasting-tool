@@ -50,6 +50,9 @@
             "type": "string",
             "defaultValue": ""
         },
+        "databaseName": {
+            "type": "string"
+        },
         "databaseSkuName": {
             "type": "string",
             "defaultValue": "S0"
@@ -172,7 +175,6 @@
             "Set"
         ],
         "storageAccountName": "[concat('das',toLower(parameters('resourceEnvironmentName')),parameters('serviceName'),'str')]",
-        "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
         "cosmosDbName": "[concat(variables('resourceNamePrefix'), '-cdb')]",
         "functionAppNames": [
             "[concat(variables('resourceNamePrefix'),'-apc-fa')]",
@@ -549,7 +551,7 @@
                 },
                 "parameters": {
                     "databaseName": {
-                        "value": "[variables('databaseName')]"
+                        "value": "[parameters('databaseName')]"
                     },
                     "sqlServerName": {
                         "value": "[parameters('sharedSQLServerName')]"
@@ -813,10 +815,6 @@
         "AppServiceName": {
             "type": "string",
             "value": "[variables('appServiceName')]"
-        },
-        "DatabaseName": {
-            "type": "string",
-            "value": "[variables('databaseName')]"
         },
         "CosmosDbName": {
             "type": "string",
