@@ -1,4 +1,8 @@
-﻿using System;
+﻿using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.MA.Shared.UI.Configuration;
+using SFA.DAS.MA.Shared.UI.Models;
+using SFA.DAS.MA.Shared.UI.Models.Links;
+using System;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Expressions;
@@ -52,5 +56,63 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         {
             return ConfigurationManager.AppSettings["ZenDeskSectionId"];            
         }
+
+        private static string GetBaseUrl()
+        {
+            return ConfigurationManager.AppSettings["MyaBaseUrl"].EndsWith("/")
+                ? ConfigurationManager.AppSettings["MyaBaseUrl"]
+                : ConfigurationManager.AppSettings["MyaBaseUrl"] + "/";
+        }
+        
+        public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
+        {
+            var configuration = DependencyResolver.Current.GetService<IStartupConfiguration>();
+            var baseUrl = GetBaseUrl();
+            var applicationBaseUrl = new System.Uri(html.ViewContext.HttpContext.Request.Url.AbsoluteUri).AbsoluteUri.Replace(new System.Uri(html.ViewContext.HttpContext.Request.Url.AbsoluteUri).AbsolutePath, "");
+
+            var headerModel = new HeaderViewModel(new HeaderConfiguration
+            {
+                EmployerCommitmentsBaseUrl = baseUrl,
+                EmployerFinanceBaseUrl = baseUrl,
+                ManageApprenticeshipsBaseUrl = baseUrl,
+                AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
+                ClientId = configuration.Identity.ClientId,
+                AuthorizationService = DependencyResolver.Current.GetService<DAS.Authorization.Services.IAuthorizationService>(),
+                SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
+            },
+            new UserContext
+            {
+                User = html.ViewContext.HttpContext.User,
+                HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
+            });
+
+            headerModel.SelectMenu(html.ViewBag.Section);
+
+            if (html.ViewBag.HideNav != null && html.ViewBag.HideNav)
+            {
+                headerModel.HideMenu();
+            }
+
+            if (html.ViewData.Model?.GetType().GetProperty("HideHeaderSignInLink") != null)
+            {
+                headerModel.RemoveLink<SignIn>();
+            }
+
+            return headerModel;
+        }
+
+        public static IFooterViewModel GetFooterViewModel(this HtmlHelper html)
+        {   
+            return new FooterViewModel(new FooterConfiguration
+            {
+                 ManageApprenticeshipsBaseUrl = GetBaseUrl()
+            },
+            new UserContext
+            {
+                User = html.ViewContext.HttpContext.User,
+                HashedAccountId = html.ViewContext.RouteData.Values["HashedAccountId"]?.ToString()
+            });
+        }
+        
     }
 }
