@@ -211,7 +211,7 @@
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.MA.Shared.UI, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.MA.Shared.UI.1.0.10\lib\net462\SFA.DAS.MA.Shared.UI.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.MA.Shared.UI.1.1.13\lib\net462\SFA.DAS.MA.Shared.UI.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
