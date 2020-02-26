@@ -77,7 +77,6 @@ namespace SFA.DAS.Forecasting.Web.Extensions
                 ManageApprenticeshipsBaseUrl = baseUrl,
                 AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
                 ClientId = configuration.Identity.ClientId,
-                AuthorizationService = DependencyResolver.Current.GetService<DAS.Authorization.Services.IAuthorizationService>(),
                 SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
             },
             new UserContext
