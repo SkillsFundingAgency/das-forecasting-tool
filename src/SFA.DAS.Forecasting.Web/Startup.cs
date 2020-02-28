@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
-using Microsoft.Azure;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using NLog;
 using Owin;
-using SFA.DAS.Configuration;
-using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.Configuration.FileStorage;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Web.App_Start;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.OidcMiddleware;
@@ -26,15 +22,12 @@ namespace SFA.DAS.Forecasting.Web
 {
     public partial class Startup
     {
-        private const string ServiceName = "SFA.DAS.ForecastingTool";
-
         private static readonly StartupConfiguration _config = new StartupConfiguration();
 
         public void Configuration(IAppBuilder app)
         {
+            var config = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<ForecastingConfiguration>();
             ConfigureAuth(app);
-
-            //var config = GetConfigurationObject();
 
             var logger = LogManager.GetLogger("Startup");
 
@@ -121,41 +114,6 @@ namespace SFA.DAS.Forecasting.Web
 
             identity.AddClaim(new Claim("sub", identity.Claims.First(c => c.Type == constants.Id()).Value));
             
-        }
-
-        private static StartupConfiguration GetConfigurationObject()
-        {
-            var environment = Environment.GetEnvironmentVariable("DASENV");
-            if (string.IsNullOrEmpty(environment))
-            {
-                environment = CloudConfigurationManager.GetSetting("EnvironmentName");
-            }
-
-            var configurationRepository = GetConfigurationRepository();
-            var configurationService = new ConfigurationService(
-                configurationRepository,
-                new ConfigurationOptions(ServiceName, environment, "1.0"));
-
-            var config = configurationService.Get<StartupConfiguration>();
-
-            return config;
-        }
-
-
-        private static IConfigurationRepository GetConfigurationRepository()
-        {
-            IConfigurationRepository configurationRepository;
-            if (bool.Parse(ConfigurationManager.AppSettings["LocalConfig"]))
-            {
-                configurationRepository = new FileStorageConfigurationRepository();
-            }
-            else
-            {
-                configurationRepository =
-                    new AzureTableStorageConfigurationRepository(
-                        CloudConfigurationManager.GetSetting("ConfigurationStorageConnectionString"));
-            }
-            return configurationRepository;
         }
     }
 

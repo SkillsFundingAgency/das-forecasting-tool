@@ -67,6 +67,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
         {
             var configuration = DependencyResolver.Current.GetService<IStartupConfiguration>();
+            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
             var baseUrl = GetBaseUrl();
             var applicationBaseUrl = new System.Uri(html.ViewContext.HttpContext.Request.Url.AbsoluteUri).AbsoluteUri.Replace(new System.Uri(html.ViewContext.HttpContext.Request.Url.AbsoluteUri).AbsolutePath, "");
 
@@ -75,6 +76,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
                 EmployerCommitmentsBaseUrl = baseUrl,
                 EmployerFinanceBaseUrl = baseUrl,
                 ManageApprenticeshipsBaseUrl = baseUrl,
+                EmployerRecruitBaseUrl = forecastingConfig.EmployerRecruitBaseUrl,
                 AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
                 ClientId = configuration.Identity.ClientId,
                 SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
