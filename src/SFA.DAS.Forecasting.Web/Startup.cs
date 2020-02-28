@@ -26,7 +26,6 @@ namespace SFA.DAS.Forecasting.Web
 
         public void Configuration(IAppBuilder app)
         {
-            var config = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<ForecastingConfiguration>();
             ConfigureAuth(app);
 
             var logger = LogManager.GetLogger("Startup");
