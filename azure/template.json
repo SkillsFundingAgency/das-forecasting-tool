@@ -345,10 +345,6 @@
                                 "value": "[parameters('apprenticeshipsApiBaseUri')]"
                             },
                             {
-                                "name": "AzureWebJobsDashboard",
-                                "value": "[reference('storage-account').outputs.storageConnectionString.value]"
-                            },
-                            {
                                 "name": "AzureWebJobsServiceBus",
                                 "value": "[parameters('AzureWebJobsServiceBus')]"
                             },
@@ -419,6 +415,10 @@
                             {
                                 "name": "WEBSITE_LOAD_CERTIFICATES",
                                 "value": "[parameters('certificateThumbprintsToLoad')]"
+                            },
+                            {
+                                "name": "FUNCTIONS_WORKER_RUNTIME",
+                                "value": "dotnet"
                             }
                         ]
                     }
@@ -632,6 +632,13 @@
                             {
                                 "tenantId": "[subscription().tenantId]",
                                 "objectId": "[reference('app-service').outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference('app-service').outputs.stagingManagedServiceIdentityId.value]",
                                 "permissions": {
                                     "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
                                 }
