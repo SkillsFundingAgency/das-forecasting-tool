@@ -142,7 +142,7 @@
         "zenDeskSnippetKey": {
             "type": "string"
         },
-        "kv_configurationStorageConnectionString": {
+        "configurationStorageConnectionString": {
             "type": "securestring"
         },
         "kv_DatabaseConnectionString": {
@@ -200,7 +200,7 @@
             },
             {
                 "name": "ConfigurationStorageConnectionString",
-                "value": "[parameters('kv_ConfigurationStorageConnectionString')]"
+                "value": "[parameters('configurationStorageConnectionString')]"
             },
             {
                 "name": "ClientId",
@@ -485,6 +485,10 @@
                             {
                                 "name": "EnvironmentName",
                                 "value": "[parameters('environmentName')]"
+                            },
+                            {
+                                "name": "ConfigurationStorageConnectionString",
+                                "value": "[parameters('configurationStorageConnectionString')]"
                             },
                             {
                                 "name": "ForecastingRoutePrefix",
