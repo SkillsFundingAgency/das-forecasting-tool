@@ -79,7 +79,7 @@ var tabs = (function () {
     }
 });
 
-window.onload = function () {
+$(window).load(function () {
 
     if (document.getElementsByClassName('chart-container').length !== 0)
     {
@@ -100,7 +100,7 @@ window.onload = function () {
     $('#BalanceSheet-Tables table.balancesheet th.tippy a').click(function (e) {
         e.preventDefault();
     });
-};
+});
 
 //OR use Object http://jsfiddle.net/etuwo8mz/57/
 //http://stackabuse.com/how-to-format-dates-in-javascript/
