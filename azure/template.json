@@ -345,10 +345,6 @@
                                 "value": "[parameters('apprenticeshipsApiBaseUri')]"
                             },
                             {
-                                "name": "AzureWebJobsDashboard",
-                                "value": "[reference('storage-account').outputs.storageConnectionString.value]"
-                            },
-                            {
                                 "name": "AzureWebJobsServiceBus",
                                 "value": "[parameters('AzureWebJobsServiceBus')]"
                             },
@@ -419,6 +415,10 @@
                             {
                                 "name": "WEBSITE_LOAD_CERTIFICATES",
                                 "value": "[parameters('certificateThumbprintsToLoad')]"
+                            },
+                            {
+                                "name": "FUNCTIONS_WORKER_RUNTIME",
+                                "value": "dotnet"
                             }
                         ]
                     }
