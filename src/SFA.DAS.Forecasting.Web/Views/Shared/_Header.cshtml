@@ -1,80 +1,72 @@
-﻿@using SFA.DAS.Forecasting.Application.Infrastructure.Registries
-@using SFA.DAS.Forecasting.Web.Extensions
-@using SFA.DAS.Forecasting.Web.ViewModels
+@* Generator: MvcView<object> *@
+@model SFA.DAS.MA.Shared.UI.Models.IHeaderViewModel
+@using SFA.DAS.MA.Shared.UI.Models.Links
 
 <header role="banner" id="global-header" class="with-proposition">
     <div class="header-wrapper">
         <div class="header-global">
             <div class="header-logo">
-                <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                    <img src="https://assets.publishing.service.gov.uk/static/gov.uk_logotype_crown_invert_trans-203e1db49d3eff430d7dc450ce723c1002542fe1d2bce661b6d8571f14c1043c.png" alt="" width="36" height="32"> GOV.UK
-                </a>
+                @Html.Raw(Model.RenderLink<GovUk>())
             </div>
         </div>
         <div class="header-proposition">
             <div class="content">
-                <a id="proposition-name" href="/">Manage apprenticeships</a>
+                @Html.Raw(Model.RenderLink<ManageApprenticeships>())
             </div>
         </div>
     </div>
 </header>
-
-@if (HttpContext.Current.User.Identity.IsAuthenticated || Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
-{
-    <div id="floating-menu-holder">
-        <div class="account-information floating-menu">
-            <div class="js-float">
-                <p class="floating-head-text">Your employer account </p>
-                <nav id="user-nav" role="navigation" aria-label="Main menu">
-                    <ul role="menubar">
-                        <li><a href="@Url.ExternalUrlAction("service", "help", true)" class="menu-main" target="_blank">Help</a></li>
-                        @if (HttpContext.Current.User.Identity.IsAuthenticated)
-                        {
-
-                            <li class="has-sub-menu">
-                                <a href="/" role="menuitem" class="menu-main" aria-label="Account settings">Settings</a>
-                                <ul role="menu" id="settings-menu">
-                                    <li><a href="@Url.ExternalUrlAction("service", "accounts",true)" role="menuitem" class="sub-menu-item">Your accounts</a></li>
-                                    @if (string.IsNullOrWhiteSpace(ViewBag.HideNav?.ToString()))
-                                    {
-                                        <li><a href="@Url.ExternalUrlAction("rename")" role="menuitem" class="sub-menu-item">Rename account</a></li>
-                                    }
-                                    <li><a href="@UserLinksViewModel.ChangePasswordLink" class="sub-menu-item">Change your password</a></li>
-                                    <li><a href="@UserLinksViewModel.ChangeEmailLink" class="sub-menu-item">Change your email address</a></li>
-                                    <li><a href="@Url.ExternalUrlAction("settings", "notifications",true)" class="sub-menu-item">Notification settings</a></li>
-
-                                </ul>
-                            </li>
-                            <li><a href="@Url.Action("SignOut", "Service")" role="menuitem" class="menu-main" aria-label="Sign out">Sign out</a></li>
-
-                        }
-                        else
-                        {
-                            if (Model?.GetType().GetProperty("HideHeaderSignInLink") == null)
-                            {
-                                <li><a href="@Url.ExternalUrlAction("service", "signin",true)" role="menuitem">Sign in / Register</a></li>
-                            }
-                        }
-                    </ul>
-                </nav>
-            </div>
+<div id="floating-menu-holder">
+    <div class="account-information floating-menu" role="navigation">
+        <div class="js-float">
+            <p class="floating-head-text">Your employer account </p>
+            <nav id="user-nav">
+                <ul>
+                    @Html.Raw(Model.RenderListItemLink<Help>())
+                    @if (Model.UserContext?.User != null && Model.UserContext.User.Identity.IsAuthenticated)
+                    {
+                        <li class="has-sub-menu">
+                            <a href="/" role="menuitem">Settings</a>
+                            <ul role="menu" class="js-hidden" id="settings-menu">
+                                @if (!Model.MenuIsHidden)
+                                {
+                                    @Html.Raw(Model.RenderListItemLink<YourAccounts>())
+                                    @Html.Raw(Model.RenderListItemLink<RenameAccount>())
+                                }
+                                @Html.Raw(Model.RenderListItemLink<ChangePassword>())
+                                @Html.Raw(Model.RenderListItemLink<ChangeEmail>())
+                                @if (!Model.MenuIsHidden)
+                                {
+                                    @Html.Raw(Model.RenderListItemLink<NotificationSettings>())
+                                }
+                            </ul>
+                        </li>
+                        @Html.Raw(Model.RenderListItemLink<SignOut>())
+                    }
+                    else
+                    {
+                        @Html.Raw(Model.RenderListItemLink<SignIn>())
+                    }
+                </ul>
+            </nav>
         </div>
-    </div> <!--/floating-menu-holder-->
-}
-@if (HttpContext.Current.User.Identity.IsAuthenticated)
+    </div>
+</div>
+
+@if (Model.UserContext?.User != null && Model.UserContext.User.Identity.IsAuthenticated)
 {
-    if (string.IsNullOrWhiteSpace(ViewBag.HideNav?.ToString()))
+    if (!Model.MenuIsHidden)
     {
         <div class="header-organisation" role="navigation">
-
             <nav class="header-inner">
-                <ul role="menubar" id="global-nav-links">
-                    <li><a href="@Url.ExternalUrlAction("teams")" class="@(ViewBag.Section == "home" ? "selected" : "")" role="menuitem">Home</a></li>
-                    <li><a href="@Url.ExternalUrlAction("balance")" class="@(ViewBag.Section == "finance" ? "selected" : "")" role="menuitem">Finance</a></li>
-                    <li><a href="@Url.ExternalUrlAction("apprentices","home",folderPath: !ConfigurationHelper.IsDevOrTestEnvironment ? "commitments/" : "")" class="@(ViewBag.Section == "apprentices" ? "selected" : "")" role="menuitem">Apprentices</a></li>
-                    <li><a href="@Url.ExternalUrlAction("teams", "view")" class="@(ViewBag.Section == "team" ? "selected" : "")" role="menuitem">Your team</a></li>
-                    <li><a href="@Url.ExternalUrlAction("agreements")" class="@(ViewBag.Section == "organisations" ? "selected" : "")" role="menuitem">Your organisations and agreements</a></li>
-                    <li><a href="@Url.ExternalUrlAction("schemes")" class="@(ViewBag.Section == "paye" ? "selected" : "")" role="menuitem">PAYE schemes</a></li>
+                <ul id="global-nav-links">
+                    @Html.Raw(Model.RenderListItemLink<Home>(Model.SelectedMenu?.ToLower() == "home"))
+                    @Html.Raw(Model.RenderListItemLink<Finance>(Model.SelectedMenu?.ToLower() == "finance"))
+                    @Html.Raw(Model.RenderListItemLink<Recruitment>())
+                    @Html.Raw(Model.RenderListItemLink<Apprentices>(Model.SelectedMenu?.ToLower() == "employercommitments"))
+                    @Html.Raw(Model.RenderListItemLink<YourTeam>(Model.SelectedMenu?.ToLower() == "team"))
+                    @Html.Raw(Model.RenderListItemLink<YourOrganisations>(Model.SelectedMenu?.ToLower() == "organisations"))
+                    @Html.Raw(Model.RenderListItemLink<PayeSchemes>(Model.SelectedMenu?.ToLower() == "paye"))
                 </ul>
             </nav>
         </div>
