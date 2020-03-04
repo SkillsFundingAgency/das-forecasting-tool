@@ -1,5 +1,4 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
-@using SFA.DAS.Forecasting.Web.ViewModels
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,18 +7,19 @@
     @*<meta name="viewport" content="width=device-width, initial-scale=1.0">*@
     <!-- Google Tag Manager -->
     <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
-            {'gtm.start': new Date().getTime(),event:'gtm.js'}
-        );var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j, f);
+        (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push(
+            { 'gtm.start': new Date().getTime(), event: 'gtm.js' }
+        ); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-KWQBWGJ');
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-83918739-15"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'UA-83918739-15');
     </script>
@@ -60,8 +60,9 @@
 </head>
 <body>
     <script>document.body.className = document.body.className + ' js-enabled';</script>
-    @Html.Partial("_CookieBanner")    
-    @Html.Partial("_Header")
+    @Html.Partial("_CookieBanner")
+    @Html.Partial("_Header", Html.GetHeaderViewModel())
+
     @RenderSection("betabanner", false)
 
     <main role="main" id="content">
@@ -73,32 +74,8 @@
 
     </main>
 
-    <footer class="group js-footer" id="footer" role="contentinfo">
-        <div class="footer-wrapper">
-            <div class="footer-meta">
-                <div class="footer-meta-inner">
-                    <ul class="platform-help-links">
-                        <li><a href="@Url.ExternalUrlAction("service", "help",true)" target="_blank">Help</a></li>
-                        <li><a href="https://www.smartsurvey.co.uk/s/apprenticeshipservicefeedback/" target="_blank">Feedback</a></li>                        
-                        <li><a href="@Url.ExternalUrlAction("service", "privacy",true)">Privacy</a></li>
-                        <li><a href="@Url.ExternalUrlAction("cookieConsent")">Cookies</a></li>
-                        <li>Built by the <a href="http://gov.uk/esfa" target="_blank">Education and Skills Funding Agency</a></li>
-                    </ul>
-                    <div class="open-government-licence">
-                        <p class="logo">
-                            <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a>
-                        </p>
-                        <p>
-                            All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated
-                        </p>
-                    </div>
-                </div>
-                <div class="copyright">
-                    <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @Html.Partial("_Footer", Html.GetFooterViewModel())
+
     <div id="global-app-error" class="app-error hidden"></div>
     @Scripts.Render("~/bundles/libs")
     @Scripts.Render("~/bundles/c3")
