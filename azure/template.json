@@ -142,7 +142,7 @@
         "zenDeskSnippetKey": {
             "type": "string"
         },
-        "kv_configurationStorageConnectionString": {
+        "configurationStorageConnectionString": {
             "type": "securestring"
         },
         "kv_DatabaseConnectionString": {
@@ -200,7 +200,7 @@
             },
             {
                 "name": "ConfigurationStorageConnectionString",
-                "value": "[parameters('kv_ConfigurationStorageConnectionString')]"
+                "value": "[parameters('configurationStorageConnectionString')]"
             },
             {
                 "name": "ClientId",
@@ -487,6 +487,10 @@
                                 "value": "[parameters('environmentName')]"
                             },
                             {
+                                "name": "ConfigurationStorageConnectionString",
+                                "value": "[parameters('configurationStorageConnectionString')]"
+                            },
+                            {
                                 "name": "ForecastingRoutePrefix",
                                 "value": "forecasting"
                             },
@@ -632,6 +636,13 @@
                             {
                                 "tenantId": "[subscription().tenantId]",
                                 "objectId": "[reference('app-service').outputs.managedServiceIdentityId.value]",
+                                "permissions": {
+                                    "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
+                                }
+                            },
+                            {
+                                "tenantId": "[subscription().tenantId]",
+                                "objectId": "[reference('app-service').outputs.stagingManagedServiceIdentityId.value]",
                                 "permissions": {
                                     "secrets": "[variables('appSettingsKeyVaultSecretPermissions')]"
                                 }

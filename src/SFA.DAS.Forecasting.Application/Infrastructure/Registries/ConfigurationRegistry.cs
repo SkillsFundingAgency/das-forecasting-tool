@@ -1,4 +1,6 @@
 ﻿using System;
+using SFA.DAS.AutoConfiguration;
+using SFA.DAS.AutoConfiguration.DependencyResolution;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Core;
@@ -9,13 +11,18 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
     public class ConfigurationRegistry : Registry
     {
+        private const string ServiceName = "SFA.DAS.Forecasting";
+
         public ConfigurationRegistry()
         {
+            IncludeRegistry<AutoConfigurationRegistry>();
             var config = GetConfiguration();
             ForSingletonOf<IApplicationConfiguration>().Use(config);
             ForSingletonOf<IApplicationConnectionStrings>().Use(config);
             ForSingletonOf<IAccountApiConfiguration>().Use(config.AccountApi);
             ForSingletonOf<IPaymentsEventsApiConfiguration>().Use(config.PaymentEventsApi);
+            
+            For<ForecastingConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ForecastingConfiguration>(ServiceName)).Singleton();
         }
 
         private IApplicationConfiguration GetConfiguration()
