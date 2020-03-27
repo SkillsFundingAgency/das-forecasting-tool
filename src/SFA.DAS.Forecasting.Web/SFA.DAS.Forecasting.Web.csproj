@@ -411,6 +411,9 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Filters\GoogleAnalyticsFilter.cs" />
+    <Compile Include="Filters\GoogleAnalyticsFilter1.cs" />
+    <Compile Include="Filters\ZendeskApiFilter.cs" />
     <Compile Include="ViewModels\AccountFundsItem.cs" />
     <Compile Include="ViewModels\AccountFundsViewModel.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
@@ -830,6 +833,10 @@
     <Content Include="Views\Shared\_CookieBanner.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Shared\_GoogleAnalyticsInfo.cshtml" />
+    <Content Include="Views\Shared\_GoogleTagManager.cshtml" />
+    <Content Include="Views\Shared\_GoogleTagManagerNoScript.cshtml" />
+    <Content Include="Views\Shared\_ZenDeskApi.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
