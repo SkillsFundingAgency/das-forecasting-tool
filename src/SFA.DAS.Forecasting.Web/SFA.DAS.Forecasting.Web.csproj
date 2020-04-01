@@ -411,8 +411,10 @@
     <Compile Include="App_Start\SmsService.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
+    <Compile Include="Extensions\ClaimsPrincipalExtensions.cs" />
+    <Compile Include="Filters\EmployerRecruitClaims.cs" />
     <Compile Include="Filters\GoogleAnalyticsFilter.cs" />
-    <Compile Include="Filters\GoogleAnalyticsFilter1.cs" />
+    <Compile Include="Filters\RouteValues.cs" />
     <Compile Include="Filters\ZendeskApiFilter.cs" />
     <Compile Include="ViewModels\AccountFundsItem.cs" />
     <Compile Include="ViewModels\AccountFundsViewModel.cs" />
