@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Web.Mvc;
-using IdentityServer3.Core.Extensions;
-using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.Filters
