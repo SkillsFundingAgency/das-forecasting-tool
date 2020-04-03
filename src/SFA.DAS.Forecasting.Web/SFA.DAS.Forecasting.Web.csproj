@@ -412,7 +412,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\StructuremapMvc.cs" />
     <Compile Include="Extensions\ClaimsPrincipalExtensions.cs" />
-    <Compile Include="Filters\EmployerRecruitClaims.cs" />
+    <Compile Include="Filters\ForecastingClaims.cs" />
     <Compile Include="Filters\GoogleAnalyticsFilter.cs" />
     <Compile Include="Filters\RouteValues.cs" />
     <Compile Include="Filters\ZendeskApiFilter.cs" />
