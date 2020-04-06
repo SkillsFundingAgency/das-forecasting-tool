@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Web.Filters;
 
@@ -12,19 +11,19 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         public static string GetDisplayName(this ClaimsPrincipal user)
         {
             return user.FindFirst(ForecastingClaims
-                .IdamsUserDisplayNameClaimTypeIdentifier).Value;
+                .IdamsUserDisplayNameClaimTypeIdentifier)?.Value;
         }
 
         public static string GetEmailAddress(this ClaimsPrincipal user)
         {
             return user.FindFirst(ForecastingClaims
-                .IdamsUserEmailClaimTypeIdentifier).Value;
+                .IdamsUserEmailClaimTypeIdentifier)?.Value;
         }
 
         public static string GetUserId(this ClaimsPrincipal user)
         {
             return user.FindFirst(ForecastingClaims
-                .IdamsUserIdClaimTypeIdentifier).Value;
+                .IdamsUserIdClaimTypeIdentifier)?.Value;
         }
 
         public static IEnumerable<string> GetEmployerAccounts(this ClaimsPrincipal user)
