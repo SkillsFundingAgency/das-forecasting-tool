@@ -12,11 +12,11 @@ namespace SFA.DAS.Forecasting.Web.Filters
             if (controller != null)
             {
                 var user = (ClaimsPrincipal)controller.User;
-                var userId = user.GetUserId();
+                var userId = user?.GetUserId();
                 controller.ViewBag.GaData = new GaData
                 {
                     UserId = userId,
-                    Acc = controller.RouteData.Values[RouteValues.EmployerAccountId].ToString().ToUpper()
+                    Acc = controller.RouteData.Values[RouteValues.EmployerAccountId]?.ToString().ToUpper()
                 };
             }
             base.OnActionExecuting(filterContext);
