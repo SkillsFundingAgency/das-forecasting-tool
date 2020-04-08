@@ -12,11 +12,11 @@ namespace SFA.DAS.Forecasting.Web.Filters
             if (controller != null)
             {
                 var user = (ClaimsPrincipal)controller.User;
-                var accountIdFromUrl = controller.RouteData.Values[RouteValues.EmployerAccountId].ToString().ToUpper();
+                var accountIdFromUrl = controller.RouteData.Values[RouteValues.EmployerAccountId]?.ToString().ToUpper();
                 controller.ViewBag.ZendeskApiData = new ZendeskApiData
                 {
-                    Name = user.GetDisplayName(),
-                    Email = user.GetEmailAddress(),
+                    Name = user?.GetDisplayName(),
+                    Email = user?.GetEmailAddress(),
                     Organization = accountIdFromUrl
                 };
             }
