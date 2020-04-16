@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         Task<List<long>> EmployersForPeriod(string payrollYear, short payrollMonth);
     }
 
-    public class LevyDeclarations : List<LevyDeclarationViewModel>, IAccountResource { }
+    public class LevyDeclarations : List<LevyDeclarationViewModel> { }
 
     public class EmployerDataService : IEmployerDataService
     {
