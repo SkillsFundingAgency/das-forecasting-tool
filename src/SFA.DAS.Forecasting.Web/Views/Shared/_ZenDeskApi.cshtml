@@ -1,9 +1,15 @@
-﻿<script nws-csp-add-nonce="true" type="text/javascript">
+﻿@using SFA.DAS.Forecasting.Web.Filters;
+
+@{ 
+    var zendeskApiData = ViewBag.ZendeskApiData as ZendeskApiFilter.ZendeskApiData ?? new ZendeskApiFilter.ZendeskApiData();
+}
+
+<script nws-csp-add-nonce="true" type="text/javascript">
     zE(function () {
         zE.identify({
-            name: '@ViewBag.ZendeskApiData?.Name',
-            email: '@ViewBag.ZendeskApiData?.Email',
-            organization: '@ViewBag.ZendeskApiData?.Organization'
+            name: '@zendeskApiData.Name',
+            email: '@zendeskApiData.Email',
+            organization: '@zendeskApiData.Organization'
         });
     });
 </script>
