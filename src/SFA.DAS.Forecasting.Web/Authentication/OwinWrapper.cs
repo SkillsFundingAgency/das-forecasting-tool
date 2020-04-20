@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using IdentityModel.Client;
-using IdentityServer3.Core.Extensions;
-using IdentityServer3.Core.Models;
 using Microsoft.Owin;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;

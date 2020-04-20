@@ -2,24 +2,33 @@
 <!DOCTYPE html>
 <html>
 <head>
+    @Html.Partial("_GoogleTagManager")
     <meta charset="utf-8" />
     <title>@ViewBag.Title - Manage apprentices</title>
     @*<meta name="viewport" content="width=device-width, initial-scale=1.0">*@
     <!-- Google Tag Manager -->
     <script>
         (function (w, d, s, l, i) {
-        w[l] = w[l] || []; w[l].push(
-            { 'gtm.start': new Date().getTime(), event: 'gtm.js' }
-        ); var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            w[l] = w[l] || [];
+            w[l].push(
+                { 'gtm.start': new Date().getTime(), event: 'gtm.js' }
+            );
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-KWQBWGJ');
     </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-83918739-15"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
+
         function gtag() { dataLayer.push(arguments); }
+
         gtag('js', new Date());
         gtag('config', 'UA-83918739-15');
     </script>
@@ -56,10 +65,13 @@
     @*@Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")*@
 
+    @Html.Partial("_GoogleAnalyticsInfo")
     @Html.Partial("_ZenDeskWidget")
+    @Html.Partial("_ZenDeskApi")
 </head>
 <body>
     <script>document.body.className = document.body.className + ' js-enabled';</script>
+    @Html.Partial("_GoogleTagManagerNoScript")
     @Html.Partial("_CookieBanner")
     @Html.Partial("_Header", Html.GetHeaderViewModel())
 

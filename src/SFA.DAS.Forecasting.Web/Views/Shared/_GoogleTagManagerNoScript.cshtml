@@ -1,0 +1,10 @@
+﻿@using SFA.DAS.Forecasting.Application.Infrastructure.Registries
+@{
+    var gaConfig = ConfigurationHelper.GetAppSetting("GoogleTrackingManagerCode", false);
+}
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=@gaConfig"
+            height="0" width="0" style="display: none; visibility: hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->

@@ -1,0 +1,14 @@
+﻿@using SFA.DAS.Forecasting.Web.Filters
+<script>
+    @if (ViewBag.GaData == null)
+    {
+        ViewBag.GaData = new GoogleAnalyticsFilter.GaData();
+    }
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({
+        'vpv': '@ViewBag.GaData.Vpv',
+        'userID': '@ViewBag.GaData.UserId',
+        'acc': '@ViewBag.GaData.Acc'
+    });
+
+</script>
