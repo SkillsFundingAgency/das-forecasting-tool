@@ -3,7 +3,8 @@
     public class ForecastingConfiguration
     {
         public string EmployerRecruitBaseUrl { get; set; }
-        
-        public ZenDeskConfiguration ZenDesk { get; set; }
+        public string ZenDeskSectionId { get; set; }
+        public string ZenDeskSnippetKey { get; set; }
+        public string ZenDeskCobrowsingSnippetKey { get; set; }
     }
 }
