@@ -50,13 +50,19 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         public static string GetZenDeskSnippetKey(this HtmlHelper html)
         {
             var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
-            return forecastingConfig.ZenDeskSnippetKey;
+            return forecastingConfig.ZenDesk.SnippetKey;
         }
 
         public static string GetZenDeskSnippetSectionId(this HtmlHelper html)
         {
             var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
-            return forecastingConfig.ZenDeskSectionId;
+            return forecastingConfig.ZenDesk.SectionId;
+        }
+
+        public static string GetZenDeskCobrowsingSnippetKey(this HtmlHelper html)
+        {
+            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
+            return forecastingConfig.ZenDesk.CobrowsingSnippetKey;
         }
 
         private static string GetBaseUrl()

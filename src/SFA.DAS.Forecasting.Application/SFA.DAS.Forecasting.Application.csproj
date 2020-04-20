@@ -260,6 +260,7 @@
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
+    <Compile Include="Infrastructure\Configuration\ZenDeskConfiguration.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentAdapter.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentSession.cs" />
