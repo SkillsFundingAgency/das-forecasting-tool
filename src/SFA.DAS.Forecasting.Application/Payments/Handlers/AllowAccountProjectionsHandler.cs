@@ -35,7 +35,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
         public async Task<IEnumerable<long>> AllowedEmployerAccountIds(PaymentCreatedMessage paymentCreatedMessage)
         {
-            _logger.Debug($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.EmployerAccountId}, {paymentCreatedMessage.Id}");
+            _logger.Info($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.EmployerAccountId}, {paymentCreatedMessage.Id}");
             if (!_applicationConfiguration.AllowTriggerProjections)
             {
                 _logger.Warn("Triggering of projections is disabled.");
@@ -46,10 +46,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
             if (await IsEmployerAccountIdAllowed(paymentCreatedMessage.EmployerAccountId))
             {
-                _logger.Debug($"Enough time has elapsed since last received payment and commitment to allow projections to be generated for employer {paymentCreatedMessage.EmployerAccountId}.");
+                _logger.Info($"Enough time has elapsed since last received payment and commitment to allow projections to be generated for employer {paymentCreatedMessage.EmployerAccountId}.");
                 if (!await _auditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
                 {
-                    _logger.Debug($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
+                    _logger.Info($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
                 }
                 else
                 {
@@ -68,7 +68,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                     employerAccountIds.Add(paymentCreatedMessage.SendingEmployerAccountId);
                     if (!await _auditService.RecordRunOfProjections(paymentCreatedMessage.SendingEmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
                     {
-                        _logger.Debug($"Triggering of payment projections for employer {paymentCreatedMessage.SendingEmployerAccountId} has already been started.");
+                        _logger.Info($"Triggering of payment projections for employer {paymentCreatedMessage.SendingEmployerAccountId} has already been started.");
                     }
                     else
                     {
@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                 }
                 else
                 {
-                    _logger.Debug($"Cannot allow projections for employer {paymentCreatedMessage.SendingEmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
+                    _logger.Info($"Cannot allow projections for employer {paymentCreatedMessage.SendingEmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
                 }
             }
             
