@@ -49,12 +49,14 @@ namespace SFA.DAS.Forecasting.Web.Extensions
 
         public static string GetZenDeskSnippetKey(this HtmlHelper html)
         {
-            return ConfigurationManager.AppSettings["ZenDeskSnippetKey"];
+            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
+            return forecastingConfig.ZenDeskSnippetKey;
         }
 
         public static string GetZenDeskSnippetSectionId(this HtmlHelper html)
         {
-            return ConfigurationManager.AppSettings["ZenDeskSectionId"];            
+            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
+            return forecastingConfig.ZenDeskSectionId;
         }
 
         private static string GetBaseUrl()
