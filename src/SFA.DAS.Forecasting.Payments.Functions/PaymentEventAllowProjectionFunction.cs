@@ -22,7 +22,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
             await FunctionRunner.Run<PaymentEventStorePaymentFunction>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Debug("Getting payment declaration handler from container.");
+                    logger.Info("Getting payment declaration handler from container.");
                     var handler = container.GetInstance<AllowAccountProjectionsHandler>();
                     if (handler == null)
                         throw new InvalidOperationException($"Failed to get payment handler from container.");
@@ -47,7 +47,7 @@ namespace SFA.DAS.Forecasting.Payments.Functions
 	                }
 	                else
 	                {
-		                logger.Debug($"Cannot generate the projections, still handling payment events. Employer: {paymentCreatedMessage.EmployerAccountId}");
+		                logger.Info($"Cannot generate the projections, still handling payment events. Employer: {paymentCreatedMessage.EmployerAccountId}");
 					}
                 });
         }
