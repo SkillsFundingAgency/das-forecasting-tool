@@ -56,11 +56,11 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             var commitmentModel = _paymentMapper.MapToCommitment(message);
             if (!commitment.RegisterCommitment(commitmentModel))
             {
-                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
+                _logger.Info($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
                 return;
             }
             
-            _logger.Debug($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
+            _logger.Info($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
             await _repository.Store(commitment);
             _logger.Info($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
             _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
@@ -81,7 +81,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             var commitmentModel = _apprenticeshipMapping.MapToCommitment(message);
             if (!commitment.RegisterCommitment(commitmentModel))
             {
-                _logger.Debug($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId} ");
+                _logger.Info($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId} ");
                 return;
             }
 
