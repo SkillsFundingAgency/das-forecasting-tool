@@ -1,5 +1,10 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
 
+@{
+    var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={@Html.GetZenDeskSnippetKey()}";
+    var cobrowsingSnippetUrl = $"https://embed-euw1.rcrsv.io/{@Html.GetZenDeskCobrowsingSnippetKey()}?zwwi=1";
+}
+
 <script type="text/javascript">
     window.zESettings = {
         webWidget: {
@@ -19,5 +24,6 @@
         }
     };
 </script>
-<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=@Html.GetZenDeskSnippetKey()"></script>
+<script id="ze-snippet" src="@snippetUrl"></script>
+<script id="co-snippet" src="@cobrowsingSnippetUrl"></script>
 @Html.SetZenDeskLabels(new string[] { ViewBag.ZenDeskLabel })

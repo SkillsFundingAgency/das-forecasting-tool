@@ -59,6 +59,12 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             return forecastingConfig.ZenDeskSectionId;
         }
 
+        public static string GetZenDeskCobrowsingSnippetKey(this HtmlHelper html)
+        {
+            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
+            return forecastingConfig.ZenDeskCobrowsingSnippetKey;
+        }
+
         private static string GetBaseUrl()
         {
             return ConfigurationManager.AppSettings["MyaBaseUrl"].EndsWith("/")
