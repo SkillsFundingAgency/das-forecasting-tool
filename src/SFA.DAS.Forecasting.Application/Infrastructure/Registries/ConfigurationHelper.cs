@@ -39,6 +39,10 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 {
                     ApiBaseUrl = CloudConfigurationManager.GetSetting("PaymentsEvent-ApiBaseUrl"),
                     ClientToken = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientToken"),
+                    Tenant = CloudConfigurationManager.GetSetting("PaymentsEvent-Tenant"),
+                    ClientId = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientId"),
+                    ClientSecret = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientSecret"),
+                    IdentifierUri = CloudConfigurationManager.GetSetting("PaymentsEvent-IdentifierUri")
                 }
                 : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
@@ -54,7 +58,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     Tenant = CloudConfigurationManager.GetSetting("CommitmentsV1Tenant"),
                     ClientId = CloudConfigurationManager.GetSetting("CommitmentsV1ClientId"),
                     ClientSecret = CloudConfigurationManager.GetSetting("CommitmentsV1ClientSecret"),
-                    IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV1IdentifierUri"),
+                    IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV1IdentifierUri")
                 }
                 : GetConfiguration<CommitmentsApiConfig>("SFA.DAS.CommitmentsAPI");
         }
