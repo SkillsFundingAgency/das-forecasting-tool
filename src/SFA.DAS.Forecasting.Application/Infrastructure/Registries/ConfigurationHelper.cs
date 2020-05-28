@@ -32,21 +32,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
         }
 
-        public static PaymentsEventsApiConfiguration GetPaymentsEventsApiConfiguration()
-        {
-            return IsDevOrAtEnvironment
-                ? new PaymentsEventsApiConfiguration
-                {
-                    ApiBaseUrl = CloudConfigurationManager.GetSetting("PaymentsEvent-ApiBaseUrl"),
-                    ClientToken = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientToken"),
-                    Tenant = CloudConfigurationManager.GetSetting("PaymentsEvent-Tenant"),
-                    ClientId = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientId"),
-                    ClientSecret = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientSecret"),
-                    IdentifierUri = CloudConfigurationManager.GetSetting("PaymentsEvent-IdentifierUri")
-                }
-                : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
-        }
-
         public static CommitmentsApiConfig GetCommitmentsApiConfiguration()
         {
             return IsDevOrAtEnvironment
