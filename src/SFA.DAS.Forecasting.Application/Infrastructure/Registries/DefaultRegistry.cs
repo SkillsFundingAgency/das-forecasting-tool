@@ -11,7 +11,6 @@ using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
 using SFA.DAS.Provider.Events.Api.Client;
-using SFA.DAS.Provider.Events.Api.Client.Configuration;
 using StructureMap;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
@@ -22,8 +21,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             if (ConfigurationHelper.IsDevOrAtEnvironment)
             {
-                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>()
-                    .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
+                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
                 For<IHashingService>()
@@ -31,8 +29,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             }
             else
             {
-                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
-                    .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
+                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>();
                 For<IAccountBalanceService>()
                     .Use<AccountBalanceService>();
                 For<IHashingService>()
