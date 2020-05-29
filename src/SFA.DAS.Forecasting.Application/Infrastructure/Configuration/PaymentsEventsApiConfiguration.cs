@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Provider.Events.Api.Client;
+﻿using SFA.DAS.Provider.Events.Api.Client.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
@@ -6,5 +6,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
     {
         public string ClientToken { get; set; }
         public string ApiBaseUrl { get; set; }
+        public string Tenant { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        public string IdentifierUri { get; set; }
     }
 }

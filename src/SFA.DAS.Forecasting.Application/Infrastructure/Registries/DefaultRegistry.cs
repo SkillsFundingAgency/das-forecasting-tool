@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Commitments.Api.Client;
-using SFA.DAS.Commitments.Api.Client.Configuration;
-using SFA.DAS.Commitments.Api.Client.Interfaces;
+﻿using SFA.DAS.Apprenticeships.Api.Client;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Application.Balance.Services;
@@ -15,8 +10,6 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
-using SFA.DAS.Http;
-using SFA.DAS.Http.TokenGenerators;
 using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
@@ -28,8 +21,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             if (ConfigurationHelper.IsDevOrAtEnvironment)
             {
-                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>()
-                    .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
+                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
                 For<IHashingService>()
@@ -37,8 +29,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             }
             else
             {
-                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>()
-                    .Ctor<IPaymentsEventsApiConfiguration>().Is(ctx => ctx.GetInstance<IApplicationConfiguration>().PaymentEventsApi);
+                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>();
                 For<IAccountBalanceService>()
                     .Use<AccountBalanceService>();
                 For<IHashingService>()

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SFA.DAS.Provider.Events.Api.Client;
+using SFA.DAS.Provider.Events.Api.Client.Configuration;
 using SFA.DAS.Provider.Events.Api.Types;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services

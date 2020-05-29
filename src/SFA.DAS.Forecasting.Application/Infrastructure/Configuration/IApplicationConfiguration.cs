@@ -12,7 +12,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         int NumberOfMonthsToProject { get; }
         bool LimitForecast { get; set; }
         AccountApiConfiguration AccountApi { get; set; }
-        PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         CommitmentsApiConfig CommitmentsApi { get; set; }
         IdentityServerConfiguration Identity { get; set; }
         string StubEmployerPaymentTable { get; set; }

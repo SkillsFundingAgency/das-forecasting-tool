@@ -6,5 +6,6 @@
         public string ZenDeskSectionId { get; set; }
         public string ZenDeskSnippetKey { get; set; }
         public string ZenDeskCobrowsingSnippetKey { get; set; }
+        public PaymentsEventsApiConfiguration PaymentsEventsApi { get; set; }
     }
 }
