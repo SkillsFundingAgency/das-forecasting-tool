@@ -179,11 +179,11 @@
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.1.95.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.95\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.1.95.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.95\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Sql.Client, Version=1.0.0.44965, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Sql.Client.1.0.0.44965\lib\net45\SFA.DAS.Sql.Client.dll</HintPath>
@@ -257,9 +257,9 @@
     <Compile Include="Infrastructure\Configuration\CommitmentsApiConfig.cs" />
     <Compile Include="Infrastructure\Configuration\ForecastingConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
+    <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
-    <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentAdapter.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentSession.cs" />
@@ -270,6 +270,7 @@
     <Compile Include="Infrastructure\Registries\DefaultWebRegistry.cs" />
     <Compile Include="Infrastructure\Registries\DocumentRegistry.cs" />
     <Compile Include="Infrastructure\Registries\MediatrRegistry.cs" />
+    <Compile Include="Infrastructure\Registries\PaymentsRegistry.cs" />
     <Compile Include="Infrastructure\Registries\TelemetryRegistry.cs" />
     <Compile Include="Infrastructure\Telemetry\AppInsightsTelemetry.cs" />
     <Compile Include="Infrastructure\Telemetry\DependencyType.cs" />
