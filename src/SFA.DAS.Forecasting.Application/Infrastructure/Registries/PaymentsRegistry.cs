@@ -18,14 +18,14 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             For<PaymentsEventsApiConfiguration>().Use(c => c.GetInstance<ForecastingConfiguration>().PaymentsEventsApi).Singleton();
             For<IPaymentsEventsApiConfiguration>().Use(c => c.GetInstance<PaymentsEventsApiConfiguration>());
 
-            //if (ConfigurationHelper.IsDevOrAtEnvironment)
-            //{
-            //    For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
-            //}
-            //else
-            //{
+            if (ConfigurationHelper.IsDevOrAtEnvironment)
+            {
+                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
+            }
+            else
+            {
                 For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>().Ctor<HttpClient>().Is(c => CreateClient(c));
-            //}
+            }
         }
 
         private HttpClient CreateClient(IContext context)
