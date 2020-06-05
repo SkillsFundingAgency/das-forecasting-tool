@@ -21,7 +21,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             if (ConfigurationHelper.IsDevOrAtEnvironment)
             {
-                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
                 For<IHashingService>()
@@ -29,7 +28,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             }
             else
             {
-                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>();
                 For<IAccountBalanceService>()
                     .Use<AccountBalanceService>();
                 For<IHashingService>()

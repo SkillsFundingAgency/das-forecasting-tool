@@ -22,7 +22,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             ForSingletonOf<IAccountApiConfiguration>().Use(config.AccountApi);
             
             For<ForecastingConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ForecastingConfiguration>(ServiceName)).Singleton();
-            For<IPaymentsEventsApiConfiguration>().Use(c => c.GetInstance<ForecastingConfiguration>().PaymentsEventsApi).Singleton();
         }
 
         private IApplicationConfiguration GetConfiguration()
