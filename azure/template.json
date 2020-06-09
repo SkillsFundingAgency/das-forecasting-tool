@@ -381,6 +381,10 @@
                                 "value": "[parameters('CommitmentsV1Tenant')]"
                             },
                             {
+                                "name": "ConfigurationStorageConnectionString",
+                                "value": "[parameters('configurationStorageConnectionString')]"
+                            },
+                            {
                                 "name": "EnvironmentName",
                                 "value": "[parameters('environmentName')]"
                             },
