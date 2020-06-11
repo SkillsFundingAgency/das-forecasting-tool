@@ -3,7 +3,6 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Http;
 using SFA.DAS.Http.TokenGenerators;
-using SFA.DAS.NLog.Logger.Web.MessageHandlers;
 using SFA.DAS.Provider.Events.Api.Client;
 using SFA.DAS.Provider.Events.Api.Client.Configuration;
 using StructureMap;
@@ -24,7 +23,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             }
             else
             {
-                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>().Ctor<HttpClient>().Is(c => CreateClient(c));
+                For<IPaymentsEventsApiClient>().Use<PaymentsEventsApiClient>().Ctor<HttpClient>("httpClient").Is(c => CreateClient(c));
             }
         }
 
@@ -32,15 +31,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             var config = context.GetInstance<ForecastingConfiguration>().PaymentsEventsApi;
 
-            HttpClient httpClient = new HttpClientBuilder()
-                    .WithBearerAuthorisationHeader(new AzureActiveDirectoryBearerTokenGenerator(config))
-                    .WithHandler(new RequestIdMessageRequestHandler())
-                    .WithHandler(new SessionIdMessageRequestHandler())
-                    .WithDefaultHeaders()
-                    .Build();
+            var httpClientBuilder = string.IsNullOrWhiteSpace(config.ClientId)
+               ? new HttpClientBuilder().WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config))
+               : new HttpClientBuilder().WithBearerAuthorisationHeader(new AzureActiveDirectoryBearerTokenGenerator(config));
 
-
-            return httpClient;
+            return httpClientBuilder
+                .WithDefaultHeaders()
+                .Build();
         }
     }
 }
