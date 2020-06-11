@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         AccountApiConfiguration AccountApi { get; set; }
         CommitmentsApiConfig CommitmentsApi { get; set; }
         IdentityServerConfiguration Identity { get; set; }
-        IPaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
+        PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }
         bool AllowTriggerProjections { get; }
         string ApprenticeshipsApiBaseUri { get; }
