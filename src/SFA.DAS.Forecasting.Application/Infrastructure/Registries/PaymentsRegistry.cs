@@ -31,7 +31,10 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         private HttpClient CreateClient(IContext context)
         {
-            var config = context.GetInstance<ForecastingConfiguration>().PaymentsEventsApi;
+            // TODO: Bring back when AAD has been fully implemented.
+            //var config = context.GetInstance<ForecastingConfiguration>().PaymentsEventsApi;
+
+            var config = context.GetInstance<IApplicationConfiguration>().PaymentEventsApi;
 
             var httpClientBuilder = string.IsNullOrWhiteSpace(config.ClientId)
                ? new HttpClientBuilder().WithBearerAuthorisationHeader(new JwtBearerTokenGenerator(config))
