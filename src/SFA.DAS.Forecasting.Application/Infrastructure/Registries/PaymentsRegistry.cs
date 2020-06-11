@@ -3,6 +3,7 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Http;
 using SFA.DAS.Http.TokenGenerators;
+using SFA.DAS.NLog.Logger.Web.MessageHandlers;
 using SFA.DAS.Provider.Events.Api.Client;
 using SFA.DAS.Provider.Events.Api.Client.Configuration;
 using StructureMap;
@@ -14,8 +15,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
     {
         public PaymentsRegistry()
         {
-            For<PaymentsEventsApiConfiguration>().Use(c => c.GetInstance<ForecastingConfiguration>().PaymentsEventsApi).Singleton();
-            For<IPaymentsEventsApiConfiguration>().Use(c => c.GetInstance<PaymentsEventsApiConfiguration>());
+            // TODO: Bring back when AAD has been fully implemented.
+            //For<PaymentsEventsApiConfiguration>().Use(c => c.GetInstance<ForecastingConfiguration>().PaymentsEventsApi).Singleton();
+            //For<IPaymentsEventsApiConfiguration>().Use(c => c.GetInstance<PaymentsEventsApiConfiguration>());
 
             if (ConfigurationHelper.IsDevOrAtEnvironment)
             {
@@ -36,6 +38,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                : new HttpClientBuilder().WithBearerAuthorisationHeader(new AzureActiveDirectoryBearerTokenGenerator(config));
 
             return httpClientBuilder
+                .WithHandler(new RequestIdMessageRequestHandler())
+                .WithHandler(new SessionIdMessageRequestHandler())
                 .WithDefaultHeaders()
                 .Build();
         }
