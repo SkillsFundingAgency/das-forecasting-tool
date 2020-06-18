@@ -71,29 +71,29 @@ namespace SFA.DAS.Forecasting.Web.Extensions
                 ? ConfigurationManager.AppSettings["MyaBaseUrl"]
                 : ConfigurationManager.AppSettings["MyaBaseUrl"] + "/";
         }
-        
+
         public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
         {
             var configuration = DependencyResolver.Current.GetService<IStartupConfiguration>();
             var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
             var baseUrl = GetBaseUrl();
-            var applicationBaseUrl = new System.Uri(html.ViewContext.HttpContext.Request.Url.AbsoluteUri).AbsoluteUri.Replace(new System.Uri(html.ViewContext.HttpContext.Request.Url.AbsoluteUri).AbsolutePath, "");
+            var applicationBaseUrl = new Uri(html.ViewContext.HttpContext.Request.Url?.AbsoluteUri).AbsoluteUri.Replace(new System.Uri(html.ViewContext.HttpContext.Request.Url?.AbsoluteUri).AbsolutePath, "");
 
             var headerModel = new HeaderViewModel(new HeaderConfiguration
-            {
-                EmployerCommitmentsBaseUrl = baseUrl,
-                EmployerFinanceBaseUrl = baseUrl,
-                ManageApprenticeshipsBaseUrl = baseUrl,
-                EmployerRecruitBaseUrl = forecastingConfig.EmployerRecruitBaseUrl,
-                AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
-                ClientId = configuration.Identity.ClientId,
-                SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
-            },
-            new UserContext
-            {
-                User = html.ViewContext.HttpContext.User,
-                HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
-            });
+                {
+                    EmployerCommitmentsBaseUrl = baseUrl,
+                    EmployerFinanceBaseUrl = baseUrl,
+                    ManageApprenticeshipsBaseUrl = baseUrl,
+                    EmployerRecruitBaseUrl = forecastingConfig.EmployerRecruitBaseUrl,
+                    AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
+                    ClientId = configuration.Identity.ClientId,
+                    SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
+                },
+                new UserContext
+                {
+                    User = html.ViewContext.HttpContext.User,
+                    HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
+                });
 
             headerModel.SelectMenu(html.ViewBag.Section);
 
@@ -111,17 +111,29 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         }
 
         public static IFooterViewModel GetFooterViewModel(this HtmlHelper html)
-        {   
+        {
             return new FooterViewModel(new FooterConfiguration
-            {
-                 ManageApprenticeshipsBaseUrl = GetBaseUrl()
-            },
-            new UserContext
-            {
-                User = html.ViewContext.HttpContext.User,
-                HashedAccountId = html.ViewContext.RouteData.Values["HashedAccountId"]?.ToString()
-            });
+                {
+                    ManageApprenticeshipsBaseUrl = GetBaseUrl()
+                },
+                new UserContext
+                {
+                    User = html.ViewContext.HttpContext.User,
+                    HashedAccountId = html.ViewContext.RouteData.Values["HashedAccountId"]?.ToString()
+                });
         }
-        
+
+        public static ICookieBannerViewModel GetCookieBannerViewModel(this HtmlHelper html)
+        {
+            return new CookieBannerViewModel(new CookieBannerConfiguration
+                {
+                    ManageApprenticeshipsBaseUrl = GetBaseUrl()
+                },
+                new UserContext
+                {
+                    User = html.ViewContext.HttpContext.User,
+                    HashedAccountId = html.ViewContext.RouteData.Values["HashedAccountId"]?.ToString()
+                });
+        }
     }
 }
