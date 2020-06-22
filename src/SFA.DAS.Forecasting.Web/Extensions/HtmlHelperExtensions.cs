@@ -93,7 +93,8 @@ namespace SFA.DAS.Forecasting.Web.Extensions
                 {
                     User = html.ViewContext.HttpContext.User,
                     HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
-                });
+                },
+                useLegacyStyles: true);
 
             headerModel.SelectMenu(html.ViewBag.Section);
 
@@ -120,7 +121,8 @@ namespace SFA.DAS.Forecasting.Web.Extensions
                 {
                     User = html.ViewContext.HttpContext.User,
                     HashedAccountId = html.ViewContext.RouteData.Values["HashedAccountId"]?.ToString()
-                });
+                },
+                useLegacyStyles: true);
         }
 
         public static ICookieBannerViewModel GetCookieBannerViewModel(this HtmlHelper html)
