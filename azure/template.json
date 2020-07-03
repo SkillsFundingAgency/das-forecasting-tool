@@ -53,6 +53,10 @@
         "databaseName": {
             "type": "string"
         },
+        "elasticPoolName": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "databaseSkuName": {
             "type": "string",
             "defaultValue": "S0"
@@ -563,6 +567,9 @@
                     },
                     "sqlServerName": {
                         "value": "[parameters('sharedSQLServerName')]"
+                    },
+                    "elasticPoolName": {
+                        "value": "[parameters('elasticPoolName')]"
                     },
                     "databaseSkuName": {
                         "value": "[parameters('databaseSkuName')]"
