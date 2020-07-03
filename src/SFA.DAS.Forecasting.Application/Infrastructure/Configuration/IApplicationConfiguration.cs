@@ -1,5 +1,6 @@
 ﻿using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Provider.Events.Api.Client.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
@@ -14,6 +15,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         AccountApiConfiguration AccountApi { get; set; }
         CommitmentsApiConfig CommitmentsApi { get; set; }
         IdentityServerConfiguration Identity { get; set; }
+        PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }
         bool AllowTriggerProjections { get; }
         string ApprenticeshipsApiBaseUri { get; }
