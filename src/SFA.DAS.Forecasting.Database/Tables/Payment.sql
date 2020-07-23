@@ -32,3 +32,5 @@ CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId_ExternalPaymentId] ON [
 GO
 CREATE NONCLUSTERED INDEX [IDX_Payment_EmployerAccountId_SendingEmployerAccountId_FundingSource] ON [dbo].[Payment] (EmployerAccountId, SendingEmployerAccountId, FundingSource) INCLUDE ([Amount], [CollectionPeriodMonth], [CollectionPeriodYear]) WITH (ONLINE = ON)
 GO
+CREATE NONCLUSTERED INDEX [IDX_Payment_SendingEmployerAccountId_EmployerAccountId] ON [dbo].[Payment] ([SendingEmployerAccountId], [EmployerAccountId]) INCLUDE ([ReceivedTime]) WITH (ONLINE = ON)
+GO
