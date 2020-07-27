@@ -127,9 +127,11 @@ namespace SFA.DAS.Forecasting.Web.Extensions
 
         public static ICookieBannerViewModel GetCookieBannerViewModel(this HtmlHelper html)
         {
+            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
+
             return new CookieBannerViewModel(new CookieBannerConfiguration
                 {
-                    ManageApprenticeshipsBaseUrl = GetBaseUrl()
+                    ManageApprenticeshipsBaseUrl = forecastingConfig.EmployerAccountsBaseUrl
                 },
                 new UserContext
                 {

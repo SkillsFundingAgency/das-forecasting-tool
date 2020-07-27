@@ -835,7 +835,6 @@
     <Content Include="Views\Estimation\_editApprenticeshipContent.cshtml" />
     <Content Include="Views\Forecasting\ExpiredFundsGuidance.cshtml" />
     <Content Include="Views\Shared\_ZenDeskWidget.cshtml" />
-    <Content Include="Views\Shared\_CookieBanner.cshtml" />
     <Content Include="Views\Shared\_GoogleAnalyticsInfo.cshtml" />
     <Content Include="Views\Shared\_GoogleTagManager.cshtml" />
     <Content Include="Views\Shared\_GoogleTagManagerNoScript.cshtml" />
