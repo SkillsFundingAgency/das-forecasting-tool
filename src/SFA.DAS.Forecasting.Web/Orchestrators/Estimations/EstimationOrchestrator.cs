@@ -78,7 +78,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                 }
             };
 
-
             if (estimationProjector.IfAllApprenticeshipExpired())
             {
                 viewModel.AllApprenticeshipExpired = true;
