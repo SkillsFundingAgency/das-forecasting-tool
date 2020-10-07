@@ -19,6 +19,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
         decimal TransferAllowance { get; set; }
         void BuildProjections();
 		void ApplyExpiredFunds(Dictionary<CalendarPeriod, decimal> expiredFunds);
+        bool IfAllApprenticeshipExpired();
     }
 
     public class AccountEstimationProjection : IAccountEstimationProjection
@@ -74,6 +75,17 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
 
             TransferAllowance = _account.TransferAllowance;
             MonthlyInstallmentAmount = _account.LevyDeclared;
+        }
+
+        public bool IfAllApprenticeshipExpired()
+        {
+            var startDate = _dateTimeService.GetCurrentDateTime().GetStartOfMonth();
+            var endDate = _virtualEmployerCommitments.GetLastCommitmentPlannedEndDate().AddMonths(2).GetStartOfMonth();
+
+            if (endDate < startDate)
+                return true;
+
+            return false;
         }
 
         private decimal GetLastProjectedBalance(DateTime startDate)

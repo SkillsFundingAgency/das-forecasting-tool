@@ -85,12 +85,18 @@
             <ul class="tabs-menu">
                 <li id="tab-apprenticeships-added" class="current"><a href="#apprenticeships-added">Apprenticeships added</a></li>
                 <li id="tab-account-funds"><a href="#account-funds">Account funds</a></li>
-                @if (Model.AnyTransferApprenticeships)
+                @if (Model.AllApprenticeshipExpired)
+                {
+                    <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">All of your apprenticeshipe are in the past, please edit/add in the future</a></li>
+                }
+                else if  (Model.AnyTransferApprenticeships)
                 {
                     <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
                 }
             </ul>
 
+            @if (!Model.AllApprenticeshipExpired)
+            {
             <div id="account-funds" class="tab-content" style="display: none;">
                 <div class="grid-row">
                     <div class="column-full">
@@ -99,6 +105,8 @@
                     </div>
                 </div>
 
+                @if (Model.AccountFunds.Records.Count() > 0)
+                {
                 <div class="grid-row">
                     <div class="column-full" id="AccountFunds-Tables">
 
@@ -158,21 +166,22 @@
                                         <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
                                     </tr>
 
-                                    if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
-                                    {
-                                        newFinancialYearAccountFunds = true;
-                                        startDateOfAccountFundsYear = accountFund.Date;
+                            if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
+                            {
+                                newFinancialYearAccountFunds = true;
+                                startDateOfAccountFundsYear = accountFund.Date;
                                     @:</tbody>
                                 @:</table>
                             }
+
 
                         }
 
                     </div>
                 </div>
+                            }
 
             </div>
-
 
             <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
 
@@ -231,10 +240,10 @@
                                     <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
                                 </tr>
 
-                                if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Records.Last().Equals(costEstimate))
-                                {
-                                    newFinancialYear = true;
-                                    startDateOfEstimationYear = costEstimate.Date;
+                        if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Records.Last().Equals(costEstimate))
+                        {
+                            newFinancialYear = true;
+                            startDateOfEstimationYear = costEstimate.Date;
                                 @:</tbody>
                             @:</table>
                         }
@@ -242,6 +251,7 @@
                 }
 
             </div>
+            }
 
             <div id="apprenticeships-added" class="tab-content">
                 <table class="small responsive">

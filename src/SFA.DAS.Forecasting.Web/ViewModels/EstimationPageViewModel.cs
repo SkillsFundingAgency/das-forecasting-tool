@@ -19,6 +19,8 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public bool AnyTransferApprenticeships => Any(FundingSource.Transfer);
         public bool AnyLevyApprenticeships => Any(FundingSource.Levy);
 
+        public bool AllApprenticeshipExpired { get; set; }
+
         private bool Any(FundingSource fundingSource)
         {
             return 

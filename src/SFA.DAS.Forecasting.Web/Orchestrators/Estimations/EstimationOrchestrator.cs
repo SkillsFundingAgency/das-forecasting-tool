@@ -53,15 +53,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             await RefreshCurrentBalance(accountId);
             var accountEstimation = await _estimationRepository.Get(accountId);
             var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation, _config.FeatureExpiredFunds);
-            estimationProjector.BuildProjections();
-            var projection = estimationProjector.Projections.FirstOrDefault();
-            var projectionType = projection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration;
-            var expiredFunds = await _expiredFundsService.GetExpiringFunds(estimationProjector.Projections, accountId, projectionType, DateTime.UtcNow);
-
-            if (expiredFunds.Any())
-            {
-                estimationProjector.ApplyExpiredFunds(expiredFunds);
-            }
 
             var viewModel = new EstimationPageViewModel
             {
@@ -84,26 +75,46 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                             TotalCost = o.TotalCost,
                             FundingSource = o.FundingSource
                         }).ToList(),
-                },
-                TransferAllowances = new EstimationTransferAllowanceVewModel
+                }
+            };
+
+
+            if (estimationProjector.IfAllApprenticeshipExpired())
+            {
+                viewModel.AllApprenticeshipExpired = true;
+            }
+            else
+            {
+                estimationProjector.BuildProjections();
+                var projection = estimationProjector.Projections.FirstOrDefault();
+                var projectionType = projection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration;
+                var expiredFunds = await _expiredFundsService.GetExpiringFunds(estimationProjector.Projections, accountId, projectionType, DateTime.UtcNow);
+
+                if (expiredFunds.Any())
+                {
+                    estimationProjector.ApplyExpiredFunds(expiredFunds);
+                }
+
+                viewModel.TransferAllowances = new EstimationTransferAllowanceVewModel
                 {
                     AnnualTransferAllowance = estimationProjector.TransferAllowance,
                     Records = estimationProjector?.Projections?.Skip(1)
-                        .Select(o => new EstimationTransferAllowance
+                            .Select(o => new EstimationTransferAllowance
+                            {
+                                Date = new DateTime(o.Year, o.Month, 1),
+                                ActualCost = o.ActualCosts.TransferFundsOut,
+                                EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
+                                RemainingAllowance = o.AvailableTransferFundsBalance
+                            }).ToList(),
+                };
+                viewModel.AccountFunds =
+                        new AccountFundsViewModel
                         {
-                            Date = new DateTime(o.Year, o.Month, 1),
-                            ActualCost = o.ActualCosts.TransferFundsOut,
-                            EstimatedCost = o.TransferModelledCosts.TransferFundsOut,
-                            RemainingAllowance = o.AvailableTransferFundsBalance
-                        }).ToList(),
-                },
-                AccountFunds =
-                    new AccountFundsViewModel
-                    {
-                        MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
-                        Records = GetAccountFunds(estimationProjector.Projections?.Skip(1))
-                    }
-            };
+                            MonthlyInstallmentAmount = estimationProjector.MonthlyInstallmentAmount,
+                            Records = GetAccountFunds(estimationProjector.Projections?.Skip(1))
+                        };
+            }
+
             return viewModel;
         }
 
