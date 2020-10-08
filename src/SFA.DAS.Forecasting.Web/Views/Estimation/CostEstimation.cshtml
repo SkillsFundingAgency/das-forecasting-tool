@@ -92,7 +92,7 @@
             </ul>
            
             <div id="account-funds" class="tab-content" style="display: none;">
-                @if (Model.AccountFunds != null && Model.AccountFunds.Records.Count() > 0)
+                @if (Model.AccountFunds != null && Model.AccountFunds.Records != null && Model.AccountFunds.Records.Count() > 0)
                 {
                     <div class="grid-row">
                         <div class="column-full">
@@ -179,7 +179,7 @@
 
             <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
 
-                @if (Model.TransferAllowances != null && Model.TransferAllowances.Records.Count() > 0)
+                @if (Model.TransferAllowances != null && Model.TransferAllowances.Records != null && Model.TransferAllowances.Records.Count() > 0)
                 {
                     <div class="grid-row">
                         <div class="column-full">
