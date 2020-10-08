@@ -32,7 +32,7 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
                 return true;
             }
        }
-       //TODO: will also need to make sure all courses start after today}
+
         public long EmployerAccountId => Model.EmployerAccountId;
 
         public AccountEstimation(AccountEstimationModel model, IVirtualApprenticeshipValidator validator, IDateTimeService dateTimeService)
