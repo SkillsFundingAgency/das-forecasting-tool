@@ -152,12 +152,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         [TestCase(-20, 12, false)]
         [TestCase(-15, 12, false)]
         [TestCase(-5, 10, true)]
-        public void Has_Valid_Apprenticeships_Returns_False_When_No_Active_Apprenticeshp(int deductNumberOfMonths, int numberOfMonths, bool isValid)
+        public void Has_Valid_Apprenticeships_Returns_False_When_No_Active_Apprenticeshp(int numberOfMonthsToAdd, int numberOfMonths, bool isValid)
         {
+            // arrange
             var estimation = ResolveEstimation();
-            var startDate = DateTime.Now.AddMonths(deductNumberOfMonths);
-            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, startDate.Month, startDate.Year, 5, numberOfMonths, 1000, FundingSource.Transfer);
-            Assert.AreEqual(isValid, estimation.HasValidApprenticeships);
+            var startDate = DateTime.Now.AddMonths(numberOfMonthsToAdd);
+            estimation.AddVirtualApprenticeship("course-1", "test course", 1, startDate.Month, startDate.Year, 5, numberOfMonths, 1000, FundingSource.Transfer);
+
+            //act
+            var isAppreniceshipValid = estimation.HasValidApprenticeships;
+
+            //assert
+            Assert.AreEqual(isValid, isAppreniceshipValid);
         }
     }
 }
