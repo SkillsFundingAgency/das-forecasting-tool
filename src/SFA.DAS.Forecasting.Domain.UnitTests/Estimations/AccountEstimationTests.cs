@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Domain.Shared.Validation;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -37,7 +38,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             _moqer.GetMock<IAccountEstimationRepository>()
                 .Setup(x => x.Get(It.IsAny<long>()))
                 .Returns(Task.FromResult(_moqer.Resolve<AccountEstimation>()));
-
+            _moqer.GetMock<IDateTimeService>()
+                .Setup(x => x.GetCurrentDateTime())
+                .Returns(new DateTimeService().GetCurrentDateTime());
         }
 
         private AccountEstimation ResolveEstimation()
@@ -143,6 +146,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
 
             var apprenticeship2 = estimation.AddVirtualApprenticeship("course-1", "test course", 1, 1, 2019, 5, 18, 1000, FundingSource.Levy);
             Assert.AreEqual(apprenticeship2.FundingSource, FundingSource.Levy);
+        }
+
+        
+        [TestCase(-20, 12, false)]
+        [TestCase(-15, 12, false)]
+        [TestCase(-5, 10, true)]
+        public void Has_Valid_Apprenticeships_Returns_False_When_No_Active_Apprenticeshp(int deductNumberOfMonths, int numberOfMonths, bool isValid)
+        {
+            var estimation = ResolveEstimation();
+            var startDate = DateTime.Now.AddMonths(deductNumberOfMonths);
+            var apprenticeship = estimation.AddVirtualApprenticeship("course-1", "test course", 1, startDate.Month, startDate.Year, 5, numberOfMonths, 1000, FundingSource.Transfer);
+            Assert.AreEqual(isValid, estimation.HasValidApprenticeships);
         }
     }
 }
