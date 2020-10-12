@@ -97,6 +97,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             _logger.Debug($"When adding apprentice StartDateYear: {vm.StartDateYear}");
             _logger.Debug($"When adding apprentice StartDateMonth: {vm.StartDateMonth}");
+
+            _logger.Debug($"When adding apprentice startDate: {vm.StartDate:dd/MM/yyyy}"); 
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
             if (vm.ApprenticeshipsId == null)
