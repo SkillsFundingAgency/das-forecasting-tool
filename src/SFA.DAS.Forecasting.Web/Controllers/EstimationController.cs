@@ -6,6 +6,7 @@ using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
@@ -18,17 +19,20 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
         private readonly AddEditApprenticeshipViewModelValidator _validator;
+        private readonly ILog _logger;
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
             IMembershipService membershipService,
-            AddEditApprenticeshipViewModelValidator validator)
+            AddEditApprenticeshipViewModelValidator validator,
+            ILog log)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService; 
             _validator = validator;
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
+            _logger = log;
         }
 
         [HttpGet]
@@ -91,6 +95,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Save(AddEditApprenticeshipsViewModel vm, string hashedAccountId, string estimationName)
         {
+            _logger.Debug($"When adding apprentice StartDateYear: {vm.StartDateYear}");
+            _logger.Debug($"When adding apprentice StartDateMonth: {vm.StartDateMonth}");
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
             if (vm.ApprenticeshipsId == null)

@@ -63,14 +63,9 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
                     dict.Add($"{nameof(vm.IsTransferFunded)}", "You can only fund Standards with your transfer allowance");
             }
 
-            if (vm.StartDateYear.ToString().Length < 4)
+            if ((vm.StartDateYear.ToString().Length < 4) || vm.StartDate < DateTime.Now.AddMonths(-1))
             {
                 dict.Add($"{nameof(vm.StartDateYear)}","The start date cannot be in the past");
-            }
-
-            if (vm.StartDate < DateTime.Now.AddMonths(-1))
-            {
-                dict.Add($"{nameof(vm.StartDateYear)}", "The start date cannot be in the past");
             }
 
             return dict;
