@@ -167,7 +167,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)
             {
                 await _addApprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
-                return RedirectToAction(nameof(StartEstimation), new { hashedaccountId = hashedAccountId });
+                return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
+                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName, apprenticeshipRemoved = true })
+                : RedirectToAction(nameof(StartEstimation), new { hashedaccountId = hashedAccountId });
             }
             else if (viewModel.ConfirmedDeletion.HasValue && !viewModel.ConfirmedDeletion.Value)
             {
