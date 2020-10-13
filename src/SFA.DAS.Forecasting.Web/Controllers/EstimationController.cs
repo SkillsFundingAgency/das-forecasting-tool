@@ -98,21 +98,21 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             _logger.Debug($"When adding apprentice StartDateYear: {vm.StartDateYear}");
             _logger.Debug($"When adding apprentice StartDateMonth: {vm.StartDateMonth}");
 
-            _logger.Debug($"When adding apprentice startDate: {vm.StartDate:dd/MM/yyyy}");
+            _logger.Debug($"When adding apprentice startDate: {vm.StartDate:dd/MM/yyyy}"); 
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-            var result = _validator.ValidateAdd(vm);
+                var result = _validator.ValidateAdd(vm);
 
-            foreach (var r in result)
-            {
-                ModelState.AddModelError(r.Key, r.Value);
-            }
+                foreach (var r in result)
+                {
+                    ModelState.AddModelError(r.Key, r.Value);
+                }
 
-
+           
             if (!ModelState.IsValid)
             {
                 viewModel.Courses = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false).Courses;
-
+                
                 return View("AddApprenticeships", viewModel);
             }
 
@@ -167,9 +167,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)
             {
                 await _addApprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
-                return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
-              ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName, apprenticeshipRemoved = true })
-              : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName });
+                return RedirectToAction(nameof(StartEstimation), new { hashedaccountId = hashedAccountId });
             }
             else if (viewModel.ConfirmedDeletion.HasValue && !viewModel.ConfirmedDeletion.Value)
             {
