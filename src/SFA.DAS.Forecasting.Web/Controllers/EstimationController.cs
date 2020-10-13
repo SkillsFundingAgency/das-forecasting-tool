@@ -98,33 +98,21 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             _logger.Debug($"When adding apprentice StartDateYear: {vm.StartDateYear}");
             _logger.Debug($"When adding apprentice StartDateMonth: {vm.StartDateMonth}");
 
-            _logger.Debug($"When adding apprentice startDate: {vm.StartDate:dd/MM/yyyy}"); 
+            _logger.Debug($"When adding apprentice startDate: {vm.StartDate:dd/MM/yyyy}");
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-            if (vm.ApprenticeshipsId == null)
-            {
-                var result = _validator.ValidateAdd(vm);
+            var result = _validator.ValidateAdd(vm);
 
-                foreach (var r in result)
-                {
-                    ModelState.AddModelError(r.Key, r.Value);
-                }
-            }
-            else
+            foreach (var r in result)
             {
-                var result = _validator.ValidateEdit(vm);
-
-                foreach (var r in result)
-                {
-                    ModelState.AddModelError(r.Key, r.Value);
-                }
+                ModelState.AddModelError(r.Key, r.Value);
             }
-           
+
 
             if (!ModelState.IsValid)
             {
                 viewModel.Courses = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false).Courses;
-                
+
                 return View("AddApprenticeships", viewModel);
             }
 
