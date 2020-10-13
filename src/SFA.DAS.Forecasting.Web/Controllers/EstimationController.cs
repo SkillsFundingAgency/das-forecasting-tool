@@ -110,6 +110,15 @@ namespace SFA.DAS.Forecasting.Web.Controllers
                     ModelState.AddModelError(r.Key, r.Value);
                 }
             }
+            else
+            {
+                var result = _validator.ValidateEdit(vm);
+
+                foreach (var r in result)
+                {
+                    ModelState.AddModelError(r.Key, r.Value);
+                }
+            }
            
 
             if (!ModelState.IsValid)

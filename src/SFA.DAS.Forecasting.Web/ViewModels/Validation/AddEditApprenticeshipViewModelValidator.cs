@@ -70,5 +70,17 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 
             return dict;
         }
+
+        public Dictionary<string, string> ValidateEdit(AddEditApprenticeshipsViewModel vm)
+        {
+            var dict = new Dictionary<string, string>();
+
+            if ((vm.StartDateYear.ToString().Length < 4) || vm.StartDate < DateTime.Now.AddMonths(-1))
+            {
+                dict.Add($"{nameof(vm.StartDateYear)}", "The start date cannot be in the past");
+            }
+
+            return dict;
+        }
     }
 }
