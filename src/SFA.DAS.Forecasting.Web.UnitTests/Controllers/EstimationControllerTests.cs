@@ -62,7 +62,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             var vm = new AddEditApprenticeshipsViewModel
             {
                 Course = null,
-                TotalCostAsString = "10"
+                TotalCostAsString = "10",
+                StartDateYear = DateTime.Now.Year,
+                StartDateMonth = DateTime.Now.Month
             };
 
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()
@@ -94,7 +96,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             {
                 Course = new ApprenticeshipCourse { Id = "123", FundingPeriods = fundingPeriods },
                 TotalCostAsString = costAsString,
-                NumberOfApprentices = 2
+                NumberOfApprentices = 2,
+                StartDateYear = DateTime.Now.Year,
+                StartDateMonth = DateTime.Now.Month
             };
 
             _moqer.GetMock<IAddApprenticeshipOrchestrator>()

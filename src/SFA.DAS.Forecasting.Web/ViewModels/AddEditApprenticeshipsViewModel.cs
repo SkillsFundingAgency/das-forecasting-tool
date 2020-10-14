@@ -57,7 +57,16 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         {
             get
             {
-                DateTime.TryParse($"{StartDateYear}-{StartDateMonth}-1", out var startDate);
+                string[] format = { "yyyy-M-dd" };
+                if (!DateTime.TryParseExact($"{StartDateYear}-{StartDateMonth}-01", 
+                           format,
+                           System.Globalization.CultureInfo.InvariantCulture,
+                           System.Globalization.DateTimeStyles.None, 
+                           out var startDate))
+                {
+                    return DateTime.MinValue;
+                }
+
                 return startDate;
             }
         }

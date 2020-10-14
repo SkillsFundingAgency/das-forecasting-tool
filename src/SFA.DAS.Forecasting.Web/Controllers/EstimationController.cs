@@ -6,6 +6,7 @@ using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
@@ -18,17 +19,20 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         private readonly IMembershipService _membershipService;
         private readonly AddEditApprenticeshipViewModelValidator _validator;
+        private readonly ILog _logger;
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
             IMembershipService membershipService,
-            AddEditApprenticeshipViewModelValidator validator)
+            AddEditApprenticeshipViewModelValidator validator,
+            ILog log)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _membershipService = membershipService; 
             _validator = validator;
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
+            _logger = log;
         }
 
         [HttpGet]
@@ -93,17 +97,14 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-            if (vm.ApprenticeshipsId == null)
-            {
                 var result = _validator.ValidateAdd(vm);
 
                 foreach (var r in result)
                 {
                     ModelState.AddModelError(r.Key, r.Value);
                 }
-            }
-           
 
+           
             if (!ModelState.IsValid)
             {
                 viewModel.Courses = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false).Courses;
@@ -162,13 +163,9 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)
             {
                 await _addApprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
-                return RedirectToAction(nameof(CostEstimation),
-                    new
-                    {
-                        hashedaccountId = hashedAccountId,
-                        estimateName = estimationName,
-                        apprenticeshipRemoved = true
-                    });
+                return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
+                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName, apprenticeshipRemoved = true })
+                : RedirectToAction(nameof(StartEstimation), new { hashedaccountId = hashedAccountId });
             }
             else if (viewModel.ConfirmedDeletion.HasValue && !viewModel.ConfirmedDeletion.Value)
             {
