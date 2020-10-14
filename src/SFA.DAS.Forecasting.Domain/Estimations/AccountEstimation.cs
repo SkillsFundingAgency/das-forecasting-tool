@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Estimations.Validation.VirtualApprenticeships;
+using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Payments;
 
@@ -11,17 +13,33 @@ namespace SFA.DAS.Forecasting.Domain.Estimations
     {
         internal AccountEstimationModel Model { get; }
         private readonly IVirtualApprenticeshipValidator _validator;
+        private readonly IDateTimeService _dateTimeService;
 
         public IReadOnlyCollection<VirtualApprenticeship> Apprenticeships => Model.Apprenticeships;
 
         public string Name => Model.EstimationName;
-        public bool HasValidApprenticeships => Model.Apprenticeships.Any(); //TODO: will also need to make sure all courses start after today
+        public bool HasValidApprenticeships {
+            get
+            {
+                if (!Model.Apprenticeships.Any())
+                    return false;
+
+                var latestPlannedEndDate = Model.Apprenticeships.Select(x => x.StartDate.AddMonths(x.TotalInstallments)).OrderByDescending(x => x).First().AddMonths(2).GetStartOfMonth();
+
+                if (latestPlannedEndDate < _dateTimeService.GetCurrentDateTime().GetStartOfMonth())
+                    return false;
+
+                return true;
+            }
+       }
+
         public long EmployerAccountId => Model.EmployerAccountId;
 
-        public AccountEstimation(AccountEstimationModel model, IVirtualApprenticeshipValidator validator)
+        public AccountEstimation(AccountEstimationModel model, IVirtualApprenticeshipValidator validator, IDateTimeService dateTimeService)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            _dateTimeService = dateTimeService;
         }
 
         public VirtualApprenticeship AddVirtualApprenticeship(string courseId, string courseTitle, int level, int startMonth, int startYear, int numberOfApprentices, int numberOfMonths, decimal totalCost, FundingSource fundingSource)

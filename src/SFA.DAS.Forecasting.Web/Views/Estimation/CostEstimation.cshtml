@@ -90,93 +90,96 @@
                     <li id="tab-remaining-transfer-allowance"><a href="#remaining-transfer-allowance">Remaining transfer allowance</a></li>
                 }
             </ul>
-
+           
             <div id="account-funds" class="tab-content" style="display: none;">
-                <div class="grid-row">
-                    <div class="column-full">
-                        <p>This table shows your estimated costs against your account projection</p>
-                        <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
+                @if (Model.AccountFunds != null && Model.AccountFunds.Records != null && Model.AccountFunds.Records.Count() > 0)
+                {
+                    <div class="grid-row">
+                        <div class="column-full">
+                            <p>This table shows your estimated costs against your account projection</p>
+                            <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="grid-row">
-                    <div class="column-full" id="AccountFunds-Tables">
+                    <div class="grid-row">
+                        <div class="column-full" id="AccountFunds-Tables">
 
-                        @{
-                            var newFinancialYearAccountFunds = true;
-                            var startDateOfAccountFundsYear = Model.AccountFunds.Records.First().Date;
-                        }
-
-                        @foreach (var accountFund in Model.AccountFunds.Records)
-                        {
-                            var tableRowClass = accountFund.Balance <= 0 ? "error-row" : "";
-                            var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
-
-                            if (newFinancialYearAccountFunds)
-                            {
-                                newFinancialYearAccountFunds = false;
-                                var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
-                                <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-
-
-
-
-                                @:<table class="small errorTable responsive">
-                                    <thead>
-                                        <tr>
-                                            <th class="nowrap tw-10">Date</th>
-                                            <th class="financial tippy tw-20" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
-                                                Your current costs
-                                                <br />
-                                                <span class="tip-info"><span class="info-title">info</span></span>
-                                            </th>
-                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
-                                                Estimated costs
-                                                <br />
-                                                <span class="tip-info"><span class="info-title">info</span></span>
-                                            </th>
-                                            <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds that could expire">
-                                                Expired funds
-                                                <br />
-                                                <span class="tip-info"><span class="info-title">info</span></span>
-                                            </th>
-                                            <th class="financial tippy tw-20" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
-                                                Balance
-                                                <br />
-                                                <span class="tip-info"><span class="info-title">info</span></span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    @:<tbody>
-                                    }
-
-                                    <tr class="@tableRowClass">
-                                        <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
-                                        <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
-                                        <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
-                                        <td class="financial" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
-                                        <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
-                                    </tr>
-
-                                    if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
-                                    {
-                                        newFinancialYearAccountFunds = true;
-                                        startDateOfAccountFundsYear = accountFund.Date;
-                                    @:</tbody>
-                                @:</table>
+                            @{
+                                var newFinancialYearAccountFunds = true;
+                                var startDateOfAccountFundsYear = Model.AccountFunds.Records.First().Date;
                             }
 
-                        }
+                            @foreach (var accountFund in Model.AccountFunds.Records)
+                            {
+                                var tableRowClass = accountFund.Balance <= 0 ? "error-row" : "";
+                                var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
 
+                                if (newFinancialYearAccountFunds)
+                                {
+                                    newFinancialYearAccountFunds = false;
+                                    var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
+                                    <h3 class="heading-medium">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+
+
+
+
+                                    @:<table class="small errorTable responsive">
+                                        <thead>
+                                            <tr>
+                                                <th class="nowrap tw-10">Date</th>
+                                                <th class="financial tippy tw-20" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
+                                                    Your current costs
+                                                    <br />
+                                                    <span class="tip-info"><span class="info-title">info</span></span>
+                                                </th>
+                                                <th class="financial tippy tw-25" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
+                                                    Estimated costs
+                                                    <br />
+                                                    <span class="tip-info"><span class="info-title">info</span></span>
+                                                </th>
+                                                <th class="financial tippy tw-25" data-tippy-trigger="click" title="The estimated funds that could expire">
+                                                    Expired funds
+                                                    <br />
+                                                    <span class="tip-info"><span class="info-title">info</span></span>
+                                                </th>
+                                                <th class="financial tippy tw-20" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                                                    Balance
+                                                    <br />
+                                                    <span class="tip-info"><span class="info-title">info</span></span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        @:<tbody>
+                                        }
+
+                                        <tr class="@tableRowClass">
+                                            <td class="nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
+                                            <td class="financial" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
+                                            <td class="financial" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
+                                            <td class="financial" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
+                                            <td class="financial @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
+                                        </tr>
+
+                                if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
+                                {
+                                    newFinancialYearAccountFunds = true;
+                                    startDateOfAccountFundsYear = accountFund.Date;
+                                        @:</tbody>
+                                    @:</table>
+                                }
+
+                            }
+
+                        </div>
                     </div>
+
+                                }
                 </div>
-
-            </div>
-
+            
 
             <div id="remaining-transfer-allowance" class="tab-content" style="display: none;">
 
-                @if (Model.TransferAllowances != null)
+                @if (Model.TransferAllowances != null && Model.TransferAllowances.Records != null && Model.TransferAllowances.Records.Count() > 0)
                 {
                     <div class="grid-row">
                         <div class="column-full">
