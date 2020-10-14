@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.ApprenticeshipCourses;
 using SFA.DAS.Forecasting.Models.Estimation;
-using FundingPeriod = SFA.DAS.Apprenticeships.Api.Types.FundingPeriod;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
 {
-    [TestFixture]
-    public class StandardsServiceTests
+    public class FrameworksServiceTests
     {
         private AutoMoqer _moqer;
         private List<ApprenticeshipCourse> _summaries;
@@ -31,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     Id = "test-123",
                     Level = 1,
                     Duration = 18,
-                    CourseType = ApprenticeshipCourseType.Standard,
+                    CourseType = ApprenticeshipCourseType.Framework,
                     FundingCap = 10000,
                     Title = "Test course",
                     FundingPeriods = new List<Models.Estimation.FundingPeriod>()
@@ -41,7 +36,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     Id = "test-456",
                     Level = 1,
                     Duration = 24,
-                    CourseType = ApprenticeshipCourseType.Framework,
+                    CourseType = ApprenticeshipCourseType.Standard,
                     FundingCap = 10000,
                     Title = "Test course",
                     FundingPeriods = new List<Models.Estimation.FundingPeriod>()
@@ -51,21 +46,21 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                     Id = "test-789",
                     Level = 1,
                     Duration = 24,
-                    CourseType = ApprenticeshipCourseType.Standard,
+                    CourseType = ApprenticeshipCourseType.Framework,
                     FundingCap = 10000,
                     Title = "Test course",
                     FundingPeriods = new List<Models.Estimation.FundingPeriod>()
                 }
             };
             _moqer.GetMock<IApiClient>()
-                .Setup(x => x.Get<List<ApprenticeshipCourse>>(It.IsAny<GetStandardsApiRequest>()))
+                .Setup(x => x.Get<List<ApprenticeshipCourse>>(It.IsAny<GetFrameworksApiRequest>()))
                 .ReturnsAsync(_summaries);
         }
 
         [Test]
-        public async Task Gets_All_Active_Standards()
+        public async Task Gets_All_Active_Frameworks()
         {
-            var service = _moqer.Resolve<StandardsService>();
+            var service = _moqer.Resolve<FrameworksService>();
             var courses = await service.GetCourses();
             Assert.AreEqual(2, courses.Count);
             Assert.IsTrue(courses.All(course => course.Id == "test-123" || course.Id == "test-789"));

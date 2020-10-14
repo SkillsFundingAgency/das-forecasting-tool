@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
+using Microsoft.Extensions.Options;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Domain.ApprenticeshipCourses;
 using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
@@ -13,24 +15,21 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 
     public class FrameworksService : IFrameworksService
     {
-        private readonly IFrameworkApiClient _frameworkApiClient;
-        private readonly IApprenticehipsCourseMapper _mapper;
+        private readonly IApiClient _apiClient;
+        private readonly IApplicationConfiguration _config;
 
-        public FrameworksService(IFrameworkApiClient frameworkApiClient, IApprenticehipsCourseMapper mapper)
+        public FrameworksService(IApiClient apiClient, IApplicationConfiguration config)
         {
-            _frameworkApiClient = frameworkApiClient;
-            _mapper = mapper;
+            _apiClient = apiClient;
+            _config = config;
         }
 
         public async Task<List<ApprenticeshipCourse>> GetCourses()
         {
-            var frameworks = await _frameworkApiClient.GetAllAsync();
-
-            return frameworks
-                .Where(course => course.IsActiveFramework)
-                .Where(c => c.FundingPeriods != null)
-                .Select(_mapper.Map)
-                .ToList();
+            var request = new GetFrameworksApiRequest(_config.ApprenticeshipsApiBaseUri);
+            var response = await _apiClient.Get<List<ApprenticeshipCourse>>(request);
+            
+            return response.Select(c => c).Where(f => f.CourseType == ApprenticeshipCourseType.Framework).ToList();
         }
     }
 }

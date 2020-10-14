@@ -170,6 +170,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ApprenticeshipCourses\FrameworksServiceTests.cs" />
     <Compile Include="ApprenticeshipCourses\GetStandardsHandlerTests.cs" />
     <Compile Include="ApprenticeshipCourses\StandardsServiceTests.cs" />
     <Compile Include="ApprenticeshipCourses\StandardSummaryMapperTest.cs" />

@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using SFA.DAS.Apprenticeships.Api.Client;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Domain.ApprenticeshipCourses;
 using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
@@ -14,19 +17,21 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 
     public class StandardsService: IStandardsService
     {
-        private readonly IStandardApiClient _standardApiClient;
-        private readonly IApprenticehipsCourseMapper _mapper;
+        private readonly IApiClient _apiClient;
+        private readonly ApplicationConfiguration _config;
 
-        public StandardsService(IStandardApiClient standardApiClient, IApprenticehipsCourseMapper mapper)
+        public StandardsService(IApiClient apiClient, ApplicationConfiguration config)
         {
-            _standardApiClient = standardApiClient ?? throw new ArgumentNullException(nameof(standardApiClient));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _apiClient = apiClient;
+            _config = config;
         }
 
         public async Task<List<ApprenticeshipCourse>> GetCourses()
         {
-            var standards = (await _standardApiClient.GetAllAsync()).ToList();
-            return standards.Where(course => course.IsActiveStandard).Select(_mapper.Map).ToList();
+            var request = new GetStandardsApiRequest(_config.ApprenticeshipsApiBaseUri);
+            var response = await _apiClient.Get<List<ApprenticeshipCourse>>(request);
+
+            return response.Select(c => c).Where(s => s.CourseType == ApprenticeshipCourseType.Standard).ToList();
         }
 
     }
