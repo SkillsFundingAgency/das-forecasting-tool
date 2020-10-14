@@ -95,10 +95,6 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Save(AddEditApprenticeshipsViewModel vm, string hashedAccountId, string estimationName)
         {
-            _logger.Debug($"When adding apprentice StartDateYear: {vm.StartDateYear}");
-            _logger.Debug($"When adding apprentice StartDateMonth: {vm.StartDateMonth}");
-
-            _logger.Debug($"When adding apprentice startDate: {vm.StartDate:dd/MM/yyyy}"); 
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
                 var result = _validator.ValidateAdd(vm);
