@@ -92,12 +92,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApprenticeshipCourses\ApiClient.cs" />
-    <Compile Include="ApprenticeshipCourses\ForecastingApi.cs" />
-    <Compile Include="ApprenticeshipCourses\GetFrameworksApiRequest.cs" />
-    <Compile Include="ApprenticeshipCourses\GetStandardsApiRequest.cs" />
-    <Compile Include="ApprenticeshipCourses\IApiClient.cs" />
-    <Compile Include="ApprenticeshipCourses\IGetApiRequest.cs" />
     <Compile Include="Balance\CurrentBalance.cs" />
     <Compile Include="Balance\CurrentBalanceRepository.cs" />
     <Compile Include="Balance\Services\IAccountBalanceService.cs" />
@@ -154,6 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="ApprenticeshipCourses" />
     <Folder Include="Payments\Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

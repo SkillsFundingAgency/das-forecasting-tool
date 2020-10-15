@@ -261,6 +261,11 @@
     <Compile Include="Infrastructure\Configuration\StartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IApplicationConfiguration.cs" />
     <Compile Include="Infrastructure\MessageHandler.cs" />
+    <Compile Include="Infrastructure\OuterApi\ApiClient.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetFrameworksApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetStandardsApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\IApiClient.cs" />
+    <Compile Include="Infrastructure\OuterApi\IGetApiRequest.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentAdapter.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentSession.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentSessionConnectionString.cs" />

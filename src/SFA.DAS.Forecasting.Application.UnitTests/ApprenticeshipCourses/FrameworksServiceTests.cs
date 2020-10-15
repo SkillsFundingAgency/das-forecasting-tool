@@ -5,7 +5,7 @@ using AutoMoq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
-using SFA.DAS.Forecasting.Domain.ApprenticeshipCourses;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
