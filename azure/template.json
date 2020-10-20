@@ -354,7 +354,7 @@
                                 "value": "[parameters('apprenticeshipsApiBaseUri')]"
                             },
                             {
-                                "name": "apprenticeshipsApiSubscriptionKey",
+                                "name": "ApprenticeshipsApiSubscriptionKey",
                                 "value": "[reference(resourceId(parameters('sharedApimResourceGroup'),'Microsoft.ApiManagement/service/subscriptions', parameters('sharedApimName'), variables('functionAppNames')[copyIndex()]), '2019-01-01').primaryKey]"
                             },
                             {
