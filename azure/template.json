@@ -145,9 +145,6 @@
         "apprenticeshipsApiBaseUri": {
             "type": "string"            
         },
-        "apprenticeshipsApiSubscriptionKey": {
-            "type": "securestring"
-        },
         "zenDeskSectionId": {
             "type": "string"
         },
