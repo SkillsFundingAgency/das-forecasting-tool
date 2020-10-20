@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
         }
         private void AddHeaders()
         {
-            _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipApiKey);
+            _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipsApiSubscriptionKey);
             _httpClient.DefaultRequestHeaders.Add("X-Version", "1");
         }
     }
