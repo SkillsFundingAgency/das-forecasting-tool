@@ -25,6 +25,12 @@
         "sharedAppServicePlanName": {
             "type": "string"
         },
+        "sharedApimResourceGroup": {
+            "type": "string"
+        },
+        "sharedApimName": {
+            "type": "string"
+        },
         "functionsAppServicePlanSize": {
             "type": "string",
             "allowedValues": [
@@ -137,8 +143,10 @@
             "type": "string"
         },
         "apprenticeshipsApiBaseUri": {
-            "type": "string",
-            "defaultValue": "https://findapprenticeshiptraining-api.apprenticeships.education.gov.uk/"
+            "type": "string"            
+        },
+        "apprenticeshipsApiSubscriptionKey": {
+            "type": "securestring"
         },
         "zenDeskSectionId": {
             "type": "string"
@@ -349,6 +357,10 @@
                                 "value": "[parameters('apprenticeshipsApiBaseUri')]"
                             },
                             {
+                                "name": "apprenticeshipsApiSubscriptionKey",
+                                "value": "[reference(resourceId(parameters('sharedApimResourceGroup'),'Microsoft.ApiManagement/service/subscriptions', parameters('sharedApimName'), variables('functionAppNames')[copyIndex()]), '2019-01-01').primaryKey]"
+                            },
+                            {
                                 "name": "AzureWebJobsServiceBus",
                                 "value": "[parameters('AzureWebJobsServiceBus')]"
                             },
@@ -433,7 +445,8 @@
                 }
             },
             "dependsOn": [
-                "functions-app-service-plan"
+                "functions-app-service-plan",
+                "apim-subscription-copy"
             ]
         },
         {
@@ -803,6 +816,34 @@
             "dependsOn": [
                 "keyvault"
             ]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "[concat('apim-subscription-',variables('functionAppNames')[copyIndex()])]",
+            "resourceGroup": "[parameters('sharedApimResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+            "copy": {
+                "name": "apim-subscription-copy",
+                "count": "[length(variables('functionAppNames'))]"
+            },
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'apim/apim-subscription.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apimName": {
+                        "value": "[parameters('sharedApimName')]"
+                    },
+                    "subscriptionName": {
+                        "value": "[variables('functionAppNames')[copyIndex()]]"
+                    },
+                    "subscriptionScope": {
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/FindApprenticeshipTrainingOuterApi')]"
+                    }
+                }
+            }
         }
     ],
     "outputs": {
