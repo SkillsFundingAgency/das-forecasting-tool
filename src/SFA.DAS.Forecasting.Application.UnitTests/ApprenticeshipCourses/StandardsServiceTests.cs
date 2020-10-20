@@ -38,16 +38,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                 },
                 new ApprenticeshipCourse
                 {
-                    Id = "test-456",
-                    Level = 1,
-                    Duration = 24,
-                    CourseType = ApprenticeshipCourseType.Framework,
-                    FundingCap = 10000,
-                    Title = "Test course",
-                    FundingPeriods = new List<Models.Estimation.FundingPeriod>()
-                },
-                new ApprenticeshipCourse
-                {
                     Id = "test-789",
                     Level = 1,
                     Duration = 24,
