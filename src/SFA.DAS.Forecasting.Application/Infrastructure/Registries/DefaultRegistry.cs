@@ -1,5 +1,4 @@
-﻿using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.EAS.Account.Api.Client;
+﻿using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
@@ -45,16 +44,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IEmployerDatabaseService>()
                 .Use<EmployerDatabaseService>();
-
-            For<IStandardApiClient>()
-                .Use<StandardApiClient>()
-                .Ctor<string>("baseUri")
-                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApprenticeshipsApiBaseUri);
-
-            For<IFrameworkApiClient>()
-                .Use<FrameworkApiClient>()
-                .Ctor<string>("baseUri")
-                .Is(ctx => ctx.GetInstance<IApplicationConfiguration>().ApprenticeshipsApiBaseUri);
 
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()

@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 using AutoMoq;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Models.Estimation;
-using FundingPeriod = SFA.DAS.Apprenticeships.Api.Types.FundingPeriod;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
 {
