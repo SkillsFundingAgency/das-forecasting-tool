@@ -1,14 +1,17 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
+﻿using System.Net.Http;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.HashingService;
+using SFA.DAS.Http;
 using SFA.DAS.Provider.Events.Api.Client;
 using StructureMap;
 
@@ -56,6 +59,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IExpiredFunds>()
                 .Use<EmployerFinance.Types.Models.ExpiredFunds>();
+
+            For<IApiClient>()
+                .Use<ApiClient>()
+                .Ctor<HttpClient>("httpClient")
+                .Is(new HttpClientBuilder().WithDefaultHeaders().Build());
+
+
         }
     }
 }
