@@ -143,7 +143,7 @@
             "type": "string"
         },
         "apprenticeshipsApiBaseUri": {
-            "type": "string"            
+            "type": "string"
         },
         "zenDeskSectionId": {
             "type": "string"
@@ -816,13 +816,9 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('apim-subscription-',variables('functionAppNames')[copyIndex()])]",
+            "name": "[concat('apim-subscription-',variables('functionAppNames')[0])]",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
-            "copy": {
-                "name": "apim-subscription-copy",
-                "count": "[length(variables('functionAppNames'))]"
-            },
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -834,10 +830,10 @@
                         "value": "[parameters('sharedApimName')]"
                     },
                     "subscriptionName": {
-                        "value": "[variables('functionAppNames')[copyIndex()]]"
+                        "value": "[variables('functionAppNames')[0]]"
                     },
                     "subscriptionScope": {
-                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/FindApprenticeshipTrainingOuterApi')]"
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/ForecastingOuterApi')]"
                     }
                 }
             }
