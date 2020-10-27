@@ -15,37 +15,42 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
     public class StandardsServiceTests
     {
         private AutoMoqer _moqer;
-        private List<ApprenticeshipCourse> _summaries;
+        private ApprenticeshipCourseResponse _summaries;
 
         [SetUp]
         public void SetUp()
         {
             _moqer = new AutoMoqer();
-            _summaries = new List<ApprenticeshipCourse>
-            {
-                new ApprenticeshipCourse
+            _summaries =
+                new ApprenticeshipCourseResponse
                 {
-                    Id = "test-123",
-                    Level = 1,
-                    Duration = 18,
-                    CourseType = ApprenticeshipCourseType.Standard,
-                    FundingCap = 10000,
-                    Title = "Test course",
-                    FundingPeriods = new List<Models.Estimation.FundingPeriod>()
-                },
-                new ApprenticeshipCourse
-                {
-                    Id = "test-789",
-                    Level = 1,
-                    Duration = 24,
-                    CourseType = ApprenticeshipCourseType.Standard,
-                    FundingCap = 10000,
-                    Title = "Test course",
-                    FundingPeriods = new List<Models.Estimation.FundingPeriod>()
-                }
-            };
+                    Standards = new List<ApprenticeshipCourse>
+                    {
+                        new ApprenticeshipCourse
+                        {
+                            Id = "test-123",
+                            Level = 1,
+                            Duration = 18,
+                            CourseType = ApprenticeshipCourseType.Standard,
+                            FundingCap = 10000,
+                            Title = "Test course",
+                            FundingPeriods = new List<Models.Estimation.FundingPeriod>()
+                        },
+                        new ApprenticeshipCourse
+                        {
+                            Id = "test-789",
+                            Level = 1,
+                            Duration = 24,
+                            CourseType = ApprenticeshipCourseType.Standard,
+                            FundingCap = 10000,
+                            Title = "Test course",
+                            FundingPeriods = new List<Models.Estimation.FundingPeriod>()
+                        }
+                    }
+                };
+                
             _moqer.GetMock<IApiClient>()
-                .Setup(x => x.Get<List<ApprenticeshipCourse>>(It.IsAny<GetStandardsApiRequest>()))
+                .Setup(x => x.Get<ApprenticeshipCourseResponse>(It.IsAny<GetStandardsApiRequest>()))
                 .ReturnsAsync(_summaries);
         }
 
