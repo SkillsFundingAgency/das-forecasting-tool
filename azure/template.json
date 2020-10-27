@@ -143,7 +143,10 @@
             "type": "string"
         },
         "apprenticeshipsApiBaseUri": {
-            "type": "string"            
+            "type": "string"
+        },
+        "apprenticeshipsApiSubscriptionKey": {
+            "type": "securestring"
         },
         "zenDeskSectionId": {
             "type": "string"
@@ -185,6 +188,7 @@
         ],
         "storageAccountName": "[concat('das',toLower(parameters('resourceEnvironmentName')),parameters('serviceName'),'str')]",
         "cosmosDbName": "[concat(variables('resourceNamePrefix'), '-cdb')]",
+
         "functionAppNames": [
             "[concat(variables('resourceNamePrefix'),'-apc-fa')]",
             "[concat(variables('resourceNamePrefix'),'-comt-fa')]",
@@ -355,7 +359,7 @@
                             },
                             {
                                 "name": "ApprenticeshipsApiSubscriptionKey",
-                                "value": "[reference(resourceId(parameters('sharedApimResourceGroup'),'Microsoft.ApiManagement/service/subscriptions', parameters('sharedApimName'), variables('functionAppNames')[copyIndex()]), '2019-01-01').primaryKey]"
+                                "value": "[parameters('apprenticeshipsApiSubscriptionKey')]"
                             },
                             {
                                 "name": "AzureWebJobsServiceBus",
@@ -443,7 +447,7 @@
             },
             "dependsOn": [
                 "functions-app-service-plan",
-                "apim-subscription-copy"
+                "apim-subscription-forecasting"
             ]
         },
         {
@@ -816,13 +820,10 @@
         },
         {
             "apiVersion": "2017-05-10",
-            "name": "[concat('apim-subscription-',variables('functionAppNames')[copyIndex()])]",
+            "name": "apim-subscription-forecasting",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
-            "copy": {
-                "name": "apim-subscription-copy",
-                "count": "[length(variables('functionAppNames'))]"
-            },
+
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -834,10 +835,10 @@
                         "value": "[parameters('sharedApimName')]"
                     },
                     "subscriptionName": {
-                        "value": "[variables('functionAppNames')[copyIndex()]]"
+                        "value": "[variables('functionAppNames')[0]]"
                     },
                     "subscriptionScope": {
-                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/FindApprenticeshipTrainingOuterApi')]"
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/ForecastingOuterApi')]"
                     }
                 }
             }
