@@ -96,7 +96,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             return commitment => commitment.EmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Levy
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
-                                 && commitment.Status != Status.Stopped && commitment.Status != Status.Completed;
+                                 && (commitment.ActualEndDate == null ||  commitment.ActualEndDate <= DateTime.UtcNow);
         }
 
         private Expression<Func<CommitmentModel, bool>> GetReceivingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
@@ -104,7 +104,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             return commitment => commitment.EmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
-                                 && commitment.Status != Status.Stopped && commitment.Status != Status.Completed;
+                                 && (commitment.ActualEndDate == null || commitment.ActualEndDate <= DateTime.UtcNow);
         }
 
         private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
@@ -112,7 +112,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
                                  && commitment.FundingSource == FundingSource.Transfer
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
-                                 && commitment.Status != Status.Stopped && commitment.Status != Status.Completed;
+                                 && (commitment.ActualEndDate == null || commitment.ActualEndDate <= DateTime.UtcNow);
         }
 
         private Expression<Func<CommitmentModel, bool>> GetCoInvestmentCommitments(long employerAccountId)
@@ -120,7 +120,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
             return commitment => commitment.EmployerAccountId == employerAccountId
                                  && (commitment.FundingSource == FundingSource.CoInvestedEmployer ||
                                      commitment.FundingSource == FundingSource.CoInvestedSfa)
-                                 && commitment.Status != Status.Stopped && commitment.Status != Status.Completed;
+                                 && (commitment.ActualEndDate == null || commitment.ActualEndDate <= DateTime.UtcNow);
         }
 
         public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
