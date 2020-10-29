@@ -22,9 +22,9 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 
         public async Task<List<ApprenticeshipCourse>> GetCourses()
         {
-            var response = await _apiClient.Get<ApprenticeshipCourseResponse>(new GetFrameworksApiRequest());
+            var response = await _apiClient.Get<ApprenticeshipCourseFrameworkResponse>(new GetFrameworksApiRequest());
             
-            return response.Standards.Select(c => c).ToList();
+            return response.Frameworks.Select(c => c).ToList();
         }
     }
 }

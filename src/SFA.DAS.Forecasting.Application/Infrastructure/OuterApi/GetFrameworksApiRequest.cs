@@ -8,8 +8,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
         public string GetUrl => $"frameworks";
     }
 
-    public class ApprenticeshipCourseResponse
+    public class ApprenticeshipCourseFrameworkResponse
     {
-        public List<ApprenticeshipCourse> Standards { get; set; }
+        public List<ApprenticeshipCourse> Frameworks { get; set; }
     }
 }

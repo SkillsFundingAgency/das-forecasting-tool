@@ -15,14 +15,14 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
     public class StandardsServiceTests
     {
         private AutoMoqer _moqer;
-        private ApprenticeshipCourseResponse _summaries;
+        private ApprenticeshipCourseStandardsResponse _summaries;
 
         [SetUp]
         public void SetUp()
         {
             _moqer = new AutoMoqer();
             _summaries =
-                new ApprenticeshipCourseResponse
+                new ApprenticeshipCourseStandardsResponse
                 {
                     Standards = new List<ApprenticeshipCourse>
                     {
@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
                 };
                 
             _moqer.GetMock<IApiClient>()
-                .Setup(x => x.Get<ApprenticeshipCourseResponse>(It.IsAny<GetStandardsApiRequest>()))
+                .Setup(x => x.Get<ApprenticeshipCourseStandardsResponse>(It.IsAny<GetStandardsApiRequest>()))
                 .ReturnsAsync(_summaries);
         }
 
