@@ -18,7 +18,8 @@
     [NumberOfInstallments] SMALLINT NOT NULL,
 	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Commitment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id) default(1), 
     [UpdatedDateTime] DATETIME NOT NULL DEFAULT GETDATE(),
-	[HasHadPayment] BIT NOT NULL default(1)
+	[HasHadPayment] BIT NOT NULL default(1), 
+    [Status] INT NULL
 )
 
 GO

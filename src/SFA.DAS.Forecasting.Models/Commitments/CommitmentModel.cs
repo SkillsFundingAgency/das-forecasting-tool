@@ -24,5 +24,13 @@ namespace SFA.DAS.Forecasting.Models.Commitments
         public FundingSource FundingSource { get; set; }
         public DateTime? UpdatedDateTime { get; set; }
         public bool HasHadPayment { get; set; }
+        public Status? Status { get; set; }
+    }
+
+    public enum Status
+    {
+        LiveOrWaitingToStart = 0,
+        Stopped = 1,
+        Completed = 2
     }
 }
