@@ -60,7 +60,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.NumberOfInstallments != Commitment.NumberOfInstallments
                     || model.HasHadPayment != Commitment.HasHadPayment))
             {
-                if (Commitment.Status != Status.Completed && Commitment.Status == Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
+                if (Commitment.Status != Status.Completed && Commitment.Status != Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
                 {
                     Commitment.ActualEndDate = model.ActualEndDate;
                 }
@@ -98,7 +98,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.EmployerAccountId = model.EmployerAccountId;
             Commitment.UpdatedDateTime = model.UpdatedDateTime;
             Commitment.HasHadPayment = model.HasHadPayment;
-            if (Commitment.Status != Status.Completed && Commitment.Status == Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
+            if (Commitment.Status != Status.Completed && Commitment.Status != Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
             {
                 Commitment.ActualEndDate = model.ActualEndDate;
             }
