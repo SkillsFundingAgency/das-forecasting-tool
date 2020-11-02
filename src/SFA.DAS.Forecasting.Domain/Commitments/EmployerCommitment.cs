@@ -25,6 +25,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         public string CourseName => Commitment.CourseName;
         public int? CourseLevel => Commitment.CourseLevel;
 
+
         public FundingSource FundingSource => Commitment.FundingSource;
 
         public EmployerCommitment(CommitmentModel commitment)
@@ -60,7 +61,10 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.NumberOfInstallments != Commitment.NumberOfInstallments
                     || model.HasHadPayment != Commitment.HasHadPayment))
             {
-                Commitment.ActualEndDate = model.ActualEndDate;
+                if (Commitment.Status != Models.Commitments.Status.Completed && Commitment.Status != SFA.DAS.Forecasting.Models.Commitments.Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
+                {
+                    Commitment.ActualEndDate = model.ActualEndDate;
+                }
                 Commitment.ApprenticeName = model.ApprenticeName;
                 Commitment.ApprenticeshipId = model.ApprenticeshipId;
                 Commitment.StartDate = model.StartDate;
@@ -70,6 +74,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 Commitment.NumberOfInstallments = model.NumberOfInstallments;
                 Commitment.UpdatedDateTime = model.UpdatedDateTime;
                 Commitment.HasHadPayment = model.HasHadPayment;
+                Commitment.Status = model.Status;
                 return true;
             }
 
@@ -87,7 +92,6 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.ProviderName = model.ProviderName;
             Commitment.StartDate = model.StartDate;
             Commitment.PlannedEndDate = model.PlannedEndDate;
-            Commitment.ActualEndDate = model.ActualEndDate;
             Commitment.MonthlyInstallment = model.MonthlyInstallment;
             Commitment.CompletionAmount = model.CompletionAmount;
             Commitment.NumberOfInstallments = model.NumberOfInstallments;
@@ -96,6 +100,12 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.EmployerAccountId = model.EmployerAccountId;
             Commitment.UpdatedDateTime = model.UpdatedDateTime;
             Commitment.HasHadPayment = model.HasHadPayment;
+            if (Commitment.Status != Models.Commitments.Status.Completed && Commitment.Status != Models.Commitments.Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
+            {
+                Commitment.ActualEndDate = model.ActualEndDate;
+            }
+            Commitment.Status = model.Status;
+
             return true;
         }
     }
