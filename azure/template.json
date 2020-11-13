@@ -144,7 +144,7 @@
             "type": "string"
         },
         "zenDeskSnippetKey": {
-            "type": "string"
+            "type": "securestring"
         },
         "configurationStorageConnectionString": {
             "type": "securestring"
@@ -321,7 +321,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'function-app.json')]",
+                    "uri": "[concat(variables('deploymentUrlBase'),'function-app-v2.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -335,100 +335,102 @@
                         "value": "[resourceGroup().name]"
                     },
                     "functionAppAppSettings": {
-                        "value": [
-                            {
-                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.InstrumentationKey.value]"
-                            },
-                            {
-                                "name": "AppName",
-                                "value": "[concat(variables('functionAppNames')[copyIndex()])]"
-                            },
-                            {
-                                "name": "ApprenticeshipsApiBaseUri",
-                                "value": "[parameters('apprenticeshipsApiBaseUri')]"
-                            },
-                            {
-                                "name": "AzureWebJobsServiceBus",
-                                "value": "[parameters('AzureWebJobsServiceBus')]"
-                            },
-                            {
-                                "name": "AzureWebJobsStorage",
-                                "value": "[reference('storage-account').outputs.storageConnectionString.value]"
-                            },
-                            {
-                                "name": "CommitmentsV1ApiBaseUrl",
-                                "value": "[parameters('commitmentsV1ApiBaseUrl')]"
-                            },
-                            {
-                                "name": "CommitmentsV1BaseUrl",
-                                "value": "[parameters('commitmentsV1BaseUrl')]"
-                            },
-                            {
-                                "name": "CommitmentsV1ClientId",
-                                "value": "[parameters('CommitmentsV1ClientId')]"
-                            },
-                            {
-                                "name": "CommitmentsV1ClientSecret",
-                                "value": "[parameters('CommitmentsV1ClientSecret')]"
-                            },
-                            {
-                                "name": "CommitmentsV1ClientToken",
-                                "value": "[parameters('commitmentsV1ClientToken')]"
-                            },
-                            {
-                                "name": "CommitmentsV1IdentifierUri",
-                                "value": "[parameters('CommitmentsV1IdentifierUri')]"
-                            },
-                            {
-                                "name": "CommitmentsV1Tenant",
-                                "value": "[parameters('CommitmentsV1Tenant')]"
-                            },
-                            {
-                                "name": "ConfigurationStorageConnectionString",
-                                "value": "[parameters('configurationStorageConnectionString')]"
-                            },
-                            {
-                                "name": "EnvironmentName",
-                                "value": "[parameters('environmentName')]"
-                            },
-                            {
-                                "name": "FUNCTIONS_EXTENSION_VERSION",
-                                "value": "~1"
-                            },
-                            {
-                                "name": "KeyVaultName",
-                                "value": "[variables('appSettingsKeyVaultName')]"
-                            },
-                            {
-                                "name": "LoggingRedisConnectionString",
-                                "value": "[parameters('loggingRedisConnectionString')]"
-                            },
-                            {
-                                "name": "LoggingRedisKey",
-                                "value": "[parameters('loggingRedisKey')]"
-                            },
-                            {
-                                "name": "NumberOfMonthsToProject",
-                                "value": "[parameters('numberOfMonthsToProject')]"
-                            },
-                            {
-                                "name": "SecondsToWaitToAllowProjections",
-                                "value": "[parameters('secondsToWaitToAllowProjections')]"
-                            },
-                            {
-                                "name": "StorageConnectionString",
-                                "value": "[reference('storage-account').outputs.StorageConnectionString.value]"
-                            },
-                            {
-                                "name": "WEBSITE_LOAD_CERTIFICATES",
-                                "value": "[parameters('certificateThumbprintsToLoad')]"
-                            },
-                            {
-                                "name": "FUNCTIONS_WORKER_RUNTIME",
-                                "value": "dotnet"
-                            }
-                        ]
+                        "value": {
+                            "array": [
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.InstrumentationKey.value]"
+                                },
+                                {
+                                    "name": "AppName",
+                                    "value": "[concat(variables('functionAppNames')[copyIndex()])]"
+                                },
+                                {
+                                    "name": "ApprenticeshipsApiBaseUri",
+                                    "value": "[parameters('apprenticeshipsApiBaseUri')]"
+                                },
+                                {
+                                    "name": "AzureWebJobsServiceBus",
+                                    "value": "[parameters('AzureWebJobsServiceBus')]"
+                                },
+                                {
+                                    "name": "AzureWebJobsStorage",
+                                    "value": "[reference('storage-account').outputs.storageConnectionString.value]"
+                                },
+                                {
+                                    "name": "CommitmentsV1ApiBaseUrl",
+                                    "value": "[parameters('commitmentsV1ApiBaseUrl')]"
+                                },
+                                {
+                                    "name": "CommitmentsV1BaseUrl",
+                                    "value": "[parameters('commitmentsV1BaseUrl')]"
+                                },
+                                {
+                                    "name": "CommitmentsV1ClientId",
+                                    "value": "[parameters('CommitmentsV1ClientId')]"
+                                },
+                                {
+                                    "name": "CommitmentsV1ClientSecret",
+                                    "value": "[parameters('CommitmentsV1ClientSecret')]"
+                                },
+                                {
+                                    "name": "CommitmentsV1ClientToken",
+                                    "value": "[parameters('commitmentsV1ClientToken')]"
+                                },
+                                {
+                                    "name": "CommitmentsV1IdentifierUri",
+                                    "value": "[parameters('CommitmentsV1IdentifierUri')]"
+                                },
+                                {
+                                    "name": "CommitmentsV1Tenant",
+                                    "value": "[parameters('CommitmentsV1Tenant')]"
+                                },
+                                {
+                                    "name": "ConfigurationStorageConnectionString",
+                                    "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "EnvironmentName",
+                                    "value": "[parameters('environmentName')]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_EXTENSION_VERSION",
+                                    "value": "~1"
+                                },
+                                {
+                                    "name": "KeyVaultName",
+                                    "value": "[variables('appSettingsKeyVaultName')]"
+                                },
+                                {
+                                    "name": "LoggingRedisConnectionString",
+                                    "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "LoggingRedisKey",
+                                    "value": "[parameters('loggingRedisKey')]"
+                                },
+                                {
+                                    "name": "NumberOfMonthsToProject",
+                                    "value": "[parameters('numberOfMonthsToProject')]"
+                                },
+                                {
+                                    "name": "SecondsToWaitToAllowProjections",
+                                    "value": "[parameters('secondsToWaitToAllowProjections')]"
+                                },
+                                {
+                                    "name": "StorageConnectionString",
+                                    "value": "[reference('storage-account').outputs.StorageConnectionString.value]"
+                                },
+                                {
+                                    "name": "WEBSITE_LOAD_CERTIFICATES",
+                                    "value": "[parameters('certificateThumbprintsToLoad')]"
+                                },
+                                {
+                                    "name": "FUNCTIONS_WORKER_RUNTIME",
+                                    "value": "dotnet"
+                                }
+                            ]
+                        }
                     }
                 }
             },
@@ -467,7 +469,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'app-service.json')]",
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-v2.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -481,60 +483,62 @@
                         "value": "[parameters('sharedEnvResourceGroup')]"
                     },
                     "appServiceAppSettings": {
-                        "value": [
-                            {
-                                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
-                            },
-                            {
-                                "name": "BaseAddress",
-                                "value": "[parameters('baseAddress')]"
-                            },
-                            {
-                                "name": "EnvironmentName",
-                                "value": "[parameters('environmentName')]"
-                            },
-                            {
-                                "name": "ConfigurationStorageConnectionString",
-                                "value": "[parameters('configurationStorageConnectionString')]"
-                            },
-                            {
-                                "name": "ForecastingRoutePrefix",
-                                "value": "forecasting"
-                            },
-                            {
-                                "name": "KeyVaultName",
-                                "value": "[variables('appSettingsKeyVaultName')]"
-                            },
-                            {
-                                "name": "LimitForecast",
-                                "value": "[parameters('limitForecast')]"
-                            },
-                            {
-                                "name": "LoggingRedisConnectionString",
-                                "value": "[parameters('loggingRedisConnectionString')]"
-                            },
-                            {
-                                "name": "LoggingRedisKey",
-                                "value": "[parameters('loggingRedisKey')]"
-                            },
-                            {
-                                "name": "MyaBaseUrl",
-                                "value": "[parameters('myaBaseUrl')]"
-                            },
-                            {
-                                "name": "WEBSITE_LOAD_CERTIFICATES",
-                                "value": "[parameters('certificateThumbprintsToLoad')]"
-                            },
-                            {
-                                "name": "ZenDeskSectionId",
-                                "value": "[parameters('zenDeskSectionId')]"
-                            },
-                            {
-                                "name": "ZenDeskSnippetKey",
-                                "value": "[parameters('zenDeskSnippetKey')]"
-                            }
-                        ]
+                        "value": {
+                            "array": [
+                                {
+                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                    "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
+                                },
+                                {
+                                    "name": "BaseAddress",
+                                    "value": "[parameters('baseAddress')]"
+                                },
+                                {
+                                    "name": "EnvironmentName",
+                                    "value": "[parameters('environmentName')]"
+                                },
+                                {
+                                    "name": "ConfigurationStorageConnectionString",
+                                    "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "ForecastingRoutePrefix",
+                                    "value": "forecasting"
+                                },
+                                {
+                                    "name": "KeyVaultName",
+                                    "value": "[variables('appSettingsKeyVaultName')]"
+                                },
+                                {
+                                    "name": "LimitForecast",
+                                    "value": "[parameters('limitForecast')]"
+                                },
+                                {
+                                    "name": "LoggingRedisConnectionString",
+                                    "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "LoggingRedisKey",
+                                    "value": "[parameters('loggingRedisKey')]"
+                                },
+                                {
+                                    "name": "MyaBaseUrl",
+                                    "value": "[parameters('myaBaseUrl')]"
+                                },
+                                {
+                                    "name": "WEBSITE_LOAD_CERTIFICATES",
+                                    "value": "[parameters('certificateThumbprintsToLoad')]"
+                                },
+                                {
+                                    "name": "ZenDeskSectionId",
+                                    "value": "[parameters('zenDeskSectionId')]"
+                                },
+                                {
+                                    "name": "ZenDeskSnippetKey",
+                                    "value": "[parameters('zenDeskSnippetKey')]"
+                                }
+                            ]
+                        }
                     },
                     "customHostName": {
                         "value": "[parameters('customHostname')]"
