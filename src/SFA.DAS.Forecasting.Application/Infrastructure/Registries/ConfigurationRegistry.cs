@@ -43,7 +43,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true"),
                 ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false),
                 AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false),
-                FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds",false) ?? "true")
+                FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds",false) ?? "true"),
+                ApprenticeshipsApiSubscriptionKey = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiSubscriptionKey", false)
             };
 
             SetApiConfiguration(configuration);

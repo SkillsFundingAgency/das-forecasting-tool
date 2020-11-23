@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMoq;
+using Moq;
 using NUnit.Framework;
-using SFA.DAS.Apprenticeships.Api.Client;
-using SFA.DAS.Apprenticeships.Api.Types;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
+using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
 {
@@ -14,58 +15,43 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprenticeshipCourses
     public class StandardsServiceTests
     {
         private AutoMoqer _moqer;
-        private List<StandardSummary> _summaries;
+        private ApprenticeshipCourseStandardsResponse _summaries;
 
         [SetUp]
         public void SetUp()
         {
             _moqer = new AutoMoqer();
-            _summaries = new List<StandardSummary>
-            {
-                new StandardSummary
+            _summaries =
+                new ApprenticeshipCourseStandardsResponse
                 {
-                    Id = "test-123",
-                    Level = 1,
-                    Duration = 18,
-                    EffectiveFrom = new DateTime(2017,01,01),
-                    EffectiveTo = null,
-                    IsActiveStandard = true,
-                    IsPublished = true,
-                    CurrentFundingCap = 10000,
-                    Title = "Test course",
-                    FundingPeriods = new List<FundingPeriod>()
-                },
-                new StandardSummary
-                {
-                    Id = "test-456",
-                    Level = 1,
-                    Duration = 12,
-                    EffectiveFrom = new DateTime(2017,01,01),
-                    EffectiveTo = null,
-                    IsActiveStandard = false,
-                    IsPublished = true,
-	                CurrentFundingCap = 10000,
-                    Title = "Test inactive course",
-                    FundingPeriods = new List<FundingPeriod>()
-                },
-                new StandardSummary
-                {
-                    Id = "test-789",
-                    Level = 1,
-                    Duration = 24,
-                    EffectiveFrom = new DateTime(2018,01,01),
-                    EffectiveTo = null,
-                    IsActiveStandard = true,
-                    IsPublished = true,
-                    CurrentFundingCap = 10000,
-                    Title = "Test course 2",
-                    FundingPeriods = new List<FundingPeriod>()
-                }
-            };
-            _moqer.GetMock<IStandardApiClient>()
-                .Setup(x => x.GetAllAsync())
-                .Returns(Task.FromResult<IEnumerable<StandardSummary>>(_summaries));
-            _moqer.SetInstance<IApprenticehipsCourseMapper>(new ApprenticehipsCourseMapper());
+                    Standards = new List<ApprenticeshipCourse>
+                    {
+                        new ApprenticeshipCourse
+                        {
+                            Id = "test-123",
+                            Level = 1,
+                            Duration = 18,
+                            CourseType = ApprenticeshipCourseType.Standard,
+                            FundingCap = 10000,
+                            Title = "Test course",
+                            FundingPeriods = new List<Models.Estimation.FundingPeriod>()
+                        },
+                        new ApprenticeshipCourse
+                        {
+                            Id = "test-789",
+                            Level = 1,
+                            Duration = 24,
+                            CourseType = ApprenticeshipCourseType.Standard,
+                            FundingCap = 10000,
+                            Title = "Test course",
+                            FundingPeriods = new List<Models.Estimation.FundingPeriod>()
+                        }
+                    }
+                };
+                
+            _moqer.GetMock<IApiClient>()
+                .Setup(x => x.Get<ApprenticeshipCourseStandardsResponse>(It.IsAny<GetStandardsApiRequest>()))
+                .ReturnsAsync(_summaries);
         }
 
         [Test]

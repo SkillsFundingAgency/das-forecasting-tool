@@ -22,5 +22,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string ApprenticeshipsApiBaseUri { get; set; }
         public string AppInsightsInstrumentationKey { get; set; }
         public bool FeatureExpiredFunds { get; set; }
+        public string ApprenticeshipsApiSubscriptionKey { get; set; }
     }
 }

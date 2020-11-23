@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Apprenticeships.Api.Client;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
@@ -14,19 +13,18 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 
     public class StandardsService: IStandardsService
     {
-        private readonly IStandardApiClient _standardApiClient;
-        private readonly IApprenticehipsCourseMapper _mapper;
+        private readonly IApiClient _apiClient;
 
-        public StandardsService(IStandardApiClient standardApiClient, IApprenticehipsCourseMapper mapper)
+        public StandardsService(IApiClient apiClient)
         {
-            _standardApiClient = standardApiClient ?? throw new ArgumentNullException(nameof(standardApiClient));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _apiClient = apiClient;
         }
 
         public async Task<List<ApprenticeshipCourse>> GetCourses()
         {
-            var standards = (await _standardApiClient.GetAllAsync()).ToList();
-            return standards.Where(course => course.IsActiveStandard).Select(_mapper.Map).ToList();
+            var response = await _apiClient.Get<ApprenticeshipCourseStandardsResponse>(new GetStandardsApiRequest());
+
+            return response.Standards.Select(c => c).ToList();
         }
 
     }
