@@ -25,6 +25,12 @@
         "sharedAppServicePlanName": {
             "type": "string"
         },
+        "sharedApimResourceGroup": {
+            "type": "string"
+        },
+        "sharedApimName": {
+            "type": "string"
+        },
         "functionsAppServicePlanSize": {
             "type": "string",
             "allowedValues": [
@@ -137,8 +143,10 @@
             "type": "string"
         },
         "apprenticeshipsApiBaseUri": {
-            "type": "string",
-            "defaultValue": "https://findapprenticeshiptraining-api.apprenticeships.education.gov.uk/"
+            "type": "string"
+        },
+        "apprenticeshipsApiSubscriptionKey": {
+            "type": "securestring"
         },
         "zenDeskSectionId": {
             "type": "string"
@@ -180,6 +188,7 @@
         ],
         "storageAccountName": "[concat('das',toLower(parameters('resourceEnvironmentName')),parameters('serviceName'),'str')]",
         "cosmosDbName": "[concat(variables('resourceNamePrefix'), '-cdb')]",
+
         "functionAppNames": [
             "[concat(variables('resourceNamePrefix'),'-apc-fa')]",
             "[concat(variables('resourceNamePrefix'),'-comt-fa')]",
@@ -350,6 +359,10 @@
                                     "value": "[parameters('apprenticeshipsApiBaseUri')]"
                                 },
                                 {
+                                    "name": "ApprenticeshipsApiSubscriptionKey",
+                                    "value": "[parameters('apprenticeshipsApiSubscriptionKey')]"
+                                },
+                                {
                                     "name": "AzureWebJobsServiceBus",
                                     "value": "[parameters('AzureWebJobsServiceBus')]"
                                 },
@@ -435,7 +448,8 @@
                 }
             },
             "dependsOn": [
-                "functions-app-service-plan"
+                "functions-app-service-plan",
+                "apim-subscription-forecasting"
             ]
         },
         {
@@ -807,6 +821,31 @@
             "dependsOn": [
                 "keyvault"
             ]
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "apim-subscription-forecasting",
+            "resourceGroup": "[parameters('sharedApimResourceGroup')]",
+            "type": "Microsoft.Resources/deployments",
+
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'apim/apim-subscription.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "apimName": {
+                        "value": "[parameters('sharedApimName')]"
+                    },
+                    "subscriptionName": {
+                        "value": "[variables('functionAppNames')[0]]"
+                    },
+                    "subscriptionScope": {
+                        "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/ForecastingOuterApi')]"
+                    }
+                }
+            }
         }
     ],
     "outputs": {
