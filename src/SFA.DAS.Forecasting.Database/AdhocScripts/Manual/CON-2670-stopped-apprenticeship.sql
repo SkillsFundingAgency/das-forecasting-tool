@@ -40,7 +40,7 @@ BEGIN TRY
 	PRINT '	
 
 	UPDATE [dbo].[Commitment] 
-	SET ActualEndDate = TC.CompletionDate , Status = 1
+	SET ActualEndDate = TC.StopDate , Status = 1
 	FROM Commitment C 
 	INNER JOIN
 	@TempStoppedCommitments TC 
