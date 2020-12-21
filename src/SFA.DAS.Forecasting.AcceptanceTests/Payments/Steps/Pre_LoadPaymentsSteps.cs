@@ -300,7 +300,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
             paymentsDataTable.Columns.Add("ApprenticeNINumber", typeof(string));
             paymentsDataTable.Columns.Add("ApprenticeshipCourseLevel", typeof(int));
             paymentsDataTable.Columns.Add("ApprenticeshipCourseStartDate", typeof(DateTime));
-
+            paymentsDataTable.Columns.Add("IsHistoricProviderName", typeof(byte));
             foreach (var payment in payments)
             {
                 paymentsDataTable.Rows.Add(
@@ -331,7 +331,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Payments.Steps
                     payment.ApprenticeName,
                     string.Empty,
                     payment.CourseLevel,
-                    payment.StartDateValue);
+                    payment.StartDateValue,
+                    false);
             }
 
             return paymentsDataTable;

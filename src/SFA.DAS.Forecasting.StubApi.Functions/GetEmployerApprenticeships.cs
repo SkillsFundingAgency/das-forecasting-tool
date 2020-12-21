@@ -69,6 +69,8 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
                 .RuleFor(commitment => commitment.ULN, faker => faker.Random.Long(99999,999999).ToString())
                 .RuleFor(commitment => commitment.TrainingCode, "107")
                 .RuleFor(commitment => commitment.TrainingName, "Embedded electronic systems design and development engineer")
+                .RuleFor(commitment => commitment.ProviderId, 5)
+                .RuleFor(commitment => commitment.ProviderName, "providername")
                 ;
         }
 

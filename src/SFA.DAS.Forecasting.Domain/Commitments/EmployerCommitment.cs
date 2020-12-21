@@ -27,6 +27,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
 
         public FundingSource FundingSource => Commitment.FundingSource;
 
+        public Status? Status => Commitment.Status;
+
         public EmployerCommitment(CommitmentModel commitment)
         {
             Commitment = commitment ?? throw new ArgumentNullException(nameof(commitment));
@@ -39,7 +41,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 return false;
             }
 
-            if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
+            if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue && Commitment.Status != Models.Commitments.Status.Completed && Commitment.Status != Models.Commitments.Status.Stopped)
             {
                 model.ActualEndDate = null;
             }
@@ -60,7 +62,10 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.NumberOfInstallments != Commitment.NumberOfInstallments
                     || model.HasHadPayment != Commitment.HasHadPayment))
             {
-                Commitment.ActualEndDate = model.ActualEndDate;
+                if (Commitment.Status != Models.Commitments.Status.Completed && Commitment.Status != Models.Commitments.Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
+                {
+                    Commitment.ActualEndDate = model.ActualEndDate;
+                }
                 Commitment.ApprenticeName = model.ApprenticeName;
                 Commitment.ApprenticeshipId = model.ApprenticeshipId;
                 Commitment.StartDate = model.StartDate;
@@ -96,6 +101,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.EmployerAccountId = model.EmployerAccountId;
             Commitment.UpdatedDateTime = model.UpdatedDateTime;
             Commitment.HasHadPayment = model.HasHadPayment;
+            Commitment.Status = Models.Commitments.Status.LiveOrWaitingToStart; 
             return true;
         }
     }
