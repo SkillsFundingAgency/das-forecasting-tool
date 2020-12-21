@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Commitments;
@@ -165,6 +166,113 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             Assert.AreEqual(commitment.ProviderName, employerCommitment.ProviderName);
             Assert.AreEqual(commitment.SendingEmployerAccountId, employerCommitment.SendingEmployerAccountId);
             
+        }
+
+        [TestCase(Status.Completed)]
+        [TestCase(Status.Stopped)]
+        public void Then_The_ActualEndDate_Is_Not_Updated_When_Status_Is_Stopped_Or_Completed(Status status)
+        {
+            var dbActualEndDate = DateTime.Now.AddDays(-1);
+            var paymentActualEndDate = DateTime.Now.AddDays(-2);
+            var commitment = new CommitmentModel
+            {
+                EmployerAccountId = 12345,
+                ApprenticeName = "Mr Test Tester",
+                ApprenticeshipId = 88775544,
+                ActualEndDate = paymentActualEndDate,
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.AddMonths(12),
+                MonthlyInstallment = 10m,
+                CompletionAmount = 100m,
+                NumberOfInstallments = 12
+            };
+
+            var employerCommitment = new EmployerCommitment(new CommitmentModel { Id = 65421, Status = status, ActualEndDate = dbActualEndDate });
+
+            var actual = employerCommitment.RegisterCommitment(commitment);
+
+            //Assert
+            Assert.IsTrue(actual);
+            Assert.AreEqual(dbActualEndDate , employerCommitment.ActualEndDate);
+        }
+
+        [TestCase(Status.LiveOrWaitingToStart)]
+        [TestCase(null)]
+        public void Then_The_ActualEndDate_Is_Updated_When_Status_Is_Not_Stopped_Or_Completed(Status? status)
+        {
+            var dbActualEndDate = DateTime.Now.AddDays(-1);
+            var paymentActualEndDate = DateTime.Now.AddDays(-2);
+            var commitment = new CommitmentModel
+            {
+                EmployerAccountId = 12345,
+                ApprenticeName = "Mr Test Tester",
+                ApprenticeshipId = 88775544,
+                ActualEndDate = paymentActualEndDate,
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.AddMonths(12),
+                MonthlyInstallment = 10m,
+                CompletionAmount = 100m,
+                NumberOfInstallments = 12
+            };
+
+            var employerCommitment = new EmployerCommitment(new CommitmentModel { Id = 65421, Status = status, ActualEndDate = dbActualEndDate, ApprenticeshipId = 88775544 });
+
+            var actual = employerCommitment.RegisterCommitment(commitment);
+
+            //Assert
+            Assert.IsTrue(actual);
+            Assert.AreEqual(paymentActualEndDate, employerCommitment.ActualEndDate);
+        }
+
+        [Test]
+        public void Then_The_Status_Is_LiveOrWaitingToStart_For_A_New_Record()
+        {
+            var commitment = new CommitmentModel
+            {
+                EmployerAccountId = 12345,
+                ApprenticeName = "Mr Test Tester",
+                ApprenticeshipId = 88775544,
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.AddMonths(12),
+                MonthlyInstallment = 10m,
+                CompletionAmount = 100m,
+                NumberOfInstallments = 12
+            };
+
+            var employerCommitment = new EmployerCommitment(new CommitmentModel { Id = 0 });
+
+            var actual = employerCommitment.RegisterCommitment(commitment);
+
+            //Assert
+            Assert.IsTrue(actual);
+            Assert.AreEqual(Status.LiveOrWaitingToStart , employerCommitment.Status);
+        }
+
+
+        [TestCase(Status.Completed)]
+        [TestCase(Status.Stopped)]
+        [TestCase(Status.LiveOrWaitingToStart)]
+        public void Then_The_Status_Is_NotChange_For_An_Existing_Record(Status? status)
+        {
+            var commitment = new CommitmentModel
+            {
+                EmployerAccountId = 12345,
+                ApprenticeName = "Mr Test Tester",
+                ApprenticeshipId = 88775544,
+                StartDate = DateTime.Today,
+                PlannedEndDate = DateTime.Today.AddMonths(12),
+                MonthlyInstallment = 10m,
+                CompletionAmount = 100m,
+                NumberOfInstallments = 12
+            };
+
+            var employerCommitment = new EmployerCommitment(new CommitmentModel { Id = 65421, Status = status, ApprenticeshipId = 88775544 });
+
+            var actual = employerCommitment.RegisterCommitment(commitment);
+
+            //Assert
+            Assert.IsTrue(actual);
+            Assert.AreEqual(status, employerCommitment.Status);
         }
     }
 }
