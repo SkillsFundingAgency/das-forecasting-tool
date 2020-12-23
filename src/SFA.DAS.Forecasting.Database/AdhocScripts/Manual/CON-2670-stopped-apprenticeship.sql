@@ -7,8 +7,8 @@ Instructions for use:
 3. Execute the resulting script against Forecasting database
 
 Expectations:
-~? minutes on commitments database
-~? minutes on forecasting db
+~45 minutes on commitments database
+~10 minutes on forecasting db
 */
 
 SET NOCOUNT ON
@@ -16,24 +16,24 @@ SET NOCOUNT ON
 declare @MAXINSERT int = 1000
 
 --table var declarations
-print 'declare @TempStoppedCommitments table ([ApprenticeshipId] bigint, [StopDate] datetime, [PaymentStatus] smallint)'
+print 'declare @TempStoppedCommitments table ([ApprenticeshipId] bigint, [StopDate] date, [PaymentStatus] smallint)'
 
 BEGIN TRY
 
 	--commitments
 	SELECT
-	CASE (ROW_NUMBER() OVER (ORDER BY a.Id) % @MAXINSERT) 
+	CASE (ROW_NUMBER() OVER (ORDER BY a.Id DESC) % @MAXINSERT) 
 	WHEN 1 
 	THEN 'insert into @TempStoppedCommitments ([ApprenticeshipId], [StopDate], [PaymentStatus]) values' + char(13) + char(10) else '' end +
 	' (' + convert(varchar,[Id]) +', ' + '''' + convert(varchar,[StopDate],121) + ''''+', ' +'''' + convert(varchar,PaymentStatus) + '''' + ')' + 	
 	CASE 
-	WHEN ((ROW_NUMBER() OVER (ORDER BY a.Id) % @MAXINSERT = 0)
-	OR (ROW_NUMBER() OVER (ORDER BY a.Id) = (select count(1) from dbo.Apprenticeship where PaymentStatus = 3 and a.StopDate is not null )))
+	WHEN ((ROW_NUMBER() OVER (ORDER BY a.Id DESC) % @MAXINSERT = 0)
+	OR (ROW_NUMBER() OVER (ORDER BY a.Id DESC) = (select count(1) from dbo.Apprenticeship where PaymentStatus = 3 and a.StopDate is not null )))
 	THEN ''
 	ELSE ',' END
 	FROM  [dbo].[Apprenticeship] a
 	WHERE PaymentStatus = 3 and a.StopDate is not null	
-
+	ORDER BY a.Id desc
 	
 	PRINT '	BEGIN TRANSACTION '
 

@@ -7,8 +7,8 @@ Instructions for use:
 3. Execute the resulting script against Forecasting database
 
 Expectations:
-~? minutes on commitments database
-~? minutes on forecasting db
+~1 hour 5 minutes on commitments database
+~ 5 to 10 minutes on forecasting db
 */
 
 SET NOCOUNT ON
@@ -22,13 +22,13 @@ BEGIN TRY
 
 	--commitments
 	SELECT
-	CASE (ROW_NUMBER() OVER (ORDER BY a.Id) % @MAXINSERT) 
+	CASE (ROW_NUMBER() OVER (ORDER BY a.Id DESC) % @MAXINSERT) 
 	WHEN 1 
 	THEN 'insert into @TempCompletedCommitments ([ApprenticeshipId], [CompletionDate], [PaymentStatus]) values' + char(13) + char(10) else '' end +
 	' (' + convert(varchar,[Id]) +', ' + '''' + convert(varchar,[CompletionDate],121) + ''''+', ' +'''' + convert(varchar,PaymentStatus) + '''' + ')' 	+ 	
 	CASE 
-	WHEN ((ROW_NUMBER() OVER (ORDER BY a.Id) % @MAXINSERT = 0)
-	OR (ROW_NUMBER() OVER (ORDER BY a.Id) = (select count(1) from dbo.Apprenticeship where PaymentStatus = 4 and a.CompletionDate is not null )))
+	WHEN ((ROW_NUMBER() OVER (ORDER BY a.Id DESC) % @MAXINSERT = 0)
+	OR (ROW_NUMBER() OVER (ORDER BY a.Id DESC) = (select count(1) from dbo.Apprenticeship where PaymentStatus = 4 and a.CompletionDate is not null )))
 	THEN ''
 	ELSE ',' END
 	FROM  [dbo].[Apprenticeship] a
