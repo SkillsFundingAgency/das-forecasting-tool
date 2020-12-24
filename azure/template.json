@@ -189,8 +189,8 @@
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[concat('das-',toLower(parameters('resourceEnvironmentName')),'-' , parameters('serviceName'))]",
+        "resourceGroupName": "[concat(variables('resourceNamePrefix'),'-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'),'ui-as')]",
-        "resourceGroupName": "[variables('resourceNamePrefix')]",
         "functionsAppServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
         "appSettingsKeyVaultName": "[concat(variables('resourceNamePrefix'),'-kv')]",
         "appSettingsKeyVaultSecretPermissions": [
@@ -508,6 +508,7 @@
         {
             "apiVersion": "2020-06-01",
             "name": "app-service",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
