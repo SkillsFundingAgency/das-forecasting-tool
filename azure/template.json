@@ -774,6 +774,7 @@
         {
             "apiVersion": "2020-06-01",
             "name": "storage-connectionstring-secret",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -800,6 +801,7 @@
         {
             "apiVersion": "2020-06-01",
             "name": "[concat(variables('secrets')[copyIndex()].name, '-secret')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-copy",
@@ -830,6 +832,7 @@
         {
             "apiVersion": "2020-06-01",
             "name": "[concat(variables('secrets')[copyIndex()].name, '-secret-cosmos')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-cosmos-copy",
