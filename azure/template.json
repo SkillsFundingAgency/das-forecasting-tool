@@ -643,6 +643,7 @@
         {
             "apiVersion": "2020-06-01",
             "name": "cosmos-db",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -669,6 +670,7 @@
         {
             "apiVersion": "2020-06-01",
             "name": "keyvault",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
