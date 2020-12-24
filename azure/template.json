@@ -409,6 +409,9 @@
                     "subnetResourceId": {
                         "value": "[reference('function-app-subnet').outputs.subnetResourceId.value]"
                     },
+                    "subnetResourceId": {
+                        "value": "[reference('function-app-subnet').outputs.subnetResourceId.value]"
+                    },
                     "functionAppAppSettings": {
                         "value": {
                             "array": [
@@ -890,7 +893,7 @@
             ]
         },
         {
-            "apiVersion": "2017-05-10",
+            "apiVersion": "2020-06-01",
             "name": "apim-subscription-forecasting",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
