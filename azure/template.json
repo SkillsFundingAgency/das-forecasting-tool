@@ -46,7 +46,7 @@
         },
         "functionsAppServicePlanTier": {
             "type": "string",
-            "defaultValue": "Basic"
+            "defaultValue": "Standard"
         },
         "cosmosThroughputOffer": {
             "type": "string",
