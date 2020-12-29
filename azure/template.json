@@ -22,7 +22,7 @@
         "sharedEnvResourceGroup": {
             "type": "string"
         },
-        "sharedAppServicePlanName": {
+        "sharedFrontEndAppServicePlanName": {
             "type": "string"
         },
         "sharedApimResourceGroup": {
@@ -563,7 +563,7 @@
                         "value": "[variables('appServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedAppServicePlanName')]"
+                        "value": "[parameters('sharedFrontEndAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
