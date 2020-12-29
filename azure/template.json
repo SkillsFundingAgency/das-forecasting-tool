@@ -929,6 +929,10 @@
         }
     ],
     "outputs": {
+        "ResourceGroupName": {
+            "type": "string",
+            "value": "[variables('resourceGroupName')]"
+        },
         "FunctionAppNameStandards": {
             "type": "string",
             "value": "[variables('functionAppNames')[0]]"
@@ -964,10 +968,6 @@
         "CosmosDbName": {
             "type": "string",
             "value": "[variables('cosmosDbName')]"
-        },
-        "ResourceGroupName": {
-            "type": "string",
-            "value": "[variables('resourceGroupName')]"
         }
     }
 }
