@@ -184,7 +184,6 @@
         "sharedFrontEndSubnetResourceId": {
             "type": "string"
         },
-
         "sharedEnvVirtualNetworkName": {
             "type": "string"
         },
@@ -259,9 +258,7 @@
             "type": "Microsoft.Resources/resourceGroups",
             "location": "[parameters('resourceGroupLocation')]",
             "tags": "[parameters('tags')]",
-            "properties": {
-
-            }
+            "properties": {}
         },
         {
             "type": "Microsoft.Resources/deployments",
