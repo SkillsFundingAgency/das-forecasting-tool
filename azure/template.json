@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
@@ -22,7 +22,7 @@
         "sharedEnvResourceGroup": {
             "type": "string"
         },
-        "sharedAppServicePlanName": {
+        "sharedFrontEndAppServicePlanName": {
             "type": "string"
         },
         "sharedApimResourceGroup": {
@@ -46,7 +46,7 @@
         },
         "functionsAppServicePlanTier": {
             "type": "string",
-            "defaultValue": "Basic"
+            "defaultValue": "Standard"
         },
         "cosmosThroughputOffer": {
             "type": "string",
@@ -174,11 +174,33 @@
         },
         "kv_EmployerConnectionString": {
             "type": "securestring"
+        },
+        "tags": {
+            "type": "object"
+        },
+        "resourceGroupLocation": {
+            "type": "string"
+        },
+        "sharedFrontEndSubnetResourceId": {
+            "type": "string"
+        },
+        "sharedEnvVirtualNetworkName": {
+            "type": "string"
+        },
+        "subnetObject": {
+            "type": "object"
+        },
+        "subnetServiceEndpointList": {
+            "type": "array"
+        },
+        "subnetDelegations": {
+            "type": "array"
         }
     },
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[concat('das-',toLower(parameters('resourceEnvironmentName')),'-' , parameters('serviceName'))]",
+        "resourceGroupName": "[concat(variables('resourceNamePrefix'),'-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'),'ui-as')]",
         "functionsAppServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
         "appSettingsKeyVaultName": "[concat(variables('resourceNamePrefix'),'-kv')]",
@@ -231,8 +253,47 @@
     },
     "resources": [
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
+            "name": "[variables('resourceGroupName')]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "location": "[parameters('resourceGroupLocation')]",
+            "tags": "[parameters('tags')]",
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "name": "function-app-subnet",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetObject').name]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[parameters('subnetObject').addressSpace]"
+                    },
+                    "serviceEndpointList": {
+                        "value": "[parameters('subnetServiceEndpointList')]"
+                    },
+                    "delegations": {
+                        "value": "[parameters('subnetDelegations')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2020-06-01",
             "name": "storage-account",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "dependsOn": [
             ],
             "type": "Microsoft.Resources/deployments",
@@ -250,8 +311,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "[concat(variables('functionAppNames')[copyIndex()], '-insights')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "app-insights-copy",
@@ -274,8 +336,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "app-service-app-insights",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -294,8 +357,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "functions-app-service-plan",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -320,8 +384,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "[concat(variables('functionAppNames')[copyIndex()], '-function')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "function-app-copy",
@@ -341,7 +406,10 @@
                         "value": "[variables('functionsAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
-                        "value": "[resourceGroup().name]"
+                        "value": "[variables('resourceGroupName')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[reference('function-app-subnet').outputs.subnetResourceId.value]"
                     },
                     "functionAppAppSettings": {
                         "value": {
@@ -453,7 +521,7 @@
             ]
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "app-service-certificate",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -477,8 +545,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "app-service",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -491,10 +560,13 @@
                         "value": "[variables('appServiceName')]"
                     },
                     "appServicePlanName": {
-                        "value": "[parameters('sharedAppServicePlanName')]"
+                        "value": "[parameters('sharedFrontEndAppServicePlanName')]"
                     },
                     "appServicePlanResourceGroup": {
                         "value": "[parameters('sharedEnvResourceGroup')]"
+                    },
+                    "subnetResourceId": {
+                        "value": "[parameters('sharedFrontEndSubnetResourceId')]"
                     },
                     "appServiceAppSettings": {
                         "value": {
@@ -569,7 +641,7 @@
             ]
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "sql-database",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -608,8 +680,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "cosmos-db",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -634,8 +707,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "keyvault",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -737,8 +811,9 @@
             }
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "storage-connectionstring-secret",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -763,8 +838,9 @@
             ]
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "[concat(variables('secrets')[copyIndex()].name, '-secret')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-copy",
@@ -793,8 +869,9 @@
             ]
         },
         {
-            "apiVersion": "2019-05-01",
+            "apiVersion": "2020-06-01",
             "name": "[concat(variables('secrets')[copyIndex()].name, '-secret-cosmos')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
             "copy": {
                 "name": "secrets-cosmos-copy",
@@ -823,7 +900,7 @@
             ]
         },
         {
-            "apiVersion": "2017-05-10",
+            "apiVersion": "2020-06-01",
             "name": "apim-subscription-forecasting",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
@@ -849,6 +926,10 @@
         }
     ],
     "outputs": {
+        "ResourceGroupName": {
+            "type": "string",
+            "value": "[variables('resourceGroupName')]"
+        },
         "FunctionAppNameStandards": {
             "type": "string",
             "value": "[variables('functionAppNames')[0]]"
