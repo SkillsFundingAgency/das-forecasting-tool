@@ -62,6 +62,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.NumberOfInstallments != Commitment.NumberOfInstallments
                     || model.HasHadPayment != Commitment.HasHadPayment))
             {
+                //don't update the actual end date - as the Actual EndDate updated from the das-forecasting-jobs event handlers
                 Commitment.ApprenticeName = model.ApprenticeName;
                 Commitment.ApprenticeshipId = model.ApprenticeshipId;
                 Commitment.StartDate = model.StartDate;
