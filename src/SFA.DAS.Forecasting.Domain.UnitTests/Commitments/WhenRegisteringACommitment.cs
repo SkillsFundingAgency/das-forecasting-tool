@@ -89,7 +89,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             Assert.IsTrue(actual);
             Assert.AreEqual(commitment.ApprenticeName, employerCommitment.ApprenticeName);
             Assert.AreEqual(commitment.ApprenticeshipId, employerCommitment.ApprenticeshipId);
-            Assert.AreEqual(commitment.ActualEndDate, employerCommitment.ActualEndDate);
             Assert.AreEqual(commitment.StartDate, employerCommitment.StartDate);
             Assert.AreEqual(commitment.PlannedEndDate, employerCommitment.PlannedEndDate);
             Assert.AreEqual(commitment.MonthlyInstallment, employerCommitment.MonthlyInstallment);
@@ -168,9 +167,11 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             
         }
 
+        [TestCase(Status.LiveOrWaitingToStart)]        
         [TestCase(Status.Completed)]
         [TestCase(Status.Stopped)]
-        public void Then_The_ActualEndDate_Is_Not_Updated_When_Status_Is_Stopped_Or_Completed(Status status)
+        [TestCase(null)]
+        public void Then_The_ActualEndDate_Is_Not_Updated(Status status)
         {
             var dbActualEndDate = DateTime.Now.AddDays(-1);
             var paymentActualEndDate = DateTime.Now.AddDays(-2);
@@ -194,34 +195,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             //Assert
             Assert.IsTrue(actual);
             Assert.AreEqual(dbActualEndDate , employerCommitment.ActualEndDate);
-        }
-
-        [TestCase(Status.LiveOrWaitingToStart)]
-        [TestCase(null)]
-        public void Then_The_ActualEndDate_Is_Updated_When_Status_Is_Not_Stopped_Or_Completed(Status? status)
-        {
-            var dbActualEndDate = DateTime.Now.AddDays(-1);
-            var paymentActualEndDate = DateTime.Now.AddDays(-2);
-            var commitment = new CommitmentModel
-            {
-                EmployerAccountId = 12345,
-                ApprenticeName = "Mr Test Tester",
-                ApprenticeshipId = 88775544,
-                ActualEndDate = paymentActualEndDate,
-                StartDate = DateTime.Today,
-                PlannedEndDate = DateTime.Today.AddMonths(12),
-                MonthlyInstallment = 10m,
-                CompletionAmount = 100m,
-                NumberOfInstallments = 12
-            };
-
-            var employerCommitment = new EmployerCommitment(new CommitmentModel { Id = 65421, Status = status, ActualEndDate = dbActualEndDate, ApprenticeshipId = 88775544 });
-
-            var actual = employerCommitment.RegisterCommitment(commitment);
-
-            //Assert
-            Assert.IsTrue(actual);
-            Assert.AreEqual(paymentActualEndDate, employerCommitment.ActualEndDate);
         }
 
         [Test]
