@@ -62,10 +62,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.NumberOfInstallments != Commitment.NumberOfInstallments
                     || model.HasHadPayment != Commitment.HasHadPayment))
             {
-                if (Commitment.Status != Models.Commitments.Status.Completed && Commitment.Status != Models.Commitments.Status.Stopped) // If status is already stopped or completed - don't update the actual end date - as the Actual EndDate will have the stopped or completed Date
-                {
-                    Commitment.ActualEndDate = model.ActualEndDate;
-                }
+                //don't update the actual end date - as the Actual EndDate updated from the das-forecasting-jobs event handlers
                 Commitment.ApprenticeName = model.ApprenticeName;
                 Commitment.ApprenticeshipId = model.ApprenticeshipId;
                 Commitment.StartDate = model.StartDate;
@@ -92,7 +89,6 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.ProviderName = model.ProviderName;
             Commitment.StartDate = model.StartDate;
             Commitment.PlannedEndDate = model.PlannedEndDate;
-            Commitment.ActualEndDate = model.ActualEndDate;
             Commitment.MonthlyInstallment = model.MonthlyInstallment;
             Commitment.CompletionAmount = model.CompletionAmount;
             Commitment.NumberOfInstallments = model.NumberOfInstallments;

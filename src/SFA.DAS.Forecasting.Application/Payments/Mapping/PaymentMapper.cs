@@ -50,7 +50,6 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				LearnerId = paymentCreatedMessage.Uln,
 				StartDate = paymentCreatedMessage.EarningDetails.StartDate,
 				PlannedEndDate = paymentCreatedMessage.EarningDetails.PlannedEndDate,
-				ActualEndDate = paymentCreatedMessage.EarningDetails.ActualEndDate,
 				CompletionAmount = paymentCreatedMessage.EarningDetails.CompletionAmount,
 				MonthlyInstallment = paymentCreatedMessage.EarningDetails.MonthlyInstallment,
 				NumberOfInstallments = (short)paymentCreatedMessage.EarningDetails.TotalInstallments,
@@ -63,11 +62,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
                 FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource),
                 HasHadPayment = true,
                 UpdatedDateTime = DateTime.UtcNow
-			      };
-
-            if (model.ActualEndDate.HasValue && model.ActualEndDate == DateTime.MinValue)
-                model.ActualEndDate = null;
-
+			};
+           
             return model;
         }
 	}
