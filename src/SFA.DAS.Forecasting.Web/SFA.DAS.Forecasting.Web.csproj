@@ -856,12 +856,6 @@
     <Content Include="Content\spec\support\jasmine.json" />
     <Content Include="Content\src\sass\_publication.scss" />
     <Content Include="Content\src\sass\_cookiebanner.scss" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Project_Readme.html" />
     <Content Include="Views\Forecasting\Apprenticeships.cshtml" />
   </ItemGroup>
