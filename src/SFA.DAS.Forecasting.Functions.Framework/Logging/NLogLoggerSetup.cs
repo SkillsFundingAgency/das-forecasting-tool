@@ -65,6 +65,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             return ConfigurationHelper.GetAppSetting(key, isSensitive);
         }
 
-        private static LogLevel GetMinLogLevel() => LogLevel.FromString(GetSetting("MinLogLevel") ?? "Info");
+        private static LogLevel GetMinLogLevel() => LogLevel.Info;
     }
 }
