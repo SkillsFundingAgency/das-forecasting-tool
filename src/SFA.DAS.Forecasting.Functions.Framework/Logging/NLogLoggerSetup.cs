@@ -7,6 +7,7 @@ using SFA.DAS.NLog.Logger;
 using System;
 using System.IO;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
+using SFA.DAS.NLog.Targets.Redis.DotNetCore;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
@@ -34,11 +35,11 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             var target = new RedisTarget
             {
                 Name = "RedisLog",
-                AppName = appName,
-                EnvironmentKey = GetSetting("EnvironmentName"),
-                ConnectionStringKey = GetSetting("LoggingRedisConnectionString"),
+                AppName = appName, 
+                EnvironmentKeyName = GetSetting("EnvironmentName"),
+                ConnectionStringName = GetSetting("LoggingRedisConnectionString"),
                 IncludeAllProperties = true,
-                KeySettingsKey = GetSetting("LoggingRedisKey"),
+                //KeySettingsKey = "logstash", //GetSetting("LoggingRedisKey"),
                 Layout = "${message}"
             };
 
