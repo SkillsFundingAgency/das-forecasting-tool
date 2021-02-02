@@ -8,26 +8,30 @@ using System;
 using System.IO;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.NLog.Targets.Redis.DotNetCore;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Forecasting.Functions.Framework.Logging
 {
     public class NLogLoggerSetup
     {
-        internal static NLogLogger Create(Type type)
+        internal static NLogLogger Create(Type type, ILoggingContext loggingContext, IDictionary<string, object> properties)
         {
             var appName = GetSetting("AppName");
-            var localLogPath = GetSetting("LogDir");
+            var localLogPath = @"D:/home/LogFiles";  // GetSetting("LogDir");
 
             var config = new LoggingConfiguration();
 
-            if (ConfigurationHelper.IsDevEnvironment)
-                AddLocalTarget(config, localLogPath, appName);
-            else
-                AddRedisTarget(config, appName);
+            AddLocalTarget(config, localLogPath, appName);
+            AddRedisTarget(config, appName);
+
+            //if (ConfigurationHelper.IsDevEnvironment)
+            //    AddLocalTarget(config, localLogPath, appName);
+            //else
+            //    AddRedisTarget(config, appName);
 
             LogManager.Configuration = config;
             LogManager.ThrowConfigExceptions = true;
-            return new NLogLogger(type);
+            return new NLogLogger(type, loggingContext, properties);
         }
 
         private static void AddRedisTarget(LoggingConfiguration config, string appName)
@@ -36,9 +40,9 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             {
                 Name = "RedisLog",
                 AppName = appName, 
-                EnvironmentKeyName = GetSetting("EnvironmentName"),
-                ConnectionStringName = GetSetting("LoggingRedisConnectionString"),
-                IncludeAllProperties = true,
+                EnvironmentKeyName = "TEST", //GetSetting("EnvironmentName"),
+                ConnectionStringName = "das-dev-log-rds.redis.cache.windows.net:6380,password=0J8kHTfmszL0hQHrRGeIQyius7WMlgdmSZhQFo0zWzc=,ssl=True,abortConnect=False", //GetSetting("LoggingRedisConnectionString"),
+                IncludeAllProperties = true,                
                 //KeySettingsKey = "logstash", //GetSetting("LoggingRedisKey"),
                 Layout = "${message}"
             };

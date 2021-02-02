@@ -12,6 +12,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
         public CompositeLogger(NLogLogger nLogLogger, TraceWriterLogger traceWriterLogger)
         {
             _nLogLogger = nLogLogger ?? throw new ArgumentNullException(nameof(nLogLogger));
+            _nLogLogger.ApplicationName = "das-forecasting-appc-f";
             _traceWriterLogger = traceWriterLogger ?? throw new ArgumentNullException(nameof(traceWriterLogger));
         }
 

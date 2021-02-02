@@ -113,7 +113,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework
                c.For<ITelemetry>().Use<AppInsightsTelemetry>();
                c.For<TraceWriter>().Use(writer);
                c.For<TraceWriterLogger>().Use<TraceWriterLogger>();
-               c.For<ILog>().Use<CompositeLogger>();  //TODO: Move to logging or default registry
+               //c.For<ILog>().Use<CompositeLogger>();  //TODO: Move to logging or default registry               
            });
             return nestedContainer;
         }
