@@ -15,13 +15,13 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
         internal static NLogLogger Create(Type type)
         {
             var appName = GetSetting("AppName");
-            var localLogPath = GetSetting("LogDir");
+            var localLogPath = @"D:/home/LogFiles";  // GetSetting("LogDir");            
 
             var config = new LoggingConfiguration();
 
-            if (ConfigurationHelper.IsDevEnvironment)
+            //if (ConfigurationHelper.IsDevEnvironment)
                 AddLocalTarget(config, localLogPath, appName);
-            else
+            //else
                 AddRedisTarget(config, appName);
 
             LogManager.Configuration = config;
