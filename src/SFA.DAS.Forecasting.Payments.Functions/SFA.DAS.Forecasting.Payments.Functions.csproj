@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.3.0" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.3.0" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />    
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />    
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />    
     <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.2924" />    
     <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.2924" />    
     <PackageReference Include="SFA.DAS.HashingService" Version="1.0.0.43004" />    
