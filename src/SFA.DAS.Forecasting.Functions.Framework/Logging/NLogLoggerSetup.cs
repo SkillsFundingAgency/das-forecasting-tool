@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
         internal static NLogLogger Create(Type type)
         {
             var appName = GetSetting("AppName");
-            var localLogPath = GetSetting("LogDir");            
+            var localLogPath = GetSetting("LogDir");
 
             var config = new LoggingConfiguration();
 

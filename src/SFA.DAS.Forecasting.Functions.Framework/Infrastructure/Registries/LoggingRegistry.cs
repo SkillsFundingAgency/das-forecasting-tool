@@ -9,7 +9,6 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Infrastructure.Registries
         public LoggingRegistry()
         {
             For<NLogLogger>().Use(NLogLoggerSetup.Create(null));
-            //For<ILog>().Use(NLogLoggerSetup.Create(null));
         }
     }
 }
