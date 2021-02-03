@@ -40,8 +40,8 @@ namespace SFA.DAS.Forecasting.Functions.Framework.Logging
             {
                 Name = "RedisLog",
                 AppName = appName, 
-                EnvironmentKeyName = GetSetting("EnvironmentName"),
-                ConnectionStringName = GetSetting("LoggingRedisConnectionString"),
+                EnvironmentKeyName = "EnvironmentName",
+                ConnectionStringName = "LoggingRedisConnectionString",
                 IncludeAllProperties = true,                
                 //KeySettingsKey = "logstash", //GetSetting("LoggingRedisKey"),
                 Layout = "${message}"
