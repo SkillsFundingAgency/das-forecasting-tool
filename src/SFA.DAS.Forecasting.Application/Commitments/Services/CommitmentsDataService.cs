@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.NLog.Logger;
 using IsolationLevel = System.Data.IsolationLevel;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Services
@@ -21,12 +23,15 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
     {
         private readonly IForecastingDataContext _dataContext;
         private readonly ITelemetry _telemetry;
+        private readonly ILog _logger;
 
-        public CommitmentsDataService(IForecastingDataContext dataContext, ITelemetry telemetry)
+        public CommitmentsDataService(IForecastingDataContext dataContext, ITelemetry telemetry, ILog logger)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
             _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger)); ;
         }
+
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
             return await _dataContext
@@ -139,18 +144,32 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         public async Task Store(CommitmentModel commitment)
         {
-            var startTime = DateTime.UtcNow;
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            if (commitment.Id <= 0)
-                _dataContext.Commitments.Add(commitment);
-    
-            await _dataContext.SaveChangesAsync();
-        
-            stopwatch.Stop();
+            try
+            {
+                _logger.Info($"Store Commitment Id {commitment.Id}");
+                var startTime = DateTime.UtcNow;
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+                if (commitment.Id <= 0)
+                    _dataContext.Commitments.Add(commitment);
 
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime, stopwatch.Elapsed, true);
+                await _dataContext.SaveChangesAsync();
 
+                stopwatch.Stop();
+
+                _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime, stopwatch.Elapsed, true);
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errorMessages = ex.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(x => x.ErrorMessage);
+                var fullErrorMessage = string.Join("; ", errorMessages);
+                var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
+                _logger.Error(ex, exceptionMessage);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex,$"Store Commitment Failed for CommitmentId {commitment.Id}");
+            }
         }
 
     }

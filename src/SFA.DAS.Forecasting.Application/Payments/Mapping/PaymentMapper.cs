@@ -50,6 +50,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				LearnerId = paymentCreatedMessage.Uln,
 				StartDate = paymentCreatedMessage.EarningDetails.StartDate,
 				PlannedEndDate = paymentCreatedMessage.EarningDetails.PlannedEndDate,
+				ActualEndDate = null,
 				CompletionAmount = paymentCreatedMessage.EarningDetails.CompletionAmount,
 				MonthlyInstallment = paymentCreatedMessage.EarningDetails.MonthlyInstallment,
 				NumberOfInstallments = (short)paymentCreatedMessage.EarningDetails.TotalInstallments,
