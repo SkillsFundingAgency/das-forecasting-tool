@@ -23,7 +23,7 @@ The following needs to be installed on your local machine:
 
 Running the acceptance tests will populate the database with a set of data - the connection string in the app.config file for the acceptance tests may need updating.
 
-To load apprenticeship courses into CosmosDB function run **SFA.DAS.Forecasting.ApprenticeshipCourses.Functions**.
+To load apprenticeship courses into CosmosDB function run **SFA.DAS.Forecasting.ApprenticeshipCourses.Functions**. This has a dependencey on [das-apim-endpoints](https://github.com/SkillsFundingAgency/das-apim-endpoints) forecasting outer api. If you are part of the ESFA organisation you can request a subscription key, if not then follow the readme for setting up the Forecasting outer api.
 
 ### Routes for test data
 
