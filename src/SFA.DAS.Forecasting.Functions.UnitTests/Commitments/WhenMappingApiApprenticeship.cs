@@ -208,7 +208,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             var result = await _sut.Map(apiApprenticeship);
 
             // Assert
-            result.MonthlyInstallment.Should().Be(expectedMonthlyInstallments);
+            result.MonthlyInstallment.Should().BeApproximately(expectedMonthlyInstallments, 0.01m);
         }
 
         [Test]
