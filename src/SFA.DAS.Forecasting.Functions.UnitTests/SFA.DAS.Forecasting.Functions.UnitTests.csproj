@@ -74,6 +74,10 @@
       <Project>{AC4EB07B-53B5-46A4-B83B-1DA52A3B595B}</Project>
       <Name>SFA.DAS.Forecasting.Commitments.Functions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
+      <Project>{97049CCE-774A-4377-B682-1C01B95C2CF3}</Project>
+      <Name>SFA.DAS.Forecasting.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
