@@ -6,6 +6,7 @@ using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Models.Estimation;
+using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Threading.Tasks;
 using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
@@ -237,6 +238,24 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
 
             // Assert
             result.NumberOfInstallments.Should().Be(duration);
+        }
+
+        [Test]
+        [TestCase(null, FundingSource.Levy)]
+        [TestCase(1234, FundingSource.Transfer)]
+        public async Task ShouldMapToApprenticeshipMessage_FundingSource(long? transferSenderId, FundingSource fundingSource)
+        {
+            // Arrange
+            ApiApprenticeship apiApprenticeship = _fixture
+                .Build<ApiApprenticeship>()
+                .With(o => o.TransferSenderId, transferSenderId)
+                .Create();
+
+            // Act
+            var result = await _sut.Map(apiApprenticeship);
+
+            // Assert
+            result.FundingSource.Should().Be(fundingSource);
         }
     }
 }
