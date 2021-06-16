@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
             if (apprenticeship.EndDate.HasValue && apprenticeship.StartDate.HasValue)
             {
                 duration = (apprenticeship.EndDate.Value.Year - apprenticeship.StartDate.Value.Year) * 12 +
-                           apprenticeship.EndDate.Value.Month - apprenticeship.EndDate.Value.Month;
+                           apprenticeship.EndDate.Value.Month - apprenticeship.StartDate.Value.Month;
             }
 
             var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.TrainingCode);

@@ -5,6 +5,9 @@
     <AssemblyName>SFA.DAS.Forecasting.Commitments.Functions</AssemblyName>
     <RootNamespace>SFA.DAS.Forecasting.Commitments.Functions</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
@@ -31,5 +34,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>SFA.DAS.Forecasting.Functions.UnitTests</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 </Project>
