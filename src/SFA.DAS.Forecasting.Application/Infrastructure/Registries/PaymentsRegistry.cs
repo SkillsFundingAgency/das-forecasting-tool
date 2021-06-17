@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             //For<PaymentsEventsApiConfiguration>().Use(c => c.GetInstance<ForecastingConfiguration>().PaymentsEventsApi).Singleton();
             //For<IPaymentsEventsApiConfiguration>().Use(c => c.GetInstance<PaymentsEventsApiConfiguration>());
 
-            if (ConfigurationHelper.IsDevOrAtEnvironment)
+            if (ConfigurationHelper.IsDevEnvironment)
             {
                 For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
             }

@@ -27,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Ctor<IAccountApiConfiguration>()
                 .Is(apiConfig);
 
-            if (ConfigurationHelper.IsDevOrAtEnvironment)
+            if (ConfigurationHelper.IsDevEnvironment)
             {
                 For<IAccountBalanceService>()
                     .Use<DevAccountBalanceService>();
