@@ -145,9 +145,6 @@
         "apprenticeshipsApiBaseUri": {
             "type": "string"
         },
-        "apprenticeshipsApiSubscriptionKey": {
-            "type": "securestring"
-        },
         "zenDeskSectionId": {
             "type": "string"
         },
@@ -428,7 +425,7 @@
                                 },
                                 {
                                     "name": "ApprenticeshipsApiSubscriptionKey",
-                                    "value": "[parameters('apprenticeshipsApiSubscriptionKey')]"
+                                    "value": "[reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/subscriptions/', variables('functionAppNames')[0]), '2019-01-01').primaryKey]"
                                 },
                                 {
                                     "name": "AzureWebJobsServiceBus",
