@@ -130,7 +130,7 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             }
             var earningDetail = earningDetails.FirstOrDefault(ed => Guid.TryParse(ed.PaymentId, out Guid paymentGuid) && paymentGuid == payment.PaymentId);
 
-            if (ConfigurationHelper.IsDevOrAtEnvironment && earningDetail == null)
+            if (ConfigurationHelper.IsDevEnvironment && earningDetail == null)
             {
                 var random = new Random();
                 earningDetail = earningDetails.Skip(random.Next(0, earningDetails.Count() - 1)).FirstOrDefault();

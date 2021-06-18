@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
             return 
-                IsDevOrAtEnvironment
+                IsDevEnvironment
                 ? new AccountApiConfiguration
                 {
                     Tenant = CloudConfigurationManager.GetSetting("AccountApi-Tenant"),
@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static PaymentsEventsApiConfiguration GetPaymentsEventsApiConfiguration()
         {
-            return IsDevOrAtEnvironment
+            return IsDevEnvironment
                 ? new PaymentsEventsApiConfiguration
                 {
                     ApiBaseUrl = CloudConfigurationManager.GetSetting("PaymentsEvent-ApiBaseUrl"),
@@ -45,7 +45,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static CommitmentsApiConfig GetCommitmentsApiConfiguration()
         {
-            return IsDevOrAtEnvironment
+            return IsDevEnvironment
                 ? new CommitmentsApiConfig
                 {
                     BaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV1BaseUrl"),
@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         public static string GetAppSetting(string keyName, bool isSensitive)
         {
             var value = ConfigurationManager.AppSettings[keyName];
-            return IsDevOrAtEnvironment || !isSensitive
+            return IsDevEnvironment || !isSensitive
                 ? value
                 : GetSecret(keyName).Result;
         }
@@ -88,7 +88,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             if (string.IsNullOrEmpty(connectionString))
                 return GetAppSetting(name, true);
 
-            return IsDevOrAtEnvironment
+            return IsDevEnvironment
                 ? connectionString
                 : GetSecret(name).Result;
         }
@@ -97,14 +97,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEV") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
-
-        public static bool IsDevOrAtEnvironment =>
-            IsDevEnvironment || (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("AT") ?? false);
-
-        public static bool IsDevOrTestEnvironment =>
-            IsDevOrAtEnvironment || 
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("TEST") ?? false) ||
-            (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("TEST2") ?? false);
 
         private static async Task<string> GetSecret(string secretName)
         {
