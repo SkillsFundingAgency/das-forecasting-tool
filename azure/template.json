@@ -425,7 +425,7 @@
                                 },
                                 {
                                     "name": "ApprenticeshipsApiSubscriptionKey",
-                                    "value": "[reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/subscriptions/', variables('functionAppNames')[0]), '2019-01-01').primaryKey]"
+                                    "value": "[reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/subscriptions/', concat(variables('resourceNamePrefix'),'-apc-fa')), '2019-01-01').primaryKey]"
                                 },
                                 {
                                     "name": "AzureWebJobsServiceBus",
@@ -913,7 +913,7 @@
                         "value": "[parameters('sharedApimName')]"
                     },
                     "subscriptionName": {
-                        "value": "[variables('functionAppNames')[0]]"
+                        "value": "[concat(variables('resourceNamePrefix'),'-apc-fa')]"
                     },
                     "subscriptionScope": {
                         "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/ForecastingOuterApi')]"
