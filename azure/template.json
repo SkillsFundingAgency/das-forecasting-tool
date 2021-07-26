@@ -195,7 +195,7 @@
         }
     },
     "variables": {
-        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/add-mintlsversion-1-2/templates/",
         "resourceNamePrefix": "[concat('das-',toLower(parameters('resourceEnvironmentName')),'-' , parameters('serviceName'))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'),'-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'),'ui-as')]",
