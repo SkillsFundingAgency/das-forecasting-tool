@@ -23,7 +23,7 @@ var AddEditApprentiecships = {
         }
 
         var fundingBand = AddEditApprentiecships.altFind(model.FundingBands, function (fb) {
-            return date > AddEditApprentiecships.getDate(fb.FromDate) && date < AddEditApprentiecships.getDate(fb.ToDate);
+            return date > AddEditApprentiecships.getDate(fb.FromDate) && (date < AddEditApprentiecships.getDate(fb.ToDate) || fb.ToDate == null);
         }) || model.FundingBands[model.FundingBands.length - 1];
 
         var result = {
