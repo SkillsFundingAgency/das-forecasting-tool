@@ -48,6 +48,9 @@
             "type": "string",
             "defaultValue": "Standard"
         },
+        "cosmosDbPrimaryReadWriteKey": {
+            "type": "securestring"
+        },
         "cosmosThroughputOffer": {
             "type": "string",
             "defaultValue": "400"
@@ -888,7 +891,7 @@
                         "value": "CosmosDbConnectionString"
                     },
                     "secretValue": {
-                        "value": "[concat('AccountEndpoint=https://', variables('cosmosDbName'), '.documents.azure.com:443/;AccountKey=', reference('cosmos-db').outputs.PrimaryMasterKey.value, ';Database=Forecasting; Collection=Forecasting; ThroughputOffer=', parameters('cosmosThroughputOffer'))]"
+                        "value": "[concat('AccountEndpoint=https://', variables('cosmosDbName'), '.documents.azure.com:443/;AccountKey=', parameters('cosmosDbPrimaryReadWriteKey'), ';Database=Forecasting; Collection=Forecasting; ThroughputOffer=', parameters('cosmosThroughputOffer'))]"
                     }
                 }
             },
