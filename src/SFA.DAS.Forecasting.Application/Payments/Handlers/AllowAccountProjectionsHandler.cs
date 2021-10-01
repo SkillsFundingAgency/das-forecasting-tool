@@ -88,35 +88,37 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         private async Task<bool> IsEmployerAccountIdAllowed(long employerAccountId)
         {
             var payments = _paymentsRepository.Get(employerAccountId);
-            var lastPaymentReceivedTime = await payments.GetLastTimeReceivedPayment();
-            if (lastPaymentReceivedTime == null)
+            var hasReceivedRecentPayment = await payments.HasReceivedRecentPayment();
+            if (hasReceivedRecentPayment == null)
             {
-                _logger.Info($"No last payment received time recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");                
+                _logger.Info($"No last payment received recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");                
             }
 
             var lastCommitmentReceivedTime = await _commitmentsRepository.GetLastTimeRecieved(employerAccountId);
             if (lastCommitmentReceivedTime == null)
                 throw new InvalidOperationException($"No last commitment time recorded for employer account: {employerAccountId}");
 
-            return AllowProjections(lastPaymentReceivedTime, lastCommitmentReceivedTime);
+            return AllowProjections(hasReceivedRecentPayment, lastCommitmentReceivedTime);
         }
 
         private async Task<bool> IsSendingEmployerAccountIdAllowed(long sendingEmployerAccountId)
         {
             var payments = _paymentsRepository.Get(sendingEmployerAccountId);
-            var lastReceivedTime = await payments.GetLastTimeSentPayment();
-            if (lastReceivedTime == null)
-                throw new InvalidOperationException($"No last time recorded for employer account: {sendingEmployerAccountId}");
+            var hasReceivedRecentPaymentForSendingEmployer = await payments.HasReceivedRecentPaymentForSendingEmployer();
+            if (hasReceivedRecentPaymentForSendingEmployer == null)
+            {
+                _logger.Info($"No last payment received recorded for sending employer account: {sendingEmployerAccountId}  5 minutes has elapsed since last received payment");
+            }                
 
             var lastCommitmentReceivedTime = await _commitmentsRepository.GetLastTimeRecieved(sendingEmployerAccountId);
             if (lastCommitmentReceivedTime == null)
                 throw new InvalidOperationException($"No last commitment time recorded for employer account: {sendingEmployerAccountId}");
 
-            return AllowProjections(lastReceivedTime, lastCommitmentReceivedTime);
+            return AllowProjections(hasReceivedRecentPaymentForSendingEmployer, lastCommitmentReceivedTime);
         }
-        private bool AllowProjections(DateTime? lastPaymentReceivedTime, DateTime? lastCommitmentReceivedTime)
+        private bool AllowProjections(bool? hasReceivedRecentPayment, DateTime? lastCommitmentReceivedTime)
         {
-            var allowPaymentProjections = lastPaymentReceivedTime == null;
+            var allowPaymentProjections = (bool)!hasReceivedRecentPayment;
             
             var allowCommitmentProjections =
                 lastCommitmentReceivedTime.Value.AddSeconds(_applicationConfiguration.SecondsToWaitToAllowProjections) <=

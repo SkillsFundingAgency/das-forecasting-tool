@@ -44,24 +44,26 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 _dataContext.Payments.Add(payment);
         }
 
-        public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
-        {
-            return await _dataContext
+        public async Task<bool?> HasReceivedRecentPayment(long employerAccountId)
+        {          
+            return
+                await _dataContext
                 .Payments
-                .Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId) 
+                .Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
                                                              && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() != null;
         }
 
-        public async Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId)
+        public async Task<bool?> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
         {
             return await _dataContext
-                .Payments.Where(payment => payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
+                .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
+                                                                                && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() != null;
         }
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)
