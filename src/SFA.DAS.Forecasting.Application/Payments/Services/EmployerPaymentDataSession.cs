@@ -5,6 +5,7 @@ using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -45,9 +46,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
-            _dataContext.Database.CommandTimeout = 300;
             return await _dataContext
-                .Payments.Where(payment => payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
+                .Payments
+                .Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId) 
+                                                             && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync();
