@@ -88,15 +88,17 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         private async Task<bool> IsEmployerAccountIdAllowed(long employerAccountId)
         {
             var payments = _paymentsRepository.Get(employerAccountId);
-            var lastReceivedTime = await payments.GetLastTimeReceivedPayment();
-            if (lastReceivedTime == null)
-                throw new InvalidOperationException($"No last time recorded for employer account: {employerAccountId}");
+            var lastPaymentReceivedTime = await payments.GetLastTimeReceivedPayment();
+            if (lastPaymentReceivedTime == null)
+            {
+                _logger.Info($"No last payment received time recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");                
+            }
 
             var lastCommitmentReceivedTime = await _commitmentsRepository.GetLastTimeRecieved(employerAccountId);
             if (lastCommitmentReceivedTime == null)
                 throw new InvalidOperationException($"No last commitment time recorded for employer account: {employerAccountId}");
 
-            return AllowProjections(lastReceivedTime, lastCommitmentReceivedTime);
+            return AllowProjections(lastPaymentReceivedTime, lastCommitmentReceivedTime);
         }
 
         private async Task<bool> IsSendingEmployerAccountIdAllowed(long sendingEmployerAccountId)
@@ -114,9 +116,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         }
         private bool AllowProjections(DateTime? lastPaymentReceivedTime, DateTime? lastCommitmentReceivedTime)
         {
-            var allowPaymentProjections =
-                lastPaymentReceivedTime.Value.AddSeconds(_applicationConfiguration.SecondsToWaitToAllowProjections) <=
-                DateTime.UtcNow;
+            var allowPaymentProjections = lastPaymentReceivedTime == null;
+            
             var allowCommitmentProjections =
                 lastCommitmentReceivedTime.Value.AddSeconds(_applicationConfiguration.SecondsToWaitToAllowProjections) <=
                 DateTime.UtcNow;
