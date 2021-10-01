@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         public EmployerPaymentDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));            
         }
 
         public async Task<PaymentModel> Get(long employerAccountId, string paymentId)
@@ -45,6 +45,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
         {
+            _dataContext.Database.CommandTimeout = 300;
             return await _dataContext
                 .Payments.Where(payment => payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
                 .OrderByDescending(payment => payment.ReceivedTime)

@@ -4,6 +4,7 @@ using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
+using System.Data.Entity.Infrastructure;
 
 namespace SFA.DAS.Forecasting.Data
 {
@@ -51,6 +52,9 @@ namespace SFA.DAS.Forecasting.Data
             : base("Name=DatabaseConnectionString")
         {
             InitializePartial();
+
+            // Get the ObjectContext related to this DbContext and  Sets the command timeout for all the commands
+            ((IObjectContextAdapter)this).ObjectContext.CommandTimeout = 300;            
         }
 
         public ForecastingDataContext(string connectionString)
