@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Data
         public ForecastingDataContext(IApplicationConnectionStrings config)
             : base(config.DatabaseConnectionString)
         {
-            InitializePartial();   
+            InitializePartial();
         }
 
         partial void DisposePartial(bool disposing)

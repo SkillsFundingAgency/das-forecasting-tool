@@ -4,7 +4,6 @@ using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Levy;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Projections;
-using System.Data.Entity.Infrastructure;
 
 namespace SFA.DAS.Forecasting.Data
 {
@@ -51,7 +50,7 @@ namespace SFA.DAS.Forecasting.Data
         public ForecastingDataContext()
             : base("Name=DatabaseConnectionString")
         {
-            InitializePartial();        
+            InitializePartial();
         }
 
         public ForecastingDataContext(string connectionString)
