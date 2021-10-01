@@ -21,8 +21,7 @@ namespace SFA.DAS.Forecasting.Data
         public ForecastingDataContext(IApplicationConnectionStrings config)
             : base(config.DatabaseConnectionString)
         {
-            InitializePartial();
-            ((IObjectContextAdapter)this).ObjectContext.CommandTimeout = 300;            
+            InitializePartial();   
         }
 
         partial void DisposePartial(bool disposing)

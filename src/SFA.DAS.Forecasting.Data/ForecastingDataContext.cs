@@ -51,10 +51,7 @@ namespace SFA.DAS.Forecasting.Data
         public ForecastingDataContext()
             : base("Name=DatabaseConnectionString")
         {
-            InitializePartial();
-
-            // Get the ObjectContext related to this DbContext and  Sets the command timeout for all the commands
-            ((IObjectContextAdapter)this).ObjectContext.CommandTimeout = 300;            
+            InitializePartial();        
         }
 
         public ForecastingDataContext(string connectionString)

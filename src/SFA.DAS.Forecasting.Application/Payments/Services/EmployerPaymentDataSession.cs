@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         public EmployerPaymentDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));            
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry)); 
         }
 
         public async Task<PaymentModel> Get(long employerAccountId, string paymentId)
