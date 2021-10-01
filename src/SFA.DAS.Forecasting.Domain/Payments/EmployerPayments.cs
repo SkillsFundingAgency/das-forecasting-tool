@@ -16,12 +16,12 @@ namespace SFA.DAS.Forecasting.Domain.Payments
             _dataSession = dataSession ?? throw new ArgumentNullException(nameof(dataSession));
         }
 
-		public async Task<bool?> HasReceivedRecentPayment()
+		public async Task<bool> HasReceivedRecentPayment()
 		{
 			return await _dataSession.HasReceivedRecentPayment(_employerAccountId);
 		}
 
-	    public async Task<bool?> HasReceivedRecentPaymentForSendingEmployer()
+	    public async Task<bool> HasReceivedRecentPaymentForSendingEmployer()
 	    {
 		    return await _dataSession.HasReceivedRecentPaymentForSendingEmployer(_employerAccountId);
 	    }

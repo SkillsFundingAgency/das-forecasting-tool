@@ -89,7 +89,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         {
             var payments = _paymentsRepository.Get(employerAccountId);
             var hasReceivedRecentPayment = await payments.HasReceivedRecentPayment();
-            if (hasReceivedRecentPayment == null)
+            if (!hasReceivedRecentPayment)
             {
                 _logger.Info($"No last payment received recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");                
             }
@@ -105,7 +105,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         {
             var payments = _paymentsRepository.Get(sendingEmployerAccountId);
             var hasReceivedRecentPaymentForSendingEmployer = await payments.HasReceivedRecentPaymentForSendingEmployer();
-            if (hasReceivedRecentPaymentForSendingEmployer == null)
+            if (!hasReceivedRecentPaymentForSendingEmployer)
             {
                 _logger.Info($"No last payment received recorded for sending employer account: {sendingEmployerAccountId}  5 minutes has elapsed since last received payment");
             }                
@@ -116,9 +116,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
             return AllowProjections(hasReceivedRecentPaymentForSendingEmployer, lastCommitmentReceivedTime);
         }
-        private bool AllowProjections(bool? hasReceivedRecentPayment, DateTime? lastCommitmentReceivedTime)
+        private bool AllowProjections(bool hasReceivedRecentPayment, DateTime? lastCommitmentReceivedTime)
         {
-            var allowPaymentProjections = (bool)!hasReceivedRecentPayment;
+            var allowPaymentProjections = !hasReceivedRecentPayment;
             
             var allowCommitmentProjections =
                 lastCommitmentReceivedTime.Value.AddSeconds(_applicationConfiguration.SecondsToWaitToAllowProjections) <=

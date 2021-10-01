@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
             var lastReceivedTime = DateTime.Now;
             _moqer.GetMock<IEmployerPaymentDataSession>()
                 .Setup(session => session.HasReceivedRecentPayment(It.IsAny<long>()))
-                .Returns(Task.FromResult<bool?>(lastReceivedTime != null));
+                .Returns(Task.FromResult<bool>(lastReceivedTime != null));
             
             //Act
             var payments = new EmployerPayments(12345, _moqer.GetMock<IEmployerPaymentDataSession>().Object);
@@ -42,7 +42,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
             var lastReceivedTime = DateTime.Now;
             _moqer.GetMock<IEmployerPaymentDataSession>()
                 .Setup(session => session.HasReceivedRecentPayment(It.IsAny<long>()))
-                .Returns(Task.FromResult<bool?>(lastReceivedTime == null));
+                .Returns(Task.FromResult<bool>(lastReceivedTime == null));
 
             //Act
             var payments = new EmployerPayments(12345, _moqer.GetMock<IEmployerPaymentDataSession>().Object);

@@ -44,7 +44,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 _dataContext.Payments.Add(payment);
         }
 
-        public async Task<bool?> HasReceivedRecentPayment(long employerAccountId)
+        public async Task<bool> HasReceivedRecentPayment(long employerAccountId)
         {          
             return
                 await _dataContext
@@ -56,7 +56,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 .FirstOrDefaultAsync() != null;
         }
 
-        public async Task<bool?> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
+        public async Task<bool> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
         {
             return await _dataContext
                 .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
