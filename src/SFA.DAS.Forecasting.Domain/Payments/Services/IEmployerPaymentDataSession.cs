@@ -10,8 +10,8 @@ namespace SFA.DAS.Forecasting.Domain.Payments.Services
     {
         Task<PaymentModel> Get(long employerAccountId, string paymentId);
         void Store(PaymentModel payment);
-        Task<DateTime?> GetLastReceivedTime(long employerAccountId);
-	    Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId);
+        Task<bool> HasReceivedRecentPayment(long employerAccountId);
+	    Task<bool> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId);
         Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId);
 		Task SaveChanges();
     }

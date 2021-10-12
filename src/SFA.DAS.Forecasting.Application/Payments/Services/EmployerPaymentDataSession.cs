@@ -5,6 +5,7 @@ using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,7 +22,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         public EmployerPaymentDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
         {
             _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry)); 
         }
 
         public async Task<PaymentModel> Get(long employerAccountId, string paymentId)
@@ -43,22 +44,26 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 _dataContext.Payments.Add(payment);
         }
 
-        public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
-        {
-            return await _dataContext
-                .Payments.Where(payment => payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
+        public async Task<bool> HasReceivedRecentPayment(long employerAccountId)
+        {          
+            return
+                await _dataContext
+                .Payments
+                .Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
+                                                             && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() != null;
         }
 
-        public async Task<DateTime?> GetLastSentTime(long sendingEmployerAccountId)
+        public async Task<bool> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
         {
             return await _dataContext
-                .Payments.Where(payment => payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
+                .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
+                                                                                && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync() != null;
         }
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)

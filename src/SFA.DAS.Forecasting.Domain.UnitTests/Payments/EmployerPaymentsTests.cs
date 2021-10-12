@@ -20,14 +20,35 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Payments
         }
 
         [Test]
-        public async Task Returns_Last_Received_Time()
+        public async Task Received_Recent_Payment_Returns_NotNull()
         {
+            //Arrange
             var lastReceivedTime = DateTime.Now;
             _moqer.GetMock<IEmployerPaymentDataSession>()
-                .Setup(session => session.GetLastReceivedTime(It.IsAny<long>()))
-                .Returns(Task.FromResult<DateTime?>(lastReceivedTime));
+                .Setup(session => session.HasReceivedRecentPayment(It.IsAny<long>()))
+                .Returns(Task.FromResult<bool>(lastReceivedTime != null));
+            
+            //Act
             var payments = new EmployerPayments(12345, _moqer.GetMock<IEmployerPaymentDataSession>().Object);
-            Assert.AreEqual(lastReceivedTime, await payments.GetLastTimeReceivedPayment());
+            
+            //Assert
+            Assert.AreEqual(true, await payments.HasReceivedRecentPayment());
+        }
+
+        [Test]
+        public async Task Received_Recent_Payment_Returns_Null()
+        {
+            //Arrange
+            var lastReceivedTime = DateTime.Now;
+            _moqer.GetMock<IEmployerPaymentDataSession>()
+                .Setup(session => session.HasReceivedRecentPayment(It.IsAny<long>()))
+                .Returns(Task.FromResult<bool>(lastReceivedTime == null));
+
+            //Act
+            var payments = new EmployerPayments(12345, _moqer.GetMock<IEmployerPaymentDataSession>().Object);
+
+            //Assert
+            Assert.AreEqual(false, await payments.HasReceivedRecentPayment());
         }
     }
 }
