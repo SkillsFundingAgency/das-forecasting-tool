@@ -52,7 +52,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                                                                          && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)                
                 .FirstOrDefaultAsync() != null;
-        }    
+        }
 
         public async Task<bool> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
         {
