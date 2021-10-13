@@ -50,7 +50,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 await _dataContext
                 .Payments
                 .Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
-                                                             && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
+                                                             && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync() != null;
@@ -60,7 +60,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         {
             return await _dataContext
                 .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
-                                                                                && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
+                                                                                && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .Select(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync() != null;
