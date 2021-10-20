@@ -3,9 +3,9 @@ param(
     [string]$ResourceGroupName
 )
 
-$SubscriptionId = (Get-AzureRmContext).Subscription.Id
+$SubscriptionId = (Get-AzContext).Subscription.Id
 if(!$SubscriptionId){
-    $SubscriptionId = (Get-AzureRmContext).Subscription.SubscriptionId
+    $SubscriptionId = (Get-AzContext).Subscription.SubscriptionId
 }
 foreach ($FunctionApp in $FunctionAppNames) {
     Write-Host "Initialising $FunctionApp"
@@ -15,6 +15,6 @@ foreach ($FunctionApp in $FunctionAppNames) {
         ApiVersion = "2016-08-01"
         Force      = $true
     }
-    $TriggerUrl = (Invoke-AzureRmResourceAction @ResourceActionParams).trigger_url
+    $TriggerUrl = (Invoke-AzResourceAction @ResourceActionParams).trigger_url
     Invoke-RestMethod -Uri $TriggerUrl -UseBasicParsing
 }
