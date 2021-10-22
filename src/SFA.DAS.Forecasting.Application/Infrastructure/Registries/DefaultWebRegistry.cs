@@ -19,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Use<ForecastingDataContext>()
                 .Ctor<IApplicationConnectionStrings>("config")
                 .Is(ctx => ctx.GetInstance<IApplicationConnectionStrings>())
-                .ContainerScoped();
+                .Transient();
 
             var apiConfig = ConfigurationHelper.GetAccountApiConfiguration();
             For<IAccountApiClient>()

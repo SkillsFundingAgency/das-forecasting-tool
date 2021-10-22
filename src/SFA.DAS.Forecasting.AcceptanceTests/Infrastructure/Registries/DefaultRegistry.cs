@@ -30,7 +30,8 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Infrastructure.Registries
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()
                 .Ctor<IApplicationConnectionStrings>("config")
-                .Is(ctx => ctx.GetInstance<Config>());
+                .Is(ctx => ctx.GetInstance<Config>())
+                .Transient();
 
             For<IDbConnection>()
                 .Use<SqlConnection>()
