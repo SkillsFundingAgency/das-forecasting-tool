@@ -46,21 +46,24 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<bool> HasReceivedRecentPayment(long employerAccountId)
         {
-            return
-                await _dataContext
+            var recentPayment = await _dataContext
                 .Payments.Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
                                                                          && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
-                .OrderByDescending(payment => payment.ReceivedTime)                
-                .FirstOrDefaultAsync() != null;
+                .OrderByDescending(payment => payment.ReceivedTime)
+                .FirstOrDefaultAsync();
+            
+            return recentPayment != null;
         }
 
         public async Task<bool> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
         {
-            return await _dataContext
+            var recentPayment = await _dataContext
                 .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
                                                                                 && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
-                .OrderByDescending(payment => payment.ReceivedTime)                
-                .FirstOrDefaultAsync() != null;
+                .OrderByDescending(payment => payment.ReceivedTime)
+                .FirstOrDefaultAsync();
+                
+                return recentPayment != null;
         }
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)
