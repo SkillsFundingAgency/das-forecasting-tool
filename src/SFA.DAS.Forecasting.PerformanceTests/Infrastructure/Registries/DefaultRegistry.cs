@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.PerformanceTests.Infrastructure.Registries
                 .Use<ForecastingDataContext>()
                 .Ctor<IApplicationConnectionStrings>("config")
                 .Is(ctx => ctx.GetInstance<Config>())
-                .Transient();
+                .ContainerScoped();
 
             For<IDbConnection>()
                 .Use<SqlConnection>()
