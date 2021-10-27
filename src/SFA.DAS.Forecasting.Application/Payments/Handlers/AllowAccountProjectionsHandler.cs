@@ -88,22 +88,20 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         private async Task<bool> IsEmployerAccountIdAllowed(long employerAccountId)
         {
             var payments = _paymentsRepository.Get(employerAccountId);
-            var hasReceivedRecentPayment = payments.HasReceivedRecentPayment();
-            var lastCommitmentReceivedTime = _commitmentsRepository.GetLastTimeRecieved(employerAccountId);
+            var hasReceivedRecentPayment = await payments.HasReceivedRecentPayment();
+            var lastCommitmentReceivedTime = await _commitmentsRepository.GetLastTimeRecieved(employerAccountId);
 
-            await Task.WhenAll(hasReceivedRecentPayment, lastCommitmentReceivedTime);
-
-            if (!hasReceivedRecentPayment.Result)
+            if (!hasReceivedRecentPayment)
             {
                 _logger.Info($"No last payment received recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");
             }
 
-            if (lastCommitmentReceivedTime.Result == null)
+            if (lastCommitmentReceivedTime == null)
             {
                 throw new InvalidOperationException($"No last commitment time recorded for employer account: {employerAccountId}");
             }
 
-            return AllowProjections(hasReceivedRecentPayment.Result, lastCommitmentReceivedTime.Result);
+            return AllowProjections(hasReceivedRecentPayment, lastCommitmentReceivedTime);
         }
 
         private async Task<bool> IsSendingEmployerAccountIdAllowed(long sendingEmployerAccountId)
