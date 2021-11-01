@@ -45,25 +45,25 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         }
 
         public async Task<bool> HasReceivedRecentPayment(long employerAccountId)
-        {          
-            return
-                await _dataContext
-                .Payments
-                .Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
-                                                             && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
+        {
+            var recentPayment = await _dataContext
+                .Payments.Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
+                                                                         && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
-                .Select(payment => payment.ReceivedTime)
-                .FirstOrDefaultAsync() != null;
+                .FirstOrDefaultAsync();
+            
+            return recentPayment != null;
         }
 
         public async Task<bool> HasReceivedRecentPaymentForSendingEmployer(long sendingEmployerAccountId)
         {
-            return await _dataContext
+            var recentPayment = await _dataContext
                 .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
-                                                                                && SqlFunctions.DateDiff("MIN", DateTime.Now, payment.ReceivedTime) <= 5)
+                                                                                && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
-                .Select(payment => payment.ReceivedTime)
-                .FirstOrDefaultAsync() != null;
+                .FirstOrDefaultAsync();
+                
+                return recentPayment != null;
         }
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetPaymentTotals(long employerAccountId)
