@@ -9,6 +9,8 @@
     <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.2924" />
     <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.2924" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="7.89.7" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="7.89.7" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="7.89.7" />
     <PackageReference Include="SFA.DAS.Provider.Events.Api.Client" Version="2.1.97" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
   </ItemGroup>

@@ -49,19 +49,16 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
             };
         }
 
-        private static Faker<GetApprenticeshipResponse> CreateFakeCommitment(string employerAccountId)
+        private static Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse> CreateFakeCommitment(string employerAccountId)
         {
-            return new Faker<GetApprenticeshipResponse>()
+            return new Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
                 .RuleFor(commitment => commitment.Id, faker => faker.Random.Long(99999, 9999999))
-                .RuleFor(commitment => commitment.EmployerAccountId, Convert.ToInt64(employerAccountId))
-                //.RuleFor(commitment => commitment.TransferSenderId, Convert.ToInt64(employerAccountId))
-                //.RuleFor(commitment => commitment.Cost, faker => faker.Random.Int(300,1000))
-                //.RuleFor(commitment => commitment.AgreementStatus, AgreementStatus.BothAgreed)
-                //.RuleFor(commitment => commitment.PaymentStatus, PaymentStatus.Active)
-                // .RuleFor(commitment => commitment.TrainingType, TrainingType.Standard)
+                .RuleFor(commitment => commitment.AccountLegalEntityId, Convert.ToInt64(employerAccountId))
+                .RuleFor(commitment => commitment.TransferSenderId, Convert.ToInt64(employerAccountId))
+                .RuleFor(commitment => commitment.Cost, faker => faker.Random.Int(300,1000))
+                .RuleFor(commitment => commitment.PaymentStatus, CommitmentsV2.Types.PaymentStatus.Active)
                 .RuleFor(commitment => commitment.StartDate, faker => DateTime.Now.AddMonths(faker.Random.Int(1, 12)))
                 .RuleFor(commitment => commitment.EndDate, faker => DateTime.Now.AddMonths(faker.Random.Int(15, 30)))
-                // .RuleFor(commitment => commitment.ApprenticeshipName, faker => faker.Company.CompanyName())
                 .RuleFor(commitment => commitment.FirstName, faker => faker.Name.FirstName())
                 .RuleFor(commitment => commitment.LastName, faker => faker.Name.LastName())
                 .RuleFor(commitment => commitment.Uln, faker => faker.Random.Long(99999, 999999).ToString())
@@ -72,9 +69,9 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
                 ;
         }
 
-        private static string SendCommitments(Faker<GetApprenticeshipResponse> fakeCommitment, int count = 10)
+        private static string SendCommitments(Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse> fakeCommitment, int count = 10)
         {
-            var commitments = new List<GetApprenticeshipResponse>();
+            var commitments = new List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>();
             for (var i = 0; i < count; i++)
             {
                 var commitment = fakeCommitment.Generate();
