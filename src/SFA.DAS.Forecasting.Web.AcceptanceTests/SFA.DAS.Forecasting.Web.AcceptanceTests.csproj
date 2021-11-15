@@ -74,8 +74,8 @@
     <Reference Include="Sfa.Automation.Framework, Version=1.0.0.50518, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.Automation.Framework.1.0.0.50518\lib\net45\Sfa.Automation.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="StructureMap, Version=4.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>
+    <Reference Include="StructureMap, Version=4.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.7.0\lib\net45\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
