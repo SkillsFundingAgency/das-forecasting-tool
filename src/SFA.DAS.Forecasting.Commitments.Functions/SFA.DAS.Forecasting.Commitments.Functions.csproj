@@ -11,8 +11,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="SFA.DAS.Commitments.Api.Client" Version="4.1.494" />
-    <PackageReference Include="SFA.DAS.Commitments.Api.Types" Version="4.1.494" />
     <PackageReference Include="SFA.DAS.Http" Version="3.2.28" />
     <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />
     <PackageReference Include="SFA.DAS.NLog.Targets.Redis" Version="1.0.0.47445" />
