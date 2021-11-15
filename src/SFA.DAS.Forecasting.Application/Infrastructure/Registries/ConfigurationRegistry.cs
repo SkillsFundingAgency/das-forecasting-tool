@@ -28,8 +28,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             ForSingletonOf<IPaymentsEventsApiConfiguration>().Use(config.PaymentEventsApi);
             For<ForecastingConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ForecastingConfiguration>(ServiceName)).Singleton();
-            //TODO: Move this to proper place.
-            IncludeRegistry<CommitmentsApiClientRegistry>();
         }
 
         private ILoggerFactory CreateLoggerFactory()

@@ -96,6 +96,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
+        public static bool ByPassMI => IsDevEnvironment && (ConfigurationManager.AppSettings["ByPassMI"]?.Equals("TRUE") ?? false);
+
         private static async Task<string> GetSecret(string secretName)
         {
             try
