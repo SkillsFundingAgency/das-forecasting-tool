@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
+using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
@@ -18,7 +19,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static AccountApiConfiguration GetAccountApiConfiguration()
         {
-            return 
+            return
                 IsDevEnvironment
                 ? new AccountApiConfiguration
                 {
@@ -28,7 +29,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     ApiBaseUrl = CloudConfigurationManager.GetSetting("AccountApi-ApiBaseUrl"),
                     IdentifierUri = CloudConfigurationManager.GetSetting("AccountApi-IdentifierUri")
                 }
-                : 
+                :
                 GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
         }
 
@@ -43,20 +44,17 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
         }
 
-        public static CommitmentsApiConfig GetCommitmentsApiConfiguration()
+        public static CommitmentsClientApiConfiguration GetCommitmentsApiConfiguration()
         {
-            return IsDevEnvironment
-                ? new CommitmentsApiConfig
-                {
-                    BaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV1BaseUrl"),
-                    ClientToken = CloudConfigurationManager.GetSetting("CommitmentsV1ClientToken"),
-                    ApiBaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV1ApiBaseUrl"),
-                    Tenant = CloudConfigurationManager.GetSetting("CommitmentsV1Tenant"),
-                    ClientId = CloudConfigurationManager.GetSetting("CommitmentsV1ClientId"),
-                    ClientSecret = CloudConfigurationManager.GetSetting("CommitmentsV1ClientSecret"),
-                    IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV1IdentifierUri")
-                }
-                : GetConfiguration<CommitmentsApiConfig>("SFA.DAS.CommitmentsAPI");
+            return
+                //IsDevEnvironment
+                //? new CommitmentsClientApiConfiguration
+                //{
+                //    ApiBaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV1ApiBaseUrl"),
+                //    IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV1IdentifierUri")
+                //}
+                //: 
+                GetConfiguration<CommitmentsClientApiConfiguration>("SFA.DAS.CommitmentsAPI");
         }
 
         private static T GetConfiguration<T>(string serviceName)
