@@ -9,7 +9,7 @@ using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Threading.Tasks;
-using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 
 namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
 {
@@ -24,14 +24,14 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public void SetUp()
         {
             // Temporary while divide by zero exists
-            _fixture.Customize<ApiApprenticeship>(
+            _fixture.Customize<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>(
                 x => x
                 .Without(y => y.EndDate)
                 .Without(y => y.StartDate)
                 .Do(o =>
             {
                 o.StartDate = _fixture.Create<DateTime>();
-                o.EndDate = o.StartDate.Value.AddMonths(13);
+                o.EndDate = o.StartDate.AddMonths(13);
             }));
 
             _apprenticeshipCourseDataServiceMock = new Mock<IApprenticeshipCourseDataService>();
@@ -43,7 +43,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         {
             // Arrange
             var emptyResult = new ApprenticeshipMessage();
-            ApiApprenticeship apiApprenticeship = null;
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = null;
 
             // Act
             var result = await _sut.Map(apiApprenticeship);
@@ -56,34 +56,34 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public async Task NotNull_ShouldGetApprenticeshipTrainingCourse()
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture.Create<ApiApprenticeship>();
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture.Create<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>();
 
             // Act
             var result = await _sut.Map(apiApprenticeship);
 
             // Assert
             _apprenticeshipCourseDataServiceMock
-                .Verify(mock => mock.GetApprenticeshipCourse(It.Is<string>(x => x == apiApprenticeship.TrainingCode)), Times.Once);
+                .Verify(mock => mock.GetApprenticeshipCourse(It.Is<string>(x => x == apiApprenticeship.CourseCode)), Times.Once);
         }
 
         [Test]
         public async Task ShouldMapToApprenticeshipMessage()
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture.Create<ApiApprenticeship>();
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture.Create<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>();
 
             // Act
             var result = await _sut.Map(apiApprenticeship);
 
             // Assert
-            result.EmployerAccountId.Should().Be(apiApprenticeship.EmployerAccountId);
+            result.EmployerAccountId.Should().Be(apiApprenticeship.AccountLegalEntityId);
             result.SendingEmployerAccountId.Should().Be(apiApprenticeship.TransferSenderId);
             result.ProviderId.Should().Be(apiApprenticeship.ProviderId);
             result.ProviderName.Should().Be(apiApprenticeship.ProviderName);
             result.ApprenticeshipId.Should().Be(apiApprenticeship.Id);
-            result.CourseName.Should().Be(apiApprenticeship.TrainingName);
-            result.StartDate.Should().Be(apiApprenticeship.StartDate.Value);
-            result.PlannedEndDate.Should().Be(apiApprenticeship.EndDate.Value);
+            result.CourseName.Should().Be(apiApprenticeship.CourseName);
+            result.StartDate.Should().Be(apiApprenticeship.StartDate);
+            result.PlannedEndDate.Should().Be(apiApprenticeship.EndDate);
             result.ActualEndDate.Should().Be(null);
         }
 
@@ -94,9 +94,9 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public async Task ShouldMapTApprenticeshipMessage_LearnerId(string apprenticeshipUln, long expectedLearnerId)
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture
-                .Build<ApiApprenticeship>()
-                .With(x => x.ULN, apprenticeshipUln)
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture
+                .Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
+                .With(x => x.Uln, apprenticeshipUln)
                 .Create();
 
             // Act
@@ -114,8 +114,8 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             var lastName = "bar";
             var expectedApprenticeName = "foo bar";
 
-            ApiApprenticeship apiApprenticeship = _fixture
-                .Build<ApiApprenticeship>()
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture
+                .Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
                 .With(x => x.FirstName, firstName)
                 .With(x => x.LastName, lastName)
                 .Create();
@@ -131,7 +131,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public async Task NullApprenticeshipCourse_ShouldMapToApprenticeshipMessage_CourseLevel_Zero()
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture.Create<ApiApprenticeship>();
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture.Create<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>();
 
             // Act
             var result = await _sut.Map(apiApprenticeship);
@@ -146,14 +146,14 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public async Task ShouldMapToApprenticeshipMessage_CourseLevel(int? apiCourseLevel, int expectedMappedCourseLevel)
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture.Create<ApiApprenticeship>();
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture.Create<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>();
             var apiCourse = _fixture
                 .Build<ApprenticeshipCourse>()
                 .With(x => x.Level, apiCourseLevel)
                 .Create();
 
             _apprenticeshipCourseDataServiceMock
-                .Setup(mock => mock.GetApprenticeshipCourse(It.Is<string>(x => x == apiApprenticeship.TrainingCode)))
+                .Setup(mock => mock.GetApprenticeshipCourse(It.Is<string>(x => x == apiApprenticeship.CourseCode)))
                 .ReturnsAsync(apiCourse);
 
             // Act
@@ -169,8 +169,8 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public async Task ShouldMapToApprenticeshipMessage_CompletionAmount(decimal? apprenticeshipCost, int expectedCompletionAmount)
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture
-                .Build<ApiApprenticeship>()
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture
+                .Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
                 .With(o => o.Cost, apprenticeshipCost)
                 .Create();
 
@@ -193,15 +193,15 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             // Arrange
             _fixture.Customizations.Clear();
 
-            ApiApprenticeship apiApprenticeship = _fixture
-                .Build<ApiApprenticeship>()
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture
+                .Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
                 .With(y => y.Cost, apprenticeshipCost)
                 .Without(y => y.EndDate)
                 .Without(y => y.StartDate)
                 .Do(o =>
                 {
                     o.StartDate = _fixture.Create<DateTime>();
-                    o.EndDate = o.StartDate.Value.AddMonths(duration);
+                    o.EndDate = o.StartDate.AddMonths(duration);
                 })
                 .Create();
             // Act
@@ -223,14 +223,14 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             // Arrange
             _fixture.Customizations.Clear();
 
-            ApiApprenticeship apiApprenticeship = _fixture
-                .Build<ApiApprenticeship>()
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture
+                .Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
                 .Without(y => y.EndDate)
                 .Without(y => y.StartDate)
                 .Do(o =>
                 {
                     o.StartDate = _fixture.Create<DateTime>();
-                    o.EndDate = o.StartDate.Value.AddMonths(duration);
+                    o.EndDate = o.StartDate.AddMonths(duration);
                 })
                 .Create();
             // Act
@@ -246,8 +246,8 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
         public async Task ShouldMapToApprenticeshipMessage_FundingSource(long? transferSenderId, FundingSource fundingSource)
         {
             // Arrange
-            ApiApprenticeship apiApprenticeship = _fixture
-                .Build<ApiApprenticeship>()
+            GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apiApprenticeship = _fixture
+                .Build<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
                 .With(o => o.TransferSenderId, transferSenderId)
                 .Create();
 
