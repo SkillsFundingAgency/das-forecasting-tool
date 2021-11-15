@@ -29,7 +29,8 @@
     "CommitmentsV1Tenant": "",
     "CommitmentsV1ClientId": "",
     "CommitmentsV1ClientSecret": "",
-    "CommitmentsV1IdentifierUri": ""
+    "CommitmentsV1IdentifierUri": "",
+    "BindingRedirects": "[ { \"ShortName\": \"Microsoft.IdentityModel.Clients.ActiveDirectory\", \"RedirectToVersion\": \"5.2.8.0\", \"PublicKeyToken\": \"31bf3856ad364e35\" } ]"
   },
   "Host": {
     "LocalHttpPort": 7076,
