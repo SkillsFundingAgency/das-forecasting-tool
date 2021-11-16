@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization.Json;
-using System.Text;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
@@ -22,13 +19,11 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
         private static List<BindingRedirect> GetBindingRedirects()
         {
-            var result = new List<BindingRedirect>();
-            var bindingRedirectListJson = Environment.GetEnvironmentVariable("BindingRedirects");
-            using (var memoryStream = new MemoryStream(Encoding.Unicode.GetBytes(bindingRedirectListJson)))
-            {
-                var serializer = new DataContractJsonSerializer(typeof(List<BindingRedirect>));
-                result = (List<BindingRedirect>)serializer.ReadObject(memoryStream);
-            }
+            var result = new List<BindingRedirect>() 
+            { 
+              new BindingRedirect { ShortName = "Microsoft.IdentityModel.Clients.ActiveDirectory",   PublicKeyToken = "31bf3856ad364e35",    RedirectToVersion = "5.2.8.0" } 
+            };
+
             return result;
         }
 

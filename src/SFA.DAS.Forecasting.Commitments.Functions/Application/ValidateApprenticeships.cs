@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
@@ -12,9 +11,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
         {
             var filteredApprenticeships =
                 apprenticeships
-                //.Where(m => !m.HasHadDataLockSuccess)
-                //.Where(m => m.st == null)
-                //.Where(m => m.PauseDate == null)
+                .Where(m => !m.HasHadDataLockSuccess)
                 .Where(m => m.ApprenticeshipStatus == CommitmentsV2.Types.ApprenticeshipStatus.Live || m.ApprenticeshipStatus == CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart).ToList();
 
             return CreateResult(filteredApprenticeships, apprenticeships);

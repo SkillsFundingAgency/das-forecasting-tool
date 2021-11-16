@@ -65,8 +65,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
                 .RuleFor(commitment => commitment.CourseCode, "107")
                 .RuleFor(commitment => commitment.CourseName, "Embedded electronic systems design and development engineer")
                 .RuleFor(commitment => commitment.ProviderId, 5)
-                .RuleFor(commitment => commitment.ProviderName, "providername")
-                ;
+                .RuleFor(commitment => commitment.ProviderName, "providername");
         }
 
         private static string SendCommitments(Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse> fakeCommitment, int count = 10)

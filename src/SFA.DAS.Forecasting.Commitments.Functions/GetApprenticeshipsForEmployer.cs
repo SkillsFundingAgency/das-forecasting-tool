@@ -6,9 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-//using SFA.DAS.Commitments.Api.Client.Interfaces;
-//using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-//using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Commitments.Functions.Application;
@@ -39,9 +36,6 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
                    (apprenticeships, failedValidation) = apprenticeshipValidation.BusinessValidation(apprenticeships);
                    logger.Info($"{failedValidation.Count()} apprenticeships failed business validation");
-
-                   //(apprenticeships, failedValidation)  = apprenticeshipValidation.InputValidation(apprenticeships);
-                   //logger.Info($"{failedValidation.Count()} apprenticeships failed input validation");
 
                    var mappedApprenticeships = apprenticeships.Select(mapper.Map).ToList();
 
