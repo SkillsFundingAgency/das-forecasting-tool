@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                    (apprenticeships, failedValidation) = apprenticeshipValidation.BusinessValidation(apprenticeships);
                    logger.Info($"{failedValidation.Count()} apprenticeships failed business validation");
 
-                   var mappedApprenticeships = apprenticeships.Select(mapper.Map).ToList();
+                   var mappedApprenticeships = apprenticeships.Select(y => mapper.Map(y, message.EmployerId)).ToList();
 
                    logger.Info($"Sending {mappedApprenticeships.Count} apprenticeships for storing. EmployerId: {message.EmployerId} ");
 

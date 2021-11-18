@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
             _apprenticeshipCourseDataService = apprenticeshipCourseDataService;
         }
 
-        internal async Task<ApprenticeshipMessage> Map(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apprenticeship)
+        internal async Task<ApprenticeshipMessage> Map(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apprenticeship, long employerAccountId)
         {
             if (apprenticeship == null)
             {
@@ -29,7 +29,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 
             return new ApprenticeshipMessage
             {
-                EmployerAccountId = apprenticeship.AccountLegalEntityId,
+                EmployerAccountId = employerAccountId,
                 SendingEmployerAccountId = apprenticeship.TransferSenderId,
                 LearnerId = long.TryParse(apprenticeship.Uln, out var result) ? result : 0,
                 ProviderId = apprenticeship.ProviderId,
