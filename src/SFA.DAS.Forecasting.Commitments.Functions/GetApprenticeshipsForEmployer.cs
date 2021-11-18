@@ -50,8 +50,11 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
         private static async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForAccount(long employerAccountId, ICommitmentsApiClient employerCommitmentsApi)
         {
-            var apprenticeships = await GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.Live);
-            apprenticeships.AddRange(await GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart));
+            var liveApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.Live);
+            var awaitingApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart);
+
+            var apprenticeships = await liveApprenticeshipsTask;
+            apprenticeships.AddRange(await awaitingApprenticeshipsTask);
 
             return apprenticeships;
         }
