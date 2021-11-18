@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.CommitmentsV2.Api.Client;
+using SFA.DAS.CommitmentsV2.Api.Client.DependencyResolution;
 using SFA.DAS.Forecasting.Application.LocalDevRegistry;
 using StructureMap;
 
@@ -15,17 +16,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             }
             else
             {
-                IncludeRegistry<CommitmentsApiClientRegistry2>();
+                IncludeRegistry<CommitmentsApiClientRegistry>();
             }
-        }
-    }
-
-    public class CommitmentsApiClientRegistry2 : Registry
-    {
-        public CommitmentsApiClientRegistry2()
-        {
-            For<ICommitmentsApiClient>().Use(c => c.GetInstance<ICommitmentsApiClientFactory>().CreateClient()).Singleton();
-            For<ICommitmentsApiClientFactory>().Use<CommitmentsApiClientFactory>();
         }
     }
 }
