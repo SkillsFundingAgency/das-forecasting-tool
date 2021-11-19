@@ -1,6 +1,8 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.AutoConfiguration;
 using SFA.DAS.AutoConfiguration.DependencyResolution;
+using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Core;
@@ -15,14 +17,22 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public ConfigurationRegistry()
         {
+            For<ILoggerFactory>().Use(ctx => CreateLoggerFactory()).Singleton();
             IncludeRegistry<AutoConfigurationRegistry>();
             var config = GetConfiguration();
             ForSingletonOf<IApplicationConfiguration>().Use(config);
             ForSingletonOf<IApplicationConnectionStrings>().Use(config);
             ForSingletonOf<IAccountApiConfiguration>().Use(config.AccountApi);
+            ForSingletonOf<CommitmentsClientApiConfiguration>().Use(config.CommitmentsClientApiConfiguration);
 
             ForSingletonOf<IPaymentsEventsApiConfiguration>().Use(config.PaymentEventsApi);
             For<ForecastingConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ForecastingConfiguration>(ServiceName)).Singleton();
+        }
+
+        private ILoggerFactory CreateLoggerFactory()
+        {
+            var loggerFactory = new LoggerFactory();
+            return loggerFactory;
         }
 
         private IApplicationConfiguration GetConfiguration()
@@ -43,7 +53,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 AllowTriggerProjections = bool.Parse(ConfigurationHelper.GetAppSetting("AllowTriggerProjections", false) ?? "true"),
                 ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false),
                 AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false),
-                FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds",false) ?? "true"),
+                FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds", false) ?? "true"),
                 ApprenticeshipsApiSubscriptionKey = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiSubscriptionKey", false)
             };
 
@@ -55,7 +65,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         {
             config.AccountApi = ConfigurationHelper.GetAccountApiConfiguration();
             config.PaymentEventsApi = ConfigurationHelper.GetPaymentsEventsApiConfiguration();
-            config.CommitmentsApi = ConfigurationHelper.GetCommitmentsApiConfiguration();
+            config.CommitmentsClientApiConfiguration = ConfigurationHelper.GetCommitmentsApiConfiguration();
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Models.Payments;
-using ApiApprenticeship = SFA.DAS.Commitments.Api.Types.Apprenticeship.Apprenticeship;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
@@ -15,36 +15,31 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
             _apprenticeshipCourseDataService = apprenticeshipCourseDataService;
         }
 
-        internal async Task<ApprenticeshipMessage> Map(ApiApprenticeship apprenticeship)
+        internal async Task<ApprenticeshipMessage> Map(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apprenticeship, long employerAccountId)
         {
             if (apprenticeship == null)
             {
                 return new ApprenticeshipMessage();
             }
 
-            var duration = 0;
+            var duration = (apprenticeship.EndDate.Year - apprenticeship.StartDate.Year) * 12 +
+                           apprenticeship.EndDate.Month - apprenticeship.StartDate.Month;
 
-            if (apprenticeship.EndDate.HasValue && apprenticeship.StartDate.HasValue)
-            {
-                duration = (apprenticeship.EndDate.Value.Year - apprenticeship.StartDate.Value.Year) * 12 +
-                           apprenticeship.EndDate.Value.Month - apprenticeship.StartDate.Value.Month;
-            }
-
-            var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.TrainingCode);
+            var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.CourseCode);
 
             return new ApprenticeshipMessage
             {
-                EmployerAccountId = apprenticeship.EmployerAccountId,
+                EmployerAccountId = employerAccountId,
                 SendingEmployerAccountId = apprenticeship.TransferSenderId,
-                LearnerId = long.TryParse(apprenticeship.ULN, out var result) ? result : 0,
+                LearnerId = long.TryParse(apprenticeship.Uln, out var result) ? result : 0,
                 ProviderId = apprenticeship.ProviderId,
                 ProviderName = apprenticeship.ProviderName,
                 ApprenticeshipId = apprenticeship.Id,
                 ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
-                CourseName = apprenticeship.TrainingName,
+                CourseName = apprenticeship.CourseName,
                 CourseLevel = training?.Level ?? 0,
-                StartDate = apprenticeship.StartDate.Value,
-                PlannedEndDate = apprenticeship.EndDate.Value,
+                StartDate = apprenticeship.StartDate,
+                PlannedEndDate = apprenticeship.EndDate,
                 ActualEndDate = null,
                 CompletionAmount = apprenticeship.Cost.Value * 0.2M,
                 MonthlyInstallment = (apprenticeship.Cost.Value * 0.8M) / duration,

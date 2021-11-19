@@ -1,5 +1,4 @@
-﻿using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using SFA.DAS.EAS.Account.Api.Types;
+﻿using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.Provider.Events.Api.Types;
 using System.Collections.Generic;
 
@@ -13,7 +12,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
 
 
         public static IDictionary<string, string> Apprenticeships { get; set; }
-            = new Dictionary<string,string>();
+            = new Dictionary<string, string>();
 
         public static decimal Balance { get; set; } = 500000;
     }
