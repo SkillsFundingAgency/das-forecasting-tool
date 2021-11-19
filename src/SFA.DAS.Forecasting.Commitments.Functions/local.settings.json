@@ -23,9 +23,9 @@
     "LoggingRedisConnectionString": "localhost",
     "ApprenticeshipsApiBaseUri": "https://findapprenticeshiptraining-api.sfa.bis.gov.uk/",
     "APPINSIGHTS_INSTRUMENTATIONKEY": "f0ca1c02-2018-4445-b2e8-001e322bf0e8",
-    "CommitmentsV2ApiBaseUrl": "https://localhost:5011/",
-    "CommitmentsV2IdentifierUri": "https://citizenazuresfabisgov.onmicrosoft.com/das-commitments-api",
-    "ByPassMI" : "FALSE"
+    "CommitmentsV2ApiBaseUrl": "https://at-commitments-api.apprenticeships.education.gov.uk/",
+    "CommitmentsV2IdentifierUri": "https://citizenazuresfabisgov.onmicrosoft.com/das-at-comtapi-as-ar",
+    "ByPassMI": "FALSE"
   },
   "Host": {
     "LocalHttpPort": 7076,
