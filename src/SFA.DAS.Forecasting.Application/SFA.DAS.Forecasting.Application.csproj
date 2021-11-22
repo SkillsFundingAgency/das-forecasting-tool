@@ -68,8 +68,8 @@
     <Reference Include="Microsoft.Azure.KeyVault.WebKey, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.WebKey.2.0.7\lib\net452\Microsoft.Azure.KeyVault.WebKey.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.Services.AppAuthentication, Version=1.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Services.AppAuthentication.1.5.0\lib\net461\Microsoft.Azure.Services.AppAuthentication.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Services.AppAuthentication, Version=1.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Services.AppAuthentication.1.6.2\lib\net461\Microsoft.Azure.Services.AppAuthentication.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -105,8 +105,8 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.8\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.9\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.JsonWebTokens.5.6.0\lib\net461\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
@@ -147,14 +147,14 @@
     <Reference Include="SFA.DAS.AutoConfiguration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.AutoConfiguration.2.2.6\lib\net462\SFA.DAS.AutoConfiguration.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Api.Client, Version=7.89.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Api.Client.7.89.7\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Api.Client.dll</HintPath>
+    <Reference Include="SFA.DAS.CommitmentsV2.Api.Client, Version=8.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Api.Client.8.0.3\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Api.Client.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Api.Types, Version=7.89.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Api.Types.7.89.7\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Api.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.CommitmentsV2.Api.Types, Version=8.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Api.Types.8.0.3\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Api.Types.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=7.89.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.7.89.7\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
+    <Reference Include="SFA.DAS.CommitmentsV2.Types, Version=8.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Types.8.0.3\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Types.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Common.Domain, Version=1.4.278.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.278\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
@@ -178,7 +178,7 @@
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Http, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Http.3.2.62\lib\netstandard2.0\SFA.DAS.Http.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Http.3.2.65\lib\netstandard2.0\SFA.DAS.Http.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
