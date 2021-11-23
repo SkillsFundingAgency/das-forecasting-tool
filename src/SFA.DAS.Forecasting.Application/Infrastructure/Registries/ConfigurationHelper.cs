@@ -46,15 +46,24 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static CommitmentsClientApiConfiguration GetCommitmentsApiConfiguration()
         {
-            return
-                IsDevEnvironment
-                ? new CommitmentsClientApiConfiguration
+            if (IsDevEnvironment)
+            {
+                return new CommitmentsClientApiConfiguration
                 {
                     ApiBaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV2ApiBaseUrl"),
                     IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV2IdentifierUri")
-                }
-                :
-                GetConfiguration<CommitmentsClientApiConfiguration>("SFA.DAS.CommitmentsAPI");
+                };
+            }
+            else
+            {
+
+                var config = GetConfiguration<CommitmemtsV2ApiClientConfiguration>("SFA.DAS.CommitmentsAPI");
+                return new CommitmentsClientApiConfiguration
+                {
+                    ApiBaseUrl = config.CommitmentsV2ApiBaseUrl,
+                    IdentifierUri = config.CommitmentsV2IdentifierUri
+                };
+            }
         }
 
         private static T GetConfiguration<T>(string serviceName)

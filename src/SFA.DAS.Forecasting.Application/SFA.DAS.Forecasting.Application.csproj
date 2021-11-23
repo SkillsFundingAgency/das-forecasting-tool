@@ -264,6 +264,7 @@
     <Compile Include="Estimations\Services\AccountEstimationDataService.cs" />
     <Compile Include="Events\EventPublisher.cs" />
     <Compile Include="ExpiredFunds\Service\ExpiredFundsService.cs" />
+    <Compile Include="Infrastructure\Configuration\CommitmemtsV2ApiClientConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\ForecastingConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\IStartupConfiguration.cs" />
     <Compile Include="Infrastructure\Configuration\PaymentsEventsApiConfiguration.cs" />
