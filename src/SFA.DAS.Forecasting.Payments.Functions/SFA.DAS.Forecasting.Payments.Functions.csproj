@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.3.0" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.3.0" />    
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />    
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />    
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />    
     <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.2924" />    
