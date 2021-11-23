@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
     {
         static RefreshEmployersForApprenticeshipUpdate()
         {
-            ApplicationHelper.AssemblyBindingRedirect();
+            //ApplicationHelper.AssemblyBindingRedirect();
         }
 
         [FunctionName("RefreshEmployersForApprenticeshipUpdate")]
