@@ -9,11 +9,6 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     public class RefreshEmployersForApprenticeshipUpdate : IFunction
     {
-        static RefreshEmployersForApprenticeshipUpdate()
-        {
-            //ApplicationHelper.AssemblyBindingRedirect();
-        }
-
         [FunctionName("RefreshEmployersForApprenticeshipUpdate")]
         public static async Task Run(
             [QueueTrigger(QueueNames.RefreshEmployersForApprenticeshipUpdate)] string message,
