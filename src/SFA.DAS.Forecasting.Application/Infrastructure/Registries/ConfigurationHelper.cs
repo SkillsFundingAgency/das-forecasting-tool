@@ -57,7 +57,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             else
             {
 
-                var config = GetConfiguration<CommitmemtsV2ApiClientConfiguration>("SFA.DAS.CommitmentsAPI");
+                var config = GetConfiguration<CommitmemtsV2ApiClientConfiguration>("SFA.DAS.Forecasting");
                 return new CommitmentsClientApiConfiguration
                 {
                     ApiBaseUrl = config.CommitmentsV2ApiBaseUrl,
