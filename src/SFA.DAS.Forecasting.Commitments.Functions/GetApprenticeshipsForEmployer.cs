@@ -15,6 +15,8 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     public class GetApprenticeshipsForEmployer : IFunction
     {
+        public const int PageItemCount = 500;
+
         [FunctionName("GetApprenticeshipsForEmployer")]
         public static async Task Run(
             [QueueTrigger(QueueNames.RefreshApprenticeshipsForEmployer)] RefreshApprenticeshipForAccountMessage message,
@@ -65,13 +67,13 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
             var pageNumber = 2;
 
-            var totalPages = (int)Math.Ceiling((double)apiApprenticeships.TotalApprenticeshipsFound / 100);
+            var totalPages = (int)Math.Ceiling((double)apiApprenticeships.TotalApprenticeshipsFound / PageItemCount);
 
             var apprenticeships = apiApprenticeships.Apprenticeships.ToList();
 
-            if (apiApprenticeships.PageNumber > 1)
+            if (totalPages > 1)
             {
-                while (pageNumber != totalPages)
+                while (pageNumber <= totalPages)
                 {
                     var pageOfApprenticeshipSearchResponse =
                        await GetApprenticeships(employerCommitmentsApi, employerAccountId, status, pageNumber);
@@ -90,12 +92,9 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
             {
                 Status = status,
                 AccountId = employerAccountId,
+                PageNumber = pageNumber ?? 1,
+                PageItemCount = PageItemCount
             };
-
-            if (pageNumber.HasValue)
-            {
-                request.PageNumber = pageNumber.Value;
-            }
 
             return await employerCommitmentsApi.GetApprenticeships(request);
         }
