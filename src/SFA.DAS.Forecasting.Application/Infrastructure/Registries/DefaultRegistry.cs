@@ -21,6 +21,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
     {
         public DefaultRegistry()
         {
+            var azureTokenProvider = new Microsoft.Azure.Services.AppAuthentication.AzureServiceTokenProvider();
             if (ConfigurationHelper.IsDevEnvironment)
             {
                 For<IAccountBalanceService>()
@@ -47,6 +48,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IEmployerDatabaseService>()
                 .Use<EmployerDatabaseService>();
+            
+
+            System.Data.Entity.DbConfiguration.Loaded += (_, a) =>
+            {
+                a.ReplaceService<System.Data.Entity.Infrastructure.IDbConnectionFactory>((s, k) => new CustomDbConnectionFactory(ConfigurationHelper.IsDevEnvironment));
+            };
 
             For<IForecastingDataContext>()
                 .Use<ForecastingDataContext>()
