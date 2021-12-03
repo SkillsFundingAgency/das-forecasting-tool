@@ -71,8 +71,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Use<ApiClient>()
                 .Ctor<HttpClient>("httpClient")
                 .Is(new HttpClient());
-
-
         }
     }
 }

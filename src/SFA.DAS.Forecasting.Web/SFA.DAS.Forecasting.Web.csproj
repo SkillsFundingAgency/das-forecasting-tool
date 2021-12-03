@@ -224,10 +224,6 @@
     <Reference Include="SFA.DAS.OidcMiddleware, Version=2.0.0.48664, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.OidcMiddleware.2.0.0.48664\lib\net45\SFA.DAS.OidcMiddleware.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.Sql.Client, Version=1.0.0.44965, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Sql.Client.1.0.0.44965\lib\net45\SFA.DAS.Sql.Client.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
       <Private>True</Private>
