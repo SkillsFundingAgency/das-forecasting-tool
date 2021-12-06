@@ -48,7 +48,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IEmployerDatabaseService>()
                 .Use<EmployerDatabaseService>();
-            
 
             System.Data.Entity.DbConfiguration.Loaded += (_, a) =>
             {
