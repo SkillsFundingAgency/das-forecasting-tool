@@ -80,6 +80,7 @@
     <Compile Include="Configurations\BalanceConfiguration.cs" />
     <Compile Include="Configurations\AccountProjectionCommitmentConfiguration.cs" />
     <Compile Include="Configurations\AccountProjectionConfiguration.cs" />
+    <Compile Include="CustomDbConnectionFactory.cs" />
     <Compile Include="ForecastingDataContext.cs" />
     <Compile Include="ForecastingDataContextFactory.cs" />
     <Compile Include="ForecastingDbConfiguration.cs" />
