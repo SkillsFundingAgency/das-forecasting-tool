@@ -12,11 +12,6 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     [StorageAccount("StorageConnectionString")]
     public class GetAccountBalanceFunction : IFunction
     {
-        static GetAccountBalanceFunction()
-        {
-            ApplicationHelper.AssemblyBindingRedirect();
-        }
-
         [FunctionName("GetAccountBalanceFunction")]
         [return: Queue(QueueNames.BuildProjections)]
         public static async Task<GenerateAccountProjectionCommand> Run(

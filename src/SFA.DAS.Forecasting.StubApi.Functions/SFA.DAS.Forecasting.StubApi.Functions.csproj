@@ -6,8 +6,8 @@
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
     <PackageReference Include="Bogus" Version="22.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.2924" />
-    <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.2924" />
+    <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.3073" />
+    <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.3073" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="8.0.3" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="8.0.3" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="8.0.3" />
