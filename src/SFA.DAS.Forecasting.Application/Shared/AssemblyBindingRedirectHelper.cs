@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
-namespace SFA.DAS.Forecasting.Commitments.Functions
+namespace SFA.DAS.Forecasting.Application.Shared
 {
     public static class AssemblyBindingRedirectHelper
     {
@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
         {
             var result = new List<BindingRedirect>()
             {
-              new BindingRedirect { ShortName = "Microsoft.IdentityModel.Clients.ActiveDirectory",   PublicKeyToken = "31bf3856ad364e35",    RedirectToVersion = "5.2.8.0" }
+              new BindingRedirect { ShortName = "Microsoft.IdentityModel.Clients.ActiveDirectory",   PublicKeyToken = "31bf3856ad364e35",    RedirectToVersion = "5.2.9.0" }
             };
 
             return result;
@@ -79,6 +79,3 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
         }
     }
 }
-
-
-

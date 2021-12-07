@@ -255,6 +255,7 @@
     <Compile Include="ApprenticeshipCourses\Services\StandardsService.cs" />
     <Compile Include="Apprenticeship\Mapping\ApprenticeshipMapping.cs" />
     <Compile Include="Apprenticeship\Messages\ApprenticeshipMessage.cs" />
+    <Compile Include="Shared\AssemblyBindingRedirectHelper.cs" />
     <Compile Include="Balance\Services\AccountBalanceService.cs" />
     <Compile Include="Balance\Services\BalanceDataService.cs" />
     <Compile Include="Balance\Services\DevAccountBalanceService.cs" />
