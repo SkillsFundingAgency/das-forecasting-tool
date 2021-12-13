@@ -10,9 +10,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
-using SFA.DAS.Commitments.Api.Types;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship;
-using SFA.DAS.Commitments.Api.Types.Apprenticeship.Types;
+using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
@@ -51,39 +49,35 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
             };
         }
 
-        private static Faker<Apprenticeship> CreateFakeCommitment(string employerAccountId)
+        private static Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse> CreateFakeCommitment(string employerAccountId)
         {
-            return new Faker<Apprenticeship>()
-                .RuleFor(commitment => commitment.Id, faker => faker.Random.Long(99999,9999999))
-                .RuleFor(commitment => commitment.EmployerAccountId, Convert.ToInt64(employerAccountId))
+            return new Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>()
+                .RuleFor(commitment => commitment.Id, faker => faker.Random.Long(99999, 9999999))
+                .RuleFor(commitment => commitment.AccountLegalEntityId, Convert.ToInt64(employerAccountId))
                 .RuleFor(commitment => commitment.TransferSenderId, Convert.ToInt64(employerAccountId))
-                .RuleFor(commitment => commitment.Cost, faker => faker.Random.Int(300,1000))
-                .RuleFor(commitment => commitment.AgreementStatus, AgreementStatus.BothAgreed)
-                .RuleFor(commitment => commitment.PaymentStatus, PaymentStatus.Active)
-                .RuleFor(commitment => commitment.TrainingType, TrainingType.Standard)
-                .RuleFor(commitment => commitment.StartDate, faker=> DateTime.Now.AddMonths(faker.Random.Int(1,12)))
-                .RuleFor(commitment => commitment.EndDate, faker=> DateTime.Now.AddMonths(faker.Random.Int(15,30)))
-                .RuleFor(commitment => commitment.ApprenticeshipName, faker => faker.Company.CompanyName())
+                .RuleFor(commitment => commitment.Cost, faker => faker.Random.Int(300, 1000))
+                .RuleFor(commitment => commitment.PaymentStatus, CommitmentsV2.Types.PaymentStatus.Active)
+                .RuleFor(commitment => commitment.StartDate, faker => DateTime.Now.AddMonths(faker.Random.Int(1, 12)))
+                .RuleFor(commitment => commitment.EndDate, faker => DateTime.Now.AddMonths(faker.Random.Int(15, 30)))
                 .RuleFor(commitment => commitment.FirstName, faker => faker.Name.FirstName())
                 .RuleFor(commitment => commitment.LastName, faker => faker.Name.LastName())
-                .RuleFor(commitment => commitment.ULN, faker => faker.Random.Long(99999,999999).ToString())
-                .RuleFor(commitment => commitment.TrainingCode, "107")
-                .RuleFor(commitment => commitment.TrainingName, "Embedded electronic systems design and development engineer")
+                .RuleFor(commitment => commitment.Uln, faker => faker.Random.Long(99999, 999999).ToString())
+                .RuleFor(commitment => commitment.CourseCode, "107")
+                .RuleFor(commitment => commitment.CourseName, "Embedded electronic systems design and development engineer")
                 .RuleFor(commitment => commitment.ProviderId, 5)
-                .RuleFor(commitment => commitment.ProviderName, "providername")
-                ;
+                .RuleFor(commitment => commitment.ProviderName, "providername");
         }
 
-        private static string SendCommitments(Faker<Apprenticeship> fakeCommitment, int count = 10)
+        private static string SendCommitments(Faker<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse> fakeCommitment, int count = 10)
         {
-            var commitments = new List<Apprenticeship>();
+            var commitments = new List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>();
             for (var i = 0; i < count; i++)
             {
                 var commitment = fakeCommitment.Generate();
                 commitments.Add(commitment);
             }
 
-            var page = new 
+            var page = new
             {
                 PageSize = 1000,
                 TotalApprenticeships = commitments.Count,
