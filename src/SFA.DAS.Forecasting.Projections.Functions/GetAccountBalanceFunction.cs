@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using SFA.DAS.Forecasting.Application.Projections.Handlers;
+using SFA.DAS.Forecasting.Application.Shared;
 using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.Projections;
 
@@ -11,6 +12,11 @@ namespace SFA.DAS.Forecasting.Projections.Functions
     [StorageAccount("StorageConnectionString")]
     public class GetAccountBalanceFunction : IFunction
     {
+        static GetAccountBalanceFunction()
+        {
+            ApplicationHelper.AssemblyBindingRedirect();
+        }
+
         [FunctionName("GetAccountBalanceFunction")]
         [return: Queue(QueueNames.BuildProjections)]
         public static async Task<GenerateAccountProjectionCommand> Run(
