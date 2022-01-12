@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using SFA.DAS.Forecasting.Application.Converters;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
@@ -36,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         public EmployerDatabaseService(
             IApplicationConfiguration config,
             ILog logger)
-            : base(config.EmployerConnectionString, logger)
+            : base(config.EmployerConnectionString, str => logger.Warn(str), ConfigurationHelper.IsDevEnvironment)
         {
             _logger = logger;
         }
