@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Data
         {
             SetProviderServices("System.Data.EntityClient",
                 SqlProviderServices.Instance);
-            SetDefaultConnectionFactory(new SqlConnectionFactory());
+           SetDefaultConnectionFactory(new SqlConnectionFactory());
         }
     }
 

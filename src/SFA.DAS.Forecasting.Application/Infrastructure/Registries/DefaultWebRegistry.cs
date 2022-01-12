@@ -27,6 +27,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Ctor<IAccountApiConfiguration>()
                 .Is(apiConfig);
 
+            System.Data.Entity.DbConfiguration.Loaded += (_, a) =>
+            {
+                a.ReplaceService<System.Data.Entity.Infrastructure.IDbConnectionFactory>((s, k) => new CustomDbConnectionFactory(ConfigurationHelper.IsDevEnvironment));
+            };
+
             if (ConfigurationHelper.IsDevEnvironment)
             {
                 For<IAccountBalanceService>()
