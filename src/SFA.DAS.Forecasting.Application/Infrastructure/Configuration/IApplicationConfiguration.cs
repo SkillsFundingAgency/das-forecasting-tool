@@ -1,10 +1,10 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
+﻿using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
+using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Provider.Events.Api.Client.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
-    public interface IApplicationConfiguration: IApplicationConnectionStrings
+    public interface IApplicationConfiguration : IApplicationConnectionStrings
     {
         string BackLink { get; }
         string AllowedHashStringCharacters { get; }
@@ -13,13 +13,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         int NumberOfMonthsToProject { get; }
         bool LimitForecast { get; set; }
         AccountApiConfiguration AccountApi { get; set; }
-        CommitmentsApiConfig CommitmentsApi { get; set; }
+        CommitmentsClientApiConfiguration CommitmentsClientApiConfiguration { get; set; }
         IdentityServerConfiguration Identity { get; set; }
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }
         bool AllowTriggerProjections { get; }
         string ApprenticeshipsApiBaseUri { get; }
-        string AppInsightsInstrumentationKey  { get; }
+        string AppInsightsInstrumentationKey { get; }
         bool FeatureExpiredFunds { get; set; }
         string ApprenticeshipsApiSubscriptionKey { get; set; }
     }

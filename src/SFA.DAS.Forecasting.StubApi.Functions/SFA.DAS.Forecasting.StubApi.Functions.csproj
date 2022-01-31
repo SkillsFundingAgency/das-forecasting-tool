@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
@@ -8,7 +8,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.2924" />
     <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.2924" />
-    <PackageReference Include="SFA.DAS.Commitments.Api.Types" Version="2.1.511" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Client" Version="8.0.3" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="8.0.3" />
+    <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="8.0.3" />
     <PackageReference Include="SFA.DAS.Provider.Events.Api.Client" Version="2.1.97" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
   </ItemGroup>
