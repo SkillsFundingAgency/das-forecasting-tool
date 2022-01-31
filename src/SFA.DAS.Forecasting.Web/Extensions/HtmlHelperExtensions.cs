@@ -65,29 +65,28 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             return forecastingConfig.ZenDeskCobrowsingSnippetKey;
         }
 
-        private static string GetBaseUrl()
+        private static string GetRelativeUrl(string subdomain)
         {
-            return ConfigurationManager.AppSettings["MyaBaseUrl"].EndsWith("/")
-                ? ConfigurationManager.AppSettings["MyaBaseUrl"]
-                : ConfigurationManager.AppSettings["MyaBaseUrl"] + "/";
+            var uri = new Uri(ConfigurationManager.AppSettings["MyaBaseUrl"]);
+            return $"{uri.Scheme}{subdomain}{uri.Host}/";
         }
 
         public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
         {
             var configuration = DependencyResolver.Current.GetService<IStartupConfiguration>();
-            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
-            var baseUrl = GetBaseUrl();
-            var applicationBaseUrl = new Uri(html.ViewContext.HttpContext.Request.Url?.AbsoluteUri).AbsoluteUri.Replace(new System.Uri(html.ViewContext.HttpContext.Request.Url?.AbsoluteUri).AbsolutePath, "");
-
+         
             var headerModel = new HeaderViewModel(new HeaderConfiguration
                 {
-                    EmployerCommitmentsBaseUrl = baseUrl,
-                    EmployerFinanceBaseUrl = baseUrl,
-                    ManageApprenticeshipsBaseUrl = baseUrl,
-                    EmployerRecruitBaseUrl = forecastingConfig.EmployerRecruitBaseUrl,
+                    ManageApprenticeshipsBaseUrl = GetRelativeUrl("accounts"),
+                    ApplicationBaseUrl = GetRelativeUrl("forecasting"),
+                    EmployerCommitmentsV2BaseUrl = GetRelativeUrl("approvals"),
+                    EmployerFinanceBaseUrl = GetRelativeUrl("finance"),
                     AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
                     ClientId = configuration.Identity.ClientId,
-                    SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
+                    EmployerRecruitBaseUrl = GetRelativeUrl("recruit"),
+                    SignOutUrl = new Uri($"{GetRelativeUrl("forecasting")}forecasting/Service/signout"),
+                    ChangeEmailReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/email/change"),
+                    ChangePasswordReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/password/change")
                 },
                 new UserContext
                 {
@@ -115,7 +114,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         {
             return new FooterViewModel(new FooterConfiguration
                 {
-                    ManageApprenticeshipsBaseUrl = GetBaseUrl()
+                    ManageApprenticeshipsBaseUrl = GetRelativeUrl("accounts")
                 },
                 new UserContext
                 {
