@@ -68,7 +68,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         private static string GetRelativeUrl(string subdomain)
         {
             var uri = new Uri(ConfigurationManager.AppSettings["MyaBaseUrl"]);
-            return $"{uri.Scheme}{subdomain}{uri.Host}/";
+            return $"{uri.Scheme}://{subdomain}.{uri.Host}/";
         }
 
         public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
