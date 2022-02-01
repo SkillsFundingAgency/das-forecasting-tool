@@ -2,6 +2,7 @@
 using SFA.DAS.MA.Shared.UI.Configuration;
 using SFA.DAS.MA.Shared.UI.Models;
 using SFA.DAS.MA.Shared.UI.Models.Links;
+using SFA.DAS.NLog.Logger;
 using System;
 using System.Configuration;
 using System.Linq;
@@ -67,47 +68,62 @@ namespace SFA.DAS.Forecasting.Web.Extensions
 
         private static string GetRelativeUrl(string subdomain)
         {
+            var logger = DependencyResolver.Current.GetService<ILog>();
+
             var uri = new Uri(ConfigurationManager.AppSettings["MyaBaseUrl"]);
-            return $"{uri.Scheme}://{subdomain}.{uri.Host}/";
+            var url= $"{uri.Scheme}://{subdomain}.{uri.Host}/";
+
+            logger.Info($"Url for {subdomain} is {url}");
+
+            return url;
         }
 
         public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
         {
             var configuration = DependencyResolver.Current.GetService<IStartupConfiguration>();
-         
-            var headerModel = new HeaderViewModel(new HeaderConfiguration
-                {
-                    ManageApprenticeshipsBaseUrl = GetRelativeUrl("accounts"),
-                    ApplicationBaseUrl = GetRelativeUrl("forecasting"),
-                    EmployerCommitmentsV2BaseUrl = GetRelativeUrl("approvals"),
-                    EmployerFinanceBaseUrl = GetRelativeUrl("finance"),
-                    AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
-                    ClientId = configuration.Identity.ClientId,
-                    EmployerRecruitBaseUrl = GetRelativeUrl("recruit"),
-                    SignOutUrl = new Uri($"{GetRelativeUrl("forecasting")}forecasting/Service/signout"),
-                    ChangeEmailReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/email/change"),
-                    ChangePasswordReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/password/change")
-                },
-                new UserContext
-                {
-                    User = html.ViewContext.HttpContext.User,
-                    HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
-                },
-                useLegacyStyles: true);
+            var logger = DependencyResolver.Current.GetService<ILog>();
 
-            headerModel.SelectMenu(html.ViewBag.Section);
-
-            if (html.ViewBag.HideNav != null && html.ViewBag.HideNav)
+            try
             {
-                headerModel.HideMenu();
-            }
+                var headerModel = new HeaderViewModel(new HeaderConfiguration
+                    {
+                        ManageApprenticeshipsBaseUrl = GetRelativeUrl("accounts"),
+                        ApplicationBaseUrl = GetRelativeUrl("forecasting"),
+                        EmployerCommitmentsV2BaseUrl = GetRelativeUrl("approvals"),
+                        EmployerFinanceBaseUrl = GetRelativeUrl("finance"),
+                        AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
+                        ClientId = configuration.Identity.ClientId,
+                        EmployerRecruitBaseUrl = GetRelativeUrl("recruit"),
+                        SignOutUrl = new Uri($"{GetRelativeUrl("forecasting")}forecasting/Service/signout"),
+                        ChangeEmailReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/email/change"),
+                        ChangePasswordReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/password/change")
+                    },
+                    new UserContext
+                    {
+                        User = html.ViewContext.HttpContext.User,
+                        HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
+                    },
+                    useLegacyStyles: true);
 
-            if (html.ViewData.Model?.GetType().GetProperty("HideHeaderSignInLink") != null)
+                headerModel.SelectMenu(html.ViewBag.Section);
+
+                if (html.ViewBag.HideNav != null && html.ViewBag.HideNav)
+                {
+                    headerModel.HideMenu();
+                }
+
+                if (html.ViewData.Model?.GetType().GetProperty("HideHeaderSignInLink") != null)
+                {
+                    headerModel.RemoveLink<SignIn>();
+                }
+
+                return headerModel;
+            }
+            catch (Exception e)
             {
-                headerModel.RemoveLink<SignIn>();
+                logger.Error(e, e.Message);
+                throw;
             }
-
-            return headerModel;
         }
 
         public static IFooterViewModel GetFooterViewModel(this HtmlHelper html)
