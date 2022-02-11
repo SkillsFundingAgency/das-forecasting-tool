@@ -19,7 +19,8 @@
 	[FundingSource] TINYINT NOT NULL CONSTRAINT FK_Commitment__FundingSource FOREIGN KEY REFERENCES FundingSource(Id) default(1), 
     [UpdatedDateTime] DATETIME NOT NULL DEFAULT GETDATE(),
 	[HasHadPayment] BIT NOT NULL default(1), 
-    [Status] INT NULL DEFAULT 0
+    [Status] INT NULL DEFAULT 0, 
+    [PledgeApplicationId] INT NULL
 )
 
 GO
