@@ -2,6 +2,7 @@
 using SFA.DAS.MA.Shared.UI.Configuration;
 using SFA.DAS.MA.Shared.UI.Models;
 using SFA.DAS.MA.Shared.UI.Models.Links;
+using SFA.DAS.NLog.Logger;
 using System;
 using System.Configuration;
 using System.Linq;
@@ -65,57 +66,71 @@ namespace SFA.DAS.Forecasting.Web.Extensions
             return forecastingConfig.ZenDeskCobrowsingSnippetKey;
         }
 
-        private static string GetBaseUrl()
+        private static string GetRelativeUrl(string subdomain)
         {
-            return ConfigurationManager.AppSettings["MyaBaseUrl"].EndsWith("/")
-                ? ConfigurationManager.AppSettings["MyaBaseUrl"]
-                : ConfigurationManager.AppSettings["MyaBaseUrl"] + "/";
+            var logger = DependencyResolver.Current.GetService<ILog>();
+
+            var uri = new Uri(ConfigurationManager.AppSettings["MyaBaseUrl"]);
+            var url= $"{uri.Scheme}://{subdomain}.{uri.Host}/";
+
+            logger.Info($"Url for {subdomain} is {url}");
+
+            return url;
         }
 
         public static IHeaderViewModel GetHeaderViewModel(this HtmlHelper html)
         {
             var configuration = DependencyResolver.Current.GetService<IStartupConfiguration>();
-            var forecastingConfig = DependencyResolver.Current.GetService<ForecastingConfiguration>();
-            var baseUrl = GetBaseUrl();
-            var applicationBaseUrl = new Uri(html.ViewContext.HttpContext.Request.Url?.AbsoluteUri).AbsoluteUri.Replace(new System.Uri(html.ViewContext.HttpContext.Request.Url?.AbsoluteUri).AbsolutePath, "");
+            var logger = DependencyResolver.Current.GetService<ILog>();
 
-            var headerModel = new HeaderViewModel(new HeaderConfiguration
-                {
-                    EmployerCommitmentsBaseUrl = baseUrl,
-                    EmployerFinanceBaseUrl = baseUrl,
-                    ManageApprenticeshipsBaseUrl = baseUrl,
-                    EmployerRecruitBaseUrl = forecastingConfig.EmployerRecruitBaseUrl,
-                    AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
-                    ClientId = configuration.Identity.ClientId,
-                    SignOutUrl = new Uri($"{applicationBaseUrl}/forecasting/Service/signout")
-                },
-                new UserContext
-                {
-                    User = html.ViewContext.HttpContext.User,
-                    HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
-                },
-                useLegacyStyles: true);
-
-            headerModel.SelectMenu(html.ViewBag.Section);
-
-            if (html.ViewBag.HideNav != null && html.ViewBag.HideNav)
+            try
             {
-                headerModel.HideMenu();
-            }
+                var headerModel = new HeaderViewModel(new HeaderConfiguration
+                    {
+                        ManageApprenticeshipsBaseUrl = GetRelativeUrl("accounts"),
+                        ApplicationBaseUrl = GetRelativeUrl("forecasting"),
+                        EmployerCommitmentsV2BaseUrl = GetRelativeUrl("approvals"),
+                        EmployerFinanceBaseUrl = GetRelativeUrl("finance"),
+                        AuthenticationAuthorityUrl = configuration.Identity.BaseAddress,
+                        ClientId = configuration.Identity.ClientId,
+                        EmployerRecruitBaseUrl = GetRelativeUrl("recruit"),
+                        SignOutUrl = new Uri($"{GetRelativeUrl("forecasting")}forecasting/Service/signout"),
+                        ChangeEmailReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/email/change"),
+                        ChangePasswordReturnUrl = new Uri($"{GetRelativeUrl("accounts")}service/password/change")
+                    },
+                    new UserContext
+                    {
+                        User = html.ViewContext.HttpContext.User,
+                        HashedAccountId = html.ViewContext.RouteData.Values["hashedAccountId"]?.ToString()
+                    },
+                    useLegacyStyles: true);
 
-            if (html.ViewData.Model?.GetType().GetProperty("HideHeaderSignInLink") != null)
+                headerModel.SelectMenu(html.ViewBag.Section);
+
+                if (html.ViewBag.HideNav != null && html.ViewBag.HideNav)
+                {
+                    headerModel.HideMenu();
+                }
+
+                if (html.ViewData.Model?.GetType().GetProperty("HideHeaderSignInLink") != null)
+                {
+                    headerModel.RemoveLink<SignIn>();
+                }
+
+                return headerModel;
+            }
+            catch (Exception e)
             {
-                headerModel.RemoveLink<SignIn>();
+                logger.Error(e, e.Message);
+                throw;
             }
-
-            return headerModel;
         }
 
         public static IFooterViewModel GetFooterViewModel(this HtmlHelper html)
         {
             return new FooterViewModel(new FooterConfiguration
                 {
-                    ManageApprenticeshipsBaseUrl = GetBaseUrl()
+                    ManageApprenticeshipsBaseUrl = GetRelativeUrl("accounts")
                 },
                 new UserContext
                 {
