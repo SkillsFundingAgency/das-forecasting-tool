@@ -1745,7 +1745,7 @@ table.top-border {
   background: #6f777b; }
 
 .breadcrumbs li {
-  background-image: url("/Content/dist/images/separator.png"); }
+  background-image: url("../images/separator.png"); }
 
 .breadcrumbs a {
   font-size: 14px;
