@@ -468,6 +468,7 @@
     <Compile Include="ViewModels\Validation\AddEditApprenticeshipViewModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\gulpfile.js" />
     <Content Include="Content\dist\c3\c3.min.css" />
     <Content Include="Content\dist\c3\c3.min.js" />
     <Content Include="Content\dist\c3\d3.min.js" />
@@ -797,6 +798,7 @@
     <Content Include="Content\src\sass\screen-ie7.scss" />
     <Content Include="Content\src\sass\screen-ie8.scss" />
     <Content Include="Content\src\sass\screen.scss" />
+    <Content Include="Content\src\sass\_all.scss" />
     <Content Include="Content\src\sass\_accordions.scss" />
     <Content Include="Content\src\sass\_agreement.scss" />
     <Content Include="Content\src\sass\_commitments.scss" />
@@ -811,7 +813,7 @@
     <Content Include="Content\src\sass\_panels.scss" />
     <Content Include="Content\src\sass\_search.scss" />
     <Content Include="Content\src\sass\_tables.scss" />
-    <Content Include="Content\src\sass\_typography.scss" />
+    <Content Include="Content\src\sass\_typography-das.scss" />
     <Content Include="Views\Forecasting\Balance.cshtml" />
     <Content Include="Views\Forecasting\ForcastingMenu.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />
