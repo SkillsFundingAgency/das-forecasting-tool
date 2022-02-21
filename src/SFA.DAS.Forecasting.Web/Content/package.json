@@ -1,19 +1,11 @@
 {
-  "name": "sfa.das.forecasting.content",
-  "version": "1.0.0",
-  "description": "",
-  "main": "Gruntfile.js",
   "scripts": {
     "test": "jasmine"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "grunt": "^1.4.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-sass": "^2.0.0",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.0.0",
+    "node-sass": "^7.0.0",
     "jasmine": "^3.1.0"
-  },
-  "dependencies": {}
+  }
 }
