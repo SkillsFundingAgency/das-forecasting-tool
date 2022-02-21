@@ -79,8 +79,7 @@ var tabs = (function () {
     }
 });
 
-$(window).load(function () {
-
+$(window).on('load', function () {
     if (document.getElementsByClassName('chart-container').length !== 0)
     {
         chart();
