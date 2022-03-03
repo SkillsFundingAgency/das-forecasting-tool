@@ -843,6 +843,12 @@
                     },
                     "enableSoftDelete": {
                         "value": true
+                    },
+                    "logAnalyticsWorkspaceName": {
+                        "value": "[parameters('logAnalyticsWorkspaceName')]"
+                    },
+                    "logAnalyticsWorkspaceResourceGroupName": {
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     }
                 }
             }
