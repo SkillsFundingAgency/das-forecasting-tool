@@ -55,6 +55,10 @@
             "type": "string",
             "defaultValue": "400"
         },
+        "cosmosDbSubnetResourceIdList": {
+            "type": "array",
+            "defaultValue": []
+        },
         "cosmosDbIpRangeFilter": {
             "type": "string",
             "defaultValue": ""
@@ -724,8 +728,17 @@
                     "defaultConsistencyLevel": {
                         "value": "Strong"
                     },
+                    "subnetResourceIdList": {
+                        "value": "[parameters('cosmosDbSubnetResourceIdList')]"
+                    },
                     "ipRangeFilter": {
                         "value": "[parameters('cosmosDbIpRangeFilter')]"
+                    },
+                    "logAnalyticsWorkspaceName": {
+                        "value": "[parameters('logAnalyticsWorkspaceName')]"
+                    },
+                    "logAnalyticsWorkspaceResourceGroupName": {
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     }
                 }
             }
@@ -830,6 +843,12 @@
                     },
                     "enableSoftDelete": {
                         "value": true
+                    },
+                    "logAnalyticsWorkspaceName": {
+                        "value": "[parameters('logAnalyticsWorkspaceName')]"
+                    },
+                    "logAnalyticsWorkspaceResourceGroupName": {
+                        "value": "[parameters('sharedManagementResourceGroup')]"
                     }
                 }
             }
