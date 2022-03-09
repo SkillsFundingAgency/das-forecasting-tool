@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Web
             bundles.Add(new StyleBundle("~/css/bundles/tippy").Include("~/Content/dist/css/tippy.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/libs")
-                .Include("~/Content/dist/js/jquery-1.10.2.min.js")
+                .Include("~/Content/dist/js/jquery-3.6.0.min.js")
                 .Include("~/Content/dist/js/stacker.js")
                 .Include("~/Content/dist/js/showhide-content.js")
                 .Include("~/Content/dist/js/cookiebanner.js")

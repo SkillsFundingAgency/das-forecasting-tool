@@ -99,14 +99,14 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.8.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.5\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.8.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.5\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.5\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.1.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
@@ -210,8 +210,8 @@
     <Reference Include="SFA.DAS.HashingService, Version=1.0.0.57835, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.HashingService.1.0.0.57835\lib\net45\SFA.DAS.HashingService.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.MA.Shared.UI, Version=1.0.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.MA.Shared.UI.1.1.56\lib\net462\SFA.DAS.MA.Shared.UI.dll</HintPath>
+    <Reference Include="SFA.DAS.MA.Shared.UI, Version=1.1.67.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SFA.DAS.MA.Shared.UI.1.1.79\lib\net462\SFA.DAS.MA.Shared.UI.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
@@ -223,10 +223,6 @@
     </Reference>
     <Reference Include="SFA.DAS.OidcMiddleware, Version=2.0.0.48664, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.OidcMiddleware.2.0.0.48664\lib\net45\SFA.DAS.OidcMiddleware.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Sql.Client, Version=1.0.0.44965, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Sql.Client.1.0.0.44965\lib\net45\SFA.DAS.Sql.Client.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.1.608.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StackExchange.Redis.1.1.608\lib\net46\StackExchange.Redis.dll</HintPath>
@@ -296,8 +292,8 @@
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Spatial, Version=5.8.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.8.2\lib\net40\System.Spatial.dll</HintPath>
+    <Reference Include="System.Spatial, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.5\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
@@ -472,6 +468,7 @@
     <Compile Include="ViewModels\Validation\AddEditApprenticeshipViewModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\gulpfile.js" />
     <Content Include="Content\dist\c3\c3.min.css" />
     <Content Include="Content\dist\c3\c3.min.js" />
     <Content Include="Content\dist\c3\d3.min.js" />
@@ -494,13 +491,12 @@
     <Content Include="Content\dist\js\cookiebanner.js" />
     <Content Include="Content\dist\js\edit-apprenticeship.js" />
     <Content Include="Content\dist\js\add-edit-functions.js" />
-    <Content Include="Content\dist\js\jquery-1.10.2.min.js" />
+    <Content Include="Content\dist\js\jquery-3.6.0.min.js" />
     <Content Include="Content\dist\js\screen.js" />
     <Content Include="Content\dist\js\select2.min.js" />
     <Content Include="Content\dist\js\showhide-content.js" />
     <Content Include="Content\dist\js\stacker.js" />
     <Content Include="Content\dist\js\tippy.all.min.js" />
-    <Content Include="Content\Gruntfile.js" />
     <Content Include="Content\dist\images\apple-touch-icon-120x120.png" />
     <Content Include="Content\dist\images\apple-touch-icon-152x152.png" />
     <Content Include="Content\dist\images\apple-touch-icon-60x60.png" />
@@ -802,6 +798,7 @@
     <Content Include="Content\src\sass\screen-ie7.scss" />
     <Content Include="Content\src\sass\screen-ie8.scss" />
     <Content Include="Content\src\sass\screen.scss" />
+    <Content Include="Content\src\sass\_all.scss" />
     <Content Include="Content\src\sass\_accordions.scss" />
     <Content Include="Content\src\sass\_agreement.scss" />
     <Content Include="Content\src\sass\_commitments.scss" />
@@ -816,7 +813,7 @@
     <Content Include="Content\src\sass\_panels.scss" />
     <Content Include="Content\src\sass\_search.scss" />
     <Content Include="Content\src\sass\_tables.scss" />
-    <Content Include="Content\src\sass\_typography.scss" />
+    <Content Include="Content\src\sass\_typography-das.scss" />
     <Content Include="Views\Forecasting\Balance.cshtml" />
     <Content Include="Views\Forecasting\ForcastingMenu.cshtml" />
     <Content Include="Views\Error\AccessDenied.cshtml" />
@@ -837,8 +834,6 @@
     <Content Include="Views\Shared\_GoogleTagManager.cshtml" />
     <Content Include="Views\Shared\_GoogleTagManagerNoScript.cshtml" />
     <Content Include="Views\Shared\_ZenDeskApi.cshtml" />
-    <Content Include="Views\Shared\_Header.cshtml" />
-    <Content Include="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

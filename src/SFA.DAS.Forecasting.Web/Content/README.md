@@ -1,6 +1,7 @@
 ﻿`npm install`  
 
-`grunt sass` - Build SASS files in src to dist/css.  
-`grunt watch`  - watching file changes and run build when needed.  
+`gulp` - To compile and then watch the SASS files in `src/sass` to `dist/css`
+`gulp sass` - Compile the SASS files in `src/sass` to `dist/css`
+`gulp watch`  - Watch for file changes and compile when needed
   
-For local changes to this project edit `src/_custom.scss`  
+For local changes to this project edit `src/sass/_custom.scss`  
