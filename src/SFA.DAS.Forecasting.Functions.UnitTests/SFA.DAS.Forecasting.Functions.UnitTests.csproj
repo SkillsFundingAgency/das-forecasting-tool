@@ -53,7 +53,7 @@
       <Version>5.10.3</Version>
     </PackageReference>
     <PackageReference Include="Moq">
-      <Version>4.8.3</Version>
+      <Version>4.17.2</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.1.2</Version>
@@ -68,10 +68,10 @@
       <Version>7.89.7</Version>
     </PackageReference>
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types">
-      <Version>8.0.3</Version>
+      <Version>8.18.3</Version>
     </PackageReference>
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types">
-      <Version>8.0.3</Version>
+      <Version>8.18.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
