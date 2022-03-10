@@ -78,7 +78,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
                 PlannedEndDate = DateTime.Today.AddMonths(12),
                 MonthlyInstallment = 10m,
                 CompletionAmount = 100m,
-                NumberOfInstallments = 12
+                NumberOfInstallments = 12,
+                PledgeApplicationId = 123
             };
             var employerCommitment = new EmployerCommitment(new CommitmentModel{Id = 65421});
 
@@ -94,6 +95,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
             Assert.AreEqual(commitment.MonthlyInstallment, employerCommitment.MonthlyInstallment);
             Assert.AreEqual(commitment.CompletionAmount, employerCommitment.CompletionAmount);
             Assert.AreEqual(commitment.NumberOfInstallments, employerCommitment.NumberOfInstallments);
+            Assert.AreEqual(commitment.PledgeApplicationId, employerCommitment.PledgeApplicationId);
         }
 
         [Test]

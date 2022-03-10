@@ -28,7 +28,8 @@ namespace SFA.DAS.Forecasting.Application.Apprenticeship.Mapping
                 SendingEmployerAccountId = message.SendingEmployerAccountId ?? message.EmployerAccountId,
                 FundingSource = message.FundingSource,
                 UpdatedDateTime = DateTime.UtcNow,
-                HasHadPayment = false
+                HasHadPayment = false,
+                PledgeApplicationId = message.PledgeApplicationId
             };
 
             return model;
