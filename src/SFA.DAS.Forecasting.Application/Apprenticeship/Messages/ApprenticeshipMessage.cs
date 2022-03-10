@@ -23,5 +23,6 @@ namespace SFA.DAS.Forecasting.Application.Apprenticeship.Messages
         public int NumberOfInstallments { get; set; }
         public FundingSource FundingSource { get; set; }
         public ProjectionSource ProjectionSource { get; set; }
+        public long? PledgeApplicationId { get; set; }
     }
 }
