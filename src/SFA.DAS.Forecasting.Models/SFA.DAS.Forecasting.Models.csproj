@@ -68,6 +68,8 @@
     <Compile Include="Payments\FundingSource.cs" />
     <Compile Include="Payments\PaymentModel.cs" />
     <Compile Include="Balance\Account.cs" />
+    <Compile Include="Pledges\Application.cs" />
+    <Compile Include="Pledges\Pledge.cs" />
     <Compile Include="Projections\AccountProjectionCommitment.cs" />
     <Compile Include="Projections\AccountProjectionModel.cs" />
     <Compile Include="Projections\EmployerProjectionAudit.cs" />
@@ -78,5 +80,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
