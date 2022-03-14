@@ -27,12 +27,14 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
             await FunctionRunner.Run<GetApprenticeshipsForEmployer>(writer, executionContext,
                async (container, logger) =>
                {
-                   logger.Debug($"Getting apprenticeships for employer {message.EmployerId}...");
+                   logger.Info($"Getting apprenticeships for employer {message.EmployerId}...");
                    var employerCommitmentsApi = container.GetInstance<ICommitmentsApiClient>();
                    var apprenticeshipValidation = new ApprenticeshipValidation();
                    var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
                    var apprenticeships = await GetApprenticeshipsForAccount(message.EmployerId, employerCommitmentsApi);
+
+                   logger.Info($"Found {apprenticeships.Count} apprenticeships for employer {message.EmployerId}...");
 
                    IEnumerable<long> failedValidation;
 
