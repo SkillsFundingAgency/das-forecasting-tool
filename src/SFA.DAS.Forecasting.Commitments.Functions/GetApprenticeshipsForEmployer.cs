@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
@@ -32,7 +34,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                    var apprenticeshipValidation = new ApprenticeshipValidation();
                    var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
-                   var apprenticeships = await GetApprenticeshipsForAccount(message.EmployerId, employerCommitmentsApi);
+                   var apprenticeships = await GetApprenticeshipsForAccount(message.EmployerId, employerCommitmentsApi, logger);
 
                    logger.Info($"Found {apprenticeships.Count} apprenticeships for employer {message.EmployerId}...");
 
@@ -52,15 +54,28 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                });
         }
 
-        private static async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForAccount(long employerAccountId, ICommitmentsApiClient employerCommitmentsApi)
+        private static async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForAccount(long employerAccountId, ICommitmentsApiClient employerCommitmentsApi, ILog logger)
         {
-            var liveApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.Live);
-            var awaitingApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart);
+            try
+            {
+                var liveApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.Live);
+                var awaitingApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart);
 
-            var apprenticeships = await liveApprenticeshipsTask;
-            apprenticeships.AddRange(await awaitingApprenticeshipsTask);
+                await Task.WhenAll(liveApprenticeshipsTask, awaitingApprenticeshipsTask);
 
-            return apprenticeships;
+                logger.Info($"{liveApprenticeshipsTask.Result.Count} live apprenticeships found for employer {employerAccountId}");
+                logger.Info($"{awaitingApprenticeshipsTask.Result.Count} waiting to start apprenticeships found for employer {employerAccountId}");
+
+                var apprenticeships = liveApprenticeshipsTask.Result;
+                apprenticeships.AddRange(awaitingApprenticeshipsTask.Result);
+
+                return apprenticeships;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "Exception occurred in GetApprenticeshipsForAccount");
+                throw;
+            }
         }
 
         private static async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForStatus(long employerAccountId, ICommitmentsApiClient employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus status)
