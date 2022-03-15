@@ -28,10 +28,19 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                async (container, logger) =>
                {
                    logger.Info("Getting pledges and applications");
-                   var pledgesService = container.GetInstance<IPledgesService>();
-                   await pledgesService.GetPledges();
+                   try
+                   {
+                       var pledgesService = container.GetInstance<IPledgesService>();
+                       await pledgesService.GetPledges();
+                   }
+                   catch (Exception ex)
+                   {
+                       logger.Error(ex, "Exception getting pledges");
+                       throw;
+                   }
 
-                   logger.Debug($"Getting apprenticeships for employer {message.EmployerId}...");
+
+                   logger.Info($"Getting apprenticeships for employer {message.EmployerId}...");
                    var employerCommitmentsApi = container.GetInstance<ICommitmentsApiClient>();
                    var apprenticeshipValidation = new ApprenticeshipValidation();
                    var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());

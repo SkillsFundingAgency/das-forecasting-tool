@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Models.Pledges;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 {
@@ -16,9 +17,9 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
     public class PledgesService : IPledgesService
     {
         private readonly IApiClient _apiClient;
-        private readonly ILogger<PledgesService> _logger;
+        private readonly ILog _logger;
 
-        public PledgesService(IApiClient apiClient, ILogger<PledgesService> logger)
+        public PledgesService(IApiClient apiClient, ILog logger)
         {
             _apiClient = apiClient;
             _logger = logger;
@@ -28,13 +29,14 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
         {
             try
             {
+                _logger.Info($"Getting pledges");
                 var response = await _apiClient.Get<GetPledgesResponse>(new GetPledgesApiRequest());
-                _logger.LogInformation($"LTM inner api reports {response.TotalPledges} total pledges");
+                _logger.Info($"LTM inner api reports {response.TotalPledges} total pledges");
                 return new List<Pledge>();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Exception occurred getting pledges");
+                _logger.Error(ex, "Error getting pledges");
                 throw;
             }
         }
@@ -42,7 +44,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
         public async Task<List<Models.Pledges.Application>> GetApplications()
         {
             var response = await _apiClient.Get<GetApplicationsResponse>(new GetApplicationsApiRequest());
-            _logger.LogInformation($"LTM inner api reports {response.TotalApplications} total applications");
+            _logger.Info($"LTM inner api reports {response.TotalApplications} total applications");
             return new List<Models.Pledges.Application>();
         }
     }
