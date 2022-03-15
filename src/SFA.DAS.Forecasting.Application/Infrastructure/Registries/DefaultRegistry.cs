@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerFinance.Types.Models;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
@@ -65,6 +66,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             For<IExpiredFunds>()
                 .Use<EmployerFinance.Types.Models.ExpiredFunds>();
+
+            For<IPledgesService>().Use<PledgesService>();
 
             For<IApiClient>()
                 .Use<ApiClient>()
