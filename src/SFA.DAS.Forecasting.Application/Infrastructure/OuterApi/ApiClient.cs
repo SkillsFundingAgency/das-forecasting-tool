@@ -40,5 +40,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipsApiSubscriptionKey);
             _httpClient.DefaultRequestHeaders.Add("X-Version", "1");
         }
+
+        public string BaseUrl => _httpClient.BaseAddress.ToString();
     }
 }

@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 {
     public class GetApprenticeshipsApiRequest : IGetApiRequest
     {
-        public string GetUrl => "apprenticeships";
+        private readonly long _employerAccountId;
+        private readonly int _status;
+        private readonly int _page;
+        private readonly int _pageItemCount;
+
+        public GetApprenticeshipsApiRequest(long employerAccountId, int status, int page, int pageItemCount)
+        {
+            _employerAccountId = employerAccountId;
+            _status = status;
+            _page = page;
+            _pageItemCount = pageItemCount;
+        }
+
+        public string GetUrl => $"apprenticeships?accountId={_employerAccountId}&status={_status}&page={_page}&pageItemCount={_pageItemCount}";
     }
 
     public class GetApprenticeshipsResponse

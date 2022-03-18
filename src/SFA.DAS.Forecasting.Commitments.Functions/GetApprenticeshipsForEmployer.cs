@@ -27,11 +27,12 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
             await FunctionRunner.Run<GetApprenticeshipsForEmployer>(writer, executionContext,
                async (container, logger) =>
                {
-                   logger.Info("Getting pledges and applications");
+                   logger.Info($"Getting apprenticeships for employer account {message.EmployerId}");
+
                    try
                    {
-                       var pledgesService = container.GetInstance<IPledgesService>();
-                       await pledgesService.GetPledges();
+                       var pledgesService = container.GetInstance<IApprovalsService>();
+                       await pledgesService.GetApprenticeships(message.EmployerId);
                    }
                    catch (Exception ex)
                    {

@@ -251,6 +251,7 @@
     <Compile Include="ApprenticeshipCourses\Handlers\GetCoursesHandler.cs" />
     <Compile Include="ApprenticeshipCourses\Handlers\StoreCourseHandler.cs" />
     <Compile Include="ApprenticeshipCourses\Services\ApprenticeshipCourseDataService.cs" />
+    <Compile Include="ApprenticeshipCourses\Services\ApprovalsService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\FrameworksService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\PledgesService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\StandardsService.cs" />

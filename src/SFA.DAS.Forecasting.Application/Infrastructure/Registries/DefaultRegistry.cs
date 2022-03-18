@@ -68,6 +68,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 .Use<EmployerFinance.Types.Models.ExpiredFunds>();
 
             For<IPledgesService>().Use<PledgesService>();
+            For<IApprovalsService>().Use<ApprovalsService>();
 
             For<IApiClient>()
                 .Use<ApiClient>()
