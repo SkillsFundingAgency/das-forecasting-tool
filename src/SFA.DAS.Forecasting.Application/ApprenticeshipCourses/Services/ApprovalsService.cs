@@ -9,6 +9,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
     public interface IApprovalsService
     {
         Task<List<Models.Approvals.Apprenticeship>> GetApprenticeships(long employerAccountId);
+        Task<List<long>> GetEmployerAccountIds();
     }
 
     public class ApprovalsService : IApprovalsService
@@ -40,6 +41,13 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
                 _logger.Error(ex, "Error getting apprenticeships");
                 throw;
             }
+        }
+
+        public async Task<List<long>> GetEmployerAccountIds()
+        {
+            var apiRequest = new GetAccountIdsApiRequest();
+            var response = await _apiClient.Get<GetAccountIdsResponse>(apiRequest);
+            return response.AccountIds;
         }
     }
 }

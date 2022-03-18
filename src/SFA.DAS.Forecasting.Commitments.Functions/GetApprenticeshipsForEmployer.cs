@@ -27,20 +27,6 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
             await FunctionRunner.Run<GetApprenticeshipsForEmployer>(writer, executionContext,
                async (container, logger) =>
                {
-                   logger.Info($"Getting apprenticeships for employer account {message.EmployerId}");
-
-                   try
-                   {
-                       var pledgesService = container.GetInstance<IApprovalsService>();
-                       await pledgesService.GetApprenticeships(message.EmployerId);
-                   }
-                   catch (Exception ex)
-                   {
-                       logger.Error(ex, "Exception getting pledges");
-                       throw;
-                   }
-
-
                    logger.Info($"Getting apprenticeships for employer {message.EmployerId}...");
                    var employerCommitmentsApi = container.GetInstance<ICommitmentsApiClient>();
                    var apprenticeshipValidation = new ApprenticeshipValidation();
