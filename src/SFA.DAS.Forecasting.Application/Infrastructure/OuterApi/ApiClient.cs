@@ -16,7 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             _httpClient = httpClient;
             if (_httpClient.BaseAddress == null)
             {
-                _httpClient.BaseAddress = new Uri(config.ForecastingOuterApiBaseUri);    
+                _httpClient.BaseAddress = new Uri(config.ApprenticeshipsApiBaseUri);    
             }
             
             _config = config;
@@ -37,7 +37,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             _httpClient.DefaultRequestHeaders.Remove("Ocp-Apim-Subscription-Key");
             _httpClient.DefaultRequestHeaders.Remove("X-Version");
                 
-            _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _config.ForecastingOuterApiSubscriptionKey);
+            _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipsApiSubscriptionKey);
             _httpClient.DefaultRequestHeaders.Add("X-Version", "1");
         }
 

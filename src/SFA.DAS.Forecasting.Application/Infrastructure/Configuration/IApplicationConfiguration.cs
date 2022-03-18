@@ -18,9 +18,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }
         bool AllowTriggerProjections { get; }
-        string ForecastingOuterApiBaseUri { get; }
+        string ApprenticeshipsApiBaseUri { get; }
         string AppInsightsInstrumentationKey { get; }
         bool FeatureExpiredFunds { get; set; }
-        string ForecastingOuterApiSubscriptionKey { get; set; }
+        string ApprenticeshipsApiSubscriptionKey { get; set; }
     }
 }

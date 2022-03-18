@@ -20,9 +20,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public IdentityServerConfiguration Identity { get; set; }
         public string StubEmployerPaymentTable { get; set; }
         public bool AllowTriggerProjections { get; set; }
-        public string ForecastingOuterApiBaseUri { get; set; }
+        public string ApprenticeshipsApiBaseUri { get; set; }
         public string AppInsightsInstrumentationKey { get; set; }
         public bool FeatureExpiredFunds { get; set; }
-        public string ForecastingOuterApiSubscriptionKey { get; set; }
+        public string ApprenticeshipsApiSubscriptionKey { get; set; }
     }
 }

@@ -24,8 +24,7 @@
     "APPINSIGHTS_INSTRUMENTATIONKEY": "f0ca1c02-2018-4445-b2e8-001e322bf0e8",
     "CommitmentsV2ApiBaseUrl": "https://at-commitments-api.apprenticeships.education.gov.uk/",
     "CommitmentsV2IdentifierUri": "https://citizenazuresfabisgov.onmicrosoft.com/das-at-comtapi-as-ar",
-    "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true",
-    "ForecastingOuterApiBaseUri":  "https://localhost:3999/apim-endpoints/forecasting-api" 
+    "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true"
   },
   "Host": {
     "LocalHttpPort": 7076,
