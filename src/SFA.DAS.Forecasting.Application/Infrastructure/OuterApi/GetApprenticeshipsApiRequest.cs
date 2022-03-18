@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             _pageItemCount = pageItemCount;
         }
 
-        public string GetUrl => $"apprenticeships?accountId={_employerAccountId}&status={_status}&page={_page}&pageItemCount={_pageItemCount}";
+        public string GetUrl => $"approvals/apprenticeships?accountId={_employerAccountId}&status={_status}&page={_page}&pageItemCount={_pageItemCount}";
     }
 
     public class GetApprenticeshipsResponse
