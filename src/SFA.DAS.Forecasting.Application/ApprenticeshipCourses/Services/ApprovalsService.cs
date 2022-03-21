@@ -52,7 +52,8 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
                 StartDate= x.StartDate,
                 EndDate = x.EndDate,
                 Cost = x.Cost,
-                HasHadDataLockSuccess = x.HasHadDataLockSuccess
+                HasHadDataLockSuccess = x.HasHadDataLockSuccess,
+                PledgeApplicationId = x.PledgeApplicationId
             }).ToList();
         }
 

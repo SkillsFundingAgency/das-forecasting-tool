@@ -33,10 +33,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 
         public int TotalApprenticeshipsFound { get; set; }
 
-        public int TotalApprenticeshipsWithAlertsFound { get; set; }
-
-        public int TotalApprenticeships { get; set; }
-
         public int PageNumber { get; set; }
 
         public class ApprenticeshipDetailsResponse
@@ -63,20 +59,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 
             public DateTime EndDate { get; set; }
 
-            public DateTime PauseDate { get; set; }
-
-            public DateTime DateOfBirth { get; set; }
-
-            public Decimal? TotalAgreedPrice { get; set; }
-
-            public string EmployerRef { get; set; }
-
-            public string ProviderRef { get; set; }
-
-            public string CohortReference { get; set; }
-
-            public long AccountLegalEntityId { get; set; }
-
             public long? TransferSenderId { get; set; }
 
             public bool HasHadDataLockSuccess { get; set; }
@@ -84,6 +66,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             public string CourseCode { get; set; }
 
             public Decimal? Cost { get; set; }
+            public int? PledgeApplicationId { get; set; }
         }
     }
 }

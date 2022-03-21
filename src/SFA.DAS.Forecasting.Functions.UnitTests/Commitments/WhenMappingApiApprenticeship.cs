@@ -257,5 +257,22 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             // Assert
             result.FundingSource.Should().Be(fundingSource);
         }
+
+        [TestCase(null)]
+        [TestCase(1234)]
+        public async Task ShouldMapToApprenticeshipMessage_PledgeApplicationId(int? pledgeApplicationId)
+        {
+            // Arrange
+            Apprenticeship apiApprenticeship = _fixture
+                .Build<Apprenticeship>()
+                .With(o => o.PledgeApplicationId, pledgeApplicationId)
+                .Create();
+
+            // Act
+            var result = await _sut.Map(apiApprenticeship, 1);
+
+            // Assert
+            result.PledgeApplicationId.Should().Be(pledgeApplicationId);
+        }
     }
 }

@@ -45,7 +45,8 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
                 CompletionAmount = apprenticeship.Cost.Value * 0.2M,
                 MonthlyInstallment = (apprenticeship.Cost.Value * 0.8M) / duration,
                 NumberOfInstallments = duration,
-                FundingSource = apprenticeship.TransferSenderId == null ? FundingSource.Levy : FundingSource.Transfer
+                FundingSource = apprenticeship.TransferSenderId == null ? FundingSource.Levy : FundingSource.Transfer,
+                PledgeApplicationId = apprenticeship.PledgeApplicationId
             };
         }
     }

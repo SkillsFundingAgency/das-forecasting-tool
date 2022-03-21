@@ -24,6 +24,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         public string ApprenticeName => Commitment.ApprenticeName;
         public string CourseName => Commitment.CourseName;
         public int? CourseLevel => Commitment.CourseLevel;
+        public int? PledgeApplicationId => Commitment.PledgeApplicationId;
 
         public FundingSource FundingSource => Commitment.FundingSource;
 
@@ -60,7 +61,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                     || model.MonthlyInstallment != Commitment.MonthlyInstallment
                     || model.CompletionAmount != Commitment.CompletionAmount
                     || model.NumberOfInstallments != Commitment.NumberOfInstallments
-                    || model.HasHadPayment != Commitment.HasHadPayment))
+                    || model.HasHadPayment != Commitment.HasHadPayment
+                    || model.PledgeApplicationId != Commitment.PledgeApplicationId
+                    ))
             {
                 //don't update the actual end date - as the Actual EndDate updated from the das-forecasting-jobs event handlers
                 Commitment.ApprenticeName = model.ApprenticeName;
@@ -72,6 +75,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 Commitment.NumberOfInstallments = model.NumberOfInstallments;
                 Commitment.UpdatedDateTime = model.UpdatedDateTime;
                 Commitment.HasHadPayment = model.HasHadPayment;
+                Commitment.PledgeApplicationId = model.PledgeApplicationId;
                 return true;
             }
 
@@ -97,7 +101,8 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             Commitment.EmployerAccountId = model.EmployerAccountId;
             Commitment.UpdatedDateTime = model.UpdatedDateTime;
             Commitment.HasHadPayment = model.HasHadPayment;
-            Commitment.Status = Models.Commitments.Status.LiveOrWaitingToStart; 
+            Commitment.Status = Models.Commitments.Status.LiveOrWaitingToStart;
+            Commitment.PledgeApplicationId = model.PledgeApplicationId;
             return true;
         }
     }
