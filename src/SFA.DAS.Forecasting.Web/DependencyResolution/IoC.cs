@@ -30,7 +30,6 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
                 c.AddRegistry<DocumentRegistry>();
                 c.AddRegistry<DefaultWebRegistry>();
                 c.AddRegistry<MediatrRegistry>();
-                c.AddRegistry<CommitmentsRegistry>();
                 c.AddRegistry<DefaultRegistry>();   
             });
         }

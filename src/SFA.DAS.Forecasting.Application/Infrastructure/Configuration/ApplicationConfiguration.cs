@@ -1,5 +1,4 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
-using SFA.DAS.EAS.Account.Api.Client;
+﻿using SFA.DAS.EAS.Account.Api.Client;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
@@ -16,7 +15,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string EmployerConnectionString { get; set; }
         public AccountApiConfiguration AccountApi { get; set; }
         public PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
-        public CommitmentsClientApiConfiguration CommitmentsClientApiConfiguration { get; set; }
         public IdentityServerConfiguration Identity { get; set; }
         public string StubEmployerPaymentTable { get; set; }
         public bool AllowTriggerProjections { get; set; }
