@@ -28,11 +28,11 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                async (container, logger) =>
                {
                    logger.Info($"Getting apprenticeships for employer {message.EmployerId}...");
-                   var employerCommitmentsApi = container.GetInstance<ICommitmentsApiClient>();
+                   var approvalsService = container.GetInstance<IApprovalsService>();
                    var apprenticeshipValidation = new ApprenticeshipValidation();
                    var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
-                   var apprenticeships = await GetApprenticeshipsForAccount(message.EmployerId, employerCommitmentsApi);
+                   var apprenticeships = await approvalsService.GetApprenticeships(message.EmployerId);
 
                    IEnumerable<long> failedValidation;
 
@@ -49,42 +49,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                    }
                });
         }
-
-        private static async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForAccount(long employerAccountId, ICommitmentsApiClient employerCommitmentsApi)
-        {
-            var liveApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.Live);
-            var awaitingApprenticeshipsTask = GetApprenticeshipsForStatus(employerAccountId, employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus.WaitingToStart);
-
-            var apprenticeships = await liveApprenticeshipsTask;
-            apprenticeships.AddRange(await awaitingApprenticeshipsTask);
-
-            return apprenticeships;
-        }
-
-        private static async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForStatus(long employerAccountId, ICommitmentsApiClient employerCommitmentsApi, CommitmentsV2.Types.ApprenticeshipStatus status)
-        {
-            GetApprenticeshipsResponse apiApprenticeships = await GetApprenticeships(employerCommitmentsApi, employerAccountId, status);
-
-            var pageNumber = 2;
-
-            var totalPages = (int)Math.Ceiling((double)apiApprenticeships.TotalApprenticeshipsFound / PageItemCount);
-
-            var apprenticeships = apiApprenticeships.Apprenticeships.ToList();
-
-            if (totalPages > 1)
-            {
-                while (pageNumber <= totalPages)
-                {
-                    var pageOfApprenticeshipSearchResponse =
-                       await GetApprenticeships(employerCommitmentsApi, employerAccountId, status, pageNumber);
-                    apprenticeships.AddRange(pageOfApprenticeshipSearchResponse.Apprenticeships);
-
-                    pageNumber++;
-                }
-            }
-
-            return apprenticeships;
-        }
+        
 
         private static async Task<GetApprenticeshipsResponse> GetApprenticeships(ICommitmentsApiClient employerCommitmentsApi, long employerAccountId, CommitmentsV2.Types.ApprenticeshipStatus status, int? pageNumber = null)
         {

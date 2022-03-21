@@ -2,6 +2,7 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Models.Approvals;
 using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions.Application
@@ -15,7 +16,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
             _apprenticeshipCourseDataService = apprenticeshipCourseDataService;
         }
 
-        internal async Task<ApprenticeshipMessage> Map(GetApprenticeshipsResponse.ApprenticeshipDetailsResponse apprenticeship, long employerAccountId)
+        internal async Task<ApprenticeshipMessage> Map(Apprenticeship apprenticeship, long employerAccountId)
         {
             if (apprenticeship == null)
             {

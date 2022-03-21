@@ -139,6 +139,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
             Assert.AreEqual(expected.StartDate, actual.StartDate);
             Assert.AreEqual(expected.EndDate, actual.EndDate);
             Assert.AreEqual(expected.Cost, actual.Cost);
+            Assert.AreEqual(expected.HasHadDataLockSuccess, actual.HasHadDataLockSuccess);
         }
     }
 }

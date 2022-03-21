@@ -17,5 +17,6 @@ namespace SFA.DAS.Forecasting.Models.Approvals
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public decimal? Cost { get; set; }
+        public bool HasHadDataLockSuccess { get; set; }
     }
 }
