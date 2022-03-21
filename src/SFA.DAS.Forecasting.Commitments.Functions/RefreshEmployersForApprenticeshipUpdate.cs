@@ -35,7 +35,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                    }
                    catch (Exception ex)
                    {
-                       logger.Error(ex, "Exception getting pledges");
+                       logger.Error(ex, "Exception getting account ids");
                        throw;
                    }
 
