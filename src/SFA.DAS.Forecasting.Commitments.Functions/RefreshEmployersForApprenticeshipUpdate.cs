@@ -39,11 +39,8 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                        throw;
                    }
 
-                   var employerCommitmentsApi = container.GetInstance<ICommitmentsApiClient>();
-                   var allEmployerIds = await employerCommitmentsApi.GetAllCohortAccountIds();
-
                    var count = 0;
-                   foreach (var id in allEmployerIds.AccountIds)
+                   foreach (var id in accountIds)
                    {
                        count++;
                        updateApprenticeshipForAccountOutputMessage.Add(new RefreshApprenticeshipForAccountMessage
