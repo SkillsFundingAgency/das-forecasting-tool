@@ -29,8 +29,8 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
                    try
                    {
-                       var pledgesService = container.GetInstance<IApprovalsService>();
-                       accountIds = await pledgesService.GetEmployerAccountIds();
+                       var approvalsService = container.GetInstance<IApprovalsService>();
+                       accountIds = await approvalsService.GetEmployerAccountIds();
                        logger.Info($"Outer api reports {accountIds.Count} employer accounts");
                    }
                    catch (Exception ex)
