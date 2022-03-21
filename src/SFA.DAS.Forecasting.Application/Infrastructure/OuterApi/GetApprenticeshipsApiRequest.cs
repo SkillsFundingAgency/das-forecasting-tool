@@ -5,20 +5,26 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 {
     public class GetApprenticeshipsApiRequest : IGetApiRequest
     {
-        private readonly long _employerAccountId;
-        private readonly int _status;
-        private readonly int _page;
+        public long EmployerAccountId { get; }
+        public int Status { get; }
+        public int Page { get; }
         private readonly int _pageItemCount;
 
-        public GetApprenticeshipsApiRequest(long employerAccountId, int status, int page, int pageItemCount)
+        public GetApprenticeshipsApiRequest(long employerAccountId, short status, int page, int pageItemCount)
         {
-            _employerAccountId = employerAccountId;
-            _status = status;
-            _page = page;
+            EmployerAccountId = employerAccountId;
+            Status = status;
+            Page = page;
             _pageItemCount = pageItemCount;
         }
 
-        public string GetUrl => $"approvals/apprenticeships?accountId={_employerAccountId}&status={_status}&page={_page}&pageItemCount={_pageItemCount}";
+        public string GetUrl => $"approvals/apprenticeships?accountId={EmployerAccountId}&status={Status}&page={Page}&pageItemCount={_pageItemCount}";
+
+        public static class ApprenticeshipStatus
+        {
+            public const short WaitingToStart = 0;
+            public const short Live = 1;
+        }
     }
 
     public class GetApprenticeshipsResponse
