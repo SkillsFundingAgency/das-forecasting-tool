@@ -18,7 +18,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
     {
         private readonly IApiClient _apiClient;
         private readonly ILog _logger;
-        public const int PageSize = 1000;
+        public const int PageSize = 500;
 
         public ApprovalsService(IApiClient apiClient, ILog logger)
         {
