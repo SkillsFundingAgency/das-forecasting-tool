@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Models.Pledges;
 using SFA.DAS.NLog.Logger;
@@ -32,7 +32,8 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
                 _logger.Info($"Getting pledges");
                 var response = await _apiClient.Get<GetPledgesResponse>(new GetPledgesApiRequest());
                 _logger.Info($"LTM inner api reports {response.TotalPledges} total pledges");
-                return new List<Pledge>();
+
+                return response.Pledges.Select(x => new Pledge { AccountId = x.AccountId }).ToList();
             }
             catch (Exception ex)
             {

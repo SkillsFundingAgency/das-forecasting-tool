@@ -15,8 +15,8 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
     {
         [FunctionName("RefreshEmployersForPledgeApplications")]
         public static async Task Run(
-            [QueueTrigger(QueueNames.RefreshEmployersForApprenticeshipUpdate)] string message,
-            [Queue(QueueNames.RefreshApprenticeshipsForEmployer)] ICollector<RefreshApprenticeshipForAccountMessage> updateApprenticeshipForAccountOutputMessage,
+            [QueueTrigger(QueueNames.RefreshEmployersForPledgeApplications)] string message,
+            [Queue(QueueNames.RefreshPledgeApplicationsForEmployer)] ICollector<RefreshPledgeApplicationsForAccountMessage> updatePledgeApplicationsForAccountOutputMessage,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
@@ -26,14 +26,12 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                 {
                     logger.Info("Getting all pledges...");
 
-                    string msg;
                     var pledges = new List<Pledge>();
 
                     try
                     {
                         var approvalsService = container.GetInstance<IPledgesService>();
                         pledges = await approvalsService.GetPledges();
-                        msg = $"Outer api reports {pledges.Count} pledges";
                     }
                     catch (Exception ex)
                     {
@@ -41,17 +39,19 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                         throw;
                     }
 
-                    //var count = 0;
-                    //foreach (var pledge in pledges)
-                    //{
-                    //    count++;
-                    //    //updateApprenticeshipForAccountOutputMessage.Add(new RefreshApprenticeshipForAccountMessage
-                    //    //{
-                    //        //EmployerId = id
-                    //    //});
-                    //}
-                    //var msg = $"Added {count} employer id messages to the queue {nameof(QueueNames.RefreshApprenticeshipsForEmployer)}.";
-                    //logger.Info(msg);
+                    var accountIds = pledges.Select(x => x.AccountId).Distinct();
+
+                    var count = 0;
+                    foreach (var id in accountIds)
+                    {
+                        count++;
+                        updatePledgeApplicationsForAccountOutputMessage.Add(new RefreshPledgeApplicationsForAccountMessage
+                        {
+                            EmployerId = id
+                        });
+                    }
+                    var msg = $"Added {count} employer id messages to the queue {nameof(QueueNames.RefreshEmployersForPledgeApplications)}.";
+                    logger.Info(msg);
                     return msg;
                 });
         }

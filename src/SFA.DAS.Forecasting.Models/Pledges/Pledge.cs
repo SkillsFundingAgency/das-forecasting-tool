@@ -2,5 +2,6 @@
 {
     public class Pledge
     {
+        public long AccountId { get; set; }
     }
 }
