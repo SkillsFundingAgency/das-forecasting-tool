@@ -258,6 +258,7 @@
     <Compile Include="Infrastructure\OuterApi\GetAccountIdsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetApplicationsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetApprenticeshipsApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetPledgeAccountIdsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetPledgesApiRequest.cs" />
     <Compile Include="Shared\AssemblyBindingRedirectHelper.cs" />
     <Compile Include="Balance\Services\AccountBalanceService.cs" />

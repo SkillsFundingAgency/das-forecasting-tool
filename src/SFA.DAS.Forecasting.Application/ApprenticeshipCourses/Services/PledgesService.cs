@@ -10,6 +10,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 {
     public interface IPledgesService
     {
+        Task<List<long>> GetAccountIds();
         Task<List<Pledge>> GetPledges();
         Task<List<Models.Pledges.Application>> GetApplications();
     }
@@ -23,6 +24,12 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
         {
             _apiClient = apiClient;
             _logger = logger;
+        }
+
+        public async Task<List<long>> GetAccountIds()
+        {
+            var response = await _apiClient.Get<GetPledgeAccountIdsResponse>(new GetPledgeAccountIdsApiRequest());
+            return response.AccountIds;
         }
 
         public async Task<List<Pledge>> GetPledges()

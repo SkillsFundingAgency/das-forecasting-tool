@@ -24,22 +24,20 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
             await FunctionRunner.Run<RefreshEmployersForPledgeApplications, string>(writer, executionContext,
                 async (container, logger) =>
                 {
-                    logger.Info("Getting all pledges...");
+                    logger.Info("Getting all pledges account ids...");
 
-                    var pledges = new List<Pledge>();
+                    var accountIds = new List<long>();
 
                     try
                     {
                         var approvalsService = container.GetInstance<IPledgesService>();
-                        pledges = await approvalsService.GetPledges();
+                        accountIds = await approvalsService.GetAccountIds();
                     }
                     catch (Exception ex)
                     {
                         logger.Error(ex, "Exception getting account ids");
                         throw;
                     }
-
-                    var accountIds = pledges.Select(x => x.AccountId).Distinct();
 
                     var count = 0;
                     foreach (var id in accountIds)
