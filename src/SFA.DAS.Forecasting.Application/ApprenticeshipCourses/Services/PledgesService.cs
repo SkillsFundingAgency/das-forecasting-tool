@@ -28,8 +28,21 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 
         public async Task<List<long>> GetAccountIds()
         {
-            var response = await _apiClient.Get<GetPledgeAccountIdsResponse>(new GetPledgeAccountIdsApiRequest());
-            return response.AccountIds;
+            try
+            {
+                var request = new GetPledgeAccountIdsApiRequest();
+                _logger.Info($"Base url: {_apiClient.BaseUrl}");
+                _logger.Info($"Get url: {request.GetUrl}");
+
+                var response = await _apiClient.Get<GetPledgeAccountIdsResponse>(request);
+                return response.AccountIds;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error getting account Ids");
+                throw;
+            }
+
         }
 
         public async Task<List<Pledge>> GetPledges(long accountId)
