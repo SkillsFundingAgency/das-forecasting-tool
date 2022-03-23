@@ -30,8 +30,8 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
                     try
                     {
-                        var approvalsService = container.GetInstance<IPledgesService>();
-                        accountIds = await approvalsService.GetAccountIds();
+                        var pledgesService = container.GetInstance<IPledgesService>();
+                        accountIds = await pledgesService.GetAccountIds();
                     }
                     catch (Exception ex)
                     {

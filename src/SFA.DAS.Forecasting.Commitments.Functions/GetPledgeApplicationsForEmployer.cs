@@ -24,25 +24,23 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                async (container, logger) =>
                {
                    logger.Info($"Getting pledges and applications for employer {message.EmployerId}...");
-                   //var approvalsService = container.GetInstance<IApprovalsService>();
-                   //var apprenticeshipValidation = new ApprenticeshipValidation();
-                   //var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
-                   //var apprenticeships = await approvalsService.GetApprenticeships(message.EmployerId);
+                   try
+                   {
+                       var pledgesService = container.GetInstance<IPledgesService>();
+                       var pledges = await pledgesService.GetPledges(message.EmployerId);
+                       var applications = new List<Models.Pledges.Application>();
 
-                   //IEnumerable<long> failedValidation;
-
-                   //(apprenticeships, failedValidation) = apprenticeshipValidation.BusinessValidation(apprenticeships);
-                   //logger.Info($"{failedValidation.Count()} apprenticeships failed business validation");
-
-                   //var mappedApprenticeships = apprenticeships.Select(y => mapper.Map(y, message.EmployerId)).ToList();
-
-                   //logger.Info($"Sending {mappedApprenticeships.Count} apprenticeships for storing. EmployerId: {message.EmployerId} ");
-
-                   //foreach (var apprenticeship in mappedApprenticeships)
-                   //{
-                   //    outputQueueMessage.Add(await apprenticeship);
-                   //}
+                       foreach (var pledge in pledges)
+                       {
+                           var pledgeApplications = await pledgesService.GetApplications(pledge.Id);
+                       }
+                   }
+                   catch (Exception ex)
+                   {
+                       logger.Error(ex, "Exception getting pledges and applications");
+                       throw;
+                   }
                });
         }
     }

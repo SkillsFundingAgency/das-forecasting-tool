@@ -4,7 +4,14 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 {
     public class GetPledgesApiRequest : IGetApiRequest
     {
-        public string GetUrl => "pledges";
+        public GetPledgesApiRequest(long accountId)
+        {
+            AccountId = accountId;
+        }
+
+        public long AccountId { get; }
+
+        public string GetUrl => $"pledges?accountId={AccountId}";
     }
 
     public class GetPledgesResponse
