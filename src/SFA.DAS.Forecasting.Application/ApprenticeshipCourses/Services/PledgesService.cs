@@ -53,7 +53,7 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
                 var response = await _apiClient.Get<GetPledgesResponse>(request);
                 _logger.Info($"LTM inner api reports {response.TotalPledges} total pledges for account {accountId}");
 
-                return response.Pledges.Select(x => new Pledge { AccountId = x.AccountId }).ToList();
+                return response.Pledges.Select(x => new Pledge { AccountId = x.AccountId, Id = x.Id }).ToList();
             }
             catch (Exception ex)
             {

@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 
         public class Pledge
         {
+            public int Id { get; set; }
             public long AccountId { get; set; }
         }
     }
