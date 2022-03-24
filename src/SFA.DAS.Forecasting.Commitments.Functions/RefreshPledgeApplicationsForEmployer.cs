@@ -6,7 +6,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
     [StorageAccount("StorageConnectionString")]
     public class RefreshPledgeApplicationsForEmployer
     {
-        [FunctionName("RefreshApprenticeshipCoursesFunction")]
+        [FunctionName("RefreshPledgeApplicationsForEmployer")]
         [return: Queue(QueueNames.RefreshEmployersForPledgeApplications)]
         public static string Run([TimerTrigger("0 0 0 */1 * *")] TimerInfo myTimer, TraceWriter log)
         {
