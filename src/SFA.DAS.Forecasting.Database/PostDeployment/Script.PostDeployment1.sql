@@ -17,7 +17,8 @@ USING (VALUES
 	  (2, N'Transfer'),
 	  (3, N'CoInvestedSfa'),
 	  (4, N'CoInvestedEmployer'),
-      (5, N'FullyFundedSfa')
+      (5, N'FullyFundedSfa'),
+	  (6, N'Pledge')
 	) 
 AS Source (Id, Name) 
 ON Target.Id = Source.Id 
