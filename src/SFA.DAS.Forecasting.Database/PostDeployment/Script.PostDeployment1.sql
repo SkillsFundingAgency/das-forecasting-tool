@@ -15,8 +15,12 @@ MERGE INTO FundingSource AS Target
 USING (VALUES 
 	  (1, N'Levy'), 
 	  (2, N'Transfer'),
-	  (3, 'CoInvestedSfa')
-	) 
+	  (3, 'CoInvestedSfa'),
+	  (4, N'CoInvestedEmployer'),
+      (5, N'FullyFundedSfa'),
+	  (6, N'ApprovedPledgeApplication'),
+	  (7, N'AcceptedPledgeApplication')
+	  )
 AS Source (Id, Name) 
 ON Target.Id = Source.Id 
 -- update matched rows 
