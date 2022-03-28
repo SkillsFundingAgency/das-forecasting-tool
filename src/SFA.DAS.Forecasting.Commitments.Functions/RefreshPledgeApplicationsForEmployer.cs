@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
         [return: Queue(QueueNames.RefreshEmployersForPledgeApplications)]
         public static string Run([TimerTrigger("0 0 0 */1 * *")] TimerInfo myTimer, TraceWriter log)
         {
-            log.Verbose("Triggering scheduled run of refresh pledge applications for employers.");
+            log.Info("Triggering scheduled run of refresh pledge applications for employers.");
             return "RefreshPledgeApplicationsForEmployer";
         }
     }
