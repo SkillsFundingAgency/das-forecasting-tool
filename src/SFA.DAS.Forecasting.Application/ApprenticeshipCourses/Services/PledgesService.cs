@@ -67,7 +67,21 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
             var request = new GetApplicationsApiRequest(pledgeId);
             var response = await _apiClient.Get<GetApplicationsResponse>(request);
             _logger.Info($"LTM inner api reports {response.Applications.Count} applications for pledge {pledgeId}");
-            return new List<Models.Pledges.Application>();
+
+            return response.Applications.Select(x => new Models.Pledges.Application
+            {
+                Id = x.Id,
+                EmployerAccountId = x.EmployerAccountId,
+                PledgeId = x.PledgeId,
+                StandardId = x.StandardId,
+                StandardTitle = x.StandardTitle,
+                StandardLevel = x.StandardLevel,
+                StandardDuration = x.StandardDuration,
+                StandardMaxFunding = x.StandardMaxFunding,
+                StartDate = x.StartDate,
+                NumberOfApprentices = x.NumberOfApprentices,
+                NumberOfApprenticesUsed = x.NumberOfApprenticesUsed
+            }).ToList();
         }
     }
 }
