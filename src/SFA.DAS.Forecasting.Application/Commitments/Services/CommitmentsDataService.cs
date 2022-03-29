@@ -43,6 +43,16 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 .FirstOrDefaultAsync();
         }
 
+        public async Task DeletePledgeApplicationCommitments(long employerAccountId)
+        {
+            var pledgeApplicationCommitments = _dataContext.Commitments.Where(x =>
+                x.FundingSource == FundingSource.ApprovedPledgeApplication ||
+                x.FundingSource == FundingSource.AcceptedPledgeApplication);
+
+            _dataContext.Commitments.RemoveRange(pledgeApplicationCommitments);
+            await _dataContext.SaveChangesAsync();
+        }
+
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
             var stopwatch = new Stopwatch();
