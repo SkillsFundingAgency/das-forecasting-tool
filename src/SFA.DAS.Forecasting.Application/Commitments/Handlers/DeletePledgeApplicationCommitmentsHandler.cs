@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
 
         public async Task Handle(long employerAccountId)
         {
-            await _repository.DeletePledgeApplicationCommitments(employerAccountId);
+            await _repository.DeletePledgeApplicationCommitmentsForSendingEmployer(employerAccountId);
         }
     }
 }

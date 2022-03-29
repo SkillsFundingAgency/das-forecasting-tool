@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
     {
         Task<EmployerCommitment> Get(long employerAccountId, long apprenticeshipId);
         Task Store(EmployerCommitment commitment);
-        Task DeletePledgeApplicationCommitments(long employerAccountId);
+        Task DeletePledgeApplicationCommitmentsForSendingEmployer(long employerAccountId);
     }
 
     public class EmployerCommitmentRepository : IEmployerCommitmentRepository
@@ -37,9 +37,9 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             await _dataService.Store(commitment.Commitment);
         }
 
-        public async Task DeletePledgeApplicationCommitments(long employerAccountId)
+        public async Task DeletePledgeApplicationCommitmentsForSendingEmployer(long employerAccountId)
         {
-            await _dataService.DeletePledgeApplicationCommitments(employerAccountId);
+            await _dataService.DeletePledgeApplicationCommitmentsForSendingEmployer(employerAccountId);
         }
     }
 }

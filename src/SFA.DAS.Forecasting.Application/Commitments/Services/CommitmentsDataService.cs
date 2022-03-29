@@ -43,11 +43,12 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeletePledgeApplicationCommitments(long employerAccountId)
+        public async Task DeletePledgeApplicationCommitmentsForSendingEmployer(long employerAccountId)
         {
             var pledgeApplicationCommitments = _dataContext.Commitments.Where(x =>
-                x.FundingSource == FundingSource.ApprovedPledgeApplication ||
-                x.FundingSource == FundingSource.AcceptedPledgeApplication);
+                x.SendingEmployerAccountId == employerAccountId &&
+                (x.FundingSource == FundingSource.ApprovedPledgeApplication ||
+                 x.FundingSource == FundingSource.AcceptedPledgeApplication));
 
             _dataContext.Commitments.RemoveRange(pledgeApplicationCommitments);
             await _dataContext.SaveChangesAsync();
