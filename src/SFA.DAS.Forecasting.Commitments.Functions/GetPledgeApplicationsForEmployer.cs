@@ -45,27 +45,9 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                            applications.AddRange(pledgeApplications);
                        }
 
-                       var commitments = applications.Select(x => new ApprenticeshipMessage
-                       {
-                            EmployerAccountId = x.EmployerAccountId,
-                            SendingEmployerAccountId = message.EmployerId,
-                            LearnerId = 1, //todo: invalid on storage
-                            ProviderId = 0,
-                            ProviderName = string.Empty,
-                            ApprenticeshipId = 0,
-                            ApprenticeName = string.Empty,
-                            CourseName = x.StandardTitle,
-                            CourseLevel = x.StandardLevel,
-                            StartDate = x.StartDate,
-                            PlannedEndDate = x.StartDate.AddMonths(x.StandardDuration),
-                            ActualEndDate = null,
-                            CompletionAmount = 1, //todo
-                            MonthlyInstallment = 1, //todo
-                            NumberOfInstallments = x.StandardDuration,
-                            FundingSource = FundingSource.ApprovedPledgeApplication, //todo
-                            ProjectionSource = ProjectionSource.Commitment,
-                            PledgeApplicationId = x.Id
-                        });
+                       var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
+
+                       var commitments = applications.Select(x => mapper.Map(x, message.EmployerId));
 
                        foreach (var commitment in commitments)
                        {

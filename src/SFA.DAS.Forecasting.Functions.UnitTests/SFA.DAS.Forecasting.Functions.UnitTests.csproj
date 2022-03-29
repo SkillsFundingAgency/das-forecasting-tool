@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commitments\WhenMappingApiApprenticeship.cs" />
+    <Compile Include="Commitments\WhenMappingPledgeApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,8 +2,10 @@
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Approvals;
 using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.Forecasting.Models.Pledges;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
@@ -47,6 +49,33 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
                 NumberOfInstallments = duration,
                 FundingSource = apprenticeship.TransferSenderId == null ? FundingSource.Levy : FundingSource.Transfer,
                 PledgeApplicationId = apprenticeship.PledgeApplicationId
+            };
+        }
+
+        internal ApprenticeshipMessage Map(Models.Pledges.Application x, long employerAccountId)
+        {
+            return new ApprenticeshipMessage
+            {
+                EmployerAccountId = x.EmployerAccountId,
+                SendingEmployerAccountId = employerAccountId,
+                LearnerId = 0,
+                ProviderId = 0,
+                ProviderName = string.Empty,
+                ApprenticeshipId = 0,
+                ApprenticeName = string.Empty,
+                CourseName = x.StandardTitle,
+                CourseLevel = x.StandardLevel,
+                StartDate = x.StartDate,
+                PlannedEndDate = x.StartDate.AddMonths(x.StandardDuration),
+                ActualEndDate = null,
+                CompletionAmount = x.StandardMaxFunding * 0.2M,
+                MonthlyInstallment = (x.StandardMaxFunding * 0.8M) / x.StandardDuration,
+                NumberOfInstallments = x.StandardDuration,
+                FundingSource = x.Status == ApplicationStatus.Approved
+                    ? FundingSource.ApprovedPledgeApplication
+                    : FundingSource.AcceptedPledgeApplication,
+                ProjectionSource = ProjectionSource.Commitment,
+                PledgeApplicationId = x.Id
             };
         }
     }
