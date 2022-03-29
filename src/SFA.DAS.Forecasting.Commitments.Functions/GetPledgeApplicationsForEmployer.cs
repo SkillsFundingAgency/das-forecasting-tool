@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                        {
                             EmployerAccountId = x.EmployerAccountId,
                             SendingEmployerAccountId = message.EmployerId,
-                            LearnerId = 0,
+                            LearnerId = 1, //todo: invalid on storage
                             ProviderId = 0,
                             ProviderName = string.Empty,
                             ApprenticeshipId = 0,
