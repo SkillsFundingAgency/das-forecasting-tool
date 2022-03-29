@@ -9,6 +9,8 @@ using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Commitments.Handlers;
 using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Functions.Framework;
+using SFA.DAS.Forecasting.Messages.Projections;
+using SFA.DAS.Forecasting.Models.Payments;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
@@ -40,7 +42,36 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                        foreach (var pledge in pledges)
                        {
                            var pledgeApplications = await pledgesService.GetApplications(pledge.Id);
+                           applications.AddRange(pledgeApplications);
                        }
+
+                       var commitments = applications.Select(x => new ApprenticeshipMessage
+                       {
+                            EmployerAccountId = x.EmployerAccountId,
+                            SendingEmployerAccountId = message.EmployerId,
+                            LearnerId = 0,
+                            ProviderId = 0,
+                            ProviderName = string.Empty,
+                            ApprenticeshipId = 0,
+                            ApprenticeName = string.Empty,
+                            CourseName = x.StandardTitle,
+                            CourseLevel = x.StandardLevel,
+                            StartDate = x.StartDate,
+                            PlannedEndDate = x.StartDate.AddMonths(x.StandardDuration),
+                            ActualEndDate = null,
+                            CompletionAmount = 1, //todo
+                            MonthlyInstallment = 1, //todo
+                            NumberOfInstallments = x.StandardDuration,
+                            FundingSource = FundingSource.ApprovedPledgeApplication, //todo
+                            ProjectionSource = ProjectionSource.Commitment,
+                            PledgeApplicationId = x.Id
+                        });
+
+                       foreach (var commitment in commitments)
+                       {
+                           outputQueueMessage.Add(commitment);
+                       }
+
                    }
                    catch (Exception ex)
                    {
