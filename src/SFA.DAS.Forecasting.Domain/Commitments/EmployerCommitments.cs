@@ -40,7 +40,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             bool FilterCurrent(CommitmentModel c) =>
                       c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
                       c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth() &&
-                      (!isVirtual || c.FundingSource == FundingSource.Transfer);
+                      (!isVirtual || c.FundingSource == FundingSource.Transfer || c.FundingSource == FundingSource.ApprovedPledgeApplication || c.FundingSource == FundingSource.AcceptedPledgeApplication);
 
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
             var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
