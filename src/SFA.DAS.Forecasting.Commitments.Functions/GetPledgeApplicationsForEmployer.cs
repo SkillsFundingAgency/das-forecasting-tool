@@ -47,13 +47,23 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
                        var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
 
-                       var commitments = applications.Select(x => mapper.Map(x, message.EmployerId));
+                       var commitments = new List<ApprenticeshipMessage>();
+
+                       foreach (var application in applications)
+                       {
+                           var numberOfApprenticesUnused = application.NumberOfApprentices - application.NumberOfApprenticesUsed;
+                           if (numberOfApprenticesUnused <= 0) continue;
+                           logger.Info($"{numberOfApprenticesUnused} of {application.NumberOfApprentices} unused against application {application.Id} pledge {application.PledgeId} employer {message.EmployerId}...");
+                           for (var i = 0; i < numberOfApprenticesUnused; i++)
+                           {
+                               commitments.Add(mapper.Map(application, message.EmployerId));
+                           }
+                       }
 
                        foreach (var commitment in commitments)
                        {
                            outputQueueMessage.Add(commitment);
                        }
-
                    }
                    catch (Exception ex)
                    {
