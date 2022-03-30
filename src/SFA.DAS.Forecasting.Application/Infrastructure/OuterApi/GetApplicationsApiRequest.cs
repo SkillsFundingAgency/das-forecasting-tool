@@ -32,6 +32,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             public DateTime StartDate { get; set; }
             public int NumberOfApprentices { get; set; }
             public int NumberOfApprenticesUsed { get; set; }
+            public string Status { get; set; }
         }
     }
 }

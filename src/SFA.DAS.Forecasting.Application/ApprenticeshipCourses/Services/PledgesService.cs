@@ -80,7 +80,8 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
                 StandardMaxFunding = x.StandardMaxFunding,
                 StartDate = x.StartDate,
                 NumberOfApprentices = x.NumberOfApprentices,
-                NumberOfApprenticesUsed = x.NumberOfApprenticesUsed
+                NumberOfApprenticesUsed = x.NumberOfApprenticesUsed,
+                Status = x.Status
             }).ToList();
         }
     }
