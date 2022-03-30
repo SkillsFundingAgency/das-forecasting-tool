@@ -126,7 +126,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
-                                 && commitment.FundingSource == FundingSource.Transfer
+                                 && (commitment.FundingSource == FundingSource.Transfer ||
+                                     commitment.FundingSource == FundingSource.ApprovedPledgeApplication ||
+                                     commitment.FundingSource == FundingSource.AcceptedPledgeApplication)
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && (commitment.ActualEndDate == null || commitment.ActualEndDate > DateTime.UtcNow);
         }
