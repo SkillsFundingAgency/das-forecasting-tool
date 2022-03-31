@@ -1,5 +1,4 @@
-﻿using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
-using SFA.DAS.EAS.Account.Api.Client;
+﻿using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Core;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
@@ -13,7 +12,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         int NumberOfMonthsToProject { get; }
         bool LimitForecast { get; set; }
         AccountApiConfiguration AccountApi { get; set; }
-        CommitmentsClientApiConfiguration CommitmentsClientApiConfiguration { get; set; }
         IdentityServerConfiguration Identity { get; set; }
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }

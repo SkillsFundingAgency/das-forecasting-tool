@@ -1,8 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.CommitmentsV2.Api.Client;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
@@ -20,12 +22,24 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
             await FunctionRunner.Run<RefreshEmployersForApprenticeshipUpdate, string>(writer, executionContext,
                async (container, logger) =>
                {
-                   logger.Debug("Getting all employer ids...");
-                   var employerCommitmentsApi = container.GetInstance<ICommitmentsApiClient>();
-                   var allEmployerIds = await employerCommitmentsApi.GetAllCohortAccountIds();
+                   logger.Info("Getting all employer ids...");
+
+                   var accountIds = new List<long>();
+
+                   try
+                   {
+                       var approvalsService = container.GetInstance<IApprovalsService>();
+                       accountIds = await approvalsService.GetEmployerAccountIds();
+                       logger.Info($"Outer api reports {accountIds.Count} employer accounts");
+                   }
+                   catch (Exception ex)
+                   {
+                       logger.Error(ex, "Exception getting account ids");
+                       throw;
+                   }
 
                    var count = 0;
-                   foreach (var id in allEmployerIds.AccountIds)
+                   foreach (var id in accountIds)
                    {
                        count++;
                        updateApprenticeshipForAccountOutputMessage.Add(new RefreshApprenticeshipForAccountMessage

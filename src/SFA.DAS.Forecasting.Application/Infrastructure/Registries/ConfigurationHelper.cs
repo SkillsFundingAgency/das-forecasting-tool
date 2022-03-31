@@ -8,7 +8,6 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
-using SFA.DAS.CommitmentsV2.Api.Client.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
@@ -42,28 +41,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     ClientToken = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientToken"),
                 }
                 : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
-        }
-
-        public static CommitmentsClientApiConfiguration GetCommitmentsApiConfiguration()
-        {
-            if (IsDevEnvironment)
-            {
-                return new CommitmentsClientApiConfiguration
-                {
-                    ApiBaseUrl = CloudConfigurationManager.GetSetting("CommitmentsV2ApiBaseUrl"),
-                    IdentifierUri = CloudConfigurationManager.GetSetting("CommitmentsV2IdentifierUri")
-                };
-            }
-            else
-            {
-
-                var config = GetConfiguration<CommitmemtsV2ApiClientConfiguration>("SFA.DAS.Forecasting");
-                return new CommitmentsClientApiConfiguration
-                {
-                    ApiBaseUrl = config.CommitmentsV2ApiBaseUrl,
-                    IdentifierUri = config.CommitmentsV2IdentifierUri
-                };
-            }
         }
 
         private static T GetConfiguration<T>(string serviceName)

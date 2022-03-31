@@ -147,9 +147,6 @@
     <Reference Include="SFA.DAS.AutoConfiguration, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.AutoConfiguration.2.2.6\lib\net462\SFA.DAS.AutoConfiguration.dll</HintPath>
     </Reference>
-    <Reference Include="SFA.DAS.CommitmentsV2.Api.Client, Version=8.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.CommitmentsV2.Api.Client.8.0.3\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Api.Client.dll</HintPath>
-    </Reference>
     <Reference Include="SFA.DAS.CommitmentsV2.Api.Types, Version=8.0.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.CommitmentsV2.Api.Types.8.0.3\lib\netstandard2.0\SFA.DAS.CommitmentsV2.Api.Types.dll</HintPath>
     </Reference>
@@ -251,10 +248,16 @@
     <Compile Include="ApprenticeshipCourses\Handlers\GetCoursesHandler.cs" />
     <Compile Include="ApprenticeshipCourses\Handlers\StoreCourseHandler.cs" />
     <Compile Include="ApprenticeshipCourses\Services\ApprenticeshipCourseDataService.cs" />
+    <Compile Include="ApprenticeshipCourses\Services\ApprovalsService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\FrameworksService.cs" />
+    <Compile Include="ApprenticeshipCourses\Services\PledgesService.cs" />
     <Compile Include="ApprenticeshipCourses\Services\StandardsService.cs" />
     <Compile Include="Apprenticeship\Mapping\ApprenticeshipMapping.cs" />
     <Compile Include="Apprenticeship\Messages\ApprenticeshipMessage.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetAccountIdsApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetApplicationsApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetApprenticeshipsApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetPledgesApiRequest.cs" />
     <Compile Include="Shared\AssemblyBindingRedirectHelper.cs" />
     <Compile Include="Balance\Services\AccountBalanceService.cs" />
     <Compile Include="Balance\Services\BalanceDataService.cs" />
@@ -280,7 +283,6 @@
     <Compile Include="Infrastructure\Persistence\DocumentAdapter.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentSession.cs" />
     <Compile Include="Infrastructure\Persistence\DocumentSessionConnectionString.cs" />
-    <Compile Include="Infrastructure\Registries\CommitmentsRegistry.cs" />
     <Compile Include="Infrastructure\Registries\ConfigurationHelper.cs" />
     <Compile Include="Infrastructure\Registries\ConfigurationRegistry.cs" />
     <Compile Include="Infrastructure\Registries\DefaultWebRegistry.cs" />
@@ -293,7 +295,6 @@
     <Compile Include="Infrastructure\Telemetry\ITelemetry.cs" />
     <Compile Include="Infrastructure\Telemetry\TelemetryExtensions.cs" />
     <Compile Include="Levy\Handlers\GenerateAccountProjectionHandler.cs" />
-    <Compile Include="LocalDevRegistry\LocalDevCommitmentApiClientFactory.cs" />
     <Compile Include="Payments\Messages\CalendarPeriod.cs" />
     <Compile Include="Payments\Messages\PreLoad\AllEmployersPreLoadPaymentRequest.cs" />
     <Compile Include="Apprenticeship\Messages\RefreshApprenticeshipForAccountMessage.cs" />
