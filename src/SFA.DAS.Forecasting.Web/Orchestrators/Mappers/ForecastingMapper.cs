@@ -73,7 +73,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                     ? "Y" : "N",
                 Uln = IsTransferCommitment(commitment, accountId) ? "" : commitment.LearnerId.ToString(),
                 ApprenticeName = IsTransferCommitment(commitment, accountId) ? "" : commitment.ApprenticeName,
-                UkPrn = commitment.ProviderId,
+                UkPrn = commitment.ProviderId == 0 ? string.Empty : commitment.ProviderId.ToString(),
                 ProviderName = commitment.ProviderName,
                 TotalCost = Convert.ToInt32((commitment.MonthlyInstallment * commitment.NumberOfInstallments) + commitment.CompletionAmount),
                 MonthlyTrainingCost = Convert.ToInt32(commitment.MonthlyInstallment),

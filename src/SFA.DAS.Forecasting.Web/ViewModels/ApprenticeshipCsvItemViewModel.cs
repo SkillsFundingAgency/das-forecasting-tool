@@ -25,7 +25,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         [Name("Apprentice Name")]
         public string ApprenticeName { get; set; }
         [Name("UKPRN")]
-        public long UkPrn { get; set; }
+        public string UkPrn { get; set; }
         [Name("Provider Name")]
         public string ProviderName { get; set; }
         [Name("Total Cost")]
