@@ -24,6 +24,11 @@ namespace SFA.DAS.Forecasting.Core
             return !date.HasValue || date.Value.Year == 1;
         }
 
+        public static DateTime GetStartOfAprilOfFinancialYear(this DateTime dateTime)
+        {
+            return dateTime.Month < 4 ? new DateTime(dateTime.Year - 1, 4, 1) : new DateTime(dateTime.Year, 4, 1);
+        }
+
         public static DateTime GetStartOfMonth(this DateTime date)
         {
             return new DateTime(date.Year, date.Month, 1);
