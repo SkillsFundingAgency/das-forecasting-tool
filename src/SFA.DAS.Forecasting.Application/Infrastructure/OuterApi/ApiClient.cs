@@ -10,6 +10,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
     {
         private readonly HttpClient _httpClient;
         private readonly IApplicationConfiguration _config;
+        private readonly object headersLock = new object(); 
 
         public ApiClient(HttpClient httpClient, IApplicationConfiguration config)
         {
@@ -34,11 +35,15 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
         }
         private void AddHeaders()
         {
-            _httpClient.DefaultRequestHeaders.Remove("Ocp-Apim-Subscription-Key");
-            _httpClient.DefaultRequestHeaders.Remove("X-Version");
-                
-            _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipsApiSubscriptionKey);
-            _httpClient.DefaultRequestHeaders.Add("X-Version", "1");
+            lock (headersLock)
+            {
+                _httpClient.DefaultRequestHeaders.Remove("Ocp-Apim-Subscription-Key");
+                _httpClient.DefaultRequestHeaders.Remove("X-Version");
+
+                _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key",
+                    _config.ApprenticeshipsApiSubscriptionKey);
+                _httpClient.DefaultRequestHeaders.Add("X-Version", "1");
+            }
         }
 
         public string BaseUrl => _httpClient.BaseAddress.ToString();
