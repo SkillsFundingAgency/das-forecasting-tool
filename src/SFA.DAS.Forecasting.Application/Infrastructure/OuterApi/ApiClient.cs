@@ -25,25 +25,20 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 
         public async Task<TResponse> Get<TResponse>(IGetApiRequest request)
         {
-            AddHeaders();
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, request.GetUrl);
+            AddAuthenticationHeader(requestMessage);
 
-            var response = await _httpClient.GetAsync(request.GetUrl).ConfigureAwait(false);
+            var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
             return JsonConvert.DeserializeObject<TResponse>(json);
         }
-        private void AddHeaders()
-        {
-            lock (headersLock)
-            {
-                _httpClient.DefaultRequestHeaders.Remove("Ocp-Apim-Subscription-Key");
-                _httpClient.DefaultRequestHeaders.Remove("X-Version");
 
-                _httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key",
-                    _config.ApprenticeshipsApiSubscriptionKey);
-                _httpClient.DefaultRequestHeaders.Add("X-Version", "1");
-            }
+        private void AddAuthenticationHeader(HttpRequestMessage httpRequestMessage)
+        {
+            httpRequestMessage.Headers.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipsApiSubscriptionKey);
+            httpRequestMessage.Headers.Add("X-Version", "1");
         }
 
         public string BaseUrl => _httpClient.BaseAddress.ToString();
