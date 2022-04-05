@@ -105,6 +105,10 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
+                ApprovedPledgeApplicationCost = totalCostOfTraning.ApprovedPledgeApplicationCost,
+                AcceptedPledgeApplicationCost = totalCostOfTraning.AcceptedPledgeApplicationCost,
+                PledgeOriginatedCommitmentCost = totalCostOfTraning.PledgeOriginatedCommitmentCost,
+
                 CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) : 0m,
                 CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) : 0m,
                 FutureFunds = futureFunds,

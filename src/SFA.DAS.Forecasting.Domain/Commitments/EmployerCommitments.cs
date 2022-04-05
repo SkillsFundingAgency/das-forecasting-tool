@@ -58,7 +58,11 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment) + coInvestmentCommitments.Sum(m => m.MonthlyInstallment),
                 TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
                 TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
-                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
+                CommitmentIds = includedCommitments.Select(c => c.Id).ToList(),
+                ApprovedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.MonthlyInstallment),
+                AcceptedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.MonthlyInstallment),
+                PledgeOriginatedCommitmentCost = sendingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.MonthlyInstallment) +
+                                                 receivingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(c => c.MonthlyInstallment)
             };
         }
 

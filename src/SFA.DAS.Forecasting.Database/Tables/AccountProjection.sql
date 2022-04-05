@@ -17,7 +17,10 @@
 	[CoInvestmentEmployer] DECIMAL(18,5) NOT NULL default(0),
 	[CoInvestmentGovernment] DECIMAL(18,5) NOT NULL default(0), 
     [ExpiredFunds] DECIMAL(18, 5) NOT NULL DEFAULT (0), 
-    [FutureFundsNoExpiry] DECIMAL(18, 5) NOT NULL DEFAULT 0
+    [FutureFundsNoExpiry] DECIMAL(18, 5) NOT NULL DEFAULT 0,
+    [ApprovedPledgeApplicationCost] DECIMAL(18, 5) NOT NULL DEFAULT 0,
+    [AcceptedPledgeApplicationCost] DECIMAL(18, 5) NOT NULL DEFAULT 0,
+    [PledgeOriginatedCommitmentCost] DECIMAL(18, 5) NOT NULL DEFAULT 0
 )
 GO
 
