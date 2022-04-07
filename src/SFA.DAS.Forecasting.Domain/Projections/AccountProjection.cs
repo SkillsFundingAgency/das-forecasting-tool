@@ -75,6 +75,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
         {
 	        var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
 	        var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
+            var totalCostOfPledges = _employerCommitments.GetTotalCostOfPledges(period);
 
 			var currentBalance = GetCurrentBalance(lastBalance,completionPayments.TransferOutCompletionPayment, totalCostOfTraning.TransferOut, isFirstMonth);
 
@@ -105,9 +106,9 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
 
-                ApprovedPledgeApplicationCost = totalCostOfTraning.ApprovedPledgeApplicationCost,
-                AcceptedPledgeApplicationCost = totalCostOfTraning.AcceptedPledgeApplicationCost,
-                PledgeOriginatedCommitmentCost = totalCostOfTraning.PledgeOriginatedCommitmentCost,
+                ApprovedPledgeApplicationCost = totalCostOfPledges.ApprovedPledgeApplicationCost,
+                AcceptedPledgeApplicationCost = totalCostOfPledges.AcceptedPledgeApplicationCost,
+                PledgeOriginatedCommitmentCost = totalCostOfPledges.PledgeOriginatedCommitmentCost,
 
                 CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) : 0m,
                 CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) : 0m,

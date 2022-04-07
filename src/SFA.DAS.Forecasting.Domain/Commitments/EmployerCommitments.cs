@@ -58,11 +58,34 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 LevyFunded = levyFundedCommitments.Sum(c => c.MonthlyInstallment) + coInvestmentCommitments.Sum(m => m.MonthlyInstallment),
                 TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
                 TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
-                CommitmentIds = includedCommitments.Select(c => c.Id).ToList(),
-                ApprovedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.MonthlyInstallment),
-                AcceptedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.MonthlyInstallment),
-                PledgeOriginatedCommitmentCost = sendingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.MonthlyInstallment) +
-                                                 receivingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(c => c.MonthlyInstallment)
+                CommitmentIds = includedCommitments.Select(c => c.Id).ToList()
+            };
+        }
+
+        public virtual CostOfPledges GetTotalCostOfPledges(DateTime date, bool isVirtual = false)
+        {
+            bool FilterCurrent(CommitmentModel c) =>
+                      c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
+                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth() &&
+                      (!isVirtual || c.FundingSource == FundingSource.Transfer || c.FundingSource == FundingSource.ApprovedPledgeApplication || c.FundingSource == FundingSource.AcceptedPledgeApplication);
+
+            //var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            //var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            //var coInvestmentCommitments = _coInvestmentCommitments.Where(FilterCurrent).ToList();
+
+            //var includedCommitments = new List<CommitmentModel>();
+            //includedCommitments.AddRange(levyFundedCommitments);
+            //includedCommitments.AddRange(sendingEmployerCommitments);
+            //includedCommitments.AddRange(receivingEmployerCommitments);
+            //includedCommitments.AddRange(coInvestmentCommitments);
+
+            return new CostOfPledges
+            {
+                ApprovedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.MonthlyInstallment + m.CompletionAmount),
+                AcceptedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.MonthlyInstallment + m.CompletionAmount),
+                PledgeOriginatedCommitmentCost = sendingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.MonthlyInstallment+ m.CompletionAmount)
+                                                 //receivingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(c => c.MonthlyInstallment + c.CompletionAmount)
             };
         }
 
