@@ -59,10 +59,13 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                 TransferIn = receivingEmployerCommitments.Sum(m => m.MonthlyInstallment),
                 TransferOut = sendingEmployerCommitments.Sum(m => m.MonthlyInstallment) + receivingEmployerCommitments.Sum(c => c.MonthlyInstallment),
                 CommitmentIds = includedCommitments.Select(c => c.Id).ToList(),
-                ApprovedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.MonthlyInstallment),
-                AcceptedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.MonthlyInstallment),
-                PledgeOriginatedCommitmentCost = sendingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.MonthlyInstallment) +
-                                                 receivingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(c => c.MonthlyInstallment)
+                ApprovedPledgeApplicationCost = 0.1m,
+                AcceptedPledgeApplicationCost = 0.2m,
+                PledgeOriginatedCommitmentCost = 0.3m
+                //ApprovedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.MonthlyInstallment),
+                //AcceptedPledgeApplicationCost = sendingEmployerCommitments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.MonthlyInstallment),
+                //PledgeOriginatedCommitmentCost = sendingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.MonthlyInstallment) +
+                                                 //receivingEmployerCommitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(c => c.MonthlyInstallment)
             };
         }
 
