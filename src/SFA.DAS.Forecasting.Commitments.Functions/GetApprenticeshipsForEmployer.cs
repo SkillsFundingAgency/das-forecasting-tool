@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                    logger.Info($"Getting apprenticeships for employer {message.EmployerId}...");
                    var approvalsService = container.GetInstance<IApprovalsService>();
                    var apprenticeshipValidation = new ApprenticeshipValidation();
-                   var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
+                   var mapper = new Mapper();
 
                    var apprenticeships = await approvalsService.GetApprenticeships(message.EmployerId);
 
@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
 
                    foreach (var apprenticeship in mappedApprenticeships)
                    {
-                       outputQueueMessage.Add(await apprenticeship);
+                       outputQueueMessage.Add(apprenticeship);
                    }
                });
         }
