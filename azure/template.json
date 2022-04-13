@@ -841,7 +841,10 @@
                     "enabledForTemplateDeployment": {
                         "value": true
                     },
-                    "enableSoftDelete": {
+                    "enableFirewall": {
+                        "value": true
+                    },
+                    "allowTrustedMicrosoftServices": {
                         "value": true
                     },
                     "logAnalyticsWorkspaceName": {
