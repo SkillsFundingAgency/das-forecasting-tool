@@ -54,6 +54,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
             public long ProviderId { get; set; }
 
             public string CourseName { get; set; }
+            public int CourseLevel { get; set; }
 
             public DateTime StartDate { get; set; }
 
