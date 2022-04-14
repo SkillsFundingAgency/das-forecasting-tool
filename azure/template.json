@@ -847,6 +847,9 @@
                     "allowTrustedMicrosoftServices": {
                         "value": true
                     },
+                    "subnetResourceIdList": {
+                        "value": "[createArray(parameters('sharedFrontEndSubnetResourceId'),reference('function-app-subnet').outputs.SubnetResourceId.value)]"
+                    },
                     "logAnalyticsWorkspaceName": {
                         "value": "[parameters('logAnalyticsWorkspaceName')]"
                     },
