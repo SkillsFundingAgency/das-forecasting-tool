@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.CommitmentsV2.Api.Types.Responses;
-using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
-using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+﻿using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Approvals;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -11,14 +8,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
     internal class Mapper
     {
-        private readonly IApprenticeshipCourseDataService _apprenticeshipCourseDataService;
-
-        public Mapper(IApprenticeshipCourseDataService apprenticeshipCourseDataService)
-        {
-            _apprenticeshipCourseDataService = apprenticeshipCourseDataService;
-        }
-
-        internal async Task<ApprenticeshipMessage> Map(Apprenticeship apprenticeship, long employerAccountId)
+        internal ApprenticeshipMessage Map(Apprenticeship apprenticeship, long employerAccountId)
         {
             if (apprenticeship == null)
             {
@@ -27,8 +17,6 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 
             var duration = (apprenticeship.EndDate.Year - apprenticeship.StartDate.Year) * 12 +
                            apprenticeship.EndDate.Month - apprenticeship.StartDate.Month;
-
-            var training = await _apprenticeshipCourseDataService.GetApprenticeshipCourse(apprenticeship.CourseCode);
 
             return new ApprenticeshipMessage
             {
@@ -40,7 +28,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
                 ApprenticeshipId = apprenticeship.Id,
                 ApprenticeName = $"{apprenticeship.FirstName} {apprenticeship.LastName}",
                 CourseName = apprenticeship.CourseName,
-                CourseLevel = training?.Level ?? 0,
+                CourseLevel = apprenticeship.CourseLevel,
                 StartDate = apprenticeship.StartDate,
                 PlannedEndDate = apprenticeship.EndDate,
                 ActualEndDate = null,

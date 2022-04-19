@@ -1,11 +1,8 @@
 ﻿using AutoFixture;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
-using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Commitments.Functions.Application;
-using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Threading.Tasks;
@@ -16,8 +13,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
     [TestFixture]
     public class WhenMappingApiApprenticeship
     {
-        private Mock<IApprenticeshipCourseDataService> _apprenticeshipCourseDataServiceMock;
-        private Mapper _sut;
+        private Mapper _sut = new Mapper();
         private IFixture _fixture = new Fixture();
 
         [SetUp]
@@ -33,47 +29,30 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                     o.StartDate = _fixture.Create<DateTime>();
                     o.EndDate = o.StartDate.AddMonths(13);
                 }));
-
-            _apprenticeshipCourseDataServiceMock = new Mock<IApprenticeshipCourseDataService>();
-            _sut = new Mapper(_apprenticeshipCourseDataServiceMock.Object);
         }
 
         [Test]
-        public async Task IfNull_ReturnEmptyMessage()
+        public void IfNull_ReturnEmptyMessage()
         {
             // Arrange
             var emptyResult = new ApprenticeshipMessage();
             Apprenticeship apiApprenticeship = null;
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.Should().BeEquivalentTo(emptyResult);
         }
 
         [Test]
-        public async Task NotNull_ShouldGetApprenticeshipTrainingCourse()
+        public void ShouldMapToApprenticeshipMessage()
         {
             // Arrange
             Apprenticeship apiApprenticeship = _fixture.Create<Apprenticeship>();
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
-
-            // Assert
-            _apprenticeshipCourseDataServiceMock
-                .Verify(mock => mock.GetApprenticeshipCourse(It.Is<string>(x => x == apiApprenticeship.CourseCode)), Times.Once);
-        }
-
-        [Test]
-        public async Task ShouldMapToApprenticeshipMessage()
-        {
-            // Arrange
-            Apprenticeship apiApprenticeship = _fixture.Create<Apprenticeship>();
-
-            // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.EmployerAccountId.Should().Be(1);
@@ -85,13 +64,14 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             result.StartDate.Should().Be(apiApprenticeship.StartDate);
             result.PlannedEndDate.Should().Be(apiApprenticeship.EndDate);
             result.ActualEndDate.Should().Be(null);
+            result.CourseLevel.Should().Be(apiApprenticeship.CourseLevel);
         }
 
         [Test]
         [TestCase(null, 0)]
         [TestCase("string", 0)]
         [TestCase("1234", 1234)]
-        public async Task ShouldMapTApprenticeshipMessage_LearnerId(string apprenticeshipUln, long expectedLearnerId)
+        public void ShouldMapTApprenticeshipMessage_LearnerId(string apprenticeshipUln, long expectedLearnerId)
         {
             // Arrange
             Apprenticeship apiApprenticeship = _fixture
@@ -100,14 +80,14 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 .Create();
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.LearnerId.Should().Be(expectedLearnerId);
         }
 
         [Test]
-        public async Task ShouldMapToApprenticeshipMessage_ApprenticeName()
+        public void ShouldMapToApprenticeshipMessage_ApprenticeName()
         {
             // Arrange
             var firstName = "foo";
@@ -121,46 +101,10 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 .Create();
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.ApprenticeName.Should().Be(expectedApprenticeName);
-        }
-
-        [Test]
-        public async Task NullApprenticeshipCourse_ShouldMapToApprenticeshipMessage_CourseLevel_Zero()
-        {
-            // Arrange
-            Apprenticeship apiApprenticeship = _fixture.Create<Apprenticeship>();
-
-            // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
-
-            // Assert
-            result.CourseLevel.Should().Be(0);
-        }
-
-        [Test]
-        [TestCase(99, 99)]
-        [TestCase(null, 0)]
-        public async Task ShouldMapToApprenticeshipMessage_CourseLevel(int? apiCourseLevel, int expectedMappedCourseLevel)
-        {
-            // Arrange
-            Apprenticeship apiApprenticeship = _fixture.Create<Apprenticeship>();
-            var apiCourse = _fixture
-                .Build<ApprenticeshipCourse>()
-                .With(x => x.Level, apiCourseLevel)
-                .Create();
-
-            _apprenticeshipCourseDataServiceMock
-                .Setup(mock => mock.GetApprenticeshipCourse(It.Is<string>(x => x == apiApprenticeship.CourseCode)))
-                .ReturnsAsync(apiCourse);
-
-            // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
-
-            // Assert
-            result.CourseLevel.Should().Be(expectedMappedCourseLevel);
         }
 
         [Test]
@@ -175,7 +119,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 .Create();
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.CompletionAmount.Should().Be(expectedCompletionAmount);
@@ -205,7 +149,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 })
                 .Create();
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.MonthlyInstallment.Should().BeApproximately(expectedMonthlyInstallments, 0.01m);
@@ -234,7 +178,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 })
                 .Create();
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.NumberOfInstallments.Should().Be(duration);
@@ -252,7 +196,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 .Create();
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.FundingSource.Should().Be(fundingSource);
@@ -269,7 +213,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
                 .Create();
 
             // Act
-            var result = await _sut.Map(apiApprenticeship, 1);
+            var result = _sut.Map(apiApprenticeship, 1);
 
             // Assert
             result.PledgeApplicationId.Should().Be(pledgeApplicationId);
