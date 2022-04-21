@@ -21,7 +21,7 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments
             _fixture = new Fixture();
             _employerAccountId = _fixture.Create<long>();
             _source = _fixture.Create<Models.Pledges.Application>();
-            _mapper = new Mapper(Mock.Of<IApprenticeshipCourseDataService>());
+            _mapper = new Mapper();
         }
 
         [Test]

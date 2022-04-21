@@ -45,7 +45,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions
                            applications.AddRange(pledgeApplications);
                        }
 
-                       var mapper = new Mapper(container.GetInstance<IApprenticeshipCourseDataService>());
+                       var mapper = new Mapper();
 
                        var commitments = new List<ApprenticeshipMessage>();
 
