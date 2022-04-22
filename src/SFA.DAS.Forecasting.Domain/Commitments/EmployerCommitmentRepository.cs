@@ -23,6 +23,15 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         
         public async Task<EmployerCommitment> Get(long employerAccountId, long apprenticeshipId)
         {
+            if (apprenticeshipId == 0)
+            {
+                return new EmployerCommitment(new  CommitmentModel
+                {
+                    EmployerAccountId = employerAccountId,
+                    ApprenticeshipId = apprenticeshipId
+                });
+            }
+
             var commitment = await _dataService.Get(employerAccountId, apprenticeshipId)
                              ?? new CommitmentModel
                              {
