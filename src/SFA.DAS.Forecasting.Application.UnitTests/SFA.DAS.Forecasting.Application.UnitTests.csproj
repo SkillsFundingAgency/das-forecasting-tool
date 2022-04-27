@@ -187,6 +187,9 @@
     <Compile Include="Payments\EarningDetailsValidatorTests.cs" />
     <Compile Include="Payments\PastPaymentEventSuperficialValidatorTests.cs" />
     <Compile Include="Payments\PaymentEventSuperficialValidatorTests.cs" />
+    <Compile Include="PledgesService\GetAccountIdsTests.cs" />
+    <Compile Include="PledgesService\GetApplicationsTests.cs" />
+    <Compile Include="PledgesService\GetPledgesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\AccountProjectionRepositoryTests.cs" />
     <Compile Include="Shared\PayrollDateServiceTests.cs" />

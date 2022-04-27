@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Models.Pledges;
 using SFA.DAS.NLog.Logger;
@@ -10,8 +10,9 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 {
     public interface IPledgesService
     {
-        Task<List<Pledge>> GetPledges();
-        Task<List<Models.Pledges.Application>> GetApplications();
+        Task<List<long>> GetAccountIds();
+        Task<List<Pledge>> GetPledges(long accountId);
+        Task<List<Models.Pledges.Application>> GetApplications(int pledgeId);
     }
 
     public class PledgesService : IPledgesService
@@ -25,14 +26,34 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
             _logger = logger;
         }
 
-        public async Task<List<Pledge>> GetPledges()
+        public async Task<List<long>> GetAccountIds()
         {
             try
             {
-                _logger.Info($"Getting pledges");
-                var response = await _apiClient.Get<GetPledgesResponse>(new GetPledgesApiRequest());
-                _logger.Info($"LTM inner api reports {response.TotalPledges} total pledges");
-                return new List<Pledge>();
+                var request = new GetPledgeAccountIdsApiRequest();
+                _logger.Info($"Base url: {_apiClient.BaseUrl}");
+                _logger.Info($"Get url: {request.GetUrl}");
+
+                var response = await _apiClient.Get<GetPledgeAccountIdsResponse>(request);
+                return response.AccountIds;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error getting account Ids");
+                throw;
+            }
+
+        }
+
+        public async Task<List<Pledge>> GetPledges(long accountId)
+        {
+            try
+            {
+                var request = new GetPledgesApiRequest(accountId);
+                var response = await _apiClient.Get<GetPledgesResponse>(request);
+                _logger.Info($"LTM inner api reports {response.Pledges.Count} total pledges for account {accountId}");
+
+                return response.Pledges.Select(x => new Pledge { AccountId = x.AccountId, Id = x.Id }).ToList();
             }
             catch (Exception ex)
             {
@@ -41,11 +62,27 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
             }
         }
 
-        public async Task<List<Models.Pledges.Application>> GetApplications()
+        public async Task<List<Models.Pledges.Application>> GetApplications(int pledgeId)
         {
-            var response = await _apiClient.Get<GetApplicationsResponse>(new GetApplicationsApiRequest());
-            _logger.Info($"LTM inner api reports {response.TotalApplications} total applications");
-            return new List<Models.Pledges.Application>();
+            var request = new GetApplicationsApiRequest(pledgeId);
+            var response = await _apiClient.Get<GetApplicationsResponse>(request);
+            _logger.Info($"LTM inner api reports {response.Applications.Count} applications for pledge {pledgeId}");
+
+            return response.Applications.Select(x => new Models.Pledges.Application
+            {
+                Id = x.Id,
+                EmployerAccountId = x.EmployerAccountId,
+                PledgeId = x.PledgeId,
+                StandardId = x.StandardId,
+                StandardTitle = x.StandardTitle,
+                StandardLevel = x.StandardLevel,
+                StandardDuration = x.StandardDuration,
+                StandardMaxFunding = x.StandardMaxFunding,
+                StartDate = x.StartDate,
+                NumberOfApprentices = x.NumberOfApprentices,
+                NumberOfApprenticesUsed = x.NumberOfApprenticesUsed,
+                Status = x.Status
+            }).ToList();
         }
     }
 }

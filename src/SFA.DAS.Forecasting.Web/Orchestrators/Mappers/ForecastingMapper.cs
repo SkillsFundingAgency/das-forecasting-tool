@@ -67,10 +67,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 
                 Apprenticeship = commitment.CourseName,
                 ApprenticeshipLevel = commitment.CourseLevel,
-                TransferToEmployer = commitment.FundingSource == FundingSource.Transfer ? "Y" : "N",
+                TransferToEmployer = commitment.FundingSource == FundingSource.Transfer ||
+                                     commitment.FundingSource == FundingSource.ApprovedPledgeApplication ||
+                                     commitment.FundingSource == FundingSource.AcceptedPledgeApplication
+                    ? "Y" : "N",
                 Uln = IsTransferCommitment(commitment, accountId) ? "" : commitment.LearnerId.ToString(),
                 ApprenticeName = IsTransferCommitment(commitment, accountId) ? "" : commitment.ApprenticeName,
-                UkPrn = commitment.ProviderId,
+                UkPrn = commitment.ProviderId == 0 ? string.Empty : commitment.ProviderId.ToString(),
                 ProviderName = commitment.ProviderName,
                 TotalCost = Convert.ToInt32((commitment.MonthlyInstallment * commitment.NumberOfInstallments) + commitment.CompletionAmount),
                 MonthlyTrainingCost = Convert.ToInt32(commitment.MonthlyInstallment),
@@ -82,7 +85,16 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                 model.PlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy");
                 model.Status = "Live and paid";
             }
-            else {
+            else if (commitment.FundingSource == FundingSource.AcceptedPledgeApplication || commitment.FundingSource == FundingSource.ApprovedPledgeApplication)
+            {
+                model.DasStartDate = commitment.StartDate.ToString("MMM-yy");
+                model.DasPlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy");
+                model.Status = commitment.FundingSource == FundingSource.ApprovedPledgeApplication
+                    ? "Approved Pledge Application"
+                    : "Accepted Pledge Application";
+            }
+            else
+            {
                 model.DasStartDate = commitment.StartDate.ToString("MMM-yy");
                 model.DasPlannedEndDate = commitment.PlannedEndDate.ToString("MMM-yy");
                 model.Status =
@@ -96,7 +108,10 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 
         private static bool IsTransferCommitment(CommitmentModel commitmentModel, long accountId)
         {
-            return commitmentModel.FundingSource.Equals(FundingSource.Transfer) && commitmentModel.SendingEmployerAccountId == accountId;
+            return (commitmentModel.FundingSource.Equals(FundingSource.Transfer)
+                   || commitmentModel.FundingSource.Equals(FundingSource.AcceptedPledgeApplication)
+                   || commitmentModel.FundingSource.Equals(FundingSource.ApprovedPledgeApplication))
+                   && commitmentModel.SendingEmployerAccountId == accountId;
         }
     }
 }

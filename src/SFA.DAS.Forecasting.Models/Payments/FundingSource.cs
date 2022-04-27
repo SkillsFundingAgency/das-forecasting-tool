@@ -6,6 +6,8 @@
 		Transfer = 2,
 		CoInvestedSfa = 3,
 		CoInvestedEmployer = 4,
-		FullyFundedSfa = 5
-    }
+		FullyFundedSfa = 5,
+        ApprovedPledgeApplication = 6,
+        AcceptedPledgeApplication = 7
+	}
 }

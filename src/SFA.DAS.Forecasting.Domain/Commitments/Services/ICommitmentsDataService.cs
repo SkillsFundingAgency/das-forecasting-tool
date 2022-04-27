@@ -10,5 +10,6 @@ namespace SFA.DAS.Forecasting.Domain.Commitments.Services
         Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId);
         Task Store(CommitmentModel commitment);
         Task<DateTime?> GetLastReceivedTime(long employerAccountId);
+        Task DeletePledgeApplicationCommitmentsForSendingEmployer(long employerAccountId);
     }
 }

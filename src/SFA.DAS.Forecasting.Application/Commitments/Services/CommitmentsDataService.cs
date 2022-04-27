@@ -43,6 +43,17 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 .FirstOrDefaultAsync();
         }
 
+        public async Task DeletePledgeApplicationCommitmentsForSendingEmployer(long employerAccountId)
+        {
+            var pledgeApplicationCommitments = _dataContext.Commitments.Where(x =>
+                x.SendingEmployerAccountId == employerAccountId &&
+                (x.FundingSource == FundingSource.ApprovedPledgeApplication ||
+                 x.FundingSource == FundingSource.AcceptedPledgeApplication));
+
+            _dataContext.Commitments.RemoveRange(pledgeApplicationCommitments);
+            await _dataContext.SaveChangesAsync();
+        }
+
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
             var stopwatch = new Stopwatch();
@@ -115,7 +126,9 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         private Expression<Func<CommitmentModel, bool>> GetSendingEmployerTransferCommitments(long employerAccountId, DateTime? forecastLimitDate)
         {
             return commitment => commitment.SendingEmployerAccountId == employerAccountId
-                                 && commitment.FundingSource == FundingSource.Transfer
+                                 && (commitment.FundingSource == FundingSource.Transfer ||
+                                     commitment.FundingSource == FundingSource.ApprovedPledgeApplication ||
+                                     commitment.FundingSource == FundingSource.AcceptedPledgeApplication)
                                  && (!forecastLimitDate.HasValue || commitment.StartDate <= forecastLimitDate)
                                  && (commitment.ActualEndDate == null || commitment.ActualEndDate > DateTime.UtcNow);
         }

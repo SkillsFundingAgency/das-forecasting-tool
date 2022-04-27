@@ -70,6 +70,7 @@
     <Compile Include="Payments\PaymentModel.cs" />
     <Compile Include="Balance\Account.cs" />
     <Compile Include="Pledges\Application.cs" />
+    <Compile Include="Pledges\ApplicationStatus.cs" />
     <Compile Include="Pledges\Pledge.cs" />
     <Compile Include="Projections\AccountProjectionCommitment.cs" />
     <Compile Include="Projections\AccountProjectionModel.cs" />

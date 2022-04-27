@@ -72,7 +72,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
         public async Task Handle(ApprenticeshipMessage message, string allowProjectionsEndpoint)
 
         {
-            if (message.LearnerId <= 0)
+            if (message.LearnerId < 0)
                 throw new InvalidOperationException("Apprenticeship requires LearnerId");
             if (message.CourseLevel <= 0)
                 throw new InvalidOperationException("Apprenticeship requires CourseLevel");
