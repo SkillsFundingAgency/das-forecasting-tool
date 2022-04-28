@@ -33,6 +33,9 @@ namespace SFA.DAS.Forecasting.Models.Projections
         public decimal CoInvestmentGovernment { get; set; } // CoInvestmentGovernment
         public decimal FutureFundsNoExpiry { get; set; }
 
+        public decimal ApprovedPledgeApplicationCost { get; set; }
+        public decimal AcceptedPledgeApplicationCost { get; set; }
+        public decimal PledgeOriginatedCommitmentCost { get; set; }
 
         public AccountProjectionModel()
         {

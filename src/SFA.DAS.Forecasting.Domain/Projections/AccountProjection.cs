@@ -73,12 +73,13 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
         private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool isFirstMonth, int periodStartDay)
         {
-	        var totalCostOfTraning = _employerCommitments.GetTotalCostOfTraining(period);
+	        var totalCostOfTraining = _employerCommitments.GetTotalCostOfTraining(period);
 	        var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
+            var totalCostOfPledges = _employerCommitments.GetTotalCostOfPledges(period);
 
-			var currentBalance = GetCurrentBalance(lastBalance,completionPayments.TransferOutCompletionPayment, totalCostOfTraning.TransferOut, isFirstMonth);
+			var currentBalance = GetCurrentBalance(lastBalance,completionPayments.TransferOutCompletionPayment, totalCostOfTraining.TransferOut, isFirstMonth);
 
-            var trainingCosts = totalCostOfTraning.LevyFunded + completionPayments.LevyFundedCompletionPayment;
+            var trainingCosts = totalCostOfTraining.LevyFunded + completionPayments.LevyFundedCompletionPayment + totalCostOfPledges.AcceptedPledgeApplicationCost + totalCostOfPledges.ApprovedPledgeApplicationCost;
             
 	        var coInvestmentAmount = GetCoInvestmentAmountBasedOnCurrentBalanceAndTrainingCosts(currentBalance, trainingCosts);
 
@@ -97,13 +98,17 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 Month = (short)period.Month,
                 Year = (short)period.Year,
 
-                LevyFundedCostOfTraining = totalCostOfTraning.LevyFunded,
-                TransferInCostOfTraining = totalCostOfTraning.TransferIn,
-                TransferOutCostOfTraining = totalCostOfTraning.TransferOut,
+                LevyFundedCostOfTraining = totalCostOfTraining.LevyFunded,
+                TransferInCostOfTraining = totalCostOfTraining.TransferIn,
+                TransferOutCostOfTraining = totalCostOfTraining.TransferOut,
 
                 LevyFundedCompletionPayments = completionPayments.LevyFundedCompletionPayment,
                 TransferInCompletionPayments = completionPayments.TransferInCompletionPayment,
                 TransferOutCompletionPayments = completionPayments.TransferOutCompletionPayment,
+
+                ApprovedPledgeApplicationCost = totalCostOfPledges.ApprovedPledgeApplicationCost + totalCostOfPledges.ApprovedPledgeApplicationCompletionPayments,
+                AcceptedPledgeApplicationCost = totalCostOfPledges.AcceptedPledgeApplicationCost + totalCostOfPledges.AcceptedPledgeApplicationCompletionPayments,
+                PledgeOriginatedCommitmentCost = totalCostOfPledges.PledgeOriginatedCommitmentCost + totalCostOfPledges.PledgeOriginatedCommitmentCompletionPayments,
 
                 CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) : 0m,
                 CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) : 0m,

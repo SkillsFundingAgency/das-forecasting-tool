@@ -69,6 +69,7 @@
     <Compile Include="Balance\CurrentBalanceRepository.cs" />
     <Compile Include="Balance\Services\IAccountBalanceService.cs" />
     <Compile Include="Balance\Services\IBalanceDataService.cs" />
+    <Compile Include="Commitments\CostOfPledges.cs" />
     <Compile Include="Commitments\EmployerCommitment.cs" />
     <Compile Include="Commitments\EmployerCommitmentRepository.cs" />
     <Compile Include="Commitments\EmployerCommitments.cs" />
@@ -121,7 +122,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ApprenticeshipCourses" />
+    <Folder Include="ApprenticeshipCourses\" />
     <Folder Include="Payments\Repositories\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -32,6 +32,10 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             Property(x => x.TransferInCompletionPayments).HasColumnName(@"TransferInCompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18, 5);
             Property(x => x.TransferOutCompletionPayments).HasColumnName(@"TransferOutCompletionPayments").HasColumnType("decimal").IsRequired().HasPrecision(18, 5);
 
+            Property(x => x.ApprovedPledgeApplicationCost).HasColumnName(@"ApprovedPledgeApplicationCost").HasColumnType("decimal").IsRequired().HasPrecision(18, 5);
+            Property(x => x.AcceptedPledgeApplicationCost).HasColumnName(@"AcceptedPledgeApplicationCost").HasColumnType("decimal").IsRequired().HasPrecision(18, 5);
+            Property(x => x.PledgeOriginatedCommitmentCost).HasColumnName(@"PledgeOriginatedCommitmentCost").HasColumnType("decimal").IsRequired().HasPrecision(18, 5);
+
             Property(x => x.FutureFunds).HasColumnName(@"FutureFunds").HasColumnType("decimal").IsRequired().HasPrecision(18,5);
             Property(x => x.CoInvestmentEmployer).HasColumnName(@"CoInvestmentEmployer").HasColumnType("decimal").IsRequired().HasPrecision(18,5);
             Property(x => x.CoInvestmentGovernment).HasColumnName(@"CoInvestmentGovernment").HasColumnType("decimal").IsRequired().HasPrecision(18,5);

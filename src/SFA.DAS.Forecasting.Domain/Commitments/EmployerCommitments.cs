@@ -62,6 +62,31 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
             };
         }
 
+        public virtual CostOfPledges GetTotalCostOfPledges(DateTime date, bool isVirtual = false)
+        {
+            bool FilterCurrent(CommitmentModel c) =>
+                      c.StartDate.GetStartOfMonth() < date.GetStartOfMonth() &&
+                      c.PlannedEndDate.GetLastPaymentDate().GetStartOfMonth() >= date.GetStartOfMonth() &&
+                      (!isVirtual || c.FundingSource == FundingSource.Transfer || c.FundingSource == FundingSource.ApprovedPledgeApplication || c.FundingSource == FundingSource.AcceptedPledgeApplication);
+
+            bool FilterCompletionPayments(CommitmentModel c) =>
+                c.PlannedEndDate.GetStartOfMonth().AddMonths(1) == date.GetStartOfMonth() &&
+                (!isVirtual || c.FundingSource == FundingSource.Transfer || c.FundingSource == FundingSource.ApprovedPledgeApplication || c.FundingSource == FundingSource.AcceptedPledgeApplication);
+
+            var commitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var commitmentsWithCompletionPayments = _sendingEmployerTransferCommitments.Where(FilterCompletionPayments).ToList();
+
+            return new CostOfPledges
+            {
+                ApprovedPledgeApplicationCost = commitments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.MonthlyInstallment),
+                AcceptedPledgeApplicationCost = commitments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.MonthlyInstallment),
+                PledgeOriginatedCommitmentCost = commitments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.MonthlyInstallment),
+                ApprovedPledgeApplicationCompletionPayments = commitmentsWithCompletionPayments.Where(x => x.FundingSource == FundingSource.ApprovedPledgeApplication).Sum(m => m.CompletionAmount),
+                AcceptedPledgeApplicationCompletionPayments = commitmentsWithCompletionPayments.Where(x => x.FundingSource == FundingSource.AcceptedPledgeApplication).Sum(m => m.CompletionAmount),
+                PledgeOriginatedCommitmentCompletionPayments = commitmentsWithCompletionPayments.Where(x => x.PledgeApplicationId.HasValue && x.FundingSource == FundingSource.Transfer).Sum(m => m.CompletionAmount)
+            };
+        }
+
         public virtual CompletionPayments GetTotalCompletionPayments(DateTime date, bool isVirtual = false)
         {
             bool FilterCurrent(CommitmentModel c) =>
