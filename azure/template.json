@@ -63,6 +63,9 @@
             "type": "string",
             "defaultValue": ""
         },
+        "cosmosDbBackupRetentionPeriod": {
+            "type": "string"
+        },
         "databaseName": {
             "type": "string"
         },
@@ -739,6 +742,9 @@
                     },
                     "logAnalyticsWorkspaceResourceGroupName": {
                         "value": "[parameters('sharedManagementResourceGroup')]"
+                    },
+                    "backupRetentionPeriod": {
+                        "value": "[parameters('cosmosDbBackupRetentionPeriod')]"
                     }
                 }
             }
