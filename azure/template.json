@@ -199,9 +199,6 @@
         },
         "subnetDelegations": {
             "type": "array"
-        },
-        "workerAccessRestrictions": {
-            "type": "array"
         }
     },
     "variables": {
@@ -441,9 +438,6 @@
                     },
                     "subnetResourceId": {
                         "value": "[reference('function-app-subnet').outputs.subnetResourceId.value]"
-                    },
-                    "ipSecurityRestrictions": {
-                        "value": "[parameters('workerAccessRestrictions')]"
                     },
                     "functionAppAppSettings": {
                         "value": {
