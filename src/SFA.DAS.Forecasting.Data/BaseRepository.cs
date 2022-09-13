@@ -7,7 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Sql.Client
+namespace SFA.DAS.Forecasting.Data
 {
     public abstract class BaseRepository
     {

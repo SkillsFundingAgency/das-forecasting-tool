@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -10,10 +11,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
     public class DevPaymentsEventsApiClient: IPaymentsEventsApiClient
     {
-        private readonly IPaymentsEventsApiConfiguration _configuration;
+        private readonly IPaymentsEventsApiClientConfiguration _configuration;
         private static readonly HttpClient HttpClient = new HttpClient();
         private readonly Uri _uri;
-        public DevPaymentsEventsApiClient(IPaymentsEventsApiConfiguration configuration)
+        public DevPaymentsEventsApiClient(IPaymentsEventsApiClientConfiguration configuration)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _uri = new Uri(configuration.ApiBaseUrl);
@@ -26,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         public async Task<PageOfResults<Payment>> GetPayments(string periodId = null, string employerAccountId = null, int page = 1, long? ukprn = null)
         {
-            var uri = $"{_configuration.ApiBaseUrl}api/payments?page={page}&periodId={periodId}&employerAccountId={employerAccountId}&ukprn={ukprn}&code={_configuration.ClientToken}";
+            var uri = $"{_configuration.ApiBaseUrl}api/payments?page={page}&periodId={periodId}&employerAccountId={employerAccountId}&ukprn={ukprn}";
             return JsonConvert.DeserializeObject<PageOfResults<Payment>>(await HttpClient.GetStringAsync(uri));
         }
 
@@ -47,6 +48,11 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         }
 
         public Task<PaymentStatistics> GetPaymentStatistics()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<SubmissionEvent>> GetLatestLearnerEventForStandards(long uln, long sinceEventId = 0)
         {
             throw new NotImplementedException();
         }

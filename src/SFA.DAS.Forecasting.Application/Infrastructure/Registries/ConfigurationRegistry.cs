@@ -23,7 +23,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
             ForSingletonOf<IApplicationConnectionStrings>().Use(config);
             ForSingletonOf<IAccountApiConfiguration>().Use(config.AccountApi);
 
-            ForSingletonOf<IPaymentsEventsApiConfiguration>().Use(config.PaymentEventsApi);
             For<ForecastingConfiguration>().Use(c => c.GetInstance<IAutoConfigurationService>().Get<ForecastingConfiguration>(ServiceName)).Singleton();
         }
 
@@ -62,7 +61,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
         private void SetApiConfiguration(ApplicationConfiguration config)
         {
             config.AccountApi = ConfigurationHelper.GetAccountApiConfiguration();
-            config.PaymentEventsApi = ConfigurationHelper.GetPaymentsEventsApiConfiguration();
         }
     }
 }

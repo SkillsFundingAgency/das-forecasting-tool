@@ -1,15 +1,15 @@
-﻿using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.NLog.Logger;
-using SFA.DAS.Sql.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using SFA.DAS.Forecasting.Application.Converters;
+using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
+using SFA.DAS.Forecasting.Data;
+using SFA.DAS.Forecasting.Models.Payments;
+using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {

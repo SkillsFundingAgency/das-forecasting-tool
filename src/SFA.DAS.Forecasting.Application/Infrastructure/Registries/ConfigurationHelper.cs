@@ -32,17 +32,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 GetConfiguration<AccountApiConfiguration>("SFA.DAS.EmployerAccountAPI");
         }
 
-        public static PaymentsEventsApiConfiguration GetPaymentsEventsApiConfiguration()
-        {
-            return IsDevEnvironment
-                ? new PaymentsEventsApiConfiguration
-                {
-                    ApiBaseUrl = CloudConfigurationManager.GetSetting("PaymentsEvent-ApiBaseUrl"),
-                    ClientToken = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientToken"),
-                }
-                : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
-        }
-
         private static T GetConfiguration<T>(string serviceName)
         {
             var environment = Environment.GetEnvironmentVariable("DASENV");
