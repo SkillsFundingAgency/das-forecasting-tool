@@ -18,32 +18,39 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
         [FunctionName("GetEarningDetailsFunction")]
         [return: Queue(QueueNames.CreatePaymentMessage)]
         public static async Task<PreLoadPaymentMessage> Run(
-            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, 
+            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)] PreLoadPaymentMessage message,
             ExecutionContext executionContext,
             TraceWriter writer)
         {
             return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer, executionContext,
                 async (container, logger) => {
-
-                    // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
-                    logger.Info($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
-
-                    var paymentDataService = container.GetInstance<PaymentApiDataService>();
-                    var hashingService = container.GetInstance<IHashingService>();
-                    var dataService = container.GetInstance<PreLoadPaymentDataService>();
-
-					var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
-
-                    var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
-                    logger.Info($"Found {earningDetails.Count} for Account: {hashedAccountId}");
-
-                    foreach (var item in earningDetails)
+                    try
                     {
-                        await dataService.StoreEarningDetails(message.EmployerAccountId, item);
+                        // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
+                        logger.Info($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
+
+                        var paymentDataService = container.GetInstance<PaymentApiDataService>();
+                        var hashingService = container.GetInstance<IHashingService>();
+                        var dataService = container.GetInstance<PreLoadPaymentDataService>();
+
+                        var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
+
+                        var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
+                        logger.Info($"Found {earningDetails.Count} for Account: {hashedAccountId}");
+
+                        foreach (var item in earningDetails)
+                        {
+                            await dataService.StoreEarningDetails(message.EmployerAccountId, item);
+                        }
+
+                        logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
+                        return message;
                     }
-                    
-					logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
-                    return message;
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex, $"{nameof(GetEarningDetailsFunction)} failed.");
+                        throw;
+                    }
                 });
         }
     }

@@ -27,33 +27,40 @@ namespace SFA.DAS.Forecasting.PreLoad.Functions
             // Sends a message to CreateEarningRecord
 
             return await FunctionRunner.Run<GetEmployerPaymentFunction, PreLoadPaymentMessage>(writer, executionContext,
-               async (container, logger) =>
-               {
-                   var employerData = container.GetInstance<IEmployerDatabaseService>();
-                   logger.Info($"Storing data for EmployerAcount: {message.EmployerAccountId}");
-
-                   var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
-
-                   if (!payments?.Any() ?? false)
+               async (container, logger) => {
+                   try
                    {
-                       logger.Info($"No data found for {message.EmployerAccountId} add message to queue to build projection from last data set");
-                       outputQueueMessage.Add(new GenerateAccountProjectionCommand
+                       var employerData = container.GetInstance<IEmployerDatabaseService>();
+                       logger.Info($"Storing data for EmployerAcount: {message.EmployerAccountId}");
+
+                       var payments = await employerData.GetEmployerPayments(message.EmployerAccountId, message.PeriodYear, message.PeriodMonth);
+
+                       if (!payments?.Any() ?? false)
                        {
-                           EmployerAccountId = message.EmployerAccountId,
-                           ProjectionSource = ProjectionSource.PaymentPeriodEnd
-                       });
-                       return null;
-                   }
+                           logger.Info($"No data found for {message.EmployerAccountId} add message to queue to build projection from last data set");
+                           outputQueueMessage.Add(new GenerateAccountProjectionCommand
+                           {
+                               EmployerAccountId = message.EmployerAccountId,
+                               ProjectionSource = ProjectionSource.PaymentPeriodEnd
+                           });
+                           return null;
+                       }
 
-                   foreach (var payment in payments)
+                       foreach (var payment in payments)
+                       {
+                           var dataService = container.GetInstance<PreLoadPaymentDataService>();
+                           await dataService.StorePayment(payment);
+
+                           logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
+                       }
+
+                       return message;
+                   }
+                   catch(Exception ex)
                    {
-                       var dataService = container.GetInstance<PreLoadPaymentDataService>();
-                       await dataService.StorePayment(payment);
-
-                       logger.Info($"Stored new {nameof(payment)} for {payment.AccountId}");
+                       logger.Error(ex, $"{nameof(GetEmployerPaymentFunction)} failed.");
+                       throw;
                    }
-
-				   return message;
                });
         }
     }
