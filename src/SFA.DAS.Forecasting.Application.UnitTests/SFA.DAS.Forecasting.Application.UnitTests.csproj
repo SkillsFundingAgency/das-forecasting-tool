@@ -120,7 +120,7 @@
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.3.0.1-prerelease-4\lib\netstandard2.0\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.3.0.1-prerelease-5\lib\netstandard2.0\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.5.2\lib\net45\StructureMap.dll</HintPath>
