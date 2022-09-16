@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
             if (ConfigurationHelper.IsDevEnvironment)
             {
-                For<IPaymentsEventsApiClient>().Use<DevPaymentsEventsApiClient>();
+                For<IPaymentsEventsApiClient>().ClearAll().Use<DevPaymentsEventsApiClient>();
             }
         }
     }
