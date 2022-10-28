@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Azure;
 using SFA.DAS.NLog.Logger;
 using System;
+using System.Net;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -16,6 +17,7 @@ namespace SFA.DAS.Forecasting.Web
 
         protected void Application_Start()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             AntiForgeryConfig.UniqueClaimTypeIdentifier = "sub";
             TelemetryConfiguration.Active.InstrumentationKey = CloudConfigurationManager.GetSetting("APPINSIGHTS_INSTRUMENTATIONKEY");
             AreaRegistration.RegisterAllAreas();
