@@ -76,6 +76,9 @@
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types">
       <Version>8.0.3</Version>
     </PackageReference>
+    <PackageReference Include="System.Threading.Tasks.Extensions">
+      <Version>4.5.4</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
