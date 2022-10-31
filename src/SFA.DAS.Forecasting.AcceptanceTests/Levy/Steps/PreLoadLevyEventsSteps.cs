@@ -153,7 +153,7 @@ namespace SFA.DAS.Forecasting.AcceptanceTests.Levy.Steps
 
             declaration.PayrollYear.Should().EndWith("17-18");
             declaration.LevyAmountDeclared.Should().Be(8811M);
-            declaration.TransactionDate.Should().BeCloseTo(DateTime.Now, precision: 60 * 1000);
+            declaration.TransactionDate.Should().BeCloseTo(DateTime.Now, new TimeSpan(60));
         }
 
 

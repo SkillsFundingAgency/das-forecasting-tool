@@ -30,8 +30,6 @@ namespace SFA.DAS.Forecasting.Web
 
             var logger = LogManager.GetLogger("Startup");
 
-            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
-
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = "Cookies",

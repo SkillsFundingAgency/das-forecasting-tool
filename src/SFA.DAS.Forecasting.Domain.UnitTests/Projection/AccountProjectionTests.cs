@@ -119,10 +119,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
 
             accountProjection.Projections.First().FutureFunds
-                .ShouldBeEquivalentTo(_account.Balance, because: "First month should be the same as current balance");
+                .Should().Be(_account.Balance, because: "First month should be the same as current balance");
 
             accountProjection.Projections.Skip(1).First().FutureFunds
-                .ShouldBeEquivalentTo(accountProjection.Projections.FirstOrDefault()?.FutureFunds +
+                .Should().Be(accountProjection.Projections.FirstOrDefault()?.FutureFunds +
                                       _account.LevyDeclared - _commitment.MonthlyInstallment);
         }
 

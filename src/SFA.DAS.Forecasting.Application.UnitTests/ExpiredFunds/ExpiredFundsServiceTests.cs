@@ -282,9 +282,10 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
             sut.GetExpiringFunds(_accountProjectionModels, _netLevyTotals, _paymentTotals, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
 
-            calledFundIn.ShouldAllBeEquivalentTo(_expiredFundsIn);    
-            calledFundOut.ShouldAllBeEquivalentTo(_expiredFundsOut.Skip(1));
-            calledExpired.ShouldAllBeEquivalentTo(calledExpired);
+            calledFundIn.Values.Should().BeEquivalentTo(_expiredFundsIn.Values);    
+            calledFundIn.Keys.Should().BeEquivalentTo(_expiredFundsIn.Keys);    
+            calledFundOut.Should().BeEquivalentTo(_expiredFundsOut.Skip(1));
+            calledExpired.Should().BeEquivalentTo(calledExpired);
             calledMonths.Should().Be(24);
 
         }
@@ -313,9 +314,10 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
             var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.AsReadOnly(), _netLevyTotals, _paymentTotals,ProjectionGenerationType.LevyDeclaration,new DateTime(2018,09,24));
 
 
-            calledFundIn.ShouldAllBeEquivalentTo(_estimatedExpiredFundsIn);
-            calledFundOut.ShouldAllBeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
-            calledExpired.ShouldAllBeEquivalentTo(expiringFunds);
+            calledFundIn.Values.Should().BeEquivalentTo(_estimatedExpiredFundsIn.Values);
+            calledFundIn.Keys.Should().BeEquivalentTo(_estimatedExpiredFundsIn.Keys);
+            calledFundOut.Should().BeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
+            calledExpired.Should().BeEquivalentTo(expiringFunds);
             calledMonths.Should().Be(24);
 
         }
