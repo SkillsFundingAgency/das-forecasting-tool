@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
+using SFA.DAS.OidcMiddleware.GovUk.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {
@@ -50,6 +51,13 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
                 }
             };
             TokenCertificateThumbprint = GetAppSetting("WEBSITE_LOAD_CERTIFICATES", false);
+            UseGovSignIn = GetAppSetting("UseGovSignIn", false).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+            GovSignInIdentityConfiguration = new GovUkOidcConfiguration
+            {
+                ClientId = GetAppSetting("GovUkClientId", false),
+                BaseUrl = GetAppSetting("GovUkBaseUrl", false),
+                KeyVaultIdentifier = GetAppSetting("GovUkKeyVaultIdentifier", false),
+            };
         }
 
         private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
@@ -83,6 +91,9 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("DEVELOPMENT") ?? false) ||
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
+        public bool UseGovSignIn { get; set; }
+        public GovUkOidcConfiguration GovSignInIdentityConfiguration { get; set; }
+
         public string GetConnectionString(string name)
         {
             var connectionString = ConfigurationManager.ConnectionStrings[name]?.ConnectionString;
@@ -115,6 +126,12 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         public string AccountActivationUrl { get; set; }
     }
 
+    public class GovSignInIdentityConfiguration
+    {
+        public string ClientId { get; set; }
+        public string BaseUrl { get; set; }
+        public string KeyVaultIdentifier { get; set; }
+    }
     public class ClaimIdentifierConfiguration
     {
         public string ClaimsBaseUrl { get; set; }
