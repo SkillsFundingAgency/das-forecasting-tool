@@ -52,7 +52,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 ApprenticeshipsApiBaseUri = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiBaseUri", false),
                 AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false),
                 FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds", false) ?? "true"),
-                ApprenticeshipsApiSubscriptionKey = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiSubscriptionKey", false)
+                ApprenticeshipsApiSubscriptionKey = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiSubscriptionKey", false),
+                UseGovSignIn = bool.Parse(ConfigurationHelper.GetAppSetting("UseGovSignIn", false))
             };
 
             SetApiConfiguration(configuration);

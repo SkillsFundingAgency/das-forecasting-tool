@@ -20,5 +20,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         string AppInsightsInstrumentationKey { get; }
         bool FeatureExpiredFunds { get; set; }
         string ApprenticeshipsApiSubscriptionKey { get; set; }
+        bool UseGovSignIn { get; set; }
     }
 }
