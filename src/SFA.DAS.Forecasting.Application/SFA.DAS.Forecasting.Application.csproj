@@ -256,9 +256,11 @@
     <Compile Include="Apprenticeship\Messages\ApprenticeshipMessage.cs" />
     <Compile Include="Apprenticeship\Messages\RefreshPledgeApplicationsForAccountMessage.cs" />
     <Compile Include="Commitments\Handlers\DeletePledgeApplicationCommitmentsHandler.cs" />
+    <Compile Include="EmployerUsers\EmployerUserAccounts.cs" />
     <Compile Include="Infrastructure\OuterApi\GetAccountIdsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetApplicationsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetApprenticeshipsApiRequest.cs" />
+    <Compile Include="Infrastructure\OuterApi\GetEmployerAccountRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetPledgeAccountIdsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetPledgesApiRequest.cs" />
     <Compile Include="Shared\AssemblyBindingRedirectHelper.cs" />
