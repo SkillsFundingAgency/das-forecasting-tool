@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Owin;
+using Microsoft.Owin.Infrastructure;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OpenIdConnect;
 using NLog;
 using Owin;
 using SFA.DAS.EmployerUsers.WebClientComponents;
@@ -16,6 +21,8 @@ using SFA.DAS.Forecasting.Web.App_Start;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.OidcMiddleware;
+using SFA.DAS.OidcMiddleware.GovUk.Configuration;
+using SFA.DAS.OidcMiddleware.GovUk.Services;
 
 [assembly: OwinStartup(typeof(SFA.DAS.Forecasting.Web.Startup))]
 namespace SFA.DAS.Forecasting.Web
@@ -53,25 +60,96 @@ namespace SFA.DAS.Forecasting.Web
 
             UserLinksViewModel.ChangePasswordLink = $"{constants.ChangePasswordLink()}{urlHelper.Encode("https://" + _config.DashboardUrl + "/service/password/change")}";
             UserLinksViewModel.ChangeEmailLink = $"{constants.ChangeEmailLink()}{urlHelper.Encode("https://" + _config.DashboardUrl + "/service/email/change")}";
-
-            app.UseCodeFlowAuthentication(new OidcMiddlewareOptions
+            if (_config.UseGovSignIn)
             {
-                ClientId = _config.Identity.ClientId,
-                ClientSecret = _config.Identity.ClientSecret,
-                Scopes = _config.Identity.Scopes,
-                BaseUrl = constants.Configuration.BaseAddress,
-                TokenEndpoint = constants.TokenEndpoint(),
-                UserInfoEndpoint = constants.UserInfoEndpoint(),
-                AuthorizeEndpoint = constants.AuthorizeEndpoint(),
-                TokenValidationMethod = _config.Identity.UseCertificate ? TokenValidationMethod.SigningKey : TokenValidationMethod.BinarySecret,
-                TokenSigningCertificateLoader = GetSigningCertificate(_config.Identity.UseCertificate, _config.IsDevEnvironment),
-                AuthenticatedCallback = identity =>
+                var handler = new JwtSecurityTokenService(_config.GovSignInIdentityConfiguration);
+                app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions("code")
                 {
-                    PostAuthentiationAction(identity, logger, constants);
-                }
-            });
+                    ClientId = _config.GovSignInIdentityConfiguration.ClientId,
+                    Scope = "openid email phone",
+                    Authority = _config.GovSignInIdentityConfiguration.BaseUrl,
+                    MetadataAddress = $"{_config.GovSignInIdentityConfiguration.BaseUrl}.well-known/openid-configuration",
+                    ResponseType = OpenIdConnectResponseType.Code,
+                    ResponseMode = "",
+                    SaveTokens = true,
+                    RedeemCode = true,
+                    RedirectUri = _config.ApplicationBaseUrl + "/sign-in",
+                    UsePkce = false,
+                    CookieManager = new ChunkingCookieManager(),
+                    SignInAsAuthenticationType = "Cookies",
+                    SecurityTokenValidator = handler,
+                    Notifications = new OpenIdConnectAuthenticationNotifications
+                    {
+                        AuthorizationCodeReceived = notification =>
+                        {
+                            var code = notification.Code;
+                            var redirectUri = notification.RedirectUri;
+                            var oidcService = new OidcService(new HttpClient(), new AzureIdentityService(),
+                                handler, new GovUkOidcConfiguration
+                                {
+                                    ClientId = notification.Options.ClientId,
+                                    BaseUrl = notification.Options.Authority,
+                                    KeyVaultIdentifier = _config.GovSignInIdentityConfiguration.KeyVaultIdentifier
+                                });
 
-            ConfigurationFactory.Current = new IdentityServerConfigurationFactory(_config);
+                            var result = oidcService.GetToken(code, redirectUri);
+                            var claims = new List<Claim>
+                                            {
+                                                new Claim("id_token", result.IdToken),
+                                                new Claim("access_token", result.AccessToken),
+                                                new Claim("expires_at", (DateTime.UtcNow.AddMinutes(10).ToString()))
+                                            };
+                            var claimsIdentity = new ClaimsIdentity(claims, notification.Options.SignInAsAuthenticationType);
+
+                            notification.HandleCodeRedemption(result.AccessToken, result.IdToken);
+
+                            var properties = notification.Options.StateDataFormat.Unprotect(notification.ProtocolMessage.State.Split('=')[1]);
+
+                            notification.AuthenticationTicket = new AuthenticationTicket(claimsIdentity, properties);
+
+
+                            return Task.CompletedTask;
+                        },
+                        SecurityTokenValidated = notification =>
+                        {
+                            var oidcService = new OidcService(new HttpClient(), new AzureIdentityService(),
+                                handler, new GovUkOidcConfiguration
+                                {
+                                    ClientId = notification.Options.ClientId,
+                                    BaseUrl = notification.Options.Authority,
+                                    KeyVaultIdentifier = _config.GovSignInIdentityConfiguration.KeyVaultIdentifier
+                                });
+
+                            oidcService.PopulateAccountClaims(notification.AuthenticationTicket.Identity, notification.ProtocolMessage.AccessToken);
+                            
+                            return Task.CompletedTask;
+                        }
+
+                    }
+                });
+            }
+            else
+            {
+                app.UseCodeFlowAuthentication(new OidcMiddlewareOptions
+                {
+                    ClientId = _config.Identity.ClientId,
+                    ClientSecret = _config.Identity.ClientSecret,
+                    Scopes = _config.Identity.Scopes,
+                    BaseUrl = constants.Configuration.BaseAddress,
+                    TokenEndpoint = constants.TokenEndpoint(),
+                    UserInfoEndpoint = constants.UserInfoEndpoint(),
+                    AuthorizeEndpoint = constants.AuthorizeEndpoint(),
+                    TokenValidationMethod = _config.Identity.UseCertificate ? TokenValidationMethod.SigningKey : TokenValidationMethod.BinarySecret,
+                    TokenSigningCertificateLoader = GetSigningCertificate(_config.Identity.UseCertificate, _config.IsDevEnvironment),
+                    AuthenticatedCallback = identity =>
+                    {
+                        PostAuthentiationAction(identity, logger, constants);
+                    }
+                });
+
+                ConfigurationFactory.Current = new IdentityServerConfigurationFactory(_config);
+            }
+            
         }
 
         private static Func<X509Certificate2> GetSigningCertificate(bool useCertificate, bool isDevEnvironement)
