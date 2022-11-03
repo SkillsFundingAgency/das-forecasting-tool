@@ -185,6 +185,7 @@
     <Compile Include="ApprovalsService\GetAccountIdsTests.cs" />
     <Compile Include="Balance\BalanceHandlerTests.cs" />
     <Compile Include="Commitments\StoreCommitmentHandler\WhenIStoreCommitments.cs" />
+    <Compile Include="EmployerUsers\MembershipProviderTests.cs" />
     <Compile Include="ExpiredFunds\ExpiredFundsServiceTests.cs" />
     <Compile Include="Levy\LevyDeclarationEventValidatorTests.cs" />
     <Compile Include="Levy\LevyEmployerDataServiceTests.cs" />
