@@ -52,6 +52,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
             };
             TokenCertificateThumbprint = GetAppSetting("WEBSITE_LOAD_CERTIFICATES", false);
             UseGovSignIn = GetAppSetting("UseGovSignIn", false).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+            BaseUrl = GetAppSetting("BaseUrl", false);
             GovSignInIdentityConfiguration = new GovUkOidcConfiguration
             {
                 ClientId = GetAppSetting("GovUkClientId", false),
@@ -93,6 +94,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 
         public bool UseGovSignIn { get; set; }
         public GovUkOidcConfiguration GovSignInIdentityConfiguration { get; set; }
+        public string BaseUrl { get; set; }
 
         public string GetConnectionString(string name)
         {
