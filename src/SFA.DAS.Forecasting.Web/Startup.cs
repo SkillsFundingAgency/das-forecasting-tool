@@ -119,7 +119,7 @@ namespace SFA.DAS.Forecasting.Web
                                 {
                                     ClientId = notification.Options.ClientId,
                                     BaseUrl = notification.Options.Authority,
-                                    KeyVaultIdentifier = _config.GovSignInIdentityConfiguration.KeyVaultIdentifier
+                                    KeyVaultIdentifier = govConfig.KeyVaultIdentifier
                                 });
 
                             oidcService.PopulateAccountClaims(notification.AuthenticationTicket.Identity, notification.ProtocolMessage.AccessToken);
