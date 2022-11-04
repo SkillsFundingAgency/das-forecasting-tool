@@ -53,12 +53,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
             TokenCertificateThumbprint = GetAppSetting("WEBSITE_LOAD_CERTIFICATES", false);
             UseGovSignIn = GetAppSetting("UseGovSignIn", false).Equals("true", StringComparison.CurrentCultureIgnoreCase);
             ApplicationBaseUrl = GetAppSetting("BaseUrl", false);
-            GovSignInIdentityConfiguration = new GovUkOidcConfiguration
-            {
-                ClientId = GetAppSetting("GovUkClientId", false),
-                BaseUrl = GetAppSetting("GovUkBaseUrl", false),
-                KeyVaultIdentifier = GetAppSetting("GovUkKeyVaultIdentifier", false),
-            };
         }
 
         private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
@@ -93,7 +87,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
             (ConfigurationManager.AppSettings["EnvironmentName"]?.Equals("LOCAL") ?? false);
 
         public bool UseGovSignIn { get; set; }
-        public GovUkOidcConfiguration GovSignInIdentityConfiguration { get; set; }
         public string ApplicationBaseUrl { get; set; }
 
         public string GetConnectionString(string name)

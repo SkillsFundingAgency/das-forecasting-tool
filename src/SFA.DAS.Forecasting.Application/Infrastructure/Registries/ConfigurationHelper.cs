@@ -8,6 +8,7 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
+using SFA.DAS.OidcMiddleware.GovUk.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {
@@ -41,6 +42,18 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                     ClientToken = CloudConfigurationManager.GetSetting("PaymentsEvent-ClientToken"),
                 }
                 : GetConfiguration<PaymentsEventsApiConfiguration>("SFA.DAS.PaymentsAPI");
+        }
+
+        public static GovUkOidcConfiguration GetGovUkOidcConfiguration()
+        {
+            return IsDevEnvironment
+                ? new GovUkOidcConfiguration
+                {
+                    ClientId = CloudConfigurationManager.GetSetting("GovUkClientId"),
+                    BaseUrl = CloudConfigurationManager.GetSetting("GovUkBaseUrl"),
+                    KeyVaultIdentifier = CloudConfigurationManager.GetSetting("GovUkKeyVaultIdentifier")
+                }
+                : GetConfiguration<GovUkOidcConfiguration>("SFA.DAS.Employer.GovSignIn");
         }
 
         private static T GetConfiguration<T>(string serviceName)

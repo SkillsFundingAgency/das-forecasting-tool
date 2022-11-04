@@ -17,6 +17,7 @@ using NLog;
 using Owin;
 using SFA.DAS.EmployerUsers.WebClientComponents;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Web.App_Start;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -60,13 +61,14 @@ namespace SFA.DAS.Forecasting.Web
             UserLinksViewModel.ChangeEmailLink = $"{constants.ChangeEmailLink()}{urlHelper.Encode("https://" + _config.DashboardUrl + "/service/email/change")}";
             if (_config.UseGovSignIn)
             {
-                var handler = new JwtSecurityTokenService(_config.GovSignInIdentityConfiguration);
+                var govConfig = ConfigurationHelper.GetGovUkOidcConfiguration();
+                var handler = new JwtSecurityTokenService(govConfig);
                 app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions("code")
                 {
-                    ClientId = _config.GovSignInIdentityConfiguration.ClientId,
+                    ClientId = govConfig.ClientId,
                     Scope = "openid email phone",
-                    Authority = _config.GovSignInIdentityConfiguration.BaseUrl,
-                    MetadataAddress = $"{_config.GovSignInIdentityConfiguration.BaseUrl}.well-known/openid-configuration",
+                    Authority = govConfig.BaseUrl,
+                    MetadataAddress = $"{govConfig.BaseUrl}.well-known/openid-configuration",
                     ResponseType = OpenIdConnectResponseType.Code,
                     ResponseMode = "",
                     SaveTokens = true,
@@ -87,7 +89,7 @@ namespace SFA.DAS.Forecasting.Web
                                 {
                                     ClientId = notification.Options.ClientId,
                                     BaseUrl = notification.Options.Authority,
-                                    KeyVaultIdentifier = _config.GovSignInIdentityConfiguration.KeyVaultIdentifier
+                                    KeyVaultIdentifier = govConfig.KeyVaultIdentifier
                                 });
 
                             var result = oidcService.GetToken(code, redirectUri);
