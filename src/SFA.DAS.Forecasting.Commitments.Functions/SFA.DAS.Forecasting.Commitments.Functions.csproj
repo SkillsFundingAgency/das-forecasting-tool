@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Api.Types" Version="8.0.3" />
     <PackageReference Include="SFA.DAS.CommitmentsV2.Types" Version="8.0.3" />
     <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />
