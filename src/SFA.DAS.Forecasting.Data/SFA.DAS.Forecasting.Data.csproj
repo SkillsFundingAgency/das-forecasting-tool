@@ -43,7 +43,6 @@
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.9\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
-    <Reference Include="mscorlib" />
     <Reference Include="Polly, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Polly.5.1.0\lib\net45\Polly.dll</HintPath>
     </Reference>
