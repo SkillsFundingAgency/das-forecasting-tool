@@ -187,7 +187,7 @@
       <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.OidcMiddleware.GovUk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.OidcMiddleware.GovUk.2.2.24-prerelease-20\lib\netstandard2.0\SFA.DAS.OidcMiddleware.GovUk.dll</HintPath>
+      <HintPath>..\packages\SFA.DAS.OidcMiddleware.GovUk.2.2.26-prerelease-5\lib\netstandard2.0\SFA.DAS.OidcMiddleware.GovUk.dll</HintPath>
     </Reference>
     <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>

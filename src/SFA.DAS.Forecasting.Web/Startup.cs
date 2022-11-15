@@ -68,7 +68,7 @@ namespace SFA.DAS.Forecasting.Web
                     ClientId = govConfig.ClientId,
                     Scope = "openid email phone",
                     Authority = govConfig.BaseUrl,
-                    MetadataAddress = $"{govConfig.BaseUrl}.well-known/openid-configuration",
+                    MetadataAddress = $"{govConfig.BaseUrl}/.well-known/openid-configuration",
                     ResponseType = OpenIdConnectResponseType.Code,
                     ResponseMode = "",
                     SaveTokens = true,
