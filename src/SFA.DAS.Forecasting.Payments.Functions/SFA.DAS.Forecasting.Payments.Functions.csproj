@@ -9,6 +9,7 @@
     <PackageReference Include="FluentValidation" Version="8.6.3" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="2.3.0" />    
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.3.0" />    
+    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" />    
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />    
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />    
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />    
