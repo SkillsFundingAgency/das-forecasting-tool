@@ -15,11 +15,13 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Web;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using SFA.DAS.Forecasting.Application.Estimations.Services;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Web.Authentication;
@@ -44,7 +46,14 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
                     scan.AssemblyContainingType<AccountEstimationDataService>();
                     scan.RegisterConcreteTypesAgainstTheFirstInterface();
                     scan.AssemblyContainingType<Ping>();
+                    scan.Exclude(c=>c == typeof(IApiClient));
+                    
                 });
+
+            For<IApiClient>()
+                .Use<ApiClient>()
+                .Ctor<HttpClient>()
+                .Is(new HttpClient());
 
             ConfigureLogging();
 
@@ -55,6 +64,8 @@ namespace SFA.DAS.Forecasting.Web.DependencyResolution
                 new TelemetryConfiguration(ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false));
             var client = new TelemetryClient(config);
             client.InstrumentationKey = config.InstrumentationKey;
+
+            
         }
 
         private void ConfigureLogging()
