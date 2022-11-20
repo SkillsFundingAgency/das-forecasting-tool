@@ -10,7 +10,6 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
     {
         private readonly HttpClient _httpClient;
         private readonly IApplicationConfiguration _config;
-        private readonly object headersLock = new object(); 
 
         public ApiClient(HttpClient httpClient, IApplicationConfiguration config)
         {
