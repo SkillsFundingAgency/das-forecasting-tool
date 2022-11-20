@@ -240,6 +240,7 @@
       <HintPath>..\packages\System.Text.Encodings.Web.4.7.2\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -257,6 +258,7 @@
     <Compile Include="Apprenticeship\Messages\RefreshPledgeApplicationsForAccountMessage.cs" />
     <Compile Include="Commitments\Handlers\DeletePledgeApplicationCommitmentsHandler.cs" />
     <Compile Include="EmployerUsers\EmployerUserAccounts.cs" />
+    <Compile Include="GovUkSignIn\GovUkOidcConfiguration.cs" />
     <Compile Include="Infrastructure\OuterApi\GetAccountIdsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetApplicationsApiRequest.cs" />
     <Compile Include="Infrastructure\OuterApi\GetApprenticeshipsApiRequest.cs" />

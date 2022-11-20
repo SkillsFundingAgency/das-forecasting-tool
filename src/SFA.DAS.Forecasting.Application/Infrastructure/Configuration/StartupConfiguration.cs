@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
-using SFA.DAS.OidcMiddleware.GovUk.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
 {

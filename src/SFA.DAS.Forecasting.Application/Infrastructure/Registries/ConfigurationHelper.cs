@@ -8,7 +8,7 @@ using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Azure.KeyVault;
-using SFA.DAS.OidcMiddleware.GovUk.Configuration;
+using SFA.DAS.Forecasting.Application.GovUkSignIn;
 
 namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 {

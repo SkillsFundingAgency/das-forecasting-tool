@@ -16,14 +16,13 @@ using Microsoft.Owin.Security.OpenIdConnect;
 using NLog;
 using Owin;
 using SFA.DAS.EmployerUsers.WebClientComponents;
+using SFA.DAS.Forecasting.Application.GovUkSignIn;
 using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
-using SFA.DAS.Forecasting.Web.App_Start;
 using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Authentication.GovUkSignIn;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.OidcMiddleware;
-using SFA.DAS.OidcMiddleware.GovUk.Configuration;
-using SFA.DAS.OidcMiddleware.GovUk.Services;
 
 [assembly: OwinStartup(typeof(SFA.DAS.Forecasting.Web.Startup))]
 namespace SFA.DAS.Forecasting.Web
@@ -38,7 +37,7 @@ namespace SFA.DAS.Forecasting.Web
 
             var logger = LogManager.GetLogger("Startup");
 
-            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+            //JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
