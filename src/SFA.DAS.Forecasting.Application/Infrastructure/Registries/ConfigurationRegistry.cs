@@ -35,6 +35,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         private IApplicationConfiguration GetConfiguration()
         {
+            bool.TryParse(ConfigurationHelper.GetAppSetting("UseGovSignIn", false), out var useGovSigIn);
+
             var configuration = new ApplicationConfiguration
             {
                 DatabaseConnectionString = ConfigurationHelper.GetConnectionString("DatabaseConnectionString"),
@@ -53,7 +55,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
                 AppInsightsInstrumentationKey = ConfigurationHelper.GetAppSetting("APPINSIGHTS_INSTRUMENTATIONKEY", false),
                 FeatureExpiredFunds = Boolean.Parse(ConfigurationHelper.GetAppSetting("FeatureExpiredFunds", false) ?? "true"),
                 ApprenticeshipsApiSubscriptionKey = ConfigurationHelper.GetAppSetting("ApprenticeshipsApiSubscriptionKey", false),
-                UseGovSignIn = bool.Parse(ConfigurationHelper.GetAppSetting("UseGovSignIn", false))
+                UseGovSignIn = useGovSigIn
             };
 
             SetApiConfiguration(configuration);
