@@ -71,14 +71,14 @@ namespace SFA.DAS.Forecasting.Web
                     Authority = govConfig.BaseUrl,
                     MetadataAddress = $"{govConfig.BaseUrl}/.well-known/openid-configuration",
                     ResponseType = OpenIdConnectResponseType.Code,
-                    ResponseMode = "",
-                    SaveTokens = true,
-                    RedeemCode = true,
+                    //ResponseMode = "",
+                    //SaveTokens = true,
+                    //RedeemCode = true,
                     RedirectUri = _config.ApplicationBaseUrl + "/sign-in",
-                    UsePkce = false,
-                    CookieManager = new ChunkingCookieManager(),
+                    //UsePkce = false,
+                    //CookieManager = new ChunkingCookieManager(),
                     SignInAsAuthenticationType = "Cookies",
-                    SecurityTokenValidator = handler,
+                    //SecurityTokenValidator = handler,
                     Notifications = new OpenIdConnectAuthenticationNotifications
                     {
                         AuthorizationCodeReceived = notification =>
@@ -101,13 +101,15 @@ namespace SFA.DAS.Forecasting.Web
                                                 new Claim("expires_at", (DateTime.UtcNow.AddMinutes(10).ToString()))
                                             };
                             var claimsIdentity = new ClaimsIdentity(claims, notification.Options.SignInAsAuthenticationType);
-
-                            notification.HandleCodeRedemption(result.AccessToken, result.IdToken);
+                            
+                            //notification.HandleCodeRedemption(result.AccessToken, result.IdToken);
 
                             var properties = notification.Options.StateDataFormat.Unprotect(notification.ProtocolMessage.State.Split('=')[1]);
 
                             notification.AuthenticationTicket = new AuthenticationTicket(claimsIdentity, properties);
 
+
+                            //notification.HandleResponse();
 
                             return Task.CompletedTask;
                         },
