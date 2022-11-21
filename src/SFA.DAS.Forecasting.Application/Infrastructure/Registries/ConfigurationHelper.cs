@@ -46,14 +46,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Registries
 
         public static GovUkOidcConfiguration GetGovUkOidcConfiguration()
         {
-            return IsDevEnvironment
-                ? new GovUkOidcConfiguration
-                {
-                    ClientId = CloudConfigurationManager.GetSetting("GovUkClientId"),
-                    BaseUrl = CloudConfigurationManager.GetSetting("GovUkBaseUrl"),
-                    KeyVaultIdentifier = CloudConfigurationManager.GetSetting("GovUkKeyVaultIdentifier")
-                }
-                : GetConfiguration<GovUkOidcConfiguration>("SFA.DAS.Employer.GovSignIn");
+            return GetConfiguration<ConfigurationGov>("SFA.DAS.Employer.GovSignIn").GovUkOidcConfiguration;
         }
 
         private static T GetConfiguration<T>(string serviceName)

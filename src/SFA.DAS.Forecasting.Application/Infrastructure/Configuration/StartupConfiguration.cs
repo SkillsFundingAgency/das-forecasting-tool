@@ -51,7 +51,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
             };
             TokenCertificateThumbprint = GetAppSetting("WEBSITE_LOAD_CERTIFICATES", false);
             UseGovSignIn = GetAppSetting("UseGovSignIn", false).Equals("true", StringComparison.CurrentCultureIgnoreCase);
-            ApplicationBaseUrl = GetAppSetting("BaseUrl", false);
+            ApplicationBaseUrl = GetAppSetting("ApplicationBaseUrl", false);
         }
 
         private string KeyVaultName => CloudConfigurationManager.GetSetting("KeyVaultName");
