@@ -6,7 +6,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.31" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="SFA.DAS.Authentication.Extensions.Legacy" Version="1.0.22" />
     <PackageReference Include="SFA.DAS.HashingService" Version="1.0.0.43004" />
     <PackageReference Include="SFA.DAS.NLog.Logger" Version="1.0.0.47445" />
