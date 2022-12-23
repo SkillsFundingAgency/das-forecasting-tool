@@ -1,12 +1,12 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Models.Payments;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Core.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
@@ -42,8 +42,9 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 		    EnsureExists(cloudTable);
 
 		    var entities = cloudTable
-				.ExecuteQuery(new TableQuery<TableEntry>()
-				    .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+				.ExecuteQuerySegmentedAsync(new TableQuery<TableEntry>()
+					.Where(
+						TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())), null).Result;
 
 		    return entities
 			    .Select(tableEntry => JsonConvert.DeserializeObject<EmployerPayment>(tableEntry.Data))
@@ -64,7 +65,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 	    {
 		    EnsureExists(cloudTable);
 
-		    var entities = cloudTable.ExecuteQuery(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())));
+		    var entities = cloudTable.ExecuteQuerySegmentedAsync(new TableQuery<TableEntry>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerId.ToString())), null).Result;
 
 		    return entities
 			    .Select(tableEntry => JsonConvert.DeserializeObject<EarningDetails>(tableEntry.Data))
@@ -149,8 +150,8 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
                 return;
 
             var entities = cloudTable
-                .ExecuteQuery(new TableQuery<TableEntry>()
-                    .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())))
+                .ExecuteQuerySegmentedAsync(new TableQuery<TableEntry>()
+                    .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, employerAccountId.ToString())), null).Result
                 .ToList();
 
             while (entities.Any())
@@ -166,10 +167,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 
         private void EnsureExists(CloudTable table)
         {
-            if (!table.Exists())
-            {
-                table.Create();
-            }
+	        _ = table.CreateIfNotExistsAsync().Result;
         }
     }
 

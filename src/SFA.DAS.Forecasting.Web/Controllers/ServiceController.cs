@@ -1,7 +1,5 @@
-﻿using System;
-using System.Web.Mvc;
-using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.Forecasting.Web.Extensions;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Web.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
@@ -9,33 +7,12 @@ namespace SFA.DAS.Forecasting.Web.Controllers
     [ForecastingRoutePrefix("Service")]
     public class ServiceController : Controller
     {
-        public readonly IOwinWrapper OwinWrapper;
-
-        public ServiceController(IOwinWrapper owinWrapper)
-        {
-            OwinWrapper = owinWrapper;
-        }
 
         [Route("signout")]
-        public ActionResult SignOut()
+        public async Task<IActionResult> SignOutEmployer()
         {
-            return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service", "signOut", true));
+            return SignOut(); //TODO FAI-625
         }
 
-        [Authorize]
-        [HttpGet]
-        [Route("password/change")]
-        public ActionResult HandlePasswordChanged(bool userCancelled = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        [Authorize]
-        [HttpGet]
-        [Route("email/change")]
-        public ActionResult HandleEmailChanged(bool userCancelled = false)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

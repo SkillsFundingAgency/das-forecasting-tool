@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.HashingService;
 using System.Collections.ObjectModel;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
 using SFA.DAS.Forecasting.Domain.Balance;
-using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators

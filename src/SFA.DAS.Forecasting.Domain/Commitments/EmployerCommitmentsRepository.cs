@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
-using SFA.DAS.Forecasting.Domain.Events;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {
@@ -16,8 +15,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
         private readonly ICommitmentsDataService _dataService;
 
         public EmployerCommitmentsRepository(
-            ICommitmentsDataService dataService, 
-            IEventPublisher eventPublisher)
+            ICommitmentsDataService dataService)
         {
             _dataService = dataService ?? throw new ArgumentNullException(nameof(dataService));
         }

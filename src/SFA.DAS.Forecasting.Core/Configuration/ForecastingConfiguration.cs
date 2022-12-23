@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
+﻿namespace SFA.DAS.Forecasting.Core.Configuration
 {
     public class ForecastingConfiguration
     {
@@ -8,5 +8,8 @@
         public string ZenDeskCobrowsingSnippetKey { get; set; }
         public PaymentsEventsApiConfiguration PaymentsEventsApi { get; set; }
         public string EmployerAccountsBaseUrl { get; set; }
+        public double SecondsToWaitToAllowProjections { get; set; }
+        public string StorageConnectionString { get; set; }
+        public string DatabaseConnectionString { get; set; }
     }
 }

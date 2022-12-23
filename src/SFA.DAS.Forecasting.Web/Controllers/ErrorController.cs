@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Messages.Projections;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 {
@@ -19,15 +17,13 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         private readonly IAccountProjectionService _accountProjectionService;
 		private readonly IExpiredFundsService _expiredFundsService;
         private readonly IApplicationConfiguration _config;
-        private readonly ITelemetry _telemetry;
-        private readonly ILog _logger;
+        private readonly ILogger<BuildAccountProjectionHandler> _logger;
 
 
-        public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository,IAccountProjectionService accountProjectionService, IApplicationConfiguration config, ITelemetry telemetry, IExpiredFundsService expiredFundsService, ILog logger)
+        public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository,IAccountProjectionService accountProjectionService, IApplicationConfiguration config, IExpiredFundsService expiredFundsService, ILogger<BuildAccountProjectionHandler> logger)
         {
             _accountProjectionRepository = accountProjectionRepository ?? throw new ArgumentNullException(nameof(accountProjectionRepository));
             _config = config ?? throw new ArgumentNullException(nameof(config));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
             _accountProjectionService = accountProjectionService ?? throw new ArgumentNullException(nameof(accountProjectionService));
 			_expiredFundsService = expiredFundsService ?? throw new ArgumentNullException(nameof(expiredFundsService));
             _logger = logger;
@@ -35,9 +31,6 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 
         public async Task Handle(GenerateAccountProjectionCommand message)
         {
-            _telemetry.AddEmployerAccountId(message.EmployerAccountId);
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             var projections = await _accountProjectionRepository.InitialiseProjection(message.EmployerAccountId);
 
             var numberOfMonthsToProject = _config.NumberOfMonthsToProject;
@@ -56,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
                 numberOfMonthsToProject += extraMonths;
             }
 
-            _logger.Info($"Projecting {numberOfMonthsToProject} months from {startDate:yyyy-MM-dd} for account {message.EmployerAccountId}");
+            _logger.LogInformation($"Projecting {numberOfMonthsToProject} months from {startDate:yyyy-MM-dd} for account {message.EmployerAccountId}");
 
             var messageProjectionSource = await _accountProjectionService.GetOriginalProjectionSource(message.EmployerAccountId,message.ProjectionSource);
            
@@ -74,13 +67,6 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             
             await _accountProjectionRepository.Store(projections);
             
-            stopwatch.Stop();
-            _telemetry.TrackDuration("BuildAccountProjection", stopwatch.Elapsed);
-        }
-
-        private int GetValue(int? value, int defaultValue)
-        {
-            return value.HasValue && value.Value > 0 ? value.Value : defaultValue;
         }
     }
 }

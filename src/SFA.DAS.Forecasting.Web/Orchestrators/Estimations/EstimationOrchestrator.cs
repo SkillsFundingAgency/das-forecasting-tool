@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Domain.Balance;
+﻿using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
@@ -11,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations

@@ -58,5 +58,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         {
             return "12345";
         }
+
+        public bool TryDecodeValue(string input, out long output)
+        {
+            output = 12345;
+            return true;
+        }
     }
 }

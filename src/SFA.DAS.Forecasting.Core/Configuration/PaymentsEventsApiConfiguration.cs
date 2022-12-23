@@ -1,6 +1,6 @@
 ﻿using SFA.DAS.Provider.Events.Api.Client.Configuration;
 
-namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
+namespace SFA.DAS.Forecasting.Core.Configuration
 {
     public class PaymentsEventsApiConfiguration : IPaymentsEventsApiConfiguration
     {

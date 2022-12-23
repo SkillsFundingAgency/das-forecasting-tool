@@ -1,7 +1,7 @@
-﻿using System;
-using System.Net;
-using System.Web.Http;
-using System.Web.Mvc;
+﻿using System.Net;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Rest;
 
 namespace SFA.DAS.Forecasting.Web
 {
@@ -9,10 +9,9 @@ namespace SFA.DAS.Forecasting.Web
     {
         public void OnException(ExceptionContext filterContext)
         {
-            var ex = filterContext.Exception as HttpResponseException;
-            if (ex != null && ex.Response.StatusCode == HttpStatusCode.Unauthorized)
+            if (filterContext.Exception is HttpOperationException ex && ex.Response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                filterContext.Result = new HttpStatusCodeResult(HttpStatusCode.Forbidden);
+                filterContext.Result = new StatusCodeResult((int)HttpStatusCode.Forbidden);
                 filterContext.ExceptionHandled = true;
             }
         }

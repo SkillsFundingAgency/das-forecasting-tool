@@ -3,10 +3,10 @@ using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Models.Levy;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Forecasting.Domain.Levy;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Services
@@ -100,7 +100,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task SaveChanges()
         {
-            await _dataContext.SaveChangesAsync();
+            _dataContext.SaveChanges();
         }
 
         public void Store(LevyDeclarationModel levyDeclaration)

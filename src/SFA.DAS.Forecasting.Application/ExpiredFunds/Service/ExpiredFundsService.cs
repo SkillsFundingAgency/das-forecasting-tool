@@ -4,10 +4,8 @@ using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Models.Projections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Messages.Projections;
@@ -29,14 +27,12 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
     {
         private readonly IExpiredFunds _expiredFunds;
         private readonly ILevyDataSession _levyDataSession;
-        private readonly ITelemetry _telemetry;
         private readonly IEmployerPaymentDataSession _employerPaymentDataSession;
 
-        public ExpiredFundsService(IExpiredFunds expiredFunds, ILevyDataSession levyDataSession, ITelemetry telemetry, IEmployerPaymentDataSession employerPaymentDataSession)
+        public ExpiredFundsService(IExpiredFunds expiredFunds, ILevyDataSession levyDataSession, IEmployerPaymentDataSession employerPaymentDataSession)
         {
-            _expiredFunds = expiredFunds ?? throw new ArgumentNullException(nameof(expiredFunds));
-            _levyDataSession = levyDataSession ?? throw new ArgumentNullException(nameof(levyDataSession));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _expiredFunds = expiredFunds;
+            _levyDataSession = levyDataSession;
             _employerPaymentDataSession = employerPaymentDataSession;
         }
 
@@ -91,16 +87,10 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
 
         public async Task<Dictionary<CalendarPeriod, decimal>> GetExpiringFunds(ReadOnlyCollection<AccountEstimationProjectionModel> estimationProjectorProjections, long employerAccountId, ProjectionGenerationType messageProjectionSource, DateTime projectionDate)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             var netLevyTotal = await _levyDataSession.GetAllNetTotals(employerAccountId);
             var paymentsTotal = await _employerPaymentDataSession.GetPaymentTotals(employerAccountId);
             
             var expiringFunds = GetExpiringFunds(estimationProjectorProjections, netLevyTotal, paymentsTotal,messageProjectionSource,projectionDate);
-
-            stopwatch.Stop();
-            _telemetry.TrackDuration("GenerateEstimatedExpiringFunds", stopwatch.Elapsed);
 
             return expiringFunds;
         }
@@ -117,15 +107,10 @@ namespace SFA.DAS.Forecasting.Application.ExpiredFunds.Service
             ProjectionSource messageProjectionSource, DateTime projectionDate)
         {
             
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            
             var netLevyTotal = await _levyDataSession.GetAllNetTotals(employerAccountId);
             var paymentsTotal = await _employerPaymentDataSession.GetPaymentTotals(employerAccountId);
             var expiringFunds = GetExpiringFunds(projectionModels, netLevyTotal, paymentsTotal, messageProjectionSource, projectionDate);
             
-            stopwatch.Stop();
-            _telemetry.TrackDuration("GenerateExpiringFunds", stopwatch.Elapsed);
 
             return expiringFunds;
         }

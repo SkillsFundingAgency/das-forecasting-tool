@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMoq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerFinance.Types.Models;
@@ -22,7 +21,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
     [TestFixture]
     public class ExpiredFundsServiceTests
     {
-        private AutoMoqer _moqer;
         private long employerAccountId = 12345;
         private IList<AccountProjectionModel> _accountProjectionModels;
         private IList<LevyPeriod> _netLevyTotals;
@@ -37,7 +35,6 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
 
             #region ActualProjectionSetup
 
@@ -221,22 +218,25 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
         [Test]
         public async Task Get_Expired_Funds_By_AccountId_Retrieves_NetLevyTotals()
         {
-            var sut = _moqer.Resolve<ExpiredFundsService>();
-            var employerPaymentDataSession = _moqer.GetMock<IEmployerPaymentDataSession>();
+            
+            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+            var levyDataSession = new Mock<ILevyDataSession>();
             employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
 
+            var sut = new ExpiredFundsService(Mock.Of<IExpiredFunds>(), levyDataSession.Object, employerPaymentDataSession.Object);
+            
             await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018,10,21));
 
-            var levyDataSession = _moqer.GetMock<ILevyDataSession>();
             levyDataSession.Verify(v => v.GetAllNetTotals(employerAccountId));
         }
 
         [Test]
         public async Task Get_Expired_Funds_By_AccountId_Retrieves_PaymentTotals()
         {
-            var employerPaymentDataSession = _moqer.GetMock<IEmployerPaymentDataSession>();
+            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+            var levyDataSession = new Mock<ILevyDataSession>();
             employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
-            var sut = _moqer.Resolve<ExpiredFundsService>();
+            var sut = new ExpiredFundsService(Mock.Of<IExpiredFunds>(), levyDataSession.Object, employerPaymentDataSession.Object);
             
             await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
@@ -246,23 +246,21 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
         [Test]
         public async Task Get_Expired_Funds_By_AccountId_Calculates_ExpiredFunds()
         {
-
-            var employerPaymentDataSession = _moqer.GetMock<IEmployerPaymentDataSession>();
+            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+            var expiredFunds = new Mock<IExpiredFunds>();
             employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
-
-            var sut = _moqer.Resolve<ExpiredFundsService>();
+            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), employerPaymentDataSession.Object);
 
             await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
-            var expiredFunds = _moqer.GetMock<IExpiredFunds>();
             expiredFunds.Verify(v => v.GetExpiringFunds(It.IsAny<Dictionary<CalendarPeriod, decimal>>(), It.IsAny<Dictionary<CalendarPeriod, decimal>>(), null, 24));
         }
 
         [Test]
         public void Get_Expired_Funds_Calculates_ExpiredFunds()
         {
-            var sut = _moqer.Resolve<ExpiredFundsService>();
-            var expiredFunds = _moqer.GetMock<IExpiredFunds>();
+            
+            var expiredFunds = new Mock<IExpiredFunds>();
 
             IDictionary<CalendarPeriod, decimal> calledFundIn = null;
             IDictionary<CalendarPeriod, decimal> calledFundOut = null;
@@ -279,12 +277,14 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
                                                             calledMonths = months;
                                                         });
 
+            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), Mock.Of<IEmployerPaymentDataSession>());
+            
             sut.GetExpiringFunds(_accountProjectionModels, _netLevyTotals, _paymentTotals, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
 
-            calledFundIn.ShouldAllBeEquivalentTo(_expiredFundsIn);    
-            calledFundOut.ShouldAllBeEquivalentTo(_expiredFundsOut.Skip(1));
-            calledExpired.ShouldAllBeEquivalentTo(calledExpired);
+            calledFundIn.Should().BeEquivalentTo(_expiredFundsIn);    
+            calledFundOut.Should().BeEquivalentTo(_expiredFundsOut.Skip(1));
+            calledExpired.Should().BeEquivalentTo(calledExpired);
             calledMonths.Should().Be(24);
 
         }
@@ -292,8 +292,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
         [Test]
         public async Task Get_Estimated_Expired_Funds_Calculates_ExpiredFunds()
         {
-            var sut = _moqer.Resolve<ExpiredFundsService>();
-            var expiredFunds = _moqer.GetMock<IExpiredFunds>();
+            var expiredFunds = new Mock<IExpiredFunds>();
 
             IDictionary<CalendarPeriod, decimal> calledFundIn = null;
             IDictionary<CalendarPeriod, decimal> calledFundOut = null;
@@ -309,13 +308,14 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
                         calledExpired = expired;
                         calledMonths = months;
                     });
+            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), Mock.Of<IEmployerPaymentDataSession>());
 
             var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.AsReadOnly(), _netLevyTotals, _paymentTotals,ProjectionGenerationType.LevyDeclaration,new DateTime(2018,09,24));
 
 
-            calledFundIn.ShouldAllBeEquivalentTo(_estimatedExpiredFundsIn);
-            calledFundOut.ShouldAllBeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
-            calledExpired.ShouldAllBeEquivalentTo(expiringFunds);
+            calledFundIn.Should().BeEquivalentTo(_estimatedExpiredFundsIn);
+            calledFundOut.Should().BeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
+            calledExpired.Should().BeEquivalentTo(expiringFunds);
             calledMonths.Should().Be(24);
 
         }
@@ -324,11 +324,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
         public async Task Then_TransferIn_Costs_Are_Excluded_And_TransferOut_Costs_Included_With_Payment_Totals()
         {
 
-            var employerPaymentDataSession = _moqer.GetMock<IEmployerPaymentDataSession>();
+            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
             employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
-            var expiredFunds = _moqer.GetMock<IExpiredFunds>();
+            var expiredFunds = new Mock<IExpiredFunds>();
 
-            var sut = _moqer.Resolve<ExpiredFundsService>();
+            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), employerPaymentDataSession.Object);
 
             await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 

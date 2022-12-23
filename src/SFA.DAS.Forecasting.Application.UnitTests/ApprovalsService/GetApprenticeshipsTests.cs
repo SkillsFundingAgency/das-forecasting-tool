@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
 {
@@ -30,7 +30,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
                 .ReturnsAsync(_apiResponse);
 
             _approvalsService =
-                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILog>());
+                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILogger<Application.ApprenticeshipCourses.Services.ApprovalsService>>());
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
             _apiClient.Setup(x => x.Get<GetApprenticeshipsResponse>(It.Is<GetApprenticeshipsApiRequest>(r => r.Status == GetApprenticeshipsApiRequest.ApprenticeshipStatus.Live)))
                 .ReturnsAsync(liveResponse);
             _approvalsService =
-                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILog>());
+                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILogger<Application.ApprenticeshipCourses.Services.ApprovalsService>>());
 
 
             var result = await _approvalsService.GetApprenticeships(_employerAccountId);
@@ -88,7 +88,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
                 .ReturnsAsync(empty);
 
             _approvalsService =
-                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILog>());
+                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILogger<Application.ApprenticeshipCourses.Services.ApprovalsService>>());
 
             var totalApprenticeships = Application.ApprenticeshipCourses.Services.ApprovalsService.PageSize * 3;
 

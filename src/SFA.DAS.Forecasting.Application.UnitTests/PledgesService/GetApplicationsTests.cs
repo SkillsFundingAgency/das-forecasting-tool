@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.PledgesService
 {
@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.PledgesService
                 .ReturnsAsync(_apiResponse);
 
             _pledgesService =
-                new Application.ApprenticeshipCourses.Services.PledgesService(_apiClient.Object, Mock.Of<ILog>());
+                new Application.ApprenticeshipCourses.Services.PledgesService(_apiClient.Object, Mock.Of<ILogger<Application.ApprenticeshipCourses.Services.PledgesService>>());
         }
 
         [Test]

@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.Filters

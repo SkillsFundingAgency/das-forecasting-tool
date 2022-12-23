@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.HashingService;
-using SFA.DAS.NLog.Logger;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
@@ -24,11 +24,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
     public class EmployerDataService : IEmployerDataService
     {
         private readonly IHashingService _hashingService;
-        private readonly ILog _logger;
+        private readonly ILogger<EmployerDataService> _logger;
         private readonly IEmployerDatabaseService _databaseService;
 
         public EmployerDataService(IHashingService hashingService,
-            ILog logger,
+            ILogger<EmployerDataService> logger,
             IEmployerDatabaseService databaseService
             )
         {
@@ -45,15 +45,15 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             if (levydeclarations == null)
             {
-                _logger.Debug($"Account API client returned null for GetLevyDeclarations for account {hashedAccountId}, period: {payrollYear}, {payrollMonth}");
+                _logger.LogDebug($"Account API client returned null for GetLevyDeclarations for account {hashedAccountId}, period: {payrollYear}, {payrollMonth}");
                 return null;
             }
 
-            _logger.Info($"Got {levydeclarations.Count} levy declarations for employer {hashedAccountId}.");
+            _logger.LogInformation($"Got {levydeclarations.Count} levy declarations for employer {hashedAccountId}.");
             var validLevyDeclarations = levydeclarations
                 .OrderByDescending(ld => ld.SubmissionDate)
                 .ToList();
-            _logger.Info($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {hashedAccountId}.");
+            _logger.LogInformation($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {hashedAccountId}.");
             
             return validLevyDeclarations.Select(levy => new LevySchemeDeclarationUpdatedMessage
             {
@@ -74,11 +74,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             var accountIds = await _databaseService.GetAccountIdsForPeriod(payrollYear, payrollMonth);
             if (accountIds == null || !accountIds.Any())
             {
-                _logger.Info("Not able to find any EmployerAccountIds");
+                _logger.LogInformation("Not able to find any EmployerAccountIds");
                 return new List<long>();
             }
 
-            _logger.Info($"Got {accountIds.Count}.");
+            _logger.LogInformation($"Got {accountIds.Count}.");
 
             return accountIds.ToList();
         }
@@ -89,11 +89,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
             if (accountIds == null || !accountIds.Any())
             {
-                _logger.Info("Not able to find any EmployerAccountIds");
+                _logger.LogInformation("Not able to find any EmployerAccountIds");
                 return new List<long>();
             }
 
-            _logger.Info($"Got {accountIds.Count}.");
+            _logger.LogInformation($"Got {accountIds.Count}.");
 
             return accountIds.ToList();
         }

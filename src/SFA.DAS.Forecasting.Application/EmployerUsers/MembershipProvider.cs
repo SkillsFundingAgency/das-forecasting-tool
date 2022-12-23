@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using SFA.DAS.EAS.Account.Api.Client;
 using System.Threading.Tasks;
-using SFA.DAS.NLog.Logger;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.Application.EmployerUsers
 {
@@ -15,9 +15,9 @@ namespace SFA.DAS.Forecasting.Application.EmployerUsers
     public class MembershipProvider : IMembershipProvider
     {
         private readonly IAccountApiClient _accountApiClient;
-        private readonly ILog _logger;
+        private readonly ILogger<MembershipProvider> _logger;
 
-        public MembershipProvider(IAccountApiClient accountApiClient, ILog logger)
+        public MembershipProvider(IAccountApiClient accountApiClient, ILogger<MembershipProvider> logger)
         {
             _accountApiClient = accountApiClient;
             _logger = logger;
@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Application.EmployerUsers
             }
             catch(Exception ex)
             {
-                _logger.Warn(ex, $"Unable to find users for account {hashedAccountId}");
+                _logger.LogWarning(ex, $"Unable to find users for account {hashedAccountId}");
                 return new List<MembershipContext>();
             }
         }

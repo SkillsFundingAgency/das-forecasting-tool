@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Configuration;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.Forecasting.Web.Mvc
 {
-    public class ForecastingRoutePrefix : RoutePrefixAttribute
+    public class ForecastingRoutePrefix : RouteAttribute
     {
-        public ForecastingRoutePrefix() : base()
-        {
-            
-        }
-
         public ForecastingRoutePrefix(string prefix) : base(GetPrefix(prefix))
         {
             

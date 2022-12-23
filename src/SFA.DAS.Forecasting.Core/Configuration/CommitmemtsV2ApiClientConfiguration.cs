@@ -1,9 +1,13 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
-
-namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
+﻿namespace SFA.DAS.Forecasting.Core.Configuration
 {
-    public class ApplicationConfiguration : IApplicationConfiguration
+    public class CommitmemtsV2ApiClientConfiguration
     {
+        public string EmployerRecruitBaseUrl { get; set; }
+        public string ZenDeskSectionId { get; set; }
+        public string ZenDeskSnippetKey { get; set; }
+        public string ZenDeskCobrowsingSnippetKey { get; set; }
+        public PaymentsEventsApiConfiguration PaymentsEventsApi { get; set; }
+        public string EmployerAccountsBaseUrl { get; set; }
         public string DatabaseConnectionString { get; set; }
         public string StorageConnectionString { get; set; }
         public string BackLink { get; set; }

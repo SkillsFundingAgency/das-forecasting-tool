@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using CsvHelper;
-using SFA.DAS.Forecasting.Web.Attributes;
-using SFA.DAS.Forecasting.Web.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ValidateMembership]
-    [AuthorizeForecasting]
-    [RoutePrefixAttribute("accounts/{hashedaccountId}/forecasting")]
+    [Route("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
         private readonly ForecastingOrchestrator _orchestrator;
-        private readonly IMembershipService _membershipService;
 
-        public ForecastingController(ForecastingOrchestrator orchestrator, IMembershipService membershipService)
+        public ForecastingController(ForecastingOrchestrator orchestrator)
         {
             _orchestrator = orchestrator;
-            _membershipService = membershipService;
         }
 
         [HttpGet]
@@ -63,7 +58,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             {
                 using (var streamWriter = new StreamWriter(memoryStream))
                 {
-                    using (var csvWriter = new CsvWriter(streamWriter))
+                    using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.CurrentCulture))
                     {
                         csvWriter.WriteRecords(results);
                         streamWriter.Flush();

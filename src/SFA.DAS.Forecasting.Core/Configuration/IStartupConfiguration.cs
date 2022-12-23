@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
+﻿namespace SFA.DAS.Forecasting.Core.Configuration
 {
 	public interface IStartupConfiguration
 	{

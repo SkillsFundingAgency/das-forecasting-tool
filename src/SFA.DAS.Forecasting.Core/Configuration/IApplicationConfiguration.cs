@@ -1,7 +1,4 @@
-﻿using SFA.DAS.EAS.Account.Api.Client;
-using SFA.DAS.Forecasting.Core;
-
-namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
+﻿namespace SFA.DAS.Forecasting.Core.Configuration
 {
     public interface IApplicationConfiguration : IApplicationConnectionStrings
     {
@@ -11,7 +8,7 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Configuration
         int SecondsToWaitToAllowProjections { get; }
         int NumberOfMonthsToProject { get; }
         bool LimitForecast { get; set; }
-        AccountApiConfiguration AccountApi { get; set; }
+        EAS.Account.Api.Client.AccountApiConfiguration AccountApi { get; set; }
         IdentityServerConfiguration Identity { get; set; }
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }

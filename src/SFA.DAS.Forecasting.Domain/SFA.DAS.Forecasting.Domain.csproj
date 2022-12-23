@@ -1,136 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SFA.DAS.Forecasting.Domain</RootNamespace>
-    <AssemblyName>SFA.DAS.Forecasting.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net6.0</TargetFramework>
+    <ProjectGuid>44F09FAD-FC66-4D24-B59E-C131ABA6F658</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.0\lib\net45\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.EmployerFinance.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.EmployerFinance.Types.0.2.24\lib\netstandard2.0\SFA.DAS.EmployerFinance.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.NLog.Logger, Version=1.0.0.47445, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.NLog.Logger.1.0.0.47445\lib\net45\SFA.DAS.NLog.Logger.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Balance\CurrentBalance.cs" />
-    <Compile Include="Balance\CurrentBalanceRepository.cs" />
-    <Compile Include="Balance\Services\IAccountBalanceService.cs" />
-    <Compile Include="Balance\Services\IBalanceDataService.cs" />
-    <Compile Include="Commitments\CostOfPledges.cs" />
-    <Compile Include="Commitments\EmployerCommitment.cs" />
-    <Compile Include="Commitments\EmployerCommitmentRepository.cs" />
-    <Compile Include="Commitments\EmployerCommitments.cs" />
-    <Compile Include="Commitments\EmployerCommitmentsRepository.cs" />
-    <Compile Include="Commitments\Services\ICommitmentsDataService.cs" />
-    <Compile Include="Commitments\TotalCompletionPayments.cs" />
-    <Compile Include="Commitments\TotalCostOfTraining.cs" />
-    <Compile Include="Estimations\AccountEstimation.cs" />
-    <Compile Include="Estimations\AccountEstimationProjection.cs" />
-    <Compile Include="Estimations\AccountEstimationProjectionCommitments.cs" />
-    <Compile Include="Estimations\AccountEstimationProjectionRepository.cs" />
-    <Compile Include="Estimations\AccountEstimationRepository.cs" />
-    <Compile Include="Estimations\CommitmentModelListBuilder.cs" />
-    <Compile Include="Estimations\Services\IAccountEstimationDataService.cs" />
-    <Compile Include="Estimations\Validation\VirtualApprenticeships\BaseVirtualApprenticeshipValidator.cs" />
-    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipCourseDetailsValidator.cs" />
-    <Compile Include="Levy\LevyDeclaration.cs" />
-    <Compile Include="Levy\LevyDeclarationRepository.cs" />
-    <Compile Include="Payments\EmployerPayments.cs" />
-    <Compile Include="Payments\EmployerPaymentsRepository.cs" />
-    <Compile Include="Shared\DateTimeService.cs" />
-    <Compile Include="Shared\Validation\ValidationResult.cs" />
-    <Compile Include="Estimations\Validation\VirtualApprenticeships\VirtualApprenticeshipValidator.cs" />
-    <Compile Include="Events\IEventPublisher.cs" />
-    <Compile Include="Payments\EmployerPaymentRepository.cs" />
-    <Compile Include="Payments\EmployerPayment.cs" />
-    <Compile Include="Payments\Services\IEmployerPaymentDataSession.cs" />
-    <Compile Include="Projections\AccountProjection.cs" />
-    <Compile Include="Projections\Services\IAccountProjectionDataSession.cs" />
-    <Compile Include="Projections\AccountProjectionRepository.cs" />
-    <Compile Include="Levy\LevyPeriod.cs" />
-    <Compile Include="Levy\LevyPeriodRepository.cs" />
-    <Compile Include="Levy\Services\ILevyDataSession.cs" />
-    <Compile Include="Levy\Validation\LevyDeclarationTransactionDateValidator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shared\IPayrollDateService.cs" />
+    <PackageReference Include="SFA.DAS.EmployerFinance.Types" Version="1.6.3167" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
+    <Folder Include="Configuration" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
-      <Project>{426ce92a-1acb-4ffe-adb2-5b49484f33ca}</Project>
-      <Name>SFA.DAS.Forecasting.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
-      <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
-      <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ApprenticeshipCourses\" />
-    <Folder Include="Payments\Repositories\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

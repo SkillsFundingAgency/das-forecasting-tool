@@ -1,38 +1,29 @@
 ﻿using System.Threading.Tasks;
-using System.Web.Mvc;
-using SFA.DAS.Forecasting.Web.Attributes;
-using SFA.DAS.Forecasting.Web.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ValidateMembership]
-    [AuthorizeForecasting]
-    [RoutePrefix("accounts/{hashedAccountId}/forecasting/estimations")]
+    [Route("accounts/{hashedAccountId}/forecasting/estimations")]
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
-        private readonly IMembershipService _membershipService;
+        
         private readonly AddEditApprenticeshipViewModelValidator _validator;
-        private readonly ILog _logger;
+        
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
-            IMembershipService membershipService,
-            AddEditApprenticeshipViewModelValidator validator,
-            ILog log)
+            AddEditApprenticeshipViewModelValidator validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
-            _membershipService = membershipService; 
             _validator = validator;
             _addApprenticeshipOrchestrator = addApprenticeshipOrchestrator;
-            _logger = log;
         }
 
         [HttpGet]
@@ -57,8 +48,8 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
             return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
-                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName })
-                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Constants.DefaultEstimationName });
+                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Startup.Constants.DefaultEstimationName })
+                : RedirectToAction(nameof(AddApprenticeships), new { hashedAccountId, estimationName = Startup.Constants.DefaultEstimationName });
         }
 
         [HttpGet]
@@ -164,7 +155,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             {
                 await _addApprenticeshipOrchestrator.RemoveApprenticeship(hashedAccountId, id);
                 return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
-                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Constants.DefaultEstimationName, apprenticeshipRemoved = true })
+                ? RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = Startup.Constants.DefaultEstimationName, apprenticeshipRemoved = true })
                 : RedirectToAction(nameof(StartEstimation), new { hashedaccountId = hashedAccountId });
             }
             else if (viewModel.ConfirmedDeletion.HasValue && !viewModel.ConfirmedDeletion.Value)

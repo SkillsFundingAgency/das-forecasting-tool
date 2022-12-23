@@ -1,15 +1,14 @@
-﻿using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.NLog.Logger;
-using SFA.DAS.Sql.Client;
+﻿using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Converters;
-using SFA.DAS.Forecasting.Application.Infrastructure.Registries;
+using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Data;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
@@ -32,12 +31,12 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
     public class EmployerDatabaseService : BaseRepository, IEmployerDatabaseService
     {
-        private readonly ILog _logger;
+        private readonly ILogger<EmployerDatabaseService> _logger;
 
         public EmployerDatabaseService(
             IApplicationConfiguration config,
-            ILog logger)
-            : base(config.EmployerConnectionString, str => logger.Warn(str), ConfigurationHelper.IsDevEnvironment)
+            ILogger<EmployerDatabaseService>  logger) :base(config.EmployerConnectionString, s => {}  , false)//TODO FAI-625
+            
         {
             _logger = logger;
         }
@@ -157,7 +156,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Failed to get employer payments");
+                _logger.LogError(ex, "Failed to get employer payments");
                 throw;
             }
         }
@@ -206,7 +205,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, "Failed to get past employer payments");
+                _logger.LogError(ex, "Failed to get past employer payments");
                 throw;
             }
         }
@@ -238,7 +237,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"Failed to get employers for year: {year} and month {month}");
+                _logger.LogError(ex, $"Failed to get employers for year: {year} and month {month}");
                 throw;
             }
         }

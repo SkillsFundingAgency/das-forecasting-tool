@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core;
@@ -14,14 +11,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Commitments
     public class EmployerCommitmentsAsSenderTests
     {
         protected  EmployerCommitmentsModel Commitments;
-        protected AutoMoqer Moqer;
         private DateTime startDate;
         private DateTime endDate;
 
         [SetUp]
         public void SetUp()
         {
-            Moqer = new AutoMoqer();
             endDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddYears(1);
             startDate = endDate.AddYears(-1);
             Commitments = new EmployerCommitmentsModel();
