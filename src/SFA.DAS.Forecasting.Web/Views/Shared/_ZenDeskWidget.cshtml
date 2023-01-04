@@ -1,8 +1,8 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
 
 @{
-    var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={@Html.GetZenDeskSnippetKey()}";
-    var cobrowsingSnippetUrl = $"https://embed-euw1.rcrsv.io/{@Html.GetZenDeskCobrowsingSnippetKey()}?zwwi=1";
+    var snippetUrl = $"https://static.zdassets.com/ekr/snippet.js?key={Configuration["ForecastingConfiguration:ZenDeskSectionId"]}";
+    var cobrowsingSnippetUrl = $"https://embed-euw1.rcrsv.io/{Configuration["ForecastingConfiguration:ZenDeskSnippetKey"]}?zwwi=1";
 }
 
 <script type="text/javascript">
@@ -18,7 +18,7 @@
             },
             helpCenter: {
                 filter: {
-                    section: @Html.GetZenDeskSnippetSectionId()
+                    section: @Configuration["ForecastingConfiguration:ZenDeskSectionId"]
                 }
             }
         }

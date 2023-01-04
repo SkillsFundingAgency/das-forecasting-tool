@@ -1,5 +1,4 @@
-﻿using AutoMoq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Controllers;
@@ -8,20 +7,20 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Moq;
+using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
 {
     [TestFixture]
     public class EstimationControllerTests
     {
-        private AutoMoqer _moqer;
         private EstimationController _controller;
+        private Mock<IAddApprenticeshipOrchestrator> _addApprenticeshipOrchestrator;
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
-
             var courseElectrician = new ApprenticeshipCourse
             {
                 CourseType = ApprenticeshipCourseType.Standard,
@@ -49,11 +48,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                courseCarpentry,
             };
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
-                .Setup(x => x.GetStandardCourses())
+            _addApprenticeshipOrchestrator = new Mock<IAddApprenticeshipOrchestrator>();
+            _addApprenticeshipOrchestrator.Setup(x => x.GetStandardCourses())
                 .Returns(apprenticeshipCourses);
 
-            _controller = _moqer.Resolve<EstimationController>();
+            _controller = new EstimationController(Mock.Of<IEstimationOrchestrator>(),_addApprenticeshipOrchestrator.Object, Mock.Of<AddEditApprenticeshipViewModelValidator>());
         }
 
         [Test]
@@ -67,11 +66,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 StartDateMonth = DateTime.Now.Month
             };
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.GetApprenticeshipAddSetup(false))
                 .Returns(new AddEditApprenticeshipsViewModel { Courses = new List<ApprenticeshipCourse>() });
 
@@ -101,11 +100,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 StartDateMonth = DateTime.Now.Month
             };
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.GetApprenticeshipAddSetup(false))
                 .Returns(new AddEditApprenticeshipsViewModel { Courses = new List<ApprenticeshipCourse>() });
 

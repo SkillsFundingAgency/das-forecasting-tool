@@ -47,6 +47,7 @@ namespace SFA.DAS.Forecasting.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddFluentValidation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

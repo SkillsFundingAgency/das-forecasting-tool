@@ -11,7 +11,7 @@
         <ul class="error-summary-list list list-links">
             @foreach (var stateItem in ViewContext.ViewData.ModelState)
             {
-                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
+                var elementId = Html.GenerateIdFromName(ViewData.TemplateInfo.GetFullHtmlFieldName(stateItem.Key)) ?? stateItem.Key;
 
                 foreach (var error in stateItem.Value.Errors.Take(1))
                 {

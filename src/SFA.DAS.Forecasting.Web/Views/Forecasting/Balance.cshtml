@@ -159,11 +159,11 @@
                         <th style="width: 60px;" scope="col">Date</th>
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
                             Cost of <br />training<br />
-                            <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
+                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
                         </th>
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">
                             Completion payments<br />
-                            <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
+                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
                         </th>
                         <th scope="col" class="financial" title="Expired Funds">
                             Expired funds<br />
@@ -171,22 +171,22 @@
                         </th>
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">
                             Funds in<br />
-                            <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
+                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
                         </th>
                         @if (Model.DisplayCoInvestment)
                         {
                             <th scope="col" class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment you pay if your funds run out, which will be 5% of the outstanding balance for that month">
                                 Your <br />contribution (5%)<br />
-                                <span class="tip-info"><a href="javascript:void();" aria-hidden="true" class="info-title">info</a></span>
+                                <span class="tip-info"><a href="javascript:void('');" aria-hidden="true" class="info-title">info</a></span>
                             </th>
                             <th scope="col" class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment the government will pay, which is 95% of the outstanding balance for that month, up to the funding band maximum">
                                 Government <br /> contribution (95%)<br />
-                                <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
+                                <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
                             </th>
                         }
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
                             Balance<br />
-                            <span class="tip-info"><a href="javascript:void();" class="info-title">info</a></span>
+                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
                         </th>
                     </tr>
                 </thead>
@@ -272,20 +272,11 @@
 
     <div class="breadcrumbs">
         <ol role="navigation">
-            <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
-            <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li>
-            <li>Funding projection</li>
+            @* TODO FAI-625 - Should just be back link *@
+            @* <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li> *@
+            @* <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li> *@
+            @* <li>Funding projection</li> *@
         </ol>
     </div>
 }
 
-@section betabanner{
-    <div class="phase-banner phase-banner-beta">
-        <div class="phase-banner-info">
-            <strong class="phase-tag">BETA</strong>
-            <span>
-                This is a new feature – your <a href="#projection-survey">feedback</a> will help us to improve it.
-            </span>
-        </div>
-    </div>
-}

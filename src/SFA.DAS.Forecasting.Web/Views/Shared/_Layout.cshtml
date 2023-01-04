@@ -1,100 +1,76 @@
-﻿@using SFA.DAS.Forecasting.Web.Extensions
+﻿@using SFA.DAS.Employer.Shared.UI.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    var tagManagerCode = "GTM-KWQBWGJ";
+    string accountId = (string)this.ViewContext.RouteData.Values["employerAccountId"] ?? "";
+    ViewBag.HideHeaderBorder = true;
+    var footerModel = new FooterModel { AccountId = accountId, UsePrivacyV2 = true };
+    
+}
+
 <!DOCTYPE html>
-<html>
+<html lang="en" class="govuk-template">
 <head>
     <meta charset="utf-8" />
-    <title>@ViewBag.Title - Manage apprentices</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@(ViewData["Title"] ?? "GOV.UK - The best place to find government services and information")</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b0c0c" />
+
+    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon" />
+    <link rel="mask-icon" href="assets/images/govuk-mask-icon.svg" color="#0b0c0c"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/govuk-apple-touch-icon-180x180.png"/>
+    <link rel="apple-touch-icon" sizes="167x167" href="assets/images/govuk-apple-touch-icon-167x167.png"/>
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/images/govuk-apple-touch-icon-152x152.png"/>
+    <link rel="apple-touch-icon" href="assets/images/govuk-apple-touch-icon.png"/>
+
+    <!--[if !IE 8]><!-->
+    <link href="css/main.css" rel="stylesheet" />
+    <link href="/css/app.css" rel="stylesheet" no-cdn />
+    <!--<![endif]-->
+
+    <meta property="og:image" content="assets/images/govuk-opengraph-image.png">
     <!-- Google Tag Manager -->
     <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push(
-                { 'gtm.start': new Date().getTime(), event: 'gtm.js' }
-            );
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-KWQBWGJ');
-    </script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-83918739-15"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() { dataLayer.push(arguments); }
-
-        gtag('js', new Date());
-        gtag('config', 'UA-83918739-15');
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','@tagManagerCode');
     </script>
     <!-- End Google Tag Manager -->
-    <!--[if gt IE 8]><!-->
-    <link href="@Styles.Url("~/Content/dist/govuk-template.css")" media="screen" rel="stylesheet" /><!--<![endif]-->
-    <!--[if IE 6]><link href="@Styles.Url("~/Content/dist/govuk-template-ie6.css")" media="screen" rel="stylesheet" /><![endif]-->
-    <!--[if IE 7]><link href="@Styles.Url("~/Content/dist/govuk-template-ie7.css")" media="screen" rel="stylesheet" /><![endif]-->
-    <!--[if IE 8]><link href="@Styles.Url("~/Content/dist/govuk-template-ie8.css")" media="screen" rel="stylesheet" /><![endif]-->
-    <link href="@Styles.Url("~/Content/dist/govuk-template-print.css")" media="print" rel="stylesheet" />
-    <!--[if IE 8]><link href="@Styles.Url("~/Content/dist/fonts-ie8.css")" media="all" rel="stylesheet"/><![endif]-->
-    <!--[if gte IE 9]><!-->
-    <link href="@Styles.Url("~/Content/dist/fonts.css")" media="all" rel="stylesheet" /><!--<![endif]-->
-    <!--[if lt IE 9]><script src="@Scripts.Url("~/Content/javascripts/ie.js")"></script><![endif]-->
-    <link rel="shortcut icon" href="@Url.Content("~/Content/dist/images/favicon.ico")" type="image/x-icon" />
-    <link rel="mask-icon" href="@Url.Content("~/Content/dist/images/gov.uk_logotype_crown.svg")" color="#0b0c0c">
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="@Url.Content("~/Content/dist/images/apple-touch-icon-152x152.png")">
-    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="@Url.Content("~/Content/dist/images/apple-touch-icon-120x120.png")">
-    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="@Url.Content("~/Content/dist/images/apple-touch-icon-76x76.png")">
-    <link rel="apple-touch-icon-precomposed" href="@Url.Content("~/Content/dist/images/apple-touch-icon-60x60.png")">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:image" content="@Url.Content("~/Content/dist/images/opengraph-image.png")">
-    <meta name="msapplication-config" content="none" />
-
-    <link href="@Styles.Url("~/css/bundles/c3")" media="all" rel="stylesheet" />
-    <!--[if IE 6]><link href="@Styles.Url("~/css/bundles/screenie6")" media="screen" rel="stylesheet" /><![endif]-->
-    <!--[if IE 7]><link href="@Styles.Url("~/css/bundles/screenie7")" media="screen" rel="stylesheet" /><![endif]-->
-    <!--[if IE 8]><link href="@Styles.Url("~/css/bundles/screenie8")" media="screen" rel="stylesheet" /><![endif]-->
-    <link href="@Styles.Url("~/css/bundles/select2")" media="all" rel="stylesheet" />
-    <!--[if gt IE 8]><!-->
-    <link href="@Styles.Url("~/css/bundles/screen")" media="all" rel="stylesheet" />
-    <link href="@Styles.Url("~/css/bundles/tippy")" media="all" rel="stylesheet" />
-    <!--<![endif]-->
-    @*@Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")*@
-
-    @Html.Partial("_GoogleAnalyticsInfo")
-    @Html.Partial("_ZenDeskWidget")
-    @Html.Partial("_ZenDeskApi")
 </head>
-<body>
-    <script>document.body.className = document.body.className + ' js-enabled';</script>
-    @Html.Partial("_GoogleTagManagerNoScript")
-    @Html.Partial("_CookieBanner", Html.GetCookieBannerViewModel())
-    @Html.Partial("_Header", Html.GetHeaderViewModel())
 
-    @RenderSection("betabanner", false)
+    <body class="govuk-template__body ">
+        <script nws-csp-add-nonce="true">
+            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+        </script>
+        <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
-    <main role="main" id="content">
-        @RenderSection("breadcrumb", required: false)
-
-        @*@Html.Partial(@"_SuccessMessage", Model as OrchestratorResponse)*@
-
-        @RenderBody()
-
-    </main>
-
-    @Html.Partial("_Footer", Html.GetFooterViewModel())
-
-    <div id="global-app-error" class="app-error hidden"></div>
-    @Scripts.Render("~/bundles/libs")
-    @Scripts.Render("~/bundles/c3")
-    @Scripts.Render("~/bundles/tippy")
-    @Scripts.Render("~/bundles/screen")
-
-
-    @RenderSection("script", false)
-
-</body>
+        @* ReSharper disable once Mvc.PartialViewNotResolved *@
+        <partial name="_Header">
+            @* ReSharper disable once Mvc.PartialViewNotResolved *@
+            <partial name="_Menu" model="@accountId">
+            </partial>
+        </partial>
+            <div class="das-section--dashboard">
+                <div class="govuk-width-container">
+                    @RenderSection("breadcrumb", required: false)
+                    <main class="govuk-main-wrapper" id="main-content" role="main">
+                        @RenderBody()
+                    </main>
+                </div>
+            </div>
+        @* ReSharper disable once Mvc.PartialViewNotResolved *@
+        <partial name="_Footer" model="@footerModel"/>
+        <script src="/libs/govuk-frontend/all.js"></script>
+        <script src="/libs/jquery/jquery.min.js"></script>
+        <script src="/js/das-all.js"></script>
+        <script src="/js/app.min.js"></script>
+        <script>
+            window.GOVUKFrontend.initAll();
+            window.DASFrontend.initAll();
+        </script>
+                
+    </body>
 </html>

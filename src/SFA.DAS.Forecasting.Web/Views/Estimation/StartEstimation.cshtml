@@ -11,19 +11,20 @@
 {
     <div class="breadcrumbs">
         <ol role="navigation">
-            <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li>
-            <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li>
-            <li>
-                @if (ViewBag.FromTransfers == true)
-                {
-                    <a href="@Url.ExternalUrlAction("transfers")">Transfers</a>
-                }
-                else
-                {
-                    <a href="@Url.Action("Balance","Forecasting")">Funding projection</a>
-                }
-            </li>
-            <li>Estimate apprenticeships you could fund</li>
+            @* TODO - FAI-625 - Should just be back link *@
+            @* <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li> *@
+            @* <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li> *@
+            @* <li> *@
+            @*     @if (ViewBag.FromTransfers == true) *@
+            @*     { *@
+            @*         <a href="@Url.ExternalUrlAction("transfers")">Transfers</a> *@
+            @*     } *@
+            @*     else *@
+            @*     { *@
+            @*         <a href="@Url.Action("Balance", "Forecasting")">Funding projection</a> *@
+            @*     } *@
+            @* </li> *@
+            @* <li>Estimate apprenticeships you could fund</li> *@
         </ol>
     </div>
 }

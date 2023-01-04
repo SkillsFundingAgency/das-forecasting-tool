@@ -1,21 +1,14 @@
-﻿using FluentValidation.Attributes;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Models.Estimation;
-using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
-    [Validator(typeof(AddEditApprenticeshipViewModelValidator))]
     public class AddEditApprenticeshipsViewModel
     {
-        public AddEditApprenticeshipsViewModel()
-        {
-        }
-
         private string _fundingPeriodJson;
         public List<ApprenticeshipCourse> Courses { get; set; } = new List<ApprenticeshipCourse>();
         public int NumberOfApprentices { get; set; }
