@@ -4,11 +4,14 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using CsvHelper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
+    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
     [Route("accounts/{hashedaccountId}/forecasting")]
     public class ForecastingController : Controller
     {
