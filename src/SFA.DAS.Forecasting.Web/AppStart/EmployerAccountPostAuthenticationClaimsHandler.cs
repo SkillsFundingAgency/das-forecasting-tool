@@ -29,6 +29,7 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
     }
     public async Task<IEnumerable<Claim>> GetClaims(TokenValidatedContext tokenValidatedContext)
     {
+        var claims = new List<Claim>();
         if (_configuration["StubAuth"] != null && _configuration["StubAuth"]
                 .Equals("true", StringComparison.CurrentCultureIgnoreCase))
         {
@@ -39,17 +40,18 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
                 AccountId = "ABC123",
                 EmployerName = "Stub Employer"
             });
-            var claims = new[]
+            claims.AddRange(new[]
             {
                 new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, JsonConvert.SerializeObject(accountClaims)),
                 new Claim(EmployerClaims.IdamsUserEmailClaimTypeIdentifier, _configuration["NoAuthEmail"]),
                 new Claim(EmployerClaims.IdamsUserIdClaimTypeIdentifier, Guid.NewGuid().ToString())
-            };
+            });
             return claims.ToList();
         }
         
         string userId;
         var email = string.Empty;
+        
         if (_forecastingConfiguration.UseGovSignIn)
         {
             userId = tokenValidatedContext.Principal.Claims
@@ -58,6 +60,7 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
             email = tokenValidatedContext.Principal.Claims
                 .First(c => c.Type.Equals(ClaimTypes.Email))
                 .Value;
+            claims.Add(new Claim(EmployerClaims.IdamsUserEmailClaimTypeIdentifier, email));
         }
         else
         {
@@ -70,6 +73,15 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
 
         var accountsAsJson = JsonConvert.SerializeObject(result.EmployerAccounts.ToDictionary(k => k.AccountId));
         var associatedAccountsClaim = new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
-        return new List<Claim> {associatedAccountsClaim};
+        claims.Add(associatedAccountsClaim);
+        if (!_forecastingConfiguration.UseGovSignIn)
+        {
+            return claims;
+        }
+            
+        claims.Add(new Claim(EmployerClaims.IdamsUserIdClaimTypeIdentifier, result.EmployerUserId));
+        claims.Add(new Claim(EmployerClaims.IdamsUserDisplayNameClaimTypeIdentifier, result.FirstName + " " + result.LastName));
+        
+        return claims;
     }
 }

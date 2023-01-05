@@ -21,6 +21,10 @@ public class EmployerAccountService : IEmployerAccountService
 
 public class EmployerUserAccounts
 {
+    public string Email { get; set; }
+    public string EmployerUserId { get; set; }
+    public string LastName { get; set; }
+    public string FirstName { get; set; }
     public IEnumerable<EmployerUserAccountItem> EmployerAccounts { get ; set ; }
 
     public static implicit operator EmployerUserAccounts(GetUserAccountsResponse source)
@@ -29,6 +33,10 @@ public class EmployerUserAccounts
         {
             return new EmployerUserAccounts
             {
+                FirstName = source.FirstName,
+                LastName = source.LastName,
+                EmployerUserId = source.EmployerUserId,
+                Email = source.Email,
                 EmployerAccounts = new List<EmployerUserAccountItem>()
             };
         }
@@ -60,6 +68,14 @@ public class EmployerUserAccountItem
 
 public class GetUserAccountsResponse
 {
+    [JsonProperty]
+    public string EmployerUserId { get; set; }
+    [JsonProperty]
+    public string FirstName { get; set; }
+    [JsonProperty]
+    public string LastName { get; set; }
+    [JsonProperty]
+    public string Email { get; set; }
     [JsonProperty("UserAccounts")]
     public List<EmployerIdentifier> UserAccounts { get; set; }
 }
