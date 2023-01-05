@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Forecasting.Web.Filters
 {
-    public static class ForecastingClaims
+    public static class EmployerClaims
     {
         public static string IdamsUserIdClaimTypeIdentifier = "http://das/employer/identity/claims/id";
         public static string IdamsUserDisplayNameClaimTypeIdentifier = "http://das/employer/identity/claims/display_name";

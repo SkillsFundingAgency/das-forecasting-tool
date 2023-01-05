@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
+using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 
 namespace SFA.DAS.Forecasting.Web
 {
@@ -47,7 +48,31 @@ namespace SFA.DAS.Forecasting.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var forecastingConfiguration = _configuration
+                .GetSection("ApimDeveloperApi")
+                .Get<ForecastingConfiguration>();
+            services.AddConfigurationOptions(_configuration);
             services.AddFluentValidation();
+            services.AddOrchestrators();
+
+            services.AddTransient<IForecastingMapper, ForecastingMapper>();
+
+            services.AddDatabaseRegistration(forecastingConfiguration, _configuration["Environment"]);
+            
+            services.AddApplicationServices(forecastingConfiguration);
+            
+            services.AddCosmosDbServices(forecastingConfiguration);
+            
+            services.AddDomainServices();
+
+            services.AddAndConfigureEmployerAuthentication(forecastingConfiguration.IdentityServerConfiguration);
+
+            //services.AddDataProtection();
+
+            //services.AddAuthorizationPolicies();
+
+            services.AddLogging();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -101,44 +126,7 @@ namespace SFA.DAS.Forecasting.Web
 
         public class Constants
         {
-            public IdentityServerConfiguration Configuration { get; set; }
-
-            private readonly string _baseUrl;
-
-            public Constants(IdentityServerConfiguration configuration)
-            {
-                _baseUrl = configuration.ClaimIdentifierConfiguration.ClaimsBaseUrl;
-                Configuration = configuration;
-            }
-
-            public static string UserExternalIdClaimKeyName = "sub";
-            public static string AccountHashedIdRouteKeyName = "HashedAccountId";
             public static string DefaultEstimationName = "default";
-
-            public string AuthorizeEndpoint() => $"{Configuration.BaseAddress}{Configuration.AuthorizeEndPoint}";
-
-            public string ChangeEmailLink() => Configuration.BaseAddress.Replace("/identity", "") +
-                                               string.Format(Configuration.ChangeEmailLink, Configuration.ClientId);
-
-            public string ChangePasswordLink() => Configuration.BaseAddress.Replace("/identity", "") +
-                                                  string.Format(Configuration.ChangePasswordLink,
-                                                      Configuration.ClientId);
-
-            public string DisplayName() => _baseUrl + Configuration.ClaimIdentifierConfiguration.DisplayName;
-            public string Email() => _baseUrl + Configuration.ClaimIdentifierConfiguration.Email;
-            public string FamilyName() => _baseUrl + Configuration.ClaimIdentifierConfiguration.FamilyName;
-            public string GivenName() => _baseUrl + Configuration.ClaimIdentifierConfiguration.GivenName;
-            public string Id() => _baseUrl + Configuration.ClaimIdentifierConfiguration.Id;
-            public string LogoutEndpoint() => $"{Configuration.BaseAddress}{Configuration.LogoutEndpoint}";
-
-            public string RegisterLink() => Configuration.BaseAddress.Replace("/identity", "") +
-                                            string.Format(Configuration.RegisterLink, Configuration.ClientId);
-
-            public string RequiresVerification() => _baseUrl + "requires_verification";
-            public string TokenEndpoint() => $"{Configuration.BaseAddress}{Configuration.TokenEndpoint}";
-            public string UserInfoEndpoint() => $"{Configuration.BaseAddress}{Configuration.UserInfoEndpoint}";
-
-
         }
     }
 }

@@ -24,13 +24,11 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
         private readonly IDocumentClient _client;
         private readonly DocumentCollection _documentCollection;
         private readonly string _databaseId;
-        public DocumentSession(IDocumentClient client, DocumentSessionConnectionString connectionString)
+        public DocumentSession(IDocumentClient client, DocumentSessionConnectionString connectionString, DocumentCollection documentCollection)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
             _databaseId = connectionString.Database;
-            _documentCollection = client
-                .ReadDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(connectionString.Database, connectionString.Collection))
-                .Result.Resource;
+            _documentCollection = documentCollection;
         }
 
         public IQueryable<T> CreateQuery<T>(int maxItemCount = -1) where T : class, IDocument

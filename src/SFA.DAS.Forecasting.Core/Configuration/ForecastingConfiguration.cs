@@ -11,5 +11,10 @@
         public double SecondsToWaitToAllowProjections { get; set; }
         public string StorageConnectionString { get; set; }
         public string DatabaseConnectionString { get; set; }
+        public bool UseGovSignIn { get; set; }
+        public string AllowedCharacters { get; set; }
+        public string HashString { get; set; }
+        public string CosmosDbConnectionString { get; set; }
+        public IdentityServerConfiguration IdentityServerConfiguration { get; set; }
     }
 }
