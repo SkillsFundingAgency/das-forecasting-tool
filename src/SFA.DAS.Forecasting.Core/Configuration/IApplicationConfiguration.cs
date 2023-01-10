@@ -13,7 +13,7 @@
         PaymentsEventsApiConfiguration PaymentEventsApi { get; set; }
         string StubEmployerPaymentTable { get; set; }
         bool AllowTriggerProjections { get; }
-        string ApprenticeshipsApiBaseUri { get; }
+        string OuterApiApiBaseUri { get; }
         string AppInsightsInstrumentationKey { get; }
         bool FeatureExpiredFunds { get; set; }
         string ApprenticeshipsApiSubscriptionKey { get; set; }

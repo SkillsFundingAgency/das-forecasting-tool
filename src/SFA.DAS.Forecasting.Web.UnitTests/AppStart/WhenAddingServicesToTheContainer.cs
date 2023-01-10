@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -7,7 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
+using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.AppStart;
 
@@ -15,21 +21,44 @@ public class WhenAddingServicesToTheContainer
 {
         [TestCase(typeof(IEstimationOrchestrator))]
         [TestCase(typeof(IAddApprenticeshipOrchestrator))]
+        [TestCase(typeof(IForecastingOrchestrator))]
+        [TestCase(typeof(ICustomClaims))]
         public void Then_The_Dependencies_Are_Correctly_Resolved_For_Orchestrators(Type toResolve)
+        {
+            var serviceCollection = new ServiceCollection();
+            SetupServiceCollection(serviceCollection);
+            var provider = serviceCollection.BuildServiceProvider();
+
+            var type = provider.GetService(toResolve);
+            Assert.IsNotNull(type);
+        }
+        
+        [Test]
+        public void Then_Resolves_Authorization_Handlers()
+        {
+            var serviceCollection = new ServiceCollection();
+            SetupServiceCollection(serviceCollection);
+            var provider = serviceCollection.BuildServiceProvider();
+            
+            var type = provider.GetServices(typeof(IAuthorizationHandler)).ToList();
+            
+            Assert.IsNotNull(type);
+            type.Count.Should().Be(1);
+            type.Should().ContainSingle(c => c.GetType() == typeof(EmployerAccountAuthorizationHandler));
+        }
+
+        private void SetupServiceCollection(ServiceCollection serviceCollection)
         {
             var configuration = GenerateConfiguration();
             var forecastingConfiguration = configuration
                 .GetSection("ForecastingConfiguration")
                 .Get<ForecastingConfiguration>();
-            
             var hostEnvironment = new Mock<IWebHostEnvironment>();
-            var serviceCollection = new ServiceCollection();
-
-            
             serviceCollection.AddSingleton(hostEnvironment.Object);
             serviceCollection.AddSingleton(Mock.Of<IConfiguration>());
             serviceCollection.AddConfigurationOptions(configuration);
             serviceCollection.AddDistributedMemoryCache();
+            serviceCollection.AddAuthenticationServices();
             serviceCollection.AddApplicationServices(forecastingConfiguration);
             serviceCollection.AddDomainServices();
             serviceCollection.AddOrchestrators();
@@ -37,11 +66,6 @@ public class WhenAddingServicesToTheContainer
             
             serviceCollection.AddDatabaseRegistration(forecastingConfiguration, configuration["Environment"]);
             serviceCollection.AddLogging();
-            
-            var provider = serviceCollection.BuildServiceProvider();
-
-            var type = provider.GetService(toResolve);
-            Assert.IsNotNull(type);
         }
 
         private static IConfigurationRoot GenerateConfiguration()
@@ -55,6 +79,8 @@ public class WhenAddingServicesToTheContainer
                     new KeyValuePair<string, string>("ForecastingConfiguration:HashString", "ABC123"),
                     new KeyValuePair<string, string>("ForecastingConfiguration:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
                     new KeyValuePair<string, string>("AccountApiConfiguration:ApiBaseUrl", "https://localhost:1"),
+                    new KeyValuePair<string, string>("ForecastingConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
+                    new KeyValuePair<string, string>("ForecastingConfiguration:OuterApiSubscriptionKey", "test"),
                     new KeyValuePair<string, string>("Environment", "test"),
                 }
             };

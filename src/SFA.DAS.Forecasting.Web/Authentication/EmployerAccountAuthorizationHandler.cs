@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.EmployerUsers;
+using SFA.DAS.Forecasting.Application.EmployerUsers.ApiResponse;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Filters;

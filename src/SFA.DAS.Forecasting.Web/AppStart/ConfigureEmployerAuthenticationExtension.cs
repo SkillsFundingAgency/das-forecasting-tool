@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Forecasting.Application.EmployerUsers;
 using SFA.DAS.Forecasting.Core.Configuration;
@@ -15,14 +17,20 @@ namespace SFA.DAS.Forecasting.Web;
 
 public static class ConfigureEmployerAuthenticationExtension
 {
+    public static void AddAuthenticationServices(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
+        services.AddTransient<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
+        services.AddTransient<IEmployerAccountService, EmployerAccountService>();
+    }
+    
     public static void AddAndConfigureEmployerAuthentication(
             this IServiceCollection services,
             IdentityServerConfiguration configuration)
         {
-            services.AddHttpContextAccessor();
-            services.AddTransient<ICustomClaims, EmployerAccountPostAuthenticationClaimsHandler>();
-            services.AddTransient<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorizationHandler>();
-            services.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
+            
             
             services.AddAuthorization(options =>
             {
@@ -80,5 +88,16 @@ public static class ConfigureEmployerAuthenticationExtension
                         ctx.Principal.Identities.First().AddClaims(claims);
                     };
                 });
+            
+            services.AddAuthentication().AddCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/error/403");
+                options.ExpireTimeSpan = TimeSpan.FromHours(1);
+                options.Cookie.Name = $"SFA.DAS.Forecasting.Web.Auth";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.SlidingExpiration = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.CookieManager = new ChunkingCookieManager { ChunkSize = 3000 };
+            });
         }
 }

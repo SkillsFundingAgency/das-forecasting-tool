@@ -1,10 +1,13 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
@@ -49,8 +52,11 @@ namespace SFA.DAS.Forecasting.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var forecastingConfiguration = _configuration
-                .GetSection("ApimDeveloperApi")
+                .GetSection(nameof(ForecastingConfiguration))
                 .Get<ForecastingConfiguration>();
+            var identityServerConfiguration = _configuration
+                .GetSection(nameof(IdentityServerConfiguration))
+                .Get<IdentityServerConfiguration>();
             services.AddConfigurationOptions(_configuration);
             services.AddFluentValidation();
             services.AddOrchestrators();
@@ -65,13 +71,37 @@ namespace SFA.DAS.Forecasting.Web
             
             services.AddDomainServices();
 
-            services.AddAndConfigureEmployerAuthentication(forecastingConfiguration.IdentityServerConfiguration);
-
-            //services.AddDataProtection();
-
-            //services.AddAuthorizationPolicies();
+            services.AddAuthenticationServices();
+            services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);
 
             services.AddLogging();
+            services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
+            
+            services.AddMaMenuConfiguration("signout", identityServerConfiguration.ClientId,_configuration["Environment"]);
+            
+            services.Configure<RouteOptions>(options =>
+                {
+                
+                }).AddMvc(options =>
+                {
+                    if (!_configuration.IsDev())
+                    {
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());    
+                    }
+                    
+                });
+            
+            services.AddApplicationInsightsTelemetry();
+
+            if (!_environment.IsDevelopment())
+            {
+                services.AddHealthChecks();
+                services.AddDataProtection(_configuration);
+            }
+            
+#if DEBUG
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+#endif
 
         }
 

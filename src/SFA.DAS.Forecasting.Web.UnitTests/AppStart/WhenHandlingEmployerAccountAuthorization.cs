@@ -11,6 +11,7 @@ using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.EmployerUsers;
+using SFA.DAS.Forecasting.Application.EmployerUsers.ApiResponse;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Configuration;
