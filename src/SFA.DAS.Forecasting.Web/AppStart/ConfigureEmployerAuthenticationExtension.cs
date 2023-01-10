@@ -11,6 +11,7 @@ using SFA.DAS.Forecasting.Application.EmployerUsers;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Filters;
+using SFA.DAS.GovUK.Auth.AppStart;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.Forecasting.Web;
@@ -24,26 +25,24 @@ public static class ConfigureEmployerAuthenticationExtension
         services.AddTransient<IEmployerAccountAuthorisationHandler, EmployerAccountAuthorizationHandler>();
         services.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
         services.AddTransient<IEmployerAccountService, EmployerAccountService>();
+        
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                PolicyNames.HasEmployerAccount
+                , policy =>
+                {
+                    policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
+                    policy.Requirements.Add(new EmployerAccountRequirement());
+                    policy.RequireAuthenticatedUser();
+                });
+        });
     }
     
     public static void AddAndConfigureEmployerAuthentication(
             this IServiceCollection services,
             IdentityServerConfiguration configuration)
         {
-            
-            
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(
-                    PolicyNames.HasEmployerAccount
-                    , policy =>
-                    {
-                        policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
-                        policy.Requirements.Add(new EmployerAccountRequirement());
-                        policy.RequireAuthenticatedUser();
-                    });
-            });
-            
             services
                 .AddAuthentication(sharedOptions =>
                 {

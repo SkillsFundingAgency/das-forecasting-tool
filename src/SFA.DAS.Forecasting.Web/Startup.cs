@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Filters;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
+using SFA.DAS.GovUK.Auth.AppStart;
 
 namespace SFA.DAS.Forecasting.Web
 {
@@ -73,7 +75,19 @@ namespace SFA.DAS.Forecasting.Web
             services.AddDomainServices();
 
             services.AddAuthenticationServices();
-            services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);
+
+            if (_configuration["ForecastingConfiguration:UseGovSignIn"] != null &&
+                _configuration["ForecastingConfiguration:UseGovSignIn"]
+                    .Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            {
+                services.AddAndConfigureGovUkAuthentication(_configuration,
+                    $"{typeof(Startup).Assembly.GetName().Name}.Auth",
+                    typeof(EmployerAccountPostAuthenticationClaimsHandler));
+            }
+            else
+            {
+                services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);    
+            }
 
             services.AddLogging();
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
