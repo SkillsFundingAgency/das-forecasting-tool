@@ -12,6 +12,7 @@ public class ErrorFieldTagHelper : TagHelper
 {
     [ViewContext]
     [HtmlAttributeNotBound]
+    // ReSharper disable once MemberCanBePrivate.Global - must be public for ViewContext to be set
     public ViewContext ViewContext { get; set; }
 
     [HtmlAttributeName("asp-fieldname")]
