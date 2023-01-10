@@ -10,6 +10,7 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
+using SFA.DAS.Forecasting.Web.Filters;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 
 namespace SFA.DAS.Forecasting.Web
@@ -84,6 +85,7 @@ namespace SFA.DAS.Forecasting.Web
                 
                 }).AddMvc(options =>
                 {
+                    options.Filters.Add(new GoogleAnalyticsFilter());
                     if (!_configuration.IsDev())
                     {
                         options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());    
