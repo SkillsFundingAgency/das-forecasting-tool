@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Configuration
 @model SFA.DAS.Forecasting.Web.ViewModels.StartViweModel
 
 @{
@@ -42,7 +43,7 @@
 
         <div class="grid-row">
             <div class="column-two-thirds">
-                <a class="button button-start" href='@Url.Action("RedirectEstimationStart","Estimation", new { hashedAccountId = ViewBag.HashedAccountId })'>Start</a>
+                <a asp-route="@RouteNames.EstimationStartRedirect" asp-route-hashedAccountId="@ViewBag.HashedAccountId" class="button button-start">Start</a>
             </div>
         </div>
         <div class="grid-row disclaimer">

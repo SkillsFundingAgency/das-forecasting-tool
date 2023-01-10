@@ -1,4 +1,5 @@
-﻿@model SFA.DAS.Forecasting.Web.ViewModels.RemoveApprenticeshipViewModel
+﻿@using SFA.DAS.Forecasting.Web.Configuration
+@model SFA.DAS.Forecasting.Web.ViewModels.RemoveApprenticeshipViewModel
 
 @{
     ViewBag.Title = Model.CourseTitle;
@@ -8,7 +9,7 @@
 
 @section breadcrumb
 {
-    <a href="@Url.RouteUrl("EstimatedCost", new { hashedaccountId = Model.HashedAccountId, estimateName = Model.EstimationName, apprenticeshipRemoved = false })" class="link-back">Back</a>
+    <a asp-route="@RouteNames.EstimatedCost" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimateName="@Model.EstimationName" asp-route-apprenticeshipRemoved="false" class="link-back">Back</a>
 }
 
 <div class="grid-row">
@@ -25,22 +26,12 @@
 <div class="grid-row">
     <div class="column-full">
 
+        <form asp-route="@RouteNames.RemoveApprenticeships" method="POST">
+            <input asp-for="EstimationName" type="hidden"/>
+            <input asp-for="HashedAccountId" type="hidden"/>
+            <input asp-for="ApprenticeshipId" type="hidden"/>
 
-        @using (Html.BeginForm("RemoveApprenticeships", "Estimation", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            @Html.HiddenFor(model => model.EstimationName)
-            @Html.HiddenFor(model => model.HashedAccountId)
-            @Html.HiddenFor(model => model.ApprenticeshipId)
-
-            var errorClass = "";
-
-            if (!Model.HasConfirmed)
-            {
-                errorClass = "form-group-error";
-            }
-
-            <div class="form-group @errorClass">
+            <div class="form-group @(!Model.HasConfirmed ? "errorClass" : "")">
 
                 <label class="form-label-bold" for="email">Are you sure you want to do this?</label>
                 @if (!Model.HasConfirmed)
@@ -50,18 +41,17 @@
 
                 <fieldset>
                     <div class="multiple-choice">
-                        @Html.RadioButtonFor(m => m.ConfirmedDeletion, true, new { id = "radio-1" })
-
+                        <input id="radio-1" asp-for="ConfirmedDeletion" type="radio" value="true"/>
                         <label for="radio-1">Yes, I do want to remove this apprenticeship</label>
                     </div>
                     <div class="multiple-choice">
-                        @Html.RadioButtonFor(m => m.ConfirmedDeletion, false, new { id = "radio-2" })
+                        <input id="radio-2" asp-for="ConfirmedDeletion" type="radio" value="false"/>
                         <label for="radio-2">No, I want to keep this apprenticeship</label>
                     </div>
                 </fieldset>
             </div>
             <button type="submit" class="button">Continue</button>
 
-        }
+        </form>
     </div>
 </div>

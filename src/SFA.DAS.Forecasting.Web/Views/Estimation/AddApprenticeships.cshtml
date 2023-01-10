@@ -1,4 +1,5 @@
 @using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Configuration
 @model SFA.DAS.Forecasting.Web.ViewModels.AddEditApprenticeshipsViewModel
 
 @{
@@ -44,20 +45,20 @@
     </div>
 
 
-    @using (@Html.BeginForm("Save", "Estimation", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
+        <form method="POST" asp-route="@RouteNames.SaveApprenticeship">
+            
+        
         <div class="grid-row">
             <div class="column-two-thirds">
-                @Html.HiddenFor(m => m.FundingPeriodsJson)
-                @Html.HiddenFor(m => m.CalculatedTotalCap)
+                <input asp-for="FundingPeriodsJson" type="hidden"/>
+                <input asp-for="CalculatedTotalCap" type="hidden"/>
 
                 @if (Model.ApprenticeshipsId == null)
                 {
                     <div asp-fieldname="IsTransferFunded">
                         <fieldset>
                             <h2 class="heading-small">Will this apprenticeship be funded by your transfer allowance?</h2>
-                            @Html.ValidationMessageFor(m => m.IsTransferFunded, null, new { id = "error-message-" + Html.IdFor(m => m.IsTransferFunded) })
+                            @Html.ValidationMessageFor(m => m.IsTransferFunded, null, new {id = "error-message-" + Html.IdFor(m => m.IsTransferFunded)})
                             <div class="multiple-choice">
                                 <input id="IsTransferFunded" type="checkbox" name="IsTransferFunded" @isChecked(Model.IsTransferFunded)>
                                 <label for="IsTransferFunded">Use transfer allowance</label>
@@ -67,12 +68,12 @@
 
                     <div asp-fieldname="Course">
                         <label class="form-label-bold" for="choose-apprenticeship">Choose apprenticeship</label>
-                        @Html.ValidationMessageFor(m => m.Course, null, new { id = "error-message-" + Html.IdFor(m => m.Course) })
+                        @Html.ValidationMessageFor(m => m.Course, null, new {id = "error-message-" + Html.IdFor(m => m.Course)})
                         @Html.DropDownListFor(model =>
                             model.Course.Id,
                             @Model.ApprenticeshipCourses,
                             "Select one",
-                            new { @class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship" })
+                            new {@class = "form-control form-control-3-4", aria_label = "Apprenticeship training course", name = "choose-apprenticeship", id = "choose-apprenticeship"})
                     </div>
                 }
                 else
@@ -87,11 +88,11 @@
 
                     </div>
                 }
-                
+
                 <div asp-fieldname="NumberOfApprentices" asp-additionalclass="no-of-apprentice">
                     <label class="form-label-bold" for="no-of-app">Number of apprentices</label>
-                    @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new { id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices) })
-                    @Html.TextBoxFor(model => model.NumberOfApprentices, new { @class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices) })
+                    @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new {id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices)})
+                    @Html.TextBoxFor(model => model.NumberOfApprentices, new {@class = "form-control", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices)})
                 </div>
 
 
@@ -99,8 +100,8 @@
                     <label class="form-label-bold" for="apprenticeship-length">Number of months</label>
                     <span class="form-hint">Apprenticeships must be a minimum of 12 months</span>
 
-                    @Html.ValidationMessageFor(m => m.TotalInstallments, null, new { id = "error-message-" + Html.IdFor(m => m.TotalInstallments) })
-                    @Html.TextBoxFor(model => model.TotalInstallments, new { @class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments) })
+                    @Html.ValidationMessageFor(m => m.TotalInstallments, null, new {id = "error-message-" + Html.IdFor(m => m.TotalInstallments)})
+                    @Html.TextBoxFor(model => model.TotalInstallments, new {@class = "form-control", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments)})
                 </div>
 
                 <div asp-fieldname="StartDate,StartDateMonth,StartDateYear" id="dateWrapper">
@@ -108,21 +109,21 @@
                     <span class="form-label-bold">Start date</span>
                     <span class="form-hint">For example, 09 2018</span>
 
-                    @Html.ValidationMessageFor(m => m.StartDate, null, new { id = "error-message-" + Html.IdFor(m => m.StartDate) })
+                    @Html.ValidationMessageFor(m => m.StartDate, null, new {id = "error-message-" + Html.IdFor(m => m.StartDate)})
                     @Html.HiddenFor(m => m.StartDate)
 
-                    @Html.ValidationMessageFor(m => m.StartDateMonth, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateMonth) })
-                    @Html.ValidationMessageFor(m => m.StartDateYear, null, new { id = "error-message-" + Html.IdFor(m => m.StartDateYear) })
+                    @Html.ValidationMessageFor(m => m.StartDateMonth, null, new {id = "error-message-" + Html.IdFor(m => m.StartDateMonth)})
+                    @Html.ValidationMessageFor(m => m.StartDateYear, null, new {id = "error-message-" + Html.IdFor(m => m.StartDateYear)})
 
                     <div class="form-date">
                         <div asp-fieldname="StartDateMonth" asp-additionalclass="form-group-month">
                             <label for="startDateMonth">Month</label>
 
-                            @Html.TextBoxFor(model => model.StartDateMonth, new { @class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth) })
+                            @Html.TextBoxFor(model => model.StartDateMonth, new {@class = "form-control", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth)})
                         </div>
                         <div asp-fieldname="StartDateYear" asp-additionalclass="form-group-year">
                             <label for="startDateYear">Year</label>
-                            @Html.TextBoxFor(model => model.StartDateYear, new { @class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear) })
+                            @Html.TextBoxFor(model => model.StartDateYear, new {@class = "form-control", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear)})
                         </div>
                     </div>
 
@@ -141,7 +142,7 @@
                         }
                     }
                     <span id="details-about-funding-calculated" class="form-hint" style="display: none;">
-                        Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br />
+                        Government funding band maximum for this apprenticeship is <span id="funding-cap-details">@fundingCap.FormatCost()</span><br/>
                         Total government funding band maximum for <b id="apprentice-count-details">@Model.NumberOfApprentices</b> apprentices is <b id="total-cap-details">@Model.CalculatedTotalCap.FormatCost() </b>
                     </span>
 
@@ -150,17 +151,17 @@
                         <a href="https://www.gov.uk/government/publications/apprenticeship-funding-bands" target="fundingbands">More information about maximum government funding bands</a>
                     </span>
                 </div>
-                
+
                 <div asp-fieldname="TotalCostAsString">
                     <label class="form-label-bold" for="total-funding-cost">Total cost</label>
                     <span class="form-hint">You can change this number but if you go above the funding band maximum value - the difference will be co-invested</span>
-                    @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new { id = "error-message-" + Html.IdFor(m => m.TotalCostAsString) })
+                    @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new {id = "error-message-" + Html.IdFor(m => m.TotalCostAsString)})
 
                     <div class="form-control-group">
                         <div class="form-control-group-prepend">
                             <span>&pound;</span>
                         </div>
-                        @Html.TextBoxFor(model => model.TotalCostAsString, new { @class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text" })
+                        @Html.TextBoxFor(model => model.TotalCostAsString, new {@class = "form-control total-funding-cost", id = "total-funding-cost", name = "total-funding-cost", type = "text"})
                     </div>
 
 
@@ -175,15 +176,13 @@
 
             <div class="column-full">
                 <button type="submit" id="save" name="save" value="Create" class="button save">Check if I can fund these</button>
-                <a href="@Url.Action("CostEstimation", "Estimation", new { hashedAccountId = Model.HashedAccountId, estimateName = Model.EstimationName })"
-                   aria-label="Cancel"
-                   class="button text-link">
+                <a asp-route="@RouteNames.EstimatedCost" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimateName="@Model.EstimationName" aria-label="Cancel" class="button text-link">
                     Cancel
                 </a>
 
             </div>
         </div>
-    }
+    </form>
     <div class="grid-row hidden" id="existingApps">
         <div class="column-full">
             <h3 class="heading-medium">

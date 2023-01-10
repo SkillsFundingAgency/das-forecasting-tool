@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Models.Payments
+@using SFA.DAS.Forecasting.Web.Configuration
 @using SFA.DAS.Forecasting.Web.Extensions
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
@@ -61,7 +62,7 @@
                         addApprenticeshipsCaption = "Add more apprenticeships to your current estimate";
                     }
 
-                    <a class="button" href="@Url.RouteUrl("AddApprenticeships",new { hashedAccountId = Model.HashedAccountId,  estimationName = Model.EstimationName})">
+                    <a asp-route="@RouteNames.AddApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName" class="button">
                         @addApprenticeshipsCaption
                     </a>
 
@@ -280,10 +281,10 @@
                                 <td data-label="Completion payment">@apprenticeship.CompletionPayment.FormatCost() </td>
                                 <td data-label="Completion payment">@apprenticeship.FundingSourceText </td>
                                 <td>
-                                    @Html.RouteLink("Edit", "EditApprenticeships", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, apprenticeshipsId = apprenticeship.Id })
+                                    <a asp-route="@RouteNames.EditApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName" asp-route-apprenticeshipsId="@apprenticeship.Id">Edit</a>
                                 </td>
                                 <td>
-                                    @Html.RouteLink("Remove", "ConfirmRemoval", new { hashedAccountId = Model.HashedAccountId, estimationName = Model.EstimationName, id = apprenticeship.Id })
+                                    <a asp-route="@RouteNames.ConfirmRemoval" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName" asp-route-apprenticeshipsId="@apprenticeship.Id">Remove</a>
                                 </td>
                             </tr>
                         }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
@@ -21,13 +22,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         private readonly IEstimationOrchestrator _estimationOrchestrator;
         private readonly IAddApprenticeshipOrchestrator _addApprenticeshipOrchestrator;
         
-        private readonly AddEditApprenticeshipViewModelValidator _validator;
+        private readonly IValidator<AddEditApprenticeshipsViewModel> _validator;
         
 
         public EstimationController(
             IEstimationOrchestrator estimationOrchestrator, 
             IAddApprenticeshipOrchestrator addApprenticeshipOrchestrator, 
-            AddEditApprenticeshipViewModelValidator validator)
+            IValidator<AddEditApprenticeshipsViewModel> validator)
         {
             _estimationOrchestrator = estimationOrchestrator;
             _validator = validator;
@@ -95,11 +96,11 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-                var result = _validator.ValidateAdd(vm);
+                var result = _validator.Validate(vm);
 
-                foreach (var r in result)
+                foreach (var r in result.Errors)
                 {
-                    ModelState.AddModelError(r.Key, r.Value);
+                    ModelState.AddModelError(r.PropertyName, r.ErrorMessage);
                 }
 
            

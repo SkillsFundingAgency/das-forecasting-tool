@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Extensions
+@using SFA.DAS.Forecasting.Web.Configuration
 @model SFA.DAS.Forecasting.Web.ViewModels.ProjectionViewModel
 
 @{
@@ -28,8 +29,7 @@
                     </p>
                 </div>
             </details>
-
-            @Html.ActionLink("Estimate apprenticeships you could fund", "StartEstimation", "Estimation", null, new { @class = "button margin-top-x2" })
+            <a asp-route="@RouteNames.StartEstimation" asp-route-hashedAccountId="@Model.HashedAccountId" class="button margin-top-x2">Estimate apprenticeships you could fund</a>
         </div>
     </div>
 
@@ -40,18 +40,14 @@
                 <ul class="list list-links">
 
                     <li>
-                        <a id="apprenticeship_csvdownload" href="@Url.Action("DownloadApprenticeshipDetailsCsv", "Forecasting", new { hashedAccountId = Model.HashedAccountId }, null)" class="">
-                            Apprenticeship details in the account projection
-                        </a>
+                        <a id="apprenticeship_csvdownload" asp-route="@RouteNames.DownloadApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" >Apprenticeship details in the account projection</a>
                         <p>
                             The download includes the details of apprenticeships used to create this projection
                         </p>
                     </li>
 
                     <li>
-                        <a id="projections_csvdownload" href="@Url.Action("Csv", "Forecasting", new { hashedAccountId = Model.HashedAccountId }, null)" class="">
-                            Account projection table
-                        </a>
+                        <a id="projections_csvdownload" asp-route="@RouteNames.DownloadCsv" asp-route-hashedAccountId="@Model.HashedAccountId">Account projection table</a>
                         <p>
                             The download includes the details of the data in the table shown on this page
                         </p>
@@ -128,7 +124,7 @@
         Funds will expire from May 2019
     </h3>
     <p>
-        The account projection table now includes an estimate of the funds that will expire from May 2019 onwards. Look at <a href="@Url.Action("ExpiredFundsGuidance","Forecasting")" target="_blank">our guidance on expired funds</a> to find out what expired funds are and how we calculate them.
+        The account projection table now includes an estimate of the funds that will expire from May 2019 onwards. Look at <a asp-route="@RouteNames.ExpiredFundsGuidance" asp-route-hashedAccountId="@Model.HashedAccountId" target="_blank">our guidance on expired funds</a> to find out what expired funds are and how we calculate them.
     </p>
     <p>
         You can also find this guidance when you click on the info button under 'Expired funds' in the account projection table.
@@ -167,7 +163,7 @@
                         </th>
                         <th scope="col" class="financial" title="Expired Funds">
                             Expired funds<br />
-                            <span class="tip-info"><a href="@Url.Action("ExpiredFundsGuidance","Forecasting")" class="info-title" target="_blank">info</a></span>
+                            <span class="tip-info"><a asp-route="@RouteNames.ExpiredFundsGuidance" asp-route-hashedAccountId="@Model.HashedAccountId" class="info-title" target="_blank">info</a></span>
                         </th>
                         <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">
                             Funds in<br />

@@ -12,7 +12,7 @@ public class ErrorFieldTagHelper : TagHelper
 {
     [ViewContext]
     [HtmlAttributeNotBound]
-    private ViewContext ViewContext { get; set; }
+    public ViewContext ViewContext { get; set; }
 
     [HtmlAttributeName("asp-fieldname")]
     public string FieldName { get; set; }
@@ -25,15 +25,18 @@ public class ErrorFieldTagHelper : TagHelper
     public override void Process(TagHelperContext context, TagHelperOutput tagHelperOutput)
     {
         var fieldNames = FieldName.Split(",");
-        if (fieldNames.Any(modelStateKey => ViewContext.ModelState.ContainsKey(modelStateKey) &&
-                                            ViewContext.ModelState[modelStateKey]!.Errors.Any()))
+        if (ViewContext?.ModelState != null)
         {
-            tagHelperOutput.AddClass("error", HtmlEncoder.Default);
-        }
-        
-        if (string.IsNullOrEmpty(AdditionalClass))
-        {
-            tagHelperOutput.AddClass(AdditionalClass, HtmlEncoder.Default);
+            if (fieldNames.Any(modelStateKey => ViewContext.ModelState.ContainsKey(modelStateKey) &&
+                                                ViewContext.ModelState[modelStateKey]!.Errors.Any()))
+            {
+                tagHelperOutput.AddClass("error", HtmlEncoder.Default);
+            }
+            
+            if (string.IsNullOrEmpty(AdditionalClass))
+            {
+                tagHelperOutput.AddClass(AdditionalClass, HtmlEncoder.Default);
+            }
         }
         tagHelperOutput.AddClass("form-group", HtmlEncoder.Default);
         
