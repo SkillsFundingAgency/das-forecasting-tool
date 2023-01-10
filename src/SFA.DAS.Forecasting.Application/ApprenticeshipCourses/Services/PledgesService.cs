@@ -31,8 +31,6 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
             try
             {
                 var request = new GetPledgeAccountIdsApiRequest();
-                _logger.LogInformation($"Base url: {_apiClient.BaseUrl}");
-                _logger.LogInformation($"Get url: {request.GetUrl}");
 
                 var response = await _apiClient.Get<GetPledgeAccountIdsResponse>(request);
                 return response.AccountIds;

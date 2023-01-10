@@ -9,15 +9,14 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
     public class ApiClient : IApiClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IApplicationConfiguration _config;
-        private readonly object headersLock = new object(); 
+        private readonly ForecastingConfiguration _config;
 
-        public ApiClient(HttpClient httpClient, IApplicationConfiguration config)
+        public ApiClient(HttpClient httpClient, ForecastingConfiguration config)
         {
             _httpClient = httpClient;
             if (_httpClient.BaseAddress == null)
             {
-                _httpClient.BaseAddress = new Uri(config.ApprenticeshipsApiBaseUri);    
+                _httpClient.BaseAddress = new Uri(config.OuterApiApiBaseUri);    
             }
             
             _config = config;
@@ -37,10 +36,8 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.OuterApi
 
         private void AddAuthenticationHeader(HttpRequestMessage httpRequestMessage)
         {
-            httpRequestMessage.Headers.Add("Ocp-Apim-Subscription-Key", _config.ApprenticeshipsApiSubscriptionKey);
+            httpRequestMessage.Headers.Add("Ocp-Apim-Subscription-Key", _config.OuterApiSubscriptionKey);
             httpRequestMessage.Headers.Add("X-Version", "1");
         }
-
-        public string BaseUrl => _httpClient.BaseAddress.ToString();
     }
 }

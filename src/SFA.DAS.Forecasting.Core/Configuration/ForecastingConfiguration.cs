@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Forecasting.Core.Configuration
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.Forecasting.Core.Configuration
 {
     public class ForecastingConfiguration
     {
@@ -15,6 +17,9 @@
         public string AllowedCharacters { get; set; }
         public string HashString { get; set; }
         public string CosmosDbConnectionString { get; set; }
-        public IdentityServerConfiguration IdentityServerConfiguration { get; set; }
+        public string DataProtectionKeysDatabase { get; set; }
+        public string RedisConnectionString { get; set; }
+        public string OuterApiApiBaseUri { get; set; }
+        public string OuterApiSubscriptionKey { get; set; }
     }
 }
