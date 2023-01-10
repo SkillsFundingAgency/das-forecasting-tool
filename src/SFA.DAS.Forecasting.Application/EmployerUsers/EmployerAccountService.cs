@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.EmployerUsers.ApiResponse;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 
 namespace SFA.DAS.Forecasting.Application.EmployerUsers;
 
@@ -12,55 +11,16 @@ public interface IEmployerAccountService
 
 public class EmployerAccountService : IEmployerAccountService
 {
+    private readonly IApiClient _apiClient;
+
+    public EmployerAccountService(IApiClient apiClient)
+    {
+        _apiClient = apiClient;
+    }
     public async Task<EmployerUserAccounts> GetUserAccounts(string userId, string email)
     {
-        throw new System.NotImplementedException();
-    }
-}
-//TODO FAI-656
+        var actual = await _apiClient.Get<GetUserAccountsResponse>(new GetEmployerAccountsRequest(email, userId));
 
-public class EmployerUserAccounts
-{
-    public string Email { get; set; }
-    public string EmployerUserId { get; set; }
-    public string LastName { get; set; }
-    public string FirstName { get; set; }
-    public IEnumerable<EmployerUserAccountItem> EmployerAccounts { get ; set ; }
-
-    public static implicit operator EmployerUserAccounts(GetUserAccountsResponse source)
-    {
-        if (source?.UserAccounts == null)
-        {
-            return new EmployerUserAccounts
-            {
-                FirstName = source.FirstName,
-                LastName = source.LastName,
-                EmployerUserId = source.EmployerUserId,
-                Email = source.Email,
-                EmployerAccounts = new List<EmployerUserAccountItem>()
-            };
-        }
-            
-        return new EmployerUserAccounts
-        {
-            EmployerAccounts = source.UserAccounts.Select(c=>(EmployerUserAccountItem)c).ToList()
-        };
-    }
-}
-
-public class EmployerUserAccountItem
-{
-    public string AccountId { get; set; }
-    public string EmployerName { get; set; }
-    public string Role { get; set; }
-        
-    public static implicit operator EmployerUserAccountItem(EmployerIdentifier source)
-    {
-        return new EmployerUserAccountItem
-        {
-            AccountId = source.AccountId,
-            EmployerName = source.EmployerName,
-            Role = source.Role
-        };
+        return actual;
     }
 }
