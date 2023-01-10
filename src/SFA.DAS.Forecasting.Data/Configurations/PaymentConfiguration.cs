@@ -19,10 +19,10 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             builder.Property(x => x.Amount).HasColumnName(@"Amount").HasColumnType("decimal").IsRequired().HasPrecision(18,5);
             builder.Property(x => x.ReceivedTime).HasColumnName(@"ReceivedTime").HasColumnType("datetime").IsRequired();
             builder.Property(x => x.LearnerId).HasColumnName(@"LearnerId").HasColumnType("bigint").IsRequired();
-            builder.Property(x => x.CollectionPeriod.Month).HasColumnName(@"CollectionPeriodMonth").HasColumnType("int").IsRequired();
-            builder.Property(x => x.CollectionPeriod.Year).HasColumnName(@"CollectionPeriodYear").HasColumnType("int").IsRequired();
-            builder.Property(x => x.DeliveryPeriod.Month).HasColumnName(@"DeliveryPeriodMonth").HasColumnType("int").IsRequired();
-            builder.Property(x => x.DeliveryPeriod.Year).HasColumnName(@"DeliveryPeriodYear").HasColumnType("int").IsRequired();
+            builder.Property(x => x.CollectionPeriodMonth).HasColumnName(@"CollectionPeriodMonth").HasColumnType("int").IsRequired();
+            builder.Property(x => x.CollectionPeriodYear).HasColumnName(@"CollectionPeriodYear").HasColumnType("int").IsRequired();
+            builder.Property(x => x.DeliveryPeriodMonth).HasColumnName(@"DeliveryPeriodMonth").HasColumnType("int").IsRequired();
+            builder.Property(x => x.DeliveryPeriodYear).HasColumnName(@"DeliveryPeriodYear").HasColumnType("int").IsRequired();
             builder.Property(x => x.FundingSource).HasColumnName(@"FundingSource").HasColumnType("tinyint").IsRequired();
         }
     }

@@ -29,8 +29,10 @@ namespace SFA.DAS.Forecasting.Domain.Payments
             if (!payment.ExternalPaymentId.Equals(ExternalPaymentId, StringComparison.CurrentCultureIgnoreCase))
                 throw new InvalidOperationException($"Invalid payment id.  Does not match original payment id. Id: {payment.ExternalPaymentId}, Current id: {ExternalPaymentId}");
             Model.Amount = payment.Amount;
-            Model.CollectionPeriod = payment.CollectionPeriod;
-            Model.DeliveryPeriod = payment.DeliveryPeriod;
+            Model.CollectionPeriodMonth = payment.CollectionPeriod.Month;
+            Model.CollectionPeriodYear = payment.CollectionPeriod.Year;
+            Model.DeliveryPeriodMonth = payment.DeliveryPeriod.Month;
+            Model.DeliveryPeriodYear = payment.DeliveryPeriod.Year;
             Model.FundingSource = payment.FundingSource;
             Model.LearnerId = payment.LearnerId;
             Model.ReceivedTime = payment.ReceivedTime;
