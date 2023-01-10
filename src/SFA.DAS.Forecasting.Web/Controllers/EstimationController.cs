@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
@@ -11,6 +13,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
     [Route("accounts/{hashedAccountId}/forecasting/estimations")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class EstimationController : Controller
     {
         private readonly IEstimationOrchestrator _estimationOrchestrator;

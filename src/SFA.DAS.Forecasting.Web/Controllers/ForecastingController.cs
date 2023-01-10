@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
@@ -13,11 +15,12 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
     [Route("accounts/{hashedaccountId}/forecasting")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class ForecastingController : Controller
     {
-        private readonly ForecastingOrchestrator _orchestrator;
+        private readonly IForecastingOrchestrator _orchestrator;
 
-        public ForecastingController(ForecastingOrchestrator orchestrator)
+        public ForecastingController(IForecastingOrchestrator orchestrator)
         {
             _orchestrator = orchestrator;
         }

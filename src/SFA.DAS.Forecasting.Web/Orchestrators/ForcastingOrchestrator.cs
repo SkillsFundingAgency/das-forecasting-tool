@@ -16,7 +16,14 @@ using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
-    public class ForecastingOrchestrator
+    public interface IForecastingOrchestrator
+    {
+        Task<ProjectionViewModel> Projection(string hashedAccountId);
+        Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId);
+        Task<IEnumerable<ApprenticeshipCsvItemViewModel>> ApprenticeshipsCsv(string hashedAccountId);
+    }
+
+    public class ForecastingOrchestrator : IForecastingOrchestrator
     {
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataSession _accountProjection;
