@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
@@ -33,7 +35,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("start", Name = "EstimationStart")]
+        [Route("start", Name = RouteNames.StartEstimation)]
         public ActionResult StartEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
@@ -41,7 +43,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("start-transfer", Name = "StartTransferEstimation")]
+        [Route("start-transfer", Name = RouteNames.StartTransferEstimation)]
         public ActionResult StartTransferEstimation(string hashedAccountId)
         {
             ViewBag.HashedAccountId = hashedAccountId;
@@ -50,7 +52,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("start-redirect", Name = "EstimationStartRedirect")]
+        [Route("start-redirect", Name = RouteNames.EstimationStartRedirect)]
         public async Task<ActionResult> RedirectEstimationStart(string hashedAccountId)
         {
             return await _estimationOrchestrator.HasValidApprenticeships(hashedAccountId)
@@ -59,7 +61,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimateName}/{apprenticeshipRemoved?}", Name = "EstimatedCost")]
+        [Route("{estimateName}/{apprenticeshipRemoved?}", Name = RouteNames.EstimatedCost)]
         public async Task<ActionResult> CostEstimation(string hashedAccountId, string estimateName, bool? apprenticeshipRemoved)
         {
             var viewModel = await _estimationOrchestrator.CostEstimation(hashedAccountId, estimateName, apprenticeshipRemoved);
@@ -67,7 +69,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimationName}/apprenticeship/add", Name = "AddApprenticeships")]
+        [Route("{estimationName}/apprenticeship/add", Name = RouteNames.AddApprenticeships)]
         public ActionResult AddApprenticeships(string hashedAccountId, string estimationName)
         {
             var vm = _addApprenticeshipOrchestrator.GetApprenticeshipAddSetup(false);
@@ -79,7 +81,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/EditApprenticeships", Name = "EditApprenticeships")]
+        [Route("{estimationName}/apprenticeship/{apprenticeshipsId}/EditApprenticeships", Name = RouteNames.EditApprenticeships)]
         public async Task<ActionResult> EditApprenticeships(string hashedAccountId, string estimationName, string apprenticeshipsId)
         {
             var model = await _estimationOrchestrator.EditApprenticeshipModel(hashedAccountId, apprenticeshipsId, estimationName);
@@ -88,8 +90,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/add", Name = "SaveApprenticeship")]
-        [ValidateAntiForgeryToken]
+        [Route("{estimationName}/apprenticeship/add", Name = RouteNames.SaveApprenticeship)]
         public async Task<ActionResult> Save(AddEditApprenticeshipsViewModel vm, string hashedAccountId, string estimationName)
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
@@ -115,7 +116,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimationName}/apprenticeship/cancel", Name = "CancelAddApprenticeship")]
+        [Route("{estimationName}/apprenticeship/cancel", Name = RouteNames.CancelAddApprenticeship)]
         public ActionResult Cancel(string hashedAccountId, string estimationName)
         { 
             return RedirectToAction(nameof(CostEstimation), new { hashedaccountId = hashedAccountId, estimateName = estimationName });
@@ -123,7 +124,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/course")]
+        [Route("{estimationName}/apprenticeship/course", Name = RouteNames.GetCourseInfo)]
         public async Task<ActionResult> GetCourseInfo(string courseId, string estimationName)
         {
             var course = await _addApprenticeshipOrchestrator.GetCourse(courseId);
@@ -138,7 +139,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("{estimationName}/apprenticeship/{id}/ConfirmRemoval", Name = "ConfirmRemoval")]
+        [Route("{estimationName}/apprenticeship/{id}/ConfirmRemoval", Name = RouteNames.ConfirmRemoval)]
         public async Task<ActionResult> ConfirmApprenticeshipsRemoval(string hashedAccountId, string estimationName, string id)
         {
             try
@@ -153,8 +154,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpPost]
-        [Route("{estimationName}/apprenticeship/{id}/remove", Name = "RemoveApprenticeships")]
-        [ValidateAntiForgeryToken]
+        [Route("{estimationName}/apprenticeship/{id}/remove", Name = RouteNames.RemoveApprenticeships)]
         public async Task<ActionResult> RemoveApprenticeships(RemoveApprenticeshipViewModel viewModel, string hashedAccountId, string estimationName, string id)
         {
             if (viewModel.ConfirmedDeletion.HasValue && viewModel.ConfirmedDeletion.Value)

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
@@ -26,7 +27,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("projections", Name = "Balance")]
+        [Route("projections", Name = RouteNames.Balance)]
         public async Task<ActionResult> Balance(string hashedAccountId)
         {
             var viewModel = await _orchestrator.Projection(hashedAccountId);
@@ -34,7 +35,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("download", Name = "DownloadCsv")]
+        [Route("download", Name = RouteNames.DownloadCsv)]
         public async Task<ActionResult> Csv(string hashedAccountId)
         {
             var results = await _orchestrator.BalanceCsv(hashedAccountId);
@@ -43,7 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("download-apprenticeships")]
+        [Route("download-apprenticeships", Name = RouteNames.DownloadApprenticeships)]
         public async Task<ActionResult> DownloadApprenticeshipDetailsCsv(string hashedAccountId)
         {
             var results = await _orchestrator.ApprenticeshipsCsv(hashedAccountId);
@@ -52,7 +53,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("expired-funds-guidance")]
+        [Route("expired-funds-guidance", Name = RouteNames.ExpiredFundsGuidance)]
         public ActionResult ExpiredFundsGuidance()
         {
             return View();
