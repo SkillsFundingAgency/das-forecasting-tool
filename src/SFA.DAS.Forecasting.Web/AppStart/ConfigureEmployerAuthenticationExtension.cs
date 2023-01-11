@@ -60,11 +60,9 @@ public static class ConfigureEmployerAuthenticationExtension
                     options.ResponseType = "code";
                     options.UsePkce = false;
                     
-                    var scopes = configuration.Scopes.Split(' ');
-                    foreach (var scope in scopes)
-                    {
-                        options.Scope.Add(scope);
-                    }
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    
                     options.ClaimActions.MapUniqueJsonKey("sub", "id");
                     options.Events.OnRemoteFailure = c =>
                     {
