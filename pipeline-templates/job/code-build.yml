@@ -17,7 +17,7 @@ jobs:
 
   - task: DotNetCoreCLI@2
     displayName: Publish - dotnet publish UIApp
-      inputs:
+    inputs:
       command: publish
       publishWebProjects: false
       projects: src/${{ parameters.SolutionBaseName }}.Web/${{ parameters.SolutionBaseName }}.Web.csproj
