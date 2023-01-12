@@ -137,12 +137,12 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _currentBalanceRepository.Setup(x => x.Get(It.IsAny<long>()))
                 .ReturnsAsync(currentBalance);
 
-            _forecastingMapper = new ForecastingMapper(Mock.Of<IApplicationConfiguration>());
+            _forecastingMapper = new ForecastingMapper();
             _accountProjectionDataSession = new Mock<IAccountProjectionDataSession>();
 
             _orchestrator = new ForecastingOrchestrator(_hashingService.Object,
                 _accountProjectionDataSession.Object, _currentBalanceRepository.Object,
-                Mock.Of<IApplicationConfiguration>(), _forecastingMapper, _commitmentsDataService.Object);
+                new ForecastingConfiguration(), _forecastingMapper, _commitmentsDataService.Object);
         }
 
         [Test]

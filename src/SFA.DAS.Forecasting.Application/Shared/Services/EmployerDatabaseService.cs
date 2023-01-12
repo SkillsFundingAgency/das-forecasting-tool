@@ -34,7 +34,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
         private readonly ILogger<EmployerDatabaseService> _logger;
 
         public EmployerDatabaseService(
-            IApplicationConfiguration config,
+            ForecastingJobsConfiguration config,
             ILogger<EmployerDatabaseService>  logger) :base(config.EmployerConnectionString, s => {}  , false)//TODO FAI-625
             
         {

@@ -19,13 +19,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
 
     public class ForecastingMapper : IForecastingMapper
     {
-        private readonly IApplicationConfiguration _config;
-
-        public ForecastingMapper(IApplicationConfiguration config)
-        {
-            _config = config;
-        }
-
+        
         public List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
         {
             return data.Select(x =>
@@ -35,8 +29,8 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Mappers
                     FundsIn = x.LevyFundsIn + x.TransferInCostOfTraining + x.TransferInCompletionPayments,
                     CostOfTraining = x.LevyFundedCostOfTraining + x.TransferOutCostOfTraining,
                     CompletionPayments = x.LevyFundedCompletionPayments + x.TransferOutCompletionPayments,
-                    ExpiredFunds = _config.FeatureExpiredFunds ? x.ExpiredFunds : 0m,
-                    Balance = _config.FeatureExpiredFunds ? x.FutureFunds : x.FutureFundsNoExpiry,
+                    ExpiredFunds = x.ExpiredFunds,
+                    Balance =  x.FutureFunds,
                     CoInvestmentEmployer = x.CoInvestmentEmployer,
                     CoInvestmentGovernment = x.CoInvestmentGovernment
                 })

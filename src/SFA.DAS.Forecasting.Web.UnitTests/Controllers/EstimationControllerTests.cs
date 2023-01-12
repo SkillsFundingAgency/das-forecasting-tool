@@ -7,6 +7,8 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.Results;
 using Moq;
 using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
@@ -17,6 +19,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
     {
         private EstimationController _controller;
         private Mock<IAddApprenticeshipOrchestrator> _addApprenticeshipOrchestrator;
+        private Mock<IValidator<AddEditApprenticeshipsViewModel>> _addEditApprenticeshipViewModelValidator;
 
         [SetUp]
         public void SetUp()
@@ -52,7 +55,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             _addApprenticeshipOrchestrator.Setup(x => x.GetStandardCourses())
                 .Returns(apprenticeshipCourses);
 
-            _controller = new EstimationController(Mock.Of<IEstimationOrchestrator>(),_addApprenticeshipOrchestrator.Object, Mock.Of<AddEditApprenticeshipViewModelValidator>());
+            // _addEditApprenticeshipViewModelValidator = new Mock<IValidator<AddEditApprenticeshipsViewModel>>();
+            // _addEditApprenticeshipViewModelValidator.Setup(x => x.Validate(It.IsAny<AddEditApprenticeshipsViewModel>()))
+            //     .Returns(new ValidationResult());
+            
+            _controller = new EstimationController(Mock.Of<IEstimationOrchestrator>(),_addApprenticeshipOrchestrator.Object, new AddEditApprenticeshipViewModelValidator());
         }
 
         [Test]
@@ -63,7 +70,9 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 Course = null,
                 TotalCostAsString = "10",
                 StartDateYear = DateTime.Now.Year,
-                StartDateMonth = DateTime.Now.Month
+                StartDateMonth = DateTime.Now.Month,
+                TotalInstallments = 12,
+                NumberOfApprentices = 1
             };
 
             _addApprenticeshipOrchestrator
@@ -95,9 +104,10 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             {
                 Course = new ApprenticeshipCourse { Id = "123", FundingPeriods = fundingPeriods },
                 TotalCostAsString = costAsString,
-                NumberOfApprentices = 2,
+                TotalInstallments = 12,
+                NumberOfApprentices = 1,
                 StartDateYear = DateTime.Now.Year,
-                StartDateMonth = DateTime.Now.Month
+                StartDateMonth = DateTime.Now.Month,
             };
 
             _addApprenticeshipOrchestrator

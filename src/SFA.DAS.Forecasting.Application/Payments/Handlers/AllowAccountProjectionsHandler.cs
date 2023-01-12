@@ -16,13 +16,13 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
         private readonly IEmployerPaymentsRepository _paymentsRepository;
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
         private readonly ILogger<AllowAccountProjectionsHandler> _logger;
-        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ForecastingJobsConfiguration _applicationConfiguration;
         private readonly IEmployerProjectionAuditService _auditService;
 
         public AllowAccountProjectionsHandler(
             IEmployerPaymentsRepository repository,
             ILogger<AllowAccountProjectionsHandler> logger,
-            IApplicationConfiguration applicationConfiguration,
+            ForecastingJobsConfiguration applicationConfiguration,
             IEmployerProjectionAuditService auditService,
             IEmployerCommitmentsRepository commitmentsRepository)
         {

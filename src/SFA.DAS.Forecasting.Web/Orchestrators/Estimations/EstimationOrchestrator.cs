@@ -23,15 +23,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
         private readonly IExpiredFundsService _expiredFundsService;
-        private readonly IApplicationConfiguration _config;
 
         public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
             IHashingService hashingService,
             ICurrentBalanceRepository currentBalanceRepository,
             IApprenticeshipCourseDataService apprenticeshipCourseService,
-            IExpiredFundsService expiredFundsService,
-            IApplicationConfiguration config)
+            IExpiredFundsService expiredFundsService)
         {
             _estimationProjectionRepository = estimationProjectionRepository ??
                                               throw new ArgumentNullException(nameof(estimationProjectionRepository));
@@ -42,7 +40,6 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
                                         throw new ArgumentNullException(nameof(currentBalanceRepository));
             _apprenticeshipCourseService = apprenticeshipCourseService;
             _expiredFundsService = expiredFundsService;
-            _config = config;
         }
 
         public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName,
@@ -51,7 +48,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountId = GetAccountId(hashedAccountId);
             await RefreshCurrentBalance(accountId);
             var accountEstimation = await _estimationRepository.Get(accountId);
-            var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation, _config.FeatureExpiredFunds);
+            var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation);
             estimationProjector.BuildProjections();
             var projection = estimationProjector.Projections.FirstOrDefault();
             var projectionType = projection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration;

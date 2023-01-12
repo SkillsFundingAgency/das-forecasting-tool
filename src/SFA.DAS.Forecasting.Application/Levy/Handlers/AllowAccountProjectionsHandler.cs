@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Messages.Projections;
 
@@ -15,9 +17,9 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
         public IEmployerProjectionAuditService AuditService;
         public ILevyPeriodRepository Repository { get; }
         public ILogger<AllowAccountProjectionsHandler> Logger { get; }
-        public IApplicationConfiguration ApplicationConfiguration { get; }
+        public ForecastingJobsConfiguration ApplicationConfiguration { get; }
 
-        public AllowAccountProjectionsHandler(ILevyPeriodRepository repository, ILogger<AllowAccountProjectionsHandler> logger, IApplicationConfiguration applicationConfiguration, IEmployerProjectionAuditService auditService)
+        public AllowAccountProjectionsHandler(ILevyPeriodRepository repository, ILogger<AllowAccountProjectionsHandler> logger, ForecastingJobsConfiguration applicationConfiguration, IEmployerProjectionAuditService auditService)
         {
             AuditService = auditService ?? throw new ArgumentNullException(nameof(auditService)); 
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));

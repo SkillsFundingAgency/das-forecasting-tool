@@ -27,7 +27,6 @@ public static class DomainRegistrationExtensions
         services.AddTransient<IAccountBalanceService, AccountBalanceService>();
         services.AddTransient<ILevyDataSession, LevyDataSession>();
         services.AddTransient<IEmployerPaymentDataSession, EmployerPaymentDataSession>();
-        services.AddTransient<IApplicationConfiguration, ApplicationConfiguration>();
         services.AddTransient<ICommitmentModelListBuilder, CommitmentModelListBuilder>();
         services.AddTransient<IAccountEstimationRepository, AccountEstimationRepository>();
         services.AddTransient<IAccountEstimationDataService, AccountEstimationDataService>();

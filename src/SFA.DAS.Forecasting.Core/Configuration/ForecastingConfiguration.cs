@@ -19,6 +19,12 @@ namespace SFA.DAS.Forecasting.Core.Configuration
         public string CosmosDbConnectionString { get; set; }
         public string DataProtectionKeysDatabase { get; set; }
         public string RedisConnectionString { get; set; }
+        public bool LimitForecast { get; set; }
+        public string BackLink { get; set; }
+    }
+
+    public class OuterApiConfiguration
+    {
         public string OuterApiApiBaseUri { get; set; }
         public string OuterApiSubscriptionKey { get; set; }
     }

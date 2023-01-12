@@ -1,12 +1,19 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers
 {
-    public class StoreCourseHandler
+    public interface IStoreCourseHandler
+    {
+        Task Handle(ApprenticeshipCourse course);
+    }
+
+    public class StoreCourseHandler : IStoreCourseHandler
     {
         private readonly IApprenticeshipCourseDataService _dataService;
         private readonly ILogger<StoreCourseHandler> _logger;

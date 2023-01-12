@@ -17,6 +17,8 @@ public static class AddConfigurationExtensions
 
         services.Configure<AccountApiConfiguration>(configuration.GetSection(nameof(AccountApiConfiguration)));
         services.Configure<IdentityServerConfiguration>(configuration.GetSection(nameof(IdentityServerConfiguration)));
+        services.Configure<OuterApiConfiguration>(configuration.GetSection(nameof(OuterApiConfiguration)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
 
         services.AddSingleton<IAccountApiConfiguration, AccountApiConfiguration>();
     }

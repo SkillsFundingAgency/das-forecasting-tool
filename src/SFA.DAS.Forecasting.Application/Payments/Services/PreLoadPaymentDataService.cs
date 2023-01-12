@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
 		private readonly CloudTable _earningTable;
 		private readonly CloudTable _earningTableNoCommitment;
 
-		public PreLoadPaymentDataService(IApplicationConfiguration settings)
+		public PreLoadPaymentDataService(ForecastingConfiguration settings)
         {
             var storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers
@@ -12,10 +14,10 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
     {
         private readonly IAccountProjectionRepository _accountProjectionRepository;
         private readonly ILogger<GenerateAccountProjectionHandler> _logger;
-        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ForecastingJobsConfiguration _applicationConfiguration;
 
         public GenerateAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository, ILogger<GenerateAccountProjectionHandler> logger,
-            IApplicationConfiguration applicationConfiguration)
+            ForecastingJobsConfiguration applicationConfiguration)
         {
             _accountProjectionRepository = accountProjectionRepository ?? throw new ArgumentNullException(nameof(accountProjectionRepository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

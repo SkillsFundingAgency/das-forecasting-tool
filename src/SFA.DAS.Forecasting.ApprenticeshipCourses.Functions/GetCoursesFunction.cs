@@ -1,30 +1,34 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers;
-using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.ApprenticeshipCourses;
 using SFA.DAS.Forecasting.Models.Estimation;
+using ExecutionContext = System.Threading.ExecutionContext;
 
 namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class GetCoursesFunction : IFunction
+    public class GetCoursesFunction
     {
-        [FunctionName("GetCoursesFunction")]
-        public static async Task Run([QueueTrigger(QueueNames.GetCourses)] RefreshCourses message,
-            TraceWriter log,
-            [Queue(QueueNames.StoreCourse)]ICollector<ApprenticeshipCourse> storeCourses,
-            ExecutionContext executionContext)
+        private readonly IGetCoursesHandler _handler;
+
+        public GetCoursesFunction(IGetCoursesHandler handler)
         {
-            await FunctionRunner.Run<GetCoursesFunction>(log, executionContext, async (container, logger) =>
-            {
-                logger.Debug("Starting GetCoursesFunction Function.");
-                var handler = container.GetInstance<GetCoursesHandler>();
-                var courses = await handler.Handle(message);
+            _handler = handler;
+        }
+        [FunctionName("GetCoursesFunction")]
+        public async Task RunAsync(
+            [QueueTrigger(QueueNames.GetCourses)] RefreshCourses message,
+            ILogger logger,
+            [Queue(QueueNames.StoreCourse)] ICollector<ApprenticeshipCourse> storeCourses)
+        {
+            
+                logger.LogInformation("Starting GetCoursesFunction Function.");
+                var courses = await _handler.Handle(message);
                 courses.ForEach(storeCourses.Add);
-                log.Info($"Finished getting courses. Got {courses.Count} courses.");
-            });
+                logger.LogInformation($"Finished getting courses. Got {courses.Count} courses.");
+            
         }
     }
 }

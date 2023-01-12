@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Messages.Projections;
 
@@ -16,11 +18,11 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         private readonly IAccountProjectionRepository _accountProjectionRepository;
         private readonly IAccountProjectionService _accountProjectionService;
 		private readonly IExpiredFundsService _expiredFundsService;
-        private readonly IApplicationConfiguration _config;
+        private readonly ForecastingJobsConfiguration _config;
         private readonly ILogger<BuildAccountProjectionHandler> _logger;
 
 
-        public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository,IAccountProjectionService accountProjectionService, IApplicationConfiguration config, IExpiredFundsService expiredFundsService, ILogger<BuildAccountProjectionHandler> logger)
+        public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository,IAccountProjectionService accountProjectionService, ForecastingJobsConfiguration config, IExpiredFundsService expiredFundsService, ILogger<BuildAccountProjectionHandler> logger)
         {
             _accountProjectionRepository = accountProjectionRepository ?? throw new ArgumentNullException(nameof(accountProjectionRepository));
             _config = config ?? throw new ArgumentNullException(nameof(config));

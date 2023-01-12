@@ -2,7 +2,8 @@
   "profiles": {
     "SFA.DAS.Forecasting.ApprenticeshipCourses.Functions": {
       "commandName": "Project",
-      "commandLineArgs": "host start"
+      "commandLineArgs": "--port 7222",
+      "launchBrowser": false
     }
   }
 }

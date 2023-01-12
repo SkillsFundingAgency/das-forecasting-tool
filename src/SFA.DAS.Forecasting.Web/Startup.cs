@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Forecasting.Application.Infrastructure.RegistrationExtensions;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Filters;
@@ -70,7 +71,7 @@ namespace SFA.DAS.Forecasting.Web
             
             services.AddApplicationServices(forecastingConfiguration);
             
-            services.AddCosmosDbServices(forecastingConfiguration);
+            services.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString);
             
             services.AddDomainServices();
 

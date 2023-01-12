@@ -8,7 +8,12 @@ using SFA.DAS.Forecasting.Models.Estimation;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers
 {
-    public class GetCoursesHandler
+    public interface IGetCoursesHandler
+    {
+        Task<List<ApprenticeshipCourse>> Handle(RefreshCourses message);
+    }
+
+    public class GetCoursesHandler : IGetCoursesHandler
     {
         private readonly IStandardsService _standardsService;
         private readonly IFrameworksService _frameworksService;

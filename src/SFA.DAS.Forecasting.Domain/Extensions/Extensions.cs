@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace SFA.DAS.Forecasting.Core
+namespace SFA.DAS.Forecasting.Domain.Extensions
 {
     public static class Extensions
     {

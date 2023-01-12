@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Infrastructure.RegistrationExtensions;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
@@ -43,7 +44,7 @@ public class WhenAddingServicesToTheContainer
             var type = provider.GetServices(typeof(IAuthorizationHandler)).ToList();
             
             Assert.IsNotNull(type);
-            type.Count.Should().Be(1);
+            type.Count.Should().Be(2);
             type.Should().ContainSingle(c => c.GetType() == typeof(EmployerAccountAuthorizationHandler));
         }
 
@@ -62,7 +63,7 @@ public class WhenAddingServicesToTheContainer
             serviceCollection.AddApplicationServices(forecastingConfiguration);
             serviceCollection.AddDomainServices();
             serviceCollection.AddOrchestrators();
-            serviceCollection.AddCosmosDbServices(forecastingConfiguration, false);
+            serviceCollection.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString, false);
             
             serviceCollection.AddDatabaseRegistration(forecastingConfiguration, configuration["Environment"]);
             serviceCollection.AddLogging();
@@ -79,8 +80,8 @@ public class WhenAddingServicesToTheContainer
                     new KeyValuePair<string, string>("ForecastingConfiguration:HashString", "ABC123"),
                     new KeyValuePair<string, string>("ForecastingConfiguration:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
                     new KeyValuePair<string, string>("AccountApiConfiguration:ApiBaseUrl", "https://localhost:1"),
-                    new KeyValuePair<string, string>("ForecastingConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
-                    new KeyValuePair<string, string>("ForecastingConfiguration:OuterApiSubscriptionKey", "test"),
+                    new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
+                    new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
                     new KeyValuePair<string, string>("Environment", "test"),
                 }
             };

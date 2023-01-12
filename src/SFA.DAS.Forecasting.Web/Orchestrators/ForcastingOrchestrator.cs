@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
         private readonly IHashingService _hashingService;
         private readonly IAccountProjectionDataSession _accountProjection;
         private readonly ICurrentBalanceRepository _balanceRepository;
-        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ForecastingConfiguration _applicationConfiguration;
         private readonly IForecastingMapper _mapper;
         private readonly ICommitmentsDataService _commitmentsDataService;
 
@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
             IHashingService hashingService,
             IAccountProjectionDataSession accountProjection,
             ICurrentBalanceRepository balanceRepository,
-            IApplicationConfiguration applicationConfiguration,
+            ForecastingConfiguration applicationConfiguration,
             IForecastingMapper mapper,
             ICommitmentsDataService commitmentsDataService
             )

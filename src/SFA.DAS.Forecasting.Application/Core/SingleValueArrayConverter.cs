@@ -5,7 +5,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace SFA.DAS.Forecasting.Core
+namespace SFA.DAS.Forecasting.Application.Core
 {
 	public class SingleValueArrayConverter<T> : JsonConverter
 	{

@@ -65,8 +65,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
 
             _orchestrator = new EstimationOrchestrator(_accountEstimationProjectionRepository.Object,
                 Mock.Of<IAccountEstimationRepository>(), _hashingService.Object, _currentBalanceRepository.Object,
-                Mock.Of<IApprenticeshipCourseDataService>(), _expiredFundsService.Object,
-                Mock.Of<IApplicationConfiguration>());
+                Mock.Of<IApprenticeshipCourseDataService>(), _expiredFundsService.Object);
         }
 
         [TestCase(100, 100, 100, 100)]

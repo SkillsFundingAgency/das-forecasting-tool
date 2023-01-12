@@ -2,8 +2,10 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
 
