@@ -1,31 +1,25 @@
 ﻿using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Forecasting.Functions.Framework;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class RefreshApprenticeshipsForEmployerHttpFunction : IFunction
+    public class RefreshApprenticeshipsForEmployerHttpFunction 
     {
         [FunctionName("RefreshApprenticeshipsForEmployerHttpFunction")]
-        public static async Task<string> Run(
+        public void Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "RefreshApprenticeshipHttpTrigger")]HttpRequestMessage req,
             [Queue(QueueNames.RefreshEmployersForApprenticeshipUpdate)] ICollector<string> message,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+            ILogger logger)
 
         {
-            return FunctionRunner.Run<RefreshApprenticeshipsForEmployerHttpFunction, string>(writer, executionContext,
-                (container, logger) =>
-                {
-                    logger.Debug("Triggering run of refresh apprenticeships for employers.");
-                    message.Add("RefreshApprenticeshipsForEmployerHttp");
-                    return "Triggering run of refresh apprenticeships for employers.";
-                });
+            
+                logger.LogDebug("Triggering run of refresh apprenticeships for employers.");
+                message.Add("RefreshApprenticeshipsForEmployerHttp");
+        
 
         }
     }

@@ -65,7 +65,7 @@ public class WhenAddingServicesToTheContainer
             serviceCollection.AddOrchestrators();
             serviceCollection.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString, false);
             
-            serviceCollection.AddDatabaseRegistration(forecastingConfiguration, configuration["Environment"]);
+            serviceCollection.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, configuration["Environment"]);
             serviceCollection.AddLogging();
         }
 
@@ -82,7 +82,7 @@ public class WhenAddingServicesToTheContainer
                     new KeyValuePair<string, string>("AccountApiConfiguration:ApiBaseUrl", "https://localhost:1"),
                     new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
                     new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
-                    new KeyValuePair<string, string>("Environment", "test"),
+                    new KeyValuePair<string, string>("EnvironmentName", "test"),
                 }
             };
 

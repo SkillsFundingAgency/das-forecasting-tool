@@ -58,8 +58,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(
                 _employerCommitmentRepostiory.Object,
                 _logger.Object, 
-                _paymentMapper.Object, 
-                new Apprenticeship.Mapping.ApprenticeshipMapping(), _queueServiceMock.Object);
+                _paymentMapper.Object, _queueServiceMock.Object);
         }
 
         [Test]
@@ -122,7 +121,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _employerCommitment = new EmployerCommitment(_commitmentModel);
             _employerCommitmentRepostiory.Setup(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId))
                 .ReturnsAsync(_employerCommitment);
-            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object, _logger.Object, _paymentMapper.Object, new Apprenticeship.Mapping.ApprenticeshipMapping(), _queueServiceMock.Object);
+            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object, _logger.Object, _paymentMapper.Object,  _queueServiceMock.Object);
 
             //Act
             await _handler.Handle(_message, _allowProjectionQueueName);

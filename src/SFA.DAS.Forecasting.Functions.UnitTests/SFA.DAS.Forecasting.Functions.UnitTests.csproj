@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.ApprenticeshipCourses.Functions\SFA.DAS.Forecasting.ApprenticeshipCourses.Functions.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Commitments.Functions\SFA.DAS.Forecasting.Commitments.Functions.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
   </ItemGroup>
 </Project>

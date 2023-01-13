@@ -5,9 +5,9 @@ using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Application.Apprenticeship.Mapping
 {
-    public class ApprenticeshipMapping
+    public static class ApprenticeshipMapping
     {
-        public CommitmentModel MapToCommitment(ApprenticeshipMessage message)
+        public static CommitmentModel MapToCommitment(ApprenticeshipMessage message)
         {
             var model = new CommitmentModel
             {

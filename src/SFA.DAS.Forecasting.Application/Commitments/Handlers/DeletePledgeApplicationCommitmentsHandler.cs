@@ -3,7 +3,11 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
 {
-    public class DeletePledgeApplicationCommitmentsHandler
+    public interface IDeletePledgeApplicationCommitmentsHandler
+    {
+        Task Handle(long employerAccountId);
+    }
+    public class DeletePledgeApplicationCommitmentsHandler : IDeletePledgeApplicationCommitmentsHandler
     {
         private readonly IEmployerCommitmentRepository _repository;
 

@@ -16,9 +16,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
 	public class QueueService: IQueueService
 	{
-	    private readonly ForecastingConfiguration _forecastingConfiguration;
+	    private readonly ForecastingJobsConfiguration _forecastingConfiguration;
 
-	    public QueueService(ForecastingConfiguration forecastingConfiguration)
+	    public QueueService(ForecastingJobsConfiguration forecastingConfiguration)
 	    {
 		    _forecastingConfiguration = forecastingConfiguration;
 	    }

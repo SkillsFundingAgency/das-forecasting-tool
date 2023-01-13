@@ -1,11 +1,14 @@
-﻿using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+﻿using System.Runtime.CompilerServices;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Approvals;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Pledges;
 
+[assembly:InternalsVisibleTo("SFA.DAS.Forecasting.Functions.UnitTests")]
 namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
+    
     internal class Mapper
     {
         internal ApprenticeshipMessage Map(Apprenticeship apprenticeship, long employerAccountId)

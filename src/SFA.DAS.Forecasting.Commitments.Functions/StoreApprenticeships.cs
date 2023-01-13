@@ -1,30 +1,27 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Application.Commitments.Handlers;
-using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
-    public class StoreApprenticeships : IFunction
+    public class StoreApprenticeships 
     {
-        [FunctionName("StoreApprenticeships")]
-        public static async Task Run(
-            [QueueTrigger(QueueNames.StoreApprenticeships)]ApprenticeshipMessage message,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+        private readonly IStoreCommitmentHandler _handler;
+
+        public StoreApprenticeships(IStoreCommitmentHandler handler)
         {
-            await FunctionRunner.Run<StoreApprenticeships>(writer, executionContext,
-                async (container, logger) =>
-                {
-                    logger.Debug($"Storing apprenticeship. Account: {message.EmployerAccountId}, apprenticeship id: {message.ApprenticeshipId}");
-                    var handler = container.GetInstance<StoreCommitmentHandler>();
-                    message.ProjectionSource = ProjectionSource.Commitment;
-                    await handler.Handle(message,QueueNames.AllowProjection);
-                    logger.Info($"Stored commitment. Apprenticeship id: {message.ApprenticeshipId}");   
-                });
+            _handler = handler;
+        }
+        [FunctionName("StoreApprenticeships")]
+        public async Task Run([QueueTrigger(QueueNames.StoreApprenticeships)]ApprenticeshipMessage message, ILogger logger)
+        {
+            logger.LogDebug($"Storing apprenticeship. Account: {message.EmployerAccountId}, apprenticeship id: {message.ApprenticeshipId}");
+            message.ProjectionSource = ProjectionSource.Commitment;
+            await _handler.Handle(message,QueueNames.AllowProjection);
+            logger.LogInformation($"Stored commitment. Apprenticeship id: {message.ApprenticeshipId}");
         }
     }
 }

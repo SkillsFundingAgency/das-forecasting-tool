@@ -11,6 +11,7 @@ using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Employer.Shared.UI;
 using SFA.DAS.Forecasting.Application.Infrastructure.RegistrationExtensions;
 using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Filters;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
@@ -44,7 +45,7 @@ namespace SFA.DAS.Forecasting.Web
                     {
                         options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
                         options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                        options.EnvironmentName = configuration["Environment"];
+                        options.EnvironmentName = configuration["EnvironmentName"];
                         options.PreFixConfigurationKeys = false;
                     }
                 );
@@ -67,7 +68,7 @@ namespace SFA.DAS.Forecasting.Web
 
             services.AddTransient<IForecastingMapper, ForecastingMapper>();
 
-            services.AddDatabaseRegistration(forecastingConfiguration, _configuration["Environment"]);
+            services.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, _configuration["Environment"]);
             
             services.AddApplicationServices(forecastingConfiguration);
             
@@ -93,7 +94,7 @@ namespace SFA.DAS.Forecasting.Web
             services.AddLogging();
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
             
-            services.AddMaMenuConfiguration("signout", identityServerConfiguration.ClientId,_configuration["Environment"]);
+            services.AddMaMenuConfiguration(RouteNames.SignOut, identityServerConfiguration.ClientId,_configuration["ResourceEnvironmentName"]);
             
             services.Configure<RouteOptions>(options =>
                 {

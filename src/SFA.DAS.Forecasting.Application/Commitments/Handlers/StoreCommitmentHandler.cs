@@ -10,10 +10,14 @@ using SFA.DAS.Forecasting.Domain.Commitments;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
 {
-    public class StoreCommitmentHandler
+    public interface IStoreCommitmentHandler
+    {
+        Task Handle(PaymentCreatedMessage message, string allowProjectionsEndpoint);
+        Task Handle(ApprenticeshipMessage message, string allowProjectionsEndpoint);
+    }
+    public class StoreCommitmentHandler : IStoreCommitmentHandler
     {
         private readonly IPaymentMapper _paymentMapper;
-        private readonly ApprenticeshipMapping _apprenticeshipMapping;
         private readonly IEmployerCommitmentRepository _repository;
         private readonly ILogger<StoreCommitmentHandler> _logger;
         private readonly IQueueService _queueService;
@@ -21,10 +25,8 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             IEmployerCommitmentRepository repository, 
             ILogger<StoreCommitmentHandler> logger, 
             IPaymentMapper paymentMapper,
-            ApprenticeshipMapping apprenticeshipMapping,
             IQueueService queueService)
         {
-            _apprenticeshipMapping = apprenticeshipMapping;
             _repository = repository;
             _logger = logger;
             _queueService = queueService;
@@ -48,7 +50,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             _logger.LogInformation($"Now storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
             await _repository.Store(commitment);
             _logger.LogInformation($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}, payment id: {message.Id}");
-            _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
+            await _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
         }
 
         public async Task Handle(ApprenticeshipMessage message, string allowProjectionsEndpoint)
@@ -60,7 +62,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
                 throw new InvalidOperationException("Apprenticeship requires CourseLevel");
 
             var commitment = await _repository.Get(message.EmployerAccountId, message.ApprenticeshipId);
-            var commitmentModel = _apprenticeshipMapping.MapToCommitment(message);
+            var commitmentModel = ApprenticeshipMapping.MapToCommitment(message);
             if (!commitment.RegisterCommitment(commitmentModel))
             {
                 _logger.LogInformation($"Not storing the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId} ");
@@ -70,7 +72,7 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Handlers
             await _repository.Store(commitment);
 
             _logger.LogInformation($"Finished adding the employer commitment. Employer: {message.EmployerAccountId}, ApprenticeshipId: {message.ApprenticeshipId}");
-            _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
+            await _queueService.SendMessageWithVisibilityDelay(message, allowProjectionsEndpoint);
         }
     }
 }

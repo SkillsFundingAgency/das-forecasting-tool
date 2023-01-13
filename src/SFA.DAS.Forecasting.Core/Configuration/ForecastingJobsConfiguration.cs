@@ -7,4 +7,6 @@ public class ForecastingJobsConfiguration
     public bool AllowTriggerProjections { get; set; }
     public int SecondsToWaitToAllowProjections { get; set; }
     public int NumberOfMonthsToProject { get; set; }
+    public string ForecastingConnectionString { get; set; }
+    public string StorageConnectionString { get; set; }
 }
