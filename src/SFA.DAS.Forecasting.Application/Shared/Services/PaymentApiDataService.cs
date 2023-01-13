@@ -7,7 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
-    public class PaymentApiDataService
+    public interface IPaymentApiDataService
+    {
+        Task<List<EarningDetails>> PaymentForPeriod(string periodId, long employerAccountId);
+    }
+    public class PaymentApiDataService : IPaymentApiDataService
     {
         private readonly IPaymentsEventsApiClient _paymentsEventsApiClient;
         private readonly ILogger<PaymentApiDataService> _logger;

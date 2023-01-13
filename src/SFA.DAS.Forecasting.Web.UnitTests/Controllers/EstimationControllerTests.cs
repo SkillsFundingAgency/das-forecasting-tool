@@ -62,7 +62,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             _controller = new EstimationController(Mock.Of<IEstimationOrchestrator>(),_addApprenticeshipOrchestrator.Object, new AddEditApprenticeshipViewModelValidator());
         }
 
-        [Test]
+        //TODO FAI-625 - refactor validator used so viewmodel validation is not on fluent validator
+        [Test(Description = "TODO needs fixing")]
         public async Task Apprenticeship_Must_Have_Course()
         {
             var vm = new AddEditApprenticeshipsViewModel

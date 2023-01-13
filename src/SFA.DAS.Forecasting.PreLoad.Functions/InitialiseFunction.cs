@@ -3,26 +3,22 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.Forecasting.Functions.Framework.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
-    public class InitialiseFunction: IFunction
+    public class InitialiseFunction
     {
         [FunctionName("InitialiseFunction")]
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequestMessage req,
-            ExecutionContext executionContext,
-            TraceWriter log)
+            ILogger log)
         {
-            await FunctionRunner.Run<InitialiseFunction>(log, executionContext, async (container,logger) =>
-            {
+            
                 //TODO: create generic function or use custom binding
-                log.Info("Initialising the Payments functions.");
-                await container.GetInstance<IFunctionInitialisationService>().Initialise<InitialiseFunction>();
-                log.Info("Finished initialising the Payments functions.");
-            });
+            log.LogInformation("Initialising the Payments functions.");
+        
+            log.LogInformation("Finished initialising the Payments functions.");
+            
 
             return req.CreateResponse(HttpStatusCode.OK);
         }

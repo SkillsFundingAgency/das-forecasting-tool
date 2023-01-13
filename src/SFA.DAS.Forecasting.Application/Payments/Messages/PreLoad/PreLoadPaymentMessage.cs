@@ -3,7 +3,7 @@
     public class PreLoadPaymentMessage
     {
         public long EmployerAccountId { get; set; }
-        public string HashedEmployerAccountId { get; set; }
+        //public string HashedEmployerAccountId { get; set; }
 
         public int PeriodYear { get; set; }
 

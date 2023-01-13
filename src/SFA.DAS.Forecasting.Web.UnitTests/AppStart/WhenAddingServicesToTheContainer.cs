@@ -65,7 +65,7 @@ public class WhenAddingServicesToTheContainer
             serviceCollection.AddOrchestrators();
             serviceCollection.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString, false);
             
-            serviceCollection.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, configuration["Environment"]);
+            serviceCollection.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
             serviceCollection.AddLogging();
         }
 

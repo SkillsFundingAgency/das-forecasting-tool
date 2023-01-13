@@ -10,7 +10,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
     public interface IEmployerDataService
     {
-        Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string employerId, string payrollYear, short periodMonth);
+        Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(long accountId, string payrollYear, short periodMonth);
 
         Task<List<long>> GetAllAccounts();
 
@@ -23,37 +23,33 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
     public class EmployerDataService : IEmployerDataService
     {
-        private readonly IHashingService _hashingService;
         private readonly ILogger<EmployerDataService> _logger;
         private readonly IEmployerDatabaseService _databaseService;
 
-        public EmployerDataService(IHashingService hashingService,
+        public EmployerDataService(
             ILogger<EmployerDataService> logger,
             IEmployerDatabaseService databaseService
             )
         {
-            _hashingService = hashingService;
             _logger = logger;
             _databaseService = databaseService;
         }
 
-        public async Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(string hashedAccountId, string payrollYear, short payrollMonth)
+        public async Task<List<LevySchemeDeclarationUpdatedMessage>> LevyForPeriod(long accountId, string payrollYear, short payrollMonth)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
-
             var levydeclarations = await _databaseService.GetAccountLevyDeclarations(accountId, payrollYear, payrollMonth);
 
             if (levydeclarations == null)
             {
-                _logger.LogDebug($"Account API client returned null for GetLevyDeclarations for account {hashedAccountId}, period: {payrollYear}, {payrollMonth}");
+                _logger.LogDebug($"Account API client returned null for GetLevyDeclarations for account {accountId}, period: {payrollYear}, {payrollMonth}");
                 return null;
             }
 
-            _logger.LogInformation($"Got {levydeclarations.Count} levy declarations for employer {hashedAccountId}.");
+            _logger.LogInformation($"Got {levydeclarations.Count} levy declarations for employer {accountId}.");
             var validLevyDeclarations = levydeclarations
                 .OrderByDescending(ld => ld.SubmissionDate)
                 .ToList();
-            _logger.LogInformation($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {hashedAccountId}.");
+            _logger.LogInformation($"Got {validLevyDeclarations.Count} levy declarations for period {payrollYear}, {payrollMonth} for employer {accountId}.");
             
             return validLevyDeclarations.Select(levy => new LevySchemeDeclarationUpdatedMessage
             {

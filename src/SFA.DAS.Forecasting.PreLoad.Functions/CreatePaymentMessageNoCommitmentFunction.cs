@@ -1,61 +1,59 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Shared.Services;
-using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
-    public class CreatePaymentMessageNoCommitmentFunction : IFunction
+    public class CreatePaymentMessageNoCommitmentFunction 
     {
+	    private readonly IEmployerDatabaseService _employerDatabaseService;
+
+	    public CreatePaymentMessageNoCommitmentFunction(IEmployerDatabaseService employerDatabaseService)
+	    {
+		    _employerDatabaseService = employerDatabaseService;
+	    }
         [FunctionName("CreatePaymentMessageNoCommitmentFunction")]
         [return: Queue(QueueNames.RemovePreLoadDataNoCommitment)]
-        public static async Task<PreLoadPaymentMessage> Run(
+        public async Task<PreLoadPaymentMessage> Run(
             [QueueTrigger(QueueNames.CreatePaymentMessageNoCommitment)]PreLoadPaymentMessage message,
             [Queue(QueueNames.PaymentValidatorNoCommitment)] ICollector<PaymentCreatedMessage> noCommitmentOutputQueueMessage,
-			ExecutionContext executionContext,
-            TraceWriter writer)
+			ILogger logger)
         {
-            return await FunctionRunner.Run<CreatePaymentMessageNoCommitmentFunction, PreLoadPaymentMessage>(writer, executionContext,
-                async (container, logger) =>
-                {
-                    logger.Info($"{nameof(CreatePaymentMessageFunction)} started");
+            
+            logger.LogInformation($"{nameof(CreatePaymentMessageFunction)} started");
 
-                    var dataService = container.GetInstance<IEmployerDatabaseService>();
+            var payments = await _employerDatabaseService.GetPastEmployerPayments(message.EmployerAccountId,message.PeriodYear, message.PeriodMonth);
 
-                    var payments = await dataService.GetPastEmployerPayments(message.EmployerAccountId,message.PeriodYear, message.PeriodMonth);
+            logger.LogInformation($"Got {payments.Count} payments for employer '{message.EmployerAccountId}'");
 
-                    logger.Info($"Got {payments.Count} payments for employer '{message.EmployerAccountId}'");
+			
+		    var paymentNoCommitmentCreatedMessage =
+		        payments
+                    .Select(p => CreatePayment(logger, p))
+				    .Where(p => p != null)
+				    .ToList();
+	    
 
-					
-		            var paymentNoCommitmentCreatedMessage =
-		                payments
-                            .Select(p => CreatePayment(logger, p))
-				            .Where(p => p != null)
-				            .ToList();
-	            
+	        foreach (var p in paymentNoCommitmentCreatedMessage)
+	        {
+		        noCommitmentOutputQueueMessage.Add(p);
+	        }
 
-	                foreach (var p in paymentNoCommitmentCreatedMessage)
-	                {
-		                noCommitmentOutputQueueMessage.Add(p);
-	                }
+	        logger.LogInformation($"{nameof(CreatePaymentMessageNoCommitmentFunction)} finished, Past payments created: {paymentNoCommitmentCreatedMessage.Count}");
 
-	                logger.Info($"{nameof(CreatePaymentMessageNoCommitmentFunction)} finished, Past payments created: {paymentNoCommitmentCreatedMessage.Count}");
-
-					return message;
-                });
+			return message;
         }
         
-        public static PaymentCreatedMessage CreatePayment(ILog logger, EmployerPayment payment)
+        private PaymentCreatedMessage CreatePayment(ILogger logger, EmployerPayment payment)
         {
             if (payment == null)
             {
-                logger.Warn("No payment passed to PaymentCreatedMessage");
+                logger.LogWarning("No payment passed to PaymentCreatedMessage");
                 return null;
             }
 

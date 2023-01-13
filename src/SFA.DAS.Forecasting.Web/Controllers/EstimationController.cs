@@ -96,11 +96,11 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-                var result = _validator.Validate(vm);//TODO this used to call ValidateAdd
+                var result = vm.ValidateAdd(vm);//TODO this used to call ValidateAdd
 
-                foreach (var r in result.Errors)
+                foreach (var r in result)
                 {
-                    ModelState.AddModelError(r.PropertyName, r.ErrorMessage);
+                    ModelState.AddModelError(r.Key, r.Value);
                 }
 
            

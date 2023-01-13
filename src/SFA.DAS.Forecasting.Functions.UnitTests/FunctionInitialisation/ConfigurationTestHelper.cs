@@ -16,7 +16,8 @@ public static class ConfigurationTestHelper
                 new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
                 new KeyValuePair<string, string>("ForecastingJobsConfiguration:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
                 new KeyValuePair<string, string>("ForecastingJobsConfiguration:ForecastingConnectionString", "test"),
-                new KeyValuePair<string, string>("ForecastingJobsConfiguration:StorageConnectionString", "test"),
+                new KeyValuePair<string, string>("ForecastingJobsConfiguration:StorageConnectionString", "UseDevelopmentStorage=true;"),
+                new KeyValuePair<string, string>("PaymentsEventsApiConfiguration:ApiBaseUrl", "https://localhost:2"),
                 new KeyValuePair<string, string>("EnvironmentName", "test"),
             }
         };

@@ -20,5 +20,6 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Levy.Functions\SFA.DAS.Forecasting.Levy.Functions.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.PreLoad.Functions\SFA.DAS.Forecasting.PreLoad.Functions.csproj" />
   </ItemGroup>
 </Project>

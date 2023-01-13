@@ -10,14 +10,29 @@ using SFA.DAS.Forecasting.Core.Configuration;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
 {
-    public class PreLoadPaymentDataService
+	public interface IPreLoadPaymentDataService
+	{
+		IEnumerable<EmployerPayment> GetPayments(long employerId);
+		IEnumerable<EmployerPayment> GetPaymentsNoCommitment(long employerId);
+		IEnumerable<EarningDetails> GetEarningDetails(long employerId);
+		IEnumerable<EarningDetails> GetEarningDetailsNoCommitment(long employerId);
+		Task StoreEarningDetails(long employerAccountId, EarningDetails earningDetails);
+		Task StoreEarningDetailsNoCommitment(long employerAccountId, EarningDetails earningDetails);
+		Task StorePayment(EmployerPayment payment);
+		Task StorePaymentNoCommitment(EmployerPayment payment);
+		Task DeleteEarningDetails(long employerAccountId);
+		Task DeleteEarningDetailsNoCommitment(long employerAccountId);
+		Task DeletePayment(long employerAccountId);
+		Task DeletePaymentNoCommitment(long employerAccountId);
+	}
+    public class PreLoadPaymentDataService : IPreLoadPaymentDataService
     {
         private readonly CloudTable _paymentTable;
         private readonly CloudTable _paymentTableNoCommitment;
 		private readonly CloudTable _earningTable;
 		private readonly CloudTable _earningTableNoCommitment;
 
-		public PreLoadPaymentDataService(ForecastingConfiguration settings)
+		public PreLoadPaymentDataService(ForecastingJobsConfiguration settings)
         {
             var storageAccount = CloudStorageAccount.Parse(settings.StorageConnectionString);
             var tableClient = storageAccount.CreateCloudTableClient();
