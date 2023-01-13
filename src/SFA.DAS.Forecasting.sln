@@ -19,8 +19,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.Aut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Web.AcceptanceTests", "SFA.DAS.Forecasting.Web.AcceptanceTests\SFA.DAS.Forecasting.Web.AcceptanceTests.csproj", "{53EAF7C5-7389-4F4D-BF13-073253D32CCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Functions.Framework", "SFA.DAS.Forecasting.Functions.Framework\SFA.DAS.Forecasting.Functions.Framework.csproj", "{C6C44EF9-7599-49EB-958D-00681B642C9B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Forecasting.Core", "SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj", "{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Forecasting.Payments.Functions", "SFA.DAS.Forecasting.Payments.Functions\SFA.DAS.Forecasting.Payments.Functions.csproj", "{4E2AC790-1A6F-4B56-8609-0F576BFF3613}"
@@ -97,10 +95,6 @@ Global
 		{53EAF7C5-7389-4F4D-BF13-073253D32CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53EAF7C5-7389-4F4D-BF13-073253D32CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53EAF7C5-7389-4F4D-BF13-073253D32CCD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C6C44EF9-7599-49EB-958D-00681B642C9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
