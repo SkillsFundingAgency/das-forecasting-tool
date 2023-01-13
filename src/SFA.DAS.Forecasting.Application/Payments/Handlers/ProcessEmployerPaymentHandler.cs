@@ -7,7 +7,11 @@ using SFA.DAS.Forecasting.Domain.Payments;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 {
-    public class ProcessEmployerPaymentHandler
+    public interface IProcessEmployerPaymentHandler
+    {
+        Task Handle(PaymentCreatedMessage paymentCreatedMessage, string allowProjectionsEndpoint);
+    }
+    public class ProcessEmployerPaymentHandler : IProcessEmployerPaymentHandler
     {
         private readonly IEmployerPaymentRepository _repository;
         private readonly ILogger<ProcessEmployerPaymentHandler> _logger;

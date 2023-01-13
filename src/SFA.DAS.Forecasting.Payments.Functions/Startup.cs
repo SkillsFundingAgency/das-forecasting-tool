@@ -6,11 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Forecasting.Application.Infrastructure.RegistrationExtensions;
 using SFA.DAS.Forecasting.Core.Configuration;
-using SFA.DAS.Forecasting.Levy.Functions;
-using SFA.DAS.Forecasting.Levy.Functions.StartupExtensions;
+using SFA.DAS.Forecasting.Payments.Functions;
+using SFA.DAS.Forecasting.Payments.Functions.StartupExtensions;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace SFA.DAS.Forecasting.Levy.Functions;
+namespace SFA.DAS.Forecasting.Payments.Functions;
 
 public class Startup : FunctionsStartup
 {

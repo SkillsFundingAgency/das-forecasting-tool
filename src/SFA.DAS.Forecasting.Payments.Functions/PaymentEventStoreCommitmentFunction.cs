@@ -1,28 +1,28 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Commitments.Handlers;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
-    public class PaymentEventStoreCommitmentFunction : IFunction
+    public class PaymentEventStoreCommitmentFunction
     {
-		[FunctionName("PaymentEventStoreCommitmentFunction")]
-		public static async Task Run(
-            [QueueTrigger(QueueNames.CommitmentProcessor)]PaymentCreatedMessage paymentCreatedMessage,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+        private readonly IStoreCommitmentHandler _handler;
+
+        public PaymentEventStoreCommitmentFunction(IStoreCommitmentHandler handler)
         {
-            await FunctionRunner.Run<PaymentEventStoreCommitmentFunction>(writer, executionContext,
-                async (container, logger) =>
-                {
-                    logger.Debug($"Storing commitment. Account: {paymentCreatedMessage.EmployerAccountId}, apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
-	                var handler = container.GetInstance<StoreCommitmentHandler>();
-					await handler.Handle(paymentCreatedMessage, QueueNames.AllowProjection);
-                    logger.Info($"Stored commitment. Apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
-                });
+            _handler = handler;
+        }
+		[FunctionName("PaymentEventStoreCommitmentFunction")]
+		public async Task Run(
+            [QueueTrigger(QueueNames.CommitmentProcessor)]PaymentCreatedMessage paymentCreatedMessage,
+            ILogger logger)
+        {
+            logger.LogDebug($"Storing commitment. Account: {paymentCreatedMessage.EmployerAccountId}, apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
+	        
+			await _handler.Handle(paymentCreatedMessage, QueueNames.AllowProjection);
+            logger.LogInformation($"Stored commitment. Apprenticeship id: {paymentCreatedMessage.ApprenticeshipId}");
         }
     }
 }

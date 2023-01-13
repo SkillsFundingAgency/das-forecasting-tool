@@ -11,7 +11,12 @@ using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 {
-    public class AllowAccountProjectionsHandler
+    public interface IAllowAccountProjectionsHandler
+    {
+        Task<IEnumerable<long>> AllowedEmployerAccountIds(PaymentCreatedMessage paymentCreatedMessage);
+
+    }
+    public class AllowAccountProjectionsHandler : IAllowAccountProjectionsHandler
     {
         private readonly IEmployerPaymentsRepository _paymentsRepository;
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
