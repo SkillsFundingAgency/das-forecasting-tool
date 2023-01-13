@@ -12,7 +12,11 @@ using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 {
-    public class AllowAccountProjectionsHandler
+    public interface IAllowAccountProjectionsHandler
+    {
+        Task<bool> Allow(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration);
+    }
+    public class AllowAccountProjectionsHandler : IAllowAccountProjectionsHandler
     {
         public IEmployerProjectionAuditService AuditService;
         public ILevyPeriodRepository Repository { get; }

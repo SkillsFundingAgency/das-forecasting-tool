@@ -1,36 +1,37 @@
-using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Application.Levy.Validation;
-using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class LevyDeclarationEventNoProjectionValidatorFunction: IFunction
+    public class LevyDeclarationEventNoProjectionValidatorFunction
     {
+        private readonly IValidator<LevySchemeDeclarationUpdatedMessage> _validator;
+
+        public LevyDeclarationEventNoProjectionValidatorFunction(IValidator<LevySchemeDeclarationUpdatedMessage> validator)
+        {
+            _validator = validator;
+            //LevyDeclarationEventValidator: AbstractValidator<LevySchemeDeclarationUpdatedMessage>
+        }
         [FunctionName("LevyDeclarationEventNoProjectionValidatorFunction")]
         [return:Queue(QueueNames.StoreLevyDeclarationNoProjection)]
-        public static LevySchemeDeclarationUpdatedMessage Run(
+        public LevySchemeDeclarationUpdatedMessage Run(
             [QueueTrigger(QueueNames.ValidateLevyDeclarationNoProjection)]LevySchemeDeclarationUpdatedMessage message, 
-            TraceWriter writer, ExecutionContext executionContext)
+            ILogger logger, ExecutionContext executionContext)
         {
-            return FunctionRunner.Run<LevyDeclarationEventNoProjectionValidatorFunction, LevySchemeDeclarationUpdatedMessage>(writer, executionContext,
-                (container, logger) =>
-                {
-                    var validationResults = container.GetInstance<LevyDeclarationEventValidator>()
-                        .Validate(message);
-                    if (!validationResults.IsValid)
-                    {
-                        logger.Warn($"Past levy declaration event failed superficial validation. Employer id: {message.AccountId}, Period: {message.PayrollMonth}, {message.PayrollYear}, Scheme: {message.EmpRef}.");
-                        return null;
-                    }
+            var validationResults = _validator
+                .Validate(message);
+            if (!validationResults.IsValid)
+            {
+                logger.LogWarning($"Past levy declaration event failed superficial validation. Employer id: {message.AccountId}, Period: {message.PayrollMonth}, {message.PayrollYear}, Scheme: {message.EmpRef}.");
+                return null;
+            }
 
-                    logger.Info($"Validated {nameof(LevySchemeDeclarationUpdatedMessage)} for EmployerAccountId: {message.AccountId}");
-                    return  message;
-                });
+            logger.LogInformation($"Validated {nameof(LevySchemeDeclarationUpdatedMessage)} for EmployerAccountId: {message.AccountId}");
+            return  message;
+            
         }
     }
 }

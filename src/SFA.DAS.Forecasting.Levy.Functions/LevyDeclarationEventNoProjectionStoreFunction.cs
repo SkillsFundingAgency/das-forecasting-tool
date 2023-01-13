@@ -1,31 +1,30 @@
-using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Levy.Handlers;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.Levy.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class LevyDeclarationEventNoProjectionStoreFunction : IFunction
+    public class LevyDeclarationEventNoProjectionStoreFunction
     {
-        [FunctionName("LevyDeclarationEventNoProjectionStoreFunction")]
-        public static async Task Run(
-            [QueueTrigger(QueueNames.StoreLevyDeclarationNoProjection)]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedMessage, ExecutionContext executionContext,
-            TraceWriter writer)
+        private readonly IStoreLevyDeclarationHandler _handler;
+
+        public LevyDeclarationEventNoProjectionStoreFunction(IStoreLevyDeclarationHandler handler)
         {
-            await FunctionRunner.Run<LevyDeclarationEventNoProjectionStoreFunction>(writer, executionContext,
-                async (container, logger) =>
-                {
-                    logger.Debug("Getting levy declaration handler from container.");
-                    var handler = container.GetInstance<StoreLevyDeclarationHandler>();
-                    if (handler == null)
-                        throw new InvalidOperationException($"Failed to get levy handler from container.");
-                    await handler.Handle(levySchemeUpdatedMessage, string.Empty);
-                    logger.Info($"Finished handling past levy declaration for EmployerAccountId: {levySchemeUpdatedMessage.AccountId}, PayrollYear: {levySchemeUpdatedMessage.PayrollYear}, month: {levySchemeUpdatedMessage.PayrollMonth}, scheme: {levySchemeUpdatedMessage.EmpRef}");
-                });
+            _handler = handler;
+        }
+        [FunctionName("LevyDeclarationEventNoProjectionStoreFunction")]
+        public async Task Run(
+            [QueueTrigger(QueueNames.StoreLevyDeclarationNoProjection)]LevySchemeDeclarationUpdatedMessage levySchemeUpdatedMessage,
+            ILogger logger)
+        {
+            
+            logger.LogDebug("Getting levy declaration handler from container.");
+            
+            await _handler.Handle(levySchemeUpdatedMessage, string.Empty);
+            logger.LogDebug($"Finished handling past levy declaration for EmployerAccountId: {levySchemeUpdatedMessage.AccountId}, PayrollYear: {levySchemeUpdatedMessage.PayrollYear}, month: {levySchemeUpdatedMessage.PayrollMonth}, scheme: {levySchemeUpdatedMessage.EmpRef}");
         }
     }
 }

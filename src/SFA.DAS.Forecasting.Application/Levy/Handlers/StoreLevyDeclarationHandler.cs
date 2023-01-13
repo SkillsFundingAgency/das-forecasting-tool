@@ -9,7 +9,11 @@ using SFA.DAS.Forecasting.Models.Levy;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 {
-    public class StoreLevyDeclarationHandler
+    public interface IStoreLevyDeclarationHandler
+    {
+        Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration, string allowProjectionsEndpoint);
+    }
+    public class StoreLevyDeclarationHandler : IStoreLevyDeclarationHandler
     {
         private readonly ILogger<StoreLevyDeclarationHandler> _logger;
         private readonly IQueueService _queueService;
