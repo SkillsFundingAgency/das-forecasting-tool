@@ -13,7 +13,11 @@ using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 {
-    public class BuildAccountProjectionHandler
+    public interface IBuildAccountProjectionHandler
+    {
+        Task Handle(GenerateAccountProjectionCommand message);
+    }
+    public class BuildAccountProjectionHandler : IBuildAccountProjectionHandler
     {
         private readonly IAccountProjectionRepository _accountProjectionRepository;
         private readonly IAccountProjectionService _accountProjectionService;

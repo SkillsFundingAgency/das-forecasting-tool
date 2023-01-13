@@ -8,19 +8,15 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
     public class AccountBalanceService : IAccountBalanceService
     {
         private readonly IAccountApiClient _accountApiClient;
-        private readonly IHashingService _hashingService;
-
-        public AccountBalanceService(IAccountApiClient accountApiClient,
-            IHashingService hashingService)
+        
+        public AccountBalanceService(IAccountApiClient accountApiClient)
         {
             _accountApiClient = accountApiClient;
-            _hashingService = hashingService;
         }
 
         public async Task<Models.Balance.BalanceModel> GetAccountBalance(long accountId)
         {
-            var hashedAccountId = _hashingService.HashValue(accountId);
-            var account = await _accountApiClient.GetAccount(hashedAccountId);
+            var account = await _accountApiClient.GetAccount(accountId);
             
             return new Models.Balance.BalanceModel
             {

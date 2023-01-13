@@ -1,39 +1,34 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Projections.Handlers;
-using SFA.DAS.Forecasting.Application.Shared;
-using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Projections.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class GetAccountBalanceFunction : IFunction
+    public class GetAccountBalanceFunction 
     {
-        static GetAccountBalanceFunction()
+        private readonly IGetAccountBalanceHandler _handler;
+
+        public GetAccountBalanceFunction(IGetAccountBalanceHandler handler)
         {
-            ApplicationHelper.AssemblyBindingRedirect();
+            _handler = handler;
         }
 
         [FunctionName("GetAccountBalanceFunction")]
         [return: Queue(QueueNames.BuildProjections)]
-        public static async Task<GenerateAccountProjectionCommand> Run(
+        public async Task<GenerateAccountProjectionCommand> Run(
             [QueueTrigger(QueueNames.GetAccountBalance)]GenerateAccountProjectionCommand message,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+            ILogger logger)
         {
-            return await FunctionRunner.Run<GetAccountBalanceFunction, GenerateAccountProjectionCommand>(writer, executionContext, async (container, logger) =>
-                {
-                    logger.Debug("Resolving GetAccountBalanceHandler from container.");
-                    var handler = container.GetInstance<GetAccountBalanceHandler>();
-                    if (handler == null)
-                        throw new InvalidOperationException("Failed to resolve GetAccountBalanceHandler from container.");
-                    await handler.Handle(message);
-                    logger.Info($"Finished generating the account projection in response to payment run: {message.EmployerAccountId}");
-                    return message;
-                });
+            
+            logger.LogDebug("Resolving GetAccountBalanceHandler from container.");
+            
+            await _handler.Handle(message);
+            logger.LogInformation($"Finished generating the account projection in response to payment run: {message.EmployerAccountId}");
+            return message;
+            
         }
     }
 }

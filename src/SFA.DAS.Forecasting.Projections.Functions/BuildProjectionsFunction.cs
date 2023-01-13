@@ -1,31 +1,29 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Projections.Handlers;
-using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Projections.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class BuildProjectionsFunction : IFunction
+    public class BuildProjectionsFunction 
     {
-        [FunctionName("BuildProjectionsFunction")]
-        public static async Task Run(
-            [QueueTrigger(QueueNames.BuildProjections)]GenerateAccountProjectionCommand message,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+        private readonly IBuildAccountProjectionHandler _handler;
+
+        public BuildProjectionsFunction(IBuildAccountProjectionHandler handler)
         {
-            await FunctionRunner.Run<GenerateProjectionsFunction>(writer, executionContext, async (container, logger) =>
-                {
-                    logger.Debug("Resolving BuildAccountProjectionHandler from container.");
-                    var handler = container.GetInstance<BuildAccountProjectionHandler>();
-                    if (handler == null)
-                        throw new InvalidOperationException("Failed to resolve BuildAccountProjectionHandler from container.");
-                    await handler.Handle(message);
-                    logger.Info($"Finished building the account projection for employer: {message.EmployerAccountId}");
-                });
+            _handler = handler;
+        }
+        [FunctionName("BuildProjectionsFunction")]
+        public async Task Run(
+            [QueueTrigger(QueueNames.BuildProjections)]GenerateAccountProjectionCommand message,
+            ILogger logger)
+        {
+            logger.LogDebug("Resolving BuildAccountProjectionHandler from container.");
+            await _handler.Handle(message);
+            logger.LogInformation($"Finished building the account projection for employer: {message.EmployerAccountId}");
+
         }
     }
 }

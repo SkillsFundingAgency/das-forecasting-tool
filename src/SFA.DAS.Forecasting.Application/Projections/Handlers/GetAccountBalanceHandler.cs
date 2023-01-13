@@ -7,7 +7,11 @@ using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 {
-    public class GetAccountBalanceHandler
+    public interface IGetAccountBalanceHandler
+    {
+        Task Handle(GenerateAccountProjectionCommand message);
+    }
+    public class GetAccountBalanceHandler : IGetAccountBalanceHandler
     {
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly ILogger<GetAccountBalanceHandler> _logger;
