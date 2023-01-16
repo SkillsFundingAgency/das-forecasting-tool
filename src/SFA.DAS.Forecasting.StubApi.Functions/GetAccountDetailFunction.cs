@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
-    public static class GetAccountDetailFunction
+    public class GetAccountDetailFunction
     {
         [FunctionName("GetAccountDetailFunction")]
-        public static HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "accounts/{accountId}")]HttpRequestMessage req, long accountId,
-            TraceWriter log)
+        public HttpResponseMessage Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "accounts/{accountId}")]HttpRequestMessage req, long accountId,
+            ILogger log)
         {
             var vm = new AccountDetailViewModel
             {

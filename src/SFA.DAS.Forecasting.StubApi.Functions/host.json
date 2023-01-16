@@ -1,8 +1,11 @@
 {
-  "queues": {
-    "batchSize": 16,
-    "newBatchThreshold": 8,
-    "maxPollingInterval": 2000,
-    "maxDequeueCount": 2
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
   }
 }

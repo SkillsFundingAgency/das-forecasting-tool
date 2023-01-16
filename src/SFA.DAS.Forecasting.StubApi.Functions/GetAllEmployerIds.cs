@@ -7,22 +7,30 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
-    public static class GetAllEmployerIds
+    public class GetAllEmployerIds
     {
-        [FunctionName("GetAllEmployerIds")]
-        public static async Task<IEnumerable<long>> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "employer/ids")]HttpRequestMessage req, 
-            TraceWriter writer)
-        {
-            writer.Info("C# HTTP trigger function processed a request.");
+        private readonly IConfiguration _configuration;
 
-            if (ConfigurationManager.AppSettings["StubData"] != null && ConfigurationManager.AppSettings["StubData"]
+        public GetAllEmployerIds(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        [FunctionName("GetAllEmployerIds")]
+        public async Task<IEnumerable<long>> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "employer/ids")]HttpRequestMessage req, 
+            ILogger logger)
+        {
+            logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            if (_configuration["StubData"] != null && _configuration["StubData"]
                     .Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
-                return CreateFakeAccounts();
+                return CreateFakeAccounts(_configuration["AccountStubLimit"]);
             }
 
             return
@@ -31,9 +39,9 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
                     .Distinct();
         }
 
-        private static List<long> CreateFakeAccounts()
+        private static List<long> CreateFakeAccounts(string accountStubLimit)
         {
-            var numberOfAccounts = Convert.ToInt32(ConfigurationManager.AppSettings["AccountStubLimit"]);
+            var numberOfAccounts = Convert.ToInt32(accountStubLimit);
             var accountList = new List<long>();
             var randomNumber = new Random();
 

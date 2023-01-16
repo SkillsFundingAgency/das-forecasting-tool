@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.EAS.Account.Api.Types;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
-    public static class GetLevyFunction
+    public class GetLevyFunction
     {
         [FunctionName("GetLevyFunction")]
-        public static async Task<HttpResponseMessage> Run([
+        public async Task<HttpResponseMessage> Run([
             HttpTrigger(AuthorizationLevel.Function, "get",
-            Route = "accounts/{accountId}/levy")]HttpRequestMessage req, string accountId, TraceWriter log)
+            Route = "accounts/{accountId}/levy")]HttpRequestMessage req, string accountId, ILogger log)
         {
-            log.Info($"C# HTTP trigger for {nameof(GetLevyFunction)} GET.");
+            log.LogInformation($"C# HTTP trigger for {nameof(GetLevyFunction)} GET.");
 
             IEnumerable<LevyDeclarationViewModel> data;
             StubDataStore.LevyData.TryGetValue(accountId, out data);

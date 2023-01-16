@@ -4,18 +4,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
-    public static class AddApprenticeshipsFunction
+    public class AddApprenticeshipsFunction
     {
         [FunctionName("AddApprenticeshipsFunction")]
-        public static async Task<HttpResponseMessage> Run([
+        public async Task<HttpResponseMessage> Run([
             HttpTrigger(AuthorizationLevel.Function, "post",
-            Route = "data/employer/{employerAccountId}/apprenticeships")]HttpRequestMessage req, string employerAccountId, TraceWriter writer)
+            Route = "data/employer/{employerAccountId}/apprenticeships")]HttpRequestMessage req, string employerAccountId, ILogger logger)
         {
-            writer.Info($"C# HTTP trigger for {nameof(AddApprenticeshipsFunction)} POST.");
+            logger.LogInformation($"C# HTTP trigger for {nameof(AddApprenticeshipsFunction)} POST.");
 
             var body = await req.Content.ReadAsStringAsync();
 
