@@ -24,4 +24,29 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Messages\SFA.DAS.Forecasting.Messages.csproj" />
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Apprenticeship\Feature\LoadApprenticeships.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>LoadApprenticeships.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>BuildProjectionsFromLevyDeclarations.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Levy\Feature\PreLoadLevyEvents.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>PreLoadLevyEvents.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Levy\Feature\ProcessLevyEvent.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Remove="Payments\Feature\Build Projections From Payment Run.feature" />
+    <SpecFlowFeatureFiles Remove="Payments\Feature\PreLoadPayments.feature" />
+    <SpecFlowFeatureFiles Remove="Payments\Feature\Process Payment Event.feature" />
+    
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Payments\Feature" />
+  </ItemGroup>
 </Project>
