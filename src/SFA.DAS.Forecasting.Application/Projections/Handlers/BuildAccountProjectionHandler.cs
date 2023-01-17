@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
         {
             var projections = await _accountProjectionRepository.InitialiseProjection(message.EmployerAccountId);
 
-            var numberOfMonthsToProject = _config.NumberOfMonthsToProject;
+            var numberOfMonthsToProject = ForecastingJobsConfiguration.NumberOfMonthsToProject;
 
             DateTime startDate;
 

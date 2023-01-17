@@ -18,6 +18,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
     }
     public class AllowAccountProjectionsHandler : IAllowAccountProjectionsHandler
     {
+        private const int SecondsToWaitToAllowProjections = 60;
         private readonly IEmployerPaymentsRepository _paymentsRepository;
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
         private readonly ILogger<AllowAccountProjectionsHandler> _logger;
@@ -129,7 +130,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             var allowPaymentProjections = !hasReceivedRecentPayment;
             
             var allowCommitmentProjections =
-                lastCommitmentReceivedTime.Value.AddSeconds(_applicationConfiguration.SecondsToWaitToAllowProjections) <=
+                lastCommitmentReceivedTime.Value.AddSeconds(SecondsToWaitToAllowProjections) <=
                 DateTime.UtcNow;
 
             return allowPaymentProjections && allowCommitmentProjections;

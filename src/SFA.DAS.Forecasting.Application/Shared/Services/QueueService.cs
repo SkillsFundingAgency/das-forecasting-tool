@@ -16,6 +16,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
 	public class QueueService: IQueueService
 	{
+		private const int SecondsToWaitToAllowProjections = 60;
 	    private readonly ForecastingJobsConfiguration _forecastingConfiguration;
 
 	    public QueueService(ForecastingJobsConfiguration forecastingConfiguration)
@@ -26,7 +27,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 	    public async Task SendMessageWithVisibilityDelay<T>(T message, string queueName)
 	        where T : class
 	    {
-            await SendMessageWithVisibilityDelay(message,queueName,TimeSpan.FromSeconds(_forecastingConfiguration.SecondsToWaitToAllowProjections));
+            await SendMessageWithVisibilityDelay(message,queueName,TimeSpan.FromSeconds(SecondsToWaitToAllowProjections));
 	    }
 
         public async Task SendMessageWithVisibilityDelay<T>(T message, string queueName, TimeSpan visibilityDelay) 
