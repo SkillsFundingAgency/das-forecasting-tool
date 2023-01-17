@@ -8,5 +8,9 @@
     "StorageConnectionString": "UseDevelopmentStorage=true;",
     "ConfigNames": "SFA.DAS.Forecasting.Web.Jobs",
     "EnvironmentName": "LOCAL"
+  },
+  "Host": {
+    "LocalHttpPort": 7073,
+    "CORS": "*"
   }
 }
