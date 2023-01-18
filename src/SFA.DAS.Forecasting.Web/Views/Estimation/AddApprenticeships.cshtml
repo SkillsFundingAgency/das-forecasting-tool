@@ -160,17 +160,20 @@
                 </div>
 
                 <div class="govuk-button-group">
-
                     <button type="submit" id="save" name="save" value="Create" class="govuk-button save">Check if I can fund these</button>
                     <a asp-route="@RouteNames.EstimatedCost" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimateName="@Model.EstimationName" aria-label="Cancel" class="govuk-link govuk-link--no-visited-state">
                         Cancel
                     </a>
-
                 </div>
 
         </form>
     </div>
 </div>
+
+@section javascript {
+    <script src="libs/accessible-autocomplete/accessible-autocomplete.min.js"></script>
+    <script src="/js/apprenticeship.js" no-cdn></script>
+}
 
 @functions {
     public string valueOrEmpty(int value)
