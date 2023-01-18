@@ -21,10 +21,7 @@ using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
-using SFA.DAS.Provider.Events.Api.Client;
-using SFA.DAS.Provider.Events.Api.Client.Configuration;
 using AccountApiConfiguration = SFA.DAS.Forecasting.Core.Configuration.AccountApiConfiguration;
-using PaymentsEventsApiConfiguration = SFA.DAS.Provider.Events.Api.Client.Configuration.PaymentsEventsApiConfiguration;
 
 namespace SFA.DAS.Forecasting.Projections.Functions.StartupExtensions;
 

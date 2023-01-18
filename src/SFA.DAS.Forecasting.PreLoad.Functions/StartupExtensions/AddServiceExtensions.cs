@@ -7,7 +7,6 @@ using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Provider.Events.Api.Client;
 using SFA.DAS.Provider.Events.Api.Client.Configuration;
-using PaymentsEventsApiConfiguration = SFA.DAS.Provider.Events.Api.Client.Configuration.PaymentsEventsApiConfiguration;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions.StartupExtensions;
 
@@ -19,7 +18,8 @@ public static class AddServiceExtensions
         builder.AddTransient<IPreLoadPaymentDataService, PreLoadPaymentDataService>();
         builder.AddTransient<IPaymentApiDataService, PaymentApiDataService>();
 
-        builder.AddHttpClient<IPaymentsEventsApiClient, PaymentsEventsApiClient>();
+        builder.AddTransient<IPaymentsEventsApiClientFactory, PaymentsEventsApiClientFactory>();
+        builder.AddTransient(services=> services.GetRequiredService<IPaymentsEventsApiClientFactory>().CreateClient());
     }
 }
 
@@ -34,7 +34,7 @@ public static class AddConfigurationExtension
         services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
 
         services.Configure<PaymentsEventsApiConfiguration>(builtConfiguration.GetSection(nameof(PaymentsEventsApiConfiguration)));
-        services.AddSingleton<IPaymentsEventsApiConfiguration>(cfg =>
+        services.AddSingleton<IPaymentsEventsApiClientConfiguration>(cfg =>
             builtConfiguration.GetSection(nameof(PaymentsEventsApiConfiguration))
                 .Get<PaymentsEventsApiConfiguration>());
     }

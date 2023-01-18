@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Forecasting.Core.Configuration
 {
-    public class PaymentsEventsApiConfiguration : IPaymentsEventsApiConfiguration
+    public class PaymentsEventsApiConfiguration : IPaymentsEventsApiClientConfiguration
     {
         public string ClientToken { get; set; }
         public string ApiBaseUrl { get; set; }
