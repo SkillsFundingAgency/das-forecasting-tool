@@ -1,0 +1,16 @@
+.app-related-section {
+    border-top: 10px solid #1d70b8;
+    padding-top: 15px;
+}
+
+.app-survey-details {
+    background: #1d70b8;
+}
+
+.app-survey-details__summary {
+    margin: 5px 10px 6px;
+}
+
+.app-survey-details__wrapper {
+
+}
