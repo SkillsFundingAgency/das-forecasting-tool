@@ -8,69 +8,36 @@
     ViewBag.GaData.Vpv = "/forecasting/estimation/page-balance";
 }
 
-<div class="grid-row funding-projection">
-    <div class="column-two-thirds">
-        <div class="hgroup form-group">
-            <h1 class="heading-xlarge">
-                Funding projection
-            </h1>
-            <p>
-                The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
-            </p>
-
-            <details>
-                <summary>More information</summary>
-                <div>
-                    <p>
-                        These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
-                    <p />
-                    <p>
-                        The projection includes all apprenticeships in your account that you’ve agreed to fund: including the apprenticeships funded by your pledges.
-                    </p>
-                </div>
-            </details>
-            <a asp-route="@RouteNames.StartEstimation" asp-route-hashedAccountId="@Model.HashedAccountId" class="button margin-top-x2">Estimate apprenticeships you could fund</a>
-        </div>
-    </div>
-
-    <div class="column-one-third">
-        <div class="related">
-            <h3 class="heading-small">Download data as a spreadsheet</h3>
-            <div class="form-group">
-                <ul class="list list-links">
-
-                    <li>
-                        <a id="apprenticeship_csvdownload" asp-route="@RouteNames.DownloadApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" >Apprenticeship details in the account projection</a>
-                        <p>
-                            The download includes the details of apprenticeships used to create this projection
-                        </p>
-                    </li>
-
-                    <li>
-                        <a id="projections_csvdownload" asp-route="@RouteNames.DownloadCsv" asp-route-hashedAccountId="@Model.HashedAccountId">Account projection table</a>
-                        <p>
-                            The download includes the details of the data in the table shown on this page
-                        </p>
-                    </li>
-                </ul>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Funding projection
+        </h1>
+        <p>
+            The figures below show the estimated funds that may be available to you for the duration of your apprenticeships.
+        </p>
+        <details class="govuk-details" data-module="govuk-details">
+            <summary class="govuk-details__summary">More information</summary>
+                <div class="govuk-details__text">
+                <p>
+                    These figures are based on the current information in your account and the data provided by your training provider which is used to calculate funding.
+                </p>
+                <p>
+                    The projection includes all apprenticeships in your account that you've agreed to fund: including the apprenticeships funded by your pledges.
+                </p>
             </div>
-        </div>
-    </div>
-</div>
+        </details>
+        <p><a asp-route="@RouteNames.StartEstimation" asp-route-hashedAccountId="@Model.HashedAccountId" class="govuk-button">Estimate apprenticeships you could fund</a></p>
 
-<!-- CHART -->
-
-<div class="grid-row">
-    <div class="column-two-thirds">
         @if (@Model.ProjectionDate.HasValue)
         {
-            <div class="panel projection-date">
+            <div class="govuk-inset-text">
                 <p>Your projection was last updated on @Model.ProjectionDate.Value.ToGdsFormatFull()</p>
             </div>
         }
         else
         {
-            <div class="panel projection-date">
+            <div class="govuk-inset-text">
                 <p>
                     If you have declared your levy and/or made a payment to your training provider, your account will show the projection when it next updates. The account is updated twice a month.
                 </p>
@@ -79,65 +46,84 @@
                 </p>
             </div>
         }
-    </div>
-</div>
-<div class="grid-row">
-    <div class="column-full">
-        <div class="chart-container" aria-hidden="true">
-            <div class="chart-data"
-                 data-dates="@Model.DatesStringArray"
-                 data-values="@Model.BalanceStringArray">
 
-            </div>
-            <h2 class="heading-large">Funding projection chart</h2>
-            <p>Account funds over time</p>
-            <div id="chart" aria-hidden="true"></div>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="app-related-section">
+            <h2 class="govuk-heading-s">Download data as a spreadsheet</h2>
+            <ul class="govuk-list">
+                <li>
+                    <a id="apprenticeship_csvdownload" asp-route="@RouteNames.DownloadApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" class="govuk-link">Apprenticeship details in the account projection</a>
+                    <p>
+                        The download includes the details of apprenticeships used to create this projection
+                    </p>
+                </li>
+                <li>
+                    <a id="projections_csvdownload" asp-route="@RouteNames.DownloadCsv" asp-route-hashedAccountId="@Model.HashedAccountId" class="govuk-link">Account projection table</a>
+                    <p>
+                        The download includes the details of the data in the table shown on this page
+                    </p>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
 
+<!-- CHART -->
+
+<div class="chart-container" aria-hidden="true">
+    <div class="chart-data" data-dates="@Model.DatesStringArray" data-values="@Model.BalanceStringArray"></div>
+    <h2 class="govuk-heading-l">Funding projection chart</h2>
+    <p>Account funds over time</p>
+    <div id="chart" aria-hidden="true"></div>
+</div>
+
+
 <!-- Projection -->
-<h4 class="heading-large">Your account projection</h4>
-<div class="grid-row" id="account-projection">
-    <div class="column-two-thirds">
+<h2 class="govuk-heading-l">Your account projection</h2>
+<div class="govuk-grid-row" id="account-projection">
+    <div class="govuk-grid-column-two-thirds">
         <p>A month by month projection of your account balance.</p>
         <p>
-            <span class="bold">Current Balance: </span> @Model.CurrentBalance.FormatCost()
+            <b>Current balance: </b> @Model.CurrentBalance.FormatCost()
         </p>
     </div>
-    <div class="column-one-third pending-completion-payments">
-        <div class="panel panel-width-thin">
-            <p>Overdue completion payments</p>
-            <span class="heading-medium">@Model.OverdueCompletionPayments.FormatCost()</span>
-            <details>
-                <summary>What does this figure mean?</summary>
-                <div class="">
-                    <p>This is the value of your overdue completion payments where the apprenticeships have overrun the planned completion date.</p>
+    <div class="govuk-grid-column-one-third pending-completion-payments">
+        <div class="govuk-inset-text">
+            <p class="govuk-body-s govuk-!-margin-0">Overdue completion payments</p>
+            <span class="govuk-heading-m">@Model.OverdueCompletionPayments.FormatCost()</span>
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">What does this figure mean?</summary>
+                <div class="govuk-!-padding-top-2">
+                    <p class="govuk-!-margin-0 govuk-body-s">This is the value of your overdue completion payments where the apprenticeships have overrun the planned completion date.</p>
                 </div>
             </details>
         </div>
     </div>
 </div>
 
-<div class="info-summary">
-    <h3 class="heading-medium">
-        Funds will expire from May 2019
+
+<div class="govuk-notification-banner govuk-notification-banner--important">
+  <div class="govuk-notification-banner__content">
+    <h3 class="govuk-notification-banner__heading">
+      Funds will expire from May 2019
     </h3>
     <p>
-        The account projection table now includes an estimate of the funds that will expire from May 2019 onwards. Look at <a asp-route="@RouteNames.ExpiredFundsGuidance" asp-route-hashedAccountId="@Model.HashedAccountId" target="_blank">our guidance on expired funds</a> to find out what expired funds are and how we calculate them.
+        The account projection table now includes an estimate of the funds that will expire from May 2019 onwards. Look at <a asp-route="@RouteNames.ExpiredFundsGuidance" asp-route-hashedAccountId="@Model.HashedAccountId" target="_blank" class="govuk-link">our guidance on expired funds</a> to find out what expired funds are and how we calculate them.
     </p>
     <p>
         You can also find this guidance when you click on the info button under 'Expired funds' in the account projection table.
     </p>
+  </div>
 </div>
 
-<div class="grid-row">
-    <div class="column-full" id="BalanceSheet-Tables">
+
+
 
         @foreach (var x in Model.ProjectionTables)
         {
-            <h3 class="heading-medium">@x.Key.FirstStartDate.ToGdsFormatWithoutDay() to @x.Key.LastEndDate.ToGdsFormatWithoutDay()</h3>
-            @:<table class="small balancesheet">
+            <h3 class="govuk-heading-m">@x.Key.FirstStartDate.ToGdsFormatWithoutDay() to @x.Key.LastEndDate.ToGdsFormatWithoutDay()</h3>
+            @:<table class="govuk-table">
                 <thead>
                     <tr>
                         <th></th>
@@ -226,44 +212,33 @@
             @:</table>
         }
 
-        <details>
-            <summary>Where is the end-point assessment cost?</summary>
-            <div class="panel panel-width-thin">
-
-                <p>
-                    The end-point assessment cost is paid by your training provider to your end-point assessment organisation (EPAO).
-                </p>
-                <p>
-                    The funds for this payment are included in the training and completion costs.
-                </p>
-            </div>
-        </details>
-
+<details class="govuk-details"  data-module="govuk-details">
+    <summary class="govuk-details__summary">Where is the end-point assessment cost?</summary>
+    <div class="govuk-details__text">
+        <p>The end-point assessment cost is paid by your training provider to your end-point assessment organisation (EPAO).</p>
+        <p>The funds for this payment are included in the training and completion costs.</p>
     </div>
-</div>
-<div class="grid-row">
-    <div class="column-full">
-        <div class="panel panel-filled-purple panel-border-wide">
-            <h3 class="heading-medium">Disclaimer</h3>
-            <p>This projection tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account. The projection tool includes the apprenticeships funded by your pledges.</p>
-            <p>The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employed, or the cost and duration of their training.</p>
-            <p>You should therefore not rely solely on the information provided by this tool when making decisions about how to spend future levy funds.</p>
-        </div>
+</details>
 
-        <details id="projection-survey" class="projection-survey">
-            <summary>Help us improve this section</summary>
-            <iframe src="https://www.smartsurvey.co.uk/s/7DFNM/"></iframe>
-        </details>
+<div class="govuk-inset-text das-inset-text--filled das-inset-text--highlight">
+    <h3 class="govuk-heading-m">Disclaimer</h3>
+    <p class="govuk-body-s">This projection tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account. The projection tool includes the apprenticeships funded by your pledges.</p>
+    <p class="govuk-body-s">The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employed, or the cost and duration of their training.</p>
+    <p class="govuk-body-s">You should therefore not rely solely on the information provided by this tool when making decisions about how to spend future levy funds.</p>
+</div>
+
+<details id="projection-survey" class="govuk-details app-survey-details" data-module="govuk-details">
+    <summary class="govuk-details__summary govuk-link--inverse app-survey-details__summary">Help us improve this section</summary>
+    <div class="app-survey-details__wrapper">
+        <iframe src="https://www.smartsurvey.co.uk/s/7DFNM/"></iframe>
     </div>
+</details>
 
-</div>
 
 @section breadcrumb {
     @if (!string.IsNullOrEmpty(Model.BackLink))
     {
-        <div class="breadcrumbs" aria-label="Breadcrumbs">
-            <a href="@Model.BackLink" aria-label="Back" class="back-link">Back</a>
-        </div>
+        <a href="@Model.BackLink" aria-label="Back" class="govuk-back-link">Back</a>
     }
 
     <div class="breadcrumbs">
