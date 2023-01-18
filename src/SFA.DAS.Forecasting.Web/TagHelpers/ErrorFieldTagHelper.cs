@@ -31,7 +31,7 @@ public class ErrorFieldTagHelper : TagHelper
             if (fieldNames.Any(modelStateKey => ViewContext.ModelState.ContainsKey(modelStateKey) &&
                                                 ViewContext.ModelState[modelStateKey]!.Errors.Any()))
             {
-                tagHelperOutput.AddClass("error", HtmlEncoder.Default);
+                tagHelperOutput.AddClass("govuk-form-group--error", HtmlEncoder.Default);
             }
             
             if (string.IsNullOrEmpty(AdditionalClass))
@@ -39,7 +39,7 @@ public class ErrorFieldTagHelper : TagHelper
                 tagHelperOutput.AddClass(AdditionalClass, HtmlEncoder.Default);
             }
         }
-        tagHelperOutput.AddClass("form-group", HtmlEncoder.Default);
+        tagHelperOutput.AddClass("govuk-form-group", HtmlEncoder.Default);
         
         tagHelperOutput.TagMode = TagMode.StartTagAndEndTag;
     }

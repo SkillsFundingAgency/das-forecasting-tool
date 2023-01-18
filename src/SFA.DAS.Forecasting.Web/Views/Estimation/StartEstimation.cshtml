@@ -10,8 +10,7 @@
 
 @section breadcrumb
 {
-    <div class="breadcrumbs">
-        <ol role="navigation">
+
             @* TODO - FAI-625 - Should just be back link *@
             @* <li><a href="@Url.ExternalUrlAction("teams")">Home</a></li> *@
             @* <li><a href="@Url.ExternalUrlAction("balance")">Finance</a></li> *@
@@ -26,35 +25,30 @@
             @*     } *@
             @* </li> *@
             @* <li>Estimate apprenticeships you could fund</li> *@
-        </ol>
-    </div>
+
+    <div class="das-js-back-link"></div>
 }
 
-<main id="content" role="main">
+
     <div id="estimate-start-transfer">
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <h1 class="heading-xlarge">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h1 class="govuk-heading-xl">
                     Estimate apprenticeships you could fund
                 </h1>
                 <p>Use this tool to see how many apprenticeships you can fund from your own account or how much of your unused funds you could transfer to another employer.</p>
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <a asp-route="@RouteNames.EstimationStartRedirect" asp-route-hashedAccountId="@ViewBag.HashedAccountId" class="button button-start">Start</a>
-            </div>
-        </div>
-        <div class="grid-row disclaimer">
-            <div class="column-two-thirds">
-                <div class="panel panel-border-wide">
-                    <h2 class="heading-medium">Disclaimer</h2>
-                    <p>This tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account and the funding band maximum for the estimated apprenticeships you have added, using this estimator.</p>
-                    <p>The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employers, or the cost and duration of their training.</p>
-                    <p>You should therefore not rely solely on the information provided by this tool when making decisions about funding apprenticeships.</p>
+                <a asp-route="@RouteNames.EstimationStartRedirect" asp-route-hashedAccountId="@ViewBag.HashedAccountId" class="govuk-button govuk-button--start">
+                    Start
+                    <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+                    </svg>
+                </a>
+                <div class="govuk-inset-text das-inset-text--filled das-inset-text--highlight">
+                    <h2 class="govuk-heading-m">Disclaimer</h2>
+                    <p class="govuk-body-s">This tool is designed to illustrate what your funds may look like based on the apprenticeships currently in your apprenticeship service account and the funding band maximum for the estimated apprenticeships you have added, using this estimator.</p>
+                    <p class="govuk-body-s">The actual amount of funds available is likely to vary if there are any changes made to your apprenticeship arrangements, including, for example, changes in the number of apprentices employers, or the cost and duration of their training.</p>
+                    <p class="govuk-body-s">You should therefore not rely solely on the information provided by this tool when making decisions about funding apprenticeships.</p>
                 </div>
             </div>
         </div>
     </div>
-</main>
