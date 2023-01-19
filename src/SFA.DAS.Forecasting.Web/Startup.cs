@@ -47,6 +47,7 @@ namespace SFA.DAS.Forecasting.Web
                         options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                         options.EnvironmentName = configuration["EnvironmentName"];
                         options.PreFixConfigurationKeys = false;
+                        options.ConfigurationKeysRawJsonResult = new[] {"SFA.DAS.Encoding"};
                     }
                 );
             }
@@ -68,7 +69,7 @@ namespace SFA.DAS.Forecasting.Web
 
             services.AddTransient<IForecastingMapper, ForecastingMapper>();
 
-            services.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, _configuration["Environment"]);
+            services.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, _configuration["EnvironmentName"]);
             
             services.AddApplicationServices(forecastingConfiguration);
             

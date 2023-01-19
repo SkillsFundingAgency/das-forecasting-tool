@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
 {

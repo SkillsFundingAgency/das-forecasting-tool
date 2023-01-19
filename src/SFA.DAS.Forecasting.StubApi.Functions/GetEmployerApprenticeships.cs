@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(data, Encoding.UTF8, "application/json")
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
         }
 
@@ -53,7 +53,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
             var data = SendCommitments(fakeCommitment, numberOfCommitments);
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(data, Encoding.UTF8, "application/json")
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
         }
 

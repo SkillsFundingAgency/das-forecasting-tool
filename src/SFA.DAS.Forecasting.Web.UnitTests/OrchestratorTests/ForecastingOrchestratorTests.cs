@@ -4,12 +4,12 @@ using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Projections;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         private EmployerCommitmentsModel _commitments;
         private BalanceModel _balance;
         private Mock<ICommitmentsDataService> _commitmentsDataService;
-        private Mock<IHashingService> _hashingService;
+        private Mock<IEncodingService> _hashingService;
         private Mock<IAccountBalanceService> _accountBalanceService;
         private Mock<ICurrentBalanceRepository> _currentBalanceRepository;
         private ForecastingMapper _forecastingMapper;
@@ -118,12 +118,12 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _commitmentsDataService.Setup(x => x.GetCurrentCommitments(It.IsAny<long>(), It.IsAny<DateTime?>()))
                 .ReturnsAsync(_commitments);
 
-            _hashingService = new Mock<IHashingService>();
+            _hashingService = new Mock<IEncodingService>();
             _hashingService
-                .Setup(m => m.DecodeValue("ABBA12"))
+                .Setup(m => m.Decode("ABBA12", EncodingType.AccountId))
                 .Returns(ExpectedAccountId);
             _hashingService
-                .Setup(m => m.DecodeValue("CDDC12"))
+                .Setup(m => m.Decode("CDDC12", EncodingType.AccountId))
                 .Returns(ReceivingEmployerAccountId);
 
             _balance = new BalanceModel { EmployerAccountId = 12345, Amount = 50000, TransferAllowance = 5000, RemainingTransferBalance = 5000, UnallocatedCompletionPayments = 2000 };

@@ -14,9 +14,7 @@ public static class AddConfigurationExtension
     {
         services.AddOptions();
         services.Configure<ForecastingJobsConfiguration>(builtConfiguration.GetSection(nameof(ForecastingJobsConfiguration)));
-        services.Configure<AccountApiConfiguration>(builtConfiguration.GetSection(nameof(AccountApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
         
-        services.AddSingleton<IAccountApiConfiguration, AccountApiConfiguration>();
     }
 }

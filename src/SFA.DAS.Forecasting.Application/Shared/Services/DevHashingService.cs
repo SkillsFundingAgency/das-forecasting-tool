@@ -1,13 +1,12 @@
-﻿using System;
-using SFA.DAS.HashingService;
+﻿using SFA.DAS.Encoding;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
-    public class DevHashingService: IHashingService
+    public class DevHashingService: IEncodingService
     {
-        public string HashValue(long id)
+        public string Encode(long value, EncodingType encodingType)
         {
-            switch (id)
+            switch (value)
             {
                 case 497: return "MJK9XV";
                 case 8509: return "MN4YKL";
@@ -18,27 +17,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return "MDDP87";
         }
 
-        public string HashValue(Guid id)
+        public long Decode(string value, EncodingType encodingType)
         {
-            throw new NotImplementedException();
-        }
-
-        public string HashValue(string id)
-        {
-            switch (id)
-            {
-                case "497": return "MJK9XV";
-                case "8509": return "MN4YKL";
-                case "54321": return "RF45KJ";
-                case "5521": return "ABC123";
-            }
-
-            return "MDDP87";
-        }
-
-        public long DecodeValue(string id)
-        {
-            switch (id)
+            switch (value)
             {
                 case "MJK9XV": return 497;
                 case "MN4YKL": return 8509;
@@ -49,19 +30,9 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
             return 12345;
         }
 
-        public Guid DecodeValueToGuid(string id)
+        public bool TryDecode(string encodedValue, EncodingType encodingType, out long decodedValue)
         {
-            throw new NotImplementedException();
-        }
-
-        public string DecodeValueToString(string id)
-        {
-            return "12345";
-        }
-
-        public bool TryDecodeValue(string input, out long output)
-        {
-            output = 12345;
+            decodedValue = 12345;
             return true;
         }
     }
