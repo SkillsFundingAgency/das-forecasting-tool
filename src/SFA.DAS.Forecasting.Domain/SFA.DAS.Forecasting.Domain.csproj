@@ -10,7 +10,4 @@
   <ItemGroup>
     <PackageReference Include="SFA.DAS.EmployerFinance.Types" Version="1.6.3167" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration" />
-  </ItemGroup>
 </Project>

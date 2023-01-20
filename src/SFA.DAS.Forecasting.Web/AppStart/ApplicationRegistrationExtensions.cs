@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using SFA.DAS.EAS.Account.Api.Client;
 using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
@@ -19,8 +18,6 @@ public static class ApplicationRegistrationExtensions
     {
         services.AddTransient<IApprenticeshipCourseDataService, ApprenticeshipCourseDataService>();
         
-        services.AddTransient<IAccountApiClient, AccountApiClient>();//TODO FAI-625
-
         services.AddTransient<IEmployerCommitmentsRepository, EmployerCommitmentsRepository>();
         services.AddTransient<ICommitmentsDataService, CommitmentsDataService>();
         services.AddTransient<IExpiredFundsService, ExpiredFundsService>();

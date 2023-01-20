@@ -83,6 +83,7 @@ public class WhenAddingServicesToTheContainer
                     new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
                     new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
                     new KeyValuePair<string, string>("EnvironmentName", "test"),
+                    new KeyValuePair<string, string>("SFA.DAS.Encoding", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}")
                 }
             };
 

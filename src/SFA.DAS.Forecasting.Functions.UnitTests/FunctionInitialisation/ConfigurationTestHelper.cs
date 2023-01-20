@@ -19,6 +19,7 @@ public static class ConfigurationTestHelper
                 new KeyValuePair<string, string>("ForecastingJobsConfiguration:StorageConnectionString", "UseDevelopmentStorage=true;"),
                 new KeyValuePair<string, string>("PaymentsEventsApiConfiguration:ApiBaseUrl", "https://localhost:2"),
                 new KeyValuePair<string, string>("EnvironmentName", "test"),
+                new KeyValuePair<string, string>("SFA.DAS.Encoding", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}")
             }
         };
 
