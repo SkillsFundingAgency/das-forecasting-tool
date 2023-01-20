@@ -35,9 +35,9 @@ public static class AddConfigurationExtension
         services.Configure<OuterApiConfiguration>(builtConfiguration.GetSection(nameof(OuterApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
         
-        //TODO this isnt a dependency we really want here
-        var encodingConfigJson = builtConfiguration.GetSection("SFA.DAS.Encoding").Value;
-        var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
-        services.AddSingleton(encodingConfig);
+        // //TODO this isnt a dependency we really want here
+        // var encodingConfigJson = builtConfiguration.GetSection("SFA.DAS.Encoding").Value;
+        // var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
+        // services.AddSingleton(encodingConfig);
     }
 }

@@ -8,7 +8,6 @@
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="6.0.0" />
     <PackageReference Include="Microsoft.NETCore.Targets" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="SFA.DAS.Account.Api.Client" Version="1.6.2924" />
     <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.2924" />
     <PackageReference Include="SFA.DAS.Common.Domain" Version="1.4.278" />
     <PackageReference Include="SFA.DAS.Http" Version="3.2.69" />

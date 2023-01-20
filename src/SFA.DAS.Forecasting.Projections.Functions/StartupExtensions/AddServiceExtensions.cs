@@ -57,6 +57,8 @@ public static class AddConfigurationExtension
         services.AddOptions();
         services.Configure<ForecastingJobsConfiguration>(builtConfiguration.GetSection(nameof(ForecastingJobsConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
+        services.Configure<OuterApiConfiguration>(builtConfiguration.GetSection(nameof(OuterApiConfiguration)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
         
         var encodingConfigJson = builtConfiguration.GetSection("SFA.DAS.Encoding").Value;
         var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);

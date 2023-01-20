@@ -1,23 +1,27 @@
 ﻿using System.Threading.Tasks;
-using SFA.DAS.EAS.Account.Api.Client;
+using SFA.DAS.Encoding;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
+using SFA.DAS.Forecasting.Models.Balance;
 
 namespace SFA.DAS.Forecasting.Application.Balance.Services
 {
     public class AccountBalanceService : IAccountBalanceService
     {
-        private readonly IAccountApiClient _accountApiClient;
-        
-        public AccountBalanceService(IAccountApiClient accountApiClient)
+        private readonly IApiClient _apiClient;
+        private readonly IEncodingService _encodingService;
+
+        public AccountBalanceService(IApiClient apiClient, IEncodingService encodingService)
         {
-            _accountApiClient = accountApiClient;
+            _apiClient = apiClient;
+            _encodingService = encodingService;
         }
 
-        public async Task<Models.Balance.BalanceModel> GetAccountBalance(long accountId)
+        public async Task<BalanceModel> GetAccountBalance(long accountId)
         {
-            var account = await _accountApiClient.GetAccount(accountId);
+            var account = await _apiClient.Get<GetAccountBalanceResponse>(new GetAccountBalanceRequest(_encodingService.Encode(accountId, EncodingType.AccountId)));
             
-            return new Models.Balance.BalanceModel
+            return new BalanceModel
             {
                 EmployerAccountId = accountId,
                 RemainingTransferBalance = account.RemainingTransferAllowance,
