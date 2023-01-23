@@ -4,6 +4,31 @@ parameters:
   Environment:
   OverrideBlockOnPossibleDataLoss: false
   AppRoleAssignmentsServiceConnection:
+  - name: FunctionApps
+    type: object
+    default:
+      - FunctionApp:
+        Name: $(FunctionAppNameStandards)
+        DeploymentPackagePathSuffix: ApprenticeshipCourses.Functions.zip
+      - FunctionApp:
+        Name: $(FunctionAppNameCommitments)
+        DeploymentPackagePathSuffix: Commitments.Functions.zip
+      - FunctionApp:
+        Name: $(FunctionAppNameLevy)
+        DeploymentPackagePathSuffix: Levy.Functions.zip
+      - FunctionApp:
+        Name: $(FunctionAppNamePayments)
+        DeploymentPackagePathSuffix: Payments.Functions.zip
+      - FunctionApp:
+        Name: $(FunctionAppNamePreload)
+        DeploymentPackagePathSuffix: PreLoad.Functions.zip
+      - FunctionApp:
+        Name: $(FunctionAppNameProjection)
+        DeploymentPackagePathSuffix: Projections.Functions.zip
+      - FunctionApp:
+        Name: $(FunctionAppNameStub)
+        DeploymentPackagePathSuffix: StubApi.Functions.zip
+
 
 jobs:
 - deployment: DeployWebApp
@@ -20,11 +45,6 @@ jobs:
             EnvironmentId: $(Environment.Id)
             PipelineName: $(Build.DefinitionName)
             RunId: $(Build.BuildId)
-      # - template: azure-pipelines-templates/deploy/step/appservice-whitelist-ip.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     ResourceName: $()
-      #     RuleName: $(Release.DefinitionName)    
         - template: azure-pipelines-templates/deploy/step/arm-deploy.yml@das-platform-building-blocks
           parameters:
             ServiceConnection: ${{ parameters.ServiceConnection }}
@@ -37,18 +57,6 @@ jobs:
             TemplateSecrets:
               LoggingRedisConnectionString: $(LoggingRedisConnectionString)
               ConfigurationStorageConnectionString: $(ConfigurationStorageConnectionString)
-      # - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
-      #     ResourceName: $(FunctionAppNameCommitments)
-      #     Tenant: $(Tenant)
-      #     IsMultiRepoCheckout: true
-      # - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
-      #     ResourceName: $(FunctionAppNamePreload)
-      #     Tenant: $(Tenant)
-      #     IsMultiRepoCheckout: true
         - template: azure-pipelines-templates/deploy/step/generate-config.yml@das-platform-building-blocks
           parameters:
             EnvironmentName: $(EnvironmentName)
@@ -59,6 +67,29 @@ jobs:
             TargetFileName: '*.schema.json'
             TableName: Configuration
             ConfigurationSecrets: {} # remove this if there are no secrets that need to be mapped for config
+        - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
+          parameters:
+            ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
+            ResourceName: $(FunctionAppNameCommitments)
+            Tenant: $(Tenant)
+            IsMultiRepoCheckout: true
+        - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
+          parameters:
+            ServiceConnection: ${{ parameters.AppRoleAssignmentsServiceConnection }}
+            ResourceName: $(FunctionAppNamePreload)
+            Tenant: $(Tenant)
+            IsMultiRepoCheckout: true
+        - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
+          parameters:
+            ServiceConnection: ${{ parameters.ServiceConnection }}
+            AppServiceName: $(AppServiceName)
+            DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Web.zip
+        - ${{ each FunctionApp in parameters.FunctionApps }}:
+          - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
+            parameters:
+              ServiceConnection: ${{ parameters.ServiceConnection }}
+              FunctionAppName: $({{ FunctionApp.Name }})
+              DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.${{ FunctionApp.DeploymentPackagePathSuffix}}
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
             AzureSubscription: ${{ parameters.ServiceConnection }}
@@ -69,38 +100,3 @@ jobs:
             DatabaseName: $(DatabaseName)
             OverrideBlockOnPossibleDataLoss: ${{ parameters.OverrideBlockOnPossibleDataLoss }}
             Environment: ${{ parameters.Environment }}
-      # - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     FunctionAppName: $(FunctionAppNameCommitments)
-      #     DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Commitments.Functions.zip
-      # - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     FunctionAppName: $(FunctionAppNameLevy)
-      #     DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Levy.Functions.zip    
-      # - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     FunctionAppName: $(FunctionAppNamePayments)
-      #     DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Payments.Functions.zip
-      # - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     FunctionAppName: $(FunctionAppNamePreload)
-      #     DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.PreLoad.Functions.zip
-      # - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     FunctionAppName: $(FunctionAppNameProjection)
-      #     DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Projections.Functions.zip
-      # - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
-      #   parameters:
-      #     ServiceConnection: ${{ parameters.ServiceConnection }}
-      #     FunctionAppName: $(FunctionAppNameStub)
-      #     DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.StubApi.Functions.zip
-      - template: azure-pipelines-templates/deploy/step/app-deploy.yml@das-platform-building-blocks
-        parameters:
-          ServiceConnection: ${{ parameters.ServiceConnection }}
-          AppServiceName: $(AppServiceName)
-          DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.Web.zip
