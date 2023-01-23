@@ -1,6 +1,23 @@
 parameters:
   SolutionBaseName:
   BuildConfiguration:
+  - name: FunctionApps
+    type: object
+    default:
+      - FunctionApp:
+        ProjectName: ApprenticeshipCourses
+      - FunctionApp:
+        ProjectName: Commitments
+      - FunctionApp:
+        ProjectName: Levy
+      - FunctionApp:
+        ProjectName: Payments
+      - FunctionApp:
+        ProjectName: PreLoad
+      - FunctionApp:
+        ProjectName: Projections
+      - FunctionApp:
+        ProjectName: StubApi
 
 jobs:
 - job: CodeBuild
@@ -16,7 +33,7 @@ jobs:
   - template: azure-pipelines-templates/build/step/app-build.yml@das-platform-building-blocks
 
   - task: DotNetCoreCLI@2
-    displayName: Publish - dotnet publish UIApp
+    displayName: Publish - dotnet publish ${{ parameters.SolutionBaseName }}.Web
     inputs:
       command: publish
       publishWebProjects: false
@@ -24,6 +41,17 @@ jobs:
       arguments: -o $(build.artifactstagingdirectory)/publish -c ${{ parameters.BuildConfiguration }} --no-build
       modifyOutputPath: true
       zipAfterPublish: true
+
+  - ${{ each FunctionApp in parameters.FunctionApps }}:
+    - task: DotNetCoreCLI@2
+      displayName: Publish - dotnet publish ${{ parameters.SolutionBaseName }}.${{FunctionApp.ProjectName}}.Functions.${{ parameters.SolutionBaseName }}.${{FunctionApp.ProjectName}}.Functions.csproj
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: src/${{ parameters.SolutionBaseName }}.${{FunctionApp.ProjectName}}.Functions.${{ parameters.SolutionBaseName }}.${{FunctionApp.ProjectName}}.Functions.csproj
+        arguments: -o $(build.artifactstagingdirectory)/publish -c ${{ parameters.BuildConfiguration }} --no-build
+        modifyOutputPath: true
+        zipAfterPublish: true
 
   - task: PublishPipelineArtifact@1
     displayName: Publish Build Artifact
