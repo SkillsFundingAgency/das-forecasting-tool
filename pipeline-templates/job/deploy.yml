@@ -32,7 +32,7 @@ parameters:
 
 
 jobs:
-- deployment: DeployWebApp
+- deployment: Deploy
   pool:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}
