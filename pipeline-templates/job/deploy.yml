@@ -90,7 +90,7 @@ jobs:
           - template: azure-pipelines-templates/deploy/step/function-deploy.yml@das-platform-building-blocks
             parameters:
               ServiceConnection: ${{ parameters.ServiceConnection }}
-              FunctionAppName: $({{ FunctionApp.Name }})
+              FunctionAppName: ${{ FunctionApp.Name }}
               DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.${{ FunctionApp.ProjectName}}.Functions.zip
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
