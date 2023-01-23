@@ -69,6 +69,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         {
             return _dataContext.Payments
                 .Where(wherePredicate)
+                .ToList()
                 .GroupBy(g => new { g.CollectionPeriod.Year, g.CollectionPeriod.Month })
                 .Select(s => new { s.Key.Year, s.Key.Month, Total = s.Sum(v => v.Amount) }).ToList()
                 .ToDictionary(k => new CalendarPeriod(k.Year, k.Month), k => k.Total);
