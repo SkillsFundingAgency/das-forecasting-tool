@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
@@ -158,10 +158,6 @@
         "resourceGroupName": "[concat(variables('resourceNamePrefix'),'-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'),'ui-as')]",
         "functionsAppServicePlanName": "[concat(variables('resourceNamePrefix'),'-asp')]",
-        "appSettingsKeyVaultSecretPermissions": [
-            "Get",
-            "Set"
-        ],
         "storageAccountName": "[concat('das',toLower(parameters('resourceEnvironmentName')),parameters('serviceName'),'str')]",
         "cosmosDbName": "[concat(variables('resourceNamePrefix'), '-cdb')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
@@ -177,7 +173,7 @@
     },
     "resources": [
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
             "location": "[parameters('resourceGroupLocation')]",
@@ -186,7 +182,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "function-app-subnet",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
             "properties": {
@@ -236,7 +232,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "storage-account",
             "resourceGroup": "[variables('resourceGroupName')]",
             "dependsOn": [
@@ -259,7 +255,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "[concat(variables('functionAppNames')[copyIndex()], '-insights')]",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -284,7 +280,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "app-service-app-insights",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -305,7 +301,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "functions-app-service-plan",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -332,7 +328,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "[concat(variables('functionAppNames')[copyIndex()], '-function')]",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -443,7 +439,7 @@
             ]
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "app-service-certificate",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -467,7 +463,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "app-service",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -559,7 +555,7 @@
             ]
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "sql-database",
             "type": "Microsoft.Resources/deployments",
             "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
@@ -598,7 +594,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "cosmos-db",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -634,7 +630,7 @@
             }
         },
         {
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2021-04-01",
             "name": "apim-subscription-forecasting",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
