@@ -10,25 +10,25 @@ parameters:
     default:
       - FunctionApp:
         Name: $(FunctionAppNameStandards)
-        DeploymentPackagePathSuffix: ApprenticeshipCourses.Functions.zip
+        ProjectName: ApprenticeshipCourses
       - FunctionApp:
         Name: $(FunctionAppNameCommitments)
-        DeploymentPackagePathSuffix: Commitments.Functions.zip
+        ProjectName: Commitments
       - FunctionApp:
         Name: $(FunctionAppNameLevy)
-        DeploymentPackagePathSuffix: Levy.Functions.zip
+        ProjectName: Levy
       - FunctionApp:
         Name: $(FunctionAppNamePayments)
-        DeploymentPackagePathSuffix: Payments.Functions.zip
+        ProjectName: Payments
       - FunctionApp:
         Name: $(FunctionAppNamePreload)
-        DeploymentPackagePathSuffix: PreLoad.Functions.zip
+        ProjectName: PreLoad
       - FunctionApp:
         Name: $(FunctionAppNameProjection)
-        DeploymentPackagePathSuffix: Projections.Functions.zip
+        ProjectName: Projections
       - FunctionApp:
         Name: $(FunctionAppNameStub)
-        DeploymentPackagePathSuffix: StubApi.Functions.zip
+        ProjectName: StubApi
 
 
 jobs:
@@ -90,7 +90,7 @@ jobs:
             parameters:
               ServiceConnection: ${{ parameters.ServiceConnection }}
               FunctionAppName: $({{ FunctionApp.Name }})
-              DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.${{ FunctionApp.DeploymentPackagePathSuffix}}
+              DeploymentPackagePath: $(Pipeline.Workspace)/${{ parameters.SolutionBaseName }}/${{ parameters.SolutionBaseName }}.${{ FunctionApp.ProjectName}}.Functions.zip
         - template: azure-pipelines-templates/deploy/step/sql-dacpac-deploy.yml@das-platform-building-blocks
           parameters:
             AzureSubscription: ${{ parameters.ServiceConnection }}
