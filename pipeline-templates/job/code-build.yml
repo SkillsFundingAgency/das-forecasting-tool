@@ -1,6 +1,8 @@
 parameters:
-  SolutionBaseName:
-  BuildConfiguration:
+  - name: SolutionBaseName
+    type: string
+  - name: BuildConfiguration
+    type: string
   - name: FunctionApps
     type: object
     default:
