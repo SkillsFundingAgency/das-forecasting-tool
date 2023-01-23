@@ -116,7 +116,7 @@
         "keyVaultCertificateName": {
             "type": "string"
         },
-        "baseAddress": {
+        "identityBaseAddress": {
             "type": "string"
         },
         "customHostname": {
@@ -610,8 +610,8 @@
                                     "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
                                 },
                                 {
-                                    "name": "BaseAddress",
-                                    "value": "[parameters('baseAddress')]"
+                                    "name": "IdentityBaseAddress",
+                                    "value": "[parameters('identityBaseAddress')]"
                                 },
                                 {
                                     "name": "EnvironmentName",
