@@ -112,9 +112,6 @@
         "myaBaseUrl": {
             "type": "string"
         },
-        "azureWebJobsServiceBus": {
-            "type": "securestring"
-        },
         "apprenticeshipsApiBaseUri": {
             "type": "string"
         },
@@ -379,10 +376,6 @@
                                 {
                                     "name": "ApprenticeshipsApiSubscriptionKey",
                                     "value": "[reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/subscriptions/', concat(variables('resourceNamePrefix'),'-apc-fa')), '2019-01-01').primaryKey]"
-                                },
-                                {
-                                    "name": "AzureWebJobsServiceBus",
-                                    "value": "[parameters('AzureWebJobsServiceBus')]"
                                 },
                                 {
                                     "name": "AzureWebJobsStorage",
