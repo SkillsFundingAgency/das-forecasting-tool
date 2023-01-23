@@ -18,14 +18,15 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
     }
     public class AllowAccountProjectionsHandler : IAllowAccountProjectionsHandler
     {
-        public IEmployerProjectionAuditService AuditService;
-        public ILevyPeriodRepository Repository { get; }
-        public ILogger<AllowAccountProjectionsHandler> Logger { get; }
-        public ForecastingJobsConfiguration ApplicationConfiguration { get; }
+        private const int SecondsToWaitToAllowProjections = 60;
+        private readonly IEmployerProjectionAuditService _auditService;
+        private ILevyPeriodRepository Repository { get; }
+        private ILogger<AllowAccountProjectionsHandler> Logger { get; }
+        private ForecastingJobsConfiguration ApplicationConfiguration { get; }
 
         public AllowAccountProjectionsHandler(ILevyPeriodRepository repository, ILogger<AllowAccountProjectionsHandler> logger, ForecastingJobsConfiguration applicationConfiguration, IEmployerProjectionAuditService auditService)
         {
-            AuditService = auditService ?? throw new ArgumentNullException(nameof(auditService)); 
+            _auditService = auditService ?? throw new ArgumentNullException(nameof(auditService)); 
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             ApplicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
@@ -52,7 +53,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
                 return false;
             }
 
-            var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
+            var allowProjections = lastReceivedTime.Value.AddSeconds(SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
             Logger.LogInformation($"Allow projections '{allowProjections}' for employer '{levySchemeDeclaration.AccountId}' in response to levy event.");
 
             if (!allowProjections)
@@ -60,7 +61,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
                 return false;
             }
 
-            if (!await AuditService.RecordRunOfProjections(levySchemeDeclaration.AccountId,nameof(ProjectionSource.LevyDeclaration)))
+            if (!await _auditService.RecordRunOfProjections(levySchemeDeclaration.AccountId,nameof(ProjectionSource.LevyDeclaration)))
             {
                 Logger.LogDebug($"Triggering of levy projections for employer {levySchemeDeclaration.AccountId} has already been started.");
                 return false;

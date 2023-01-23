@@ -1,17 +1,17 @@
-using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using SFA.DAS.EAS.Account.Api.Client;
+using Newtonsoft.Json;
 using SFA.DAS.EmployerFinance.Types.Models;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.Balance.Services;
 using SFA.DAS.Forecasting.Application.Commitments.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using SFA.DAS.Forecasting.Application.Levy.Services;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Projections.Handlers;
 using SFA.DAS.Forecasting.Application.Projections.Services;
-using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
@@ -21,10 +21,6 @@ using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
-using SFA.DAS.Provider.Events.Api.Client;
-using SFA.DAS.Provider.Events.Api.Client.Configuration;
-using AccountApiConfiguration = SFA.DAS.Forecasting.Core.Configuration.AccountApiConfiguration;
-using PaymentsEventsApiConfiguration = SFA.DAS.Provider.Events.Api.Client.Configuration.PaymentsEventsApiConfiguration;
 
 namespace SFA.DAS.Forecasting.Projections.Functions.StartupExtensions;
 
@@ -48,7 +44,9 @@ public static class AddServiceExtensions
         builder.AddTransient<IExpiredFunds, ExpiredFunds>();
         builder.AddTransient<IEmployerPaymentDataSession, EmployerPaymentDataSession>();
         
-        builder.AddTransient<IAccountApiClient, AccountApiClient>();//TODO FAI-625
+        builder.AddHttpClient<IApiClient, ApiClient>();
+
+        builder.AddTransient<IEncodingService, EncodingService>();
     }
 }
 
@@ -58,9 +56,12 @@ public static class AddConfigurationExtension
     {
         services.AddOptions();
         services.Configure<ForecastingJobsConfiguration>(builtConfiguration.GetSection(nameof(ForecastingJobsConfiguration)));
-        services.Configure<AccountApiConfiguration>(builtConfiguration.GetSection(nameof(AccountApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
+        services.Configure<OuterApiConfiguration>(builtConfiguration.GetSection(nameof(OuterApiConfiguration)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
         
-        services.AddSingleton<IAccountApiConfiguration, AccountApiConfiguration>();
+        var encodingConfigJson = builtConfiguration.GetSection("SFA.DAS.Encoding").Value;
+        var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
+        services.AddSingleton(encodingConfig);
     }
 }

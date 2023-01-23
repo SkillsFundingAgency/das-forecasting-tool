@@ -4,15 +4,14 @@ using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
-using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Models.Projections;
 using AccountEstimation = SFA.DAS.Forecasting.Domain.Estimations.AccountEstimation;
 using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
@@ -24,8 +23,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         private EstimationOrchestrator _orchestrator;
         private Mock<IAccountEstimationProjection> _accountEstimationProjection;
         private const long ExpectedAccountId = 654311;
-        private DateTime _dateFrom = DateTime.Now.AddYears(1);
-        private Mock<IHashingService> _hashingService;
+        private readonly DateTime _dateFrom = DateTime.Now.AddYears(1);
+        private Mock<IEncodingService> _hashingService;
         private Mock<CurrentBalance> _currentBalance;
         private Mock<ICurrentBalanceRepository> _currentBalanceRepository;
         private Mock<IAccountEstimationProjectionRepository> _accountEstimationProjectionRepository;
@@ -34,8 +33,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         [SetUp]
         public void Arrange()
         {
-            _hashingService = new Mock<IHashingService>();
-            _hashingService.Setup(x => x.DecodeValue(It.IsAny<string>()))
+            _hashingService = new Mock<IEncodingService>();
+            _hashingService.Setup(x => x.Decode(It.IsAny<string>(), EncodingType.AccountId))
                 .Returns(ExpectedAccountId);
 
             _currentBalance = new Mock<CurrentBalance>();

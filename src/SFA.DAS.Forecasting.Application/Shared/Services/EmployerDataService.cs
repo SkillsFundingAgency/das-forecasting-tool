@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.HashingService;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;

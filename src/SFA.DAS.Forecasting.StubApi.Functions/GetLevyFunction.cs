@@ -28,7 +28,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(d, Encoding.UTF8, "application/json")
+                Content = new StringContent(d, System.Text.Encoding.UTF8, "application/json")
             };
         }
     }

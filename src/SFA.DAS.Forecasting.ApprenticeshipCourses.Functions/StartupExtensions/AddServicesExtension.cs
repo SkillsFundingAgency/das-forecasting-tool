@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
@@ -32,5 +34,10 @@ public static class AddConfigurationExtension
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
         services.Configure<OuterApiConfiguration>(builtConfiguration.GetSection(nameof(OuterApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
+        
+        // //TODO this isnt a dependency we really want here
+        // var encodingConfigJson = builtConfiguration.GetSection("SFA.DAS.Encoding").Value;
+        // var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
+        // services.AddSingleton(encodingConfig);
     }
 }

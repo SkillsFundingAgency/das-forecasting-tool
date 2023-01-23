@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.EAS.Account.Api.Types;
 using SFA.DAS.Forecasting.Application.Projections.Handlers;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
@@ -11,7 +9,6 @@ using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Messages.Projections;
-using SFA.DAS.Forecasting.Models.Balance;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.Balance
 {

@@ -33,7 +33,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(accountDetailsJson, Encoding.UTF8, "application/json")
+                Content = new StringContent(accountDetailsJson, System.Text.Encoding.UTF8, "application/json")
             };
         }
     }

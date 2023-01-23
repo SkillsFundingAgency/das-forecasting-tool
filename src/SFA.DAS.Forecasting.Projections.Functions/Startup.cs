@@ -38,6 +38,7 @@ public class Startup : FunctionsStartup
                     options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                     options.EnvironmentName = configuration["EnvironmentName"];
                     options.PreFixConfigurationKeys = false;
+                    options.ConfigurationKeysRawJsonResult = new[] {"SFA.DAS.Encoding"};
                 }
             );
         }

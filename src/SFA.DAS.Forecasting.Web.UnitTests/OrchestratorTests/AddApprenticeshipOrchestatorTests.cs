@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
 using NUnit.Framework;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -58,7 +59,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _apprenticeshipCourseDataService.Setup(x => x.GetAllStandardApprenticeshipCourses())
                 .Returns(_apprenticeshipCourses);
 
-            _orchestrator = new AddApprenticeshipOrchestrator(Mock.Of<HashingService.IHashingService>(),
+            _orchestrator = new AddApprenticeshipOrchestrator(Mock.Of<IEncodingService>(),
                 Mock.Of<IAccountEstimationRepository>(), _apprenticeshipCourseDataService.Object,
                 Mock.Of<ILogger<AddApprenticeshipOrchestrator>>());
         }

@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -26,7 +25,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent($"Data added for {employerAccountId}", Encoding.UTF8, "application/json")
+                Content = new StringContent($"Data added for {employerAccountId}", System.Text.Encoding.UTF8, "application/json")
             };
         }
     }
