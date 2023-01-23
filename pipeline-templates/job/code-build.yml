@@ -53,6 +53,14 @@ jobs:
         modifyOutputPath: true
         zipAfterPublish: true
 
+  - task: CopyFiles@2
+    displayName: Copy Files to $(build.artifactstagingdirectory)/publish
+    inputs:
+      Contents: |
+        azure/**
+      TargetFolder: $(build.artifactstagingdirectory)/publish
+      OverWrite: true
+
   - task: PublishPipelineArtifact@1
     displayName: Publish Build Artifact
     inputs:
