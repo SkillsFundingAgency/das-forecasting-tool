@@ -55,8 +55,8 @@ public static class ConfigureEmployerAuthenticationExtension
                 {
                     options.ClientId = configuration.ClientId;
                     options.ClientSecret = configuration.ClientSecret;
-                    options.Authority = configuration.IdentityBaseAddress;
-                    options.MetadataAddress = $"{configuration.IdentityBaseAddress}/.well-known/openid-configuration";
+                    options.Authority = configuration.BaseAddress;
+                    options.MetadataAddress = $"{configuration.BaseAddress}/.well-known/openid-configuration";
                     options.ResponseType = "code";
                     options.UsePkce = false;
                     

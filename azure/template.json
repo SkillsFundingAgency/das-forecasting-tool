@@ -610,7 +610,7 @@
                                     "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
                                 },
                                 {
-                                    "name": "IdentityBaseAddress",
+                                    "name": "BaseAddress",
                                     "value": "[parameters('identityBaseAddress')]"
                                 },
                                 {
