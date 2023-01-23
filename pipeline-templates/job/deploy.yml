@@ -1,9 +1,10 @@
 parameters:
-  ServiceConnection:
-  SolutionBaseName:
-  Environment:
-  OverrideBlockOnPossibleDataLoss: false
-  AppRoleAssignmentsServiceConnection:
+  - name: ServiceConnection
+  - name: SolutionBaseName
+  - name: Environment
+  - name: OverrideBlockOnPossibleDataLoss
+    default: false
+  - name: AppRoleAssignmentsServiceConnection
   - name: FunctionApps
     type: object
     default:
