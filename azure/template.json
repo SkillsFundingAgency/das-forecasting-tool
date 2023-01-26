@@ -11,11 +11,6 @@
         "environmentName": {
             "type": "string"
         },
-        "appServiceAllowedIPs": {
-            "type": "array",
-            "defaultValue": [
-            ]
-        },
         "sharedSQLServerName": {
             "type": "string"
         },
@@ -129,6 +124,9 @@
         },
         "sharedFrontEndSubnetResourceId": {
             "type": "string"
+        },
+        "frontEndAccessRestrictions": {
+            "type": "array"
         },
         "sharedEnvVirtualNetworkName": {
             "type": "string"
@@ -529,7 +527,7 @@
                         "value": "[reference('app-service-certificate').outputs.certificateThumbprint.value]"
                     },
                     "ipSecurityRestrictions": {
-                        "value": "[parameters('appServiceAllowedIPs')]"
+                        "value": "[parameters('frontEndAccessRestrictions')]"
                     }
                 }
             },
