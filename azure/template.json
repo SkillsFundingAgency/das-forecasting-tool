@@ -112,9 +112,6 @@
         "myaBaseUrl": {
             "type": "string"
         },
-        "apprenticeshipsApiBaseUri": {
-            "type": "string"
-        },
         "zenDeskSectionId": {
             "type": "string"
         },
@@ -368,10 +365,6 @@
                                 {
                                     "name": "AppName",
                                     "value": "[concat(variables('functionAppNames')[copyIndex()])]"
-                                },
-                                {
-                                    "name": "ApprenticeshipsApiBaseUri",
-                                    "value": "[parameters('apprenticeshipsApiBaseUri')]"
                                 },
                                 {
                                     "name": "AzureWebJobsStorage",
