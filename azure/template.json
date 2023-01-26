@@ -374,10 +374,6 @@
                                     "value": "[parameters('apprenticeshipsApiBaseUri')]"
                                 },
                                 {
-                                    "name": "ApprenticeshipsApiSubscriptionKey",
-                                    "value": "[reference(concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/subscriptions/', concat(variables('resourceNamePrefix'),'-apc-fa')), '2019-01-01').primaryKey]"
-                                },
-                                {
                                     "name": "AzureWebJobsStorage",
                                     "value": "[reference('storage-account').outputs.storageConnectionString.value]"
                                 },
@@ -624,7 +620,7 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "apim-subscription-forecasting",
+            "name": "apim-subscription-forecasting-tool",
             "resourceGroup": "[parameters('sharedApimResourceGroup')]",
             "type": "Microsoft.Resources/deployments",
 
@@ -639,7 +635,7 @@
                         "value": "[parameters('sharedApimName')]"
                     },
                     "subscriptionName": {
-                        "value": "[concat(variables('resourceNamePrefix'),'-apc-fa')]"
+                        "value": "[variables('resourceGroupName')]"
                     },
                     "subscriptionScope": {
                         "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('sharedApimResourceGroup'), '/providers/Microsoft.ApiManagement/service/', parameters('sharedApimName'), '/products/ForecastingOuterApi')]"
