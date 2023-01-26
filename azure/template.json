@@ -44,8 +44,7 @@
             "defaultValue": "Standard"
         },
         "cosmosDbSubnetResourceIdList": {
-            "type": "array",
-            "defaultValue": []
+            "type": "array"
         },
         "cosmosDbIpRangeFilter": {
             "type": "string",
