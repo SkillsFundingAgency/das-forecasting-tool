@@ -4,7 +4,7 @@
 @model SFA.DAS.Forecasting.Web.ViewModels.EstimationPageViewModel
 
 @{
-    ViewBag.Title = "Estimated Cost";
+    ViewBag.Title = "Estimated cost";
     ViewBag.GaData.Vpv = "/forecasting/estimation/page-cost-estimation";
 }
 
@@ -49,7 +49,7 @@
          {
          addApprenticeshipsCaption = "Add more apprenticeships to your current estimate";
          }
-         <a asp-route="@RouteNames.AddApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName" class="govuk-button govuk-button--secondary">
+         <a asp-route="@RouteNames.AddApprenticeships" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName" class="govuk-button">
          @addApprenticeshipsCaption
          </a>
          }
@@ -76,7 +76,7 @@
       @if (Model.AnyTransferApprenticeships)
       {
       <li class="govuk-tabs__list-item">
-         <a class="govuk-tabs__tab" href="#emaining-transfer-allowance">
+         <a class="govuk-tabs__tab" href="#remaining-transfer-allowance">
          Remaining transfer allowance
          </a>
       </li>
@@ -121,8 +121,8 @@
             </tr>
             }
 
-            <tr class="govuk-table__row">
-               <th class="govuk-table__header" scope="row"><span class="govuk-visually-hidden">Totals</span></th>
+            <tr class="govuk-table__row app-table__row--total">
+               <th class="govuk-table__header app-show-from-tablet--table-cell" scope="row"><span>Totals</span> </th>
                <td class="govuk-table__header" data-label="Number of apprentices" colspan="2">
                   @Model.Apprenticeships.TotalApprenticeshipCount 
                </td>
@@ -140,123 +140,117 @@
    <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="account-funds">
       @if (Model.AccountFunds != null && Model.AccountFunds.Records != null && Model.AccountFunds.Records.Count() > 0)
       {
-      <div class="grid-row">
-         <div class="column-full">
+
             <p>This table shows your estimated costs against your account projection</p>
             <p><b>Monthly Funds in: </b>@Model.AccountFunds.MonthlyInstallmentAmount.FormatCost()</p>
-         </div>
-      </div>
-      <div class="grid-row">
-         <div class="column-full" id="AccountFunds-Tables">
+
+
+         <div id="AccountFunds-Tables">
             @{
                 var newFinancialYearAccountFunds = true;
                 var startDateOfAccountFundsYear = Model.AccountFunds.Records.First().Date;
             }
             @foreach (var accountFund in Model.AccountFunds.Records)
             {
-            var tableRowClass = accountFund.Balance <= 0 ? "error-row" : "";
-            var tableCellClass = accountFund.Balance <= 0 ? "error-messsage" : "";
-            if (newFinancialYearAccountFunds)
-            {
-            newFinancialYearAccountFunds = false;
-            var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
-            <h3 class="govuk-heading-m">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-            @:<table class="govuk-table das-table--condensed das-table--responsive">
-               <thead>
-                  <tr class="govuk-table__row">
-                     <th class="govuk-table__header nowrap tw-10">Date</th>
-                     <th class="govuk-table__header govuk-table__header--numeric tippy tw-20" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
-                        Your current costs
-                        <br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                     </th>
-                     <th class="govuk-table__header govuk-table__header--numeric tippy tw-25" data-tippy-trigger="click" title="Cost of apprenticeships you’ve estimated using this tool">
-                        Estimated costs
-                        <br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                     </th>
-                     <th class="govuk-table__header govuk-table__header--numeric tippy tw-25" data-tippy-trigger="click" title="The estimated funds that could expire">
-                        Expired funds
-                        <br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                     </th>
-                     <th class="govuk-table__header govuk-table__header--numeric tippy tw-20" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
-                        Balance
-                        <br />
-                        <span class="tip-info"><span class="info-title">info</span></span>
-                     </th>
-                  </tr>
-               </thead>
-               @:<tbody>
-                  }
-                  <tr class="govuk-table__row @tableRowClass">
-                     <td class="govuk-table__cell nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
-                     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
-                     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
-                     <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
-                     <td class="govuk-table__cell govuk-table__cell--numeric @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
-                  </tr>
-                  if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
-                  {
-                  newFinancialYearAccountFunds = true;
-                  startDateOfAccountFundsYear = accountFund.Date;
-                  @:</tbody>
-               @:</table>
-            }
+                var tableRowClass = accountFund.Balance <= 0 ? "app-table-error-row" : "";
+                var tableCellClass = accountFund.Balance <= 0 ? "app-table-cell-error-messsage" : "";
+            
+                if (newFinancialYearAccountFunds)
+                {
+                    newFinancialYearAccountFunds = false;
+                    var endYear = startDateOfAccountFundsYear.Month < 3 ? accountFund.Date.ToString("yyyy") : accountFund.Date.AddYears(1).ToString("yyyy");
+                    <h3 class="govuk-heading-m">@accountFund.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+                    @:<table class="govuk-table das-table--condensed das-table--responsive">
+                    <thead>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header nowrap das-table-cell-width-10" scope="col">Date</th>
+                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-20" scope="col">
+                                Your current costs <br />
+                                <span tabindex="0" class="app-tooltip" title="Cost of apprenticeships that you've agreed to fund, which includes any transferred funds">info</span>
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-25" scope="col">
+                                Estimated costs <br />
+                                <span tabindex="0" class="app-tooltip" title="Cost of apprenticeships you’ve estimated using this tool">info</span>
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-25" scope="col">
+                                Expired funds <br />
+                                <span tabindex="0" class="app-tooltip" title="The estimated funds that could expire">info</span>
+                            </th>
+                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-20" scope="col">
+                                Balance <br />
+                                <span tabindex="0" class="app-tooltip" title="The estimated funds you have left at the end of the month">info</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    @:<tbody>
+                        }
+                        <tr class="govuk-table__row @tableRowClass">
+                            <td class="govuk-table__cell nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric @tableCellClass" data-label="Balance">@accountFund.FormattedBalance</td>
+                        </tr>
+                        if (accountFund.Date.Month == 3 || Model.AccountFunds.Records.Last().Equals(accountFund))
+                        {
+                        newFinancialYearAccountFunds = true;
+                        startDateOfAccountFundsYear = accountFund.Date;
+                        @:</tbody>
+                    @:</table>
+                }
             }
          </div>
-      </div>
+  
       }
    </div>
-   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="emaining-transfer-allowance">
+   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="remaining-transfer-allowance">
       @if (Model.TransferAllowances != null && Model.TransferAllowances.Records != null && Model.TransferAllowances.Records.Count() > 0)
       {
-      <div class="grid-row">
-         <div class="column-full">
+
             <p>This table shows a projection of your remaining transfer allowance and includes any actual training costs already committed for transfers. Your transfer allowance is re-calculated every tax year and will be available to use from May of each year.</p>
             <p><b>Annual transfer allowance: </b>@Model.TransferAllowances.AnnualTransferAllowance.FormatCost()</p>
-         </div>
-      </div>
+
       var tableBodyClass = Model.CanFund ? "" : "errorTable";
       var newFinancialYear = true;
       var startDateOfEstimationYear = Model.TransferAllowances.Records.First().Date;
       foreach (var costEstimate in Model.TransferAllowances.Records)
       {
-      var tableRowClass = costEstimate.IsLessThanCost ? "error-row" : "";
-      var tableCellClass = costEstimate.IsLessThanCost ? "error-messsage" : "";
+      var tableRowClass = costEstimate.IsLessThanCost ? "app-table-error-row" : "";
+      var tableCellClass = costEstimate.IsLessThanCost ? "app-table-cell-error-messsage" : "";
+      
       if (newFinancialYear)
       {
       newFinancialYear = false;
       var endYear = startDateOfEstimationYear.Month < 3 ? costEstimate.Date.ToString("yyyy") : costEstimate.Date.AddYears(1).ToString("yyyy");
-      <h3 class="heading-medium">@costEstimate.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
-      @:<table class="small">
-         <thead>
-            <tr>
-               <th class="nowrap">Date</th>
-               <th class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that you have agreed to fund with a transfer">
+      <h3 class="govuk-heading-m">@costEstimate.Date.ToGdsFormatWithoutDay() to March @endYear</h3>
+      @:<table class="govuk-table das-table--condensed das-table--responsive">
+         <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+               <th class="govuk-table__header">Date</th>
+               <th class="govuk-table__header govuk-table__header--numeric">
                   Your current transfer costs
                   <br />
-                  <span class="tip-info"><span class="info-title">info</span></span>
+                  <span tabindex="0" class="app-tooltip" title="Cost of apprenticeships that you have agreed to fund with a transfer">info</span>
                </th>
-               <th class="financial tippy" data-tippy-trigger="click" title="Cost of transfer funded apprenticeships you've estimated using this tool">
+               <th class="govuk-table__header govuk-table__header--numeric">
                   Cost of estimated apprenticeships
                   <br />
-                  <span class="tip-info"><span class="info-title">info</span></span>
+                  <span tabindex="0" class="app-tooltip" title="Cost of transfer funded apprenticeships you've estimated using this tool">info</span>
                </th>
-               <th class="financial tippy" data-tippy-trigger="click" title="The estimated allowance you have left at the end of the month">
+               <th class="govuk-table__header govuk-table__header--numeric">
                   Remaining transfer allowance
                   <br />
-                  <span class="tip-info"><span class="info-title">info</span></span>
+                  <span tabindex="0" class="app-tooltip" title="The estimated allowance you have left at the end of the month">info</span>
                </th>
             </tr>
          </thead>
-         @:<tbody class="@tableBodyClass">
+         @:<tbody class="govuk-table__body @tableBodyClass">
             }
-            <tr class="@tableRowClass">
-               <td>@costEstimate.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
-               <td class="financial">@costEstimate.ActualCost.FormatCost()</td>
-               <td class="financial">@costEstimate.EstimatedCost.FormatCost()</td>
-               <td class="financial @tableCellClass">@costEstimate.RemainingAllowance.FormatCost()</td>
+            <tr class="govuk-table__row @tableRowClass">
+               <td class="govuk-table__cell" data-label="Date">@costEstimate.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
+               <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Your current transfer costs">@costEstimate.ActualCost.FormatCost()</td>
+               <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Cost of estimated apprenticeships">@costEstimate.EstimatedCost.FormatCost()</td>
+               <td class="govuk-table__cell govuk-table__cell--numeric @tableCellClass" data-label="Remaining transfer allowance">@costEstimate.RemainingAllowance.FormatCost()</td>
             </tr>
             if (costEstimate.Date.Month == 3 || Model.TransferAllowances.Records.Last().Equals(costEstimate))
             {
