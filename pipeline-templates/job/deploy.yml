@@ -77,6 +77,7 @@ jobs:
             TableName: Configuration
             ConfigurationSecrets:
               CosmosDbConnectionString: $(CosmosDbConnectionString)
+              ForecastingOuterApiSubscriptionKey: $(ForecastingOuterApiSubscriptionKey)
               ForecastingStorageConnectionString: $(ForecastingStorageConnectionString)
               IdentityClientSecret: $(IdentityClientSecret)
               PaymentsEventsApiClientSecret: $(PaymentsEventsApiClientSecret)
