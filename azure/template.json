@@ -69,9 +69,6 @@
         "logAnalyticsWorkspaceName": {
             "type": "string"
         },
-        "certificateThumbprintsToLoad": {
-            "type": "string"
-        },
         "sharedKeyVaultName": {
             "type": "string"
         },
@@ -82,8 +79,7 @@
             "type": "securestring"
         },
         "loggingRedisKey": {
-            "type": "string",
-            "defaultValue": "logstash"
+            "type": "string"
         },
         "numberOfMonthsToProject": {
             "type": "string"
@@ -398,10 +394,6 @@
                                 {
                                     "name": "StorageConnectionString",
                                     "value": "[reference('storage-account').outputs.StorageConnectionString.value]"
-                                },
-                                {
-                                    "name": "WEBSITE_LOAD_CERTIFICATES",
-                                    "value": "[parameters('certificateThumbprintsToLoad')]"
                                 },
                                 {
                                     "name": "FUNCTIONS_WORKER_RUNTIME",
