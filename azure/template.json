@@ -496,10 +496,6 @@
                                     "value": "[parameters('myaBaseUrl')]"
                                 },
                                 {
-                                    "name": "WEBSITE_LOAD_CERTIFICATES",
-                                    "value": "[parameters('certificateThumbprintsToLoad')]"
-                                },
-                                {
                                     "name": "ZenDeskSectionId",
                                     "value": "[parameters('zenDeskSectionId')]"
                                 },
