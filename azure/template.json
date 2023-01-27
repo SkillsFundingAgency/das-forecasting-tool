@@ -405,8 +405,7 @@
                 }
             },
             "dependsOn": [
-                "functions-app-service-plan",
-                "apim-subscription-forecasting"
+                "functions-app-service-plan"
             ]
         },
         {
