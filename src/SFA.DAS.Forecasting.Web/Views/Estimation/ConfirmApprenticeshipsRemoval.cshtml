@@ -9,49 +9,41 @@
 
 @section breadcrumb
 {
-    <a asp-route="@RouteNames.EstimatedCost" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimateName="@Model.EstimationName" asp-route-apprenticeshipRemoved="false" class="link-back">Back</a>
+    <a asp-route="@RouteNames.EstimatedCost" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimateName="@Model.EstimationName" asp-route-apprenticeshipRemoved="false" class="govuk-back-link">Back</a>
 }
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <div class="hgroup">
-            <h1 class="heading-xlarge">
-                Remove apprenticeship
-            </h1>
-            <p class="lede">You are about to remove @Model.NumberOfApprentices @Model.CourseTitle level @Model.Level.</p>
-        </div>
-    </div>
-</div>
-
-<div class="grid-row">
-    <div class="column-full">
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">
+            Remove apprenticeship
+        </h1>
         <form asp-route="@RouteNames.RemoveApprenticeships" method="POST">
             <input asp-for="EstimationName" type="hidden"/>
             <input asp-for="HashedAccountId" type="hidden"/>
             <input asp-for="ApprenticeshipId" type="hidden"/>
 
-            <div class="form-group @(!Model.HasConfirmed ? "errorClass" : "")">
-
-                <label class="form-label-bold" for="email">Are you sure you want to do this?</label>
-                @if (!Model.HasConfirmed)
-                {
-                    <span class="error-message">Please choose an option</span>
-                }
-
-                <fieldset>
-                    <div class="multiple-choice">
-                        <input id="radio-1" asp-for="ConfirmedDeletion" type="radio" value="true"/>
-                        <label for="radio-1">Yes, I do want to remove this apprenticeship</label>
-                    </div>
-                    <div class="multiple-choice">
-                        <input id="radio-2" asp-for="ConfirmedDeletion" type="radio" value="false"/>
-                        <label for="radio-2">No, I want to keep this apprenticeship</label>
+            <div class="govuk-form-group @(!Model.HasConfirmed ? "govuk-form-group--error" : "")">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-4">Confirm you want to remove @Model.NumberOfApprentices @Model.CourseTitle level @Model.Level </legend>
+                    @if (!Model.HasConfirmed)
+                    {
+                    <p class="govuk-error-message">
+                        <span class="govuk-visually-hidden">Error:</span> Choose an option
+                    </p>
+                    }
+                    <div class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-1" asp-for="ConfirmedDeletion" type="radio" value="true"/>
+                            <label for="radio-1" class="govuk-label govuk-radios__label">Yes, I do want to remove this apprenticeship</label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="radio-2" asp-for="ConfirmedDeletion" type="radio" value="false"/>
+                            <label for="radio-2" class="govuk-label govuk-radios__label">No, I want to keep this apprenticeship</label>
+                        </div>
                     </div>
                 </fieldset>
             </div>
-            <button type="submit" class="button">Continue</button>
-
+            <button type="submit" class="govuk-button">Continue</button>
         </form>
     </div>
 </div>
