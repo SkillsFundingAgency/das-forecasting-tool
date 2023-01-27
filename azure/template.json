@@ -156,7 +156,9 @@
             "[concat(variables('resourceNamePrefix'),'-pld-fa')]",
             "[concat(variables('resourceNamePrefix'),'-prj-fa')]",
             "[concat(variables('resourceNamePrefix'),'-stb-fa')]"
-        ]
+        ],
+        "webConfigNames": "SFA.DAS.Forecasting.Web,SFA.DAS.Employer.GovSignIn",
+        "functionsConfigNames": "SFA.DAS.Forecasting.Web.Jobs"
     },
     "resources": [
         {
@@ -368,6 +370,14 @@
                                     "value": "[parameters('configurationStorageConnectionString')]"
                                 },
                                 {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('functionsConfigNames')]"
+                                },
+                                {
+                                    "name": "Version",
+                                    "value": "1.0"
+                                },
+                                {
                                     "name": "EnvironmentName",
                                     "value": "[parameters('environmentName')]"
                                 },
@@ -474,6 +484,14 @@
                                 {
                                     "name": "ConfigurationStorageConnectionString",
                                     "value": "[parameters('configurationStorageConnectionString')]"
+                                },
+                                {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('webConfigNames')]"
+                                },
+                                {
+                                    "name": "Version",
+                                    "value": "1.0"
                                 },
                                 {
                                     "name": "ForecastingRoutePrefix",
