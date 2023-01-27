@@ -9,8 +9,6 @@ variables:
   value: SFA.DAS.Forecasting
 - name: BuildConfiguration
   value: release
-- name: DACPACSolutionBaseName
-  value: SFA.DAS.Forecasting.Database
 - name: BuildPlatform
   value: any cpu
 - group: RELEASE Management Resources
@@ -46,8 +44,8 @@ stages:
       BuildConfiguration: $(BuildConfiguration)
   - template: azure-pipelines-templates/build/job/dacpac-template.yml@das-platform-building-blocks
     parameters:
-      SolutionBaseName: $(DACPACSolutionBaseName)
-      SqlProjectPath: src/$(DACPACSolutionBaseName)/$(DACPACSolutionBaseName).sqlproj
+      SolutionBaseName: $(SolutionBaseName).Database
+      SqlProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.sqlproj
 
 - stage: Deploy_AT
   dependsOn: Build

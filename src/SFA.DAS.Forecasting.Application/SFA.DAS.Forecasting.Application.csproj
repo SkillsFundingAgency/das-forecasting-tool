@@ -15,7 +15,6 @@
     <PackageReference Include="Azure.Identity" Version="1.8.1" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="FluentValidation" Version="11.4.0" />
-    <PackageReference Include="Microsoft.Azure.DocumentDB" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
