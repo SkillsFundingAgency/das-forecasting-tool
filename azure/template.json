@@ -69,9 +69,6 @@
         "logAnalyticsWorkspaceName": {
             "type": "string"
         },
-        "certificateThumbprintsToLoad": {
-            "type": "string"
-        },
         "sharedKeyVaultName": {
             "type": "string"
         },
@@ -82,8 +79,7 @@
             "type": "securestring"
         },
         "loggingRedisKey": {
-            "type": "string",
-            "defaultValue": "logstash"
+            "type": "string"
         },
         "numberOfMonthsToProject": {
             "type": "string"
@@ -160,7 +156,9 @@
             "[concat(variables('resourceNamePrefix'),'-pld-fa')]",
             "[concat(variables('resourceNamePrefix'),'-prj-fa')]",
             "[concat(variables('resourceNamePrefix'),'-stb-fa')]"
-        ]
+        ],
+        "webConfigNames": "SFA.DAS.Forecasting.Web,SFA.DAS.Employer.GovSignIn",
+        "functionsConfigNames": "SFA.DAS.Forecasting.Web.Jobs"
     },
     "resources": [
         {
@@ -372,6 +370,14 @@
                                     "value": "[parameters('configurationStorageConnectionString')]"
                                 },
                                 {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('functionsConfigNames')]"
+                                },
+                                {
+                                    "name": "Version",
+                                    "value": "1.0"
+                                },
+                                {
                                     "name": "EnvironmentName",
                                     "value": "[parameters('environmentName')]"
                                 },
@@ -400,10 +406,6 @@
                                     "value": "[reference('storage-account').outputs.StorageConnectionString.value]"
                                 },
                                 {
-                                    "name": "WEBSITE_LOAD_CERTIFICATES",
-                                    "value": "[parameters('certificateThumbprintsToLoad')]"
-                                },
-                                {
                                     "name": "FUNCTIONS_WORKER_RUNTIME",
                                     "value": "dotnet"
                                 }
@@ -413,8 +415,7 @@
                 }
             },
             "dependsOn": [
-                "functions-app-service-plan",
-                "apim-subscription-forecasting"
+                "functions-app-service-plan"
             ]
         },
         {
@@ -485,6 +486,14 @@
                                     "value": "[parameters('configurationStorageConnectionString')]"
                                 },
                                 {
+                                    "name": "ConfigNames",
+                                    "value": "[variables('webConfigNames')]"
+                                },
+                                {
+                                    "name": "Version",
+                                    "value": "1.0"
+                                },
+                                {
                                     "name": "ForecastingRoutePrefix",
                                     "value": "forecasting"
                                 },
@@ -503,10 +512,6 @@
                                 {
                                     "name": "MyaBaseUrl",
                                     "value": "[parameters('myaBaseUrl')]"
-                                },
-                                {
-                                    "name": "WEBSITE_LOAD_CERTIFICATES",
-                                    "value": "[parameters('certificateThumbprintsToLoad')]"
                                 },
                                 {
                                     "name": "ZenDeskSectionId",

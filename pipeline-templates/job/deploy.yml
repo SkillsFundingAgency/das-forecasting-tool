@@ -76,6 +76,9 @@ jobs:
             TargetFileName: '*.schema.json'
             TableName: Configuration
             ConfigurationSecrets:
+              CosmosDbConnectionString: $(CosmosDbConnectionString)
+              ForecastingStorageConnectionString: $(ForecastingStorageConnectionString)
+              IdentityClientSecret: $(IdentityClientSecret)
               PaymentsEventsApiClientSecret: $(PaymentsEventsApiClientSecret)
         - template: azure-pipelines-templates/deploy/step/app-role-assignments.yml@das-platform-building-blocks
           parameters:
