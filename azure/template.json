@@ -157,8 +157,8 @@
             "[concat(variables('resourceNamePrefix'),'-prj-fa')]",
             "[concat(variables('resourceNamePrefix'),'-stb-fa')]"
         ],
-        "webConfigNames": "SFA.DAS.Forecasting.Web,SFA.DAS.Employer.GovSignIn",
-        "functionsConfigNames": "SFA.DAS.Forecasting.Web.Jobs"
+        "webConfigNames": "SFA.DAS.Forecasting.Web,SFA.DAS.Employer.GovSignIn,SFA.DAS.Encoding",
+        "functionsConfigNames": "SFA.DAS.Forecasting.Web.Jobs,SFA.DAS.Encoding"
     },
     "resources": [
         {
