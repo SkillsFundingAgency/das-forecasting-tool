@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.Services.AppAuthentication;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Data.Configurations;
@@ -39,7 +39,7 @@ namespace SFA.DAS.Forecasting.Data
         public DbSet<LevyDeclarationModel> LevyDeclarations { get; set; }
         public DbSet<PaymentModel> Payments { get; set; }
         private readonly ForecastingConfiguration _configuration;
-        private readonly AzureServiceTokenProvider _azureServiceTokenProvider;
+        private readonly ChainedTokenCredential _azureServiceTokenProvider;
      
         public ForecastingDataContext()
         {
@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Data
         {
             
         }
-        public ForecastingDataContext(IOptions<ForecastingConfiguration> config, DbContextOptions options, AzureServiceTokenProvider azureServiceTokenProvider) :base(options)
+        public ForecastingDataContext(IOptions<ForecastingConfiguration> config, DbContextOptions options, ChainedTokenCredential azureServiceTokenProvider) :base(options)
         {
             _configuration = config.Value;
             _azureServiceTokenProvider = azureServiceTokenProvider;
@@ -78,7 +78,7 @@ namespace SFA.DAS.Forecasting.Data
             var connection = new SqlConnection
             {
                 ConnectionString = _configuration.DatabaseConnectionString,
-                AccessToken = _azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result,
+                AccessToken = _azureServiceTokenProvider.GetTokenAsync(new TokenRequestContext(scopes: new string[] { AzureResource })).Result.Token,
             };
             
             optionsBuilder.UseSqlServer(connection,options=>

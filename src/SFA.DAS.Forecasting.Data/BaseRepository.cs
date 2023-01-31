@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Microsoft.Azure.Services.AppAuthentication;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using Polly;
 using Polly.Retry;
@@ -17,6 +18,8 @@ public abstract class BaseRepository
     private readonly Policy _retryPolicy;
     private readonly bool _isDevEnvironment;
     private readonly Action<string> _logPollyRetryMessage;
+    private readonly ChainedTokenCredential _azureServiceTokenProvider;
+
     private static IList<int> _transientErrorNumbers = new List<int>
         {
             // https://docs.microsoft.com/en-us/azure/sql-database/sql-database-develop-error-messages
@@ -25,12 +28,12 @@ public abstract class BaseRepository
             -2, 20, 64, 233, 10053, 10054, 10060, 40143
         };
 
-    protected BaseRepository(string connectionString,  Action<string> logMessage, bool isDevEnvironment = false)
+    protected BaseRepository(string connectionString,  Action<string> logMessage, ChainedTokenCredential azureServiceTokenProvider)
     {
         _connectionString = connectionString;
         _retryPolicy = GetRetryPolicy();
-        _isDevEnvironment = isDevEnvironment;
         _logPollyRetryMessage = logMessage;
+        _azureServiceTokenProvider = azureServiceTokenProvider;
     }
 
     protected async Task<T> WithConnection<T>(Func<SqlConnection, Task<T>> getData)
@@ -67,14 +70,14 @@ public abstract class BaseRepository
 
     private SqlConnection GetSqlConnecction(string connectionString)
     {
-        if (_isDevEnvironment)
+        if (_azureServiceTokenProvider == null)
         {
             return new SqlConnection(connectionString);
         }
         else
         {
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var accessToken = azureServiceTokenProvider.GetAccessTokenAsync(AzureResource).Result;
+            var accessToken = _azureServiceTokenProvider
+                .GetTokenAsync(new TokenRequestContext(scopes: new string[] {AzureResource})).Result.Token;
             return new SqlConnection
             {
                 ConnectionString = connectionString,

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Identity;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Converters;
@@ -35,7 +36,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
 
         public EmployerDatabaseService(
             ForecastingJobsConfiguration config,
-            ILogger<EmployerDatabaseService>  logger) :base(config.EmployerConnectionString, s => {}  , false)//TODO FAI-625
+            ILogger<EmployerDatabaseService>  logger, ChainedTokenCredential chainedTokenCredential) :base(config.EmployerConnectionString, s => {}, chainedTokenCredential)
             
         {
             _logger = logger;

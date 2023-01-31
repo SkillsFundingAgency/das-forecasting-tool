@@ -10,6 +10,7 @@ public static class DatabaseRegistrationExtensions
 {
     public static void AddDatabaseRegistration(this IServiceCollection services, string connectionString, string environmentName)
     {
+        services.AddHttpContextAccessor();
         if (environmentName.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
         {
             services.AddDbContext<ForecastingDataContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
@@ -17,6 +18,13 @@ public static class DatabaseRegistrationExtensions
         else
         {
             services.AddDbContext<ForecastingDataContext>(ServiceLifetime.Transient);
+            
+            services.AddSingleton(new ChainedTokenCredential(
+                new ManagedIdentityCredential(),
+                new AzureCliCredential(),
+                new VisualStudioCodeCredential(),
+                new VisualStudioCredential())
+            );
         }
 
 
@@ -25,12 +33,7 @@ public static class DatabaseRegistrationExtensions
         services.AddTransient<IForecastingDataContext, ForecastingDataContext>(provider => provider.GetService<ForecastingDataContext>());
         services.AddTransient(provider => new Lazy<ForecastingDataContext>(provider.GetService<ForecastingDataContext>()));
 
-        services.AddSingleton(new ChainedTokenCredential(
-            new ManagedIdentityCredential(),
-            new AzureCliCredential(),
-            new VisualStudioCodeCredential(),
-            new VisualStudioCredential())
-        );
+        
         
     }
 }
