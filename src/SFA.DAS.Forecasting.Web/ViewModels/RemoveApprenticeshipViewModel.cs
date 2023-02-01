@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
     public class RemoveApprenticeshipViewModel
@@ -9,7 +11,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string CourseTitle { get; set; }
         public int Level { get; set; }
         public int NumberOfApprentices { get; set; }
-        public bool? ConfirmedDeletion { get; set; } = false;
-        public bool HasConfirmed => ConfirmedDeletion.HasValue;
+        [Required(ErrorMessage = "Choose an option")]
+        public bool? ConfirmedDeletion { get; set; }
     }
 }

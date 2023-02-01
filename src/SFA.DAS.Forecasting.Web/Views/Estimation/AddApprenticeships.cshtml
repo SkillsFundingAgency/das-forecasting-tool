@@ -37,7 +37,7 @@
             @Html.Partial("_editApprenticeshipContent")
         }
 
-        <form method="POST" asp-route="@RouteNames.SaveApprenticeship">
+        <form method="post" asp-route="@RouteNames.SaveApprenticeship" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName">
             
                 <input asp-for="FundingPeriodsJson" type="hidden"/>
                 <input asp-for="CalculatedTotalCap" type="hidden"/>

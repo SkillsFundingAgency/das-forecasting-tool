@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Forecasting.Web.Configuration
+@using Microsoft.AspNetCore.Mvc.ModelBinding
 @model SFA.DAS.Forecasting.Web.ViewModels.RemoveApprenticeshipViewModel
 
 @{
@@ -17,20 +18,18 @@
         <h1 class="govuk-heading-xl">
             Remove apprenticeship
         </h1>
-        <form asp-route="@RouteNames.RemoveApprenticeships" method="POST">
+        <form asp-route="@RouteNames.RemoveApprenticeships" method="POST" asp-route-hashedAccountId="@Model.HashedAccountId" asp-route-estimationName="@Model.EstimationName" asp-route-id="@Model.ApprenticeshipId">
             <input asp-for="EstimationName" type="hidden"/>
             <input asp-for="HashedAccountId" type="hidden"/>
             <input asp-for="ApprenticeshipId" type="hidden"/>
+            <input asp-for="NumberOfApprentices" type="hidden"/>
+            <input asp-for="CourseTitle" type="hidden"/>
+            <input asp-for="Level" type="hidden"/>
 
-            <div class="govuk-form-group @(!Model.HasConfirmed ? "govuk-form-group--error" : "")">
+            <div class="govuk-form-group @(ViewData.ModelState.ContainsKey("ConfirmedDeletion") && ViewData.ModelState["ConfirmedDeletion"].Errors.Any()? "govuk-form-group--error" : "")">
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-4">Confirm you want to remove @Model.NumberOfApprentices @Model.CourseTitle level @Model.Level </legend>
-                    @if (!Model.HasConfirmed)
-                    {
-                    <p class="govuk-error-message">
-                        <span class="govuk-visually-hidden">Error:</span> Choose an option
-                    </p>
-                    }
+                    @Html.ValidationMessageFor(m => m.ConfirmedDeletion, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.ConfirmedDeletion)})
                     <div class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="radio-1" asp-for="ConfirmedDeletion" type="radio" value="true"/>
