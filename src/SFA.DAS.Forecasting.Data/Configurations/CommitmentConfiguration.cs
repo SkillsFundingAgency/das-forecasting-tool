@@ -28,6 +28,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             builder.Property(x => x.NumberOfInstallments).HasColumnName(@"NumberOfInstallments").HasColumnType("smallint").IsRequired();
             builder.Property(x => x.HasHadPayment).HasColumnName(@"HasHadPayment").HasColumnType("bit").IsRequired();
             builder.Property(x => x.UpdatedDateTime).HasColumnName(@"UpdatedDateTime").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.FundingSource).HasColumnName(@"FundingSource").HasColumnType("tinyint").IsRequired();
         }
     }
 }
