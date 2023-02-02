@@ -118,57 +118,55 @@
 </div>
 
 
-
-
         @foreach (var x in Model.ProjectionTables)
         {
             <h3 class="govuk-heading-m">@x.Key.FirstStartDate.ToGdsFormatWithoutDay() to @x.Key.LastEndDate.ToGdsFormatWithoutDay()</h3>
-            @:<table class="govuk-table">
+            @:<table class="govuk-table  das-table--condensed">
                 <thead>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header"></th>
+                        <th class="govuk-table__header"></th>
+                        <th class="govuk-table__header"></th>
+                        <th class="govuk-table__header"></th>
+                        <th class="govuk-table__header"></th>
                         @if (Model.DisplayCoInvestment)
                         {
-                            <th colspan="2" class="co-invest-head grey-bg">Co-investment</th>
+                            <th colspan="2" class="govuk-table__header govuk-!-text-align-centre app-table-cell-highlight">Co-investment</th>
                         }
-                        <th></th>
+                        <th class="govuk-table__header"></th>
                     </tr>
-                    <tr>
-                        <th style="width: 60px;" scope="col">Date</th>
-                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">
+                    <tr  class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-10" scope="col">Date</th>
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" title="">
                             Cost of <br />training<br />
-                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
+                            <span tabindex="0" class="app-tooltip" title="Cost of apprenticeships that you’ve agreed to fund, which includes any transferred funds">info</span>
                         </th>
-                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" title="">
                             Completion payments<br />
-                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
+                            <span tabindex="0" class="app-tooltip" title="This column shows the total cost of all completion payments due for the month. The completion payment is shown in the month after the apprentice plans to end their apprenticeship. It is 20% of the total cost of each apprenticeship">info</span>
                         </th>
-                        <th scope="col" class="financial" title="Expired Funds">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" title="Expired Funds">
                             Expired funds<br />
-                            <span class="tip-info"><a asp-route="@RouteNames.ExpiredFundsGuidance" asp-route-hashedAccountId="@Model.HashedAccountId" class="info-title" target="_blank">info</a></span>
+                            <a asp-route="@RouteNames.ExpiredFundsGuidance" asp-route-hashedAccountId="@Model.HashedAccountId"  class="app-tooltip" target="_blank">info</a>
                         </th>
-                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" title="">
                             Funds in<br />
-                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
+                            <span tabindex="0" class="app-tooltip" title="Total of the last month's received levy funds from your PAYE schemes including the 10% top up, which will be updated on the 20th of each month and any transferred funds you've received. The same figure is used throughout the forecast">info</span>
                         </th>
                         @if (Model.DisplayCoInvestment)
                         {
-                            <th scope="col" class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment you pay if your funds run out, which will be 5% of the outstanding balance for that month">
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric app-table-cell-highlight" title="">
                                 Your <br />contribution (5%)<br />
-                                <span class="tip-info"><a href="javascript:void('');" aria-hidden="true" class="info-title">info</a></span>
+                                <span tabindex="0" class="app-tooltip" title="Amount of co-investment you pay if your funds run out, which will be 5% of the outstanding balance for that month">info</span>
                             </th>
-                            <th scope="col" class="financial grey-bg tippy" data-tippy-trigger="click" title="Amount of co-investment the government will pay, which is 95% of the outstanding balance for that month, up to the funding band maximum">
+                            <th scope="col" class="govuk-table__header govuk-table__header--numeric app-table-cell-highlight" title="">
                                 Government <br /> contribution (95%)<br />
-                                <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
+                                <span tabindex="0" class="app-tooltip" title="Amount of co-investment the government will pay, which is 95% of the outstanding balance for that month, up to the funding band maximum">info</span>
                             </th>
                         }
-                        <th scope="col" class="financial tippy" data-tippy-trigger="click" title="The estimated funds you have left at the end of the month">
+                        <th scope="col" class="govuk-table__header govuk-table__header--numeric" title="">
                             Balance<br />
-                            <span class="tip-info"><a href="javascript:void('');" class="info-title">info</a></span>
+                            <span tabindex="0" class="app-tooltip" title="The estimated funds you have left at the end of the month">info</span>
                         </th>
                     </tr>
                 </thead>
@@ -176,15 +174,15 @@
 
                     @foreach (var item in x.Value)
                     {
-                        <tr>
-                            <td>@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
-                            <td class="financial">@item.CostOfTraining.FormatCost()</td>
-                            <td class="financial">@item.CompletionPayments.FormatCost()</td>
-                            <td class="financial">@item.ExpiredFunds.FormatCost()</td>
-                            <td class="financial">@item.FundsIn.FormatCost()</td>
+                        <tr  class="govuk-table__row">
+                            <td class="govuk-table__cell">@item.Date.ToGdsFormatShortMonthWithoutDay()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">@item.CostOfTraining.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">@item.CompletionPayments.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">@item.ExpiredFunds.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">@item.FundsIn.FormatCost()</td>
                             @if (Model.DisplayCoInvestment)
                             {
-                                <td class="financial grey-bg">
+                                <td class="govuk-table__cell govuk-table__cell--numeric app-table-cell-highlight">
                                     @if (item.CoInvestmentEmployer == 0)
                                     {
                                         <span>–</span>
@@ -194,7 +192,7 @@
                                         <span>@item.CoInvestmentEmployer.FormatCost()</span>
                                     }
                                 </td>
-                                <td class="financial grey-bg">
+                                <td class="govuk-table__cell govuk-table__cell--numeric app-table-cell-highlight">
                                     @if (item.CoInvestmentGovernment == 0)
                                     {
                                         <span>–</span>
@@ -205,7 +203,7 @@
                                     }
                                 </td>
                             }
-                            <td class="financial">@item.Balance.FormatCost()</td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">@item.Balance.FormatCost()</td>
                         </tr>
                     }
                 </tbody>

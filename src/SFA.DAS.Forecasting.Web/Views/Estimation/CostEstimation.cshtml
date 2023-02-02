@@ -163,20 +163,20 @@
                     @:<table class="govuk-table das-table--condensed das-table--responsive">
                     <thead>
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header nowrap das-table-cell-width-10" scope="col">Date</th>
-                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-20" scope="col">
+                            <th class="govuk-table__header das-table-cell-width-10" scope="col">Date</th>
+                            <th class="govuk-table__header govuk-table__header--numeric das-table-cell-width-20" scope="col">
                                 Your current costs <br />
                                 <span tabindex="0" class="app-tooltip" title="Cost of apprenticeships that you've agreed to fund, which includes any transferred funds">info</span>
                             </th>
-                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-25" scope="col">
+                            <th class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25" scope="col">
                                 Estimated costs <br />
                                 <span tabindex="0" class="app-tooltip" title="Cost of apprenticeships you’ve estimated using this tool">info</span>
                             </th>
-                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-25" scope="col">
+                            <th class="govuk-table__header govuk-table__header--numeric das-table-cell-width-25" scope="col">
                                 Expired funds <br />
                                 <span tabindex="0" class="app-tooltip" title="The estimated funds that could expire">info</span>
                             </th>
-                            <th class="govuk-table__header govuk-table__header--numeric tippy das-table-cell-width-20" scope="col">
+                            <th class="govuk-table__header govuk-table__header--numeric das-table-cell-width-20" scope="col">
                                 Balance <br />
                                 <span tabindex="0" class="app-tooltip" title="The estimated funds you have left at the end of the month">info</span>
                             </th>
@@ -185,7 +185,7 @@
                     @:<tbody>
                         }
                         <tr class="govuk-table__row @tableRowClass">
-                            <td class="govuk-table__cell nowrap" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
+                            <td class="govuk-table__cell" data-label="Date">@accountFund.Date.ToGdsFormatShortMonthAndFullYearWithoutDay()</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Your current costs">@accountFund.ActualCost.FormatCost()</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Cost of estimated apprenticeships">@accountFund.EstimatedCost.FormatCost()</td>
                             <td class="govuk-table__cell govuk-table__cell--numeric" data-label="Amount of expired funds">@accountFund.ExpiredFunds.FormatCost()</td>
