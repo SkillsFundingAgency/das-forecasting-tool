@@ -137,6 +137,9 @@
         },
         "workerAccessRestrictions": {
             "type": "array"
+        },
+        "cdnUrl": {
+            "type": "string"
         }
     },
     "variables": {
