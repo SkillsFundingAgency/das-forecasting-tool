@@ -124,7 +124,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Route("{estimationName}/apprenticeship/course", Name = RouteNames.GetCourseInfo)]
         public async Task<ActionResult> GetCourseInfo(string courseId, string estimationName)
         {
