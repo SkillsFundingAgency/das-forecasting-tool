@@ -25,6 +25,9 @@
         <!--[if !IE 8]><!-->
         <link href="css/main.css" rel="stylesheet" />
         <link href="/css/app.css" rel="stylesheet" no-cdn />
+
+        @RenderSection("styles", required: false)
+
         <!--<![endif]-->
 
         <meta property="og:image" content="assets/images/govuk-opengraph-image.png">
@@ -78,6 +81,8 @@
             window.DASFrontend.initAll();
         </script>
         
+
         @RenderSection("javascript", required: false)
+       
     </body>
 </html>
