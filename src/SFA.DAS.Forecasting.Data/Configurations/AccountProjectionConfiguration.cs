@@ -14,7 +14,7 @@ namespace SFA.DAS.Forecasting.Data.Configurations
             builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("bigint").IsRequired().ValueGeneratedOnAdd();
             builder.Property(x => x.EmployerAccountId).HasColumnName(@"EmployerAccountId").HasColumnType("bigint").IsRequired();
             builder.Property(x => x.ProjectionCreationDate).HasColumnName(@"ProjectionCreationDate").HasColumnType("datetime").IsRequired();
-            builder.Property(x => x.ProjectionGenerationType).HasColumnName(@"ProjectionGenerationType").HasColumnType("smallint").IsRequired();
+            builder.Property(x => x.ProjectionGenerationType).HasColumnName(@"ProjectionGenerationType").HasColumnType("tinyint").IsRequired();
             builder.Property(x => x.Month).HasColumnName(@"Month").HasColumnType("smallint").IsRequired();
             builder.Property(x => x.Year).HasColumnName(@"Year").HasColumnType("int").IsRequired();
 
