@@ -60,9 +60,9 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             var messageProjectionSource = await _accountProjectionService.GetOriginalProjectionSource(message.EmployerAccountId,message.ProjectionSource);
            
             if (messageProjectionSource == ProjectionSource.LevyDeclaration)
-                projections.BuildLevyTriggeredProjections(startDate, numberOfMonthsToProject);
+                projections.BuildLevyTriggeredProjections(startDate, numberOfMonthsToProject, DateTime.UtcNow);
             else
-                projections.BuildPayrollPeriodEndTriggeredProjections(startDate, numberOfMonthsToProject);
+                projections.BuildPayrollPeriodEndTriggeredProjections(startDate, numberOfMonthsToProject, DateTime.UtcNow);
     
             var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId, messageProjectionSource, startDate);
 

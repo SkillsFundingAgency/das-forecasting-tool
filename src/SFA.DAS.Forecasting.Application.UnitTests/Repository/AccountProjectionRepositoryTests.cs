@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
 
             projection.Should().BeOfType<AccountProjection>();
             projection.EmployerAccountId.Should().Be(12345);
-            projection.BuildLevyTriggeredProjections(DateTime.Now, 24);
+            projection.BuildLevyTriggeredProjections(DateTime.Now, 24, DateTime.UtcNow);
             projection.Projections.Count.Should().Be(25);
 
         }
@@ -88,7 +88,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
 
             projection.Should().BeOfType<AccountProjection>();
             projection.EmployerAccountId.Should().Be(12345);
-            projection.BuildLevyTriggeredProjections(DateTime.Now, 24);
+            projection.BuildLevyTriggeredProjections(DateTime.Now, 24, DateTime.UtcNow);
             projection.Projections.Count.Should().Be(25);
 
         }

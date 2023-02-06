@@ -30,17 +30,17 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             _projections = accountProjectionModels != null ? accountProjectionModels.ToList() :  throw new ArgumentNullException(nameof(accountProjectionModels));
         }
 
-        public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths)
+        public void BuildLevyTriggeredProjections(DateTime periodStart, int numberOfMonths, DateTime currentDate)
         {
-            BuildProjections(periodStart, numberOfMonths, ProjectionGenerationType.LevyDeclaration);
+            BuildProjections(periodStart, numberOfMonths, ProjectionGenerationType.LevyDeclaration, currentDate);
         }
 
-        public void BuildPayrollPeriodEndTriggeredProjections(DateTime periodStart, int numberOfMonths)
+        public void BuildPayrollPeriodEndTriggeredProjections(DateTime periodStart, int numberOfMonths, DateTime currentDate)
         {
-            BuildProjections(periodStart, numberOfMonths, ProjectionGenerationType.PayrollPeriodEnd);
+            BuildProjections(periodStart, numberOfMonths, ProjectionGenerationType.PayrollPeriodEnd, currentDate);
         }
 
-        private void BuildProjections(DateTime periodStart, int numberOfMonths, ProjectionGenerationType projectionGenerationType)
+        private void BuildProjections(DateTime periodStart, int numberOfMonths, ProjectionGenerationType projectionGenerationType, DateTime currentDate)
         {
             var startMonth = 0;
 
@@ -64,14 +64,15 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                     lastBalance, 
                     projectionGenerationType,
                     ignoreCostOfTraining,
-                    periodStart.Day);
+                    periodStart.Day,
+                    currentDate);
 
                 _projections.Add(projection);
                 lastBalance = projection.FutureFunds;
             }
         }
 
-        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool isFirstMonth, int periodStartDay)
+        private AccountProjectionModel CreateProjection(DateTime period, decimal levyFundsIn, decimal lastBalance, ProjectionGenerationType projectionGenerationType, bool isFirstMonth, int periodStartDay, DateTime currentDate)
         {
 	        var totalCostOfTraining = _employerCommitments.GetTotalCostOfTraining(period);
 	        var completionPayments = _employerCommitments.GetTotalCompletionPayments(period);
@@ -113,7 +114,7 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) : 0m,
                 CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) : 0m,
                 FutureFunds = futureFunds,
-                ProjectionCreationDate = DateTime.UtcNow,
+                ProjectionCreationDate = currentDate,
                 ProjectionGenerationType = projectionGenerationType
             };
             return projection;
