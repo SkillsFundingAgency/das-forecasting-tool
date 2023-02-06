@@ -83,10 +83,19 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         }
 
         [Test]
+        public void Does_Not_Include_Levy_In_Past_Months()
+        {
+            _currentDate = _projectionStartDate.AddMonths(3);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, 12, _currentDate);
+
+            _accountProjection.Projections.Count(projection => projection.LevyFundsIn == 0).Should().Be(3);
+            _accountProjection.Projections.Count(projection => projection.LevyFundsIn == 300).Should().Be(10);
+        }
+
+        [Test]
         public void Does_Not_Include_Levy_In_First_Month_For_Levy_Triggered_Projection()
         {
             _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 2, _currentDate);
-
             _accountProjection.Projections.First().FutureFunds.Should().Be(_account.Balance);
         }
 

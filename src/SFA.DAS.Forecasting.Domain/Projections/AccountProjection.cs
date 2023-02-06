@@ -80,7 +80,10 @@ namespace SFA.DAS.Forecasting.Domain.Projections
 
 			var currentBalance = GetCurrentBalance(lastBalance,completionPayments.TransferOutCompletionPayment, totalCostOfTraining.TransferOut, isFirstMonth);
 
-            var trainingCosts = totalCostOfTraining.LevyFunded + completionPayments.LevyFundedCompletionPayment + totalCostOfPledges.AcceptedPledgeApplicationCost + totalCostOfPledges.ApprovedPledgeApplicationCost;
+            var trainingCosts = totalCostOfTraining.LevyFunded
+                                + completionPayments.LevyFundedCompletionPayment 
+                                + totalCostOfPledges.AcceptedPledgeApplicationCost
+                                + totalCostOfPledges.ApprovedPledgeApplicationCost;
             
 	        var coInvestmentAmount = GetCoInvestmentAmountBasedOnCurrentBalanceAndTrainingCosts(currentBalance, trainingCosts);
 
@@ -89,12 +92,17 @@ namespace SFA.DAS.Forecasting.Domain.Projections
             var moneyIn = isFirstMonth && projectionGenerationType == ProjectionGenerationType.LevyDeclaration ? 0: 
                 levyFundsIn;
 
-			var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, isFirstMonth, periodStartDay);
+            if (currentDate > period)
+            {
+                moneyIn = 0;
+            }
+
+            var futureFunds = GetMonthEndBalance(currentBalance, moneyOut, moneyIn, projectionGenerationType, isFirstMonth, periodStartDay);
 
 
             var projection = new AccountProjectionModel
             {
-                LevyFundsIn = _account.LevyDeclared,
+                LevyFundsIn = moneyIn,
                 EmployerAccountId = _account.EmployerAccountId,
                 Month = (short)period.Month,
                 Year = (short)period.Year,
