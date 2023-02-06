@@ -4,8 +4,6 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.EmployerFinance.Types.Models;
-using SFA.DAS.Forecasting.Application.Core;
-using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Projections;
@@ -24,17 +22,21 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         private EmployerCommitments _employerCommitments;
         private AccountProjection _accountProjection;
 
+        private DateTime _projectionStartDate;
+
         [SetUp]
         public void SetUp()
         {
+            _projectionStartDate = new DateTime(2022, 4, 1);
+
             _account = new Account(1, 12000, 300, 0, 0);
             _commitment = new CommitmentModel
             {
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = DateTime.Today.AddMonths(-1),
-                PlannedEndDate = DateTime.Today.AddMonths(25),
+                StartDate = _projectionStartDate.AddMonths(-1),
+                PlannedEndDate = _projectionStartDate.AddMonths(25),
                 MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
                 CompletionAmount = 3000,
@@ -51,34 +53,39 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, _employerCommitments);
         }
 
-        [Test]
-        public void Starts_From_This_Month()
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(48)]
+        public void Starts_From_First_Month(int projectionDurationInMonths)
         {
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 1);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, projectionDurationInMonths);
 
-            _accountProjection.Projections.First().Month.Should().Be((short)DateTime.Today.Month);
+            _accountProjection.Projections.First().Month.Should().Be((short)_projectionStartDate.Month);
         }
 
-        [Test]
-        public void Projects_Requested_Number_Of_Months()
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(48)]
+        public void Projects_Requested_Number_Of_Months_Plus_One(int numberOfMonths)
         {
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, numberOfMonths);
 
-            _accountProjection.Projections.Count.Should().Be(49);
+            _accountProjection.Projections.Count.Should().Be(numberOfMonths+1);
         }
 
-        [Test]
-        public void Projects_Levy_Forward_For_Requested_Number_Of_Months()
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(48)]
+        public void Projects_Levy_Forward_For_Requested_Number_Of_Months(int numberOfMonths)
         {
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 48);
-
-            _accountProjection.Projections.Count(projection => projection.LevyFundsIn == 300).Should().Be(49);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, numberOfMonths);
+            _accountProjection.Projections.Count(projection => projection.LevyFundsIn == 300).Should().Be(numberOfMonths+1);
         }
 
         [Test]
         public void Does_Not_Include_Levy_In_First_Month_For_Levy_Triggered_Projection()
         {
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(2018, 10, 20), 2);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 2);
 
             _accountProjection.Projections.First().FutureFunds.Should().Be(_account.Balance);
         }
@@ -87,7 +94,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Includes_Levy_In_Months_After_First_Month_For_Levy_Triggered_Projection()
         {
             
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, 2);
 
             var expected = _accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared -
                            _commitment.MonthlyInstallment;
@@ -98,12 +105,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         [Test]
         public void Includes_Completion_Payments()
         {
-            _commitment.StartDate = DateTime.Today.AddMonths(-1);
-            _commitment.PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(1);
+            _commitment.StartDate = _projectionStartDate.AddMonths(-1);
+            _commitment.PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(1);
 
             _accountProjection = new AccountProjection(_account, _employerCommitments);
             
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, 2);
 
             _accountProjection.Projections.Skip(2).First().LevyFundedCompletionPayments
                 .Should().Be(_commitment.CompletionAmount);
@@ -112,7 +119,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         [Test]
         public void Includes_Installments()
         {
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 2);
 
             _accountProjection.Projections.First().FutureFunds
                 .Should().Be(_account.Balance, because: "First month should be the same as current balance");
@@ -125,7 +132,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         [Test]
         public void Includes_Co_Investment()
         {
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 7);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 7);
 
             _accountProjection.Projections[6].CoInvestmentEmployer.Should().Be(0);
             _accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
@@ -147,8 +154,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 1,
                     ApprenticeshipId = 21,
                     LearnerId = 31,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate,
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
@@ -160,8 +167,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 1,
                     ApprenticeshipId = 22,
                     LearnerId = 32,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate,
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
@@ -176,8 +183,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate,
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
@@ -192,8 +199,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 1,
                     ApprenticeshipId = 34,
                     LearnerId = 34,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate,
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
@@ -205,7 +212,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var employerCommitments = new EmployerCommitments(1, _commitments);
             _accountProjection = new AccountProjection(_account, employerCommitments);
 
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, 12);
 
             var projections = _accountProjection.Projections.ToArray();
 
@@ -229,7 +236,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Includes_Levy_In_First_Months_For_Payroll_Period_End_Triggered_Projection_Less_Costs()
         {
             
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 2);
 
             _accountProjection.Projections.First().FutureFunds
                 .Should().Be(_account.Balance + _account.LevyDeclared); // - _commitment.MonthlyInstallment);
@@ -238,7 +245,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         [Test]
         public void Includes_Levy_In_First_Months_and_costa_has_been_removed_For_Payroll_Period_End_Triggered_Projection()
         {
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 2);
 
             var expected = _accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared -
                            _commitment.MonthlyInstallment;
@@ -258,7 +265,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, _employerCommitments);
             
             //Act
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 2);
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
@@ -287,7 +294,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, _employerCommitments);
 
             //Act
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 2);
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
@@ -317,7 +324,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, _employerCommitments);
 
             //Act
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 2);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 2);
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
@@ -346,7 +353,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, _employerCommitments);
 
             //Act
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 2);
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
@@ -375,7 +382,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, _employerCommitments);
 
             //Act
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 2);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 2);
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
@@ -409,8 +416,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
-                    StartDate = DateTime.Today.AddMonths(-1),
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
+                    StartDate = _projectionStartDate.AddMonths(-1),
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(5),
                     MonthlyInstallment = 100,
                     NumberOfInstallments = 6,
                     CompletionAmount = 400,
@@ -421,7 +428,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var employerCommitments = new EmployerCommitments(1, _commitments);
             _accountProjection = new AccountProjection(_account, employerCommitments);
 
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 12);
 
             //Assert
             Assert.AreEqual(2100m, _accountProjection.Projections[0].FutureFunds);
@@ -443,8 +450,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
-                    StartDate = DateTime.Today.AddMonths(-1),
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(5),
+                    StartDate = _projectionStartDate.AddMonths(-1),
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(5),
                     MonthlyInstallment = 100,
                     NumberOfInstallments = 6,
                     CompletionAmount = 400,
@@ -455,7 +462,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             var employerCommitments = new EmployerCommitments(1, _commitments);
             _accountProjection = new AccountProjection(_account, employerCommitments);
 
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, 12);
 
             //Assert
             Assert.AreEqual(2000m, _accountProjection.Projections[0].FutureFunds);
@@ -476,8 +483,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
-                    StartDate = DateTime.Today,
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate,
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 100,
                     NumberOfInstallments = 6,
                     CompletionAmount = 400,
@@ -489,7 +496,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             
             _accountProjection = new AccountProjection(_account, employerCommitments);
             
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 12);
 
             //Assert
             Assert.AreEqual(1000m, _accountProjection.Projections[7].FutureFunds);
@@ -512,8 +519,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
-                    StartDate = DateTime.Today.AddMonths(-2),
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate.AddMonths(-2),
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
@@ -525,7 +532,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, employerCommitments);
             
             //Act
-            _accountProjection.BuildLevyTriggeredProjections(DateTime.Today, 12);
+            _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, 12);
 
             //Assert
             Assert.IsTrue(_accountProjection.Projections.All(c => c.FutureFunds.Equals(2000m)));
@@ -547,8 +554,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     SendingEmployerAccountId = 999,
                     ApprenticeshipId = 23,
                     LearnerId = 33,
-                    StartDate = DateTime.Today.AddMonths(-2),
-                    PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                    StartDate = _projectionStartDate.AddMonths(-2),
+                    PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
@@ -560,7 +567,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection = new AccountProjection(_account, employerCommitments);
 
             //Act
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(DateTime.Today, 12);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(_projectionStartDate, 12);
 
             //Assert
             Assert.IsTrue(_accountProjection.Projections.All(c => c.FutureFunds.Equals(400m)));
@@ -572,7 +579,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Then_If_I_Am_Calculating_The_First_Month_After_A_Levy_Run_It_Is_Calculated_Correctly_As_The_Accounts_Balance()
         {
             //Act
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 20), 12);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 20), 12);
 
             //Assert
             Assert.AreEqual(12000m, _accountProjection.Projections.First().FutureFunds);
@@ -582,7 +589,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Then_If_I_Am_Calculating_The_First_Month_After_A_Payment_Run_It_Is_Calculated_As_The_Account_Balance_Plus_Levy()
         {
            //Act
-            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 18), 12);
+            _accountProjection.BuildPayrollPeriodEndTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 18), 12);
 
             //Assert
             Assert.AreEqual(12300m, _accountProjection.Projections.First().FutureFunds);
@@ -592,7 +599,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Then_If_I_Am_Calculating_The_First_Month_Following_A_Previous_Levy_Run_In_The_Next_Month_It_Is_Calculated_As_Balance_Plus_Levy_Minus_All_Costs()
         {
             //Act
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 18), 12);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 18), 12);
 
             //Assert
             Assert.AreEqual(10200m, _accountProjection.Projections.First().FutureFunds);
@@ -620,8 +627,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                         SendingEmployerAccountId = 999,
                         ApprenticeshipId = 23,
                         LearnerId = 33,
-                        StartDate = DateTime.Today.AddMonths(-2),
-                        PlannedEndDate = DateTime.Today.GetStartOfMonth().AddMonths(6),
+                        StartDate = _projectionStartDate.AddMonths(-2),
+                        PlannedEndDate = _projectionStartDate.GetStartOfMonth().AddMonths(6),
                         MonthlyInstallment = 2000,
                         NumberOfInstallments = 6,
                         CompletionAmount = 1200,
@@ -689,8 +696,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = DateTime.Today.AddMonths(-1),
-                PlannedEndDate = DateTime.Today.AddMonths(25),
+                StartDate = _projectionStartDate.AddMonths(-1),
+                PlannedEndDate = _projectionStartDate.AddMonths(25),
                 MonthlyInstallment = monthlyInstallment,
                 NumberOfInstallments = 4,
                 CompletionAmount = completionAmount,
