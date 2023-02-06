@@ -23,11 +23,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         private AccountProjection _accountProjection;
 
         private DateTime _projectionStartDate;
+        private DateTime _currentDate;
 
         [SetUp]
         public void SetUp()
         {
             _projectionStartDate = new DateTime(2022, 4, 1);
+            _currentDate = _projectionStartDate.AddMonths(1);
 
             _account = new Account(1, 12000, 300, 0, 0);
             _commitment = new CommitmentModel
@@ -35,8 +37,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 EmployerAccountId = 1,
                 ApprenticeshipId = 2,
                 LearnerId = 3,
-                StartDate = _projectionStartDate.AddMonths(-1),
-                PlannedEndDate = _projectionStartDate.AddMonths(25),
+                StartDate = _projectionStartDate,
+                PlannedEndDate = _projectionStartDate.AddMonths(24),
                 MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
                 CompletionAmount = 3000,
@@ -59,7 +61,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Starts_From_First_Month(int projectionDurationInMonths)
         {
             _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, projectionDurationInMonths);
-
             _accountProjection.Projections.First().Month.Should().Be((short)_projectionStartDate.Month);
         }
 
@@ -69,7 +70,6 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Projects_Requested_Number_Of_Months_Plus_One(int numberOfMonths)
         {
             _accountProjection.BuildLevyTriggeredProjections(_projectionStartDate, numberOfMonths);
-
             _accountProjection.Projections.Count.Should().Be(numberOfMonths+1);
         }
 
@@ -599,7 +599,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         public void Then_If_I_Am_Calculating_The_First_Month_Following_A_Previous_Levy_Run_In_The_Next_Month_It_Is_Calculated_As_Balance_Plus_Levy_Minus_All_Costs()
         {
             //Act
-            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.Year, _projectionStartDate.Month, 18), 12);
+            _accountProjection.BuildLevyTriggeredProjections(new DateTime(_projectionStartDate.AddMonths(1).Year, _projectionStartDate.AddMonths(1).Month, 18), 12);
 
             //Assert
             Assert.AreEqual(10200m, _accountProjection.Projections.First().FutureFunds);
