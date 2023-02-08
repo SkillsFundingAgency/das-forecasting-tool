@@ -44,7 +44,7 @@ namespace SFA.DAS.Forecasting.Domain.Commitments
                       (!isVirtual || c.FundingSource == FundingSource.Transfer || c.FundingSource == FundingSource.ApprovedPledgeApplication || c.FundingSource == FundingSource.AcceptedPledgeApplication);
 
             var levyFundedCommitments = _levyFundedCommitments.Where(FilterCurrent).ToList();
-            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).ToList();
+            var sendingEmployerCommitments = _sendingEmployerTransferCommitments.Where(FilterCurrent).Where(x => x.FundingSource == FundingSource.Transfer).ToList();
             var receivingEmployerCommitments = _receivingEmployerTransferCommitments.Where(FilterCurrent).ToList();
             var coInvestmentCommitments = _coInvestmentCommitments.Where(FilterCurrent).ToList();
 
