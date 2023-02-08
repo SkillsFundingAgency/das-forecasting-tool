@@ -5,6 +5,7 @@ function ShowFundingEstimate() {
     this.numberOfMonthsField = document.getElementById('apprenticeship-length')
     this.apprenticeshipDateMonth = document.getElementById('startDateMonth')
     this.apprenticeshipDateYear = document.getElementById('startDateYear')
+    this.totalCostField = document.getElementById('total-funding-cost');
     this.editMode = false
     this.selectedStandardId = 0
     this.numberOfApprentices = 0
@@ -13,7 +14,8 @@ function ShowFundingEstimate() {
     this.startYear = null
     this.startDate = null
     this.monthsRemaining = 0
-    this.estimate = 0
+    this.totalFundingCap = 0
+    this.fundingCap = 0
     this.showEstimate = false
 }
 
@@ -111,7 +113,6 @@ ShowFundingEstimate.prototype.autoComplete = function() {
             if (roleChange) {
               that.roleHasChanged()
             }
-            console.log('selectedStandardId = ' + that.selectedStandardId)
         }
     });
 }
@@ -140,9 +141,10 @@ ShowFundingEstimate.prototype.roleHasChanged = function () {
         if (xhr.readyState === 4) {
           try {
               var response = JSON.parse(xhr.responseText)
-              console.log(response.numberOfMonths)
+              that.response = response
               that.numberOfMonthsField.value = response.numberOfMonths
               that.numberOfMonths = response.numberOfMonths
+              that.updateUI()
           } catch (e) {
               console.log(e)
           }
@@ -150,33 +152,6 @@ ShowFundingEstimate.prototype.roleHasChanged = function () {
     }
     xhr.open("GET", apiurl, true);
     xhr.send(JSON.stringify(paramObj));
-}
-
-ShowFundingEstimate.prototype.getEstimate = function () {
-    var that = this
-    var paramObj = {
-      CourseId: this.selectedStandardId,
-      NumberOfApprentices: this.numberOfApprentices,
-      NumberOfMonths: this.numberOfMonths,
-      StartDate: this.startDate
-    }
-    var params = new URLSearchParams(paramObj).toString();
-    var apiurl = this.getCourseApiUrl() + "?" + params
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          try {
-              var response = JSON.parse(xhr.responseText)
-              that.showEstimate = true
-              that.updateUI()
-          } catch (e) {
-              that.showEstimate = false
-              that.updateUI()
-          }
-        }
-    }
-    xhr.open("GET", apiurl, true);
-    xhr.send();
 }
 
 ShowFundingEstimate.prototype.calculateMonthsDifference = function(futureDate) {
@@ -188,22 +163,106 @@ ShowFundingEstimate.prototype.calculateMonthsDifference = function(futureDate) {
   }
   
 ShowFundingEstimate.prototype.checkFieldValues = function () {
-    if (this.selectedStandardId.length > 0 && this.numberOfMonths > 0 && this.numberOfApprentices > 0 && this.monthsRemaining > 0) {
-      this.showEstimate = true
-      this.getEstimate()
-    } else {
-      this.showEstimate = false
-      this.updateUI()
-    }
+  this.showEstimate = false
+  if (this.selectedStandardId.length > 0 && this.numberOfMonths > 0 && this.numberOfApprentices > 0 && this.monthsRemaining > 0) {
+    this.showEstimate = true
+  }
+  this.updateUI()
 }
   
 ShowFundingEstimate.prototype.updateUI = function () {
+    var infoPanel = document.getElementById("details-about-funding");
+    var calcPanel = document.getElementById("details-about-funding-calculated");
+    
     if (this.showEstimate) {
-      console.log('Show estimate')
+      this.refreshCalculation()
+      infoPanel.style.display = "none";
+      calcPanel.style.display = "block";
     } else {
-      console.log('Hide estimate')
+      this.totalCostField.value = 0
+      infoPanel.style.display = "block";
+      calcPanel.style.display = "none";
     }
+}
+
+ShowFundingEstimate.prototype.refreshCalculation = function() {
+  var calucation = AddEditApprentiecships.calculateFundingCap(this.startDate, this.response)
+  var fundingCap = calucation ? calucation.fundingCap : 0;
+  this.fundingCap = fundingCap;
+  this.totalFundingCap = this.fundingCap * this.numberOfApprentices;
+  this.updateView();  
+}
+
+ShowFundingEstimate.prototype.updateView = function() {
+  var fc = AddEditApprentiecships.toGBP(this.fundingCap)
+  var tfc = AddEditApprentiecships.toGBP(this.totalFundingCap || 0)
+  document.getElementById("funding-cap-details").innerHTML = fc;
+  document.getElementById("apprentice-count-details").innerHTML = this.numberOfApprentices;
+  document.getElementById("total-cap-details").innerHTML = tfc;
+  this.totalCostField.value = tfc.replace('£', '');
 }
 
 var showFundingEstimate = new ShowFundingEstimate()
 showFundingEstimate.init()
+
+var AddEditApprentiecships = {
+  altFind: function (arr, callback) {
+      for (var i = 0; i < arr.length; i++) {
+          var match = callback(arr[i]);
+          if (match) {
+              return arr[i];
+          }
+      }
+  },
+  calculateFundingCap: function (date, model) {
+      var today = new Date();
+      var thisMonth = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0)
+
+      if (date === undefined
+          || date.toString() === "Invalid Date"
+          || date < thisMonth
+          || model === undefined
+          || model.fundingBands == null ){
+          return undefined;
+      }
+
+      var fundingBand = AddEditApprentiecships.altFind(model.fundingBands, 
+          function (fb) {
+            return date > AddEditApprentiecships.getDate(fb.FromDate) && (date < AddEditApprentiecships.getDate(fb.ToDate) || fb.ToDate == null);
+          }) || model.fundingBands[model.fundingBands.length - 1];
+
+      var result = {
+        fundingCap: fundingBand.fundingCap
+      };
+
+      return result;
+  },
+  getDate: function (cSharpDate) {
+      if (!cSharpDate)
+          return cSharpDate;
+
+      if (cSharpDate.indexOf('-') > -1) {
+          return new Date(cSharpDate);
+      }
+
+      var stripedCsharpDate = cSharpDate.replace(/[^0-9 +]/g, '');
+      return new Date(parseInt(stripedCsharpDate));
+  },
+  toGBP: function (data) {
+      return data.toLocaleString('en-GB', { style: 'currency', currency: 'GBP' }).split('.')[0];
+  },
+  numberWithCommas: function (number) {
+      var parts = number.toString().split('.');
+      var partToProcess = parts[0];
+      partToProcess = partToProcess.replace(/,/g, '');
+      partToProcess = partToProcess.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      parts[0] = partToProcess;
+      return parts.join('.');
+  }, 
+  onlyAllowNumbers: function (event) {
+      return event.metaKey ||
+          event.which <= 0 ||
+          event.which == 8 ||
+          /[0-9]/.test(String.fromCharCode(event.which));
+  }
+};
