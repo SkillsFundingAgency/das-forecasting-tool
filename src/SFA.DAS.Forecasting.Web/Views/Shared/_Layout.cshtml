@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     var tagManagerCode = "GTM-KWQBWGJ";
-    string accountId = (string)this.ViewContext.RouteData.Values["employerAccountId"] ?? "";
+    string accountId = (string)this.ViewContext.RouteData.Values["hashedAccountId"] ?? "";
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountId, UsePrivacyV2 = true };
     
