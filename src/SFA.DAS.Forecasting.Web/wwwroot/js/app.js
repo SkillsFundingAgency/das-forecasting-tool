@@ -53,14 +53,14 @@ var chart = (function () {
 });
 
 
-window.onload = (event) => {
 
-    if (document.getElementsByClassName('chart-container').length > 0)
-    {
-        chart();
-    }
-    tippy('.app-tooltip', {
-        trigger: 'click',
-        content: (reference) => reference.getAttribute('title')
-    });
+
+
+if (document.getElementsByClassName('chart-container').length > 0)
+{
+    chart();
 }
+tippy('.app-tooltip', {
+    trigger: 'click',
+    content: (reference) => reference.getAttribute('title')
+});
