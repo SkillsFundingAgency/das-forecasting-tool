@@ -63,6 +63,7 @@ var AddEditApprentiecships = {
 
 
 function ShowFundingEstimate() {
+    this.useTransferAllowanceField = document.getElementById('IsTransferFunded')
     this.selectedStandardIdSelectId = 'choose-apprenticeship'
     this.selectedStandardIdField = document.getElementById(this.selectedStandardIdSelectId)
     this.numberOfApprenticesField = document.getElementById('no-of-app')
@@ -71,6 +72,7 @@ function ShowFundingEstimate() {
     this.startYearField = document.getElementById('startDateYear')
     this.totalCostField = document.getElementById('total-funding-cost');
     this.editMode = document.getElementById('editmode')
+    this.useTransferAllowance = false
     this.selectedStandardId = 0
     this.numberOfApprentices = this.numberOfApprenticesField.value || 0
     this.numberOfMonths = this.numberOfMonthsField.value || 0
@@ -114,6 +116,11 @@ ShowFundingEstimate.prototype.pageLoad = function () {
 
 ShowFundingEstimate.prototype.setupEvents = function () {
     var that = this
+    if (!this.editMode) {
+      this.useTransferAllowanceField.onchange = function () {
+          that.useTransferAllowance = this.checked
+      }
+    }
     this.numberOfApprenticesField.onkeyup = function () {
         that.numberOfApprentices = this.value | 0
         that.checkFieldValues()
@@ -139,9 +146,26 @@ ShowFundingEstimate.prototype.dateChange = function () {
     this.monthsRemaining = this.calculateMonthsDifference(this.startDate);
 }
 
+ShowFundingEstimate.prototype.getCourses = function(query, populateResults) {
+  var select = this.selectedStandardIdField
+  var courses = []
+  var coursesFiltered = []
+  for (var i = 0; i < select.options.length; i++) {
+      if (select.options[i].value.length > 0) {
+        var text = select.options[i].text
+        var value = select.options[i].value
+        courses.push(text)
+        if (value.indexOf('-') === -1) {
+          coursesFiltered.push(text)
+        }
+      }
+  }
+  populateResults(this.useTransferAllowance ? coursesFiltered : courses)
+}
 
 ShowFundingEstimate.prototype.autoComplete = function() {
     var that = this
+
     accessibleAutocomplete.enhanceSelectElement({
         selectElement: that.selectedStandardIdField,
         minLength: 2,
@@ -149,6 +173,7 @@ ShowFundingEstimate.prototype.autoComplete = function() {
         defaultValue: '',
         displayMenu: 'overlay',
         placeholder: '',
+        source: that.getCourses.bind(that),
         showAllValues: true,
         onConfirm: function (opt) {
             var roleChange = false
