@@ -41,7 +41,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                         PlannedEndDate = new DateTime(DateTime.Now.Year, 5, 1),
                         StartDate = new DateTime(DateTime.Now.Year, 1, 1),
                         NumberOfInstallments = 5,
-                        FundingSource = Models.Payments.FundingSource.Levy
+                        FundingSource = Models.Payments.FundingSource.Transfer
                     },
                     new CommitmentModel
                     {
@@ -51,7 +51,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                         PlannedEndDate = new DateTime(DateTime.Now.Year + 1, 9, 1),
                         StartDate = new DateTime(DateTime.Now.Year + 1, 3, 1),
                         NumberOfInstallments = 5,
-                        FundingSource = Models.Payments.FundingSource.Levy
+                        FundingSource = Models.Payments.FundingSource.Transfer
                     },
                     new CommitmentModel
                     {
@@ -279,7 +279,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
             //Assert
             var actual = _estimationProjection.Projections.OrderBy(c => c.Year).ThenBy(c => c.Month).FirstOrDefault();
             Assert.IsNotNull(actual);
-            Assert.AreEqual(9940 , actual.AvailableTransferFundsBalance);
+            Assert.AreEqual(9890 , actual.AvailableTransferFundsBalance);
         }
 
         [Test]
@@ -350,7 +350,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     FutureFundsNoExpiry = 590
                 }
             };
-            
+
             _dateTimeService
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(DateTime.Now.Year, 1, 1));
             var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);
