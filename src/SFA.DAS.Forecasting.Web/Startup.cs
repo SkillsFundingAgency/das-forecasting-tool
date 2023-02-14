@@ -67,8 +67,6 @@ namespace SFA.DAS.Forecasting.Web
             services.AddFluentValidation();
             services.AddOrchestrators();
 
-            services.AddTransient<IForecastingMapper, ForecastingMapper>();
-
             services.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, _configuration["EnvironmentName"]);
             
             services.AddApplicationServices(forecastingConfiguration);
