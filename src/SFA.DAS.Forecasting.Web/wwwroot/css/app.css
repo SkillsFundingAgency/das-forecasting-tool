@@ -135,3 +135,24 @@
 .tippy-arrow {
     color: #1d70b8;
 }
+
+
+/* Chart */
+
+.chart-container {
+    display: none;
+}
+
+path.c3-line {
+    stroke-width: 4px;
+    stroke: #005ea5;
+}
+
+.c3-axis-y-label {
+    font-family: "GDS Transport",arial,sans-serif;
+    font-size: 20px;
+}
+
+.c3-axis-y .tick {
+    display: none;
+}

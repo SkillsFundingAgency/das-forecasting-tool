@@ -68,10 +68,10 @@
                 }
                 else
                 {
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group" id="editmode">
                         <p>
-                            <strong class="govuk-label govuk-label--s" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCapCalculated">Apprenticeship</strong><br>
-                            @Model.Course.Title - Level: @Model.Course.Title
+                            <strong class="govuk-label govuk-label--s" id="course" for="apprenticeship" data-funding-cap="@Model.FundingCapCalculated">Apprenticeship</strong>
+                            @Model.Course.Title - Level: @Model.Course.Level
                         </p>
                         @Html.HiddenFor(m => m.Course.Title)
                         @Html.HiddenFor(m => m.Course.Level)

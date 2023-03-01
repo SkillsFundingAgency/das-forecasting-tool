@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     var tagManagerCode = "GTM-KWQBWGJ";
-    string accountId = (string)this.ViewContext.RouteData.Values["employerAccountId"] ?? "";
+    string accountId = (string)this.ViewContext.RouteData.Values["hashedAccountId"] ?? "";
     ViewBag.HideHeaderBorder = true;
     var footerModel = new FooterModel { AccountId = accountId, UsePrivacyV2 = true };
     
@@ -74,6 +74,8 @@
         <script src="/js/das-all.min.js"></script>
         <script src="/js/app.min.js"></script>
 
+        @RenderSection("javascript", required: false)
+
         <script src="/js/app.js" no-cdn></script>
 
         <script>
@@ -82,7 +84,7 @@
         </script>
         
 
-        @RenderSection("javascript", required: false)
+
        
     </body>
 </html>
