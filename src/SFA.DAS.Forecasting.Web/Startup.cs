@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Employer.Shared.UI;
@@ -47,7 +48,7 @@ namespace SFA.DAS.Forecasting.Web
                         options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                         options.EnvironmentName = configuration["EnvironmentName"];
                         options.PreFixConfigurationKeys = false;
-                        options.ConfigurationKeysRawJsonResult = new[] {"SFA.DAS.Encoding"};
+                        options.ConfigurationKeysRawJsonResult = new[] { "SFA.DAS.Encoding" };
                     }
                 );
             }
@@ -68,11 +69,11 @@ namespace SFA.DAS.Forecasting.Web
             services.AddOrchestrators();
 
             services.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, _configuration["EnvironmentName"]);
-            
+
             services.AddApplicationServices(forecastingConfiguration);
-            
+
             services.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString);
-            
+
             services.AddDomainServices();
 
             services.AddAuthenticationServices();
@@ -87,27 +88,27 @@ namespace SFA.DAS.Forecasting.Web
             }
             else
             {
-                services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);    
+                services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);
             }
 
             services.AddLogging();
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
-            
-            services.AddMaMenuConfiguration(RouteNames.SignOut, identityServerConfiguration.ClientId,_configuration["ResourceEnvironmentName"]);
-            
+
+            services.AddMaMenuConfiguration(RouteNames.SignOut, identityServerConfiguration.ClientId, _configuration["ResourceEnvironmentName"]);
+
             services.Configure<RouteOptions>(options =>
                 {
-                
+
                 }).AddMvc(options =>
                 {
                     options.Filters.Add(new GoogleAnalyticsFilter());
                     if (!_configuration.IsDev())
                     {
-                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());    
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     }
-                    
+
                 });
-            
+
             services.AddApplicationInsightsTelemetry();
 
             if (!_environment.IsDevelopment())
@@ -115,7 +116,7 @@ namespace SFA.DAS.Forecasting.Web
                 services.AddHealthChecks();
                 services.AddDataProtection(_configuration);
             }
-            
+
 #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 #endif
@@ -169,6 +170,13 @@ namespace SFA.DAS.Forecasting.Web
 
             app.UseEndpoints(builder => { builder.MapDefaultControllerRoute(); });
 
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content", "dist", "images")),
+                RequestPath = "/Content/dist/images",
+                ServeUnknownFileTypes = true,
+                DefaultContentType = "image/x-icon"
+            });
         }
 
         public class Constants
