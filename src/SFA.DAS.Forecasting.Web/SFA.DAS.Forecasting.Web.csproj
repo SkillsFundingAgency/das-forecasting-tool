@@ -7,7 +7,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\dist\images\favicon.ico">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
