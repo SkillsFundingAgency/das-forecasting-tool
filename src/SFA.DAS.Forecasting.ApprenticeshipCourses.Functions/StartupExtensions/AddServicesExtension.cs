@@ -12,7 +12,7 @@ namespace SFA.DAS.Forecasting.ApprenticeshipCourses.Functions.StartupExtensions;
 
 public static class AddServicesExtension
 {
-    public static void AddServices(this IServiceCollection builder)//, IConfigurationRoot configuration)
+    public static void AddServices(this IServiceCollection builder)
     {
         builder.AddTransient<IStoreCourseHandler, StoreCourseHandler>();
         builder.AddTransient<IGetCoursesHandler, GetCoursesHandler>();
@@ -34,10 +34,8 @@ public static class AddConfigurationExtension
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
         services.Configure<OuterApiConfiguration>(builtConfiguration.GetSection(nameof(OuterApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
+        services.Configure<ForecastingConnectionStrings>(builtConfiguration.GetSection(nameof(ForecastingConnectionStrings)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConnectionStrings>>().Value);
         
-        // //TODO this isnt a dependency we really want here
-        // var encodingConfigJson = builtConfiguration.GetSection("SFA.DAS.Encoding").Value;
-        // var encodingConfig = JsonConvert.DeserializeObject<EncodingConfig>(encodingConfigJson);
-        // services.AddSingleton(encodingConfig);
     }
 }

@@ -61,6 +61,9 @@ namespace SFA.DAS.Forecasting.Web
             var forecastingConfiguration = _configuration
                 .GetSection(nameof(ForecastingConfiguration))
                 .Get<ForecastingConfiguration>();
+            var forecastingConnectionStrings = _configuration
+                .GetSection(nameof(ForecastingConnectionStrings))
+                .Get<ForecastingConnectionStrings>();
             var identityServerConfiguration = _configuration
                 .GetSection(nameof(IdentityServerConfiguration))
                 .Get<IdentityServerConfiguration>();
@@ -68,11 +71,11 @@ namespace SFA.DAS.Forecasting.Web
             services.AddFluentValidation();
             services.AddOrchestrators();
 
-            services.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, _configuration["EnvironmentName"]);
+            services.AddDatabaseRegistration(forecastingConnectionStrings.DatabaseConnectionString, _configuration["EnvironmentName"]);
 
             services.AddApplicationServices(forecastingConfiguration);
 
-            services.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString);
+            services.AddCosmosDbServices(forecastingConnectionStrings.CosmosDbConnectionString);
 
             services.AddDomainServices();
 
