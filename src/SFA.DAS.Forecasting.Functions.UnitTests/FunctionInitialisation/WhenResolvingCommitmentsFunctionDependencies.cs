@@ -32,11 +32,11 @@ public class WhenResolvingCommitmentsFunctionDependencies
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration
-            .GetSection("ForecastingJobsConfiguration")
-            .Get<ForecastingJobsConfiguration>();
+            .GetSection("ForecastingConnectionStrings")
+            .Get<ForecastingConnectionStrings>();
         serviceCollection.AddConfiguration(configuration);
         serviceCollection.AddServices();
         serviceCollection.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString, false);
-        serviceCollection.AddDatabaseRegistration(forecastingJobsConfiguration.ForecastingConnectionString, configuration["EnvironmentName"]);
+        serviceCollection.AddDatabaseRegistration(forecastingJobsConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
     }
 }

@@ -49,8 +49,8 @@ public class Startup : FunctionsStartup
         builder.Services.AddServices();
         
         var forecastingJobsConfiguration = builtConfiguration
-            .GetSection(nameof(ForecastingJobsConfiguration))
-            .Get<ForecastingJobsConfiguration>();
+            .GetSection(nameof(ForecastingConnectionStrings))
+            .Get<ForecastingConnectionStrings>();
         builder.Services.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString);
         //builder.Services.AddTransient<IEmployerDemandService, EmployerDemandService>();
         builder.Services.AddLogging();    

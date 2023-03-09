@@ -13,6 +13,8 @@ public static class AddConfigurationExtension
         services.AddOptions();
         services.Configure<ForecastingJobsConfiguration>(builtConfiguration.GetSection(nameof(ForecastingJobsConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
+        services.Configure<ForecastingConnectionStrings>(builtConfiguration.GetSection(nameof(ForecastingConnectionStrings)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConnectionStrings>>().Value);
         
     }
 }
