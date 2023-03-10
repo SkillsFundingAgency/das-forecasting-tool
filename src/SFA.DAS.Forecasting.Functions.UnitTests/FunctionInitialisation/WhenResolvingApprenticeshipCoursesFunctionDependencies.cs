@@ -30,8 +30,8 @@ public class WhenResolvingApprenticeshipCoursesFunctionDependencies
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration
-            .GetSection("ForecastingJobsConfiguration")
-            .Get<ForecastingJobsConfiguration>();
+            .GetSection("ForecastingConnectionStrings")
+            .Get<ForecastingConnectionStrings>();
         serviceCollection.AddConfiguration(configuration);
         serviceCollection.AddServices();
         serviceCollection.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString, false);

@@ -54,6 +54,9 @@ public class WhenAddingServicesToTheContainer
             var forecastingConfiguration = configuration
                 .GetSection("ForecastingConfiguration")
                 .Get<ForecastingConfiguration>();
+            var forecastingConnectionStrings = configuration
+                .GetSection("ForecastingConnectionStrings")
+                .Get<ForecastingConnectionStrings>();
             var hostEnvironment = new Mock<IWebHostEnvironment>();
             serviceCollection.AddSingleton(hostEnvironment.Object);
             serviceCollection.AddSingleton(Mock.Of<IConfiguration>());
@@ -63,9 +66,9 @@ public class WhenAddingServicesToTheContainer
             serviceCollection.AddApplicationServices(forecastingConfiguration);
             serviceCollection.AddDomainServices();
             serviceCollection.AddOrchestrators();
-            serviceCollection.AddCosmosDbServices(forecastingConfiguration.CosmosDbConnectionString, false);
+            serviceCollection.AddCosmosDbServices(forecastingConnectionStrings.CosmosDbConnectionString, false);
             
-            serviceCollection.AddDatabaseRegistration(forecastingConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
+            serviceCollection.AddDatabaseRegistration(forecastingConnectionStrings.DatabaseConnectionString, configuration["EnvironmentName"]);
             serviceCollection.AddLogging();
         }
 
@@ -75,10 +78,10 @@ public class WhenAddingServicesToTheContainer
             {
                 InitialData = new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("ForecastingConfiguration:DatabaseConnectionString", "test"),
+                    new KeyValuePair<string, string>("ForecastingConnectionStrings:DatabaseConnectionString", "test"),
                     new KeyValuePair<string, string>("ForecastingConfiguration:AllowedCharacters", "ABCDEFGHJKLMN12345"),
                     new KeyValuePair<string, string>("ForecastingConfiguration:HashString", "ABC123"),
-                    new KeyValuePair<string, string>("ForecastingConfiguration:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
+                    new KeyValuePair<string, string>("ForecastingConnectionStrings:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
                     new KeyValuePair<string, string>("AccountApiConfiguration:ApiBaseUrl", "https://localhost:1"),
                     new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
                     new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),

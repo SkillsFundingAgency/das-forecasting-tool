@@ -148,19 +148,23 @@ ShowFundingEstimate.prototype.dateChange = function () {
 
 ShowFundingEstimate.prototype.getCourses = function(query, populateResults) {
   var select = this.selectedStandardIdField
-  var courses = []
   var coursesFiltered = []
   for (var i = 0; i < select.options.length; i++) {
       if (select.options[i].value.length > 0) {
         var text = select.options[i].text
         var value = select.options[i].value
-        courses.push(text)
-        if (value.indexOf('-') === -1) {
-          coursesFiltered.push(text)
+        if (this.useTransferAllowance) {
+          if (text.toLowerCase().indexOf(query.toLowerCase()) >= 0 && value.indexOf("-") > 0) {
+            coursesFiltered.push(text)
+          }
+        } else {
+          if (text.toLowerCase().indexOf(query.toLowerCase()) >= 0) {
+            coursesFiltered.push(text)
+          }
         }
       }
   }
-  populateResults(this.useTransferAllowance ? coursesFiltered : courses)
+  populateResults(coursesFiltered)
 }
 
 ShowFundingEstimate.prototype.autoComplete = function() {

@@ -32,7 +32,9 @@ public static class AddConfigurationExtension
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingJobsConfiguration>>().Value);
         services.Configure<OuterApiConfiguration>(builtConfiguration.GetSection(nameof(OuterApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
-
+        services.Configure<ForecastingConnectionStrings>(builtConfiguration.GetSection(nameof(ForecastingConnectionStrings)));
+        services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConnectionStrings>>().Value);
+        
         services.Configure<PaymentsEventsApiConfiguration>(builtConfiguration.GetSection(nameof(PaymentsEventsApiConfiguration)));
         services.AddSingleton<IPaymentsEventsApiClientConfiguration>(cfg =>
             builtConfiguration.GetSection(nameof(PaymentsEventsApiConfiguration))

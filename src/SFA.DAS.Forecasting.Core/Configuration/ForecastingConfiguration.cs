@@ -12,11 +12,11 @@ namespace SFA.DAS.Forecasting.Core.Configuration
         public string EmployerAccountsBaseUrl { get; set; }
         public double SecondsToWaitToAllowProjections { get; set; }
         public string StorageConnectionString { get; set; }
-        public string DatabaseConnectionString { get; set; }
+        
         public bool UseGovSignIn { get; set; }
         public string AllowedCharacters { get; set; }
         public string HashString { get; set; }
-        public string CosmosDbConnectionString { get; set; }
+        
         public string DataProtectionKeysDatabase { get; set; }
         public string RedisConnectionString { get; set; }
         public bool LimitForecast { get; set; }

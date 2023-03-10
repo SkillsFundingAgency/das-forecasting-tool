@@ -38,7 +38,7 @@ namespace SFA.DAS.Forecasting.Data
         public DbSet<CommitmentModel> Commitments { get; set; } 
         public DbSet<LevyDeclarationModel> LevyDeclarations { get; set; }
         public DbSet<PaymentModel> Payments { get; set; }
-        private readonly ForecastingConfiguration _configuration;
+        private readonly ForecastingConnectionStrings _configuration;
         private readonly ChainedTokenCredential _azureServiceTokenProvider;
      
         public ForecastingDataContext()
@@ -49,7 +49,7 @@ namespace SFA.DAS.Forecasting.Data
         {
             
         }
-        public ForecastingDataContext(IOptions<ForecastingConfiguration> config, DbContextOptions options, ChainedTokenCredential azureServiceTokenProvider) :base(options)
+        public ForecastingDataContext(IOptions<ForecastingConnectionStrings> config, DbContextOptions options, ChainedTokenCredential azureServiceTokenProvider) :base(options)
         {
             _configuration = config.Value;
             _azureServiceTokenProvider = azureServiceTokenProvider;
