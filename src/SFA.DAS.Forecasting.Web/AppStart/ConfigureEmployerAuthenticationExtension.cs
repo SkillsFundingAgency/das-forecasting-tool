@@ -12,6 +12,7 @@ using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Filters;
 using SFA.DAS.GovUK.Auth.AppStart;
+using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.Forecasting.Web;
@@ -26,6 +27,9 @@ public static class ConfigureEmployerAuthenticationExtension
         services.AddSingleton<IAuthorizationHandler, EmployerAccountAuthorizationHandler>();
         services.AddTransient<IEmployerAccountService, EmployerAccountService>();
         
+        //TODO to be removed after gov login enabled
+        services.AddTransient<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+        
         services.AddAuthorization(options =>
         {
             options.AddPolicy(
@@ -35,6 +39,7 @@ public static class ConfigureEmployerAuthenticationExtension
                     policy.RequireClaim(EmployerClaims.AccountsClaimsTypeIdentifier);
                     policy.Requirements.Add(new EmployerAccountRequirement());
                     policy.RequireAuthenticatedUser();
+                    policy.Requirements.Add(new AccountActiveRequirement());
                 });
         });
     }
