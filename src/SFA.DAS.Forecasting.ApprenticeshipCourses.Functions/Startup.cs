@@ -52,9 +52,10 @@ public class Startup : FunctionsStartup
             .GetSection(nameof(ForecastingConnectionStrings))
             .Get<ForecastingConnectionStrings>();
         builder.Services.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString);
-        //builder.Services.AddTransient<IEmployerDemandService, EmployerDemandService>();
-        builder.Services.AddLogging();    
-        builder.Services.BuildServiceProvider();
         
+        builder.Services.AddLogging();    
+        builder.Services.AddApplicationInsightsTelemetryWorkerService();
+        builder.Services.BuildServiceProvider();
+
     }
 }
