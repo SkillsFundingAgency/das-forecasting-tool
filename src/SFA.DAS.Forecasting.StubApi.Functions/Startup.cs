@@ -50,6 +50,7 @@ public class Startup : FunctionsStartup
             .Get<ForecastingConnectionStrings>();
         builder.Services.AddDatabaseRegistration(forecastingJobsConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
         builder.Services.AddLogging();    
+        builder.Services.AddApplicationInsightsTelemetryWorkerService();
         builder.Services.BuildServiceProvider();
     }
 }

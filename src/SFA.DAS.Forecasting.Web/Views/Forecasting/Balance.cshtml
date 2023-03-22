@@ -123,18 +123,14 @@
             <h3 class="govuk-heading-m">@x.Key.FirstStartDate.ToGdsFormatWithoutDay() to @x.Key.LastEndDate.ToGdsFormatWithoutDay()</h3>
             @:<table class="govuk-table  das-table--condensed">
                 <thead>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header"></th>
-                        <th class="govuk-table__header"></th>
-                        <th class="govuk-table__header"></th>
-                        <th class="govuk-table__header"></th>
-                        <th class="govuk-table__header"></th>
-                        @if (Model.DisplayCoInvestment)
+                    @if (Model.DisplayCoInvestment)
                         {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" colspan="5"></th>
                             <th colspan="2" class="govuk-table__header govuk-!-text-align-centre app-table-cell-highlight">Co-investment</th>
-                        }
-                        <th class="govuk-table__header"></th>
-                    </tr>
+                            <th class="govuk-table__header"></th>
+                        </tr>
+                      }
                     <tr  class="govuk-table__row">
                         <th class="govuk-table__header das-table-cell-width-10" scope="col">Date</th>
                         <th scope="col" class="govuk-table__header govuk-table__header--numeric" title="">

@@ -15,4 +15,6 @@ public class GetUserAccountsResponse
     public string Email { get; set; }
     [JsonProperty("UserAccounts")]
     public List<EmployerIdentifier> UserAccounts { get; set; }
+    [JsonProperty]
+    public bool IsSuspended { get; set; }
 }
