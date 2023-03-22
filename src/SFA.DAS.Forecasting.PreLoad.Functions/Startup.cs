@@ -53,6 +53,7 @@ public class Startup : FunctionsStartup
         
         builder.Services.AddDatabaseRegistration(forecastingJobsConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
         builder.Services.AddLogging();    
+        builder.Services.AddApplicationInsightsTelemetryWorkerService();
         builder.Services.BuildServiceProvider();
     }
 }

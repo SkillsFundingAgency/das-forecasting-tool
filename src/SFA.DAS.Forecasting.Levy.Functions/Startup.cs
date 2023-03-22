@@ -53,6 +53,7 @@ public class Startup : FunctionsStartup
         builder.Services.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString);
         builder.Services.AddDatabaseRegistration(forecastingJobsConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
         builder.Services.AddLogging();    
+        builder.Services.AddApplicationInsightsTelemetryWorkerService();
         builder.Services.BuildServiceProvider();
         
     }
