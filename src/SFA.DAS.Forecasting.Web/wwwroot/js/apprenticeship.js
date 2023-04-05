@@ -154,7 +154,7 @@ ShowFundingEstimate.prototype.getCourses = function(query, populateResults) {
         var text = select.options[i].text
         var value = select.options[i].value
         if (this.useTransferAllowance) {
-          if (text.toLowerCase().indexOf(query.toLowerCase()) >= 0 && value.indexOf("-") > 0) {
+          if (text.toLowerCase().indexOf(query.toLowerCase()) >= 0 && value.indexOf("-") === -1) {
             coursesFiltered.push(text)
           }
         } else {
