@@ -86,8 +86,8 @@ namespace SFA.DAS.Forecasting.Web
                     .Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 services.AddAndConfigureGovUkAuthentication(_configuration,
-                    $"{typeof(Startup).Assembly.GetName().Name}.Auth",
-                    typeof(EmployerAccountPostAuthenticationClaimsHandler));
+                    typeof(EmployerAccountPostAuthenticationClaimsHandler),
+                    "","/accounts/SignIn-Stub");
                 services.AddMaMenuConfiguration(RouteNames.SignOut, _configuration["ResourceEnvironmentName"]);
             }
             else

@@ -32,8 +32,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             var authenticationProperties = new AuthenticationProperties();
             authenticationProperties.Parameters.Clear();
             authenticationProperties.Parameters.Add("id_token",idToken);
+            var schemes = new List<string>
+            {
+                CookieAuthenticationDefaults.AuthenticationScheme
+            };
+            _ = bool.TryParse(_config["StubAuth"], out var stubAuth);
+            if (!stubAuth)
+            {
+                schemes.Add(OpenIdConnectDefaults.AuthenticationScheme);
+            }
+            
             return SignOut(
-                authenticationProperties, CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
+                authenticationProperties, schemes.ToArray());
         }
 
 #if DEBUG
@@ -47,14 +57,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [HttpPost]
         [Route("SignIn-Stub")]
         [AllowAnonymous]
-        public IActionResult SigninStubPost()
+        public async Task<IActionResult> SigninStubPost()
         {
-            _stubAuthenticationService?.AddStubEmployerAuth(Response.Cookies, new StubAuthUserDetails
+            
+            var claims = await _stubAuthenticationService.GetStubSignInClaims(new StubAuthUserDetails
             {
                 Email = _config["StubEmail"],
                 Id = _config["StubId"]
-            }, true);
+            });
 
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims,
+                new AuthenticationProperties());
+            
             return RedirectToRoute("Signed-in-stub");
         }
 
