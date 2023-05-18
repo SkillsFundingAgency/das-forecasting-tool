@@ -1,36 +1,39 @@
+using FluentValidation;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Forecasting.Core;
-using SFA.DAS.Forecasting.Functions.Framework;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
-using SFA.DAS.Forecasting.Application.Payments.Validation;
+using SFA.DAS.Forecasting.Domain.Extensions;
 
 namespace SFA.DAS.Forecasting.Payments.Functions
 {
     [StorageAccount("StorageConnectionString")]
-    public class PaymentEventNoCommitmentValidatorFunction: IFunction
+    public class PaymentEventNoCommitmentValidatorFunction
     {
+        private readonly IValidator<PaymentCreatedMessage> _validator;
+
+        public PaymentEventNoCommitmentValidatorFunction(IValidator<PaymentCreatedMessage> validator)
+        {
+            _validator = validator;
+            //PastPaymentEventSuperficialValidator : AbstractValidator<PaymentCreatedMessage>
+        }
         [FunctionName("PaymentEventNoCommitmentValidatorFunction")]
         [return:Queue(QueueNames.PaymentNoCommitmentProcessor)]
-        public static PaymentCreatedMessage Run(
+        public PaymentCreatedMessage Run(
             [QueueTrigger(QueueNames.PaymentValidatorNoCommitment)]PaymentCreatedMessage paymentCreatedMessage,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+            ILogger logger)
         {
-            return FunctionRunner.Run<PaymentEventNoCommitmentValidatorFunction, PaymentCreatedMessage>(writer, executionContext, (container, logger) =>
-                {
-                    var validationResults = container.GetInstance<PastPaymentEventSuperficialValidator>().Validate(paymentCreatedMessage);
+            var validationResults = _validator.Validate(paymentCreatedMessage);
 
-                    if (!validationResults.IsValid)
-                    {
-                        logger.Warn($"Past payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
-                        return null;
-                    }
+            if (!validationResults.IsValid)
+            {
+                logger.LogWarning($"Past payment event failed superficial validation. Employer: {paymentCreatedMessage.EmployerAccountId} apprenticeship: {paymentCreatedMessage.ApprenticeshipId}, Errors:{validationResults.ToJson()}");
+                return null;
+            }
 
-                    logger.Info($"Validated past {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
-                    
-                    return paymentCreatedMessage;
-                });
+            logger.LogInformation($"Validated past {nameof(PaymentCreatedMessage)} for EmployerAccountId: {paymentCreatedMessage.EmployerAccountId} fundingSource:{paymentCreatedMessage.FundingSource}");
+            
+            return paymentCreatedMessage;
+            
         }
     }
 }

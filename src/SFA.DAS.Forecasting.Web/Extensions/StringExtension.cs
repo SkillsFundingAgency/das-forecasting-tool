@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using Microsoft.Ajax.Utilities;
 
 namespace SFA.DAS.Forecasting.Web.Extensions
 {
@@ -7,7 +6,7 @@ namespace SFA.DAS.Forecasting.Web.Extensions
     {
         public static decimal ToDecimal(this string str)
         {
-            if (str.IsNullOrWhiteSpace() || str.StartsWith("-"))
+            if (string.IsNullOrWhiteSpace(str) || str.StartsWith("-"))
             {
                 return 0M;
             }

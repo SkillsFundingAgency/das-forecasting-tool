@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
 {
@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.ApprovalsService
                 .ReturnsAsync(_apiResponse);
 
             _approvalsService =
-                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILog>());
+                new Application.ApprenticeshipCourses.Services.ApprovalsService(_apiClient.Object, Mock.Of<ILogger<Application.ApprenticeshipCourses.Services.ApprovalsService>>());
         }
 
         [Test]

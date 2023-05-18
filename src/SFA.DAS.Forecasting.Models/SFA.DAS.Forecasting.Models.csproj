@@ -1,87 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{97049CCE-774A-4377-B682-1C01B95C2CF3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SFA.DAS.Forecasting.Models</RootNamespace>
-    <AssemblyName>SFA.DAS.Forecasting.Models</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="SFA.DAS.Provider.Events.Api.Client" Version="3.0.1-prerelease-5" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Approvals\Apprenticeship.cs" />
-    <Compile Include="Balance\BalanceModel.cs" />
-    <Compile Include="Commitments\CommitmentModel.cs" />
-    <Compile Include="Commitments\EmployerCommitmentsModel.cs" />
-    <Compile Include="Estimation\AccountEstimationModel.cs" />
-    <Compile Include="Estimation\AccountEstimationProjectionModel.cs" />
-    <Compile Include="Estimation\ApprenticeshipCourseType.cs" />
-    <Compile Include="Estimation\ApprenticeshipToAdd.cs" />
-    <Compile Include="Estimation\ApprenticeshipCourse.cs" />
-    <Compile Include="Estimation\FundingPeriod.cs" />
-    <Compile Include="Estimation\VirtualApprenticeship.cs" />
-    <Compile Include="IDocument.cs" />
-    <Compile Include="Levy\LevyDeclarationModel.cs" />
-    <Compile Include="Payments\CalendarPeriod.cs" />
-    <Compile Include="Payments\NamedCalendarPeriod.cs" />
-    <Compile Include="Payments\EmployerPayment.cs" />
-    <Compile Include="Payments\EmployerTotalCostOfTraining.cs" />
-    <Compile Include="Payments\FundingSource.cs" />
-    <Compile Include="Payments\PaymentModel.cs" />
-    <Compile Include="Balance\Account.cs" />
-    <Compile Include="Pledges\Application.cs" />
-    <Compile Include="Pledges\ApplicationStatus.cs" />
-    <Compile Include="Pledges\Pledge.cs" />
-    <Compile Include="Projections\AccountProjectionCommitment.cs" />
-    <Compile Include="Projections\AccountProjectionModel.cs" />
-    <Compile Include="Projections\EmployerProjectionAudit.cs" />
-    <Compile Include="Projections\ProjectionGenerationType.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

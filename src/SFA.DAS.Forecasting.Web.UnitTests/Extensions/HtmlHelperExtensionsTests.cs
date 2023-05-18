@@ -13,7 +13,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Extensions
             var expected = $"<script type=\"text/javascript\">zE('webWidget', 'helpCenter:setSuggestions', {{ labels: [{keywords}] }});</script>";
 
             // Act
-            var actual = HtmlHelperExtensions.SetZenDeskLabels(null, labels).ToString();
+            var actual = ZenDeskLabelExtensions.SetZenDeskLabels(null, labels).ToString();
 
             // Assert
             Assert.AreEqual(expected, actual);

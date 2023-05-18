@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Projections;
@@ -15,12 +14,11 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
     public class AccountProjectionDataSession : IAccountProjectionDataSession
     {
         private readonly IForecastingDataContext _dataContext;
-        private readonly ITelemetry _telemetry;
+        
 
-        public AccountProjectionDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
+        public AccountProjectionDataSession(IForecastingDataContext dataContext)
         {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _dataContext = dataContext;
         }
 
         public async Task<List<AccountProjectionModel>> Get(long employerAccountId)
@@ -32,9 +30,6 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
 
         public async Task Store(IEnumerable<AccountProjectionModel> accountProjections)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var startTime = DateTime.UtcNow;
             var insertString = new StringBuilder();
             var accountCommitmentsInsert =
                 "DECLARE @TempAccountProjection as TABLE" +
@@ -62,7 +57,7 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                 ") ";
 
 
-            _dataContext.Configuration.AutoDetectChangesEnabled = false;
+            //_dataContext.Configuration.AutoDetectChangesEnabled = false;
             insertString.Append(accountCommitmentsInsert);
             insertString.AppendLine("insert into @TempAccountProjection VALUES ");
             foreach (var accountProjectionModel in accountProjections)
@@ -116,30 +111,18 @@ namespace SFA.DAS.Forecasting.Application.Projections.Services
                                     " 				TransferOutCompletionPayments = s.TransferOutCompletionPayments, FutureFunds = s.FutureFunds, " +
                                     " 				CoinvestmentEmployer = s.CoinvestmentEmployer, CoInvestmentGovernment = s.CoInvestmentGovernment, ExpiredFunds = s.ExpiredFunds, FutureFundsNoExpiry = s.FutureFundsNoExpiry, ApprovedPledgeApplicationCost = s.ApprovedPledgeApplicationCost, AcceptedPledgeApplicationCost = s.AcceptedPledgeApplicationCost, PledgeOriginatedCommitmentCost = s.PledgeOriginatedCommitmentCost;");
 
-            await _dataContext.Database.ExecuteSqlCommandAsync(insertString.ToString());
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseMerge, "Store Account Projections", startTime, stopwatch.Elapsed, true);
+            await _dataContext.ExecuteRawSql(insertString.ToString());
+            
         }
 
         public async Task DeleteAll(long employerAccountId)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var startTime = DateTime.UtcNow;
-
-            await _dataContext.Database.ExecuteSqlCommandAsync("DELETE FROM dbo.AccountProjection where EmployerAccountId=@p0", employerAccountId);
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseDelete, "Delete Account Projections", startTime, stopwatch.Elapsed, true);
+            await _dataContext.ExecuteSqlInterpolatedAsync($"DELETE FROM dbo.AccountProjection where EmployerAccountId={employerAccountId}" );
         }
 
-        public async Task SaveChanges()
+        public Task SaveChanges()
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var startTime = DateTime.UtcNow;
-            await _dataContext.SaveChangesAsync();
-            _telemetry.TrackDependency("EF Context Save Changes", "Account Projections", startTime, stopwatch.Elapsed, true);
-
+            return Task.FromResult(_dataContext.SaveChanges());
         }
     }
 }

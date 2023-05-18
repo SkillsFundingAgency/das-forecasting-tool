@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMoq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Balance;
@@ -16,28 +15,23 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
     [TestFixture]
     public class CurrentBalanceTests
     {
-        private AutoMoqer _moqer;
-        private Models.Balance.BalanceModel _previousAccountBalance;
         private Models.Balance.BalanceModel _currentAccountBalance;
+        private Mock<IAccountBalanceService> _accountBalanceService;
+        private EmployerCommitments _employerCommitments;
+        private CurrentBalance _currentBalance;
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
-            _previousAccountBalance = new BalanceModel
-            {
-                EmployerAccountId = 12345,
-                BalancePeriod = DateTime.MinValue,
-            };
             _currentAccountBalance = new BalanceModel
             {
                 EmployerAccountId = 12345,
-                BalancePeriod = DateTime.Today,
+                BalancePeriod = DateTime.Today.AddDays(-1),
                 Amount = 10000,
                 TransferAllowance = 1000,
                 RemainingTransferBalance = 1000
             };
-            _moqer.SetInstance(new EmployerCommitments(12345, new EmployerCommitmentsModel{ LevyFundedCommitments = new List<CommitmentModel>
+            _employerCommitments = new EmployerCommitments(12345, new EmployerCommitmentsModel{ LevyFundedCommitments = new List<CommitmentModel>
             {
                 new CommitmentModel
                 {
@@ -62,90 +56,73 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
                     FundingSource = FundingSource.Levy
                 }
             }
-            }));
-            _moqer.SetInstance(_previousAccountBalance);
-            _moqer.GetMock<IAccountBalanceService>()
-                .Setup(svc => svc.GetAccountBalance(It.IsAny<long>()))
-                .Returns(Task.FromResult<BalanceModel>(_currentAccountBalance));
+            });
+            
+
+            _accountBalanceService = new Mock<IAccountBalanceService>();
+            _accountBalanceService.Setup(x => x.GetAccountBalance(It.IsAny<long>()))
+                .ReturnsAsync(_currentAccountBalance);
+
+
+            _currentBalance = new CurrentBalance(_currentAccountBalance, _accountBalanceService.Object,
+                _employerCommitments);
+
         }
 
         [Test]
         public async Task Refresh_Balance_Gets_Balance_From_Accounts_Api()
         {
-            var balance = _moqer.Resolve<CurrentBalance>();
-            Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
-            _moqer.GetMock<IAccountBalanceService>()
-                .Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _previousAccountBalance.EmployerAccountId)));
-            Assert.AreEqual(_currentAccountBalance.Amount, balance.Amount);
-        }
-
-        [Test]
-        public async Task Refresh_Balance_Refreshes_Balance()
-        {
-            var balance = _moqer.Resolve<CurrentBalance>();
-            Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
-            _moqer.GetMock<IAccountBalanceService>()
-                .Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _previousAccountBalance.EmployerAccountId)));
-            Assert.AreEqual(_currentAccountBalance.Amount, balance.Amount);
+            Assert.IsTrue(await _currentBalance.RefreshBalance(), "Failed to update the current employer balance.");
+            _accountBalanceService.Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _currentBalance.EmployerAccountId)));
+            Assert.AreEqual(_currentAccountBalance.Amount, _currentBalance.Amount);
         }
 
         [Test]
         public async Task Refresh_Balance_Refreshes_Transfer_Allowance()
         {
-            var balance = _moqer.Resolve<CurrentBalance>();
-            Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
-            _moqer.GetMock<IAccountBalanceService>()
-                .Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _previousAccountBalance.EmployerAccountId)));
-            Assert.AreEqual(_currentAccountBalance.TransferAllowance, balance.TransferAllowance);
+            Assert.IsTrue(await _currentBalance.RefreshBalance(), "Failed to update the current employer balance.");
+            _accountBalanceService.Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _currentBalance.EmployerAccountId)));
+            Assert.AreEqual(_currentAccountBalance.TransferAllowance, _currentBalance.TransferAllowance);
         }
 
         [Test]
         public async Task Refresh_Balance_Refreshes_Remaining_Transfer_Allowance()
         {
-            var balance = _moqer.Resolve<CurrentBalance>();
-            Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
-            _moqer.GetMock<IAccountBalanceService>()
-                .Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _previousAccountBalance.EmployerAccountId)));
-            Assert.AreEqual(_currentAccountBalance.RemainingTransferBalance, balance.RemainingTransferBalance);
+            Assert.IsTrue(await _currentBalance.RefreshBalance(), "Failed to update the current employer balance.");
+            _accountBalanceService.Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _currentBalance.EmployerAccountId)));
+            Assert.AreEqual(_currentAccountBalance.RemainingTransferBalance, _currentBalance.RemainingTransferBalance);
         }
 
         [Test]
         public async Task Refresh_Balance_Refreshes_unallocated_completion_payments()
         {
-            var balance = _moqer.Resolve<CurrentBalance>();
-
-            Assert.IsTrue(await balance.RefreshBalance(), "Failed to update the current employer balance.");
-            Assert.AreEqual(0, balance.UnallocatedCompletionPayments);
+            Assert.IsTrue(await _currentBalance.RefreshBalance(), "Failed to update the current employer balance.");
+            Assert.AreEqual(0, _currentBalance.UnallocatedCompletionPayments);
         }
 
 
         [Test]
         public async Task Refresh_Balance_Refreshes_unallocated_completion_payments_when_rebuilding_projection()
         {
-            var balance = _moqer.Resolve<CurrentBalance>();
-
-            Assert.IsTrue(await balance.RefreshBalance(true), "Failed to update the current employer balance.");
-            Assert.AreEqual(1000, balance.UnallocatedCompletionPayments);
+            Assert.IsTrue(await _currentBalance.RefreshBalance(true), "Failed to update the current employer balance.");
+            Assert.AreEqual(1000, _currentBalance.UnallocatedCompletionPayments);
         }
 
         [Test]
         public async Task Refresh_Balance_Refreshes_unallocated_completion_payments_include_unpaid_when_rebuilding_projection()
         {
-            var balance = _moqer.Resolve<CurrentBalance>();
-
-            Assert.IsTrue(await balance.RefreshBalance(true,true), "Failed to update the current employer balance.");
-            Assert.AreEqual(1000, balance.UnallocatedCompletionPayments);
+            Assert.IsTrue(await _currentBalance.RefreshBalance(true,true), "Failed to update the current employer balance.");
+            Assert.AreEqual(1000, _currentBalance.UnallocatedCompletionPayments);
         }
 
 
         [Test]
         public async Task Does_Not_Refresh_If_Last_Refresh_Less_Than_1_Day_Ago()
         {
-            _previousAccountBalance.BalancePeriod = DateTime.UtcNow.AddHours(-23);
-            var balance = _moqer.Resolve<CurrentBalance>();
-            Assert.IsFalse(await balance.RefreshBalance(), "Updated the current employer balance.");
-            _moqer.GetMock<IAccountBalanceService>()
-                .Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _previousAccountBalance.EmployerAccountId)), Times.Never());
+            _currentAccountBalance.BalancePeriod = DateTime.UtcNow.AddHours(-23);
+            Assert.IsFalse(await _currentBalance.RefreshBalance(), "Updated the current employer balance.");
+            _accountBalanceService
+                .Verify(svc => svc.GetAccountBalance(It.Is<long>(id => id == _currentBalance.EmployerAccountId)), Times.Never());
         }
     }
 }

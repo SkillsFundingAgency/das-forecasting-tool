@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMoq;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
-using FluentValidation.Results;
 using NUnit.Framework;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.ViewModels;
 
@@ -15,16 +17,16 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
     [TestFixture]
     public class AddApprenticeshipOrchestatorTests
     {
-        private AutoMoqer _moqer;
         private List<ApprenticeshipCourse> _apprenticeshipCourses;
         private ApprenticeshipCourse _courseElectrician;
         private ApprenticeshipCourse _courseCarpentry;
+        private Mock<IApprenticeshipCourseDataService> _apprenticeshipCourseDataService;
+        private AddApprenticeshipOrchestrator _orchestrator;
 
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
            
             _courseElectrician = new ApprenticeshipCourse
             {
@@ -53,9 +55,13 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
                _courseCarpentry,
             };
 
-            _moqer.GetMock<IApprenticeshipCourseDataService>()
-                .Setup(x => x.GetAllStandardApprenticeshipCourses())
+            _apprenticeshipCourseDataService = new Mock<IApprenticeshipCourseDataService>();
+            _apprenticeshipCourseDataService.Setup(x => x.GetAllStandardApprenticeshipCourses())
                 .Returns(_apprenticeshipCourses);
+
+            _orchestrator = new AddApprenticeshipOrchestrator(Mock.Of<IEncodingService>(),
+                Mock.Of<IAccountEstimationRepository>(), _apprenticeshipCourseDataService.Object,
+                Mock.Of<ILogger<AddApprenticeshipOrchestrator>>());
         }
         
         [TestCase("6,000", "6,000")]
@@ -73,7 +79,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         [TestCase("66,000000", "66,000,000")]
         public async Task TestingCommasAddedToTotalCostAsStringSetsExcpectedTotalCostValues(string totalCostAsStringInput, string totalCostAsStringOutput)
         {
-            var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
+            
             var vm = new AddEditApprenticeshipsViewModel()
             {
                 NumberOfApprentices = 1,
@@ -82,7 +88,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             };
             
             // Act
-            var res = await orchestrator.UpdateAddApprenticeship(vm);
+            var res = await _orchestrator.UpdateAddApprenticeship(vm);
 
             // Assert
             AssertionExtensions.Should((string) res.TotalCostAsString).Be(totalCostAsStringOutput);      
@@ -91,8 +97,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
         [Test]
         public void TestingAddApprenticeSetupReturnsDefaultSetupWithAvailableApprenticeshipsOrderedAsExpected()
         {
-            var orchestrator = _moqer.Resolve<AddApprenticeshipOrchestrator>();
-            var res = orchestrator.GetApprenticeshipAddSetup(true);
+            var res = _orchestrator.GetApprenticeshipAddSetup(true);
            
             AssertionExtensions.Should((int)res.ApprenticeshipCourses.Count()).Be(2);
 

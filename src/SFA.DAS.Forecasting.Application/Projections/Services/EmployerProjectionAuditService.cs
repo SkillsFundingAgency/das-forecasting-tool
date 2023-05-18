@@ -2,10 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
-using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
-using SFA.DAS.Forecasting.Messages.Projections;
-using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Services
 {

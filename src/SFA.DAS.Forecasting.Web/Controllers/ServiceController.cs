@@ -1,41 +1,27 @@
-﻿using System;
-using System.Web.Mvc;
-using SFA.DAS.Forecasting.Web.Authentication;
-using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Web.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Forecasting.Web.Configuration;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ForecastingRoutePrefix("Service")]
+    [Route("accounts")]
     public class ServiceController : Controller
     {
-        public readonly IOwinWrapper OwinWrapper;
 
-        public ServiceController(IOwinWrapper owinWrapper)
+        [Route("signout", Name = RouteNames.SignOut)]
+        public async Task<IActionResult> SignOutEmployer()
         {
-            OwinWrapper = owinWrapper;
+            var idToken = await HttpContext.GetTokenAsync("id_token");
+
+            var authenticationProperties = new AuthenticationProperties();
+            authenticationProperties.Parameters.Clear();
+            authenticationProperties.Parameters.Add("id_token",idToken);
+            return SignOut(
+                authenticationProperties, CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme);
         }
 
-        [Route("signout")]
-        public ActionResult SignOut()
-        {
-            return OwinWrapper.SignOutUser(Url.ExternalUrlAction("service", "signOut", true));
-        }
-
-        [Authorize]
-        [HttpGet]
-        [Route("password/change")]
-        public ActionResult HandlePasswordChanged(bool userCancelled = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        [Authorize]
-        [HttpGet]
-        [Route("email/change")]
-        public ActionResult HandleEmailChanged(bool userCancelled = false)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

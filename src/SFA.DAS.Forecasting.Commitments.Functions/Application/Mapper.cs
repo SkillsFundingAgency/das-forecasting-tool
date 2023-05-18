@@ -1,11 +1,14 @@
-﻿using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+﻿using System.Runtime.CompilerServices;
+using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Approvals;
 using SFA.DAS.Forecasting.Models.Payments;
 using SFA.DAS.Forecasting.Models.Pledges;
 
+[assembly:InternalsVisibleTo("SFA.DAS.Forecasting.Functions.UnitTests")]
 namespace SFA.DAS.Forecasting.Commitments.Functions.Application
 {
+    
     internal class Mapper
     {
         internal ApprenticeshipMessage Map(Apprenticeship apprenticeship, long employerAccountId)
@@ -33,7 +36,7 @@ namespace SFA.DAS.Forecasting.Commitments.Functions.Application
                 PlannedEndDate = apprenticeship.EndDate,
                 ActualEndDate = null,
                 CompletionAmount = apprenticeship.Cost.Value * 0.2M,
-                MonthlyInstallment = (apprenticeship.Cost.Value * 0.8M) / duration,
+                MonthlyInstallment =duration > 0 ? (apprenticeship.Cost.Value * 0.8M) / duration : 0,
                 NumberOfInstallments = duration,
                 FundingSource = apprenticeship.TransferSenderId == null ? FundingSource.Levy : FundingSource.Transfer,
                 PledgeApplicationId = apprenticeship.PledgeApplicationId

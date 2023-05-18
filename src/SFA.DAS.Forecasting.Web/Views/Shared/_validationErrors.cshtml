@@ -1,27 +1,28 @@
 ﻿
 @if (!ViewContext.ViewData.ModelState.IsValid)
 {
-    <div class="error-summary validation-summary-details error-summary-with-sticky-header" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">
-            Errors to fix
-        </h2>
+    <div class="govuk-error-summary" data-module="govuk-error-summary">
+        <div role="alert">
+            <h2 class="govuk-error-summary__title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    @foreach (var stateItem in ViewContext.ViewData.ModelState)
+                    {
+                        var elementId = Html.GenerateIdFromName(ViewData.TemplateInfo.GetFullHtmlFieldName(stateItem.Key)) ?? stateItem.Key;
 
-        <p>Please check the details you have entered against the information that's needed.</p>
-
-        <ul class="error-summary-list list list-links">
-            @foreach (var stateItem in ViewContext.ViewData.ModelState)
-            {
-                var elementId = ViewData.TemplateInfo.GetFullHtmlFieldId(stateItem.Key) ?? stateItem.Key;
-
-                foreach (var error in stateItem.Value.Errors.Take(1))
-                {
-                    <li>
-                        <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
-                            @error.ErrorMessage
-                        </a>
-                    </li>
-                }
-            }
-        </ul>
+                        foreach (var error in stateItem.Value.Errors.Take(1))
+                        {
+                            <li>
+                                <a href="#error-message-@elementId" data-focuses="error-message-@elementId">
+                                    @error.ErrorMessage
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
     </div>
 }

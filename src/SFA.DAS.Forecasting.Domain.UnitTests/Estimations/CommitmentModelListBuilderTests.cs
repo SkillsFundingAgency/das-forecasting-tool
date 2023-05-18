@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMoq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
@@ -11,12 +10,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
     [TestFixture]
     public class CommitmentModelListBuilderTests
     {
-        private AutoMoqer _moqer;
         private List<VirtualApprenticeship> _virtualApprenticeships;
+        private CommitmentModelListBuilder _commitmentsModelListBuilder;
+
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
             _virtualApprenticeships = new List<VirtualApprenticeship>
             {
                 new VirtualApprenticeship
@@ -48,12 +47,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     FundingSource = 0
                 }
             };
+            _commitmentsModelListBuilder = new CommitmentModelListBuilder();
         }
 
         [Test]
         public void Modelled_Apprentices_Are_Created_As_Sender_Apprentices()
         {
-            var modelledApprenticeships = _moqer.Resolve<CommitmentModelListBuilder>().Build(12345, _virtualApprenticeships);
+            var modelledApprenticeships = _commitmentsModelListBuilder.Build(12345, _virtualApprenticeships);
             Assert.IsTrue(modelledApprenticeships.All(modelledApprenticeship => modelledApprenticeship.SendingEmployerAccountId == 12345 && modelledApprenticeship.EmployerAccountId == 0));
         }
 
@@ -61,13 +61,13 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Creates_Correct_Number_Of_Modelled_Apprentices_For_The_Virtual_Apprenticeships()
         {
             Assert.AreEqual(_virtualApprenticeships.Sum(va => va.ApprenticesCount),
-                _moqer.Resolve<CommitmentModelListBuilder>().Build(12345, _virtualApprenticeships).Count);
+                _commitmentsModelListBuilder.Build(12345, _virtualApprenticeships).Count);
         }
 
         [Test]
         public void Calculates_Correct_Completion_Payments()
         {
-            var modelledApprenticeships = _moqer.Resolve<CommitmentModelListBuilder>().Build(12345, _virtualApprenticeships);
+            var modelledApprenticeships = _commitmentsModelListBuilder.Build(12345, _virtualApprenticeships);
             _virtualApprenticeships.ForEach(va =>
             {
                 modelledApprenticeships.Where(ma => ma.CourseName == va.CourseTitle).ToList().ForEach(ma => Assert.AreEqual(va.TotalCompletionAmount / va.ApprenticesCount,ma.CompletionAmount));
@@ -77,7 +77,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         [Test]
         public void Calculates_Correct_Installment_Amount()
         {
-            var modelledApprenticeships = _moqer.Resolve<CommitmentModelListBuilder>().Build(12345, _virtualApprenticeships);
+            var modelledApprenticeships = _commitmentsModelListBuilder.Build(12345, _virtualApprenticeships);
             _virtualApprenticeships.ForEach(va =>
             {
                 modelledApprenticeships.Where(ma => ma.CourseName == va.CourseTitle).ToList().ForEach(ma => Assert.AreEqual(va.TotalInstallmentAmount / va.ApprenticesCount, ma.MonthlyInstallment));

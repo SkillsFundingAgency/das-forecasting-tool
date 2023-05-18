@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -9,43 +8,52 @@ using Bogus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SFA.DAS.CommitmentsV2.Api.Types.Responses;
+using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
+using GetApprenticeshipsResponse = SFA.DAS.CommitmentsV2.Api.Types.Responses.GetApprenticeshipsResponse;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
-    public static class GetEmployerApprenticeships
+    public class GetEmployerApprenticeships
     {
+        private readonly IConfiguration _configuration;
+
+        public GetEmployerApprenticeships(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         [FunctionName("GetEmployerApprenticeships")]
-        public static async Task<HttpResponseMessage> Run([
+        public async Task<HttpResponseMessage> Run([
             HttpTrigger(AuthorizationLevel.Function, "get",
             Route = "employer/{employerAccountId}/apprenticeships/search")]HttpRequestMessage req, string employerAccountId, TraceWriter writer)
         {
-            if (ConfigurationManager.AppSettings["StubData"] != null && ConfigurationManager.AppSettings["StubData"]
+            if (_configuration["StubData"] != null && _configuration["StubData"]
                     .Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
-                return CreateFakeCommitments(employerAccountId);
+                return CreateFakeCommitments(employerAccountId,_configuration["NumberOfCommitments"]);
             }
 
             StubDataStore.Apprenticeships.TryGetValue(employerAccountId, out var data);
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(data, Encoding.UTF8, "application/json")
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
         }
 
-        private static HttpResponseMessage CreateFakeCommitments(string employerAccountId)
+        private static HttpResponseMessage CreateFakeCommitments(string employerAccountId, string numberOfCommitmentsConfigValue)
         {
             var fakeCommitment = CreateFakeCommitment(employerAccountId);
 
-            var numberOfCommitments = Convert.ToInt32(ConfigurationManager.AppSettings["NumberOfCommitments"]);
+            var numberOfCommitments = Convert.ToInt32(numberOfCommitmentsConfigValue);
 
 
             var data = SendCommitments(fakeCommitment, numberOfCommitments);
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(data, Encoding.UTF8, "application/json")
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
         }
 

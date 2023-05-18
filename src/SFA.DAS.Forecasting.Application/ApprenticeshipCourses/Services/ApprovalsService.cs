@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
-using SFA.DAS.NLog.Logger;
 using GetApprenticeshipsResponse = SFA.DAS.Forecasting.Application.Infrastructure.OuterApi.GetApprenticeshipsResponse;
 
 namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
@@ -17,10 +17,10 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
     public class ApprovalsService : IApprovalsService
     {
         private readonly IApiClient _apiClient;
-        private readonly ILog _logger;
+        private readonly ILogger<ApprovalsService> _logger;
         public const int PageSize = 500;
 
-        public ApprovalsService(IApiClient apiClient, ILog logger)
+        public ApprovalsService(IApiClient apiClient, ILogger<ApprovalsService> logger)
         {
             _apiClient = apiClient;
             _logger = logger;
@@ -28,14 +28,14 @@ namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
 
         public async Task<List<Models.Approvals.Apprenticeship>> GetApprenticeships(long employerAccountId)
         {
-            _logger.Info($"Getting apprenticeships for account {employerAccountId}");
+            _logger.LogInformation($"Getting apprenticeships for account {employerAccountId}");
 
             var waitingToStart = await GetApprenticeshipsForStatus(employerAccountId, GetApprenticeshipsApiRequest.ApprenticeshipStatus.WaitingToStart);
             var live = await GetApprenticeshipsForStatus(employerAccountId, GetApprenticeshipsApiRequest.ApprenticeshipStatus.Live);
 
             var all = waitingToStart.Union(live).ToList();
 
-            _logger.Info($"Retrieved {all.Count} apprenticeships for account {employerAccountId}");
+            _logger.LogInformation($"Retrieved {all.Count} apprenticeships for account {employerAccountId}");
 
             return all.Select(x => new Models.Approvals.Apprenticeship
             {

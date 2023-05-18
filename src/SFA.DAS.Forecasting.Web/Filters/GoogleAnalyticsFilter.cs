@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.Filters
@@ -16,7 +18,7 @@ namespace SFA.DAS.Forecasting.Web.Filters
                 controller.ViewBag.GaData = new GaData
                 {
                     UserId = userId,
-                    Acc = controller.RouteData.Values[RouteValues.EmployerAccountId]?.ToString().ToUpper()
+                    Acc = controller.RouteData.Values[RouteValueKeys.EncodedAccountId]?.ToString().ToUpper()
                 };
             }
             base.OnActionExecuting(filterContext);

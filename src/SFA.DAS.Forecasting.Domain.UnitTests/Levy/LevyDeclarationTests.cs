@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMoq;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Domain.Levy;
@@ -11,14 +10,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
     [TestFixture]
     public class LevyDeclarationTests
     {
-        private AutoMoqer _moqer;
         private LevyDeclarationModel _model;
+        private Mock<IPayrollDateService> _payrollDateService;
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
-            _moqer.GetMock<IPayrollDateService>()
+            _payrollDateService = new Mock<IPayrollDateService>();
+            _payrollDateService
                 .Setup(svc => svc.GetPayrollDate(It.IsAny<string>(), It.IsAny<short>()))
                 .Returns(DateTime.Today);
             _model = new LevyDeclarationModel
@@ -28,25 +27,23 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Levy
                 Scheme = "ABC/123",
                 PayrollMonth = 1,
                 PayrollYear = "18-19",
-
             };
-            _moqer.SetInstance(_model);
         }
 
         [Test]
         public void Rejects_Levy_Declarations_Over_2_Years_Old()
         {
-            var levyPeriod = _moqer.Resolve<LevyDeclaration>();
-            Assert.Catch(() => levyPeriod.RegisterLevyDeclaration(10000, DateTime.Today.AddYears(-3)));
+            var levyDeclaration = new LevyDeclaration(_payrollDateService.Object, _model);
+            Assert.Catch(() => levyDeclaration.RegisterLevyDeclaration(10000, DateTime.Today.AddYears(-3)));
         }
 
         [Test]
         public void Declaration_For_Same_Scheme_And_Period_Should_Overwrite_Previous_Declaration()
         {
             _model.LevyAmountDeclared = 1;
-            var levyPeriod = _moqer.Resolve<LevyDeclaration>();
-            levyPeriod.RegisterLevyDeclaration(10000, DateTime.Today);
-            Assert.AreEqual(10000, levyPeriod.LevyAmountDeclared);
+            var levyDeclaration = new LevyDeclaration(_payrollDateService.Object, _model);
+            levyDeclaration.RegisterLevyDeclaration(10000, DateTime.Today);
+            Assert.AreEqual(10000, levyDeclaration.LevyAmountDeclared);
         }
     }
 }

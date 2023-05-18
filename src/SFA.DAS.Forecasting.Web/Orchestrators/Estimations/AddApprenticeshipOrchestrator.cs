@@ -1,32 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.Orchestrators.Exceptions;
 using SFA.DAS.Forecasting.Web.ViewModels;
-using SFA.DAS.HashingService;
-using SFA.DAS.NLog.Logger;
+using AccountEstimation = SFA.DAS.Forecasting.Domain.Estimations.AccountEstimation;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 {
     public class AddApprenticeshipOrchestrator : IAddApprenticeshipOrchestrator
     {
-        private readonly IHashingService _hashingService;
+        private readonly IEncodingService _encodingService;
         private readonly IAccountEstimationRepository _accountEstimationRepository;
-        private readonly ILog _logger;
+        private readonly ILogger<AddApprenticeshipOrchestrator> _logger;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
 
         public AddApprenticeshipOrchestrator(
-            IHashingService hashingService, 
+            IEncodingService encodingService, 
             IAccountEstimationRepository accountEstimationRepository, 
             IApprenticeshipCourseDataService apprenticeshipCourseService,
-            ILog logger)
+            ILogger<AddApprenticeshipOrchestrator> logger)
         {
-            _hashingService = hashingService;
+            _encodingService = encodingService;
             _accountEstimationRepository = accountEstimationRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
             _logger = logger;
@@ -69,7 +69,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             }
             
 
-            _logger.Debug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {vm.Course}");
+            _logger.LogDebug($"Storing Apprenticeship for account {hashedAccountId}, estimation name: {estimationName}, Course: {vm.Course}");
             await _accountEstimationRepository.Store(accountEstimation);
         }
 
@@ -143,7 +143,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
 
         private async Task<AccountEstimation> GetAccountEstimation(string hashedAccountId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
             return await _accountEstimationRepository.Get(accountId);
         }
 

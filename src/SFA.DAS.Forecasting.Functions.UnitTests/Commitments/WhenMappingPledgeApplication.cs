@@ -1,7 +1,5 @@
 ﻿using AutoFixture;
-using Moq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Models.Payments;
 

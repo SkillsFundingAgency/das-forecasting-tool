@@ -1,44 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Projections.Services;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Payments;
-using SFA.DAS.NLog.Logger;
 using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 {
-    public class AllowAccountProjectionsHandler
+    public interface IAllowAccountProjectionsHandler
     {
+        Task<IEnumerable<long>> AllowedEmployerAccountIds(PaymentCreatedMessage paymentCreatedMessage);
+
+    }
+    public class AllowAccountProjectionsHandler : IAllowAccountProjectionsHandler
+    {
+        private const int SecondsToWaitToAllowProjections = 60;
         private readonly IEmployerPaymentsRepository _paymentsRepository;
         private readonly IEmployerCommitmentsRepository _commitmentsRepository;
-        private readonly ILog _logger;
-        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ILogger<AllowAccountProjectionsHandler> _logger;
+        private readonly ForecastingJobsConfiguration _applicationConfiguration;
         private readonly IEmployerProjectionAuditService _auditService;
 
         public AllowAccountProjectionsHandler(
             IEmployerPaymentsRepository repository,
-            ILog logger,
-            IApplicationConfiguration applicationConfiguration,
+            ILogger<AllowAccountProjectionsHandler> logger,
+            ForecastingJobsConfiguration applicationConfiguration,
             IEmployerProjectionAuditService auditService,
             IEmployerCommitmentsRepository commitmentsRepository)
         {
-            _paymentsRepository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _applicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
-            _auditService = auditService ?? throw new ArgumentNullException(nameof(auditService));
-            _commitmentsRepository = commitmentsRepository ?? throw new ArgumentNullException(nameof(commitmentsRepository));
+            _paymentsRepository = repository;
+            _logger = logger;
+            _applicationConfiguration = applicationConfiguration;
+            _auditService = auditService;
+            _commitmentsRepository = commitmentsRepository;
         }
 
         public async Task<IEnumerable<long>> AllowedEmployerAccountIds(PaymentCreatedMessage paymentCreatedMessage)
         {
-            _logger.Info($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.EmployerAccountId}, {paymentCreatedMessage.Id}");
+            _logger.LogInformation($"Now checking if projections can be generated for payment events: {paymentCreatedMessage.EmployerAccountId}, {paymentCreatedMessage.Id}");
             if (!_applicationConfiguration.AllowTriggerProjections)
             {
-                _logger.Warn("Triggering of projections is disabled.");
+                _logger.LogWarning("Triggering of projections is disabled.");
                 return new List<long>();
             }
 
@@ -46,10 +52,10 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
             if (await IsEmployerAccountIdAllowed(paymentCreatedMessage.EmployerAccountId))
             {
-                _logger.Info($"Enough time has elapsed since last received payment and commitment to allow projections to be generated for employer {paymentCreatedMessage.EmployerAccountId}.");
+                _logger.LogInformation($"Enough time has elapsed since last received payment and commitment to allow projections to be generated for employer {paymentCreatedMessage.EmployerAccountId}.");
                 if (!await _auditService.RecordRunOfProjections(paymentCreatedMessage.EmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
                 {
-                    _logger.Info($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
+                    _logger.LogInformation($"Triggering of payment projections for employer {paymentCreatedMessage.EmployerAccountId} has already been started.");
                 }
                 else
                 {
@@ -58,7 +64,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             }
             else
             {
-                _logger.Info($"Cannot allow projections for employer {paymentCreatedMessage.EmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
+                _logger.LogInformation($"Cannot allow projections for employer {paymentCreatedMessage.EmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
             }
 
             if (paymentCreatedMessage.SendingEmployerAccountId != 0 && paymentCreatedMessage.EmployerAccountId != paymentCreatedMessage.SendingEmployerAccountId)
@@ -68,7 +74,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                     employerAccountIds.Add(paymentCreatedMessage.SendingEmployerAccountId);
                     if (!await _auditService.RecordRunOfProjections(paymentCreatedMessage.SendingEmployerAccountId, nameof(ProjectionSource.PaymentPeriodEnd)))
                     {
-                        _logger.Info($"Triggering of payment projections for employer {paymentCreatedMessage.SendingEmployerAccountId} has already been started.");
+                        _logger.LogInformation($"Triggering of payment projections for employer {paymentCreatedMessage.SendingEmployerAccountId} has already been started.");
                     }
                     else
                     {
@@ -77,7 +83,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
                 }
                 else
                 {
-                    _logger.Info($"Cannot allow projections for employer {paymentCreatedMessage.SendingEmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
+                    _logger.LogInformation($"Cannot allow projections for employer {paymentCreatedMessage.SendingEmployerAccountId}. Not enough time has elapsed since last payment or commitment received.");
                 }
             }
             
@@ -93,7 +99,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
 
             if (!hasReceivedRecentPayment)
             {
-                _logger.Info($"No last payment received recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");
+                _logger.LogInformation($"No last payment received recorded for employer account: {employerAccountId}  5 minutes has elapsed since last received payment");
             }
 
             if (lastCommitmentReceivedTime == null)
@@ -110,7 +116,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             var hasReceivedRecentPaymentForSendingEmployer = await payments.HasReceivedRecentPaymentForSendingEmployer();
             if (!hasReceivedRecentPaymentForSendingEmployer)
             {
-                _logger.Info($"No last payment received recorded for sending employer account: {sendingEmployerAccountId}  5 minutes has elapsed since last received payment");
+                _logger.LogInformation($"No last payment received recorded for sending employer account: {sendingEmployerAccountId}  5 minutes has elapsed since last received payment");
             }                
 
             var lastCommitmentReceivedTime = await _commitmentsRepository.GetLastTimeRecieved(sendingEmployerAccountId);
@@ -124,7 +130,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Handlers
             var allowPaymentProjections = !hasReceivedRecentPayment;
             
             var allowCommitmentProjections =
-                lastCommitmentReceivedTime.Value.AddSeconds(_applicationConfiguration.SecondsToWaitToAllowProjections) <=
+                lastCommitmentReceivedTime.Value.AddSeconds(SecondsToWaitToAllowProjections) <=
                 DateTime.UtcNow;
 
             return allowPaymentProjections && allowCommitmentProjections;

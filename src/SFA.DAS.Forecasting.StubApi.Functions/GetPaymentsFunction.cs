@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -9,23 +8,30 @@ using System.Threading.Tasks;
 using Bogus;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.Provider.Events.Api.Types;
 
 namespace SFA.DAS.Forecasting.StubApi.Functions
 {
 
-    public static class GetPaymentsFunction
+    public class GetPaymentsFunction
     {
-        [FunctionName("GetPaymentsFunction")]
-        public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "payments")]HttpRequestMessage req, 
-            TraceWriter log)
+        private readonly IConfiguration _configuration;
+
+        public GetPaymentsFunction(IConfiguration configuration)
         {
-            log.Info($"C# HTTP trigger function {nameof(GetPaymentsFunction)}.");
+            _configuration = configuration;
+        }
+        [FunctionName("GetPaymentsFunction")]
+        public async Task<HttpResponseMessage> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "payments")]HttpRequestMessage req, 
+            ILogger log)
+        {
+            log.LogInformation($"C# HTTP trigger function {nameof(GetPaymentsFunction)}.");
             string data;
-            if (ConfigurationManager.AppSettings["StubData"] != null && ConfigurationManager.AppSettings["StubData"].Equals("true", StringComparison.CurrentCultureIgnoreCase))
+            if (_configuration["StubData"] != null && _configuration["StubData"].Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 var payments = CreateFakePayments("12345");
                 data = SendPayments(payments, 200);
@@ -38,7 +44,7 @@ namespace SFA.DAS.Forecasting.StubApi.Functions
 
             return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StringContent(data, Encoding.UTF8, "application/json")
+                Content = new StringContent(data, System.Text.Encoding.UTF8, "application/json")
             };
         }
 

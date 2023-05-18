@@ -1,16 +1,17 @@
 ﻿using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.Commitments.Functions
 {
     [StorageAccount("StorageConnectionString")]
     public class RefreshApprenticeshipsForEmployer
     {
-        [FunctionName("RefreshApprenticeshipCoursesFunction")]
+        [FunctionName("RefreshEmployersForApprenticeshipTimerUpdate")]
         [return: Queue(QueueNames.RefreshEmployersForApprenticeshipUpdate)]
-        public static string Run([TimerTrigger("0 0 0 */1 * *")]TimerInfo myTimer, TraceWriter log)
+        public string Run([TimerTrigger("0 0 0 */1 * *")]TimerInfo myTimer, ILogger log)
         {
-            log.Info("Triggering scheduled run of refresh apprenticeships for employers.");
+            log.LogInformation("Triggering scheduled run of refresh apprenticeships for employers.");
             return "RefreshApprenticeshipsForEmployer";
         }
     }

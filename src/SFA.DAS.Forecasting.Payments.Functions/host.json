@@ -1,12 +1,11 @@
 {
-  "queues": {
-    "batchSize": 4,
-    "newBatchThreshold": 2,
-    "maxPollingInterval": 500,
-    "maxDequeueCount": 2
-  },
-  "tracing": {
-    "consoleLevel": "verbose",
-    "fileLoggingMode": "debugOnly"
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
+    }
   }
 }

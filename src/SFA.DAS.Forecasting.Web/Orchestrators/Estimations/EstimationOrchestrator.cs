@@ -1,17 +1,15 @@
-﻿using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Domain.Balance;
+﻿using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Extensions;
 using SFA.DAS.Forecasting.Web.ViewModels;
-using SFA.DAS.HashingService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SFA.DAS.Encoding;
 using SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
 using SFA.DAS.Forecasting.Application.ExpiredFunds.Service;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Models.Projections;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
@@ -20,30 +18,24 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
     {
         private readonly IAccountEstimationProjectionRepository _estimationProjectionRepository;
         private readonly IAccountEstimationRepository _estimationRepository;
-        private readonly IHashingService _hashingService;
+        private readonly IEncodingService _encodingService;
         private readonly ICurrentBalanceRepository _currentBalanceRepository;
         private readonly IApprenticeshipCourseDataService _apprenticeshipCourseService;
         private readonly IExpiredFundsService _expiredFundsService;
-        private readonly IApplicationConfiguration _config;
 
         public EstimationOrchestrator(IAccountEstimationProjectionRepository estimationProjectionRepository,
             IAccountEstimationRepository estimationRepository,
-            IHashingService hashingService,
+            IEncodingService encodingService,
             ICurrentBalanceRepository currentBalanceRepository,
             IApprenticeshipCourseDataService apprenticeshipCourseService,
-            IExpiredFundsService expiredFundsService,
-            IApplicationConfiguration config)
+            IExpiredFundsService expiredFundsService)
         {
-            _estimationProjectionRepository = estimationProjectionRepository ??
-                                              throw new ArgumentNullException(nameof(estimationProjectionRepository));
-            _estimationRepository =
-                estimationRepository ?? throw new ArgumentNullException(nameof(estimationRepository));
-            _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
-            _currentBalanceRepository = currentBalanceRepository ??
-                                        throw new ArgumentNullException(nameof(currentBalanceRepository));
+            _estimationProjectionRepository = estimationProjectionRepository ;
+            _estimationRepository = estimationRepository;
+            _encodingService = encodingService;
+            _currentBalanceRepository = currentBalanceRepository;
             _apprenticeshipCourseService = apprenticeshipCourseService;
             _expiredFundsService = expiredFundsService;
-            _config = config;
         }
 
         public async Task<EstimationPageViewModel> CostEstimation(string hashedAccountId, string estimateName,
@@ -52,7 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             var accountId = GetAccountId(hashedAccountId);
             await RefreshCurrentBalance(accountId);
             var accountEstimation = await _estimationRepository.Get(accountId);
-            var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation, _config.FeatureExpiredFunds);
+            var estimationProjector = await _estimationProjectionRepository.Get(accountEstimation);
             estimationProjector.BuildProjections();
             var projection = estimationProjector.Projections.FirstOrDefault();
             var projectionType = projection?.ProjectionGenerationType ?? ProjectionGenerationType.LevyDeclaration;
@@ -107,7 +99,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             return viewModel;
         }
 
-        private long GetAccountId(string hashedAccountId) => _hashingService.DecodeValue(hashedAccountId);
+        private long GetAccountId(string hashedAccountId) => _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
 
         public async Task<bool> HasValidApprenticeships(string hashedAccountId)
         {
@@ -145,7 +137,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
         public async Task<AddEditApprenticeshipsViewModel> EditApprenticeshipModel(string hashedAccountId,
             string apprenticeshipsId, string estimationName)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
             var estimations = await _estimationRepository.Get(accountId);
 
             var model = estimations.FindVirtualApprenticeship(apprenticeshipsId);

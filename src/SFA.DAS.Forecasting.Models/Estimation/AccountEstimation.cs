@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Models.Estimation
         public long EmployerAccountId { get; set; }
 
         public IEnumerable<VirtualApprenticeship> Apprenticeships { get; set; }
-        public IEnumerable<AccountProjectionReadModel> Estimations { get; set; }
+        //TODO ublic IEnumerable<AccountProjectionReadModel> Estimations { get; set; }
 
     }
 }

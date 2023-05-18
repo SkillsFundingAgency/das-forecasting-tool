@@ -1,15 +1,12 @@
-﻿using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
-using SFA.DAS.Forecasting.Data;
+﻿using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.SqlServer;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Application.Payments.Services
@@ -17,24 +14,17 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
     public class EmployerPaymentDataSession : IEmployerPaymentDataSession
     {
         private readonly IForecastingDataContext _dataContext;
-        private readonly ITelemetry _telemetry;
 
-        public EmployerPaymentDataSession(IForecastingDataContext dataContext, ITelemetry telemetry)
+        public EmployerPaymentDataSession(IForecastingDataContext dataContext)
         {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry)); 
+            _dataContext = dataContext; 
         }
 
         public async Task<PaymentModel> Get(long employerAccountId, string paymentId)
         {
-            var stopwatch = new Stopwatch();
-            var startTime = DateTime.UtcNow;
-            stopwatch.Start();
             var employerPayment = await _dataContext.Payments
                 .FirstOrDefaultAsync(payment => payment.EmployerAccountId == employerAccountId &&
                                                 payment.ExternalPaymentId == paymentId);
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Payment", startTime, stopwatch.Elapsed, employerPayment != null);
             return employerPayment;
         }
 
@@ -48,7 +38,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         {
             var recentPayment = await _dataContext
                 .Payments.Where(payment => (payment.EmployerAccountId == employerAccountId || payment.SendingEmployerAccountId == employerAccountId)
-                                                                         && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
+                                                                         && EF.Functions.DateDiffMinute(payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync();
             
@@ -59,7 +49,7 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         {
             var recentPayment = await _dataContext
                 .Payments.Where(payment => (payment.SendingEmployerAccountId == sendingEmployerAccountId && payment.EmployerAccountId != sendingEmployerAccountId)
-                                                                                && SqlFunctions.DateDiff("minute", payment.ReceivedTime, DateTime.UtcNow) <= 5)
+                                                                                && EF.Functions.DateDiffMinute(payment.ReceivedTime, DateTime.UtcNow) <= 5)
                 .OrderByDescending(payment => payment.ReceivedTime)
                 .FirstOrDefaultAsync();
                 
@@ -79,18 +69,14 @@ namespace SFA.DAS.Forecasting.Application.Payments.Services
         {
             return _dataContext.Payments
                 .Where(wherePredicate)
+                .ToList()
                 .GroupBy(g => new { g.CollectionPeriod.Year, g.CollectionPeriod.Month })
                 .Select(s => new { s.Key.Year, s.Key.Month, Total = s.Sum(v => v.Amount) }).ToList()
                 .ToDictionary(k => new CalendarPeriod(k.Year, k.Month), k => k.Total);
         }
-        public async Task SaveChanges()
+        public Task SaveChanges()
         {
-            var stopwatch = new Stopwatch();
-            var startTime = DateTime.UtcNow;
-            stopwatch.Start();
-            await _dataContext.SaveChangesAsync();
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseInsert, "Store Payment", startTime, stopwatch.Elapsed, true);
+            return Task.FromResult(_dataContext.SaveChanges());
         }
     }
 }

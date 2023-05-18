@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moq;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using SFA.DAS.Forecasting.Core.Configuration;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
 {
@@ -16,15 +16,11 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
         private ForecastingMapper _mapper;
         private AccountProjectionModel _projectionModel;
         private IEnumerable<AccountProjectionModel> _models;
-        private Mock<IApplicationConfiguration> _config;
-
+        
         [SetUp]
         public void SetUp()
         {
-            _config = new Mock<IApplicationConfiguration>();
-            _config.Setup(x => x.FeatureExpiredFunds).Returns(true);
-
-            _mapper = new ForecastingMapper(_config.Object);
+            _mapper = new ForecastingMapper();
             _projectionModel =
                 new AccountProjectionModel
                 {
@@ -71,16 +67,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests.MapperTests
             result.First().CoInvestmentEmployer.Should().Be(_projectionModel.CoInvestmentEmployer);
             result.First().CoInvestmentGovernment.Should().Be(_projectionModel.CoInvestmentGovernment);
             result.First().ExpiredFunds.Should().Be(_projectionModel.ExpiredFunds);
-        }
-
-        [Test]
-        public void Then_The_Expired_Funds_Value_Is_Zero_If_The_Config_Is_Set_Not_To_Show_Expired_Funds()
-        {
-            _config.Setup(x => x.FeatureExpiredFunds).Returns(false);
-
-            var result = _mapper.MapProjections(_models);
-            
-            result.All(c=>c.ExpiredFunds.Equals(0)).Should().BeTrue();
         }
 
         [Test]

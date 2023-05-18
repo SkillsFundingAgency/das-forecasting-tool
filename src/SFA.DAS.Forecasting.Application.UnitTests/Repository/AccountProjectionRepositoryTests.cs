@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AutoMoq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -12,6 +9,7 @@ using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Domain.Projections;
+using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
@@ -21,18 +19,13 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
     [TestFixture]
     public class AccountProjectionRepositoryTests
     {
-        private AutoMoqer _moqer;
+        private Mock<ICurrentBalanceRepository> _currentBalanceRepo;
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
+            _currentBalanceRepo = new Mock<ICurrentBalanceRepository>();
             
-
-            var currentBalanceRepo = _moqer.GetMock<ICurrentBalanceRepository>();
-            var mockBalance = _moqer.GetMock<CurrentBalance>();
-
-
             var balance = new BalanceModel
             {
                 EmployerAccountId = 12345,
@@ -59,27 +52,18 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
                 }
             });
 
-            mockBalance.Setup(x => x.EmployerAccountId).Returns(12345);
-            mockBalance.Setup(x => x.Amount).Returns(10000);
-            mockBalance.Setup(x => x.RefreshBalance(It.IsAny<bool>(), false))
-                .ReturnsAsync(true);
-           
-            currentBalanceRepo.Setup(x => x.Get(It.IsAny<long>()))
-                .ReturnsAsync(new CurrentBalance(balance,_moqer.GetMock<IAccountBalanceService>().Object,commitments));
-
-            var levyDataSession = _moqer.GetMock<ILevyDataSession>();
-            levyDataSession.Setup(s => s.GetLatestLevyAmount(12345)).ReturnsAsync(0);
-            levyDataSession.Setup(s => s.GetLatestLevyAmount(12345)).ReturnsAsync(-400);
-
+            _currentBalanceRepo.Setup(x => x.Get(It.IsAny<long>()))
+                .ReturnsAsync(new CurrentBalance(balance, Mock.Of<IAccountBalanceService>(),commitments));
         }
 
         [Test]
         public async Task Positive_LevyAmount_Returns_Projection()
         {
-            var levyDataSession = _moqer.GetMock<ILevyDataSession>();
+            var levyDataSession = new Mock<ILevyDataSession>();
             levyDataSession.Setup(s => s.GetLatestLevyAmount(12345)).ReturnsAsync(400);
 
-            var sut = _moqer.Resolve<AccountProjectionRepository>();
+            var sut = new AccountProjectionRepository(_currentBalanceRepo.Object, levyDataSession.Object,
+                Mock.Of<IAccountProjectionDataSession>());
            
             var projection = await sut.InitialiseProjection(12345);
 
@@ -93,11 +77,12 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Repository
         [Test]
         public async Task Negative_LevyAmount_Returns_Projection()
         {
-            var levyDataSession = _moqer.GetMock<ILevyDataSession>();
+            var levyDataSession = new Mock<ILevyDataSession>();
             levyDataSession.Setup(s => s.GetLatestLevyAmount(12345)).ReturnsAsync(-400);
             levyDataSession.Setup(s => s.GetLatestPositiveLevyAmount(12345)).ReturnsAsync(400);
 
-            var sut = _moqer.Resolve<AccountProjectionRepository>();
+            var sut = new AccountProjectionRepository(_currentBalanceRepo.Object, levyDataSession.Object,
+                Mock.Of<IAccountProjectionDataSession>());
 
             var projection = await sut.InitialiseProjection(12345);
 

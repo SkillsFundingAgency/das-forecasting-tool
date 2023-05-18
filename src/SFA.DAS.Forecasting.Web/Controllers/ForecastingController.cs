@@ -1,31 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using CsvHelper;
-using SFA.DAS.Forecasting.Web.Attributes;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.Employer.Shared.UI.Attributes;
 using SFA.DAS.Forecasting.Web.Authentication;
+using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [ValidateMembership]
-    [AuthorizeForecasting]
-    [RoutePrefixAttribute("accounts/{hashedaccountId}/forecasting")]
+    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
+    [Route("accounts/{hashedaccountId}/forecasting")]
+    [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class ForecastingController : Controller
     {
-        private readonly ForecastingOrchestrator _orchestrator;
-        private readonly IMembershipService _membershipService;
+        private readonly IForecastingOrchestrator _orchestrator;
 
-        public ForecastingController(ForecastingOrchestrator orchestrator, IMembershipService membershipService)
+        public ForecastingController(IForecastingOrchestrator orchestrator)
         {
             _orchestrator = orchestrator;
-            _membershipService = membershipService;
         }
 
         [HttpGet]
-        [Route("projections", Name = "Balance")]
+        [Route("projections", Name = RouteNames.Balance)]
         public async Task<ActionResult> Balance(string hashedAccountId)
         {
             var viewModel = await _orchestrator.Projection(hashedAccountId);
@@ -33,7 +35,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("download", Name = "DownloadCsv")]
+        [Route("download", Name = RouteNames.DownloadCsv)]
         public async Task<ActionResult> Csv(string hashedAccountId)
         {
             var results = await _orchestrator.BalanceCsv(hashedAccountId);
@@ -42,7 +44,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("download-apprenticeships")]
+        [Route("download-apprenticeships", Name = RouteNames.DownloadApprenticeships)]
         public async Task<ActionResult> DownloadApprenticeshipDetailsCsv(string hashedAccountId)
         {
             var results = await _orchestrator.ApprenticeshipsCsv(hashedAccountId);
@@ -51,7 +53,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         }
 
         [HttpGet]
-        [Route("expired-funds-guidance")]
+        [Route("expired-funds-guidance", Name = RouteNames.ExpiredFundsGuidance)]
         public ActionResult ExpiredFundsGuidance()
         {
             return View();
@@ -63,7 +65,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             {
                 using (var streamWriter = new StreamWriter(memoryStream))
                 {
-                    using (var csvWriter = new CsvWriter(streamWriter))
+                    using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.CurrentCulture))
                     {
                         csvWriter.WriteRecords(results);
                         streamWriter.Flush();

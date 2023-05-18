@@ -24,17 +24,21 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 				ProviderId = paymentCreatedMessage.Ukprn,
 				LearnerId = paymentCreatedMessage.Uln,
 				Amount = paymentCreatedMessage.Amount,
-				CollectionPeriod = new Models.Payments.CalendarPeriod
-                {
-//					Id = paymentCreatedMessage.CollectionPeriod.Id,
-					Month = paymentCreatedMessage.CollectionPeriod.Month,
-					Year = paymentCreatedMessage.CollectionPeriod.Year
-				},
-                DeliveryPeriod = new Models.Payments.CalendarPeriod
-                {
-                    Month = paymentCreatedMessage.DeliveryPeriod.Month,
-                    Year = paymentCreatedMessage.DeliveryPeriod.Year
-                },
+				CollectionPeriodMonth = paymentCreatedMessage.CollectionPeriod.Month,
+				CollectionPeriodYear = paymentCreatedMessage.CollectionPeriod.Year,
+				DeliveryPeriodYear = paymentCreatedMessage.DeliveryPeriod.Year,
+				DeliveryPeriodMonth = paymentCreatedMessage.DeliveryPeriod.Month,
+// 				CollectionPeriod = new Models.Payments.CalendarPeriod
+//                 {
+// //					Id = paymentCreatedMessage.CollectionPeriod.Id,
+// 					Month = paymentCreatedMessage.CollectionPeriod.Month,
+// 					Year = paymentCreatedMessage.CollectionPeriod.Year
+// 				},
+//                 DeliveryPeriod = new Models.Payments.CalendarPeriod
+//                 {
+//                     Month = paymentCreatedMessage.DeliveryPeriod.Month,
+//                     Year = paymentCreatedMessage.DeliveryPeriod.Year
+//                 },
 				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
 				ReceivedTime = DateTime.UtcNow,
                 FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource)

@@ -3,10 +3,10 @@ using SFA.DAS.Forecasting.Domain.Levy.Services;
 using SFA.DAS.Forecasting.Models.Levy;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Forecasting.Domain.Levy;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Services
@@ -31,8 +31,9 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task<decimal> GetLatestLevyAmount(long employerAccountId)
         {
-            return await _dataContext.LevyDeclarations
+            return (await _dataContext.LevyDeclarations
                 .Where(levy => levy.EmployerAccountId == employerAccountId)
+                .ToListAsync())
                 .GroupBy(levy => levy.PayrollDate)
                     .Select(group => new
                     {
@@ -41,14 +42,15 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                     })
                 .OrderByDescending(item => item.PayrollDate)
                 .Select(item => item.Amount)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
         }
 
 
         public async Task<decimal> GetLatestPositiveLevyAmount(long employerAccountId)
         {
-            return await _dataContext.LevyDeclarations
+            return (await _dataContext.LevyDeclarations
                 .Where(levy => levy.EmployerAccountId == employerAccountId)
+                .ToListAsync())
                 .GroupBy(levy => levy.PayrollDate)
                 .Select(group => new
                 {
@@ -57,7 +59,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
                 })
                 .OrderByDescending(item => item.PayrollDate).Where(w => w.Amount > 0)
                 .Select(item => item.Amount)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
         }
 
         public async Task<LevyDeclarationModel> GetBySubmissionId(long submissionId)
@@ -93,6 +95,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
         {
             return _dataContext.LevyDeclarations
                 .Where(wherePredicate)
+                .ToList()
                 .GroupBy(g => new { g.EmployerAccountId, g.TransactionDate.Year, g.TransactionDate.Month }).ToList()
                 .Select(s => new LevyPeriod(s.Key.EmployerAccountId, s.Key.Year.ToString(), (byte)s.Key.Month,s.Max(v => v.TransactionDate), s.Sum(v => v.LevyAmountDeclared), s.Max(v => v.DateReceived)));
         }
@@ -100,7 +103,7 @@ namespace SFA.DAS.Forecasting.Application.Levy.Services
 
         public async Task SaveChanges()
         {
-            await _dataContext.SaveChangesAsync();
+            _dataContext.SaveChanges();
         }
 
         public void Store(LevyDeclarationModel levyDeclaration)

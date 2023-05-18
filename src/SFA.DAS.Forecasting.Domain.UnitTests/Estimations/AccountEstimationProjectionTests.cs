@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using AutoMoq;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.EmployerFinance.Types.Models;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Domain.Estimations;
 using SFA.DAS.Forecasting.Domain.Shared;
@@ -20,16 +19,16 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
     {
         private const int EmployerAccountId = 12345;
         private const int TransferAllowance = 15000;
-        private AutoMoqer _moqer;
         private EmployerCommitmentsModel _commitments;
         private List<AccountProjectionModel> _accountProjection;
         private Account _account;
         private AccountEstimationProjection _estimationProjection;
+        private AccountEstimationProjectionCommitments _accountEstimationProjectionCommitments;
+        private Mock<IDateTimeService> _dateTimeService;
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
             _commitments = new EmployerCommitmentsModel
             {
                 SendingEmployerTransferCommitments = 
@@ -150,18 +149,17 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 }
             };
 
-            var accountEstimationProjectionCommitments =
+            _accountEstimationProjectionCommitments =
                 new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
 
-            _moqer.GetMock<IDateTimeService>()
+            _dateTimeService = new Mock<IDateTimeService>();
+            _dateTimeService
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(DateTime.Now.Year, 2, 1));
 
-            _moqer.SetInstance(accountEstimationProjectionCommitments);
 
             _account = new Account(EmployerAccountId, 10000, 0, TransferAllowance, 10000);
-            _moqer.SetInstance(_account);
             
-            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(),_moqer.Resolve<AccountEstimationProjectionCommitments>(),_moqer.Resolve<IDateTimeService>(),false);
+            _estimationProjection = new AccountEstimationProjection(_account,_accountEstimationProjectionCommitments,_dateTimeService.Object,false);
         }
 
         [Test]
@@ -180,13 +178,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void First_Month_Is_Current_Month()
         {
             //Arrange
-            _moqer.SetInstance<IDateTimeService>(new DateTimeService());
-            _estimationProjection = new AccountEstimationProjection(
-                _moqer.Resolve<Account>(), 
-                _moqer.Resolve<AccountEstimationProjectionCommitments>(), 
-                _moqer.Resolve<IDateTimeService>(), 
-                false);
-
+            _dateTimeService
+                .Setup(x => x.GetCurrentDateTime()).Returns(DateTime.UtcNow);
+            
             //Act
             _estimationProjection.BuildProjections();
             var projection = _estimationProjection.Projections.FirstOrDefault();
@@ -243,9 +237,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance_If_Expired_Funds_Is_Enabled()
         {
             //Arrange
-            _moqer.GetMock<IDateTimeService>()
+            _dateTimeService
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(DateTime.Now.Year, 1, 1));
-            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), true);
+            
+            _estimationProjection =  new AccountEstimationProjection(_account,_accountEstimationProjectionCommitments,_dateTimeService.Object,true);
 
             //Act
             _estimationProjection.BuildProjections();
@@ -261,9 +256,10 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Then_The_AccountFunds_Estimation_Uses_The_Projected_Balance_With_No_Expiry_If_Expired_Funds_Is_Disabled()
         {
             //Arrange
-            _moqer.GetMock<IDateTimeService>()
+            _dateTimeService
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(DateTime.Now.Year, 1, 1));
-            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), _moqer.Resolve<AccountEstimationProjectionCommitments>(), _moqer.Resolve<IDateTimeService>(), false);
+            
+            _estimationProjection =  new AccountEstimationProjection(_account,_accountEstimationProjectionCommitments,_dateTimeService.Object,false);
 
             //Act
             _estimationProjection.BuildProjections();
@@ -307,13 +303,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                 }
             };
             var employerCommitments = new EmployerCommitments(EmployerAccountId, commitments);           
-            var accountEstimationProjectionCommitments =
-                new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
-            _moqer.SetInstance(accountEstimationProjectionCommitments);            
-            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), 
-                _moqer.Resolve<AccountEstimationProjectionCommitments>(), 
-                _moqer.Resolve<IDateTimeService>(), 
-                false);
+            var accountEstimationProjectionCommitments = new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
+            _estimationProjection =  new AccountEstimationProjection(_account,accountEstimationProjectionCommitments,_dateTimeService.Object,false);
 
             //Act
             _estimationProjection.BuildProjections();
@@ -359,18 +350,14 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
                     FutureFundsNoExpiry = 590
                 }
             };
-            _moqer.GetMock<IApplicationConfiguration>().Setup(
-                x => x.FeatureExpiredFunds).Returns(true);
-            _moqer.GetMock<IDateTimeService>()
+            
+            _dateTimeService
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(DateTime.Now.Year, 1, 1));
             var employerCommitments = new EmployerCommitments(EmployerAccountId, _commitments);
             var accountEstimationProjectionCommitments =
                 new AccountEstimationProjectionCommitments(employerCommitments, _accountProjection.AsReadOnly());
-            _moqer.SetInstance(accountEstimationProjectionCommitments);
-            _estimationProjection = new AccountEstimationProjection(_moqer.Resolve<Account>(), 
-                _moqer.Resolve<AccountEstimationProjectionCommitments>(), 
-                _moqer.Resolve<IDateTimeService>(), 
-                false);
+            
+            _estimationProjection =  new AccountEstimationProjection(_account,accountEstimationProjectionCommitments,_dateTimeService.Object,false);
 
             //Act
             _estimationProjection.BuildProjections();
@@ -386,15 +373,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Estimations
         public void Then_The_AccountFunds_Estimation_Applys_Etimated_Funds()
         {
             //Arrange
-            _moqer.GetMock<IApplicationConfiguration>().Setup(
-                x => x.FeatureExpiredFunds).Returns(true);
-            _moqer.GetMock<IDateTimeService>()
+            _dateTimeService
                 .Setup(x => x.GetCurrentDateTime()).Returns(new DateTime(DateTime.Now.Year, 1, 1));
-            var estimationProjection = new AccountEstimationProjection(
-                _moqer.Resolve<Account>(), 
-                _moqer.Resolve<AccountEstimationProjectionCommitments>(), 
-                _moqer.Resolve<IDateTimeService>(), 
-                false);
+            var estimationProjection =  new AccountEstimationProjection(_account,_accountEstimationProjectionCommitments,_dateTimeService.Object,true);
 
             var expiredFunds = new Dictionary<CalendarPeriod, decimal>()
             {

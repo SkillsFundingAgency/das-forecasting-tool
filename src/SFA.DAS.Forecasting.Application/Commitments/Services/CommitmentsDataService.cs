@@ -1,35 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Transactions;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
-using SFA.DAS.NLog.Logger;
-using IsolationLevel = System.Data.IsolationLevel;
 
 namespace SFA.DAS.Forecasting.Application.Commitments.Services
 {
     public class CommitmentsDataService : ICommitmentsDataService
     {
         private readonly IForecastingDataContext _dataContext;
-        private readonly ITelemetry _telemetry;
-        private readonly ILog _logger;
+        private readonly ILogger<CommitmentsDataService> _logger;
 
-        public CommitmentsDataService(IForecastingDataContext dataContext, ITelemetry telemetry, ILog logger)
+        public CommitmentsDataService(IForecastingDataContext dataContext, ILogger<CommitmentsDataService> logger)
         {
-            _dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger)); ;
+            _dataContext = dataContext;
+            _logger = logger;
         }
 
         public async Task<DateTime?> GetLastReceivedTime(long employerAccountId)
@@ -51,13 +43,11 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                  x.FundingSource == FundingSource.AcceptedPledgeApplication));
 
             _dataContext.Commitments.RemoveRange(pledgeApplicationCommitments);
-            await _dataContext.SaveChangesAsync();
+            await Task.FromResult(_dataContext.SaveChanges());
         }
 
         public async Task<EmployerCommitmentsModel> GetCurrentCommitments(long employerAccountId, DateTime? forecastLimitDate = null)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             var model = new EmployerCommitmentsModel
             {
                 LevyFundedCommitments = await GetCommitments(GetLevyFundedCommiments(employerAccountId, forecastLimitDate), "Levy Funded Commitments"),
@@ -65,18 +55,13 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 SendingEmployerTransferCommitments = await GetCommitments(GetSendingEmployerTransferCommitments(employerAccountId, forecastLimitDate),"Sending Employer Transfer Commitments"),
                 CoInvestmentCommitments = await GetCommitments(GetCoInvestmentCommitments(employerAccountId),"Co-Investment Commitments")
             };
-            stopwatch.Stop();
-            _telemetry.TrackDuration("Get Current Commitments", stopwatch.Elapsed);
             return model;
         }
 
         private async Task<List<CommitmentModel>> GetCommitments(Expression<Func<CommitmentModel, bool>> filter, string queryName)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             var listSize = await _dataContext.Commitments.AsNoTracking().CountAsync(filter);
-            stopwatch.Stop();
-            _telemetry.TrackDuration("Get Commitment Count: " + queryName, stopwatch.Elapsed);
+            
             var model = new List<CommitmentModel>(listSize);
 
             if (listSize == 0)
@@ -86,7 +71,6 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
             var moreData = true;
             var skip = 0;
-            stopwatch.Restart();
             while (moreData)
             {
                 var commitments = await _dataContext.Commitments.AsNoTracking().Where(filter).OrderBy(c => c.Id).Skip(skip).Take(100).ToListAsync();
@@ -102,8 +86,6 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
                 }
             }
 
-            stopwatch.Stop();
-            _telemetry.TrackDuration($"Get {queryName}", stopwatch.Elapsed);
             return model;
         }
 
@@ -143,15 +125,10 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
 
         public async Task<CommitmentModel> Get(long employerAccountId, long apprenticeshipId)
         {
-            var startTime = DateTime.UtcNow;
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
             var commitmentModel = await _dataContext.Commitments.FirstOrDefaultAsync(commitment =>
                 commitment.EmployerAccountId == employerAccountId &&
                 commitment.ApprenticeshipId == apprenticeshipId);
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Commitment", startTime, stopwatch.Elapsed,
-                commitmentModel != null);
+            
             return commitmentModel;
         }
 
@@ -159,29 +136,23 @@ namespace SFA.DAS.Forecasting.Application.Commitments.Services
         {
             try
             {
-                _logger.Info($"Store Commitment Id {commitment.Id}");
+                _logger.LogInformation($"Store Commitment Id {commitment.Id}");
                 var startTime = DateTime.UtcNow;
                 var stopwatch = new Stopwatch();
                 stopwatch.Start();
                 if (commitment.Id <= 0)
-                    _dataContext.Commitments.Add(commitment);
+                    await _dataContext.Commitments.AddAsync(commitment);
 
-                await _dataContext.SaveChangesAsync();
+                _dataContext.SaveChanges();
 
-                stopwatch.Stop();
-
-                _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Store Commitment", startTime, stopwatch.Elapsed, true);
             }
-            catch (DbEntityValidationException ex)
+            catch (DbUpdateException ex)
             {
-                var errorMessages = ex.EntityValidationErrors.SelectMany(x => x.ValidationErrors).Select(x => x.ErrorMessage);
-                var fullErrorMessage = string.Join("; ", errorMessages);
-                var exceptionMessage = string.Concat(ex.Message, " The validation errors are: ", fullErrorMessage);
-                _logger.Error(ex, exceptionMessage);
+                _logger.LogError(ex, "Error adding commitments");
             }
             catch (Exception ex)
             {
-                _logger.Error(ex,$"Store Commitment Failed for CommitmentId {commitment.Id}");
+                _logger.LogError(ex,$"Store Commitment Failed for CommitmentId {commitment.Id}");
             }
         }
 

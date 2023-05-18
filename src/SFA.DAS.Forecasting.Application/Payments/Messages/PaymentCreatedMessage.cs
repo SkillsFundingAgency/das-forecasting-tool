@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Provider.Events.Api.Types;

@@ -5,6 +5,7 @@ using System.Linq;
 using SFA.DAS.EmployerFinance.Types.Models;
 using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Commitments;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Shared;
 using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Estimation;

@@ -1,50 +1,41 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Shared.Services;
-using SFA.DAS.Forecasting.Functions.Framework;
-using SFA.DAS.HashingService;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
-    public class GetEarningDetailsFunction : IFunction
+    public class GetEarningDetailsFunction 
     {
+        private readonly IPaymentApiDataService _paymentApiDataService;
+        private readonly IPreLoadPaymentDataService _preLoadPaymentDataService;
+
+        public GetEarningDetailsFunction(IPaymentApiDataService paymentApiDataService, IPreLoadPaymentDataService preLoadPaymentDataService)
+        {
+            _paymentApiDataService = paymentApiDataService;
+            _preLoadPaymentDataService = preLoadPaymentDataService;
+        }
         [FunctionName("GetEarningDetailsFunction")]
         [return: Queue(QueueNames.CreatePaymentMessage)]
-        public static async Task<PreLoadPaymentMessage> Run(
-            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, 
-            ExecutionContext executionContext,
-            TraceWriter writer)
+        public async Task<PreLoadPaymentMessage> Run(
+            [QueueTrigger(QueueNames.PreLoadEarningDetailsPayment)]PreLoadPaymentMessage message, ILogger logger)
         {
-            return await FunctionRunner.Run<GetEarningDetailsFunction, PreLoadPaymentMessage>(writer, executionContext,
-                async (container, logger) => {
+            // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
+            logger.LogInformation($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
 
-                    // Get ALL EarningDetails from Payment ProviderEventsAPI for a Employer and PeriodId
-                    logger.Info($"Running {nameof(GetEarningDetailsFunction)} {message.EmployerAccountId}. {message.PeriodId}");
+		    var earningDetails = await _paymentApiDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
+            
+            logger.LogInformation($"Found {earningDetails.Count} for Account: {message.EmployerAccountId}");
 
-                    var paymentDataService = container.GetInstance<PaymentApiDataService>();
-                    var hashingService = container.GetInstance<IHashingService>();
-                    var dataService = container.GetInstance<PreLoadPaymentDataService>();
-
-					var earningDetails = await paymentDataService.PaymentForPeriod(message.PeriodId, message.EmployerAccountId);
-
-                    var hashedAccountId = hashingService.HashValue(message.EmployerAccountId);
-                    logger.Info($"Found {earningDetails.Count} for Account: {hashedAccountId}");
-
-                    foreach (var item in earningDetails)
-                    {
-                        await dataService.StoreEarningDetails(message.EmployerAccountId, item);
-                    }
-                    
-					logger.Info($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
-                    return message;
-                });
+            foreach (var item in earningDetails)
+            {
+                await _preLoadPaymentDataService.StoreEarningDetails(message.EmployerAccountId, item);
+            }
+            
+		    logger.LogInformation($"Sending message {nameof(message)} to {QueueNames.CreatePaymentMessage}");
+            return message;
         }
     }
 }

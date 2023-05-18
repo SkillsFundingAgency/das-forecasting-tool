@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMoq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
@@ -10,12 +9,11 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Levy
     [TestFixture]
     public class LevyDeclarationEventValidatorTests
     {
-        protected AutoMoqer Moqer { get; private set; }
-        protected LevySchemeDeclarationUpdatedMessage LevySchemeDeclarationUpdatedMessage { get; set; }
+        private LevySchemeDeclarationUpdatedMessage LevySchemeDeclarationUpdatedMessage { get; set; }
         [SetUp]
         public void SetUp()
         {
-            Moqer = new AutoMoqer();
+            
             LevySchemeDeclarationUpdatedMessage = new LevySchemeDeclarationUpdatedMessage
             {
                 SubmissionId = 123,

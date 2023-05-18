@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
 using SFA.DAS.Forecasting.Application.Payments.Mapping;
 using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Domain.Commitments;
 using SFA.DAS.Forecasting.Models.Commitments;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentHandler
 {
     public class WhenIStoreCommitments
     {
         private Mock<IEmployerCommitmentRepository> _employerCommitmentRepostiory;
-        private Mock<ILog> _logger;
+        private Mock<ILogger<Application.Commitments.Handlers.StoreCommitmentHandler>> _logger;
         private Application.Commitments.Handlers.StoreCommitmentHandler _handler;
         private Mock<IPaymentMapper> _paymentMapper;
         private PaymentCreatedMessage _message;
@@ -47,7 +44,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             
             _employerCommitmentRepostiory = new Mock<IEmployerCommitmentRepository>();
 
-            _logger = new Mock<ILog>();
+            _logger = new Mock<ILogger<Application.Commitments.Handlers.StoreCommitmentHandler>>();
 
             _paymentMapper = new Mock<IPaymentMapper>();
             _paymentMapper.Setup(x =>
@@ -61,9 +58,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(
                 _employerCommitmentRepostiory.Object,
                 _logger.Object, 
-                _paymentMapper.Object, 
-                new Mock<ITelemetry>().Object, 
-                new Apprenticeship.Mapping.ApprenticeshipMapping(), _queueServiceMock.Object);
+                _paymentMapper.Object, _queueServiceMock.Object);
         }
 
         [Test]
@@ -126,7 +121,7 @@ namespace SFA.DAS.Forecasting.Application.UnitTests.Commitments.StoreCommitmentH
             _employerCommitment = new EmployerCommitment(_commitmentModel);
             _employerCommitmentRepostiory.Setup(x => x.Get(ExpectedEmployerAccountId, ExpectedApprenticeshipId))
                 .ReturnsAsync(_employerCommitment);
-            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object, _logger.Object, _paymentMapper.Object, new Mock<ITelemetry>().Object, new Apprenticeship.Mapping.ApprenticeshipMapping(), _queueServiceMock.Object);
+            _handler = new Application.Commitments.Handlers.StoreCommitmentHandler(_employerCommitmentRepostiory.Object, _logger.Object, _paymentMapper.Object,  _queueServiceMock.Object);
 
             //Act
             await _handler.Handle(_message, _allowProjectionQueueName);

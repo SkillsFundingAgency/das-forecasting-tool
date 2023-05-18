@@ -1,5 +1,4 @@
-﻿using AutoMoq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Models.Estimation;
 using SFA.DAS.Forecasting.Web.Controllers;
@@ -8,20 +7,23 @@ using SFA.DAS.Forecasting.Web.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.Results;
+using Moq;
+using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
 {
     [TestFixture]
     public class EstimationControllerTests
     {
-        private AutoMoqer _moqer;
         private EstimationController _controller;
+        private Mock<IAddApprenticeshipOrchestrator> _addApprenticeshipOrchestrator;
+        private Mock<IValidator<AddEditApprenticeshipsViewModel>> _addEditApprenticeshipViewModelValidator;
 
         [SetUp]
         public void SetUp()
         {
-            _moqer = new AutoMoqer();
-
             var courseElectrician = new ApprenticeshipCourse
             {
                 CourseType = ApprenticeshipCourseType.Standard,
@@ -49,14 +51,19 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                courseCarpentry,
             };
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
-                .Setup(x => x.GetStandardCourses())
+            _addApprenticeshipOrchestrator = new Mock<IAddApprenticeshipOrchestrator>();
+            _addApprenticeshipOrchestrator.Setup(x => x.GetStandardCourses())
                 .Returns(apprenticeshipCourses);
 
-            _controller = _moqer.Resolve<EstimationController>();
+            // _addEditApprenticeshipViewModelValidator = new Mock<IValidator<AddEditApprenticeshipsViewModel>>();
+            // _addEditApprenticeshipViewModelValidator.Setup(x => x.Validate(It.IsAny<AddEditApprenticeshipsViewModel>()))
+            //     .Returns(new ValidationResult());
+            
+            _controller = new EstimationController(Mock.Of<IEstimationOrchestrator>(),_addApprenticeshipOrchestrator.Object, new AddEditApprenticeshipViewModelValidator());
         }
 
-        [Test]
+        //TODO FAI-625 - refactor validator used so viewmodel validation is not on fluent validator
+        [Test(Description = "TODO needs fixing")]
         public async Task Apprenticeship_Must_Have_Course()
         {
             var vm = new AddEditApprenticeshipsViewModel
@@ -64,14 +71,16 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
                 Course = null,
                 TotalCostAsString = "10",
                 StartDateYear = DateTime.Now.Year,
-                StartDateMonth = DateTime.Now.Month
+                StartDateMonth = DateTime.Now.Month,
+                TotalInstallments = 12,
+                NumberOfApprentices = 1
             };
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.GetApprenticeshipAddSetup(false))
                 .Returns(new AddEditApprenticeshipsViewModel { Courses = new List<ApprenticeshipCourse>() });
 
@@ -96,16 +105,17 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Controllers
             {
                 Course = new ApprenticeshipCourse { Id = "123", FundingPeriods = fundingPeriods },
                 TotalCostAsString = costAsString,
-                NumberOfApprentices = 2,
+                TotalInstallments = 12,
+                NumberOfApprentices = 1,
                 StartDateYear = DateTime.Now.Year,
-                StartDateMonth = DateTime.Now.Month
+                StartDateMonth = DateTime.Now.Month,
             };
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.UpdateAddApprenticeship(vm))
                 .Returns(Task.FromResult(vm));
 
-            _moqer.GetMock<IAddApprenticeshipOrchestrator>()
+            _addApprenticeshipOrchestrator
                 .Setup(x => x.GetApprenticeshipAddSetup(false))
                 .Returns(new AddEditApprenticeshipsViewModel { Courses = new List<ApprenticeshipCourse>() });
 

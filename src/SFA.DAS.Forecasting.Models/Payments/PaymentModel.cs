@@ -13,18 +13,13 @@ namespace SFA.DAS.Forecasting.Models.Payments
         public decimal Amount { get; set; } // Amount
         public DateTime ReceivedTime { get; set; } // ReceivedTime
         public long LearnerId { get; set; } // LearnerId
-        public CalendarPeriod CollectionPeriod { get; set; }
-        public CalendarPeriod DeliveryPeriod { get; set; }
-        //public int CollectionPeriodMonth { get; set; } // CollectionPeriodMonth
-        //public int CollectionPeriodYear { get; set; } // CollectionPeriodYear
-        //public int DeliveryPeriodMonth { get; set; } // DeliveryPeriodMonth
-        //public int DeliveryPeriodYear { get; set; } // DeliveryPeriodYear
+        public CalendarPeriod CollectionPeriod => new (CollectionPeriodYear, CollectionPeriodMonth);
+        public CalendarPeriod DeliveryPeriod => new (DeliveryPeriodYear, DeliveryPeriodMonth);
+        public int CollectionPeriodMonth { get; set; } // CollectionPeriodMonth
+        public int CollectionPeriodYear { get; set; } // CollectionPeriodYear
+        public int DeliveryPeriodMonth { get; set; } // DeliveryPeriodMonth
+        public int DeliveryPeriodYear { get; set; } // DeliveryPeriodYear
         public FundingSource FundingSource { get; set; } // FundingSource
 
-        public PaymentModel()
-        {
-            CollectionPeriod = new CalendarPeriod();
-            DeliveryPeriod = new CalendarPeriod();
-        }
     }
 }

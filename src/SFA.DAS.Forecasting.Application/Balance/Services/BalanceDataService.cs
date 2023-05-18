@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data.Entity;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Telemetry;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Forecasting.Data;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 
@@ -11,24 +9,18 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
     public class BalanceDataService : IBalanceDataService
     {
         private readonly IForecastingDataContext _forecastingDataContext;
-        private readonly ITelemetry _telemetry;
-
-        public BalanceDataService(IForecastingDataContext forecastingDataContext, ITelemetry telemetry)
+        
+        public BalanceDataService(IForecastingDataContext forecastingDataContext)
         {
-            _forecastingDataContext = forecastingDataContext ?? throw new ArgumentNullException(nameof(forecastingDataContext));
-            _telemetry = telemetry ?? throw new ArgumentNullException(nameof(telemetry));
+            _forecastingDataContext = forecastingDataContext;
         }
 
         public async Task<Models.Balance.BalanceModel> Get(long employerAccountId)
         {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var startTime = DateTime.UtcNow;
             var accountBalance = await _forecastingDataContext
                 .Balances
                 .FirstOrDefaultAsync(balance => balance.EmployerAccountId == employerAccountId);
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseQuery, "Get Balance", startTime, stopwatch.Elapsed, accountBalance != null);
+            
             return accountBalance;
         }
 
@@ -51,12 +43,9 @@ namespace SFA.DAS.Forecasting.Application.Balance.Services
                     _forecastingDataContext.Balances.Add(balance);
                 }
             }
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            var startTime = DateTime.UtcNow;
-            await _forecastingDataContext.SaveChangesAsync();
-            stopwatch.Stop();
-            _telemetry.TrackDependency(DependencyType.SqlDatabaseUpdate, "Store Balance", startTime, stopwatch.Elapsed, true);
+            
+            _forecastingDataContext.SaveChanges();
+            
         }
     }
 }

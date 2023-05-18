@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Globalization;
 
 namespace SFA.DAS.Forecasting.AcceptanceTests

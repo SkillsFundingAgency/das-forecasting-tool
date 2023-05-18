@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.Ajax.Utilities;
+﻿using System.Configuration;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace SFA.DAS.Forecasting.Web.Extensions
 {
@@ -13,17 +9,17 @@ namespace SFA.DAS.Forecasting.Web.Extensions
         {
 
             var baseUrl = GetBaseUrl();
-            if (controllerName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(controllerName))
                 return baseUrl;
 
-            var accountId = helper.RequestContext.RouteData.Values["hashedAccountId"];
+            var accountId = helper.ActionContext.RouteData.Values["hashedAccountId"];
 
             return ignoreAccountId ? $"{baseUrl}{controllerName}/{actionName}"
                                     : $"{baseUrl}{folderPath}accounts/{accountId}/{controllerName}/{actionName}";
 
         }
 
-        private static string GetBaseUrl()
+        private static string GetBaseUrl() //TODO FAI-625
         {
             return ConfigurationManager.AppSettings["MyaBaseUrl"].EndsWith("/")
                 ? ConfigurationManager.AppSettings["MyaBaseUrl"]

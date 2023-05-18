@@ -1,33 +1,16 @@
 ﻿{
   "IsEncrypted": false,
   "Values": {
-    "AppName": "das-forecasting-commitments",
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "AzureWebJobsDashboard": "UseDevelopmentStorage=true",
-    "StorageConnectionString": "UseDevelopmentStorage=true",
-    "DatabaseConnectionString": "Data Source=.;Initial Catalog=SFA.DAS.Forecasting;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=True;Connect Timeout=60;Encrypt=False;TrustServerCertificate=True",
-    "CosmosDbConnectionString": "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400",
-    "AzureWebJobsServiceBus": "",
-    "ConnectionStringKey": "localhost",
-    "EnvironmentKey": "LOCAL",
-    "LoggingRedisKey": "logstash",
-    "EnvironmentName": "LOCAL",
-    "SecondsToWaitToAllowProjections": 5,
-    "HashString": "hash n beans",
-    "AllowedHashstringCharacters": "abcdefgh",
-    "NLog-InternalLogFile": "c:\temp\nlog-internal.{APPNAME}.log",
-    "NLog-SimpleLayout": "${longdate} [${uppercase:${level}}] [${logger}] - ${message} ${onexception:${exception:format=tostring}}",
-    "NLog-Localdir": "c:/temp/FAT",
-    "LogDir": "c:/temp/FAT",
-    "LoggingRedisConnectionString": "localhost",
-    "ApprenticeshipsApiBaseUri": "https://findapprenticeshiptraining-api.sfa.bis.gov.uk/",
-    "APPINSIGHTS_INSTRUMENTATIONKEY": "f0ca1c02-2018-4445-b2e8-001e322bf0e8",
-    "CommitmentsV2ApiBaseUrl": "https://at-commitments-api.apprenticeships.education.gov.uk/",
-    "CommitmentsV2IdentifierUri": "https://citizenazuresfabisgov.onmicrosoft.com/das-at-comtapi-as-ar",
-    "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true"
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true;",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "AzureWebJobsSecretStorageType": "files",
+    "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
+    "StorageConnectionString": "UseDevelopmentStorage=true;",
+    "ConfigNames": "SFA.DAS.Forecasting.Web.Jobs",
+    "EnvironmentName": "LOCAL"
   },
   "Host": {
-    "LocalHttpPort": 7076,
+    "LocalHttpPort": 7075,
     "CORS": "*"
   }
 }

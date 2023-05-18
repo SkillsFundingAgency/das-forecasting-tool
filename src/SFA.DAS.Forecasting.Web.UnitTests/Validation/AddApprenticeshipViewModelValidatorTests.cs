@@ -141,7 +141,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
         {
             _validViewModel.IsTransferFunded = "on";
 
-            var result = _validator.ValidateAdd(_validViewModel);
+            var result = _validViewModel.ValidateAdd(_validViewModel);
             result.Count().Should().Be(0);
 
         }
@@ -153,7 +153,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             _validViewModel.Course.Title = "test Framework";
             _validViewModel.Course.CourseType = Models.Estimation.ApprenticeshipCourseType.Framework;
 
-            var result = _validator.ValidateAdd(_validViewModel);
+            var result = _validViewModel.ValidateAdd(_validViewModel);
 
             var error = result.Single(m => m.Key == nameof(_validViewModel.IsTransferFunded));
             error.Value.Should().Be("You can only fund Standards with your transfer allowance");

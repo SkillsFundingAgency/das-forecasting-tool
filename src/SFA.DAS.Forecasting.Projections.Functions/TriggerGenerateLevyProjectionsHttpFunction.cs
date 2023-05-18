@@ -3,6 +3,7 @@ using System.Net.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Messages.Projections;
 
 namespace SFA.DAS.Forecasting.Projections.Functions
@@ -15,9 +16,9 @@ namespace SFA.DAS.Forecasting.Projections.Functions
         public static GenerateAccountProjectionCommand Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "TriggerGenerateLevyProjections/{employerAccountId}")] CalendarPeriod req, 
             long employerAccountId,
-            TraceWriter log)
+            ILogger log)
         {
-            log.Verbose($"Received http request to generate projections for employer: {employerAccountId}");
+            log.LogDebug($"Received http request to generate projections for employer: {employerAccountId}");
             return new GenerateAccountProjectionCommand
             {
                 EmployerAccountId = employerAccountId,

@@ -1,39 +1,34 @@
-﻿using SFA.DAS.Forecasting.Models.Commitments;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Data.Configurations
 {
-    [System.CodeDom.Compiler.GeneratedCode("EF.Reverse.POCO.Generator", "2.36.1.0")]
-    public partial class CommitmentConfiguration : System.Data.Entity.ModelConfiguration.EntityTypeConfiguration<CommitmentModel>
+    public class CommitmentConfiguration : IEntityTypeConfiguration<CommitmentModel>
     {
-        public CommitmentConfiguration()
-            : this("dbo")
+        public void Configure(EntityTypeBuilder<CommitmentModel> builder)
         {
-        }
+            builder.ToTable("Commitment");
+            builder.HasKey(x => x.Id);
 
-        public CommitmentConfiguration(string schema)
-        {
-            ToTable("Commitment", schema);
-            HasKey(x => x.Id);
-
-            Property(x => x.Id).HasColumnName(@"Id").HasColumnType("bigint").IsRequired().HasDatabaseGeneratedOption(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.Identity);
-            Property(x => x.EmployerAccountId).HasColumnName(@"EmployerAccountId").HasColumnType("bigint").IsRequired();
-            Property(x => x.LearnerId).HasColumnName(@"LearnerId").HasColumnType("bigint").IsRequired();
-            Property(x => x.ProviderId).HasColumnName(@"ProviderId").HasColumnType("bigint").IsRequired();
-            Property(x => x.ProviderName).HasColumnName(@"ProviderName").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
-            Property(x => x.ApprenticeshipId).HasColumnName(@"ApprenticeshipId").HasColumnType("bigint").IsRequired();
-            Property(x => x.ApprenticeName).HasColumnName(@"ApprenticeName").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
-            Property(x => x.CourseName).HasColumnName(@"CourseName").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
-            Property(x => x.CourseLevel).HasColumnName(@"CourseLevel").HasColumnType("int").IsOptional();
-            Property(x => x.StartDate).HasColumnName(@"StartDate").HasColumnType("datetime").IsRequired();
-            Property(x => x.PlannedEndDate).HasColumnName(@"PlannedEndDate").HasColumnType("datetime").IsRequired();
-            Property(x => x.ActualEndDate).HasColumnName(@"ActualEndDate").HasColumnType("datetime").IsOptional();
-            Property(x => x.CompletionAmount).HasColumnName(@"CompletionAmount").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
-            Property(x => x.MonthlyInstallment).HasColumnName(@"MonthlyInstallment").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
-            Property(x => x.NumberOfInstallments).HasColumnName(@"NumberOfInstallments").HasColumnType("smallint").IsRequired();
-            Property(x => x.HasHadPayment).HasColumnName(@"HasHadPayment").HasColumnType("bit").IsRequired();
-            Property(x => x.UpdatedDateTime).HasColumnName(@"UpdatedDateTime").HasColumnType("datetime").IsRequired();
-            InitializePartial();
+            builder.Property(x => x.Id).HasColumnName(@"Id").HasColumnType("bigint").IsRequired().ValueGeneratedOnAdd();
+            builder.Property(x => x.EmployerAccountId).HasColumnName(@"EmployerAccountId").HasColumnType("bigint").IsRequired();
+            builder.Property(x => x.LearnerId).HasColumnName(@"LearnerId").HasColumnType("bigint").IsRequired();
+            builder.Property(x => x.ProviderId).HasColumnName(@"ProviderId").HasColumnType("bigint").IsRequired();
+            builder.Property(x => x.ProviderName).HasColumnName(@"ProviderName").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
+            builder.Property(x => x.ApprenticeshipId).HasColumnName(@"ApprenticeshipId").HasColumnType("bigint").IsRequired();
+            builder.Property(x => x.ApprenticeName).HasColumnName(@"ApprenticeName").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
+            builder.Property(x => x.CourseName).HasColumnName(@"CourseName").HasColumnType("nvarchar").IsRequired().HasMaxLength(200);
+            builder.Property(x => x.CourseLevel).HasColumnName(@"CourseLevel").HasColumnType("int").IsRequired(false);
+            builder.Property(x => x.StartDate).HasColumnName(@"StartDate").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.PlannedEndDate).HasColumnName(@"PlannedEndDate").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.ActualEndDate).HasColumnName(@"ActualEndDate").HasColumnType("datetime").IsRequired(false);
+            builder.Property(x => x.CompletionAmount).HasColumnName(@"CompletionAmount").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            builder.Property(x => x.MonthlyInstallment).HasColumnName(@"MonthlyInstallment").HasColumnType("decimal").IsRequired().HasPrecision(18,2);
+            builder.Property(x => x.NumberOfInstallments).HasColumnName(@"NumberOfInstallments").HasColumnType("smallint").IsRequired();
+            builder.Property(x => x.HasHadPayment).HasColumnName(@"HasHadPayment").HasColumnType("bit").IsRequired();
+            builder.Property(x => x.UpdatedDateTime).HasColumnName(@"UpdatedDateTime").HasColumnType("datetime").IsRequired();
+            builder.Property(x => x.FundingSource).HasColumnName(@"FundingSource").HasColumnType("tinyint").IsRequired();
         }
-        partial void InitializePartial();
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using SFA.DAS.Forecasting.Domain.Extensions;
 
 namespace SFA.DAS.Forecasting.Domain.Commitments
 {

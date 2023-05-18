@@ -2,53 +2,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
-using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Web.Orchestrators.Mappers;
 using SFA.DAS.Forecasting.Web.ViewModels;
-using SFA.DAS.HashingService;
 using System.Collections.ObjectModel;
+using SFA.DAS.Encoding;
+using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Commitments.Services;
 using SFA.DAS.Forecasting.Web.ViewModels.EqualComparer;
 using SFA.DAS.Forecasting.Domain.Balance;
-using SFA.DAS.Forecasting.Models.Balance;
 using SFA.DAS.Forecasting.Models.Commitments;
 
 namespace SFA.DAS.Forecasting.Web.Orchestrators
 {
-    public class ForecastingOrchestrator
+    public interface IForecastingOrchestrator
     {
-        private readonly IHashingService _hashingService;
+        Task<ProjectionViewModel> Projection(string hashedAccountId);
+        Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId);
+        Task<IEnumerable<ApprenticeshipCsvItemViewModel>> ApprenticeshipsCsv(string hashedAccountId);
+    }
+
+    public class ForecastingOrchestrator : IForecastingOrchestrator
+    {
+        private readonly IEncodingService _encodingService;
         private readonly IAccountProjectionDataSession _accountProjection;
         private readonly ICurrentBalanceRepository _balanceRepository;
-        private readonly IApplicationConfiguration _applicationConfiguration;
+        private readonly ForecastingConfiguration _applicationConfiguration;
         private readonly IForecastingMapper _mapper;
         private readonly ICommitmentsDataService _commitmentsDataService;
 
         private static readonly DateTime BalanceMaxDate = DateTime.Parse("2019-05-01");
 
         public ForecastingOrchestrator(
-            IHashingService hashingService,
+            IEncodingService encodingService,
             IAccountProjectionDataSession accountProjection,
             ICurrentBalanceRepository balanceRepository,
-            IApplicationConfiguration applicationConfiguration,
+            ForecastingConfiguration applicationConfiguration,
             IForecastingMapper mapper,
             ICommitmentsDataService commitmentsDataService
             )
         {
-            _hashingService = hashingService ?? throw new ArgumentNullException(nameof(hashingService));
-            _accountProjection = accountProjection ?? throw new ArgumentNullException(nameof(accountProjection));
+            _encodingService = encodingService;
+            _accountProjection = accountProjection;
             _balanceRepository = balanceRepository;
-            _applicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _commitmentsDataService = commitmentsDataService ?? throw new ArgumentNullException(nameof(commitmentsDataService));
+            _applicationConfiguration = applicationConfiguration;
+            _mapper = mapper;
+            _commitmentsDataService = commitmentsDataService;
         }
 
         public async Task<ProjectionViewModel> Projection(string hashedAccountId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
 
             var balance = await GetBalance(hashedAccountId);
             var accountProjection = await ReadProjection(accountId);
@@ -69,7 +74,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<IEnumerable<BalanceCsvItemViewModel>> BalanceCsv(string hashedAccountId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
 
             return (await ReadProjection(accountId))
                 .Projections
@@ -78,7 +83,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         public async Task<IEnumerable<ApprenticeshipCsvItemViewModel>> ApprenticeshipsCsv(string hashedAccountId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
             var commitments = await _commitmentsDataService.GetCurrentCommitments(accountId, _applicationConfiguration.LimitForecast ? BalanceMaxDate : (DateTime?)null);
             var csvCommitments = new List<CommitmentModel>();
             csvCommitments = csvCommitments.Concat(commitments.LevyFundedCommitments)
@@ -110,7 +115,7 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators
 
         private async Task<CurrentBalance> GetBalance(string hashedAccountId)
         {
-            var accountId = _hashingService.DecodeValue(hashedAccountId);
+            var accountId = _encodingService.Decode(hashedAccountId, EncodingType.AccountId);
             var currentBalance = await _balanceRepository.Get(accountId);
             if(currentBalance == null)
                 await currentBalance.RefreshBalance();

@@ -1,25 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SFA.DAS.Forecasting.Application.Infrastructure.Configuration;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Forecasting.Application.Core;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
 using SFA.DAS.Forecasting.Application.Projections.Services;
 using SFA.DAS.Forecasting.Core;
+using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Messages.Projections;
-using SFA.DAS.NLog.Logger;
 
 namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 {
-    public class AllowAccountProjectionsHandler
+    public interface IAllowAccountProjectionsHandler
     {
-        public IEmployerProjectionAuditService AuditService;
-        public ILevyPeriodRepository Repository { get; }
-        public ILog Logger { get; }
-        public IApplicationConfiguration ApplicationConfiguration { get; }
+        Task<bool> Allow(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration);
+    }
+    public class AllowAccountProjectionsHandler : IAllowAccountProjectionsHandler
+    {
+        private const int SecondsToWaitToAllowProjections = 60;
+        private readonly IEmployerProjectionAuditService _auditService;
+        private ILevyPeriodRepository Repository { get; }
+        private ILogger<AllowAccountProjectionsHandler> Logger { get; }
+        private ForecastingJobsConfiguration ApplicationConfiguration { get; }
 
-        public AllowAccountProjectionsHandler(ILevyPeriodRepository repository, ILog logger, IApplicationConfiguration applicationConfiguration, IEmployerProjectionAuditService auditService)
+        public AllowAccountProjectionsHandler(ILevyPeriodRepository repository, ILogger<AllowAccountProjectionsHandler> logger, ForecastingJobsConfiguration applicationConfiguration, IEmployerProjectionAuditService auditService)
         {
-            AuditService = auditService ?? throw new ArgumentNullException(nameof(auditService)); 
+            _auditService = auditService ?? throw new ArgumentNullException(nameof(auditService)); 
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             ApplicationConfiguration = applicationConfiguration ?? throw new ArgumentNullException(nameof(applicationConfiguration));
@@ -27,12 +34,12 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
 
         public async Task<bool> Allow(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration)
         {
-            Logger.Debug($"Now checking if projections can be generated for levy declaration events: {levySchemeDeclaration.ToDebugJson()}");
+            Logger.LogDebug($"Now checking if projections can be generated for levy declaration events: {levySchemeDeclaration.ToDebugJson()}");
             if (levySchemeDeclaration.PayrollMonth == null)
                 throw new InvalidOperationException($"Received invalid levy declaration. No month specified. Data: ");
             if (!ApplicationConfiguration.AllowTriggerProjections)
             {
-                Logger.Warn("Triggering of projections is disabled.");
+                Logger.LogWarning("Triggering of projections is disabled.");
                 return false;
             }
 
@@ -42,21 +49,21 @@ namespace SFA.DAS.Forecasting.Application.Levy.Handlers
             var lastReceivedTime = levyPeriod.GetLastTimeReceivedLevy();
             if (lastReceivedTime == null)
             {
-                Logger.Warn($"No levy recorded for employer: {levySchemeDeclaration.AccountId}, period: {levySchemeDeclaration.PayrollYear}, {levySchemeDeclaration.PayrollMonth.Value}");
+                Logger.LogWarning($"No levy recorded for employer: {levySchemeDeclaration.AccountId}, period: {levySchemeDeclaration.PayrollYear}, {levySchemeDeclaration.PayrollMonth.Value}");
                 return false;
             }
 
-            var allowProjections = lastReceivedTime.Value.AddSeconds(ApplicationConfiguration.SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
-            Logger.Info($"Allow projections '{allowProjections}' for employer '{levySchemeDeclaration.AccountId}' in response to levy event.");
+            var allowProjections = lastReceivedTime.Value.AddSeconds(SecondsToWaitToAllowProjections) <= DateTime.UtcNow;
+            Logger.LogInformation($"Allow projections '{allowProjections}' for employer '{levySchemeDeclaration.AccountId}' in response to levy event.");
 
             if (!allowProjections)
             {
                 return false;
             }
 
-            if (!await AuditService.RecordRunOfProjections(levySchemeDeclaration.AccountId,nameof(ProjectionSource.LevyDeclaration)))
+            if (!await _auditService.RecordRunOfProjections(levySchemeDeclaration.AccountId,nameof(ProjectionSource.LevyDeclaration)))
             {
-                Logger.Debug($"Triggering of levy projections for employer {levySchemeDeclaration.AccountId} has already been started.");
+                Logger.LogDebug($"Triggering of levy projections for employer {levySchemeDeclaration.AccountId} has already been started.");
                 return false;
             }
 

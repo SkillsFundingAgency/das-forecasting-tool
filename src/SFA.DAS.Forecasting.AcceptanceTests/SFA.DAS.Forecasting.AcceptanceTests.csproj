@@ -1,382 +1,53 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" />
-  <Import Project="..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B0AB734A-AA53-4F32-92A0-0C7ADD6A336C}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SFA.DAS.Forecasting.AcceptanceTests</RootNamespace>
-    <AssemblyName>SFA.DAS.Forecasting.AcceptanceTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AngleSharp, Version=0.9.8.1, Culture=neutral, PublicKeyToken=e83494dcdc6d31ea, processorArchitecture=MSIL">
-      <HintPath>..\packages\AngleSharp.0.9.8.1\lib\net45\AngleSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="CsQuery, Version=1.3.3.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
-    </Reference>
-    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.19.4.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.19.4\lib\net45\FluentAssertions.dll</HintPath>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.19.4.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentAssertions.4.19.4\lib\net45\FluentAssertions.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.Documents.Client, Version=1.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.DocumentDB.1.21.1\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Edm.5.8.5\lib\net40\Microsoft.Data.Edm.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.OData.5.8.5\lib\net40\Microsoft.Data.OData.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.5\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.IdentityModel.Clients.ActiveDirectory.5.2.9\lib\net45\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=8.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.8.7.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.2.0.0-clinteastwood\lib\net452\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Common.Domain, Version=1.4.278.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Common.Domain.1.4.278\lib\net462\SFA.DAS.Common.Domain.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Client.1.6.2924\lib\net462\SFA.DAS.EAS.Account.Api.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.EAS.Account.Api.Types, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Account.Api.Types.1.6.2924\lib\net462\SFA.DAS.EAS.Account.Api.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Provider.Events.Api.Client, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="SFA.DAS.Provider.Events.Api.Types, Version=2.1.97.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SFA.DAS.Provider.Events.Api.Client.2.1.97\lib\net45\SFA.DAS.Provider.Events.Api.Types.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap, Version=4.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Spatial, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.8.5\lib\net40\System.Spatial.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="TechTalk.SpecFlow, Version=2.4.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
-      <HintPath>..\packages\SpecFlow.2.4.0\lib\net45\TechTalk.SpecFlow.dll</HintPath>
-    </Reference>
+    <PackageReference Include="FluentAssertions" Version="6.8.0" />
+    <PackageReference Include="nunit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.169" />
+    <PackageReference Include="SpecFlow" Version="3.9.74" />
+    <PackageReference Include="SpecFlow.NUnit" Version="3.9.74" />
+    <PackageReference Include="SpecFlow.Tools.MsBuild.Generation" Version="3.9.74" />
+    <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0"/>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Apprenticeship\Feature\LoadApprenticeships.feature">
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Messages\SFA.DAS.Forecasting.Messages.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <SpecFlowFeatureFiles Update="Apprenticeship\Feature\LoadApprenticeships.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>LoadApprenticeships.feature.cs</LastGenOutput>
-    </None>
-    <Compile Include="Apprenticeship\Feature\LoadApprenticeships.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LoadApprenticeships.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Apprenticeship\Steps\ApprenticeshipsSteps.cs" />
-    <Compile Include="Apprenticeship\TestApprenticeship.cs" />
-    <Compile Include="BindingBootstrapper.cs" />
-    <Compile Include="CommitmentType.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BuildProjectionsFromLevyDeclarations.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Levy\Steps\BuildProjectionsFromLevyDeclarations.cs" />
-    <Compile Include="Payments\Feature\Build Projections From Payment Run.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Build Projections From Payment Run.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Payments\Steps\Pre_LoadPaymentsSteps.cs" />
-    <Compile Include="Payments\Steps\BuildProjectionsFromPaymentRun.cs" />
-    <Compile Include="Payments\TestAccountProjection.cs" />
-    <Compile Include="Payments\TestPayment.cs" />
-    <Compile Include="Payments\Feature\PreLoadPayments.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PreLoadPayments.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\Calculate co-investment amounts.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Calculate co-investment amounts.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\ExpiredFunds - Levy.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ExpiredFunds - Levy.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Projections_for_non_paid_Apprenticeships.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\Generate Training Cost Projections.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Generate Training Cost Projections.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\ProjectionsTransfer.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProjectionsTransfer.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Steps\CalculateCo_InvestmentAmountsCI_570Steps.cs" />
-    <Compile Include="Projections\Steps\ExpiredFundsSteps.cs" />
-    <Compile Include="Projections\Steps\CoInvestmentFundedPayments.cs" />
-    <Compile Include="Projections\Steps\GenerateCompletionPaymentProjectionsCI_506Steps.cs" />
-    <Compile Include="Infrastructure\Config.cs" />
-    <Compile Include="Infrastructure\Registries\DefaultRegistry.cs" />
-    <Compile Include="Levy\Feature\PreLoadLevyEvents.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PreLoadLevyEvents.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Levy\Feature\ProcessLevyEvent.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ProcessLevyEvent.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Levy\Steps\PreLoadLevyEventsSteps.cs" />
-    <Compile Include="Levy\LevySubmission.cs" />
-    <Compile Include="Payments\Feature\Process Payment Event.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Process Payment Event.feature</DependentUpon>
-    </Compile>
-    <Compile Include="PayrollPeriod.cs" />
-    <Compile Include="Payments\Steps\ProcessPaymentEventSteps.cs" />
-    <Compile Include="Projections\Feature\Generate Levy Projections.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Generate Levy Projections.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Feature\Generate Completion Payment Projections.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Generate Completion Payment Projections.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Projections\Steps\GenerateLevyProjectionsCI_498Steps.cs" />
-    <Compile Include="Payments\TestCommitment.cs" />
-    <Compile Include="Projections\Steps\GenerateTrainingCostProjectionsCI_499Steps.cs" />
-    <Compile Include="Levy\Steps\ProcessLevyEventCI_528Steps.cs" />
-    <Compile Include="Projections\Steps\ProjectionsForEmployersWithLevyFundedAndTransferFundedCommitments.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StepsBase.cs" />
-    <Compile Include="TableStorageService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="App.Release.config">
-      <DependentUpon>App.config</DependentUpon>
-    </Content>
-    <None Include="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature">
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Levy\Feature\BuildProjectionsFromLevyDeclarations.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>BuildProjectionsFromLevyDeclarations.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Levy\Feature\PreLoadLevyEvents.feature">
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Levy\Feature\PreLoadLevyEvents.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>PreLoadLevyEvents.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Levy\Feature\ProcessLevyEvent.feature">
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Update="Levy\Feature\ProcessLevyEvent.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>ProcessLevyEvent.feature.cs</LastGenOutput>
-    </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Payments\Feature\Build Projections From Payment Run.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Build Projections From Payment Run.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Payments\Feature\PreLoadPayments.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>PreLoadPayments.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Payments\Feature\Process Payment Event.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Process Payment Event.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\Calculate co-investment amounts.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Calculate co-investment amounts.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\ExpiredFunds - Levy.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ExpiredFunds - Levy.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Projections_For_Employers_With_Levy_Funded_And_Transfer_Funded_Commitments.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\Projections_for_non_paid_Apprenticeships.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Projections_for_non_paid_Apprenticeships.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\Generate Levy Projections.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Generate Levy Projections.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\Generate Completion Payment Projections.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Generate Completion Payment Projections.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\Generate Training Cost Projections.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>Generate Training Cost Projections.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Projections\Feature\ProjectionsTransfer.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>ProjectionsTransfer.feature.cs</LastGenOutput>
-    </None>
+    </SpecFlowFeatureFiles>
+    <SpecFlowFeatureFiles Remove="Payments\Feature\Build Projections From Payment Run.feature" />
+    <SpecFlowFeatureFiles Remove="Payments\Feature\PreLoadPayments.feature" />
+    <SpecFlowFeatureFiles Remove="Payments\Feature\Process Payment Event.feature" />
+    
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Application\SFA.DAS.Forecasting.Application.csproj">
-      <Project>{b6b0820b-097f-4938-a1d4-fe92f3a1308f}</Project>
-      <Name>SFA.DAS.Forecasting.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Core\SFA.DAS.Forecasting.Core.csproj">
-      <Project>{426CE92A-1ACB-4FFE-ADB2-5B49484F33CA}</Project>
-      <Name>SFA.DAS.Forecasting.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Data\SFA.DAS.Forecasting.Data.csproj">
-      <Project>{97d35da3-c286-40bc-82fc-408084233b46}</Project>
-      <Name>SFA.DAS.Forecasting.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Domain\SFA.DAS.Forecasting.Domain.csproj">
-      <Project>{737C7231-3BF2-4D0B-992E-A227D95EAA53}</Project>
-      <Name>SFA.DAS.Forecasting.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Messages\SFA.DAS.Forecasting.Messages.csproj">
-      <Project>{ECF5F114-FF6F-4D2C-AB19-B430D02EFBE7}</Project>
-      <Name>SFA.DAS.Forecasting.Messages</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj">
-      <Project>{97049cce-774a-4377-b682-1c01b95c2cf3}</Project>
-      <Name>SFA.DAS.Forecasting.Models</Name>
-    </ProjectReference>
+    <Folder Include="Payments\Feature" />
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\AsyncUsageAnalyzers.1.0.0-alpha003\analyzers\dotnet\AsyncUsageAnalyzers.dll" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <UsingTask TaskName="TransformXml" AssemblyFile="$(VSToolsPath)\Web\Microsoft.Web.Publishing.Tasks.dll" />
-  <Target Name="AfterCompile" Condition="exists('App.$(Configuration).config')">
-    <!-- Generate transformed app config in the intermediate directory -->
-    <TransformXml Source="App.config" Destination="$(IntermediateOutputPath)$(TargetFileName).config" Transform="App.$(Configuration).config" />
-    <!-- Force build process to use the transformed configuration file from now on. -->
-    <ItemGroup>
-      <AppConfigWithTargetPath Remove="App.config" />
-      <AppConfigWithTargetPath Include="$(IntermediateOutputPath)$(TargetFileName).config">
-        <TargetPath>$(TargetFileName).config</TargetPath>
-      </AppConfigWithTargetPath>
-    </ItemGroup>
-  </Target>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets'))" />
-    <Error Condition="!Exists('..\packages\SpecFlow.2.4.0\build\SpecFlow.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SpecFlow.2.4.0\build\SpecFlow.targets'))" />
-    <Error Condition="!Exists('..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
-    <Error Condition="!Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-  </Target>
-  <Import Project="..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets')" />
-  <Import Project="..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.1.21.1\build\Microsoft.Azure.DocumentDB.targets')" />
-  <Import Project="..\packages\SpecFlow.2.4.0\build\SpecFlow.targets" Condition="Exists('..\packages\SpecFlow.2.4.0\build\SpecFlow.targets')" />
 </Project>

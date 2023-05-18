@@ -2,10 +2,10 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
-using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Models.Payments;
 using System;
 using System.Threading.Tasks;
+using SFA.DAS.Forecasting.Commitments.Functions.Application;
 using SFA.DAS.Forecasting.Models.Approvals;
 
 namespace SFA.DAS.Forecasting.Functions.UnitTests.Commitments

@@ -2,35 +2,31 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using SFA.DAS.Forecasting.Functions.Framework;
 using SFA.DAS.Forecasting.PreLoad.Functions.Models;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
-    public class LevyDeclarationPreLoadHttpFunction : IFunction
+    public class LevyDeclarationPreLoadHttpFunction 
     {
         [FunctionName("LevyDeclarationPreLoadHttpFunction")]
-        public static async Task<string> Run(
+        public async Task<string> Run(
             [HttpTrigger(AuthorizationLevel.Function,
             "post", Route = "LevyDeclarationPreLoadHttpFunction")]HttpRequestMessage req,
             [Queue(QueueNames.LevyPreLoadRequest)] ICollector<PreLoadRequest> outputQueueMessage,
-            ExecutionContext executionContext,
-            TraceWriter writer)
+            ILogger logger)
         {
-            return await FunctionRunner.Run<LevyDeclarationPreLoadHttpFunction, string>(writer, executionContext,
-               async (container, logger) =>
-               {
-                   var body = await req.Content.ReadAsStringAsync();
-                   var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
+            
+           var body = await req.Content.ReadAsStringAsync();
+           var preLoadRequest = JsonConvert.DeserializeObject<PreLoadRequest>(body);
 
-                   outputQueueMessage.Add(preLoadRequest);
+           outputQueueMessage.Add(preLoadRequest);
 
-                   var msg = $"Added {nameof(PreLoadRequest)} for levy declaration";
-                   logger.Info(msg);
-                   return msg;
-               });
+           var msg = $"Added {nameof(PreLoadRequest)} for levy declaration";
+           logger.LogInformation(msg);
+           return msg;
+
         }
     }
 }

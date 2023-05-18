@@ -267,6 +267,8 @@ src/Tools/PhantomJS/tools/phantomjs/ChangeLog
 desktop.ini
 App.Debug.config
 *.json
+src/SFA.DAS.Forecasting.AcceptanceTests/**/**/*.feature.cs
 
 # Exclude ARM template azure\template.json from .gitignore
 !azure/template.json
+*.DotSettings

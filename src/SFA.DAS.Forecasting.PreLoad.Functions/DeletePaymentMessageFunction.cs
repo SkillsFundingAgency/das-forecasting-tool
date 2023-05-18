@@ -1,31 +1,31 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Payments.Messages.PreLoad;
 using SFA.DAS.Forecasting.Application.Payments.Services;
-using SFA.DAS.Forecasting.Functions.Framework;
 
 namespace SFA.DAS.Forecasting.PreLoad.Functions
 {
-    public class DeletePaymentMessageFunction : IFunction
+    public class DeletePaymentMessageFunction 
     {
-        [FunctionName("DeletePaymentMessageFunction")]
-        public static async Task Run(
-            [QueueTrigger(QueueNames.RemovePreLoadData)]PreLoadPaymentMessage message,
-            ExecutionContext executionContext,
-            TraceWriter writer)
-        {
-            await FunctionRunner.Run<DeletePaymentMessageFunction>(writer, executionContext,
-                async (container, logger) =>
-                {
-                    logger.Info($"{nameof(DeletePaymentMessageFunction)} started for account: {message.HashedEmployerAccountId}");
-                    var dataService = container.GetInstance<PreLoadPaymentDataService>();
-                    
-                    await dataService.DeletePayment(message.EmployerAccountId);
-					await dataService.DeleteEarningDetails(message.EmployerAccountId);
+        private readonly IPreLoadPaymentDataService _preLoadPaymentDataService;
 
-					logger.Info($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.HashedEmployerAccountId}.");
-                });
+        public DeletePaymentMessageFunction(IPreLoadPaymentDataService preLoadPaymentDataService)
+        {
+            _preLoadPaymentDataService = preLoadPaymentDataService;
+        }
+            
+        [FunctionName("DeletePaymentMessageFunction")]
+        public async Task Run(
+            [QueueTrigger(QueueNames.RemovePreLoadData)]PreLoadPaymentMessage message, ILogger logger)
+        {
+            logger.LogInformation($"{nameof(DeletePaymentMessageFunction)} started for account: {message.EmployerAccountId}");
+            
+            await _preLoadPaymentDataService.DeletePayment(message.EmployerAccountId);
+			await _preLoadPaymentDataService.DeleteEarningDetails(message.EmployerAccountId);
+
+			logger.LogInformation($"{nameof(DeletePaymentMessageFunction)} finished for account: {message.EmployerAccountId}.");
+            
         }
     }
 }

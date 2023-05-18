@@ -1,5 +1,7 @@
 ﻿using System.Security.Claims;
-using System.Web.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Extensions;
 
 namespace SFA.DAS.Forecasting.Web.Filters
@@ -12,7 +14,7 @@ namespace SFA.DAS.Forecasting.Web.Filters
             if (controller != null)
             {
                 var user = (ClaimsPrincipal)controller.User;
-                var accountIdFromUrl = controller.RouteData.Values[RouteValues.EmployerAccountId]?.ToString().ToUpper();
+                var accountIdFromUrl = controller.RouteData.Values[RouteValueKeys.EncodedAccountId]?.ToString().ToUpper();
                 controller.ViewBag.ZendeskApiData = new ZendeskApiData
                 {
                     Name = user?.GetDisplayName(),

@@ -1,22 +1,25 @@
-﻿using System;
-using SFA.DAS.Forecasting.Application.Payments.Messages;
+﻿using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Provider.Events.Api.Client;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SFA.DAS.NLog.Logger;
+using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Forecasting.Application.Shared.Services
 {
-    public class PaymentApiDataService
+    public interface IPaymentApiDataService
+    {
+        Task<List<EarningDetails>> PaymentForPeriod(string periodId, long employerAccountId);
+    }
+    public class PaymentApiDataService : IPaymentApiDataService
     {
         private readonly IPaymentsEventsApiClient _paymentsEventsApiClient;
-        private readonly ILog _logger;
+        private readonly ILogger<PaymentApiDataService> _logger;
 
-        public PaymentApiDataService(IPaymentsEventsApiClient paymentsEventsApiClient, ILog logger)
+        public PaymentApiDataService(IPaymentsEventsApiClient paymentsEventsApiClient, ILogger<PaymentApiDataService> logger)
         {
             _paymentsEventsApiClient = paymentsEventsApiClient;
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _logger = logger;
         }
 
         public async Task<List<EarningDetails>> PaymentForPeriod(string periodId, long employerAccountId)
@@ -28,11 +31,11 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                 var page = await _paymentsEventsApiClient.GetPayments(periodId, employerAccountId.ToString(), i);
                 if (!page.Items.Any())
                 {
-                    _logger.Info($"No payments returned for page {i}.");
+                    _logger.LogInformation($"No payments returned for page {i}.");
                     break;
                 }
 
-                _logger.Debug($"Got {page.Items.Length} payments for page {i}.");
+                _logger.LogDebug($"Got {page.Items.Length} payments for page {i}.");
                 var paymentEarningDetails = page.Items
                     .Where(p => p.EarningDetails.Any())
                     .SelectMany(p => p.EarningDetails, (p, e) =>
@@ -51,7 +54,7 @@ namespace SFA.DAS.Forecasting.Application.Shared.Services
                             TotalInstallments = e.TotalInstallments
                         })
                     .ToList();
-                _logger.Debug($"Got {paymentEarningDetails.Count} payments for page {i}.");
+                _logger.LogDebug($"Got {paymentEarningDetails.Count} payments for page {i}.");
                 result.AddRange(paymentEarningDetails);
                 if (page.PageNumber == page.TotalNumberOfPages)
                     break;
