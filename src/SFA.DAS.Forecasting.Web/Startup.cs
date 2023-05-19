@@ -86,18 +86,20 @@ namespace SFA.DAS.Forecasting.Web
                     .Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
                 services.AddAndConfigureGovUkAuthentication(_configuration,
-                    $"{typeof(Startup).Assembly.GetName().Name}.Auth",
-                    typeof(EmployerAccountPostAuthenticationClaimsHandler));
+                    typeof(EmployerAccountPostAuthenticationClaimsHandler),
+                    "","/accounts/SignIn-Stub");
+                services.AddMaMenuConfiguration(RouteNames.SignOut, _configuration["ResourceEnvironmentName"]);
             }
             else
             {
                 services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);
+                services.AddMaMenuConfiguration(RouteNames.SignOut, identityServerConfiguration.ClientId, _configuration["ResourceEnvironmentName"]);
             }
 
             services.AddLogging();
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
-            services.AddMaMenuConfiguration(RouteNames.SignOut, identityServerConfiguration.ClientId, _configuration["ResourceEnvironmentName"]);
+
 
             services.Configure<RouteOptions>(options =>
                 {

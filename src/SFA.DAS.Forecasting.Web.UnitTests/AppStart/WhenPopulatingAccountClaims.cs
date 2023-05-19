@@ -24,22 +24,6 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.AppStart;
 public class WhenPopulatingAccountClaims
 {
     [Test, MoqAutoData]
-    public async Task Then_The_Claims_Are_Populated_For_Stubbed_User(
-        [Frozen] Mock<IEmployerAccountService> accountService,
-        [Frozen] Mock<IConfiguration> configuration,
-        EmployerAccountPostAuthenticationClaimsHandler handler)
-    {
-        var expectedClaimEmail = "test@testing.com";
-        configuration.Setup(x => x["NoAuthEmail"]).Returns(expectedClaimEmail);
-        configuration.Setup(x => x["StubAuth"]).Returns("true");
-        
-        var actual = await handler.GetClaims(null);
-        
-        accountService.Verify(x=>x.GetUserAccounts(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-        actual.Should().ContainSingle(c => c.Value.Equals(expectedClaimEmail));
-    }
-    
-    [Test, MoqAutoData]
     public async Task Then_The_Claims_Are_Populated_For_Gov_User(
         string nameIdentifier,
         string idamsIdentifier,

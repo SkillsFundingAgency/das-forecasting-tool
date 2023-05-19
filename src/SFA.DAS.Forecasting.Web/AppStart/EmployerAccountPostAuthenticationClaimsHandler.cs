@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Application.EmployerUsers;
@@ -19,37 +18,16 @@ namespace SFA.DAS.Forecasting.Web;
 public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
 {
     private readonly IEmployerAccountService _accountsSvc;
-    private readonly IConfiguration _configuration;
     private readonly ForecastingConfiguration _forecastingConfiguration;
 
-    public EmployerAccountPostAuthenticationClaimsHandler(IEmployerAccountService accountsSvc, IConfiguration configuration, IOptions<ForecastingConfiguration> forecastingConfiguration)
+    public EmployerAccountPostAuthenticationClaimsHandler(IEmployerAccountService accountsSvc, IOptions<ForecastingConfiguration> forecastingConfiguration)
     {
         _accountsSvc = accountsSvc;
-        _configuration = configuration;
         _forecastingConfiguration = forecastingConfiguration.Value;
     }
     public async Task<IEnumerable<Claim>> GetClaims(TokenValidatedContext tokenValidatedContext)
     {
         var claims = new List<Claim>();
-        if (_configuration["StubAuth"] != null && _configuration["StubAuth"]
-                .Equals("true", StringComparison.CurrentCultureIgnoreCase))
-        {
-            var accountClaims = new Dictionary<string, EmployerUserAccountItem>();
-            accountClaims.Add("", new EmployerUserAccountItem
-            {
-                Role = "Owner",
-                AccountId = "ABC123",
-                EmployerName = "Stub Employer"
-            });
-            claims.AddRange(new[]
-            {
-                new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, JsonConvert.SerializeObject(accountClaims)),
-                new Claim(EmployerClaims.IdamsUserEmailClaimTypeIdentifier, _configuration["NoAuthEmail"]),
-                new Claim(EmployerClaims.IdamsUserIdClaimTypeIdentifier, Guid.NewGuid().ToString())
-            });
-            return claims.ToList();
-        }
-        
         string userId;
         var email = string.Empty;
         
