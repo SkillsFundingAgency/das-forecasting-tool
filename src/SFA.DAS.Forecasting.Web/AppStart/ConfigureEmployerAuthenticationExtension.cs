@@ -29,6 +29,7 @@ public static class ConfigureEmployerAuthenticationExtension
         
         //TODO to be removed after gov login enabled
         services.AddTransient<IAuthorizationHandler, AccountActiveAuthorizationHandler>();
+        services.AddTransient<IStubAuthenticationService, StubAuthenticationService>();
         
         services.AddAuthorization(options =>
         {
