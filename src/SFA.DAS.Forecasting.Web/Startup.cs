@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Employer.Shared.UI;
@@ -174,14 +173,6 @@ namespace SFA.DAS.Forecasting.Web
             app.UseAuthorization();
 
             app.UseEndpoints(builder => { builder.MapDefaultControllerRoute(); });
-
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Content", "dist", "images")),
-                RequestPath = "/Content/dist/images",
-                ServeUnknownFileTypes = true,
-                DefaultContentType = "image/x-icon"
-            });
         }
 
         public class Constants
