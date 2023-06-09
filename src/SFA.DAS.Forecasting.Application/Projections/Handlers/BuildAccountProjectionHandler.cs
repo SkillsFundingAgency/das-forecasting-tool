@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Messages.Projections;
+using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
 namespace SFA.DAS.Forecasting.Application.Projections.Handlers
 {
@@ -66,6 +68,8 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
     
             var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId, messageProjectionSource, startDate);
 
+            RemovePastExpiryOfFunds(expiringFunds);
+
             if (expiringFunds.Any())
             {
                 projections.UpdateProjectionsWithExpiredFunds(expiringFunds);
@@ -73,6 +77,18 @@ namespace SFA.DAS.Forecasting.Application.Projections.Handlers
             
             await _accountProjectionRepository.Store(projections);
             
+        }
+
+        private static void RemovePastExpiryOfFunds(Dictionary<CalendarPeriod, decimal> expiringFunds)
+        {
+            foreach (var expiry in expiringFunds)
+            {
+                var expiryDate = new DateTime(expiry.Key.Year, expiry.Key.Month, 19);
+                if (expiryDate < DateTime.UtcNow)
+                {
+                    expiringFunds.Remove(expiry.Key);
+                }
+            }
         }
     }
 }
