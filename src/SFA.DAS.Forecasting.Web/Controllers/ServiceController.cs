@@ -45,6 +45,18 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return SignOut(
                 authenticationProperties, schemes.ToArray());
         }
+        
+        [Route("signoutcleanup")]
+        public async Task SignOutCleanup()
+        {
+            var idToken = await HttpContext.GetTokenAsync("id_token");
+
+            var authenticationProperties = new AuthenticationProperties();
+            authenticationProperties.Parameters.Clear();
+            authenticationProperties.Parameters.Add("id_token", idToken);
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme, authenticationProperties);
+            await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme, authenticationProperties);
+        }
 
 #if DEBUG
         [HttpGet]
