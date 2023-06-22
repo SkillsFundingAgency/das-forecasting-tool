@@ -45,6 +45,13 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return SignOut(
                 authenticationProperties, schemes.ToArray());
         }
+        
+        [AllowAnonymous]
+        [Route("signoutcleanup")]
+        public async Task SignOutCleanup()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
 
 #if DEBUG
         [HttpGet]
