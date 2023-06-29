@@ -83,7 +83,7 @@
 
                 <div asp-fieldname="NumberOfApprentices" asp-additionalclass="no-of-apprentice">
                     <label class="govuk-label govuk-label--s" for="no-of-app">Number of apprentices</label>
-                    @Html.ValidationMessageFor(m => m.NumberOfApprentices, "Please specify the number of apprentices. ", new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices)})
+                    @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices)})
                     @Html.TextBoxFor(model => model.NumberOfApprentices, new {@class = "govuk-input govuk-input--width-2", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices)})
                 </div>
 
@@ -91,7 +91,7 @@
                     <label class="govuk-label govuk-label--s" for="apprenticeship-length">Number of months</label>
                     <div class="govuk-hint">Apprenticeships must be a minimum of 12 months</div>
 
-                    @Html.ValidationMessageFor(m => m.TotalInstallments, "Please specify a valid number of months. ", new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.TotalInstallments)})
+                    @Html.ValidationMessageFor(m => m.TotalInstallments, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.TotalInstallments)})
                     @Html.TextBoxFor(model => model.TotalInstallments, new {@class = "govuk-input govuk-input--width-2", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments)})
                 </div>
 
@@ -103,8 +103,8 @@
                         @Html.ValidationMessageFor(m => m.StartDate, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDate)})
                         @Html.HiddenFor(m => m.StartDate)
 
-                        @Html.ValidationMessageFor(m => m.StartDateMonth, "Please specify a start month. ", new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDateMonth)})
-                        @Html.ValidationMessageFor(m => m.StartDateYear, "Please specify a start year. ", new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDateYear)})
+                        @Html.ValidationMessageFor(m => m.StartDateMonth, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDateMonth)})
+                        @Html.ValidationMessageFor(m => m.StartDateYear, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.StartDateYear)})
 
                         <div class="govuk-date-input">
                             <div class="govuk-date-input__item">
@@ -149,7 +149,7 @@
                 <div asp-fieldname="TotalCostAsString">
                     <label class="govuk-label govuk-label--s" for="total-funding-cost">Total cost</label>
                     <div class="govuk-hint">You can change this number but if you go above the funding band maximum value - the difference will be co-invested</div>
-                    @Html.ValidationMessageFor(m => m.TotalCostAsString, "Please specify the total cost. ", new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.TotalCostAsString)})
+                    @Html.ValidationMessageFor(m => m.TotalCostAsString, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.TotalCostAsString)})
 
                     <div class="govuk-input__wrapper">
                         <div class="govuk-input__prefix" aria-hidden="true">£</div>
