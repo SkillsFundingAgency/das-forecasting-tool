@@ -181,8 +181,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _accountProjection.Projections[6].CoInvestmentGovernment.Should().Be(0);
             _accountProjection.Projections[6].FutureFunds.Should().Be(1200);
 
-            _accountProjection.Projections[7].CoInvestmentEmployer.Should().Be(90);
-            _accountProjection.Projections[7].CoInvestmentGovernment.Should().Be(810);
+            _accountProjection.Projections[7].CoInvestmentEmployer.Should().Be(45);
+            _accountProjection.Projections[7].CoInvestmentGovernment.Should().Be(855);
             _accountProjection.Projections[7].FutureFunds.Should().Be(300);
         }
 
@@ -370,18 +370,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
-            Assert.AreEqual(0.9 * 300, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(0.1 * 300, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(0.95 * 300, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(0.05 * 300, expectedMonth1?.CoInvestmentEmployer);
             Assert.AreEqual(300, expectedMonth1?.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
-            Assert.AreEqual(0.9 * 300, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(0.1 * 300, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(0.95 * 300, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(0.05 * 300, expectedMonth2?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth2?.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
-            Assert.AreEqual(0.9 * 200, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(0.1 * 200, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(0.95 * 200, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(0.05 * 200, expectedMonth3?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth3?.FutureFunds);
         }
 
@@ -399,18 +399,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
-            Assert.AreEqual(600 * .9, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(600 * .1, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(600 * .95, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(600 * .05, expectedMonth1?.CoInvestmentEmployer);
             Assert.AreEqual(100, expectedMonth1?.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
-            Assert.AreEqual(500 * .9, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(500 * .1, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(500 * .95, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(500 * .05, expectedMonth2?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth2?.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
-            Assert.AreEqual(200 * .9, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(200 * .1, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(200 * .95, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(200 * .05, expectedMonth3?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth3?.FutureFunds);
         }
 
@@ -428,18 +428,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
-            Assert.AreEqual(300 * .9, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(300 * .1, expectedMonth1?.CoInvestmentEmployer);
+            Assert.AreEqual(300 * .95, expectedMonth1?.CoInvestmentGovernment);
+            Assert.AreEqual(300 * .05, expectedMonth1?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth1?.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
-            Assert.AreEqual(200 * .9, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(200 * .1, expectedMonth2?.CoInvestmentEmployer);
+            Assert.AreEqual(200 * .95, expectedMonth2?.CoInvestmentGovernment);
+            Assert.AreEqual(200 * .05, expectedMonth2?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth2?.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
-            Assert.AreEqual(200 * .9, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(200 * .1, expectedMonth3?.CoInvestmentEmployer);
+            Assert.AreEqual(200 * .95, expectedMonth3?.CoInvestmentGovernment);
+            Assert.AreEqual(200 * .05, expectedMonth3?.CoInvestmentEmployer);
             Assert.AreEqual(400, expectedMonth3?.FutureFunds);
         }
 

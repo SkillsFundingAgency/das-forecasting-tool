@@ -128,8 +128,8 @@ namespace SFA.DAS.Forecasting.Domain.Projections
                 AcceptedPledgeApplicationCost = totalCostOfPledges.AcceptedPledgeApplicationCost + totalCostOfPledges.AcceptedPledgeApplicationCompletionPayments,
                 PledgeOriginatedCommitmentCost = totalCostOfPledges.PledgeOriginatedCommitmentCost + totalCostOfPledges.PledgeOriginatedCommitmentCompletionPayments,
 
-                CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.1m) : 0m,
-                CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.9m) : 0m,
+                CoInvestmentEmployer = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.05m) : 0m,
+                CoInvestmentGovernment = coInvestmentAmount > 0 ? (coInvestmentAmount * 0.95m) : 0m,
                 FutureFunds = futureFunds,
                 ProjectionCreationDate = currentDate,
                 ProjectionGenerationType = projectionGenerationType
