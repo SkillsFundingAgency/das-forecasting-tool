@@ -84,7 +84,7 @@
                 <div asp-fieldname="NumberOfApprentices" asp-additionalclass="no-of-apprentice">
                     <label class="govuk-label govuk-label--s" for="no-of-app">Number of apprentices</label>
                     @Html.ValidationMessageFor(m => m.NumberOfApprentices, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.NumberOfApprentices)})
-                    @Html.TextBoxFor(model => model.NumberOfApprentices, new {@class = "govuk-input govuk-input--width-2", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices)})
+                @Html.TextBoxFor(model => model.NumberOfApprentices, new {@class = "govuk-input govuk-input--width-2", aria_label = "Number of apprentices", name = "no-of-app", id = "no-of-app", type = "number", @Value = valueOrEmpty(Model.NumberOfApprentices ?? 0)})
                 </div>
 
                 <div asp-fieldname="NumberOfApprentices" asp-additionalclass="no-of-months">
@@ -92,7 +92,7 @@
                     <div class="govuk-hint">Apprenticeships must be a minimum of 12 months</div>
 
                     @Html.ValidationMessageFor(m => m.TotalInstallments, null, new {@class="govuk-error-message", id = "error-message-" + Html.IdFor(m => m.TotalInstallments)})
-                    @Html.TextBoxFor(model => model.TotalInstallments, new {@class = "govuk-input govuk-input--width-2", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments)})
+                    @Html.TextBoxFor(model => model.TotalInstallments, new {@class = "govuk-input govuk-input--width-2", id = "apprenticeship-length", name = "apprenticeship-length", type = "number", @Value = valueOrEmpty(Model.TotalInstallments ?? 0)})
                 </div>
 
                 <div asp-fieldname="StartDate,StartDateMonth,StartDateYear" id="dateWrapper">
@@ -110,13 +110,13 @@
                             <div class="govuk-date-input__item">
                                 <div asp-fieldname="StartDateMonth" asp-additionalclass="govuk-form-group">
                                     <label for="startDateMonth" class="govuk-label govuk-date-input__label">Month</label>
-                                    @Html.TextBoxFor(model => model.StartDateMonth, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth)})
+                                @Html.TextBoxFor(model => model.StartDateMonth, new {@class = "govuk-input govuk-date-input__input govuk-input--width-2", name = "startDateMonth", id = "startDateMonth", type = "number", pattern = "[0-9]*", placeholder = "MM", @Value = valueOrEmpty(Model.StartDateMonth ?? 0)})
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
                                 <div asp-fieldname="StartDateYear" asp-additionalclass="govuk-form-group">
                                     <label for="startDateYear" class="govuk-label govuk-date-input__label">Year</label>
-                                    @Html.TextBoxFor(model => model.StartDateYear, new {@class = "govuk-input govuk-date-input__input govuk-input--width-4", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear)})
+                                @Html.TextBoxFor(model => model.StartDateYear, new {@class = "govuk-input govuk-date-input__input govuk-input--width-4", name = "startDateYear", id = "startDateYear", type = "number", pattern = "[0-9]*", placeholder = "YYYY", @Value = valueOrEmpty(Model.StartDateYear ?? 0)})
                                 </div>
                             </div>
                         </div>
