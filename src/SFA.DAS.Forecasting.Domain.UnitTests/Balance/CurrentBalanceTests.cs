@@ -26,7 +26,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Balance
             _currentAccountBalance = new BalanceModel
             {
                 EmployerAccountId = 12345,
-                BalancePeriod = DateTime.Today.AddDays(-1),
+                BalancePeriod = DateTime.UtcNow.AddDays(-1),
                 Amount = 10000,
                 TransferAllowance = 1000,
                 RemainingTransferBalance = 1000

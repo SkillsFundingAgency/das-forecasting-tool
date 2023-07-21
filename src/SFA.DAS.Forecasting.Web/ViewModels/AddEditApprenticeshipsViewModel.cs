@@ -96,11 +96,6 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         {
             var dict = new Dictionary<string, string>();
 
-            if (vm.TotalCostAsString.ToDecimal() <= 0)
-            {
-                dict.Add($"{nameof(vm.TotalCostAsString)}", "You must enter a number that is above zero");
-            }
-
             if (vm.Course == null)
             {
                 dict.Add($"{nameof(vm.Course)}", "You must choose 1 apprenticeship");
@@ -111,9 +106,24 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
                     dict.Add($"{nameof(vm.IsTransferFunded)}", "You can only fund Standards with your transfer allowance");
             }
 
+            if (vm.NumberOfApprentices <= 0)
+            {
+                dict.Add($"{nameof(vm.NumberOfApprentices)}", "You must enter more than zero apprentices");
+            }
+
+            if (vm.TotalInstallments < 12)
+            {
+                dict.Add($"{nameof(vm.TotalInstallments)}", "You must enter a minimum of twelve months");
+            }
+
             if ((vm.StartDateYear.ToString().Length < 4) || vm.StartDate < DateTime.Now.AddMonths(-1))
             {
-                dict.Add($"{nameof(vm.StartDateYear)}","The start date cannot be in the past");
+                dict.Add($"{nameof(vm.StartDateYear)}", "The start date cannot be in the past");
+            }
+
+            if (vm.TotalCostAsString.ToDecimal() <= 0)
+            {
+                dict.Add($"{nameof(vm.TotalCostAsString)}", "You must enter a total cost that is above zero");
             }
 
             return dict;

@@ -80,7 +80,7 @@ public class WhenAddingServicesToTheContainer
             {
                 InitialData = new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>("ForecastingConnectionStrings:DatabaseConnectionString", "test"),
+                    new KeyValuePair<string, string>("ForecastingConnectionStrings:DatabaseConnectionString", "Server=tcp:test.server.net,1433;Initial Catalog=test-db;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"),
                     new KeyValuePair<string, string>("ForecastingConfiguration:AllowedCharacters", "ABCDEFGHJKLMN12345"),
                     new KeyValuePair<string, string>("ForecastingConfiguration:HashString", "ABC123"),
                     new KeyValuePair<string, string>("ForecastingConnectionStrings:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
