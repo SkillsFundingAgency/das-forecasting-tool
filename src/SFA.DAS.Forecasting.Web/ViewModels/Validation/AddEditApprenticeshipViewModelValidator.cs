@@ -23,6 +23,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels.Validation
 
             RuleFor(m => m.StartDateYear)
                 .NotEmpty()
+                .GreaterThan(0)
                 .WithMessage("The start year was not entered");
 
             RuleFor(m => m.StartDateMonth)

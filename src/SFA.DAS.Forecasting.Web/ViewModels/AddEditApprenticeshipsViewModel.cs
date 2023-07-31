@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SFA.DAS.Forecasting.Web.Extensions;
+using Microsoft.Azure.Documents.SystemFunctions;
 
 namespace SFA.DAS.Forecasting.Web.ViewModels
 {
@@ -12,10 +13,10 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
     {
         private string _fundingPeriodJson;
         public List<ApprenticeshipCourse> Courses { get; set; } = new List<ApprenticeshipCourse>();
-        public int NumberOfApprentices { get; set; }
-        public short TotalInstallments { get; set; }
-        public int StartDateMonth { get; set; }
-        public int StartDateYear { get; set; }
+        public int? NumberOfApprentices { get; set; }
+        public short? TotalInstallments { get; set; }
+        public int? StartDateMonth { get; set; }
+        public int? StartDateYear { get; set; }
         public string TotalCostAsString { get; set; }
         public decimal? CalculatedTotalCap => FundingCapCalculated * NumberOfApprentices;
         public string EstimationName { get; set; }
@@ -106,17 +107,22 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
                     dict.Add($"{nameof(vm.IsTransferFunded)}", "You can only fund Standards with your transfer allowance");
             }
 
-            if (vm.NumberOfApprentices <= 0)
+            if (vm.NumberOfApprentices <= 0 || !vm.NumberOfApprentices.HasValue)
             {
                 dict.Add($"{nameof(vm.NumberOfApprentices)}", "You must enter more than zero apprentices");
             }
 
-            if (vm.TotalInstallments < 12)
+            if (vm.TotalInstallments < 12 || !vm.TotalInstallments.HasValue)
             {
                 dict.Add($"{nameof(vm.TotalInstallments)}", "You must enter a minimum of twelve months");
             }
 
-            if ((vm.StartDateYear.ToString().Length < 4) || vm.StartDate < DateTime.Now.AddMonths(-1))
+            if (
+                vm.StartDateYear.ToString().Length < 4 || 
+                vm.StartDate < DateTime.Now.AddMonths(-1) ||
+                !vm.StartDateYear.HasValue || 
+                !vm.StartDateMonth.HasValue
+            )
             {
                 dict.Add($"{nameof(vm.StartDateYear)}", "The start date cannot be in the past");
             }

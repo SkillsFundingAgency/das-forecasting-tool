@@ -58,13 +58,13 @@ namespace SFA.DAS.Forecasting.Web.Orchestrators.Estimations
             if (vm.ApprenticeshipsId == null)
             {
                 accountEstimation.AddVirtualApprenticeship(vm.Course.Id, vm.Course.Title, vm.Course.Level,
-                    vm.StartDateMonth, vm.StartDateYear,
-                    vm.NumberOfApprentices, vm.TotalInstallments,
+                    vm.StartDateMonth ?? 0, vm.StartDateYear ?? 0,
+                    vm.NumberOfApprentices ?? 0, vm.TotalInstallments ?? 0,
                     vm.TotalCostAsString.ToDecimal(), fundingSource);
             }
             else
             {
-                accountEstimation.UpdateApprenticeship(vm.ApprenticeshipsId, vm.StartDateMonth, vm.StartDateYear, vm.NumberOfApprentices, vm.TotalInstallments, vm.TotalCostAsString.ToDecimal());
+                accountEstimation.UpdateApprenticeship(vm.ApprenticeshipsId, vm.StartDateMonth ?? 0, vm.StartDateYear ?? 0, vm.NumberOfApprentices ?? 0, vm.TotalInstallments ?? 0, vm.TotalCostAsString.ToDecimal());
 
             }
             
