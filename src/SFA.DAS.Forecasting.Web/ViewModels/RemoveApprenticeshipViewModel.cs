@@ -11,7 +11,7 @@ namespace SFA.DAS.Forecasting.Web.ViewModels
         public string CourseTitle { get; set; }
         public int Level { get; set; }
         public int NumberOfApprentices { get; set; }
-        [Required(ErrorMessage = "Choose an option")]
+        [Required(ErrorMessage = "Please choose an option")]
         public bool? ConfirmedDeletion { get; set; }
     }
 }

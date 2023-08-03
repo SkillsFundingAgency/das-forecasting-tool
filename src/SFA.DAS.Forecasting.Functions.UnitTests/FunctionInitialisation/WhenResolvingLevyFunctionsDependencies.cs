@@ -38,6 +38,6 @@ public class WhenResolvingLevyFunctionsDependencies
         serviceCollection.AddServices();
         serviceCollection.AddLogging();
         serviceCollection.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString, false);
-        serviceCollection.AddDatabaseRegistration(forecastingJobsConfiguration.CosmosDbConnectionString, configuration["EnvironmentName"]);
+        serviceCollection.AddDatabaseRegistration(forecastingJobsConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
     }
 }

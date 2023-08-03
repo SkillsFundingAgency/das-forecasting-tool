@@ -14,7 +14,7 @@ using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
+    // [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
     [Route("accounts/{hashedAccountId}/forecasting/estimations")]
     [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class EstimationController : Controller
@@ -96,12 +96,12 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         {
             var viewModel = await _addApprenticeshipOrchestrator.UpdateAddApprenticeship(vm);
 
-                var result = vm.ValidateAdd(vm);
+            var result = vm.ValidateAdd(vm);
 
-                foreach (var r in result)
-                {
-                    ModelState.AddModelError(r.Key, r.Value);
-                }
+            foreach (var r in result)
+            {
+                ModelState.AddModelError(r.Key, r.Value);
+            }
 
            
             if (!ModelState.IsValid)

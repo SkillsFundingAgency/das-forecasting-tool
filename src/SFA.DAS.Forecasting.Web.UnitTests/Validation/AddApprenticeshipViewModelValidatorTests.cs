@@ -115,7 +115,7 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.Validation
             _validViewModel.StartDateMonth = 0;
             var result = _validator.Validate(_validViewModel);
             var error = result.Errors.First(m => m.PropertyName == nameof(_validViewModel.StartDateMonth));
-            error.ErrorMessage.Should().Be("The start month was not entered");
+            error.ErrorMessage.Should().Be("The start month entered needs to be between 1 and 12");
         }
 
         [Test]
