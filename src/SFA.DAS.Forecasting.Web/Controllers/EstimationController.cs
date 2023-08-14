@@ -14,7 +14,7 @@ using SFA.DAS.Forecasting.Web.ViewModels.Validation;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
-    // [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
     [Route("accounts/{hashedAccountId}/forecasting/estimations")]
     [SetNavigationSection(NavigationSection.AccountsFinance)]
     public class EstimationController : Controller
