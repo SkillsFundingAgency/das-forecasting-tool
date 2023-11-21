@@ -11,13 +11,13 @@
     <ProjectReference Include="..\SFA.DAS.Forecasting.Models\SFA.DAS.Forecasting.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Core" Version="1.27.0" />
-    <PackageReference Include="Azure.Identity" Version="1.8.1" />
+    <PackageReference Include="Azure.Core" Version="1.36.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="FluentValidation" Version="11.4.0" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SFA.DAS.Encoding" Version="1.1.76" />
     <PackageReference Include="SFA.DAS.Account.Api.Types" Version="1.6.3195" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
