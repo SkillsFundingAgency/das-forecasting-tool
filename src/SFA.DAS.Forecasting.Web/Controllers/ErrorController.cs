@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Web.Configuration;
 
@@ -9,7 +9,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("accessdenied", Name = RouteNames.AccessDenied)]
         public ActionResult AccessDenied()
         {
-            Response.StatusCode = (int)HttpStatusCode.Forbidden;
+            Response.StatusCode = StatusCodes.Status403Forbidden;
 
             return View("AccessDenied");
         }
@@ -17,7 +17,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
         [Route("notfound", Name = RouteNames.NotFound)]
         public ActionResult NotFound()
         {
-            Response.StatusCode = (int)HttpStatusCode.NotFound;
+            Response.StatusCode = StatusCodes.Status404NotFound;
 
             return View("NotFound");
         }
