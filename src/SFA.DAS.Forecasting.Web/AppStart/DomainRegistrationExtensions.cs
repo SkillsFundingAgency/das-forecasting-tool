@@ -4,7 +4,7 @@ using SFA.DAS.Forecasting.Application.Estimations.Services;
 using SFA.DAS.Forecasting.Application.Levy.Services;
 using SFA.DAS.Forecasting.Application.Payments.Services;
 using SFA.DAS.Forecasting.Application.Projections.Services;
-using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Application.Shared.Services;
 using SFA.DAS.Forecasting.Domain.Balance;
 using SFA.DAS.Forecasting.Domain.Balance.Services;
 using SFA.DAS.Forecasting.Domain.Estimations;
@@ -15,7 +15,7 @@ using SFA.DAS.Forecasting.Domain.Payments.Services;
 using SFA.DAS.Forecasting.Domain.Projections.Services;
 using SFA.DAS.Forecasting.Domain.Shared;
 
-namespace SFA.DAS.Forecasting.Web;
+namespace SFA.DAS.Forecasting.Web.AppStart;
 
 public static class DomainRegistrationExtensions
 {
@@ -33,5 +33,6 @@ public static class DomainRegistrationExtensions
         services.AddTransient<IVirtualApprenticeshipValidator, VirtualApprenticeshipValidator>();
         services.AddTransient<IDateTimeService, DateTimeService>();
         services.AddTransient<IAccountEstimationProjectionRepository, AccountEstimationProjectionRepository>();
+        services.AddTransient<IEmployerDataService, EmployerDataService>();
     }
 }
