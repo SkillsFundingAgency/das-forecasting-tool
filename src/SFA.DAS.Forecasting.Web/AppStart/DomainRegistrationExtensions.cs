@@ -33,6 +33,5 @@ public static class DomainRegistrationExtensions
         services.AddTransient<IVirtualApprenticeshipValidator, VirtualApprenticeshipValidator>();
         services.AddTransient<IDateTimeService, DateTimeService>();
         services.AddTransient<IAccountEstimationProjectionRepository, AccountEstimationProjectionRepository>();
-        services.AddTransient<IEmployerDataService, EmployerDataService>();
     }
 }
