@@ -15,7 +15,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return View("Error");
         }
 
-        [Route("accessdenied", Name = RouteNames.AccessDenied)]
+        [Route("403", Name = RouteNames.AccessDenied)]
         public ActionResult AccessDenied()
         {
             Response.StatusCode = StatusCodes.Status403Forbidden;
@@ -23,7 +23,7 @@ namespace SFA.DAS.Forecasting.Web.Controllers
             return View("AccessDenied");
         }
 
-        [Route("notfound", Name = RouteNames.NotFound)]
+        [Route("404", Name = RouteNames.NotFound)]
         public ActionResult NotFound()
         {            
             Response.StatusCode = StatusCodes.Status404NotFound;

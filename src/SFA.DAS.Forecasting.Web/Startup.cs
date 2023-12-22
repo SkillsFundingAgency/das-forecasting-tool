@@ -166,7 +166,7 @@ namespace SFA.DAS.Forecasting.Web
                     //Re-execute the request so the user gets the error page
                     var originalPath = context.Request.Path.Value;
                     context.Items["originalPath"] = originalPath;
-                    context.Request.Path = "/error/notfound";
+                    context.Request.Path = "/error/404";
                     await next();
                 }
             });
