@@ -1,18 +1,17 @@
-﻿@{
+﻿@inject SFA.DAS.EmployerUrlHelper.ILinkGenerator LinkGenerator
+
+@{
     ViewBag.GaData.Vpv = "/forecasting/error/page-access-denied";
 }
 <div class="grid-row">
     <div class="column-two-thirds">
-        <h1 class="heading-xlarge">You don't have access to this page</h1>
+        <h1 class="govuk-heading-xl">Access denied</h1>
+        <p>Your account does not have sufficient privileges</p>
     </div>
 </div>
-
 <div class="grid-row">
     <div class="column-two-thirds">
-        <p class="bold-medium">
-            The page you requested either does not exist or you don't
-            have access to it, from here you can:
-        </p>
-        <a class="button button-start" id="go_back_service_home_page" href="/">Go back to the service home page</a>
+        <p>If you are experiencing difficulty accessing the area of the site you need, first contact an/the account owner to ensure you have the correct role assigned to your account.</p>  
+        <a class="govuk-button govuk-button--start" id="go_back_service_home_page" href="@LinkGenerator.AccountsLink("")">Go back to the service home page</a>
     </div>
 </div>

@@ -4,8 +4,17 @@ using SFA.DAS.Forecasting.Web.Configuration;
 
 namespace SFA.DAS.Forecasting.Web.Controllers
 {
+    [Route("[controller]")]
     public class ErrorController : Controller
     {
+        [Route("")]
+        public IActionResult Error()
+        {
+            Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            return View("Error");
+        }
+
         [Route("accessdenied", Name = RouteNames.AccessDenied)]
         public ActionResult AccessDenied()
         {
@@ -16,10 +25,10 @@ namespace SFA.DAS.Forecasting.Web.Controllers
 
         [Route("notfound", Name = RouteNames.NotFound)]
         public ActionResult NotFound()
-        {
+        {            
             Response.StatusCode = StatusCodes.Status404NotFound;
 
             return View("NotFound");
-        }
+        }      
     }
 }

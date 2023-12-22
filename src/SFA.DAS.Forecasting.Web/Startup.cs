@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Employer.Shared.UI;
+using SFA.DAS.EmployerUrlHelper.DependencyResolution;
 using SFA.DAS.Forecasting.Application.Infrastructure.RegistrationExtensions;
 using SFA.DAS.Forecasting.Core.Configuration;
 using SFA.DAS.Forecasting.Web.AppStart;
@@ -77,6 +78,8 @@ namespace SFA.DAS.Forecasting.Web
             services.AddCosmosDbServices(forecastingConnectionStrings.CosmosDbConnectionString);
 
             services.AddDomainServices();
+
+            services.AddEmployerUrlHelper();
 
             services.AddAuthenticationServices();
 
@@ -163,7 +166,7 @@ namespace SFA.DAS.Forecasting.Web
                     //Re-execute the request so the user gets the error page
                     var originalPath = context.Request.Path.Value;
                     context.Items["originalPath"] = originalPath;
-                    context.Request.Path = "/error/404";
+                    context.Request.Path = "/error/notfound";
                     await next();
                 }
             });
