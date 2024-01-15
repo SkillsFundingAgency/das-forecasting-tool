@@ -14,6 +14,7 @@ public static class AddServiceExtensions
 {
     public static void AddServices(this IServiceCollection builder)
     {
+        builder.AddTransient<IEmployerDataService, EmployerDataService>();
         builder.AddTransient<IEmployerDatabaseService, EmployerDatabaseService>();
         builder.AddTransient<IPreLoadPaymentDataService, PreLoadPaymentDataService>();
         builder.AddTransient<IPaymentApiDataService, PaymentApiDataService>();
