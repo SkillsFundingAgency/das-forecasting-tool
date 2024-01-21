@@ -1,21 +1,18 @@
-﻿@{
+﻿@inject SFA.DAS.EmployerUrlHelper.ILinkGenerator LinkGenerator
+
+@{
     ViewBag.PageID = "page-not-found";
     ViewBag.Title = "Page not found";
     ViewBag.HideNav = true;
     ViewBag.GaData.Vpv = "/forecasting/error/page-not-found";
 }
-
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h1 class="heading-xlarge">Page not found</h1>
-        <p>If you entered a web address, check that it's correct. Or you can <a href="/">return to the homepage</a>.</p>
-    </div>
-</div>
-
-@section breadcrumb {
-    <div class="breadcrumbs">
-        <ol role="navigation" aria-label="Breadcrumbs">
-            <li><a href="/" class="back-link">Back to the homepage</a></li>
-        </ol>
-    </div>
-}
+<h1 class="govuk-heading-xl">Page not found</h1>
+<p>
+    If you typed the web address, check it is correct.
+</p>
+<p class="govuk-body">
+    If you pasted the web address, check you copied the entire address.
+</p>
+<p class="govuk-body">
+    If the web address is correct or you selected a link or button you can <a href="@LinkGenerator.AccountsLink("")">return to the homepage</a>.
+</p>

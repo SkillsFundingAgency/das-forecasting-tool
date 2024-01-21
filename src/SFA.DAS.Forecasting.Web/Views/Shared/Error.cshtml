@@ -1,20 +1,7 @@
-﻿@{
-    ViewBag.PageID = "page-error";
-    ViewBag.Title = "Error";
-    ViewBag.HideNav = true;
+﻿﻿@{
+    ViewData["Title"] = "Error";
+    ViewBag.GaData.Vpv = "/error";
 }
 
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h1 class="heading-xlarge">There's been an error</h1>
-        <p>Sorry, there seems to be an error with this page. Please refresh your browser or <a href="/">go back to the homepage</a>.</p>
-    </div>
-</div>
-
-@section breadcrumb {
-    <div class="breadcrumbs">
-        <ol role="navigation" aria-label="Breadcrumbs">
-            <li><a href="/" class="back-link">Back to the homepage</a></li>
-        </ol>
-    </div>
-}
+<h1 class="govuk-heading-xl">Error</h1>
+<p class="govuk-body">An error occurred while processing your request.</p>
