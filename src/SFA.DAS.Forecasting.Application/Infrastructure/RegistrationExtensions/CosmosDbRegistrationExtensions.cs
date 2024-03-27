@@ -19,23 +19,11 @@ public static class CosmosDbRegistrationExtensions
             client.CreateDatabaseIfNotExistsAsync(new Database { Id = documentConnectionString.Database }).Wait();
         }
         services.AddSingleton<IDocumentClient>(client);
-        services.AddTransient<IDocumentSession>(_=> CreateDocumentSession(connectionString, createIfNotExists));
-        if (createIfNotExists)
-        {
-            client.CreateDocumentCollectionIfNotExistsAsync(
-                UriFactory.CreateDatabaseUri(documentConnectionString.Database), new DocumentCollection
-                {
-                    Id = documentConnectionString.Collection
-                },
-                new RequestOptions { OfferThroughput = int.Parse((string) documentConnectionString.ThroughputOffer) }).Wait();    
-        }
+        services.AddTransient<IDocumentSession>(_=> CreateDocumentSession(client, createIfNotExists));
     }
 
-    private static IDocumentSession CreateDocumentSession(string connectionString, bool createIfNotExists)
+    private static IDocumentSession CreateDocumentSession(IDocumentClient client, DocumentSessionConnectionString documentConnectionString, bool createIfNotExists)
     {
-        var documentConnectionString = new DocumentSessionConnectionString { ConnectionString = connectionString };
-
-        var client = new DocumentClient(new Uri(documentConnectionString.AccountEndpoint), documentConnectionString.AccountKey);
         var documentCollection = new DocumentCollection();
         if (createIfNotExists)
         {
