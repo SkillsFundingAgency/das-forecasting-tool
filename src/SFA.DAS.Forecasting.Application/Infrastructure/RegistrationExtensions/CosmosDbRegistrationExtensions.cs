@@ -19,7 +19,7 @@ public static class CosmosDbRegistrationExtensions
             client.CreateDatabaseIfNotExistsAsync(new Database { Id = documentConnectionString.Database }).Wait();
         }
         services.AddSingleton<IDocumentClient>(client);
-        services.AddTransient<IDocumentSession>(_=> CreateDocumentSession(client, createIfNotExists));
+        services.AddTransient<IDocumentSession>(_=> CreateDocumentSession(client, documentConnectionString, createIfNotExists));
     }
 
     private static IDocumentSession CreateDocumentSession(IDocumentClient client, DocumentSessionConnectionString documentConnectionString, bool createIfNotExists)
@@ -40,6 +40,5 @@ public static class CosmosDbRegistrationExtensions
         }
 
         return new DocumentSession(client, documentConnectionString, documentCollection);
-    
     }
 }
