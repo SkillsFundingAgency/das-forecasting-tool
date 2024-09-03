@@ -18,7 +18,6 @@ public static class AddConfigurationExtensions
         services.Configure<ForecastingConnectionStrings>(configuration.GetSection(nameof(ForecastingConnectionStrings)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<ForecastingConnectionStrings>>().Value);
         
-        services.Configure<IdentityServerConfiguration>(configuration.GetSection(nameof(IdentityServerConfiguration)));
         services.Configure<OuterApiConfiguration>(configuration.GetSection(nameof(OuterApiConfiguration)));
         services.AddSingleton(cfg => cfg.GetService<IOptions<OuterApiConfiguration>>().Value);
         

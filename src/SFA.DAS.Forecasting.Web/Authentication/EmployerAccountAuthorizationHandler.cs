@@ -81,8 +81,7 @@ public class EmployerAccountAuthorizationHandler : AuthorizationHandler<Employer
 
         if (employerAccounts == null || !employerAccounts.ContainsKey(accountIdFromUrl))
         {
-            var requiredIdClaim = _configuration.UseGovSignIn
-                ? ClaimTypes.NameIdentifier : EmployerClaims.IdamsUserIdClaimTypeIdentifier;
+            var requiredIdClaim = ClaimTypes.NameIdentifier; 
 
             if (!context.User.HasClaim(c => c.Type.Equals(requiredIdClaim)))
                 return false;

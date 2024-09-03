@@ -28,35 +28,20 @@ public class EmployerAccountPostAuthenticationClaimsHandler : ICustomClaims
     public async Task<IEnumerable<Claim>> GetClaims(TokenValidatedContext tokenValidatedContext)
     {
         var claims = new List<Claim>();
-        string userId;
-        var email = string.Empty;
+
+        var userId = tokenValidatedContext.Principal.Claims
+            .First(c => c.Type.Equals(ClaimTypes.NameIdentifier))
+            .Value;
+        var email = tokenValidatedContext.Principal.Claims
+            .First(c => c.Type.Equals(ClaimTypes.Email))
+            .Value;
+        claims.Add(new Claim(EmployerClaims.IdamsUserEmailClaimTypeIdentifier, email));
         
-        if (_forecastingConfiguration.UseGovSignIn)
-        {
-            userId = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(ClaimTypes.NameIdentifier))
-                .Value;
-            email = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(ClaimTypes.Email))
-                .Value;
-            claims.Add(new Claim(EmployerClaims.IdamsUserEmailClaimTypeIdentifier, email));
-        }
-        else
-        {
-            userId = tokenValidatedContext.Principal.Claims
-                .First(c => c.Type.Equals(EmployerClaims.IdamsUserIdClaimTypeIdentifier))
-                .Value;
-        }
-            
         var result = await _accountsSvc.GetUserAccounts(userId, email);
 
         var accountsAsJson = JsonConvert.SerializeObject(result.EmployerAccounts.ToDictionary(k => k.AccountId));
         var associatedAccountsClaim = new Claim(EmployerClaims.AccountsClaimsTypeIdentifier, accountsAsJson, JsonClaimValueTypes.Json);
         claims.Add(associatedAccountsClaim);
-        if (!_forecastingConfiguration.UseGovSignIn)
-        {
-            return claims;
-        }
             
         claims.Add(new Claim(EmployerClaims.IdamsUserIdClaimTypeIdentifier, result.EmployerUserId));
         claims.Add(new Claim(EmployerClaims.IdamsUserDisplayNameClaimTypeIdentifier, result.FirstName + " " + result.LastName));
