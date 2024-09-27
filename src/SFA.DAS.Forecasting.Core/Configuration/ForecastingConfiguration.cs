@@ -13,7 +13,6 @@ namespace SFA.DAS.Forecasting.Core.Configuration
         public double SecondsToWaitToAllowProjections { get; set; }
         public string StorageConnectionString { get; set; }
         
-        public bool UseGovSignIn { get; set; }
         public string AllowedCharacters { get; set; }
         public string HashString { get; set; }
         

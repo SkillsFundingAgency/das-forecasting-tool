@@ -15,7 +15,6 @@ using SFA.DAS.Forecasting.Web.AppStart;
 using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 using SFA.DAS.Forecasting.Web.Orchestrators.Estimations;
-using SFA.DAS.GovUK.Auth.Authentication;
 using SFA.DAS.GovUK.Auth.Services;
 
 namespace SFA.DAS.Forecasting.Web.UnitTests.AppStart;
@@ -46,9 +45,8 @@ public class WhenAddingServicesToTheContainer
             var type = provider.GetServices(typeof(IAuthorizationHandler)).ToList();
             
             Assert.IsNotNull(type);
-            type.Count.Should().Be(3);
+            type.Count.Should().Be(2);
             type.Should().ContainSingle(c => c.GetType() == typeof(EmployerAccountAuthorizationHandler));
-            type.Should().ContainSingle(c => c.GetType() == typeof(AccountActiveAuthorizationHandler));
         }
 
         private void SetupServiceCollection(ServiceCollection serviceCollection)

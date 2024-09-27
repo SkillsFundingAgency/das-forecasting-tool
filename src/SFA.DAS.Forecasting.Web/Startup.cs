@@ -64,9 +64,6 @@ namespace SFA.DAS.Forecasting.Web
             var forecastingConnectionStrings = _configuration
                 .GetSection(nameof(ForecastingConnectionStrings))
                 .Get<ForecastingConnectionStrings>();
-            var identityServerConfiguration = _configuration
-                .GetSection(nameof(IdentityServerConfiguration))
-                .Get<IdentityServerConfiguration>();
             services.AddConfigurationOptions(_configuration);
             services.AddFluentValidation();
             services.AddOrchestrators();
@@ -82,21 +79,12 @@ namespace SFA.DAS.Forecasting.Web
             services.AddEmployerUrlHelper();
 
             services.AddAuthenticationServices();
-
-            if (_configuration["ForecastingConfiguration:UseGovSignIn"] != null &&
-                _configuration["ForecastingConfiguration:UseGovSignIn"]
-                    .Equals("true", StringComparison.CurrentCultureIgnoreCase))
-            {
-                services.AddAndConfigureGovUkAuthentication(_configuration,
-                    typeof(EmployerAccountPostAuthenticationClaimsHandler),
-                    "","/accounts/SignIn-Stub");
-                services.AddMaMenuConfiguration(RouteNames.SignOut, _configuration["ResourceEnvironmentName"]);
-            }
-            else
-            {
-                services.AddAndConfigureEmployerAuthentication(identityServerConfiguration);
-                services.AddMaMenuConfiguration(RouteNames.SignOut, identityServerConfiguration.ClientId, _configuration["ResourceEnvironmentName"]);
-            }
+        
+            services.AddAndConfigureGovUkAuthentication(_configuration,
+                typeof(EmployerAccountPostAuthenticationClaimsHandler),
+                "","/accounts/SignIn-Stub");
+            services.AddMaMenuConfiguration(RouteNames.SignOut, _configuration["ResourceEnvironmentName"]);
+        
 
             services.AddLogging();
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
