@@ -2,6 +2,7 @@
 
 @{
     ViewBag.GaData.Vpv = "/forecasting/error/page-access-denied";
+    ViewBag.ShowNav = false;
 }
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -12,6 +13,6 @@
 <div class="grid-row">
     <div class="column-two-thirds">
         <p>If you are experiencing difficulty accessing the area of the site you need, first contact an/the account owner to ensure you have the correct role assigned to your account.</p>  
-        <a class="govuk-button govuk-button--start" id="go_back_service_home_page" href="@LinkGenerator.AccountsLink("")">Go back to the service home page</a>
+        <a class="govuk-button" id="go_back_service_home_page" href="@LinkGenerator.AccountsLink("")">Go back to the service home page</a>
     </div>
 </div>
