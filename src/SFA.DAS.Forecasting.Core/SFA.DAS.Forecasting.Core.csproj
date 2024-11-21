@@ -3,6 +3,6 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SFA.DAS.Provider.Events.Api.Client" Version="3.0.1-prerelease-5" />
+    <PackageReference Include="SFA.DAS.Provider.Events.Api.Client" Version="3.0.5-prerelease-1" />
   </ItemGroup>
 </Project>
