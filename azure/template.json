@@ -392,8 +392,8 @@
                         "value": {
                             "array": [
                                 {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.InstrumentationKey.value]"
+                                    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                                    "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.ConnectionString.value]"
                                 },
                                 {
                                     "name": "AppName",
@@ -508,8 +508,8 @@
                         "value": {
                             "array": [
                                 {
-                                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                                    "value": "[reference('app-service-app-insights').outputs.InstrumentationKey.value]"
+                                    "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                                    "value": "[reference('app-service-app-insights').outputs.ConnectionString.value]"
                                 },
                                 {
                                     "name": "BaseAddress",
