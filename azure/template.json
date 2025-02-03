@@ -147,6 +147,31 @@
         "minimumTlsVersion": {
             "type": "string",
             "defaultValue": "TLS1_2"
+        },
+        "applicationInsightsConnectionString": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Shared application insights connection string retrieved from the get-product-app-insights step"
+            }
+        },
+        "applicationInsightsResourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "Shared application insights resource ID retrieved from the get-product-app-insights step"
+            }
+        },
+        "alertActionGroupResourceId": {
+            "type": "string",
+            "metadata": {
+                "description": "Alert group resource ID found in the management resources variable groups"
+            }
+        },
+        "enableFailedRequestAlert": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "Enables alerting on app insights failed requests"
+            }
         }
     },
     "variables": {
