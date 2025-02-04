@@ -283,52 +283,6 @@
         },
         {
             "apiVersion": "2021-04-01",
-            "name": "[concat(variables('functionAppNames')[copyIndex()], '-insights')]",
-            "resourceGroup": "[variables('resourceGroupName')]",
-            "type": "Microsoft.Resources/deployments",
-            "copy": {
-                "name": "app-insights-copy",
-                "count": "[length(variables('functionAppNames'))]"
-            },
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appInsightsName": {
-                        "value": "[concat(variables('functionAppNames')[copyIndex()])]"
-                    },
-                    "attachedService": {
-                        "value": "[concat(variables('functionAppNames')[copyIndex()])]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2021-04-01",
-            "name": "app-service-app-insights",
-            "resourceGroup": "[variables('resourceGroupName')]",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights.json')]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "appInsightsName": {
-                        "value": "[variables('appServiceName')]"
-                    },
-                    "attachedService": {
-                        "value": "[variables('appServiceName')]"
-                    }
-                }
-            }
-        },
-        {
-            "apiVersion": "2021-04-01",
             "name": "functions-app-service-plan",
             "resourceGroup": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/deployments",
@@ -393,7 +347,7 @@
                             "array": [
                                 {
                                     "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                                    "value": "[reference(concat(variables('functionAppNames')[copyIndex()], '-insights')).outputs.ConnectionString.value]"
+                                    "value": "[parameters('applicationInsightsConnectionString')]"
                                 },
                                 {
                                     "name": "AppName",
@@ -457,6 +411,35 @@
             ]
         },
         {
+            "copy": {
+                "name": "function-alert-copy",
+                "count": "[length(variables('functionAppNames'))]"
+            },
+            "condition": "[equals(parameters('enableFailedRequestAlert'), true())]",
+            "apiVersion": "2021-04-01",
+            "name": "[concat('application-insights-', variables('functionAppNames')[copyIndex()], '-alert-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights-failed-requests-alert.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "serviceName": {
+                        "value": "[variables('functionAppNames')[copyIndex()]]"
+                    },
+                    "applicationInsightsResourceId": {
+                        "value": "[parameters('applicationInsightsResourceId')]"
+                    },
+                    "alertActionGroupResourceId": {
+                        "value": "[parameters('alertActionGroupResourceId')]"
+                    }
+                }
+            }
+        },
+        {
             "apiVersion": "2021-04-01",
             "name": "app-service-certificate",
             "type": "Microsoft.Resources/deployments",
@@ -509,7 +492,7 @@
                             "array": [
                                 {
                                     "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
-                                    "value": "[reference('app-service-app-insights').outputs.ConnectionString.value]"
+                                    "value": "[parameters('applicationInsightsConnectionString')]"
                                 },
                                 {
                                     "name": "BaseAddress",
@@ -587,6 +570,31 @@
             },
             "dependsOn": [
             ]
+        },
+        {
+            "condition": "[equals(parameters('enableFailedRequestAlert'), true())]",
+            "apiVersion": "2021-04-01",
+            "name": "[concat('application-insights-', variables('appServiceName'), '-alert-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'application-insights-failed-requests-alert.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "serviceName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "applicationInsightsResourceId": {
+                        "value": "[parameters('applicationInsightsResourceId')]"
+                    },
+                    "alertActionGroupResourceId": {
+                        "value": "[parameters('alertActionGroupResourceId')]"
+                    }
+                }
+            }
         },
         {
             "apiVersion": "2021-04-01",
