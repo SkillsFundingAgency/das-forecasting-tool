@@ -12,69 +12,59 @@ using SFA.DAS.Forecasting.Web.Authentication;
 using SFA.DAS.Forecasting.Web.Configuration;
 using SFA.DAS.Forecasting.Web.Orchestrators;
 
-namespace SFA.DAS.Forecasting.Web.Controllers
+namespace SFA.DAS.Forecasting.Web.Controllers;
+
+[Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
+[Route("accounts/{hashedaccountId}/forecasting")]
+[SetNavigationSection(NavigationSection.AccountsFinance)]
+public class ForecastingController : Controller
 {
-    [Authorize(Policy = nameof(PolicyNames.HasEmployerAccount))]
-    [Route("accounts/{hashedaccountId}/forecasting")]
-    [SetNavigationSection(NavigationSection.AccountsFinance)]
-    public class ForecastingController : Controller
+    private readonly IForecastingOrchestrator _orchestrator;
+
+    public ForecastingController(IForecastingOrchestrator orchestrator)
     {
-        private readonly IForecastingOrchestrator _orchestrator;
+        _orchestrator = orchestrator;
+    }
+    
+    [HttpGet]
+    [Route("download", Name = RouteNames.DownloadCsv)]
+    public async Task<ActionResult> Csv(string hashedAccountId)
+    {
+        var results = await _orchestrator.BalanceCsv(hashedAccountId);
 
-        public ForecastingController(IForecastingOrchestrator orchestrator)
+        return CreateCsvStream(results, "esfaforecast");
+    }
+
+    [HttpGet]
+    [Route("download-apprenticeships", Name = RouteNames.DownloadApprenticeships)]
+    public async Task<ActionResult> DownloadApprenticeshipDetailsCsv(string hashedAccountId)
+    {
+        var results = await _orchestrator.ApprenticeshipsCsv(hashedAccountId);
+
+        return CreateCsvStream(results, "esfa_apprenticeships");
+    }
+
+    [HttpGet]
+    [Route("expired-funds-guidance", Name = RouteNames.ExpiredFundsGuidance)]
+    public ActionResult ExpiredFundsGuidance()
+    {
+        return View();
+    }
+
+    private ActionResult CreateCsvStream<T>(IEnumerable<T> results, string fileNamePreFix)
+    {
+        using (var memoryStream = new MemoryStream())
         {
-            _orchestrator = orchestrator;
-        }
-
-        [HttpGet]
-        [Route("projections", Name = RouteNames.Balance)]
-        public async Task<ActionResult> Balance(string hashedAccountId)
-        {
-            var viewModel = await _orchestrator.Projection(hashedAccountId);
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        [Route("download", Name = RouteNames.DownloadCsv)]
-        public async Task<ActionResult> Csv(string hashedAccountId)
-        {
-            var results = await _orchestrator.BalanceCsv(hashedAccountId);
-
-            return CreateCsvStream(results, "esfaforecast");
-        }
-
-        [HttpGet]
-        [Route("download-apprenticeships", Name = RouteNames.DownloadApprenticeships)]
-        public async Task<ActionResult> DownloadApprenticeshipDetailsCsv(string hashedAccountId)
-        {
-            var results = await _orchestrator.ApprenticeshipsCsv(hashedAccountId);
-
-            return CreateCsvStream(results, "esfa_apprenticeships");
-        }
-
-        [HttpGet]
-        [Route("expired-funds-guidance", Name = RouteNames.ExpiredFundsGuidance)]
-        public ActionResult ExpiredFundsGuidance()
-        {
-            return View();
-        }
-
-        private ActionResult CreateCsvStream<T>(IEnumerable<T> results, string fileNamePreFix)
-        {
-            using (var memoryStream = new MemoryStream())
+            using (var streamWriter = new StreamWriter(memoryStream))
             {
-                using (var streamWriter = new StreamWriter(memoryStream))
+                using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.CurrentCulture))
                 {
-                    using (var csvWriter = new CsvWriter(streamWriter, CultureInfo.CurrentCulture))
-                    {
-                        csvWriter.WriteRecords(results);
-                        streamWriter.Flush();
-                        memoryStream.Position = 0;
-                        return File(memoryStream.ToArray(), "text/csv", $"{fileNamePreFix}_{DateTime.Now:yyyyMMddhhmmss}.csv");
-                    }
+                    csvWriter.WriteRecords(results);
+                    streamWriter.Flush();
+                    memoryStream.Position = 0;
+                    return File(memoryStream.ToArray(), "text/csv", $"{fileNamePreFix}_{DateTime.Now:yyyyMMddhhmmss}.csv");
                 }
             }
         }
     }
-
 }

@@ -141,18 +141,8 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.OrchestratorTests
             _accountProjectionDataSession = new Mock<IAccountProjectionDataSession>();
 
             _orchestrator = new ForecastingOrchestrator(_hashingService.Object,
-                _accountProjectionDataSession.Object, _currentBalanceRepository.Object,
+                _accountProjectionDataSession.Object,
                 new ForecastingConfiguration(), _forecastingMapper, _commitmentsDataService.Object);
-        }
-
-        [Test]
-        public async Task ShouldTake_48_months_projections()
-        {
-            SetUpProjections(48 + 10);
-
-            var balance = await _orchestrator.Projection("ABBA12");
-
-            balance.BalanceItemViewModels.Count().Should().Be(48);
         }
 
         [Test]
