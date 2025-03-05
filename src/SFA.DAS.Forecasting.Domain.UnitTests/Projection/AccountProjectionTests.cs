@@ -43,7 +43,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 MonthlyInstallment = 2100,
                 NumberOfInstallments = 24,
                 CompletionAmount = 3000,
-                FundingSource = Models.Payments.FundingSource.Levy
+                FundingSource = FundingSource.Levy
             };
             _commitments = new EmployerCommitmentsModel
             {
@@ -108,8 +108,8 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
 
             var expected = _accountProjection.Projections.FirstOrDefault()?.FutureFunds + _account.LevyDeclared -
                            _commitment.MonthlyInstallment;
-            var funds2ndMonth = _accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds;
-            funds2ndMonth.Should().Be(expected);
+            var fundsSecondMonth = _accountProjection.Projections.Skip(1).FirstOrDefault()?.FutureFunds;
+            fundsSecondMonth.Should().Be(expected);
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
         {
             _commitments.LevyFundedCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 1,
@@ -202,9 +202,9 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Levy
+                    FundingSource = FundingSource.Levy
                 },
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 1,
@@ -215,12 +215,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Levy
+                    FundingSource = FundingSource.Levy
                 }
             };
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 999,
@@ -231,12 +231,12 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
             _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 999,
                     SendingEmployerAccountId = 1,
@@ -247,7 +247,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
 
@@ -312,18 +312,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
             Assert.AreEqual(0, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(0, expectedMonth1?.CoInvestmentEmployer);
-            Assert.AreEqual(700, expectedMonth1?.FutureFunds);
+            Assert.AreEqual(0, expectedMonth1.CoInvestmentEmployer);
+            Assert.AreEqual(700, expectedMonth1.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
             Assert.AreEqual(0, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(0, expectedMonth2?.CoInvestmentEmployer);
-            Assert.AreEqual(900, expectedMonth2?.FutureFunds);
+            Assert.AreEqual(0, expectedMonth2.CoInvestmentEmployer);
+            Assert.AreEqual(900, expectedMonth2.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(0, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(0, expectedMonth3?.CoInvestmentEmployer);
-            Assert.AreEqual(1100, expectedMonth3?.FutureFunds);
+            Assert.AreEqual(0, expectedMonth3.CoInvestmentEmployer);
+            Assert.AreEqual(1100, expectedMonth3.FutureFunds);
         }
 
         [Test]
@@ -341,18 +341,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
             Assert.AreEqual(0, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(0, expectedMonth1?.CoInvestmentEmployer);
-            Assert.AreEqual(300, expectedMonth1?.FutureFunds);
+            Assert.AreEqual(0, expectedMonth1.CoInvestmentEmployer);
+            Assert.AreEqual(300, expectedMonth1.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
             Assert.AreEqual(0, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(0, expectedMonth2?.CoInvestmentEmployer);
-            Assert.AreEqual(500, expectedMonth2?.FutureFunds);
+            Assert.AreEqual(0, expectedMonth2.CoInvestmentEmployer);
+            Assert.AreEqual(500, expectedMonth2.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(0, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(0, expectedMonth3?.CoInvestmentEmployer);
-            Assert.AreEqual(700, expectedMonth3?.FutureFunds);
+            Assert.AreEqual(0, expectedMonth3.CoInvestmentEmployer);
+            Assert.AreEqual(700, expectedMonth3.FutureFunds);
         }
 
 
@@ -371,18 +371,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
             Assert.AreEqual(0.95 * 300, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(0.05 * 300, expectedMonth1?.CoInvestmentEmployer);
-            Assert.AreEqual(300, expectedMonth1?.FutureFunds);
+            Assert.AreEqual(0.05 * 300, expectedMonth1.CoInvestmentEmployer);
+            Assert.AreEqual(300, expectedMonth1.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
             Assert.AreEqual(0.95 * 300, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(0.05 * 300, expectedMonth2?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth2?.FutureFunds);
+            Assert.AreEqual(0.05 * 300, expectedMonth2.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth2.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(0.95 * 200, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(0.05 * 200, expectedMonth3?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth3?.FutureFunds);
+            Assert.AreEqual(0.05 * 200, expectedMonth3.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth3.FutureFunds);
         }
 
         [Test]
@@ -400,18 +400,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
             Assert.AreEqual(600 * .95, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(600 * .05, expectedMonth1?.CoInvestmentEmployer);
-            Assert.AreEqual(100, expectedMonth1?.FutureFunds);
+            Assert.AreEqual(600 * .05, expectedMonth1.CoInvestmentEmployer);
+            Assert.AreEqual(100, expectedMonth1.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
             Assert.AreEqual(500 * .95, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(500 * .05, expectedMonth2?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth2?.FutureFunds);
+            Assert.AreEqual(500 * .05, expectedMonth2.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth2.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(200 * .95, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(200 * .05, expectedMonth3?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth3?.FutureFunds);
+            Assert.AreEqual(200 * .05, expectedMonth3.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth3.FutureFunds);
         }
 
         [Test]
@@ -429,18 +429,18 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             //Assert
             var expectedMonth1 = _accountProjection.Projections.FirstOrDefault();
             Assert.AreEqual(300 * .95, expectedMonth1?.CoInvestmentGovernment);
-            Assert.AreEqual(300 * .05, expectedMonth1?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth1?.FutureFunds);
+            Assert.AreEqual(300 * .05, expectedMonth1.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth1.FutureFunds);
 
             var expectedMonth2 = _accountProjection.Projections.Skip(1).FirstOrDefault();
             Assert.AreEqual(200 * .95, expectedMonth2?.CoInvestmentGovernment);
-            Assert.AreEqual(200 * .05, expectedMonth2?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth2?.FutureFunds);
+            Assert.AreEqual(200 * .05, expectedMonth2.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth2.FutureFunds);
 
             var expectedMonth3 = _accountProjection.Projections.Skip(2).FirstOrDefault();
             Assert.AreEqual(200 * .95, expectedMonth3?.CoInvestmentGovernment);
-            Assert.AreEqual(200 * .05, expectedMonth3?.CoInvestmentEmployer);
-            Assert.AreEqual(400, expectedMonth3?.FutureFunds);
+            Assert.AreEqual(200 * .05, expectedMonth3.CoInvestmentEmployer);
+            Assert.AreEqual(400, expectedMonth3.FutureFunds);
         }
 
         [Test]
@@ -452,7 +452,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 999,
@@ -463,7 +463,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 100,
                     NumberOfInstallments = 6,
                     CompletionAmount = 400,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
 
@@ -486,7 +486,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 999,
@@ -497,7 +497,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 100,
                     NumberOfInstallments = 6,
                     CompletionAmount = 400,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
 
@@ -519,7 +519,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 999,
@@ -530,7 +530,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 100,
                     NumberOfInstallments = 6,
                     CompletionAmount = 400,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
 
@@ -555,7 +555,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>();
             _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 999,
@@ -566,7 +566,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
 
@@ -590,7 +590,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
             _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>();
             _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>
             {
-                new CommitmentModel
+                new()
                 {
                     EmployerAccountId = 1,
                     SendingEmployerAccountId = 999,
@@ -601,7 +601,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                     MonthlyInstallment = 2000,
                     NumberOfInstallments = 6,
                     CompletionAmount = 1200,
-                    FundingSource = Models.Payments.FundingSource.Transfer
+                    FundingSource = FundingSource.Transfer
                 }
             };
 
@@ -663,7 +663,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 _commitments.ReceivingEmployerTransferCommitments = new List<CommitmentModel>();
                 _commitments.SendingEmployerTransferCommitments = new List<CommitmentModel>
                 {
-                    new CommitmentModel
+                    new()
                     {
                         EmployerAccountId = 1,
                         SendingEmployerAccountId = 999,
@@ -674,7 +674,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                         MonthlyInstallment = 2000,
                         NumberOfInstallments = 6,
                         CompletionAmount = 1200,
-                        FundingSource = Models.Payments.FundingSource.Transfer
+                        FundingSource = FundingSource.Transfer
                     }
                 };
 
@@ -742,7 +742,7 @@ namespace SFA.DAS.Forecasting.Domain.UnitTests.Projection
                 MonthlyInstallment = monthlyInstallment,
                 NumberOfInstallments = 4,
                 CompletionAmount = completionAmount,
-                FundingSource = Models.Payments.FundingSource.Levy
+                FundingSource = FundingSource.Levy
             };
             _commitments = new EmployerCommitmentsModel
             {

@@ -15,327 +15,319 @@ using SFA.DAS.Forecasting.Messages.Projections;
 using SFA.DAS.Forecasting.Models.Estimation;
 using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
-namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds
+namespace SFA.DAS.Forecasting.Application.UnitTests.ExpiredFunds;
+
+[TestFixture]
+public class ExpiredFundsServiceTests
 {
+    private const long EmployerAccountId = 12345;
+    private IList<AccountProjectionModel> _accountProjectionModels;
+    private IList<LevyPeriod> _netLevyTotals;
+    private Dictionary<CalendarPeriod, decimal> _paymentTotals;
 
-    [TestFixture]
-    public class ExpiredFundsServiceTests
+    private Dictionary<CalendarPeriod, decimal> _expiredFundsIn;
+    private Dictionary<CalendarPeriod, decimal> _expiredFundsOut;
+    private List<AccountEstimationProjectionModel> _accountEstimationProjectionModels;
+    private Dictionary<CalendarPeriod, decimal> _estimatedExpiredFundsIn;
+    private Dictionary<CalendarPeriod, decimal> _estimatedExpiredFundsOut;
+
+    [SetUp]
+    public void SetUp()
     {
-        private long employerAccountId = 12345;
-        private IList<AccountProjectionModel> _accountProjectionModels;
-        private IList<LevyPeriod> _netLevyTotals;
-        private Dictionary<CalendarPeriod, decimal> _paymentTotals;
 
-        private Dictionary<CalendarPeriod, decimal> _expiredFundsIn;
-        private Dictionary<CalendarPeriod, decimal> _expiredFundsOut;
-        private List<AccountEstimationProjectionModel> _accountEstimationProjectionModels;
-        private Dictionary<CalendarPeriod, decimal> _estimatedExpiredFundsIn;
-        private Dictionary<CalendarPeriod, decimal> _estimatedExpiredFundsOut;
-
-        [SetUp]
-        public void SetUp()
-        {
-
-            #region ActualProjectionSetup
+        #region ActualProjectionSetup
 
             
-            //ProjectionModel
+        //ProjectionModel
 
-            _accountProjectionModels = new List<AccountProjectionModel>()
+        _accountProjectionModels = new List<AccountProjectionModel>()
+        {
+            new()
             {
-                new AccountProjectionModel()
+                EmployerAccountId = EmployerAccountId,
+                Month = 1,
+                Year = 2018,
+                LevyFundsIn = 1000,
+                FutureFunds = 200,
+                LevyFundedCompletionPayments = 0,
+                LevyFundedCostOfTraining = 800,
+                TransferOutCompletionPayments = 10,
+                TransferOutCostOfTraining = 5,
+                ProjectionGenerationType = ProjectionGenerationType.LevyDeclaration
+            },
+            new()
+            {
+                EmployerAccountId = EmployerAccountId,
+                Month =2,
+                Year = 2018,
+                LevyFundsIn = 1000,
+                FutureFunds = 700,
+                LevyFundedCompletionPayments = 0,
+                LevyFundedCostOfTraining = 500,
+                TransferInCompletionPayments = 100,
+                TransferInCostOfTraining = 50,
+                ProjectionGenerationType = ProjectionGenerationType.LevyDeclaration
+            },
+            new()
+            {
+                EmployerAccountId = EmployerAccountId,
+                Month = 3,
+                Year = 2018,
+                LevyFundsIn = 1000,
+                FutureFunds = -100,
+                LevyFundedCompletionPayments = 1000,
+                LevyFundedCostOfTraining = 800,
+                ProjectionGenerationType = ProjectionGenerationType.LevyDeclaration
+            },
+
+        };
+
+
+        //NetLevyTotals Object
+
+        _netLevyTotals = new List<LevyPeriod>
+        {
+            new(12345, "2016", 1,DateTime.Parse("2016-01-01"), 1000m, null),
+            new(12345, "2017", 10,DateTime.Parse("2017-10-01"), 500m, null),
+            new(12345, "2017", 11,DateTime.Parse("2017-11-01"), 800m, null),
+            new(12345, "2017", 12,DateTime.Parse("2017-12-01"), 300m, null)
+        };
+        //Payments Object
+        _paymentTotals = new Dictionary<CalendarPeriod, decimal>
+        {
+            {new CalendarPeriod(2016,1), 1000m  },
+            {new CalendarPeriod(2017,10), 500m  },
+            {new CalendarPeriod(2017,11), 800m  },
+            {new CalendarPeriod(2017,12), 300m  },
+        };
+        //
+
+        _expiredFundsIn = new Dictionary<CalendarPeriod, decimal>
+        {
+            {new CalendarPeriod(2018,1), 1000m  },
+            {new CalendarPeriod(2018,2), 1000m  },
+            {new CalendarPeriod(2018,3), 1000m  },
+            { new CalendarPeriod(2016,1), 1000m  },
+            {new CalendarPeriod(2017,10), 500m  },
+            {new CalendarPeriod(2017,11), 800m  },
+            {new CalendarPeriod(2017,12), 300m  }
+
+        };
+
+        _expiredFundsOut = new Dictionary<CalendarPeriod, decimal>
+        {
+            {new CalendarPeriod(2018,1), 815m  },
+            {new CalendarPeriod(2018,2), 500m  },
+            {new CalendarPeriod(2018,3), 1800m  },
+            { new CalendarPeriod(2016,1), 1000m  },
+            {new CalendarPeriod(2017,10), 500m  },
+            {new CalendarPeriod(2017,11), 800m  },
+            {new CalendarPeriod(2017,12), 300m  }
+
+        };
+
+
+        #endregion
+
+        #region EsitmatedProjectionSetup
+
+        _accountEstimationProjectionModels = new List<AccountEstimationProjectionModel>()
+        {
+            new()
+            {
+                Month = 1,
+                Year = 2018,
+                EstimatedProjectionBalance = 100,
+                FundsIn = 1000,
+                ActualCosts = new AccountEstimationProjectionModel.Cost()
                 {
-                    EmployerAccountId = employerAccountId,
-                    Month = 1,
-                    Year = 2018,
-                    LevyFundsIn = 1000,
-                    FutureFunds = 200,
-                    LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 800,
-                    TransferOutCompletionPayments = 10,
-                    TransferOutCostOfTraining = 5,
-                    ProjectionGenerationType = ProjectionGenerationType.LevyDeclaration
+                    LevyCompletionPayments = 0,
+                    LevyCostOfTraining = 800
                 },
-                new AccountProjectionModel()
+                AllModelledCosts = new AccountEstimationProjectionModel.Cost()
                 {
-                    EmployerAccountId = employerAccountId,
-                    Month =2,
-                    Year = 2018,
-                    LevyFundsIn = 1000,
-                    FutureFunds = 700,
-                    LevyFundedCompletionPayments = 0,
-                    LevyFundedCostOfTraining = 500,
-                    TransferInCompletionPayments = 100,
-                    TransferInCostOfTraining = 50,
-                    ProjectionGenerationType = ProjectionGenerationType.LevyDeclaration
-                },
-                new AccountProjectionModel()
-                {
-                    EmployerAccountId = employerAccountId,
-                    Month = 3,
-                    Year = 2018,
-                    LevyFundsIn = 1000,
-                    FutureFunds = -100,
-                    LevyFundedCompletionPayments = 1000,
-                    LevyFundedCostOfTraining = 800,
-                    ProjectionGenerationType = ProjectionGenerationType.LevyDeclaration
-                },
-
-            };
-
-
-            //NetLevyTotals Object
-
-            _netLevyTotals = new List<LevyPeriod>
-            {
-                new LevyPeriod(12345, "2016", 1,DateTime.Parse("2016-01-01"), 1000m, null),
-                new LevyPeriod(12345, "2017", 10,DateTime.Parse("2017-10-01"), 500m, null),
-                new LevyPeriod(12345, "2017", 11,DateTime.Parse("2017-11-01"), 800m, null),
-                new LevyPeriod(12345, "2017", 12,DateTime.Parse("2017-12-01"), 300m, null)
-            };
-            //Payments Object
-            _paymentTotals = new Dictionary<CalendarPeriod, decimal>
-            {
-                {new CalendarPeriod(2016,1), 1000m  },
-                {new CalendarPeriod(2017,10), 500m  },
-                {new CalendarPeriod(2017,11), 800m  },
-                {new CalendarPeriod(2017,12), 300m  },
-            };
-            //
-
-            _expiredFundsIn = new Dictionary<CalendarPeriod, decimal>
-            {
-                {new CalendarPeriod(2018,1), 1000m  },
-                {new CalendarPeriod(2018,2), 1000m  },
-                {new CalendarPeriod(2018,3), 1000m  },
-                { new CalendarPeriod(2016,1), 1000m  },
-                {new CalendarPeriod(2017,10), 500m  },
-                {new CalendarPeriod(2017,11), 800m  },
-                {new CalendarPeriod(2017,12), 300m  }
-
-            };
-
-            _expiredFundsOut = new Dictionary<CalendarPeriod, decimal>
-            {
-                {new CalendarPeriod(2018,1), 815m  },
-                {new CalendarPeriod(2018,2), 500m  },
-                {new CalendarPeriod(2018,3), 1800m  },
-                { new CalendarPeriod(2016,1), 1000m  },
-                {new CalendarPeriod(2017,10), 500m  },
-                {new CalendarPeriod(2017,11), 800m  },
-                {new CalendarPeriod(2017,12), 300m  }
-
-            };
-
-
-            #endregion
-
-            #region EsitmatedProjectionSetup
-
-            _accountEstimationProjectionModels = new List<AccountEstimationProjectionModel>()
-            {
-                new AccountEstimationProjectionModel()
-                {
-                    Month = 1,
-                    Year = 2018,
-                    EstimatedProjectionBalance = 100,
-                    FundsIn = 1000,
-                    ActualCosts = new AccountEstimationProjectionModel.Cost()
-                    {
-                        LevyCompletionPayments = 0,
-                        LevyCostOfTraining = 800
-                    },
-                    AllModelledCosts = new AccountEstimationProjectionModel.Cost()
-                    {
-                        LevyCostOfTraining =  100,
-                        LevyCompletionPayments = 0
-                    }
-                },
-                new AccountEstimationProjectionModel()
-                {
-                    Month = 2,
-                    Year = 2018,
-                    EstimatedProjectionBalance = 400,
-                    FundsIn = 1000,
-                    ActualCosts = new AccountEstimationProjectionModel.Cost()
-                    {
-                        LevyCompletionPayments = 0,
-                        LevyCostOfTraining = 500
-                    },
-                    AllModelledCosts = new AccountEstimationProjectionModel.Cost()
-                    {
-                        LevyCostOfTraining =  200,
-                        LevyCompletionPayments = 0
-                    }
-                },
-                new AccountEstimationProjectionModel()
-                {
-                    Month = 3,
-                    Year = 2018,
-                    EstimatedProjectionBalance = -1700,
-                    FundsIn = 1000,
-                    ActualCosts = new AccountEstimationProjectionModel.Cost()
-                    {
-                        LevyCompletionPayments = 1000,
-                        LevyCostOfTraining = 800
-                    },
-                    AllModelledCosts = new AccountEstimationProjectionModel.Cost()
-                    {
-                        LevyCostOfTraining =  300,
-                        LevyCompletionPayments = 1000
-                    }
+                    LevyCostOfTraining =  100,
+                    LevyCompletionPayments = 0
                 }
-            };
+            },
+            new()
+            {
+                Month = 2,
+                Year = 2018,
+                EstimatedProjectionBalance = 400,
+                FundsIn = 1000,
+                ActualCosts = new AccountEstimationProjectionModel.Cost()
+                {
+                    LevyCompletionPayments = 0,
+                    LevyCostOfTraining = 500
+                },
+                AllModelledCosts = new AccountEstimationProjectionModel.Cost()
+                {
+                    LevyCostOfTraining =  200,
+                    LevyCompletionPayments = 0
+                }
+            },
+            new()
+            {
+                Month = 3,
+                Year = 2018,
+                EstimatedProjectionBalance = -1700,
+                FundsIn = 1000,
+                ActualCosts = new AccountEstimationProjectionModel.Cost()
+                {
+                    LevyCompletionPayments = 1000,
+                    LevyCostOfTraining = 800
+                },
+                AllModelledCosts = new AccountEstimationProjectionModel.Cost()
+                {
+                    LevyCostOfTraining =  300,
+                    LevyCompletionPayments = 1000
+                }
+            }
+        };
 
 
            
-            _estimatedExpiredFundsIn = new Dictionary<CalendarPeriod, decimal>
-            {
-                {new CalendarPeriod(2018,1), 1000m  },
-                {new CalendarPeriod(2018,2), 1000m  },
-                {new CalendarPeriod(2018,3), 1000m  },
-                { new CalendarPeriod(2016,1), 1000m  },
-                {new CalendarPeriod(2017,10), 500m  },
-                {new CalendarPeriod(2017,11), 800m  },
-                {new CalendarPeriod(2017,12), 300m  }
-
-            };
-
-            _estimatedExpiredFundsOut = new Dictionary<CalendarPeriod, decimal>
-            {
-                {new CalendarPeriod(2018,1), 900m  },
-                {new CalendarPeriod(2018,2), 700m  },
-                {new CalendarPeriod(2018,3), 3100m  },
-                { new CalendarPeriod(2016,1), 1000m  },
-                {new CalendarPeriod(2017,10), 500m  },
-                {new CalendarPeriod(2017,11), 800m  },
-                {new CalendarPeriod(2017,12), 300m  }
-
-            };
-            #endregion
-        }
-
-        [Test]
-        public async Task Get_Expired_Funds_By_AccountId_Retrieves_NetLevyTotals()
+        _estimatedExpiredFundsIn = new Dictionary<CalendarPeriod, decimal>
         {
+            {new CalendarPeriod(2018,1), 1000m  },
+            {new CalendarPeriod(2018,2), 1000m  },
+            {new CalendarPeriod(2018,3), 1000m  },
+            { new CalendarPeriod(2016,1), 1000m  },
+            {new CalendarPeriod(2017,10), 500m  },
+            {new CalendarPeriod(2017,11), 800m  },
+            {new CalendarPeriod(2017,12), 300m  }
+
+        };
+
+        _estimatedExpiredFundsOut = new Dictionary<CalendarPeriod, decimal>
+        {
+            {new CalendarPeriod(2018,1), 900m  },
+            {new CalendarPeriod(2018,2), 700m  },
+            {new CalendarPeriod(2018,3), 3100m  },
+            { new CalendarPeriod(2016,1), 1000m  },
+            {new CalendarPeriod(2017,10), 500m  },
+            {new CalendarPeriod(2017,11), 800m  },
+            {new CalendarPeriod(2017,12), 300m  }
+
+        };
+        #endregion
+    }
+
+    [Test]
+    public async Task Get_Expired_Funds_By_AccountId_Retrieves_NetLevyTotals()
+    {
             
-            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
-            var levyDataSession = new Mock<ILevyDataSession>();
-            employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
+        var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+        var levyDataSession = new Mock<ILevyDataSession>();
+        employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
 
-            var sut = new ExpiredFundsService(Mock.Of<IExpiredFunds>(), levyDataSession.Object, employerPaymentDataSession.Object);
+        var sut = new ExpiredFundsService(Mock.Of<IExpiredFunds>(), levyDataSession.Object, employerPaymentDataSession.Object);
             
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018,10,21));
+        await sut.GetExpiringFunds(_accountProjectionModels, EmployerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018,10,21));
 
-            levyDataSession.Verify(v => v.GetAllNetTotals(employerAccountId));
-        }
+        levyDataSession.Verify(v => v.GetAllNetTotals(EmployerAccountId));
+    }
 
-        [Test]
-        public async Task Get_Expired_Funds_By_AccountId_Retrieves_PaymentTotals()
-        {
-            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
-            var levyDataSession = new Mock<ILevyDataSession>();
-            employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
-            var sut = new ExpiredFundsService(Mock.Of<IExpiredFunds>(), levyDataSession.Object, employerPaymentDataSession.Object);
+    [Test]
+    public async Task Get_Expired_Funds_By_AccountId_Retrieves_PaymentTotals()
+    {
+        var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+        var levyDataSession = new Mock<ILevyDataSession>();
+        employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
+        var sut = new ExpiredFundsService(Mock.Of<IExpiredFunds>(), levyDataSession.Object, employerPaymentDataSession.Object);
             
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
+        await sut.GetExpiringFunds(_accountProjectionModels, EmployerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
-            employerPaymentDataSession.Verify(v => v.GetPaymentTotals(employerAccountId));
-        }
+        employerPaymentDataSession.Verify(v => v.GetPaymentTotals(EmployerAccountId));
+    }
 
-        [Test]
-        public async Task Get_Expired_Funds_By_AccountId_Calculates_ExpiredFunds()
-        {
-            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
-            var expiredFunds = new Mock<IExpiredFunds>();
-            employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
-            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), employerPaymentDataSession.Object);
+    [Test]
+    public async Task Get_Expired_Funds_By_AccountId_Calculates_ExpiredFunds()
+    {
+        var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+        var expiredFunds = new Mock<IExpiredFunds>();
+        employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
+        var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), employerPaymentDataSession.Object);
 
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
+        await sut.GetExpiringFunds(_accountProjectionModels, EmployerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
-            expiredFunds.Verify(v => v.GetExpiringFunds(It.IsAny<Dictionary<CalendarPeriod, decimal>>(), It.IsAny<Dictionary<CalendarPeriod, decimal>>(), null, 24));
-        }
+        expiredFunds.Verify(v => v.GetExpiringFunds(It.IsAny<Dictionary<CalendarPeriod, decimal>>(), It.IsAny<Dictionary<CalendarPeriod, decimal>>(), null, 24));
+    }
 
-        [Test]
-        public void Get_Expired_Funds_Calculates_ExpiredFunds()
-        {
+    [Test]
+    public void Get_Expired_Funds_Calculates_ExpiredFunds()
+    {
             
-            var expiredFunds = new Mock<IExpiredFunds>();
+        var expiredFunds = new Mock<IExpiredFunds>();
 
-            IDictionary<CalendarPeriod, decimal> calledFundIn = null;
-            IDictionary<CalendarPeriod, decimal> calledFundOut = null;
-            IDictionary<CalendarPeriod, decimal> calledExpired = null;
-            var calledMonths = 0;
+        IDictionary<CalendarPeriod, decimal> calledFundIn = null;
+        IDictionary<CalendarPeriod, decimal> calledFundOut = null;
+        IDictionary<CalendarPeriod, decimal> calledExpired = null;
+        var calledMonths = 0;
 
-            expiredFunds.Setup(s => s.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(), It.IsAny<IDictionary<CalendarPeriod, decimal>>(), null, 24))
-                                        .Callback<IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, int>(
-                                                        (fundsIn, fundsOut, expired, months) =>
-                                                        {
-                                                            calledFundIn = fundsIn;
-                                                            calledFundOut = fundsOut;
-                                                            calledExpired = expired;
-                                                            calledMonths = months;
-                                                        });
+        expiredFunds.Setup(s => s.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(), It.IsAny<IDictionary<CalendarPeriod, decimal>>(), null, 24))
+            .Callback<IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, int>(
+                (fundsIn, fundsOut, expired, months) =>
+                {
+                    calledFundIn = fundsIn;
+                    calledFundOut = fundsOut;
+                    calledExpired = expired;
+                    calledMonths = months;
+                });
 
-            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), Mock.Of<IEmployerPaymentDataSession>());
+        var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), Mock.Of<IEmployerPaymentDataSession>());
             
-            sut.GetExpiringFunds(_accountProjectionModels, _netLevyTotals, _paymentTotals, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
+        sut.GetExpiringFunds(_accountProjectionModels, _netLevyTotals, _paymentTotals, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
 
-            calledFundIn.Should().BeEquivalentTo(_expiredFundsIn);    
-            calledFundOut.Should().BeEquivalentTo(_expiredFundsOut.Skip(1));
-            calledExpired.Should().BeEquivalentTo(calledExpired);
-            calledMonths.Should().Be(24);
+        calledFundIn.Should().BeEquivalentTo(_expiredFundsIn);    
+        calledFundOut.Should().BeEquivalentTo(_expiredFundsOut.Skip(1));
+        calledExpired.Should().BeEquivalentTo(calledExpired);
+        calledMonths.Should().Be(24);
 
-        }
+    }
 
-        [Test]
-        public async Task Get_Estimated_Expired_Funds_Calculates_ExpiredFunds()
-        {
-            var expiredFunds = new Mock<IExpiredFunds>();
+    [Test]
+    public void Get_Estimated_Expired_Funds_Calculates_ExpiredFunds()
+    {
+        var expiredFunds = new Mock<IExpiredFunds>();
 
-            IDictionary<CalendarPeriod, decimal> calledFundIn = null;
-            IDictionary<CalendarPeriod, decimal> calledFundOut = null;
-            IDictionary<CalendarPeriod, decimal> calledExpired = null;
-            int calledMonths = 0;
+        IDictionary<CalendarPeriod, decimal> calledFundIn = null;
+        IDictionary<CalendarPeriod, decimal> calledFundOut = null;
+        IDictionary<CalendarPeriod, decimal> calledExpired = null;
+        var calledMonths = 0;
 
-            expiredFunds.Setup(s => s.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(), It.IsAny<IDictionary<CalendarPeriod, decimal>>(), null, 24))
-                .Callback<IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, int>(
-                    (fundsIn, fundsOut, expired, months) =>
-                    {
-                        calledFundIn = fundsIn;
-                        calledFundOut = fundsOut;
-                        calledExpired = expired;
-                        calledMonths = months;
-                    });
-            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), Mock.Of<IEmployerPaymentDataSession>());
+        expiredFunds.Setup(s => s.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(), It.IsAny<IDictionary<CalendarPeriod, decimal>>(), null, 24))
+            .Callback<IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, IDictionary<CalendarPeriod, decimal>, int>(
+                (fundsIn, fundsOut, expired, months) =>
+                {
+                    calledFundIn = fundsIn;
+                    calledFundOut = fundsOut;
+                    calledExpired = expired;
+                    calledMonths = months;
+                });
+        var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), Mock.Of<IEmployerPaymentDataSession>());
 
-            var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.AsReadOnly(), _netLevyTotals, _paymentTotals,ProjectionGenerationType.LevyDeclaration,new DateTime(2018,09,24));
+        var expiringFunds = sut.GetExpiringFunds(_accountEstimationProjectionModels.AsReadOnly(), _netLevyTotals, _paymentTotals,ProjectionGenerationType.LevyDeclaration,new DateTime(2018,09,24));
 
+        calledFundIn.Should().BeEquivalentTo(_estimatedExpiredFundsIn);
+        calledFundOut.Should().BeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
+        calledExpired.Should().BeEquivalentTo(expiringFunds);
+        calledMonths.Should().Be(24);
+    }
 
-            calledFundIn.Should().BeEquivalentTo(_estimatedExpiredFundsIn);
-            calledFundOut.Should().BeEquivalentTo(_estimatedExpiredFundsOut.Skip(1));
-            calledExpired.Should().BeEquivalentTo(expiringFunds);
-            calledMonths.Should().Be(24);
+    [Test]
+    public async Task Then_TransferIn_Costs_Are_Excluded_And_TransferOut_Costs_Included_With_Payment_Totals()
+    {
+        var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
+        employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
+        var expiredFunds = new Mock<IExpiredFunds>();
 
-        }
+        var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), employerPaymentDataSession.Object);
 
-		[Test]
-        public async Task Then_TransferIn_Costs_Are_Excluded_And_TransferOut_Costs_Included_With_Payment_Totals()
-        {
+        await sut.GetExpiringFunds(_accountProjectionModels, EmployerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
 
-            var employerPaymentDataSession = new Mock<IEmployerPaymentDataSession>();
-            employerPaymentDataSession.Setup(s => s.GetPaymentTotals(12345)).ReturnsAsync(_paymentTotals);
-            var expiredFunds = new Mock<IExpiredFunds>();
-
-            var sut = new ExpiredFundsService(expiredFunds.Object, Mock.Of<ILevyDataSession>(), employerPaymentDataSession.Object);
-
-            await sut.GetExpiringFunds(_accountProjectionModels, employerAccountId, ProjectionSource.LevyDeclaration, new DateTime(2018, 10, 22));
-
-            expiredFunds.Verify(x=>x.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(),It.Is<IDictionary<CalendarPeriod, decimal>>(c=>c.Values.Sum().Equals(4900m)),null,24));
-        }
-
-
-
+        expiredFunds.Verify(x=>x.GetExpiringFunds(It.IsAny<IDictionary<CalendarPeriod, decimal>>(),It.Is<IDictionary<CalendarPeriod, decimal>>(c=>c.Values.Sum().Equals(4900m)),null,24));
     }
 }
