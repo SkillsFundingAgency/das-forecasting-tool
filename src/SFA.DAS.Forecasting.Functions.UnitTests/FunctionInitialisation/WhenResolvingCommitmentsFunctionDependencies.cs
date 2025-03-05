@@ -28,7 +28,7 @@ public class WhenResolvingCommitmentsFunctionDependencies
         Assert.IsNotNull(type);
     }
 
-    private void SetupServiceCollection(ServiceCollection serviceCollection)
+    private static void SetupServiceCollection(ServiceCollection serviceCollection)
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration

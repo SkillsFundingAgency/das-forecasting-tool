@@ -12,14 +12,14 @@ public static class ConfigurationTestHelper
         {
             InitialData = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
-                new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
-                new KeyValuePair<string, string>("ForecastingConnectionStrings:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
-                new KeyValuePair<string, string>("ForecastingConnectionStrings:ForecastingConnectionString", "test"),
-                new KeyValuePair<string, string>("ForecastingJobsConfiguration:StorageConnectionString", "UseDevelopmentStorage=true;"),
-                new KeyValuePair<string, string>("PaymentsEventsApiConfiguration:ApiBaseUrl", "https://localhost:2"),
-                new KeyValuePair<string, string>("EnvironmentName", "test"),
-                new KeyValuePair<string, string>("SFA.DAS.Encoding", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}")
+                new("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
+                new("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
+                new("ForecastingConnectionStrings:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
+                new("ForecastingConnectionStrings:ForecastingConnectionString", "test"),
+                new("ForecastingJobsConfiguration:StorageConnectionString", "UseDevelopmentStorage=true;"),
+                new("PaymentsEventsApiConfiguration:ApiBaseUrl", "https://localhost:2"),
+                new("EnvironmentName", "test"),
+                new("SFA.DAS.Encoding", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}")
             }
         };
 

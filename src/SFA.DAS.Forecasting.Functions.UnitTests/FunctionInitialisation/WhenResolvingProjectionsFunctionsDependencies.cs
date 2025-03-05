@@ -15,7 +15,6 @@ public class WhenResolvingProjectionsFunctionsDependencies
     [TestCase(typeof(IGetAccountBalanceHandler))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Handlers(Type toResolve)
     {
-        
         var serviceCollection = new ServiceCollection();
         
         SetupServiceCollection(serviceCollection);
@@ -25,7 +24,7 @@ public class WhenResolvingProjectionsFunctionsDependencies
         Assert.IsNotNull(type);
     }
 
-    private void SetupServiceCollection(ServiceCollection serviceCollection)
+    private static void SetupServiceCollection(ServiceCollection serviceCollection)
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration
@@ -34,7 +33,6 @@ public class WhenResolvingProjectionsFunctionsDependencies
         serviceCollection.AddConfiguration(configuration);
         serviceCollection.AddServices();
         serviceCollection.AddLogging();
-        //serviceCollection.AddCosmosDbServices(forecastingJobsConfiguration.CosmosDbConnectionString, false);
         serviceCollection.AddDatabaseRegistration(forecastingJobsConfiguration.DatabaseConnectionString, configuration["EnvironmentName"]);
     }
 }

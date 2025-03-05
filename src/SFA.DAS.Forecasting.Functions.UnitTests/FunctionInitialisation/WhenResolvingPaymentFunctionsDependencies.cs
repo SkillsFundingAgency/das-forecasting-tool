@@ -20,7 +20,6 @@ public class WhenResolvingPaymentFunctionsDependencies
     [TestCase(typeof(IValidator<PaymentCreatedMessage>))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Handlers(Type toResolve)
     {
-        
         var serviceCollection = new ServiceCollection();
         
         SetupServiceCollection(serviceCollection);
@@ -30,7 +29,7 @@ public class WhenResolvingPaymentFunctionsDependencies
         Assert.IsNotNull(type);
     }
 
-    private void SetupServiceCollection(ServiceCollection serviceCollection)
+    private static void SetupServiceCollection(ServiceCollection serviceCollection)
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration

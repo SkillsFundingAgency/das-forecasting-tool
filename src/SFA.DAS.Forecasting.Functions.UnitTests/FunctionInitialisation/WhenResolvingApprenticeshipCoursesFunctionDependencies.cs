@@ -11,7 +11,6 @@ namespace SFA.DAS.Forecasting.Functions.UnitTests.FunctionInitialisation;
 
 public class WhenResolvingApprenticeshipCoursesFunctionDependencies
 {
-    
     [TestCase(typeof(IStoreCourseHandler))]
     [TestCase(typeof(IGetCoursesHandler))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Handlers(Type toResolve)
@@ -26,7 +25,7 @@ public class WhenResolvingApprenticeshipCoursesFunctionDependencies
         Assert.IsNotNull(type);
     }
 
-    private void SetupServiceCollection(ServiceCollection serviceCollection)
+    private static void SetupServiceCollection(ServiceCollection serviceCollection)
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration

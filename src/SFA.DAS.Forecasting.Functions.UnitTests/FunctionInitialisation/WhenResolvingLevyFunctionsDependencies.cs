@@ -6,8 +6,8 @@ using NUnit.Framework;
 using SFA.DAS.Forecasting.Application.Infrastructure.RegistrationExtensions;
 using SFA.DAS.Forecasting.Application.Levy.Handlers;
 using SFA.DAS.Forecasting.Application.Levy.Messages;
-using SFA.DAS.Forecasting.Levy.Functions.StartupExtensions;
 using SFA.DAS.Forecasting.Core.Configuration;
+using SFA.DAS.Forecasting.Levy.Functions.StartupExtensions;
 
 namespace SFA.DAS.Forecasting.Functions.UnitTests.FunctionInitialisation;
 
@@ -18,7 +18,6 @@ public class WhenResolvingLevyFunctionsDependencies
     [TestCase(typeof(IValidator<LevySchemeDeclarationUpdatedMessage>))]
     public void Then_The_Dependencies_Are_Correctly_Resolved_For_Handlers(Type toResolve)
     {
-        
         var serviceCollection = new ServiceCollection();
         
         SetupServiceCollection(serviceCollection);
@@ -28,7 +27,7 @@ public class WhenResolvingLevyFunctionsDependencies
         Assert.IsNotNull(type);
     }
 
-    private void SetupServiceCollection(ServiceCollection serviceCollection)
+    private static void SetupServiceCollection(ServiceCollection serviceCollection)
     {
         var configuration = ConfigurationTestHelper.GenerateConfiguration();
         var forecastingJobsConfiguration = configuration
