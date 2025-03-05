@@ -71,13 +71,13 @@ public class WhenPopulatingAccountClaims
         actual.FirstOrDefault(c=>c.Type.Equals(ClaimTypes.AuthorizationDecision)).Value.Should().Be("Suspended");
     }
 
-    private TokenValidatedContext ArrangeTokenValidatedContext(string nameIdentifier, string idamsIdentifier, string emailAddress)
+    private static TokenValidatedContext ArrangeTokenValidatedContext(string nameIdentifier, string idamsIdentifier, string emailAddress)
     {
         var identity = new ClaimsIdentity(new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, nameIdentifier),
-            new Claim(EmployerClaims.IdamsUserIdClaimTypeIdentifier, idamsIdentifier),
-            new Claim(ClaimTypes.Email, emailAddress)
+            new(ClaimTypes.NameIdentifier, nameIdentifier),
+            new(EmployerClaims.IdamsUserIdClaimTypeIdentifier, idamsIdentifier),
+            new(ClaimTypes.Email, emailAddress)
         });
         
         var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(identity));

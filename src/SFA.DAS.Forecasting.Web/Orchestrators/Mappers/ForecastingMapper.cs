@@ -19,7 +19,6 @@ public interface IForecastingMapper
 
 public class ForecastingMapper : IForecastingMapper
 {
-        
     public List<ProjectiontemViewModel> MapProjections(IEnumerable<AccountProjectionModel> data)
     {
         return data.Select(x =>

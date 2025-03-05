@@ -21,78 +21,80 @@ namespace SFA.DAS.Forecasting.Web.UnitTests.AppStart;
 
 public class WhenAddingServicesToTheContainer
 {
-        [TestCase(typeof(IEstimationOrchestrator))]
-        [TestCase(typeof(IAddApprenticeshipOrchestrator))]
-        [TestCase(typeof(IForecastingOrchestrator))]
-        [TestCase(typeof(ICustomClaims))]
-        public void Then_The_Dependencies_Are_Correctly_Resolved_For_Orchestrators(Type toResolve)
-        {
-            var serviceCollection = new ServiceCollection();
-            SetupServiceCollection(serviceCollection);
-            var provider = serviceCollection.BuildServiceProvider();
+    [TestCase(typeof(IEstimationOrchestrator))]
+    [TestCase(typeof(IAddApprenticeshipOrchestrator))]
+    [TestCase(typeof(IForecastingOrchestrator))]
+    [TestCase(typeof(ICustomClaims))]
+    public void Then_The_Dependencies_Are_Correctly_Resolved_For_Orchestrators(Type toResolve)
+    {
+        var serviceCollection = new ServiceCollection();
+        SetupServiceCollection(serviceCollection);
+        var provider = serviceCollection.BuildServiceProvider();
 
-            var type = provider.GetService(toResolve);
-            Assert.IsNotNull(type);
-        }
+        var type = provider.GetService(toResolve);
+        Assert.IsNotNull(type);
+    }
+
+    [Test]
+    public void Then_Resolves_Authorization_Handlers()
+    {
+        var serviceCollection = new ServiceCollection();
+        SetupServiceCollection(serviceCollection);
+        var provider = serviceCollection.BuildServiceProvider();
+
+        var type = provider.GetServices(typeof(IAuthorizationHandler)).ToList();
+
+        Assert.IsNotNull(type);
+        type.Count.Should().Be(2);
+        type.Should().ContainSingle(c => c.GetType() == typeof(EmployerAccountAuthorizationHandler));
+    }
+
+    private static void SetupServiceCollection(ServiceCollection serviceCollection)
+    {
+        var configuration = GenerateConfiguration();
+        var forecastingConfiguration = configuration
+            .GetSection("ForecastingConfiguration")
+            .Get<ForecastingConfiguration>();
         
-        [Test]
-        public void Then_Resolves_Authorization_Handlers()
-        {
-            var serviceCollection = new ServiceCollection();
-            SetupServiceCollection(serviceCollection);
-            var provider = serviceCollection.BuildServiceProvider();
-            
-            var type = provider.GetServices(typeof(IAuthorizationHandler)).ToList();
-            
-            Assert.IsNotNull(type);
-            type.Count.Should().Be(2);
-            type.Should().ContainSingle(c => c.GetType() == typeof(EmployerAccountAuthorizationHandler));
-        }
+        var forecastingConnectionStrings = configuration
+            .GetSection("ForecastingConnectionStrings")
+            .Get<ForecastingConnectionStrings>();
+        
+        var hostEnvironment = new Mock<IWebHostEnvironment>();
+        serviceCollection.AddSingleton(hostEnvironment.Object);
+        serviceCollection.AddSingleton(Mock.Of<IConfiguration>());
+        serviceCollection.AddConfigurationOptions(configuration);
+        serviceCollection.AddDistributedMemoryCache();
+        serviceCollection.AddAuthenticationServices();
+        serviceCollection.AddApplicationServices(forecastingConfiguration);
+        serviceCollection.AddDomainServices();
+        serviceCollection.AddOrchestrators();
+        serviceCollection.AddCosmosDbServices(forecastingConnectionStrings.CosmosDbConnectionString, false);
 
-        private void SetupServiceCollection(ServiceCollection serviceCollection)
-        {
-            var configuration = GenerateConfiguration();
-            var forecastingConfiguration = configuration
-                .GetSection("ForecastingConfiguration")
-                .Get<ForecastingConfiguration>();
-            var forecastingConnectionStrings = configuration
-                .GetSection("ForecastingConnectionStrings")
-                .Get<ForecastingConnectionStrings>();
-            var hostEnvironment = new Mock<IWebHostEnvironment>();
-            serviceCollection.AddSingleton(hostEnvironment.Object);
-            serviceCollection.AddSingleton(Mock.Of<IConfiguration>());
-            serviceCollection.AddConfigurationOptions(configuration);
-            serviceCollection.AddDistributedMemoryCache();
-            serviceCollection.AddAuthenticationServices();
-            serviceCollection.AddApplicationServices(forecastingConfiguration);
-            serviceCollection.AddDomainServices();
-            serviceCollection.AddOrchestrators();
-            serviceCollection.AddCosmosDbServices(forecastingConnectionStrings.CosmosDbConnectionString, false);
-            
-            serviceCollection.AddDatabaseRegistration(forecastingConnectionStrings.DatabaseConnectionString, configuration["EnvironmentName"]);
-            serviceCollection.AddLogging();
-        }
+        serviceCollection.AddDatabaseRegistration(forecastingConnectionStrings.DatabaseConnectionString, configuration["EnvironmentName"]);
+        serviceCollection.AddLogging();
+    }
 
-        private static IConfigurationRoot GenerateConfiguration()
+    private static IConfigurationRoot GenerateConfiguration()
+    {
+        var configSource = new MemoryConfigurationSource
         {
-            var configSource = new MemoryConfigurationSource
+            InitialData = new List<KeyValuePair<string, string>>
             {
-                InitialData = new List<KeyValuePair<string, string>>
-                {
-                    new KeyValuePair<string, string>("ForecastingConnectionStrings:DatabaseConnectionString", "Server=tcp:test.server.net,1433;Initial Catalog=test-db;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"),
-                    new KeyValuePair<string, string>("ForecastingConfiguration:AllowedCharacters", "ABCDEFGHJKLMN12345"),
-                    new KeyValuePair<string, string>("ForecastingConfiguration:HashString", "ABC123"),
-                    new KeyValuePair<string, string>("ForecastingConnectionStrings:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
-                    new KeyValuePair<string, string>("AccountApiConfiguration:ApiBaseUrl", "https://localhost:1"),
-                    new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
-                    new KeyValuePair<string, string>("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
-                    new KeyValuePair<string, string>("EnvironmentName", "test"),
-                    new KeyValuePair<string, string>("SFA.DAS.Encoding", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}")
-                }
-            };
+                new("ForecastingConnectionStrings:DatabaseConnectionString", "Server=tcp:test.server.net,1433;Initial Catalog=test-db;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"),
+                new("ForecastingConfiguration:AllowedCharacters", "ABCDEFGHJKLMN12345"),
+                new("ForecastingConfiguration:HashString", "ABC123"),
+                new("ForecastingConnectionStrings:CosmosDbConnectionString", "AccountEndpoint=https://localhost:8081;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==;Database=Forecasting;Collection=ForecastingDev;ThroughputOffer=400"),
+                new("AccountApiConfiguration:ApiBaseUrl", "https://localhost:1"),
+                new("OuterApiConfiguration:OuterApiApiBaseUri", "https://localhost:1"),
+                new("OuterApiConfiguration:OuterApiSubscriptionKey", "test"),
+                new("EnvironmentName", "test"),
+                new("SFA.DAS.Encoding", "{'Encodings':[{'EncodingType':'AccountId','Salt':'test','MinHashLength':6,'Alphabet':'46789BCDFGHJKLMNPRSTVWXY'}]}")
+            }
+        };
 
-            var provider = new MemoryConfigurationProvider(configSource);
+        var provider = new MemoryConfigurationProvider(configSource);
 
-            return new ConfigurationRoot(new List<IConfigurationProvider> { provider });
-        }
+        return new ConfigurationRoot(new List<IConfigurationProvider> { provider });
+    }
 }
