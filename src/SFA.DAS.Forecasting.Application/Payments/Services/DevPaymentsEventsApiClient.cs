@@ -7,54 +7,53 @@ using SFA.DAS.Provider.Events.Api.Client;
 using SFA.DAS.Provider.Events.Api.Client.Configuration;
 using SFA.DAS.Provider.Events.Api.Types;
 
-namespace SFA.DAS.Forecasting.Application.Payments.Services
+namespace SFA.DAS.Forecasting.Application.Payments.Services;
+
+public class DevPaymentsEventsApiClient: IPaymentsEventsApiClient
 {
-    public class DevPaymentsEventsApiClient: IPaymentsEventsApiClient
+    private readonly IPaymentsEventsApiClientConfiguration _configuration;
+    private static readonly HttpClient HttpClient = new HttpClient();
+    private readonly Uri _uri;
+    public DevPaymentsEventsApiClient(IPaymentsEventsApiClientConfiguration configuration)
     {
-        private readonly IPaymentsEventsApiClientConfiguration _configuration;
-        private static readonly HttpClient HttpClient = new HttpClient();
-        private readonly Uri _uri;
-        public DevPaymentsEventsApiClient(IPaymentsEventsApiClientConfiguration configuration)
-        {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _uri = new Uri(configuration.ApiBaseUrl);
-        }
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _uri = new Uri(configuration.ApiBaseUrl);
+    }
 
-        public Task<PeriodEnd[]> GetPeriodEnds()
-        {
-            throw new NotImplementedException();
-        }
+    public Task<PeriodEnd[]> GetPeriodEnds()
+    {
+        throw new NotImplementedException();
+    }
 
-        public async Task<PageOfResults<Payment>> GetPayments(string periodId = null, string employerAccountId = null, int page = 1, long? ukprn = null)
-        {
-            var uri = $"{_configuration.ApiBaseUrl}api/payments?page={page}&periodId={periodId}&employerAccountId={employerAccountId}&ukprn={ukprn}&code={0}";//TODO FAI-625
-            return JsonConvert.DeserializeObject<PageOfResults<Payment>>(await HttpClient.GetStringAsync(uri));
-        }
+    public async Task<PageOfResults<Payment>> GetPayments(string periodId = null, string employerAccountId = null, int page = 1, long? ukprn = null)
+    {
+        var uri = $"{_configuration.ApiBaseUrl}api/payments?page={page}&periodId={periodId}&employerAccountId={employerAccountId}&ukprn={ukprn}&code={0}";//TODO FAI-625
+        return JsonConvert.DeserializeObject<PageOfResults<Payment>>(await HttpClient.GetStringAsync(uri));
+    }
 
-        public Task<PageOfResults<AccountTransfer>> GetTransfers(string periodId = null, long? senderAccountId = null, long? receiverAccountId = null, int page = 1)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<PageOfResults<AccountTransfer>> GetTransfers(string periodId = null, long? senderAccountId = null, long? receiverAccountId = null, int page = 1)
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task<PageOfResults<SubmissionEvent>> GetSubmissionEvents(long sinceEventId = 0, DateTime? sinceTime = null, long ukprn = 0, int page = 1)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<PageOfResults<SubmissionEvent>> GetSubmissionEvents(long sinceEventId = 0, DateTime? sinceTime = null, long ukprn = 0, int page = 1)
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task<List<SubmissionEvent>> GetLatestLearnerEventForStandards(long uln, long sinceEventId = 0)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<List<SubmissionEvent>> GetLatestLearnerEventForStandards(long uln, long sinceEventId = 0)
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task<PageOfResults<DataLockEvent>> GetDataLockEvents(long sinceEventId = 0, DateTime? sinceTime = null, string employerAccountId = null,
-            long ukprn = 0, int page = 1)
-        {
-            throw new NotImplementedException();
-        }
+    public Task<PageOfResults<DataLockEvent>> GetDataLockEvents(long sinceEventId = 0, DateTime? sinceTime = null, string employerAccountId = null,
+        long ukprn = 0, int page = 1)
+    {
+        throw new NotImplementedException();
+    }
 
-        public Task<PaymentStatistics> GetPaymentStatistics()
-        {
-            throw new NotImplementedException();
-        }
+    public Task<PaymentStatistics> GetPaymentStatistics()
+    {
+        throw new NotImplementedException();
     }
 }

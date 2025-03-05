@@ -5,46 +5,45 @@ using System.Threading.Tasks;
 using SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
 using SFA.DAS.Forecasting.Models.Estimation;
 
-namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
+namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+
+public interface IApprenticeshipCourseDataService
 {
-    public interface IApprenticeshipCourseDataService
+    List<ApprenticeshipCourse> GetAllStandardApprenticeshipCourses();
+    List<ApprenticeshipCourse> GetAllApprenticeshipCourses();
+    Task<ApprenticeshipCourse> GetApprenticeshipCourse(string courseId);
+    Task Store(ApprenticeshipCourse course);
+}
+
+public class ApprenticeshipCourseDataService: IApprenticeshipCourseDataService
+{
+    private readonly IDocumentSession _documentSession;
+
+    public ApprenticeshipCourseDataService(IDocumentSession documentSession)
     {
-        List<ApprenticeshipCourse> GetAllStandardApprenticeshipCourses();
-        List<ApprenticeshipCourse> GetAllApprenticeshipCourses();
-        Task<ApprenticeshipCourse> GetApprenticeshipCourse(string courseId);
-        Task Store(ApprenticeshipCourse course);
+        _documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
     }
 
-    public class ApprenticeshipCourseDataService: IApprenticeshipCourseDataService
+    public List<ApprenticeshipCourse> GetAllStandardApprenticeshipCourses()
     {
-        private readonly IDocumentSession _documentSession;
+        return _documentSession.CreateQuery<ApprenticeshipCourse>()
+            .Where(course => course.CourseType == ApprenticeshipCourseType.Standard)
+            .ToList();
+    }
 
-        public ApprenticeshipCourseDataService(IDocumentSession documentSession)
-        {
-            _documentSession = documentSession ?? throw new ArgumentNullException(nameof(documentSession));
-        }
+    public List<ApprenticeshipCourse> GetAllApprenticeshipCourses()
+    {
+        return _documentSession.CreateQuery<ApprenticeshipCourse>()
+            .ToList();
+    }
 
-        public List<ApprenticeshipCourse> GetAllStandardApprenticeshipCourses()
-        {
-            return _documentSession.CreateQuery<ApprenticeshipCourse>()
-                .Where(course => course.CourseType == ApprenticeshipCourseType.Standard)
-                .ToList();
-        }
+    public async Task<ApprenticeshipCourse> GetApprenticeshipCourse(string courseId)
+    {
+        return await _documentSession.Get<ApprenticeshipCourse>(courseId);
+    }
 
-        public List<ApprenticeshipCourse> GetAllApprenticeshipCourses()
-        {
-            return _documentSession.CreateQuery<ApprenticeshipCourse>()
-                .ToList();
-        }
-
-        public async Task<ApprenticeshipCourse> GetApprenticeshipCourse(string courseId)
-        {
-            return await _documentSession.Get<ApprenticeshipCourse>(courseId);
-        }
-
-        public async Task Store(ApprenticeshipCourse course)
-        {
-            await _documentSession.Store(course);
-        }
+    public async Task Store(ApprenticeshipCourse course)
+    {
+        await _documentSession.Store(course);
     }
 }

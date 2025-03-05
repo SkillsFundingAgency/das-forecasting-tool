@@ -1,7 +1,7 @@
 ﻿    using System.Data.Common;
 
-namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
-{
+    namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence;
+
     public class DocumentSessionConnectionString: DbConnectionStringBuilder
     {
         public string Database { get => (string)this["Database"]; set => this["Database"] = value; }
@@ -10,4 +10,3 @@ namespace SFA.DAS.Forecasting.Application.Infrastructure.Persistence
         public string Collection { get => (string)this["Collection"]; set => this["Collection"] = value; }
         public string ThroughputOffer { get => (string)this["ThroughputOffer"]; set => this["ThroughputOffer"] = value; }
     }
-}

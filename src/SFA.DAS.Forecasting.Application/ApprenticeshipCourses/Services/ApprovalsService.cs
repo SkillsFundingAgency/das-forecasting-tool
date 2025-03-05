@@ -6,89 +6,88 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Forecasting.Application.Infrastructure.OuterApi;
 using GetApprenticeshipsResponse = SFA.DAS.Forecasting.Application.Infrastructure.OuterApi.GetApprenticeshipsResponse;
 
-namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services
+namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Services;
+
+public interface IApprovalsService
 {
-    public interface IApprovalsService
+    Task<List<Models.Approvals.Apprenticeship>> GetApprenticeships(long employerAccountId);
+    Task<List<long>> GetEmployerAccountIds();
+}
+
+public class ApprovalsService : IApprovalsService
+{
+    private readonly IApiClient _apiClient;
+    private readonly ILogger<ApprovalsService> _logger;
+    public const int PageSize = 500;
+
+    public ApprovalsService(IApiClient apiClient, ILogger<ApprovalsService> logger)
     {
-        Task<List<Models.Approvals.Apprenticeship>> GetApprenticeships(long employerAccountId);
-        Task<List<long>> GetEmployerAccountIds();
+        _apiClient = apiClient;
+        _logger = logger;
     }
 
-    public class ApprovalsService : IApprovalsService
+    public async Task<List<Models.Approvals.Apprenticeship>> GetApprenticeships(long employerAccountId)
     {
-        private readonly IApiClient _apiClient;
-        private readonly ILogger<ApprovalsService> _logger;
-        public const int PageSize = 500;
+        _logger.LogInformation($"Getting apprenticeships for account {employerAccountId}");
 
-        public ApprovalsService(IApiClient apiClient, ILogger<ApprovalsService> logger)
+        var waitingToStart = await GetApprenticeshipsForStatus(employerAccountId, GetApprenticeshipsApiRequest.ApprenticeshipStatus.WaitingToStart);
+        var live = await GetApprenticeshipsForStatus(employerAccountId, GetApprenticeshipsApiRequest.ApprenticeshipStatus.Live);
+
+        var all = waitingToStart.Union(live).ToList();
+
+        _logger.LogInformation($"Retrieved {all.Count} apprenticeships for account {employerAccountId}");
+
+        return all.Select(x => new Models.Approvals.Apprenticeship
         {
-            _apiClient = apiClient;
-            _logger = logger;
-        }
+            Id = x.Id,
+            EmployerAccountId = employerAccountId,
+            TransferSenderId = x.TransferSenderId,
+            Uln = x.Uln,
+            ProviderId = x.ProviderId,
+            ProviderName = x.ProviderName,
+            FirstName = x.FirstName,
+            LastName = x.LastName,
+            CourseCode = x.CourseCode,
+            CourseName = x.CourseName,
+            CourseLevel = x.CourseLevel,
+            StartDate = x.StartDate,
+            EndDate = x.EndDate,
+            Cost = x.Cost,
+            HasHadDataLockSuccess = x.HasHadDataLockSuccess,
+            PledgeApplicationId = x.PledgeApplicationId
+        }).ToList();
+    }
 
-        public async Task<List<Models.Approvals.Apprenticeship>> GetApprenticeships(long employerAccountId)
+    private async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForStatus(long employerAccountId, short status)
+    {
+        var apiRequest = new GetApprenticeshipsApiRequest(employerAccountId, status, 1, PageSize);
+        var response = await _apiClient.Get<GetApprenticeshipsResponse>(apiRequest);
+
+        var pageNumber = 2;
+
+        var totalPages = (int)Math.Ceiling((double)response.TotalApprenticeshipsFound / PageSize);
+
+        var apprenticeships = response.Apprenticeships.ToList();
+
+        if (totalPages > 1)
         {
-            _logger.LogInformation($"Getting apprenticeships for account {employerAccountId}");
-
-            var waitingToStart = await GetApprenticeshipsForStatus(employerAccountId, GetApprenticeshipsApiRequest.ApprenticeshipStatus.WaitingToStart);
-            var live = await GetApprenticeshipsForStatus(employerAccountId, GetApprenticeshipsApiRequest.ApprenticeshipStatus.Live);
-
-            var all = waitingToStart.Union(live).ToList();
-
-            _logger.LogInformation($"Retrieved {all.Count} apprenticeships for account {employerAccountId}");
-
-            return all.Select(x => new Models.Approvals.Apprenticeship
+            while (pageNumber <= totalPages)
             {
-                Id = x.Id,
-                EmployerAccountId = employerAccountId,
-                TransferSenderId = x.TransferSenderId,
-                Uln = x.Uln,
-                ProviderId = x.ProviderId,
-                ProviderName = x.ProviderName,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                CourseCode = x.CourseCode,
-                CourseName = x.CourseName,
-                CourseLevel = x.CourseLevel,
-                StartDate = x.StartDate,
-                EndDate = x.EndDate,
-                Cost = x.Cost,
-                HasHadDataLockSuccess = x.HasHadDataLockSuccess,
-                PledgeApplicationId = x.PledgeApplicationId
-            }).ToList();
-        }
+                apiRequest = new GetApprenticeshipsApiRequest(employerAccountId, status, pageNumber, PageSize);
+                response = await _apiClient.Get<GetApprenticeshipsResponse>(apiRequest);
+                apprenticeships.AddRange(response.Apprenticeships);
 
-        private async Task<List<GetApprenticeshipsResponse.ApprenticeshipDetailsResponse>> GetApprenticeshipsForStatus(long employerAccountId, short status)
-        {
-            var apiRequest = new GetApprenticeshipsApiRequest(employerAccountId, status, 1, PageSize);
-            var response = await _apiClient.Get<GetApprenticeshipsResponse>(apiRequest);
-
-            var pageNumber = 2;
-
-            var totalPages = (int)Math.Ceiling((double)response.TotalApprenticeshipsFound / PageSize);
-
-            var apprenticeships = response.Apprenticeships.ToList();
-
-            if (totalPages > 1)
-            {
-                while (pageNumber <= totalPages)
-                {
-                    apiRequest = new GetApprenticeshipsApiRequest(employerAccountId, status, pageNumber, PageSize);
-                    response = await _apiClient.Get<GetApprenticeshipsResponse>(apiRequest);
-                    apprenticeships.AddRange(response.Apprenticeships);
-
-                    pageNumber++;
-                }
+                pageNumber++;
             }
-
-            return apprenticeships;
         }
 
-        public async Task<List<long>> GetEmployerAccountIds()
-        {
-            var apiRequest = new GetAccountIdsApiRequest();
-            var response = await _apiClient.Get<GetAccountIdsResponse>(apiRequest);
-            return response.AccountIds;
-        }
+        return apprenticeships;
+    }
+
+    public async Task<List<long>> GetEmployerAccountIds()
+    {
+        var apiRequest = new GetAccountIdsApiRequest();
+        var response = await _apiClient.Get<GetAccountIdsResponse>(apiRequest);
+        return response.AccountIds;
     }
 }

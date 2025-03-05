@@ -1,7 +1,6 @@
-﻿namespace SFA.DAS.Forecasting.Application.Apprenticeship.Messages
+﻿namespace SFA.DAS.Forecasting.Application.Apprenticeship.Messages;
+
+public class RefreshPledgeApplicationsForAccountMessage
 {
-    public class RefreshPledgeApplicationsForAccountMessage
-    {
-        public long EmployerId { get; set; }
-    }
+    public long EmployerId { get; set; }
 }

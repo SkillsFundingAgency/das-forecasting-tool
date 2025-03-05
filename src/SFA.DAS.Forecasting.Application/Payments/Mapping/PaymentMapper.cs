@@ -4,30 +4,30 @@ using SFA.DAS.Forecasting.Application.Payments.Messages;
 using SFA.DAS.Forecasting.Models.Commitments;
 using SFA.DAS.Forecasting.Models.Payments;
 
-namespace SFA.DAS.Forecasting.Application.Payments.Mapping
-{
-    public interface IPaymentMapper
-    {
-        PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
-        CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
-    }
+namespace SFA.DAS.Forecasting.Application.Payments.Mapping;
 
-    public class PaymentMapper: IPaymentMapper
-    {
-		public PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
+public interface IPaymentMapper
+{
+	PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage);
+	CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage);
+}
+
+public class PaymentMapper: IPaymentMapper
+{
+	public PaymentModel MapToPayment(PaymentCreatedMessage paymentCreatedMessage)
+	{
+		return new PaymentModel
 		{
-			return new PaymentModel
-			{
-				ExternalPaymentId = paymentCreatedMessage.Id,
-				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
-                SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
-				ProviderId = paymentCreatedMessage.Ukprn,
-				LearnerId = paymentCreatedMessage.Uln,
-				Amount = paymentCreatedMessage.Amount,
-				CollectionPeriodMonth = paymentCreatedMessage.CollectionPeriod.Month,
-				CollectionPeriodYear = paymentCreatedMessage.CollectionPeriod.Year,
-				DeliveryPeriodYear = paymentCreatedMessage.DeliveryPeriod.Year,
-				DeliveryPeriodMonth = paymentCreatedMessage.DeliveryPeriod.Month,
+			ExternalPaymentId = paymentCreatedMessage.Id,
+			EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
+			SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
+			ProviderId = paymentCreatedMessage.Ukprn,
+			LearnerId = paymentCreatedMessage.Uln,
+			Amount = paymentCreatedMessage.Amount,
+			CollectionPeriodMonth = paymentCreatedMessage.CollectionPeriod.Month,
+			CollectionPeriodYear = paymentCreatedMessage.CollectionPeriod.Year,
+			DeliveryPeriodYear = paymentCreatedMessage.DeliveryPeriod.Year,
+			DeliveryPeriodMonth = paymentCreatedMessage.DeliveryPeriod.Month,
 // 				CollectionPeriod = new Models.Payments.CalendarPeriod
 //                 {
 // //					Id = paymentCreatedMessage.CollectionPeriod.Id,
@@ -39,37 +39,36 @@ namespace SFA.DAS.Forecasting.Application.Payments.Mapping
 //                     Month = paymentCreatedMessage.DeliveryPeriod.Month,
 //                     Year = paymentCreatedMessage.DeliveryPeriod.Year
 //                 },
-				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
-				ReceivedTime = DateTime.UtcNow,
-                FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource)
-			};
-		}
+			ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
+			ReceivedTime = DateTime.UtcNow,
+			FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource)
+		};
+	}
 
-		public CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
+	public CommitmentModel MapToCommitment(PaymentCreatedMessage paymentCreatedMessage)
+	{
+		var model = new CommitmentModel
 		{
-            var model = new CommitmentModel
-			{
-				EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
-				ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
-				LearnerId = paymentCreatedMessage.Uln,
-				StartDate = paymentCreatedMessage.EarningDetails.StartDate,
-				PlannedEndDate = paymentCreatedMessage.EarningDetails.PlannedEndDate,
-				ActualEndDate = null,
-				CompletionAmount = paymentCreatedMessage.EarningDetails.CompletionAmount,
-				MonthlyInstallment = paymentCreatedMessage.EarningDetails.MonthlyInstallment,
-				NumberOfInstallments = (short)paymentCreatedMessage.EarningDetails.TotalInstallments,
-				ProviderId = paymentCreatedMessage.Ukprn,
-				ProviderName = paymentCreatedMessage.ProviderName,
-				ApprenticeName = paymentCreatedMessage.ApprenticeName,
-				CourseName = paymentCreatedMessage.CourseName,
-				CourseLevel = paymentCreatedMessage.CourseLevel,
-                SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
-                FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource),
-                HasHadPayment = true,
-                UpdatedDateTime = DateTime.UtcNow
-			};
+			EmployerAccountId = paymentCreatedMessage.EmployerAccountId,
+			ApprenticeshipId = paymentCreatedMessage.ApprenticeshipId,
+			LearnerId = paymentCreatedMessage.Uln,
+			StartDate = paymentCreatedMessage.EarningDetails.StartDate,
+			PlannedEndDate = paymentCreatedMessage.EarningDetails.PlannedEndDate,
+			ActualEndDate = null,
+			CompletionAmount = paymentCreatedMessage.EarningDetails.CompletionAmount,
+			MonthlyInstallment = paymentCreatedMessage.EarningDetails.MonthlyInstallment,
+			NumberOfInstallments = (short)paymentCreatedMessage.EarningDetails.TotalInstallments,
+			ProviderId = paymentCreatedMessage.Ukprn,
+			ProviderName = paymentCreatedMessage.ProviderName,
+			ApprenticeName = paymentCreatedMessage.ApprenticeName,
+			CourseName = paymentCreatedMessage.CourseName,
+			CourseLevel = paymentCreatedMessage.CourseLevel,
+			SendingEmployerAccountId = paymentCreatedMessage.SendingEmployerAccountId,
+			FundingSource = FundingSourceConverter.ConvertToPaymentsFundingSource(paymentCreatedMessage.FundingSource),
+			HasHadPayment = true,
+			UpdatedDateTime = DateTime.UtcNow
+		};
            
-            return model;
-        }
+		return model;
 	}
 }

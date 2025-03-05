@@ -6,50 +6,49 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using SFA.DAS.Forecasting.Core.Configuration;
 
-namespace SFA.DAS.Forecasting.Application.Shared.Services
+namespace SFA.DAS.Forecasting.Application.Shared.Services;
+
+public interface IQueueService
 {
-    public interface IQueueService
-    {
-        Task SendMessageWithVisibilityDelay<T>(T message, string queueName) where T : class;
-        Task SendMessageWithVisibilityDelay<T>(T element, string queueName, TimeSpan visibilityDelay) where T : class;
-    }
+	Task SendMessageWithVisibilityDelay<T>(T message, string queueName) where T : class;
+	Task SendMessageWithVisibilityDelay<T>(T element, string queueName, TimeSpan visibilityDelay) where T : class;
+}
 
-	public class QueueService: IQueueService
+public class QueueService: IQueueService
+{
+	private const int SecondsToWaitToAllowProjections = 60;
+	private readonly ForecastingJobsConfiguration _forecastingConfiguration;
+
+	public QueueService(ForecastingJobsConfiguration forecastingConfiguration)
 	{
-		private const int SecondsToWaitToAllowProjections = 60;
-	    private readonly ForecastingJobsConfiguration _forecastingConfiguration;
+		_forecastingConfiguration = forecastingConfiguration;
+	}
 
-	    public QueueService(ForecastingJobsConfiguration forecastingConfiguration)
-	    {
-		    _forecastingConfiguration = forecastingConfiguration;
-	    }
+	public async Task SendMessageWithVisibilityDelay<T>(T message, string queueName)
+		where T : class
+	{
+		await SendMessageWithVisibilityDelay(message,queueName,TimeSpan.FromSeconds(SecondsToWaitToAllowProjections));
+	}
 
-	    public async Task SendMessageWithVisibilityDelay<T>(T message, string queueName)
-	        where T : class
-	    {
-            await SendMessageWithVisibilityDelay(message,queueName,TimeSpan.FromSeconds(SecondsToWaitToAllowProjections));
-	    }
+	public async Task SendMessageWithVisibilityDelay<T>(T message, string queueName, TimeSpan visibilityDelay) 
+		where  T : class 
+	{
+		var cloudMessage = new CloudQueueMessage(JsonConvert.SerializeObject(message));
 
-        public async Task SendMessageWithVisibilityDelay<T>(T message, string queueName, TimeSpan visibilityDelay) 
-			where  T : class 
-		{
-			var cloudMessage = new CloudQueueMessage(JsonConvert.SerializeObject(message));
+		// Retrieve storage account from connection string.
+		var storageAccount = CloudStorageAccount.Parse(_forecastingConfiguration.StorageConnectionString);
 
-			// Retrieve storage account from connection string.
-			var storageAccount = CloudStorageAccount.Parse(_forecastingConfiguration.StorageConnectionString);
+		// Create the queue client.
+		var queueClient = storageAccount.CreateCloudQueueClient();
 
-			// Create the queue client.
-			var queueClient = storageAccount.CreateCloudQueueClient();
+		// Retrieve a reference to a container.
+		var queue = queueClient.GetQueueReference(queueName);
 
-			// Retrieve a reference to a container.
-			var queue = queueClient.GetQueueReference(queueName);
+		// Create the queue if it doesn't already exist
+		await queue.CreateIfNotExistsAsync();
 
-			// Create the queue if it doesn't already exist
-			await queue.CreateIfNotExistsAsync();
-
-			var random = new Random(Guid.NewGuid().GetHashCode());
-		    var concurrencyMitigation = TimeSpan.FromSeconds( random.Next(0, 10));
-			await queue.AddMessageAsync(cloudMessage, null, visibilityDelay.Add(concurrencyMitigation), null, null);
-		}
+		var random = new Random(Guid.NewGuid().GetHashCode());
+		var concurrencyMitigation = TimeSpan.FromSeconds( random.Next(0, 10));
+		await queue.AddMessageAsync(cloudMessage, null, visibilityDelay.Add(concurrencyMitigation), null, null);
 	}
 }

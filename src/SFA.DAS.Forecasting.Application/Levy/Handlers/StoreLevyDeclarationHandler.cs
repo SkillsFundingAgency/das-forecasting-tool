@@ -7,60 +7,59 @@ using SFA.DAS.Forecasting.Domain.Levy;
 using SFA.DAS.Forecasting.Models.Levy;
 
 
-namespace SFA.DAS.Forecasting.Application.Levy.Handlers
+namespace SFA.DAS.Forecasting.Application.Levy.Handlers;
+
+public interface IStoreLevyDeclarationHandler
 {
-    public interface IStoreLevyDeclarationHandler
+    Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration, string allowProjectionsEndpoint);
+}
+public class StoreLevyDeclarationHandler : IStoreLevyDeclarationHandler
+{
+    private readonly ILogger<StoreLevyDeclarationHandler> _logger;
+    private readonly IQueueService _queueService;
+    public ILevyDeclarationRepository Repository { get; }
+
+    public StoreLevyDeclarationHandler(ILevyDeclarationRepository repository, ILogger<StoreLevyDeclarationHandler> logger, IQueueService queueService)
     {
-        Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration, string allowProjectionsEndpoint);
+        _logger = logger;
+        _queueService = queueService;
+        Repository = repository;
     }
-    public class StoreLevyDeclarationHandler : IStoreLevyDeclarationHandler
+
+    public async Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration, string allowProjectionsEndpoint)
     {
-        private readonly ILogger<StoreLevyDeclarationHandler> _logger;
-        private readonly IQueueService _queueService;
-        public ILevyDeclarationRepository Repository { get; }
+        _logger.LogDebug($"Now handling the levy declaration event: {levySchemeDeclaration.AccountId}, {levySchemeDeclaration.EmpRef}");
+        if (levySchemeDeclaration.PayrollMonth == null)
+            throw new InvalidOperationException($"Received invalid levy declaration. No month specified. Data: ");
 
-        public StoreLevyDeclarationHandler(ILevyDeclarationRepository repository, ILogger<StoreLevyDeclarationHandler> logger, IQueueService queueService)
+        var declaration = MapLevySchemeDeclarationUpdatedMessageToLevyDeclarationModel(levySchemeDeclaration);
+
+        var levyDeclaration = await Repository.Get(declaration);
+        _logger.LogDebug("Now adding levy declaration to levy period.");
+        levyDeclaration.RegisterLevyDeclaration(levySchemeDeclaration.LevyDeclaredInMonth, levySchemeDeclaration.CreatedDate);
+        _logger.LogDebug($"Now storing the levy period. Employer: {levySchemeDeclaration.AccountId}, year: {levySchemeDeclaration.PayrollYear}, month: {levySchemeDeclaration.PayrollMonth}");
+        await Repository.Store(levyDeclaration);
+        _logger.LogDebug($"Finished adding the levy declaration to the levy period. Levy declaration: {levyDeclaration.Id}");
+
+        if (!string.IsNullOrWhiteSpace(allowProjectionsEndpoint))
         {
-            _logger = logger;
-            _queueService = queueService;
-            Repository = repository;
+            _queueService.SendMessageWithVisibilityDelay(levySchemeDeclaration, allowProjectionsEndpoint);
         }
+    }
 
-        public async Task Handle(LevySchemeDeclarationUpdatedMessage levySchemeDeclaration, string allowProjectionsEndpoint)
+    private static LevyDeclarationModel MapLevySchemeDeclarationUpdatedMessageToLevyDeclarationModel(
+        LevySchemeDeclarationUpdatedMessage levySchemeDeclaration)
+    {
+        var declaration = new LevyDeclarationModel
         {
-            _logger.LogDebug($"Now handling the levy declaration event: {levySchemeDeclaration.AccountId}, {levySchemeDeclaration.EmpRef}");
-            if (levySchemeDeclaration.PayrollMonth == null)
-                throw new InvalidOperationException($"Received invalid levy declaration. No month specified. Data: ");
-
-            var declaration = MapLevySchemeDeclarationUpdatedMessageToLevyDeclarationModel(levySchemeDeclaration);
-
-            var levyDeclaration = await Repository.Get(declaration);
-            _logger.LogDebug("Now adding levy declaration to levy period.");
-            levyDeclaration.RegisterLevyDeclaration(levySchemeDeclaration.LevyDeclaredInMonth, levySchemeDeclaration.CreatedDate);
-            _logger.LogDebug($"Now storing the levy period. Employer: {levySchemeDeclaration.AccountId}, year: {levySchemeDeclaration.PayrollYear}, month: {levySchemeDeclaration.PayrollMonth}");
-            await Repository.Store(levyDeclaration);
-            _logger.LogDebug($"Finished adding the levy declaration to the levy period. Levy declaration: {levyDeclaration.Id}");
-
-			if (!string.IsNullOrWhiteSpace(allowProjectionsEndpoint))
-	        {
-		        _queueService.SendMessageWithVisibilityDelay(levySchemeDeclaration, allowProjectionsEndpoint);
-			}
-		}
-
-        private static LevyDeclarationModel MapLevySchemeDeclarationUpdatedMessageToLevyDeclarationModel(
-            LevySchemeDeclarationUpdatedMessage levySchemeDeclaration)
-        {
-            var declaration = new LevyDeclarationModel
-            {
-                EmployerAccountId = levySchemeDeclaration.AccountId,
-                TransactionDate = levySchemeDeclaration.CreatedDate,
-                LevyAmountDeclared = levySchemeDeclaration.LevyDeclaredInMonth,
-                SubmissionId = levySchemeDeclaration.SubmissionId,
-                PayrollMonth = (byte)levySchemeDeclaration.PayrollMonth,
-                PayrollYear = levySchemeDeclaration.PayrollYear,
-                Scheme = levySchemeDeclaration.EmpRef
-            };
-            return declaration;
-        }
+            EmployerAccountId = levySchemeDeclaration.AccountId,
+            TransactionDate = levySchemeDeclaration.CreatedDate,
+            LevyAmountDeclared = levySchemeDeclaration.LevyDeclaredInMonth,
+            SubmissionId = levySchemeDeclaration.SubmissionId,
+            PayrollMonth = (byte)levySchemeDeclaration.PayrollMonth,
+            PayrollYear = levySchemeDeclaration.PayrollYear,
+            Scheme = levySchemeDeclaration.EmpRef
+        };
+        return declaration;
     }
 }

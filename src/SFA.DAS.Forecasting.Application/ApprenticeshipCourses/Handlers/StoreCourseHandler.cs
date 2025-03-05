@@ -6,29 +6,28 @@ using SFA.DAS.Forecasting.Core;
 using SFA.DAS.Forecasting.Domain.Extensions;
 using SFA.DAS.Forecasting.Models.Estimation;
 
-namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers
+namespace SFA.DAS.Forecasting.Application.ApprenticeshipCourses.Handlers;
+
+public interface IStoreCourseHandler
 {
-    public interface IStoreCourseHandler
+    Task Handle(ApprenticeshipCourse course);
+}
+
+public class StoreCourseHandler : IStoreCourseHandler
+{
+    private readonly IApprenticeshipCourseDataService _dataService;
+    private readonly ILogger<StoreCourseHandler> _logger;
+
+    public StoreCourseHandler(IApprenticeshipCourseDataService dataService, ILogger<StoreCourseHandler> logger)
     {
-        Task Handle(ApprenticeshipCourse course);
+        _dataService = dataService;
+        _logger = logger;
     }
 
-    public class StoreCourseHandler : IStoreCourseHandler
+    public async Task Handle(ApprenticeshipCourse course)
     {
-        private readonly IApprenticeshipCourseDataService _dataService;
-        private readonly ILogger<StoreCourseHandler> _logger;
-
-        public StoreCourseHandler(IApprenticeshipCourseDataService dataService, ILogger<StoreCourseHandler> logger)
-        {
-            _dataService = dataService;
-            _logger = logger;
-        }
-
-        public async Task Handle(ApprenticeshipCourse course)
-        {
-            _logger.LogDebug($"Storing apprenticeship course. Course: {course.ToJson()}");
-            await _dataService.Store(course);
-            _logger.LogDebug($"Stored apprenticeship course. Course id: {course.Id}");
-        }
+        _logger.LogDebug($"Storing apprenticeship course. Course: {course.ToJson()}");
+        await _dataService.Store(course);
+        _logger.LogDebug($"Stored apprenticeship course. Course id: {course.Id}");
     }
 }

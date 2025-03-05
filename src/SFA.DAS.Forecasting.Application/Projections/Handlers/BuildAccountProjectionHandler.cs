@@ -13,81 +13,80 @@ using SFA.DAS.Forecasting.Domain.Projections;
 using SFA.DAS.Forecasting.Messages.Projections;
 using CalendarPeriod = SFA.DAS.EmployerFinance.Types.Models.CalendarPeriod;
 
-namespace SFA.DAS.Forecasting.Application.Projections.Handlers
+namespace SFA.DAS.Forecasting.Application.Projections.Handlers;
+
+public interface IBuildAccountProjectionHandler
 {
-    public interface IBuildAccountProjectionHandler
+    Task Handle(GenerateAccountProjectionCommand message);
+}
+public class BuildAccountProjectionHandler : IBuildAccountProjectionHandler
+{
+    private readonly IAccountProjectionRepository _accountProjectionRepository;
+    private readonly IAccountProjectionService _accountProjectionService;
+    private readonly IExpiredFundsService _expiredFundsService;
+    private readonly ForecastingJobsConfiguration _config;
+    private readonly ILogger<BuildAccountProjectionHandler> _logger;
+
+
+    public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository,IAccountProjectionService accountProjectionService, ForecastingJobsConfiguration config, IExpiredFundsService expiredFundsService, ILogger<BuildAccountProjectionHandler> logger)
     {
-        Task Handle(GenerateAccountProjectionCommand message);
+        _accountProjectionRepository = accountProjectionRepository ?? throw new ArgumentNullException(nameof(accountProjectionRepository));
+        _config = config ?? throw new ArgumentNullException(nameof(config));
+        _accountProjectionService = accountProjectionService ?? throw new ArgumentNullException(nameof(accountProjectionService));
+        _expiredFundsService = expiredFundsService ?? throw new ArgumentNullException(nameof(expiredFundsService));
+        _logger = logger;
     }
-    public class BuildAccountProjectionHandler : IBuildAccountProjectionHandler
+
+    public async Task Handle(GenerateAccountProjectionCommand message)
     {
-        private readonly IAccountProjectionRepository _accountProjectionRepository;
-        private readonly IAccountProjectionService _accountProjectionService;
-		private readonly IExpiredFundsService _expiredFundsService;
-        private readonly ForecastingJobsConfiguration _config;
-        private readonly ILogger<BuildAccountProjectionHandler> _logger;
+        var projections = await _accountProjectionRepository.InitialiseProjection(message.EmployerAccountId);
 
+        var numberOfMonthsToProject = ForecastingJobsConfiguration.NumberOfMonthsToProject;
 
-        public BuildAccountProjectionHandler(IAccountProjectionRepository accountProjectionRepository,IAccountProjectionService accountProjectionService, ForecastingJobsConfiguration config, IExpiredFundsService expiredFundsService, ILogger<BuildAccountProjectionHandler> logger)
+        DateTime startDate;
+
+        if (message.StartPeriod != null)
         {
-            _accountProjectionRepository = accountProjectionRepository ?? throw new ArgumentNullException(nameof(accountProjectionRepository));
-            _config = config ?? throw new ArgumentNullException(nameof(config));
-            _accountProjectionService = accountProjectionService ?? throw new ArgumentNullException(nameof(accountProjectionService));
-			_expiredFundsService = expiredFundsService ?? throw new ArgumentNullException(nameof(expiredFundsService));
-            _logger = logger;
+            startDate = new DateTime(message.StartPeriod.Year, message.StartPeriod.Month, message.StartPeriod.Day);
+        }
+        else
+        {
+            startDate = DateTime.Today.GetStartOfAprilOfFinancialYear();
+
+            var extraMonths = ((DateTime.Today.Year - startDate.Year) * 12) + DateTime.Today.Month - startDate.Month;
+            numberOfMonthsToProject += extraMonths;
         }
 
-        public async Task Handle(GenerateAccountProjectionCommand message)
-        {
-            var projections = await _accountProjectionRepository.InitialiseProjection(message.EmployerAccountId);
+        _logger.LogInformation($"Projecting {numberOfMonthsToProject} months from {startDate:yyyy-MM-dd} for account {message.EmployerAccountId}");
 
-            var numberOfMonthsToProject = ForecastingJobsConfiguration.NumberOfMonthsToProject;
-
-            DateTime startDate;
-
-            if (message.StartPeriod != null)
-            {
-                startDate = new DateTime(message.StartPeriod.Year, message.StartPeriod.Month, message.StartPeriod.Day);
-            }
-            else
-            {
-                startDate = DateTime.Today.GetStartOfAprilOfFinancialYear();
-
-                var extraMonths = ((DateTime.Today.Year - startDate.Year) * 12) + DateTime.Today.Month - startDate.Month;
-                numberOfMonthsToProject += extraMonths;
-            }
-
-            _logger.LogInformation($"Projecting {numberOfMonthsToProject} months from {startDate:yyyy-MM-dd} for account {message.EmployerAccountId}");
-
-            var messageProjectionSource = await _accountProjectionService.GetOriginalProjectionSource(message.EmployerAccountId,message.ProjectionSource);
+        var messageProjectionSource = await _accountProjectionService.GetOriginalProjectionSource(message.EmployerAccountId,message.ProjectionSource);
            
-            if (messageProjectionSource == ProjectionSource.LevyDeclaration)
-                projections.BuildLevyTriggeredProjections(startDate, numberOfMonthsToProject, DateTime.UtcNow);
-            else
-                projections.BuildPayrollPeriodEndTriggeredProjections(startDate, numberOfMonthsToProject, DateTime.UtcNow);
+        if (messageProjectionSource == ProjectionSource.LevyDeclaration)
+            projections.BuildLevyTriggeredProjections(startDate, numberOfMonthsToProject, DateTime.UtcNow);
+        else
+            projections.BuildPayrollPeriodEndTriggeredProjections(startDate, numberOfMonthsToProject, DateTime.UtcNow);
     
-            var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId, messageProjectionSource, startDate);
+        var expiringFunds = await _expiredFundsService.GetExpiringFunds(projections.Projections, message.EmployerAccountId, messageProjectionSource, startDate);
 
-            RemovePastExpiryOfFunds(expiringFunds);
+        RemovePastExpiryOfFunds(expiringFunds);
 
-            if (expiringFunds.Any())
-            {
-                projections.UpdateProjectionsWithExpiredFunds(expiringFunds);
-            }
-            
-            await _accountProjectionRepository.Store(projections);
-            
-        }
-
-        private static void RemovePastExpiryOfFunds(Dictionary<CalendarPeriod, decimal> expiringFunds)
+        if (expiringFunds.Any())
         {
-            foreach (var expiry in expiringFunds)
+            projections.UpdateProjectionsWithExpiredFunds(expiringFunds);
+        }
+            
+        await _accountProjectionRepository.Store(projections);
+            
+    }
+
+    private static void RemovePastExpiryOfFunds(Dictionary<CalendarPeriod, decimal> expiringFunds)
+    {
+        foreach (var expiry in expiringFunds)
+        {
+            var expiryDate = new DateTime(expiry.Key.Year, expiry.Key.Month, 19);
+            if (expiryDate < DateTime.UtcNow)
             {
-                var expiryDate = new DateTime(expiry.Key.Year, expiry.Key.Month, 19);
-                if (expiryDate < DateTime.UtcNow)
-                {
-                    expiringFunds.Remove(expiry.Key);
-                }
+                expiringFunds.Remove(expiry.Key);
             }
         }
     }
