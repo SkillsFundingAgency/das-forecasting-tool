@@ -2,33 +2,32 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Forecasting.Web.Configuration;
 
-namespace SFA.DAS.Forecasting.Web.Controllers
+namespace SFA.DAS.Forecasting.Web.Controllers;
+
+[Route("[controller]")]
+public class ErrorController : Controller
 {
-    [Route("[controller]")]
-    public class ErrorController : Controller
+    [Route("")]
+    public IActionResult Error()
     {
-        [Route("")]
-        public IActionResult Error()
-        {
-            Response.StatusCode = StatusCodes.Status500InternalServerError;
+        Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-            return View("Error");
-        }
-
-        [Route("403", Name = RouteNames.AccessDenied)]
-        public ActionResult AccessDenied()
-        {
-            Response.StatusCode = StatusCodes.Status403Forbidden;
-
-            return View("AccessDenied");
-        }
-
-        [Route("404", Name = RouteNames.NotFound)]
-        public ActionResult NotFound()
-        {            
-            Response.StatusCode = StatusCodes.Status404NotFound;
-
-            return View("NotFound");
-        }      
+        return View("Error");
     }
+
+    [Route("403", Name = RouteNames.AccessDenied)]
+    public ActionResult AccessDenied()
+    {
+        Response.StatusCode = StatusCodes.Status403Forbidden;
+
+        return View("AccessDenied");
+    }
+
+    [Route("404", Name = RouteNames.NotFound)]
+    public ActionResult NotFound()
+    {            
+        Response.StatusCode = StatusCodes.Status404NotFound;
+
+        return View("NotFound");
+    }      
 }
