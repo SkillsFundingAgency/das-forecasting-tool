@@ -172,6 +172,19 @@
             "metadata": {
                 "description": "Enables alerting on app insights failed requests"
             }
+        },
+        "EnableRouteTableAssociation": {
+            "type": "bool",
+            "defaultValue": false,
+            "metadata": {
+                "description": "Determines whether to enable route table association on subnet"
+            }
+        },
+        "SharedRouteTableName": {
+            "type": "string",
+            "metadata": {
+                "description": "Determines whether to enable route table association on subnet"
+            }
         }
     },
     "variables": {
@@ -193,7 +206,11 @@
             "[concat(variables('resourceNamePrefix'),'-stb-fa')]"
         ],
         "webConfigNames": "SFA.DAS.Forecasting.Web,SFA.DAS.Employer.GovSignIn,SFA.DAS.Encoding",
-        "functionsConfigNames": "SFA.DAS.Forecasting.Web.Jobs,SFA.DAS.Encoding"
+        "functionsConfigNames": "SFA.DAS.Forecasting.Web.Jobs,SFA.DAS.Encoding",
+        "routeTableId": {
+            "id": "[resourceId(subscription().subscriptionId, parameters('sharedEnvResourceGroup'), 'Microsoft.Network/routeTables', parameters('SharedRouteTableName'))]"
+        },
+        "emptyObject": {}
     },
     "resources": [
         {
@@ -230,6 +247,9 @@
                     },
                     "delegations": {
                         "value": "[parameters('subnetDelegations')]"
+                    },
+                    "routeTable": {
+                        "value": "[if(parameters('enableRouteTableAssociation'), variables('routeTableId') , variables('emptyObject'))]"
                     }
                 }
             }
@@ -259,8 +279,7 @@
             "apiVersion": "2021-04-01",
             "name": "storage-account",
             "resourceGroup": "[variables('resourceGroupName')]",
-            "dependsOn": [
-            ],
+            "dependsOn": [],
             "type": "Microsoft.Resources/deployments",
             "properties": {
                 "mode": "Incremental",
@@ -568,8 +587,7 @@
                     }
                 }
             },
-            "dependsOn": [
-            ]
+            "dependsOn": []
         },
         {
             "condition": "[equals(parameters('enableFailedRequestAlert'), true())]",
